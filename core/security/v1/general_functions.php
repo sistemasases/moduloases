@@ -119,12 +119,6 @@ function _core_security_register_log( $user_id, $action_id, $params, $output ){
  * Function that given a XML configuration file route, return a list with its
  * aliases.
  * 
- * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
- * @since 1.0.0
- * 
- * @param string $xml_route Configuration file route
- * @return array List of aliases in the configuration file
- * 
  * XML example
  * 
  * <?xml version="1.0"?>
@@ -149,6 +143,17 @@ function _core_security_register_log( $user_id, $action_id, $params, $output ){
  *         </action>
  *    </config>
  * </configurations>
+ * 
+ * The previous example return [ 'say_hello', 'say_goodbye' ]
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param string $xml_route Configuration file route
+ * @return array List of aliases in the configuration file
+ * 
+ * @throws Exception If the file does not exist
+ * 
  */
 
 function _core_security_get_config_actions( $xml_route ){
@@ -179,7 +184,7 @@ function _core_security_get_config_actions( $xml_route ){
             );
         
     }else{
-        throw new Exception( "File $xml_route does not exist.", -1 );
+        throw new Exception( "File '$xml_route' does not exist.", -1 );
     }
     
 }
