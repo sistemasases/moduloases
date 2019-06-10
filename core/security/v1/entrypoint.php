@@ -290,7 +290,10 @@ function secure_call_checker( $managers_dir ){
         $config_file = $manager . "/" . basename( $manager ) . ".xml";
         if( file_exists( $config_file ) ){
             $calls = _core_security_get_config_actions( $config_file );
-            $unsolved_secured_calls = array_diff($calls, $stored_alias_actions);
+            $unsolved_secured_calls = array_merge( 
+                $unsolved_secured_calls,
+                array_diff($calls, $stored_alias_actions) 
+            );
         }
     }
         
