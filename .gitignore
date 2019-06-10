@@ -1,4 +1,6 @@
 view/archivos_subidos/
 composer.lock
 /node_modules/*
+nbproject/*
 package-lock.json
+/nbproject/private/

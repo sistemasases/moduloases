@@ -24,7 +24,7 @@ require_once( __DIR__ . "/checker.php");
  *	)
  * )
  *
- * @see get_action( $in ) in this file.
+ * @see get_action( $in ) in gets.php.
  * @see user_exist( $user_id ) in this file.
  *
  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>

@@ -475,6 +475,23 @@ function  get_generos()
    return $DB->get_records_sql($sql_query);
 }
 
+
+/**
+ * Get opciones de sexo registradas en base de datos
+ * 
+ * @author Juan Pablo Castro
+ * @see get_sex_options()
+ * @return array --> con opciones sexo
+ */
+
+function  get_sex_options()
+{
+    global $DB; 
+   $sql_query = "SELECT * FROM {talentospilos_sexo}";
+   return $DB->get_records_sql($sql_query);
+}
+
+
 /**
  * Get etnias registrados
  *
@@ -541,6 +558,59 @@ function  get_act_simultaneas()
 
     return $icetex_status_student;
  }
+
+   
+ /**
+ * Update moodle user 
+ *
+ * @see studentprofile_update_email_moodle
+ * @param $obj_updatable_moodle
+ * @return bool is update?
+ */
+
+ function  studentprofile_update_email_moodle($obj_updatable_moodle){
+
+    global $DB;
+
+    preg_match("/((?:[a-z]+\.)*[a-z]+(?:@correounivalle\.edu\.co))/",$obj_updatable_moodle->email  , $array_match);
+
+
+    if (!empty($array_match)) {
+
+        if (strcmp($array_match[0],$obj_updatable_moodle->email) !== 0) {
+   
+            $result_cv_update = false;
+        } else{
+   
+            $result_cv_update = $DB->update_record('user', $obj_updatable_moodle);
+        }
+    }else {
+   
+        $result_cv_update = false;
+    }
+
+    return  $result_cv_update;
+
+ }
+
+
+  
+ /**
+ * Get moodle user from talentospilos_user_extended
+ *
+ * @see get_moodle_user
+ * @param $ases_id
+ * @return int id_moodle_user
+ */
+ function get_moodle_id($ases_id){
+
+ global $DB;
+
+ $sql_query = "SELECT id_moodle_user FROM {talentospilos_user_extended} WHERE id_ases_user = $ases_id AND tracking_status = 1";
+ $status = $DB->get_record_sql($sql_query)->id_moodle_user;
+ return $status;
+
+}
  
  /**
  * Gets the ASES status for a student

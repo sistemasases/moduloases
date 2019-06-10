@@ -39,7 +39,7 @@ class ases_user_form extends moodleform {
         $tipo_doc_options = TipoDocumento::get_options();
         $cidades_options = Municipio::get_options();
         $estamento_options = Estamento::get_options();
-        //$discapacidades_options = Discapacidad::get_options();
+        $discapacidad_options = Discapacidad::get_options();
         $ciudad_por_defecto = Municipio::get_municipio_por_defecto();
         $mform = $this->_form; // Don't forget the underscore! 
         $date_options_fecha_nac = array(
@@ -55,6 +55,11 @@ class ases_user_form extends moodleform {
 
         $mform->addElement('searchableselector', 'tipo_doc', 'Tipo de documento' , $tipo_doc_options);
         $mform->addRule('tipo_doc', null, 'required');
+
+        $mform->addElement('searchableselector', 'id_discapacidad', 'Discapacidad' , $discapacidad_options);
+        $mform->setDefault('id_discapacidad', $ciudad_por_defecto->id);
+        $mform->addRule('id_discapacidad', null, 'required');
+
 
         $mform->addElement('select', 'id_ciudad_res', 'Ciudad de residencia' , $cidades_options); 
         $mform->setDefault('id_ciudad_res', $ciudad_por_defecto->id);
@@ -78,7 +83,6 @@ class ases_user_form extends moodleform {
         $mform->addElement('text', 'barrio_ini', 'Barrio de procedencia');
         $mform->addElement('text', 'dir_ini', 'Dirección procedencia');
 
-
         $mform->addElement('text', 'barrio_res', 'Barrio residencia');
         $mform->addElement('text', 'direccion_res', 'Dirección residencia');
 
@@ -92,7 +96,7 @@ class ases_user_form extends moodleform {
         $mform->addRule('tel_res', 'El número de telefónico de residencia debe contener solo dígitos', 'numeric'); 
 
         $mform->addElement('text', 'colegio', 'Colegio');
-        $mform->addElement('select', 'estamento', 'Estamento' , $estamento_options); 
+        $mform->addElement('select', 'estamento', 'Estamento' , $estamento_options);
 
         $mform->addElement('text', 'celular', 'Celular');
         $mform->addRule('celular', 'El número de celular debe contener solo dígitos', 'numeric'); 
