@@ -123,6 +123,16 @@ function core_secure_template_checker( $dir ){
 	return secure_template_checker( $dir );
 }
 
+/**
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see secure_call_checker( ... ) in entrypoint.php
+ * 
+ * @param $managers_dir Managers location, typical location '/block/ases/managers'
+ * 
+ * @return array List of call aliases that does not exist at the database
+ */
 function core_secure_call_checker( $managers_dir ){
     return secure_call_checker( $managers_dir );
 }
