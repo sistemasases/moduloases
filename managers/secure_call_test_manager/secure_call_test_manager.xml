@@ -1,9 +1,14 @@
 <?xml version="1.0"?>
 <configurations>
-	<config config_for="api">
+	<config config_for="api" manager="security_core">
 		<action>
 			<alias>
 				say_hello
+			</alias>
+		</action>
+                <action>
+			<alias>
+				say_goodbye
 			</alias>
 		</action>
 	</config>
