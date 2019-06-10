@@ -40,17 +40,45 @@ function create_menu_options($userid, $blockid, $courseid)
 {
 
     $menu_options = '';
+    $dropdown_close_tags = '</div>
+                            </div>';
+    $academic_dropdown = '<div id="academic_dropdown" class="dropdown">
+                            <button class="dropbtn">Académico <i class="fa fa-caret-down"></i>
+                            </button>
+                            <div class="dropdown-content">';
+    $academic_options = array();
+    $reports_dropdown = '<div id="reports_dropdown" class="dropdown">
+                            <button class="dropbtn">Reportes <i class="fa fa-caret-down"></i>
+                            </button>
+                            <div class="dropdown-content">';
+    $reports_options = array();
+    $icetex_men_dropdown = '<div id="icetex_men_dropdown" class="dropdown">
+                            <button class="dropbtn">ICETEX/MEN <i class="fa fa-caret-down"></i>
+                            </button>
+                            <div class="dropdown-content">';
+    $icetex_options = array();                        
+    $soc_ed_dropdown = '<div id="soc_ed_dropdown" class="dropdown">
+                            <button class="dropbtn">Socioeducativo <i class="fa fa-caret-down"></i>
+                            </button>
+                            <div class="dropdown-content">';
+    $soc_ed_options = array();                        
+    $admin_dropdown = '<div id="admin_dropdown" class="dropdown">
+                            <button class="dropbtn">Sistemas <i class="fa fa-caret-down"></i>
+                            </button>
+                            <div class="dropdown-content">'; 
+    $admin_options = array();
+    $discapacity_dropdown = '<div id="discapacity_dropdown" class="dropdown">
+                                <button class="dropbtn">Discapacidad <i class="fa fa-caret-down"></i>
+                                </button>
+                                <div class="dropdown-content">';
+    $discapacity_options = array();
     $menu_return = "";
     $id_role = get_id_rol($userid, $blockid);
      
     if($id_role != ""){
-        $functions = get_functions_by_role_id($id_role);
-        
-        $indexed = array();
+        $functions = get_functions_by_role_id($id_role);        
 
         foreach ($functions as $function) {
-
-
 
             if ($function == 'ases_report') {
                 $url = new moodle_url("/blocks/ases/view/ases_report.php", array(
@@ -58,8 +86,8 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '"> Reporte general </a><li>';
-                $indexed['Reporte general'] = $menu_options;
+                $menu_options = '<a id="menu_ases_report" href= "' . $url . '"> Reporte general </a>';
+                $soc_ed_options['Reporte general'] = $menu_options;
             }
 
             if ($function == 'create_action') {
@@ -68,8 +96,8 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '"> Gestión de permisos </a><li>';
-                $indexed['Gestión de permisos'] = $menu_options;
+                $menu_options = '<a id="menu_create_action" href= "' . $url . '"> Gestión de permisos </a>';
+                $admin_options['Gestión de permisos'] = $menu_options;
 
             }
 
@@ -79,8 +107,8 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '"> Registro de notas </a><li>';
-                $indexed['Registro de notas'] = $menu_options;
+                $menu_options = '<a id="menu_grade_categories" href= "' . $url . '"> Registro de notas </a>';
+                $academic_options['Registro de notas'] = $menu_options;
 
             }
 
@@ -90,8 +118,8 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '"> Carga de históricos </a><li>';
-                $indexed['Carga de históricos'] = $menu_options;
+                $menu_options = '<a id="menu_upload_historical_files" href= "' . $url . '"> Carga de históricos </a>';
+                $admin_options['Carga de históricos'] = $menu_options;
 
             }
 
@@ -102,8 +130,8 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '"> Gestión de instancia </a><li>';
-                $indexed['Gestión de instancia'] = $menu_options;
+                $menu_options = '<a id="menu_instance_configuration" href= "' . $url . '"> Gestión de instancia </a>';
+                $admin_options['Gestión de instancia'] = $menu_options;
 
             }
 
@@ -113,8 +141,8 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '"> Carga masiva datatables </a><li>';
-                $indexed['Carga masiva datatables'] = $menu_options;
+                $menu_options = '<a id="menu_massive_upload" href= "' . $url . '"> Carga masiva datatables </a>';
+                $admin_options['Carga masiva datatables'] = $menu_options;
 
             }
             if ($function == 'mass_role_management') {
@@ -123,8 +151,8 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '"> Carga masiva </a><li>';
-                $indexed['Carga masiva'] = $menu_options;
+                $menu_options = '<a id="menu_mass_role_management" href= "' . $url . '"> Carga masiva </a>';
+                $admin_options['Carga masiva'] = $menu_options;
 
             }
 
@@ -134,8 +162,8 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '"> Gestión de períodos </a><li>';
-                $indexed["Gestión de períodos"] = $menu_options;
+                $menu_options = '<a id="menu_periods_management" href= "' . $url . '"> Gestión de períodos </a>';
+                $admin_options["Gestión de períodos"] = $menu_options;
 
             }
 
@@ -145,8 +173,8 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '"> Seguimiento grupal </a><li>';
-                $indexed["Seguimiento grupal"] = $menu_options;
+                $menu_options = '<a id="menu_groupal_tracking" href= "' . $url . '"> Seguimiento grupal </a>';
+                $soc_ed_options["Seguimiento grupal"] = $menu_options;
 
             }
 
@@ -155,9 +183,9 @@ function create_menu_options($userid, $blockid, $courseid)
                     'courseid' => $courseid,
                     'instanceid' => $blockid,
                 ));
-
-                $menu_options = '<li><a href= "' . $url . '"> Reportes de seguimientos </a><li>';
-                $indexed["Reportes de seguimientos"] = $menu_options;
+                
+                $menu_options = '<a id="menu_report_trackings" href= "' . $url . '"> Reportes de seguimientos </a>';
+                $soc_ed_options["Reportes de seguimientos"] = $menu_options;
 
             }
 
@@ -167,8 +195,8 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '"> Gestión de usuarios </a><li>';
-                $indexed['Gestión de usuarios'] = $menu_options;
+                $menu_options = '<a id="menu_user_management" href= "' . $url . '"> Gestión de usuarios </a>';
+                $admin_options['Gestión de usuarios'] = $menu_options;
 
             }
 
@@ -178,8 +206,8 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '"> Ficha de estudiantes </a><li>';
-                $indexed['Ficha de estudiantes'] = $menu_options;
+                $menu_options = '<a id="menu_student_profile" href= "' . $url . '"> Ficha de estudiantes </a>';
+                $soc_ed_options['Ficha de estudiantes'] = $menu_options;
 
             }
 
@@ -189,8 +217,8 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '"> Carga de archivos </a><li>';
-                $indexed['Carga de archivos'] = $menu_options;
+                $menu_options = '<a id="menu_upload_files_form" href= "' . $url . '"> Carga de archivos </a>';
+                $admin_options['Carga de archivos'] = $menu_options;
 
             }
 
@@ -200,8 +228,8 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '"> Reportes ICETEX </a><li>';
-                $indexed['Reportes ICETEX'] = $menu_options;
+                $menu_options = '<a id="menu_historical_icetex_reports" href= "' . $url . '"> Reportes ICETEX </a>';
+                $icetex_options['Reportes ICETEX'] = $menu_options;
 
             }
 
@@ -211,8 +239,8 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '"> Reportes por docente </a><li>';
-                $indexed['Reportes por docente'] = $menu_options;
+                $menu_options = '<a id="menu_teachers_reports" href= "' . $url . '"> Reportes por docente </a>';
+                $academic_options['Reportes por docente'] = $menu_options;
 
             }
             if ($function == 'student_item_grades_report') {
@@ -221,8 +249,8 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '"> Reportes notas por items </a><li>';
-                $indexed['Reportes notas por items'] = $menu_options;
+                $menu_options = '<a id="menu_student_item_grades_report" href= "' . $url . '"> Reportes notas por items </a>';
+                $academic_options['Reportes notas por items'] = $menu_options;
 
             }
             if ($function == 'report_active_semesters') {
@@ -231,8 +259,8 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '"> Reporte deserción </a><li>';
-                $indexed['Reporte deserción'] = $menu_options;
+                $menu_options = '<a id="menu_report_active_semesters" href= "' . $url . '"> Reporte deserción </a>';
+                $soc_ed_options['Reporte deserción'] = $menu_options;
 
             }
             if ($function == 'historic_academic_reports') {
@@ -241,8 +269,8 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '"> Reportes históricos académicos </a><li>';
-                $indexed['Reportes históricos académicos'] = $menu_options;
+                $menu_options = '<a id="menu_historic_academic_reports" href= "' . $url . '"> Reportes históricos académicos </a>';
+                $academic_options['Reportes históricos académicos'] = $menu_options;
 
             }
 
@@ -252,8 +280,8 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '"> Administrador de formularios </a><li>';
-                $indexed['Administrador de formularios'] = $menu_options;
+                $menu_options = '<a id="menu_dphpforms_form_editor" href= "' . $url . '"> Administrador de formularios </a>';
+                $admin_options['Administrador de formularios'] = $menu_options;
 
             }
 
@@ -263,8 +291,8 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '"> Estudiantes sin asignar </a><li>';
-                $indexed['Estudiantes sin asignar'] = $menu_options;
+                $menu_options = '<a id="menu_not_assigned_students" href= "' . $url . '"> Estudiantes sin asignar </a>';
+                $academic_options['Estudiantes sin asignar'] = $menu_options;
 
             }
 
@@ -274,8 +302,8 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '"> Reporte de formularios </a><li>';
-                $indexed['Reporte de formularios'] = $menu_options;
+                $menu_options = '<a id="menu_dphpforms_reports" href= "' . $url . '"> Reporte de formularios </a>';
+                $soc_ed_options['Reporte de formularios'] = $menu_options;
 
             }
 
@@ -285,8 +313,8 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '"> Gestión de asignaciones </a><li>';
-                $indexed['Gestión de asignaciones'] = $menu_options;
+                $menu_options = '<a id="menu_monitor_assignments" href= "' . $url . '"> Gestión de asignaciones </a>';
+                $soc_ed_options['Gestión de asignaciones'] = $menu_options;
 
             }
 
@@ -296,8 +324,8 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '"> Estudiantes sin seguimientos </a><li>';
-                $indexed['Estudiantes sin seguimientos '] = $menu_options;
+                $menu_options = '<a id="menu_assigned_students_no_trackings_report" href= "' . $url . '"> Estudiantes sin seguimientos </a>';
+                $soc_ed_options['Estudiantes sin seguimientos '] = $menu_options;
 
             }
 
@@ -308,11 +336,8 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '">Reporte backup </a><li>';
-
-                
-                $indexed['Reporte backup'] = $menu_options;
-
+                $menu_options = '<a id="menu_backup_forms" href= "' . $url . '">Reporte backup </a>';                
+                $admin_options['Reporte backup'] = $menu_options;
             }
 
             if ($function == 'discapacity_reports') {
@@ -321,10 +346,8 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '">Reporte discapacidad e inclusión<span class="badge badge-secondary">New</span> </a><li>';
-
-                
-                $indexed['Reporte discapacidad e inclusión'] = $menu_options;
+                $menu_options = '<a id="menu_discapacity_reports" href= "' . $url . '">Reporte discapacidad e inclusión<span class="badge badge-secondary">New</span> </a>';
+                $discapacity_options['Reporte discapacidad e inclusión'] = $menu_options;
 
             }
 
@@ -334,8 +357,8 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li id="menu_incidents_manager"><a class="menu_a" href= "' . $url . '">Gestión de incidencias</a><li>';
-                $indexed['Gestión de incidencias'] = $menu_options;
+                $menu_options = '<a id="menu_incidents_manager" class="menu_a" href= "' . $url . '">Gestión de incidencias</a>';
+                $admin_options['Gestión de incidencias'] = $menu_options;
 
             }
 
@@ -345,10 +368,18 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li id="menu_men_report"><a class="menu_a" href= "' . $url . '">Reporte MEN</a><li>';
-                $indexed['Reporte MEN'] = $menu_options;
+                $menu_options = '<a id="menu_men_report" class="menu_a" href= "' . $url . '">Reporte MEN</a>';
+                $icetex_options['Reporte MEN'] = $menu_options;
 
             }
+            
+            
+            if ($function == 'ases_graphic_reports') {
+                $url = new moodle_url("/blocks/ases/view/ases_graphic_reports.php", array(
+                    'courseid' => $courseid,
+                    'instanceid' => $blockid,
+                ));
+
 
             if ($function == 'ases_graphic_reports') {
                 $url = new moodle_url("/blocks/ases/view/ases_graphic_reports.php", array(
@@ -356,21 +387,64 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li><a href= "' . $url . '"> Reportes Gráficos </a><li>';
-                $indexed['Reportes Gráficos'] = $menu_options;
+                $menu_options = '<li id="menu_ases_graphic_reports"><a class="menu_a" href= "' . $url . '">Reportes gráficos ASES</a><li>';	
+
+                $indexed['Reportes gráficos ASES'] = $menu_options;
             }
 
+
+
+
+
+            }
 
         }
 
         //ORDENA
-        ksort($indexed);
-
-        foreach ($indexed as $value) {
-            $menu_return .= $value;
+        if (sizeof($admin_options) > 0){
+            ksort($admin_options);
+            foreach ($admin_options as $value) {
+                $admin_dropdown .= $value;
+            }
+            $admin_dropdown .= $dropdown_close_tags;
+            $menu_return .= $admin_dropdown;
+        }
+        
+        if (sizeof($soc_ed_options) > 0) {
+            ksort($soc_ed_options);
+            foreach ($soc_ed_options as $value) {
+                $soc_ed_dropdown .= $value;
+            }
+            $soc_ed_dropdown .= $dropdown_close_tags;
+            $menu_return .= $soc_ed_dropdown;
         }
 
-        
+        if (sizeof($academic_options) > 0) {
+            ksort($academic_options);
+            foreach ($academic_options as $value) {
+                $academic_dropdown .= $value;
+            }
+            $academic_dropdown .= $dropdown_close_tags;
+            $menu_return .= $academic_dropdown;
+        }
+
+        if (sizeof($icetex_options) > 0) {
+            ksort($icetex_options);
+            foreach ($icetex_options as $value) {
+                $icetex_men_dropdown .= $value;
+            }
+            $icetex_men_dropdown .= $dropdown_close_tags;
+            $menu_return .= $icetex_men_dropdown;
+        }
+
+        if (sizeof($discapacity_options) > 0) {
+            ksort($discapacity_options);
+            foreach ($discapacity_options as $value) {
+                $discapacity_dropdown .= $value;
+            }
+            $discapacity_dropdown .= $dropdown_close_tags;
+            $menu_return .= $discapacity_dropdown;
+        }
     }
 
     return $menu_return;

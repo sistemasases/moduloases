@@ -123,13 +123,9 @@ function render_groupal_tracks_monitor_new_form($groupal_tracks, $monitor_id, $p
         else {
             $monitor_trackings = get_tracking_grupal_monitor_current_semester($monitor_id, $period);
         }
-
-        $panel.= aux_create_groupal_toggle($monitor_id);
     }
 
-    if (!$groupal_tracks) {
-        $panel.= aux_create_groupal_toggle($monitor_id);
-    }
+    $panel.= aux_create_groupal_toggle($monitor_id);
 
     return $panel;
 }

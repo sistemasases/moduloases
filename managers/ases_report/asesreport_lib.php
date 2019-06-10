@@ -627,8 +627,8 @@ function get_ases_report($general_fields=null,
 
     $sub_query_status = "";
     $sub_query_academic = "";
-    $sub_query_risks = "";
-    $sub_query_assignment_fields = "";
+     $sub_query_risks = "";
+     $sub_query_assignment_fields = "";
 
     // Clausula select para los campos generales del reporte ASES
     if($general_fields){
