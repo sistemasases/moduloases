@@ -294,7 +294,7 @@ function secure_call_checker( $managers_dir ){
         }
     }
         
-    return $unsolved_secured_calls;
+    return array_values( $unsolved_secured_calls );
 }
 
 ?>

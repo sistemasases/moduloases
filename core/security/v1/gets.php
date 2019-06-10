@@ -146,6 +146,7 @@ function _core_security_get_actions( $type = null ){
 function _core_security_get_action_type( $alias = null ){
 
 	global $DB_PREFIX;
+        
 	$params = [];
 	$alias_filter = null;
 	$tablename = $DB_PREFIX . "talentospilos_tipos_accion";

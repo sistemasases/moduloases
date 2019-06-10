@@ -6,11 +6,6 @@
 				say_hello
 			</alias>
 		</action>
-                <action>
-			<alias>
-				say_goodbye
-			</alias>
-		</action>
 	</config>
 	<config config_for="lib">
 		<action>
