@@ -12,6 +12,15 @@ require_once( __DIR__ . "/gets.php");
 require_once( __DIR__ . "/general_functions.php");
 require_once( __DIR__ . "/checker.php");
 
+const VALID_CHARACTERS = [
+    'a','b','c','d','e','f','g',
+    'h','i','j','k','l','m','n',
+    'o','p','q','r','s','t','u',
+    'v','w','x','y','z','0','1',
+    '2','3','4','5','6','7','8',
+    '9','_'
+];
+
 /**
  * Function that processes a secure call request.
  *
@@ -216,17 +225,10 @@ function secure_render( &$data, $user_id = null, $singularizations = null, $time
  * @return array
 */
 function secure_template_checker( $templates_dir ){
+    
 
 	$fileList = glob( $templates_dir . '/*');
 	$unsolved_secure_blocks = [];
-
-	$valid_characters = [
-		'a','b','c','d','e','f','g',
-		'h','i','j','k','l','m','n',
-		'o','p','q','r','s','t','u',
-		'v','w','x','y','z','0','1',
-		'2','3','4','5','6','7','8',
-		'9','_'];
 
 	$actions_type = _core_security_get_action_type( 'front' );
 	$actions = _core_security_get_actions( $actions_type['id'] );
@@ -246,7 +248,7 @@ function secure_template_checker( $templates_dir ){
 	    			break;
 	    		}
 
-	    		if( in_array($template[ $i ], $valid_characters) ){
+	    		if( in_array($template[ $i ], VALID_CHARACTERS) ){
 	    			$alias_tag .= $template[ $i ];
 	    		}
 		    }
@@ -265,51 +267,34 @@ function secure_template_checker( $templates_dir ){
 }
 
 /**
- * ...
- *
+ * Function that find secure_call declarations that does not exist at the database.
+ * 
+ * @see _core_security_get_config_actions( ... )  in general_functions.php                       
  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
  *
- * @param string $managers_dir, Folder with managers.
+ * @param string $managers_dir Folder with managers.
  *
  * @return array
 */
 function secure_call_checker( $managers_dir ){
+        
+    $managers = array_filter(glob( $managers_dir . '/*'), 'is_dir');
+    $unsolved_secured_calls = [];
 
-	$managers = array_filter(glob( $managers_dir . '/*'), 'is_dir');
-	$unsolved_secure_calls = [];
+    $actions_type_back = _core_security_get_action_type( 'back' );
+    $stored_actions = _core_security_get_actions( $actions_type_back['id'] );
+    $stored_alias_actions = array_map( function($in){ return $in['alias']; }, $stored_actions );
 
-	$valid_characters = [
-		'a','b','c','d','e','f','g',
-		'h','i','j','k','l','m','n',
-		'o','p','q','r','s','t','u',
-		'v','w','x','y','z','0','1',
-		'2','3','4','5','6','7','8',
-		'9','_'];
-
-	$actions_type = _core_security_get_action_type( 'back' );
-	$actions = _core_security_get_actions( $actions_type['id'] );
-	$alias_actions = array_map( function($in){ return $in['alias']; }, $actions );
-
-	foreach($managers as $manager){
-
-		$manager_name = basename( $manager );
-		
-		if( file_exists( $manager . "/" . $manager_name . ".xml" ) ){
-
-			$config_file = simplexml_load_file(
-				$CFG->dirroot . 
-				'/blocks/ases/managers/secure_call_test_manager/secure_call_test_manager.xml'
-			);
-
-			//simplexml_load_file return a mixed ouput.
-			if( $config_file !== false ){
-				
-			}
-
-		}
-
-	}
+    foreach($managers as $manager){
+        $config_file = $manager . "/" . basename( $manager ) . ".xml";
+        if( file_exists( $config_file ) ){
+            $calls = _core_security_get_config_actions( $config_file );
+            $unsolved_secured_calls = array_intersect($calls, $stored_alias_actions);
+        }
+    }
+        
+    return $unsolved_secured_calls;
 }
 
 ?>
