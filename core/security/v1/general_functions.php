@@ -161,7 +161,7 @@ function _core_security_get_config_actions( $xml_route ){
         return 
             array_values( // Reset array counter
                 array_filter( // Remove empty values
-                    array_map(
+                    array_map( // Get aliases
                         function( $action ){ 
                             return trim( (string) $action->alias[0] ); 
                         } , $actions 
