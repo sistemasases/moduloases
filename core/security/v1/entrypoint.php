@@ -275,7 +275,7 @@ function secure_template_checker( $templates_dir ){
  *
  * @param string $managers_dir Folder with managers.
  *
- * @return array
+ * @return array List of call aliases that does not exist at the database
 */
 function secure_call_checker( $managers_dir ){
         
