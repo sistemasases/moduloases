@@ -23,43 +23,32 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once(dirname(__FILE__). '/../../../../../config.php');
+
+// -- Dev test block - This block cannot be considerated as documentation.
 /*header('Content-Type: application/json');
-
-$xQuery = new stdClass();
-$xQuery->form = "seguimiento_pares"; // Can be alias(String) or idntifier(Number)
-$xQuery->filterFields = [
-                         ["id_estudiante",[
-                             ["%%","LIKE"]
-                            ], false],
-                        ["fecha",[
-                             ["%%","LIKE"]
-                            ], false],
-                        ["revisado_practicante",[
-                            ["%%","LIKE"]
-                           ], false],
-                       ["revisado_profesional",[
-                        ["%%","LIKE"]
-                       ], false]
-                   ];
-$xQuery->orderFields = [
-                        ["fecha","DESC"]
-                       ];
-
-$xQuery->orderByDatabaseRecordDate = false; // If true, orderField is ignored. DESC
-$xQuery->recordStatus = [ "!deleted" ];// options "deleted" or "!deleted", can be both. Empty = both.
-$xQuery->asFields = [  [ [ function( $_this ){ return (int) $_this['id_registro'] ; } ], "id_estudiante" ], ["revisado_profesional", "id_estudiante"] ]; 
-//No soportado aun
-$xQuery->selectedFields = [ "id_creado_por", "id_estudiante" ]; // RecordId and BatabaseRecordDate are selected by default.
-
-
+ /*$xQuery = new stdClass();
+ * $xQuery->form = "seguimiento_pares"; // Can be alias(String) or identifier(Number)
+ * $xQuery->filterFields = [
+ *     ["id_estudiante",[ ["%%","LIKE"]], false],
+ *     ["fecha",[ ["%%","LIKE"] ], false],
+ *     ["revisado_practicante",[ ["%%","LIKE"] ], false],
+ *     ["revisado_profesional",[ ["%%","LIKE"] ], false]
+ * ];
+ * $xQuery->orderFields = [ ["fecha","DESC"] ];
+ * $xQuery->orderByDatabaseRecordDate = false; // If true, 'orderField' is ignored. DESC
+ * $xQuery->recordStatus = [ "!deleted" ]; // options "deleted" or "!deleted", can be both. Empty = both.
+ * $xQuery->asFields = [ [ [ function( $_this ){ return (int) $_this['id_registro'] ; } ], "id_estudiante" ], ["revisado_profesional", "id_estudiante"] ]; 
+ * $xQuery->selectedFields = [ "id_creado_por", "id_estudiante" ]; // Without support.
 echo json_encode( dphpformsV2_find_records( $xQuery ) );*/
+// -- End Dev test block
+
 
 /**
- * 
+ * Function that given a valid xQuery returns the execution result.
  * @author Jeison Cardona Gómez. <jeison.cardona@correounivalle.edu.co>
- * @param int 
- * @param int 
- * @return stdClass
+ * @see dphpformsV2_validate_xquery( ... ) in this file
+ * @param Object $query stdClass with the specified properties. 
+ * @return stdClass | Array
  */
  function dphpformsV2_find_records( $query ){
 
@@ -67,207 +56,24 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );*/
 
     $form = dphpformsV2_get_form_info( $query->form );
     
-    if( $form ){
-        $fields = dphpformsV2_get_fields_form( $form->id );
-        $list_fields_alias = [];
-        $list_fields_alias_id = [];
-        $list_fields_id_alias = [];
-        $list_fields_data_type = [];
-        $list_valid_operators = ["=",">","<",">=","<=","!=", "LIKE"];
-        $list_asFields_alias = [];
-        $list_filter_fields_alias = [];
-        foreach( $fields as $field ){
-            array_push( $list_fields_alias, $field->local_alias );
-            $list_fields_alias_id[$field->local_alias] = $field->id_pregunta;
-            $list_fields_id_alias[$field->id_pregunta] = $field->local_alias;
-            $list_fields_data_type[$field->id_pregunta] = $field->tipo_campo;
-        };
-
-        //Validation if the filter fields exist.
-        foreach( $query->filterFields as $filterField ){
-           if( count( $filterField ) == 3 ){
-                if( !in_array( $filterField[0], $list_fields_alias ) ){
-                    return [
-                        "status_code" => -1,
-                        "error_message" => "QUERY->filterFields: ".json_encode($filterField)." DOES NOT EXIST AS A FIELD",
-                        "data_response" => ""
-                    ];
-                };
-                if( gettype( $filterField[2] ) !== "boolean" ){
-                    return [
-                        "status_code" => -1,
-                        "error_message" => "QUERY->filterFields: ".json_encode($filterField)." DOES NOT HAVE A VALID VALUE, USE bool true OR false NOT ". gettype( $filterField[2] ),
-                        "data_response" => ""
-                    ];
-                };
-                if( gettype( $filterField[1] ) !== "array" ){
-                    return [
-                        "status_code" => -1,
-                        "error_message" => "QUERY->filterFields: ".json_encode($filterField)." DOES NOT MATCH WITH THE STRUCTURE. [...,[\"value\",\"operator\"],...]  ",
-                        "data_response" => ""
-                    ];
-                }else{
-                    foreach( $filterField[1] as $filterValues  ){
-                        if( count( $filterValues ) != 2 ){
-                            return [
-                                "status_code" => -1,
-                                "error_message" => "QUERY->filterFields: ".json_encode($filterValues)." DOES NOT MATCH WITH THE STRUCTURE. [\"value\",\"operator\"]  ",
-                                "data_response" => ""
-                            ];      
-                        }else{
-                            if( !in_array( $filterValues[1], $list_valid_operators ) ){
-                                return [
-                                    "status_code" => -1,
-                                    "error_message" => "QUERY->filterFields: ".json_encode($filterValues)." DOES NOT HAVE A VALID OPERATOR, USE ".json_encode($list_valid_operators)." NOT ". $filterValues[1],
-                                    "data_response" => ""
-                                ];
-                            }
-                        }
-                    }
-                };
-                
-                array_push( $list_filter_fields_alias, $filterField[0] );
-
-           }else{
-            return [
-                "status_code" => -1,
-                "error_message" => "QUERY->filterFields: ".json_encode($filterField)." DOES NOT MATCH WITH THE STRUCTURE [\"alias_field\", \"value\", optional = true or false, operator = \">,<,=,!=,<=,>=\"]",
-                "data_response" => ""
-            ];
-           };
-        };
-        //Validation if the order fields exist.
-        foreach( $query->orderFields as $orderField ){
-            if( count( $orderField ) == 2 ){
-                 if( !in_array( $orderField[0], $list_fields_alias ) ){
-                     return [
-                         "status_code" => -1,
-                         "error_message" => "QUERY->orderFields: ".json_encode($orderField)." DOES NOT EXIST AS A FIELD",
-                         "data_response" => ""
-                     ];
-                 }else{
-                     if( !((strtoupper($orderField[1]) == "ASC") || (strtoupper($orderField[1]) == "DESC") )){
-                        return [
-                            "status_code" => -1,
-                            "error_message" => "QUERY->orderFields: ".json_encode($orderField)." DOES NOT HAVE A VALID VALUE, USE 'ASC' OR 'DESC'",
-                            "data_response" => ""
-                        ];
-                     }
-                 };
-            }else{
-             return [
-                 "status_code" => -1,
-                 "error_message" => "QUERY->orderFields: ".json_encode($orderField)." DOES NOT MATCH WITH THE STRUCTURE [\"alias_field\", \"ASC OR DESC\"]",
-                 "data_response" => ""
-             ];
-            };
-        };
-         
-        //Validation if the selected fields exist.
-        foreach( $query->selectedFields as $selectedField ){
-            if( !in_array( $selectedField, $list_fields_alias ) ){
-                 return [
-                     "status_code" => -1,
-                     "error_message" => "QUERY->selectedFields: ".json_encode($selectedField)." DOES NOT EXIST AS A FIELD",
-                     "data_response" => ""
-                 ];
-            };
-        };
-
-        //Validation if the asFields fields exist.
-        foreach( $query->asFields as $asField ){
-
-            if( count( $asField ) == 2 ){
+    $validation_status = dphpformsV2_validate_xquery($query);
+    if( $validation_status['status_code'] === -1 ){
+        return $validation_status;
+    }
+    
+    $fields = dphpformsV2_get_fields_form( $form->id );
+    $list_fields_alias = [];
+    $list_fields_alias_id = [];
+    $list_fields_id_alias = [];
+    $list_fields_data_type = [];
+    $list_filter_fields_alias = [];
         
-                $asType = gettype( $asField[0] );
-                    
-                if( ( $asType !== "string") && ($asType !== "array" ) ){
-                    return [
-                        "status_code" => -1,
-                        "error_message" => "QUERY->asFields: ".json_encode($asField)." DOES NOT MATCH WITH THE STRUCTURE [\"alias_field\", \"new_alias_field_name\" ] or [ [ instanceof Closure( \$_this, \$arg1, \$arg2, ... ), \"param\"||\$param, ... ], \"new_alias_field_name\" ]",
-                        "data_response" => ""
-                    ];
-                };
-
-                if( $asType === "array" ){
-                    if( count( $asField[1] ) < 1 ){
-                        
-                        return [
-                            "status_code" => -1,
-                            "error_message" => "QUERY->asFields: ".json_encode($asField)." DOES NOT MATCH WITH THE STRUCTURE [\"alias_field\", \"new_alias_field_name\" ] or [ [ instanceof Closure( \$_this, \$arg1, \$arg2, ... ), \"param\"||\$param, ... ], \"new_alias_field_name\" ]",
-                            "data_response" => ""
-                        ];
-                    }else{
-                        if( !is_callable( $asField[0][0] ) ){
-                            return [
-                                "status_code" => -1,
-                                "error_message" => "QUERY->asFields: THE FIRST ELEMENT OF THE ARRAY IS NOT CALLABLE.",
-                                "data_response" => ""
-                            ];
-                        }
-                    }
-
-                }else if( $asType === "string" ){
-
-                    if( !in_array( $asField[0], $list_filter_fields_alias ) ){
-                        return [
-                            "status_code" => -1,
-                            "error_message" => "QUERY->asFields: ".json_encode($asField)." DOES NOT EXIST AS A FILTER FIELD",
-                            "data_response" => ""
-                        ];
-                    };
-
-                }
-
-                if( $asField[1] === "" ){
-                    return [
-                        "status_code" => -1,
-                        "error_message" => "QUERY->asFields: ".json_encode($asField)." ALIAS '". $asField[1]."' MUST BE DIFFERENT FROM EMPTY.",
-                        "data_response" => ""
-                    ];
-                }
-
-            }else{
-                return [
-                    "status_code" => -1,
-                    "error_message" => "QUERY->asFields: ".json_encode($asField)." DOES NOT MATCH WITH THE STRUCTURE [\"alias_field\", \"new_alias_field_name\" ] or [ [ instanceof Closure( \$_this, \$arg1, \$arg2, ... ), \"param\"||\$param, ... ], \"new_alias_field_name\" ]",
-                    "data_response" => ""
-                ];
-            }
-            
-        };
-        
-
-    }else{
-        return [
-            "status_code" => -1,
-            "error_message" => "QUERY->form: $query->form DOES NOT EXIST",
-            "data_response" => ""
-        ];
-    };
-
-    if( gettype( $query->orderByDatabaseRecordDate ) !== "boolean" ){
-        return [
-            "status_code" => -1,
-            "error_message" => "QUERY->orderByDatabaseRecordDate: $query->orderByDatabaseRecordDate DOES NOT HAVE A VALID VALUE, USE bool true OR false NOT ". gettype( $query->orderByDatabaseRecordDate ),
-            "data_response" => ""
-        ];
-    };
-
-    //Validation of record status
-    foreach( $query->recordStatus as $rStatus ){
-        $valid_values = [ "deleted", "!deleted" ];
-        if( !in_array( $rStatus, $valid_values ) ){
-             return [
-                 "status_code" => -1,
-                 "error_message" => "QUERY->recordStatus: ".json_encode($rStatus)." IS NOT A VALID VALUE",
-                 "data_response" => ""
-             ];
-        };
-     };
-
-     //Validations completed
-
+    foreach( $fields as $field ){
+        array_push( $list_fields_alias, $field->local_alias );
+        $list_fields_alias_id[$field->local_alias] = $field->id_pregunta;
+        $list_fields_id_alias[$field->id_pregunta] = $field->local_alias;
+        $list_fields_data_type[$field->id_pregunta] = $field->tipo_campo;
+     }
 
      $sql_query = "";
      //Find with where clause
@@ -489,7 +295,7 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );*/
  * Function that return the basic dynamic form information.
  * @author Jeison Cardona Gómez. <jeison.cardona@correounivalle.edu.co>
  * @param int/$string Alias or identifier 
- * @return stdClass
+ * @return stdClass with id, nombre, alias, descripcion, method, action, enctype, fecha_hora_registro, estado
  */
  function dphpformsV2_get_form_info( $alias_identifier ){
     
@@ -1460,6 +1266,294 @@ function dphpformsV2_html_minifier($buffer) {
     $buffer = preg_replace($search, $replace, $buffer);
 
     return trim($buffer);
+}
+
+/**
+ * Function that given a xQuery return a validation status.
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @param Object $query stdClass with the specified properties.
+ * @return Array
+ * 
+ * Input example:
+ * 
+ * $xQuery = new stdClass();
+ * $xQuery->form = "seguimiento_pares"; // Can be alias(String) or identifier(Number)
+ * $xQuery->filterFields = [
+ *     ["id_estudiante",[ ["%%","LIKE"]], false],
+ *     ["fecha",[ ["%%","LIKE"] ], false],
+ *     ["revisado_practicante",[ ["%%","LIKE"] ], false],
+ *     ["revisado_profesional",[ ["%%","LIKE"] ], false]
+ * ];
+ * $xQuery->orderFields = [ ["fecha","DESC"] ];
+ * $xQuery->orderByDatabaseRecordDate = false; // If true, 'orderField' is ignored. DESC
+ * $xQuery->recordStatus = [ "!deleted" ]; // options "deleted" or "!deleted", can be both. Empty = both.
+ * $xQuery->asFields = [ [ [ function( $_this ){ return (int) $_this['id_registro'] ; } ], "id_estudiante" ], ["revisado_profesional", "id_estudiante"] ]; 
+ * $xQuery->selectedFields = [ "id_creado_por", "id_estudiante" ]; // Without support.
+*/
+function dphpformsV2_validate_xquery( $query ){
+    
+    $form = dphpformsV2_get_form_info( $query->form );
+    
+    if( $form ){
+        $fields = dphpformsV2_get_fields_form( $form->id );
+        $list_fields_alias = [];
+        $list_fields_alias_id = [];
+        $list_fields_id_alias = [];
+        $list_fields_data_type = [];
+        $list_valid_operators = ["=",">","<",">=","<=","!=", "LIKE"];
+        //$list_asFields_alias = [];
+        $list_filter_fields_alias = [];
+        
+        foreach( $fields as $field ){
+            array_push( $list_fields_alias, $field->local_alias );
+            $list_fields_alias_id[$field->local_alias] = $field->id_pregunta;
+            $list_fields_id_alias[$field->id_pregunta] = $field->local_alias;
+            $list_fields_data_type[$field->id_pregunta] = $field->tipo_campo;
+        }
+
+        //Validation if the filter fields exist.
+        foreach( $query->filterFields as $filterField ){
+           if( count( $filterField ) == 3 ){
+                if( !in_array( $filterField[0], $list_fields_alias ) ){
+                    return [
+                        "status_code" => -1,
+                        "error_message" => "QUERY->filterFields: ".json_encode($filterField)." DOES NOT EXIST AS A FIELD",
+                        "data_response" => ""
+                    ];
+                };
+                if( gettype( $filterField[2] ) !== "boolean" ){
+                    return [
+                        "status_code" => -1,
+                        "error_message" => "QUERY->filterFields: ".json_encode($filterField)." DOES NOT HAVE A VALID VALUE, USE bool true OR false NOT ". gettype( $filterField[2] ),
+                        "data_response" => ""
+                    ];
+                };
+                if( gettype( $filterField[1] ) !== "array" ){
+                    return [
+                        "status_code" => -1,
+                        "error_message" => "QUERY->filterFields: ".json_encode($filterField)." DOES NOT MATCH WITH THE STRUCTURE. [...,[\"value\",\"operator\"],...]  ",
+                        "data_response" => ""
+                    ];
+                }else{
+                    foreach( $filterField[1] as $filterValues  ){
+                        if( count( $filterValues ) != 2 ){
+                            return [
+                                "status_code" => -1,
+                                "error_message" => "QUERY->filterFields: ".json_encode($filterValues)." DOES NOT MATCH WITH THE STRUCTURE. [\"value\",\"operator\"]  ",
+                                "data_response" => ""
+                            ];      
+                        }else{
+                            if( !in_array( $filterValues[1], $list_valid_operators ) ){
+                                return [
+                                    "status_code" => -1,
+                                    "error_message" => "QUERY->filterFields: ".json_encode($filterValues)." DOES NOT HAVE A VALID OPERATOR, USE ".json_encode($list_valid_operators)." NOT ". $filterValues[1],
+                                    "data_response" => ""
+                                ];
+                            }
+                        }
+                    }
+                }
+                
+                array_push( $list_filter_fields_alias, $filterField[0] );
+
+           }else{
+            return [
+                "status_code" => -1,
+                "error_message" => "QUERY->filterFields: ".json_encode($filterField)." DOES NOT MATCH WITH THE STRUCTURE [\"alias_field\", \"value\", optional = true or false, operator = \">,<,=,!=,<=,>=\"]",
+                "data_response" => ""
+            ];
+           }
+        }
+        
+        //Validation if the order fields exist.
+        foreach( $query->orderFields as $orderField ){
+            if( count( $orderField ) == 2 ){
+                 if( !in_array( $orderField[0], $list_fields_alias ) ){
+                     return [
+                         "status_code" => -1,
+                         "error_message" => "QUERY->orderFields: ".json_encode($orderField)." DOES NOT EXIST AS A FIELD",
+                         "data_response" => ""
+                     ];
+                 }else{
+                     if( !((strtoupper($orderField[1]) == "ASC") || (strtoupper($orderField[1]) == "DESC") )){
+                        return [
+                            "status_code" => -1,
+                            "error_message" => "QUERY->orderFields: ".json_encode($orderField)." DOES NOT HAVE A VALID VALUE, USE 'ASC' OR 'DESC'",
+                            "data_response" => ""
+                        ];
+                     }
+                 }
+            }else{
+             return [
+                 "status_code" => -1,
+                 "error_message" => "QUERY->orderFields: ".json_encode($orderField)." DOES NOT MATCH WITH THE STRUCTURE [\"alias_field\", \"ASC OR DESC\"]",
+                 "data_response" => ""
+             ];
+            }
+        }
+         
+        //Validation if the selected fields exist.
+        foreach( $query->selectedFields as $selectedField ){
+            if( !in_array( $selectedField, $list_fields_alias ) ){
+                 return [
+                     "status_code" => -1,
+                     "error_message" => "QUERY->selectedFields: ".json_encode($selectedField)." DOES NOT EXIST AS A FIELD",
+                     "data_response" => ""
+                 ];
+            }
+        }
+
+        //Validation if the asFields fields exist.
+        foreach( $query->asFields as $asField ){
+
+            if( count( $asField ) == 2 ){
+        
+                $asType = gettype( $asField[0] );
+                    
+                if( ( $asType !== "string") && ($asType !== "array" ) ){
+                    return [
+                        "status_code" => -1,
+                        "error_message" => "QUERY->asFields: ".json_encode($asField)." DOES NOT MATCH WITH THE STRUCTURE [\"alias_field\", \"new_alias_field_name\" ] or [ [ instanceof Closure( \$_this, \$arg1, \$arg2, ... ), \"param\"||\$param, ... ], \"new_alias_field_name\" ]",
+                        "data_response" => ""
+                    ];
+                }
+
+                if( $asType === "array" ){
+                    if( count( $asField[1] ) < 1 ){
+                        
+                        return [
+                            "status_code" => -1,
+                            "error_message" => "QUERY->asFields: ".json_encode($asField)." DOES NOT MATCH WITH THE STRUCTURE [\"alias_field\", \"new_alias_field_name\" ] or [ [ instanceof Closure( \$_this, \$arg1, \$arg2, ... ), \"param\"||\$param, ... ], \"new_alias_field_name\" ]",
+                            "data_response" => ""
+                        ];
+                    }else{
+                        if( !is_callable( $asField[0][0] ) ){
+                            return [
+                                "status_code" => -1,
+                                "error_message" => "QUERY->asFields: THE FIRST ELEMENT OF THE ARRAY IS NOT CALLABLE.",
+                                "data_response" => ""
+                            ];
+                        }
+                    }
+
+                }else if( $asType === "string" ){
+
+                    if( !in_array( $asField[0], $list_filter_fields_alias ) ){
+                        return [
+                            "status_code" => -1,
+                            "error_message" => "QUERY->asFields: ".json_encode($asField)." DOES NOT EXIST AS A FILTER FIELD",
+                            "data_response" => ""
+                        ];
+                    }
+
+                }
+
+                if( $asField[1] === "" ){
+                    return [
+                        "status_code" => -1,
+                        "error_message" => "QUERY->asFields: ".json_encode($asField)." ALIAS '". $asField[1]."' MUST BE DIFFERENT FROM EMPTY.",
+                        "data_response" => ""
+                    ];
+                }
+
+            }else{
+                return [
+                    "status_code" => -1,
+                    "error_message" => "QUERY->asFields: ".json_encode($asField)." DOES NOT MATCH WITH THE STRUCTURE [\"alias_field\", \"new_alias_field_name\" ] or [ [ instanceof Closure( \$_this, \$arg1, \$arg2, ... ), \"param\"||\$param, ... ], \"new_alias_field_name\" ]",
+                    "data_response" => ""
+                ];
+            }
+            
+        }
+        
+
+    }else{
+        return [
+            "status_code" => -1,
+            "error_message" => "QUERY->form: $query->form DOES NOT EXIST",
+            "data_response" => ""
+        ];
+    }
+
+    if( gettype( $query->orderByDatabaseRecordDate ) !== "boolean" ){
+        return [
+            "status_code" => -1,
+            "error_message" => "QUERY->orderByDatabaseRecordDate: $query->orderByDatabaseRecordDate DOES NOT HAVE A VALID VALUE, USE bool true OR false NOT ". gettype( $query->orderByDatabaseRecordDate ),
+            "data_response" => ""
+        ];
+    }
+
+    //Validation of record status
+    foreach( $query->recordStatus as $rStatus ){
+        $valid_values = [ "deleted", "!deleted" ];
+        if( !in_array( $rStatus, $valid_values ) ){
+             return [
+                 "status_code" => -1,
+                 "error_message" => "QUERY->recordStatus: ".json_encode($rStatus)." IS NOT A VALID VALUE",
+                 "data_response" => ""
+             ];
+        }
+     }
+
+    return [
+        "status_code" => 0,
+        "error_message" => NULL,
+        "data_response" => NULL
+    ];
+    
+}
+
+  /*$xQuery = new stdClass();
+  $xQuery->form = "seguimiento_pares"; // Can be alias(String) or identifier(Number)
+  $xQuery->filterFields = [
+      ["id_estudiante",[ ["%%","LIKE"]], false],
+      ["fecha",[ ["%%","LIKE"] ], false],
+      ["revisado_practicante",[ ["%%","LIKE"] ], false],
+      ["revisado_profesional",[ ["%%","LIKE"] ], false]
+  ];
+  $xQuery->orderFields = [ ["fecha","DESC"] ];
+  $xQuery->orderByDatabaseRecordDate = false; // If true, 'orderField' is ignored. DESC
+  $xQuery->recordStatus = [ "!deleted" ]; // options "deleted" or "!deleted", can be both. Empty = both.
+  $xQuery->asFields = [ [ "fecha", "id_estudiante_x" ], ["revisado_profesional", "id_estudiante"] ]; 
+  $xQuery->selectedFields = [ "id_creado_por", "id_estudiante" ]; // Without support.
+  
+  echo dphpformsV2_get_json_xquery($xQuery); die();*/
+ 
+
+function dphpformsV2_get_json_xquery( $query ){
+    
+    $validation_data = dphpformsV2_validate_xquery($query);
+    if( $validation_data['status_code'] === -1 ){
+        return null;
+    }
+    
+    $form = dphpformsV2_get_form_info( $query->form );
+    
+    $query_params = [
+        'filterFields',
+        'orderFields',
+        'orderByDatabaseRecordDate',
+        'recordStatus',
+        'asFields',
+        'selectedFields',
+        'selectedFields'
+    ];
+    
+    $_xquery = [
+        'form' => $form->alias,
+    ];
+    
+    foreach ($query_params as $key => $param){
+        $_xquery[$param] = ($query->$param ? $query->$param : []);
+    }
+    
+    //orderByDatabaseRecordDate cannot be an empty array [].
+    if( empty($_xquery['orderByDatabaseRecordDate']) ){
+        $_xquery['orderByDatabaseRecordDate'] = false;
+    }
+    
+    return json_encode( $_xquery );
+    
 }
 
 ?>
