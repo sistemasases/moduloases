@@ -390,6 +390,7 @@ function create_menu_options($userid, $blockid, $courseid)
                 $menu_options = '<li id="menu_ases_graphic_reports"><a class="menu_a" href= "' . $url . '">Reportes gráficos ASES</a><li>';	
 
                 $indexed['Reportes gráficos ASES'] = $menu_options;
+                $soc_ed_options['Reportes Gráficos'] = $menu_options;
             }
 
 

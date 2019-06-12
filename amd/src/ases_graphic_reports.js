@@ -27,13 +27,14 @@ define(['jquery',
     
     function ($, jszip, pdfmake, dataTables, autoFill, buttons, html5, flash, print, bootstrap, sweetalert, jqueryui, select2, Chart, loading_indicator, chartjs_plugin_datalabels) {
         
-         //Objeto para guardar las gráficas de manera dinámica
         return {             
             init: function () {
                 window.JSZip = jszip; 
-                window.graficas = {};
+                window.graficas = {};    //Objeto para guardar las gráficas de manera dinámica
                 const secciones = ["programa", "facultad", "sexo", "edad", "condExcepcion", "riesgos"];                                                
                 
+                //Eventos para cargar tablas y gráficas una vez se abra cada panel
+
                 $("#list-students-programa-panel").on('click', function(){                                   
                     getDataGraphicTable("programa");
                 });
@@ -56,7 +57,9 @@ define(['jquery',
 
                 $("#list-students-riesgos-panel").on('click', function(){
                     getDataGraphicTable("riesgos");
-                });                 
+                });              
+                
+                //Eventos para actualizar tablas y gráficas cada vez que cambien los checkboxes de los filtros
 
                 $('#status_fields').on('change', function () {                    
                     for (i = 0; i < secciones.length; i++) { 
@@ -67,6 +70,7 @@ define(['jquery',
                     }
                 });
                
+                //Eventos para actualizar tablas y gráficas cada vez que cambie el filtro de cohorte
 
                 $('#conditions').on('change', function () {
                     for (i = 0; i < secciones.length; i++) { 
@@ -75,23 +79,17 @@ define(['jquery',
                             getDataGraphicTable(secciones[i]);
                         }
                     }
-                });                      
-                
-
-            },
-            get_id_instance: function () {
-                var urlParameters = location.search.split('&');
-
-                for (x in urlParameters) {
-                    if (urlParameters[x].indexOf('instanceid') >= 0) {
-                        var intanceparameter = urlParameters[x].split('=');
-                        return intanceparameter[1];
-                    }
-                }
-                return 0;
-            }
-            
+                });
+            }            
         }
+
+        /**
+         * Funcion getDataGraphicTable
+         * Recibe un tipo de reporte y realiza una consulta AJAX para obtener los datos de la tabla y gráfica,
+         * y posteriormente crearlas.
+         * 
+         * @param {*} type  tipo de reporte, posibles valores: "programa", "facultad", "sexo", "edad", "condExcepcion", "riesgos"
+         */
 
         function getDataGraphicTable(type){
 
@@ -107,6 +105,8 @@ define(['jquery',
                 success: function (msg) {                                   
 
                     createTable(type, msg);
+
+                    //Se crea la gráfica con la función auxiliar correspondiente dependiendo del tipo de gráfica
                     switch(type){
                         case 'programa':                        
                             createBarGraphic(type, msg.data, 'horizontalBar');
@@ -136,15 +136,29 @@ define(['jquery',
             });
         }
 
-        function createTable(type, msg){
+        /**
+         * Función createTable
+         * Crea o actualiza la tabla de un reporte dependiendo de su tipo
+         * 
+         * @param {*} type Tipo de tabla: programa, edad, facultad...
+         * @param {*} data 
+         */
+
+        function createTable(type, data){
             $("#div_table_"+type).empty();
             $("#div_table_"+type).append('<table id="t_' + type + '" class="table" cellspacing="0" width="100%"><thead> </thead></table>');
-            $("#t_"+type).DataTable(msg); 
+            $("#t_"+type).DataTable(data); 
         }                
         
-        //Función que se encarga de crear una gráfica de barras teniendo como parámetros:
-        // type: Tipo de gráfica: programa, edad, facultad...
-        // data: Información a mostrarse en la gráfica
+        /**
+         * Función createBarGraphic         * 
+         * Se encarga de crear una gráfica de barras teniendo como parámetros:
+         * 
+         * @param {*} type Tipo de gráfica: programa, edad, facultad...
+         * @param {*} data Información a mostrarse en la gráfica
+         * @param {*} type_chart Relacionado con la orientación de la gráfica de barras: 'bar' ó 'horizontalBar'
+         */ 
+
         function createBarGraphic(type, data, type_chart){
 
             //Se preparan los nombres de los labels a mostrar en la gráfica
@@ -260,7 +274,17 @@ define(['jquery',
                 window.graficas["chart_"+type].update();
             }
         }
-        
+
+        /**
+         * Función createPieDoughnutGraphic
+         * Se encarga de preparar los datos y contruir un reporte gráfico tipo torta o dona a partir de éstos
+         * 
+         * @param {*} type Tipo de gráfica: programa, edad, facultad...
+         * @param {*} data  Datos a mostrar
+         * @param {*} type_graphic 'doughnut' ó 'pie'
+         */
+
+
         function createPieDoughnutGraphic(type, data, type_graphic){                     
 
             var labelsGrafica = [], cantidades = [];
@@ -274,9 +298,10 @@ define(['jquery',
                 labelsGrafica.push(nombre);
                 cantidades.push(cantidad);               
             }  
-
+            
             var ctx = document.getElementById("grafica_"+type).getContext('2d');
-                var data = {
+                
+            var data = {
                     labels: labelsGrafica,
                     datasets: [{
                         label: "Cantidad de Estudiantes",
@@ -290,7 +315,7 @@ define(['jquery',
                     }]
             }
 
-            if(!window.graficas["chart_"+type]){      
+            if(!window.graficas["chart_"+type]){    //Si la gráfica no existe, se crea desde cero  
 
                 var texto = type;
                 if(type ==='condExcepcion'){
@@ -324,22 +349,30 @@ define(['jquery',
                     options: chart_options
                 });
 
-            }else{
+            }else{ //Si la gráfica ya existe, se actualizan simplemente los datos
                 window.graficas["chart_"+type]["data"] = data;
                 window.graficas["chart_"+type].update();
-
             }     
-
         }
+
+        /**
+         * Función createRiskGraphic
+         * Se encarga de preparar los datos de la gráfica de riesgos y 
+         * crear el reporte gráfico a partir de éstos         
+         * 
+         * @param {*} data 
+         */
         
         function createRisksGraphic(data){
 
+            //Arreglos separados para los labels y los valores de los riesgos            
             var nombres_riesgos = [];
             var riesgos_bajos = [];
             var riesgos_medios = [];
             var riesgos_altos = [];
             var sin_registro = [];
 
+            //Se llenan los arreglos recién creados
             for (riesgo in data){
                 nombres_riesgos.push(data[riesgo]["riesgo"]);
                 riesgos_bajos.push(data[riesgo]["bajo"]);
@@ -350,6 +383,7 @@ define(['jquery',
             
             $('.risk-chart-container').css('width', '100%');
 
+            //Preparación de los datos
             var ctx = document.getElementById("grafica_riesgos").getContext('2d');
             var data = {
                 labels: nombres_riesgos,
@@ -384,7 +418,7 @@ define(['jquery',
                 ]
             }
 
-            if(!window.graficas["chart_riesgos"]){                      
+            if(!window.graficas["chart_riesgos"]){ //Si la gráfica no existe, se crea desde cero                     
             
                 var chart_options = {
                     
@@ -425,15 +459,12 @@ define(['jquery',
                     options: chart_options
                 });
 
-            }else{
+            }else{ //Si la gráfica existe, se actualizan sus datos
+
                 window.graficas["chart_riesgos"]["data"] = data;
                 window.graficas["chart_riesgos"].update();
-
             }
-
-        }
-        
-
+        }        
 
         function getIdinstancia() {
             var urlParameters = location.search.split('&');           

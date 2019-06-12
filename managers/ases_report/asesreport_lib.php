@@ -173,7 +173,7 @@ function getGraficAge($cohorte, $ases_status, $icetex_status, $program_status, $
                 FROM {talentospilos_user_extended} AS usuario               
                 INNER JOIN {talentospilos_usuario} AS usuario_ases
                 ON usuario.id_ases_user = usuario_ases.id
-                WHERE EXTRACT(YEAR FROM age(usuario_ases.fecha_nac)) > 0                
+                WHERE EXTRACT(YEAR FROM age(usuario_ases.fecha_nac)) > 10                
                 ";
     
     $sub_query = subconsultaGraficReport($ases_status, $icetex_status, $program_status, $cohorte, $instance_id);
@@ -317,7 +317,10 @@ function getGraficEstado($cohorte){
 function getGraficCondExcepcion($cohorte, $ases_status, $icetex_status, $program_status, $instance_id){
     global $DB;
     
-    $sql_query = "SELECT cond_excepcion.alias AS nombre, COUNT(usuario.id) AS cantidad, cond_excepcion.condicion_excepcion AS nombre_largo
+    $sql_query = "SELECT COUNT(usuario.id) AS cantidad, cond_excepcion.condicion_excepcion AS nombre_largo,
+                CASE WHEN cond_excepcion.alias = 'N.A' THEN 'N.A.'
+                     ELSE cond_excepcion.alias
+                END AS nombre
                 FROM {talentospilos_user_extended} AS usuario               
                 INNER JOIN {talentospilos_usuario} AS usuario_ases
                 ON usuario.id_ases_user = usuario_ases.id
