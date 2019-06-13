@@ -329,7 +329,7 @@ function secure_create_call($alias, $action_type, $name = NULL, $description = N
         
             $manager = get_db_manager();
 
-            $tablename =  $DB_PREFIX . "talentospilos_acciones";
+            $tablename = $DB_PREFIX . "talentospilos_acciones";
             $params = [
                 $alias, $name, $description, $_action_type['id'], $log
             ];
@@ -346,6 +346,54 @@ function secure_create_call($alias, $action_type, $name = NULL, $description = N
     }else{
         return null;
     }
+    
+}
+
+/**
+ * Function that given an action id or alias, delete it from the database
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @sicen 1.0.0
+ * 
+ * @see _core_security_get_action( ... ) in tgets.php
+ * @see get_db_manager( ... ) in query_manager.php
+ * 
+ * @param integer|string $alias Action alias or identifier
+ * @param integer $user_id User Moodle id
+ * 
+ * @return integer|null If the operation was correct, return 1
+ */
+function secure_remove_call( $alias, $user_id ){
+   
+    $action = _core_security_get_action($alias);
+    if( !is_null( $action ) ){
+        
+        global $DB_PREFIX;
+        
+        $user = NULL;
+        $manager = get_db_manager();
+        
+        if( is_numeric($user_id) ){
+            
+            $tablename = $DB_PREFIX . "user";
+            $params = [ $user_id ];
+            $user = $manager( "SELECT * FROM $tablename WHERE id = $1", $params, $extra = null );
+            
+        }
+        
+        if( $user ){
+            
+            $tablename = $DB_PREFIX . "talentospilos_acciones";
+            $params = [ $action['id'] ];
+            $query = "UPDATE $tablename SET eliminado = 1, fecha_hora_eliminacion = 'now()', id_usuario_eliminador = $user_id "
+                    . "WHERE id = $1";
+
+            return $manager( $query, $params, $extra = null );    
+        }
+        
+    }
+    
+    return null;
     
 }
 
