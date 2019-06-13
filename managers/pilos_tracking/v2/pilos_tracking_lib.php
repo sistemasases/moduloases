@@ -174,6 +174,21 @@ function pilos_tracking_get_tracking_count( $username, $semester_id, $instance, 
 
 function pilos_tracking_general_get_count( $user_id, $rol, $fecha_inicio_str, $fecha_fin_str, $instance, $semester_id ){
     
+    $count['revisado_profesional'] = 0;
+    $count['not_revisado_profesional'] = 0;
+    $count['total_profesional'] = 0;
+    $count['revisado_practicante'] = 0;
+    $count['not_revisado_practicante'] = 0;
+    $count['total_practicante'] = 0;
+
+    $count['in_revisado_profesional'] = 0;
+    $count['in_not_revisado_profesional'] = 0;
+    $count['in_total_profesional'] = 0;
+    $count['in_revisado_practicante'] = 0;
+    $count['in_not_revisado_practicante'] = 0;
+    $count['in_total_practicante'] = 0;
+    
+    
     $student_list_ids = [];
     $xquery_seguimiento_pares_filterFields = [
         ["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
@@ -198,6 +213,10 @@ function pilos_tracking_general_get_count( $user_id, $rol, $fecha_inicio_str, $f
                 }
             }
         }
+        
+        if( count($student_list_ids) == 0 ){
+            return $count;
+        }
 
         //Pares
         foreach( $student_list_ids as $key => $student ){
@@ -220,6 +239,10 @@ function pilos_tracking_general_get_count( $user_id, $rol, $fecha_inicio_str, $f
                 array_push( $student_list_ids, $student );
             }
         }
+        
+        if( count($student_list_ids) == 0 ){
+            return $count;
+        }
 
         //Pares
         foreach( $student_list_ids as $key => $student ){
@@ -236,6 +259,11 @@ function pilos_tracking_general_get_count( $user_id, $rol, $fecha_inicio_str, $f
     }else if( $rol == "monitor_ps" ){
 
         $students_from_monitor = monitor_assignments_get_students_from_monitor( $instance, $user_id , $semester_id );
+        
+        if( count($students_from_monitor) == 0 ){
+            return $count;
+        }
+        
         //Pares
         foreach( $students_from_monitor as $key => $student ){
             array_push( $xquery_seguimiento_pares_filterFields, ["id_estudiante", [[ $student->id, "=" ]], false ] );
