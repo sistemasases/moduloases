@@ -226,7 +226,7 @@ function _core_security_get_user_rol( $user_id, $time_context = null, $singulari
 			( $u_rol['usar_intervalo_alternativo'] == 1 ) && 
 			( !is_null( $u_rol['usar_intervalo_alternativo'] ) )
 		){
-			$alternative_interval = _core_secutiry_solve_alternative_interval( $u_rol['intervalo_validez_alternativo'] );
+			$alternative_interval = _core_security_solve_alternative_interval( $u_rol['intervalo_validez_alternativo'] );
 			if( $alternative_interval ){
 				$rol->start = strtotime($alternative_interval['fecha_hora_inicio']);
 				$rol->end = strtotime($alternative_interval['fecha_hora_fin']);
