@@ -159,4 +159,19 @@ function core_secure_create_call($alias, $action_type, $name = NULL, $descriptio
     return secure_create_call($alias, $action_type, $name, $description, $log);
 }
 
+
+/**
+ * Interface to secure_remove_call
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * 
+ * @param integer|string $alias Action alias or identifier
+ * @param integer $user_id User Moodle id
+ * 
+ * @return integer|null If the operation was correct, return 1
+ */
+function core_secure_remove_call( $alias, $user_id ){
+    return secure_remove_call( $alias, $user_id );
+}
+
 ?>
