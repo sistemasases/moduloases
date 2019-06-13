@@ -33,4 +33,11 @@ $singularizations = array(
 
 //print_r( core_secure_create_call( "test_aliasxy", "back", $name = NULL, $description = NULL, $log = 0 ) );
 
+//print_r( _core_security_get_actions( "back" ) );
+
+//print_r(secure_remove_call( "say_hello", 107089 ) );
+
+//print_r( core_secure_create_call( "say_hello", "back", $name = NULL, $description = NULL, $log = 0 ) );
+
+
 ?>
