@@ -28,7 +28,7 @@ require_once( __DIR__ . "/query_manager.php");
  *
  * @return array|null
 */
-function _core_secutiry_solve_alternative_interval( $alternative_interval_json ){
+function _core_security_solve_alternative_interval( $alternative_interval_json ){
 
 	$params = [];
 	$alternative_interval_json = json_decode( $alternative_interval_json );
