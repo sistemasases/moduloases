@@ -288,7 +288,8 @@ function _core_security_get_role( $in ){
 	array_push($params, $in);
 
 	$manager = get_db_manager();
-	$role = $manager( $query = "SELECT * FROM $tablename WHERE $criteria = $1", $params, $extra = null );
+        $query = $query = "SELECT * FROM $tablename WHERE $criteria = $1 AND eliminado = 0";
+	$role = $manager( $query, $params, $extra = null );
 	
 	return ( count( $role ) == 1 ? $role[0] : null );
 
