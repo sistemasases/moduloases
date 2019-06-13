@@ -300,4 +300,53 @@ function secure_call_checker( $managers_dir ){
     return array_values( $unsolved_secured_calls );
 }
 
+/**
+ * Function that insert at the DB a new action.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * @see _core_security_get_action( ... ) in gets.php
+ * @see _core_security_get_action_type( ... ) in gets.php
+ * @see get_db_manager( ... ) in query_manager.php
+ * 
+ * @param string $alias Action alias
+ * @param integer|string $action_type Identifier or type alias (back or front)
+ * @param string $name Action name
+ * @param string $description Action description
+ * @param integer $log Allow store every return
+ * 
+ * @return integer|null If the operation was correct, it will be return 1
+ */
+function secure_create_call($alias, $action_type, $name = NULL, $description = NULL, $log = 0){
+    
+    // Check if no exist at the DB
+    if( is_null( _core_security_get_action( $alias ) ) ){
+        
+        $_action_type = _core_security_get_action_type( $action_type );
+        
+        if( $_action_type ){
+            global $DB_PREFIX;
+        
+            $manager = get_db_manager();
+
+            $tablename =  $DB_PREFIX . "talentospilos_acciones";
+            $params = [
+                $alias, $name, $description, $_action_type['id'], $log
+            ];
+
+            $query = "INSERT INTO $tablename "
+                    . "(alias, nombre, descripcion, id_tipo_accion, registra_log)"
+                    . "VALUES($1, $2, $3, $4, $5)";
+
+            return $manager( $query, $params, $extra = null );
+        }else{
+            return null;
+        }
+                
+    }else{
+        return null;
+    }
+    
+}
+
 ?>
