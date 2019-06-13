@@ -124,6 +124,8 @@ function core_secure_template_checker( $dir ){
 }
 
 /**
+ * Interface to secure_call_checker
+ * 
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
  * 
@@ -135,6 +137,26 @@ function core_secure_template_checker( $dir ){
  */
 function core_secure_call_checker( $managers_dir ){
     return secure_call_checker( $managers_dir );
+}
+
+/**
+ * Interface to secure_create_call
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see secure_create_call( ... ) in entrypoint.php
+ * 
+ * @param string $alias Action alias
+ * @param integer|string $action_type Identifier or type alias (back or front)
+ * @param string $name Action name
+ * @param string $description Action description
+ * @param integer $log Allow store every return
+ * 
+ * @return integer|null If the operation was correct, it will be return 1
+ */
+function core_secure_create_call($alias, $action_type, $name = NULL, $description = NULL, $log = 0){
+    return secure_create_call($alias, $action_type, $name, $description, $log);
 }
 
 ?>
