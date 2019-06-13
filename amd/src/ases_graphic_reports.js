@@ -26,59 +26,72 @@ define(['jquery',
 ],
     
     function ($, jszip, pdfmake, dataTables, autoFill, buttons, html5, flash, print, bootstrap, sweetalert, jqueryui, select2, Chart, loading_indicator, chartjs_plugin_datalabels) {
-        var radar_chart;
-        var table_programs;
-        return {
+        
+        return {             
             init: function () {
+                window.JSZip = jszip; 
+                window.graficas = {};    //Objeto para guardar las gráficas de manera dinámica
+                const secciones = ["programa", "facultad", "sexo", "edad", "condExcepcion", "riesgos"];                                                
+                
+                //Eventos para cargar tablas y gráficas una vez se abra cada panel
 
-                window.JSZip = jszip;        
+                $("#list-students-programa-panel").on('click', function(){                                   
+                    getDataGraphicTable("programa");
+                });
+
+                $("#list-students-facultad-panel").on('click', function(){
+                    getDataGraphicTable("facultad");
+                });                                       
+
+                $("#list-students-sexo-panel").on('click', function(){
+                    getDataGraphicTable("sexo");
+                }); 
+
+                $("#list-students-edad-panel").on('click', function(){
+                    getDataGraphicTable("edad");
+                }); 
+
+                $("#list-students-condExcepcion-panel").on('click', function(){
+                    getDataGraphicTable("condExcepcion");
+                }); 
+
+                $("#list-students-riesgos-panel").on('click', function(){
+                    getDataGraphicTable("riesgos");
+                });              
                 
-               
-                $("#list-students-status-panel").on('click', function(){
-                    //updateTable();                    
-                    get_data_to_graphic();                   					
-                });   
-                
-                $("#save-btn").click(function() {
-                //     $("#canvas").get(0).toBlob(function(blob) {
-                //        saveAs(blob, "chart_1.png");
-                //    });
-                });  
+                //Eventos para actualizar tablas y gráficas cada vez que cambien los checkboxes de los filtros
 
                 $('#status_fields').on('change', function () {                    
-                    get_data_to_graphic();
+                    for (i = 0; i < secciones.length; i++) { 
+                        
+                        if($("#"+secciones[i]).length > 0){
+                            getDataGraphicTable(secciones[i]);
+                        }
+                    }
                 });
                
+                //Eventos para actualizar tablas y gráficas cada vez que cambie el filtro de cohorte
 
                 $('#conditions').on('change', function () {
-                    get_data_to_graphic();
-                });                                              
-                
-
-            },
-            load_defaults_students: function (data) {
-
-                // $("#div_table").html('');
-                // $("#div_table").fadeIn(1000).append('<table id="tableResult" class="stripe row-border order-column" cellspacing="0" width="100%"><thead> </thead></table>');
-                // //console.log(data);
-                // $("#tableResult").DataTable(data);
-
-            },
-            get_id_instance: function () {
-                var urlParameters = location.search.split('&');
-
-                for (x in urlParameters) {
-                    if (urlParameters[x].indexOf('instanceid') >= 0) {
-                        var intanceparameter = urlParameters[x].split('=');
-                        return intanceparameter[1];
+                    for (i = 0; i < secciones.length; i++) { 
+                        
+                        if($("#"+secciones[i]).length > 0){
+                            getDataGraphicTable(secciones[i]);
+                        }
                     }
-                }
-                return 0;
-            }
-            
+                });
+            }            
         }
 
-        function get_data_to_graphic(){
+        /**
+         * Funcion getDataGraphicTable
+         * Recibe un tipo de reporte y realiza una consulta AJAX para obtener los datos de la tabla y gráfica,
+         * y posteriormente crearlas.
+         * 
+         * @param {*} type  tipo de reporte, posibles valores: "programa", "facultad", "sexo", "edad", "condExcepcion", "riesgos"
+         */
+
+        function getDataGraphicTable(type){
 
             var ases_status = $("#ases_status").is(":checked") ? 1 : 0;
             var icetex_status = $("#icetex_status").is(":checked") ? 1 : 0;
@@ -87,44 +100,33 @@ define(['jquery',
             $.ajax({
 
                 type: "POST",
-                data: { type: 'carrera', cohort: $('#conditions').val(), ases_status: ases_status, icetex_status: icetex_status, program_status: program_status, instance_id: getIdinstancia() },
+                data: { type: type, cohort: $('#conditions').val(), ases_status: ases_status, icetex_status: icetex_status, program_status: program_status, instance_id: getIdinstancia() },
                 url: "../managers/ases_report/asesreport_graphics_processing.php",
-                success: function (msg) {
-                    var results = Object.keys(msg).map(function(k) { return msg[k] });                    
-                    var programas = []; 
-                    var cantidades = [];   
-                    var nombrePrograma ='';                                      
-                    
-                    results.sort(function(prog1, prog2,) {
-                        return prog2.count - prog1.count;
-                    });
-                    var data = [];
-                    for(var x in results){
-                        nombrePrograma = results[x].nombre;
-                        cantidadPrograma = results[x].count;
+                success: function (msg) {                                   
 
-                        nombrePrograma = results[x].nombre;
-                        cantidadPrograma = results[x].count;
+                    createTable(type, msg);
 
-                        if(nombrePrograma !== 'PLAN TALENTOS PILOS'){                                                        
-
-                            if(nombrePrograma === 'LICENCIATURA EN EDUCACIÓN BÁSICA CON ÉNFASIS EN CIENCIAS NATURALES Y EDUCACIÓN AMBIENTAL'){
-                                nombrePrograma = 'LIC. EN EDU. BÁSICA ÉNFASIS EN CIENCIAS NATURALES Y EDU. AMBIENTAL'
-                            }
-
-                            if(nombrePrograma === 'LICENCIATURA EN EDUCACIÓN BÁSICA CON ÉNFASIS EN CIENCIAS SOCIALES'){
-                                nombrePrograma = 'LIC. EN EDU. BÁSICA CON ÉNFASIS EN CIENCIAS SOCIALES'
-                            }                                                                  
-                            programas.push(nombrePrograma);
-                            cantidades.push(cantidadPrograma);
-
-                            data.push({programa: nombrePrograma, cantidad: cantidadPrograma})
-                        }                     
-                    }                    
-
-                    creategraphicProgramas(programas, cantidades);
-                    createTable(data);
-                    
+                    //Se crea la gráfica con la función auxiliar correspondiente dependiendo del tipo de gráfica
+                    switch(type){
+                        case 'programa':                        
+                            createBarGraphic(type, msg.data, 'horizontalBar');
+                            break;
+                        case 'edad':                        
+                            createBarGraphic(type, msg.data, 'bar');
+                            break;
+                        case 'facultad':
+                            createPieDoughnutGraphic(type, msg.data, 'doughnut');
+                            break;
+                        case 'sexo':
+                            createPieDoughnutGraphic(type, msg.data, 'pie');
+                            break;
+                        case 'condExcepcion':
+                            createPieDoughnutGraphic(type, msg.data, 'doughnut');
+                            break;
+                        case 'riesgos':
+                            createRisksGraphic(msg.data)
+                            break;
+                    }                   
                 },
                 dataType: "json",
                 cache: false,
@@ -134,62 +136,66 @@ define(['jquery',
             });
         }
 
-        function createTable(data){
+        /**
+         * Función createTable
+         * Crea o actualiza la tabla de un reporte dependiendo de su tipo
+         * 
+         * @param {*} type Tipo de tabla: programa, edad, facultad...
+         * @param {*} data 
+         */
 
-            if (!table_programs){
+        function createTable(type, data){
+            $("#div_table_"+type).empty();
+            $("#div_table_"+type).append('<table id="t_' + type + '" class="table" cellspacing="0" width="100%"><thead> </thead></table>');
+            $("#t_"+type).DataTable(data); 
+        }                
+        
+        /**
+         * Función createBarGraphic         * 
+         * Se encarga de crear una gráfica de barras teniendo como parámetros:
+         * 
+         * @param {*} type Tipo de gráfica: programa, edad, facultad...
+         * @param {*} data Información a mostrarse en la gráfica
+         * @param {*} type_chart Relacionado con la orientación de la gráfica de barras: 'bar' ó 'horizontalBar'
+         */ 
 
-                table_programs = $("#table_programs").DataTable(
-                    { 
-                        "retrieve": true,                          
-                        "bsort" : false,
-                        "data" : data,                         
-                        "columns" : [
-                            {
-                                "title" : "Programa", 
-                                "name" : "programa", 
-                                "data" : "programa",
-                            },
-                            {
-                                "title" : "Cantidad de estudiantes", 
-                                "name" : "cantidad", 
-                                "data" : "cantidad"
-                            }],
-                        "dom":"lifrtpB",
-                        "buttons" : [
-                            {
-                                "extend" : "print",
-                                "text" : 'Imprimir'
-                            },{
-                                "extend" : "csv",
-                                "text" : 'CSV'
-                            },{
-                                "extend" : "excel",
-                                "text" : 'Excel',
-                                "className" : 'buttons-excel',
-                                "filename" : 'Export excel',
-                                "extension" : '.xls'
-                            }   
-                        ]                           
-                    }
-                );
-                table_programs.draw();
-            }            
-            else{
-                table_programs.clear();
-                table_programs.rows.add(data);
-                table_programs.draw();
-            }
+        function createBarGraphic(type, data, type_chart){
 
-        }
+            //Se preparan los nombres de los labels a mostrar en la gráfica
+            var atributos = Object.keys(data[0]);
+            var label = atributos[0];
+            var labelCantidad = atributos[1];            
 
-        function creategraphicProgramas(programas, cantidades){
-            $('.chart-container').css('height', '1300px');
-            $('.chart-container').css('width', '100%');
+            var labelsGrafica = [], cantidades = [];
             
+            for(var x in data){
+
+                nombre = data[x][label];
+                cantidad = data[x][labelCantidad];  
+
+                if(nombre === 'LICENCIATURA EN EDUCACIÓN BÁSICA CON ÉNFASIS EN CIENCIAS NATURALES Y EDUCACIÓN AMBIENTAL'){
+                    nombre = 'LIC. EN EDU. BÁSICA ÉNFASIS EN CIENCIAS NATURALES Y EDU. AMBIENTAL'
+                }
+
+                if(nombre === 'LICENCIATURA EN EDUCACIÓN BÁSICA CON ÉNFASIS EN CIENCIAS SOCIALES'){
+                    nombre = 'LIC. EN EDU. BÁSICA CON ÉNFASIS EN CIENCIAS SOCIALES'
+                } 
+                                                                                    
+                labelsGrafica.push(nombre);
+                cantidades.push(cantidad);               
+            }            
+
+            $('.horizontal-bar-chart-container').css('height', '1300px');
+            $('.horizontal-bar-chart-container').css('width', '100%');
+
+            $('.bar-chart-container').css('height', '800px');
+            $('.bar-chart-container').css('width', '100%');
+            
+            //Se asignan los colores de las barras de la gráfica, alternando los colores
             var backgroundColors = [];
             var borderColors = [];            
             
-            for(var i=0; i<programas.length; i++){
+            for(var i=0; i<labelsGrafica.length; i++){
                 if(i%2 == 0){
                     backgroundColors.push('rgba(255, 99, 132, 0.2)');
                     borderColors.push('rgba(255, 99, 132, 1)');
@@ -199,9 +205,10 @@ define(['jquery',
                 }
             }
 
-            var ctx = document.getElementById('grafica_tipos').getContext('2d');
+            //Se crea la gráfica en el elemento "grafica_<type>", ej: grafica_programa
+            var ctx = document.getElementById("grafica_"+type).getContext('2d');
             var data = {
-                labels: programas,
+                labels: labelsGrafica,
                 datasets: [{
                     label: "Cantidad de Estudiantes",
                     data: cantidades,
@@ -211,10 +218,17 @@ define(['jquery',
                 }]
             }        
             
-            if(!radar_chart){
+            //Se verifica que la gráfica no exista todavía, para crearla de 0
+            //Se maneja una convención para los nombres de la gráficas así: chart_<tipoGrafica>, ej: "chart_programa"
+            if(!window.graficas["chart_"+type]){
+                
+                var texto = type;
+                if(type ==='condExcepcion'){
+                    texto = 'Condición de Excepción'
+                }
 
-                radar_chart = new Chart(ctx, {               
-                    type: 'horizontalBar',
+                window.graficas["chart_"+type] = new Chart(ctx, {               
+                    type: type_chart,
                     data: data,
                     options: {
                         // Elements options apply to all of the options unless overridden in a dataset
@@ -231,7 +245,7 @@ define(['jquery',
                         },
                         title: {
                             display: true,
-                            text: 'No. de Estudiantes por Programa',
+                            text: 'Cantidad de Estudiantes por ' + texto,
                             fontSize: 30
                         },
                         scales: {
@@ -255,46 +269,202 @@ define(['jquery',
                 }
                 );
             }
-            else{
-                radar_chart["data"] = data;
-                radar_chart.update();
-            }
-
-        } 
-
-        //Actualización de la tabla 
-        function updateTable(){
-            //createTable();
-            var cohorts = $('#conditions').val();
-
-            if(cohorts == 'TODOS'){
-                $('#div-summary-spp').prop('hidden', false);
-                $('#div-summary-spe').prop('hidden', false);
-                $('#div-summary-3740').prop('hidden', false);
-                $('#div-summary-oa').prop('hidden', false);
-            }else if(cohorts == 'TODOS-SPP' || cohorts.substring(0, 3) == 'SPP'){
-                $('#div-summary-spp').prop('hidden', false);
-                $('#div-summary-spe').prop('hidden', true);
-                $('#div-summary-3740').prop('hidden', true);
-                $('#div-summary-oa').prop('hidden', true);
-            }else if(cohorts == 'TODOS-SPE' || cohorts.substring(0, 3) == 'SPE'){
-                $('#div-summary-spfunctionp').prop('hidden', true);
-                $('#div-summary-spe').prop('hidden', false);
-                $('#div-summary-3740').prop('hidden', true);
-                $('#div-summary-oa').prop('hidden', true);
-            }else if(cohorts == 'TODOS-3740' || cohorts.substring(0, 4) == '3740'){
-                $('#div-summary-spp').prop('hidden', true);
-                $('#div-summary-spe').prop('hidden', true);
-                $('#div-summary-3740').prop('hidden', false);
-                $('#div-summary-oa').prop('hidden', true);
-            }else if(cohorts == 'TODOS-OTROS'){
-                $('#div-summary-spp').prop('hidden', true);
-                $('#div-summary-spe').prop('hidden', true);
-                $('#div-summary-3740').prop('hidden', true);
-                $('#div-summary-oa').prop('hidden', false);
+            else{ //Si la gráfica ya existe, se modifica la información en ella                
+                window.graficas["chart_"+type]["data"] = data;
+                window.graficas["chart_"+type].update();
             }
         }
+
+        /**
+         * Función createPieDoughnutGraphic
+         * Se encarga de preparar los datos y contruir un reporte gráfico tipo torta o dona a partir de éstos
+         * 
+         * @param {*} type Tipo de gráfica: programa, edad, facultad...
+         * @param {*} data  Datos a mostrar
+         * @param {*} type_graphic 'doughnut' ó 'pie'
+         */
+
+
+        function createPieDoughnutGraphic(type, data, type_graphic){                     
+
+            var labelsGrafica = [], cantidades = [];
+            
+            for(var x in data){
+
+                nombre = data[x]["nombre"];
+                cantidad = data[x]["cantidad"];               
+                               
+                                                                                    
+                labelsGrafica.push(nombre);
+                cantidades.push(cantidad);               
+            }  
+            
+            var ctx = document.getElementById("grafica_"+type).getContext('2d');
+                
+            var data = {
+                    labels: labelsGrafica,
+                    datasets: [{
+                        label: "Cantidad de Estudiantes",
+                        data: cantidades,
+                        backgroundColor: ["#F56476", "#BFD1E5", "#FFEECF", "#C9A690", "#DF928E", 
+                                          "#CECCCC", "#9191E9", "#99E1D9", "#FFA552", "#BFC8AD", "#0BAA6B", "#EDD892"],
+                        borderColor: ["#F56476", "#BFD1E5", "#FFEECF", "#C9A690", "#DF928E", 
+                                    "#CECCCC", "#9191E9", "#99E1D9", "#FFA552", "#BFC8AD", "#0BAA6B", "#EDD892"],
+                        borderWidth: 1
+                        
+                    }]
+            }
+
+            if(!window.graficas["chart_"+type]){    //Si la gráfica no existe, se crea desde cero  
+
+                var texto = type;
+                if(type ==='condExcepcion'){
+                    texto = 'Condición de Excepción'
+                }
+            
+                var chart_options = {
+                    
+                    title: {
+                        display: true,
+                        text: 'Cantidad de estudiantes por ' + texto,
+                        fontSize: 30
+                    },
+                    legend: {
+                        display: true
+                    },
+                    starAngle: 0,
+                    animation: {
+                        animateRotate: true,
+                        animateScale: true
+                    },
+                    showTooltips: true,
+                    showPercentages: true
+                };
+
+                Chart.defaults.polarArea.animation.animateScale = false;
+            
+                window.graficas["chart_"+type] = new Chart(ctx, {
+                    type: type_graphic,
+                    data: data,
+                    options: chart_options
+                });
+
+            }else{ //Si la gráfica ya existe, se actualizan simplemente los datos
+                window.graficas["chart_"+type]["data"] = data;
+                window.graficas["chart_"+type].update();
+            }     
+        }
+
+        /**
+         * Función createRiskGraphic
+         * Se encarga de preparar los datos de la gráfica de riesgos y 
+         * crear el reporte gráfico a partir de éstos         
+         * 
+         * @param {*} data 
+         */
         
+        function createRisksGraphic(data){
+
+            //Arreglos separados para los labels y los valores de los riesgos            
+            var nombres_riesgos = [];
+            var riesgos_bajos = [];
+            var riesgos_medios = [];
+            var riesgos_altos = [];
+            var sin_registro = [];
+
+            //Se llenan los arreglos recién creados
+            for (riesgo in data){
+                nombres_riesgos.push(data[riesgo]["riesgo"]);
+                riesgos_bajos.push(data[riesgo]["bajo"]);
+                riesgos_medios.push(data[riesgo]["medio"]);
+                riesgos_altos.push(data[riesgo]["alto"]);
+                sin_registro.push(data[riesgo]["no_registra"]);
+            }         
+            
+            $('.risk-chart-container').css('width', '100%');
+
+            //Preparación de los datos
+            var ctx = document.getElementById("grafica_riesgos").getContext('2d');
+            var data = {
+                labels: nombres_riesgos,
+                datasets: [{
+                    label: "Riesgos bajos",
+                    data: riesgos_bajos,
+                    backgroundColor: "rgba(0, 179, 136, 0.4)",
+				    borderColor: "rgba(0, 179, 136, 1)",                   
+                    borderWidth: 2
+                },
+                {
+                    label: "Riesgos Medios",
+                    data: riesgos_medios,
+                    backgroundColor: "rgba(255, 136, 17, 0.4)",
+				    borderColor: "rgba(255, 136, 17, 1)",                   
+                    borderWidth: 2
+                },
+                {
+                    label: "Riesgos Altos",
+                    data: riesgos_altos,
+                    backgroundColor: "rgba(255, 86, 102, 0.4)",
+				    borderColor: "rgba(255, 86, 102, 1)",                   
+                    borderWidth: 2
+                },
+                {
+                    label: "N.R.",
+                    data: sin_registro,
+                    backgroundColor: "rgba(132, 133, 134, 0.4)",
+				    borderColor: "rgba(132, 133, 134, 1)",                   
+                    borderWidth: 2
+                }
+                ]
+            }
+
+            if(!window.graficas["chart_riesgos"]){ //Si la gráfica no existe, se crea desde cero                     
+            
+                var chart_options = {
+                    
+                    title: {
+                        display: true,
+                        text: 'Cantidad de registros por riesgos',
+                        fontSize: 25
+                    },
+                    legend: {
+                        display: true,
+                        labels:{
+                            fontSize: 15,
+                            fontStyle: 'bold'
+                        }
+                    },
+                    starAngle: 0,
+                    animation: {
+                        animateRotate: true,
+                        animateScale: true
+                    },
+                    scales: {
+                        xAxes: [{
+                            ticks: {
+                                fontSize: 15,
+                                fontStyle: 'bold'
+                            }
+                        }]
+                    },
+                    showTooltips: true,
+                    showPercentages: true
+                };
+
+                Chart.defaults.polarArea.animation.animateScale = false;
+            
+                window.graficas["chart_riesgos"] = new Chart(ctx, {
+                    type: 'bar',
+                    data: data,
+                    options: chart_options
+                });
+
+            }else{ //Si la gráfica existe, se actualizan sus datos
+
+                window.graficas["chart_riesgos"]["data"] = data;
+                window.graficas["chart_riesgos"].update();
+            }
+        }        
 
         function getIdinstancia() {
             var urlParameters = location.search.split('&');           
