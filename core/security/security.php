@@ -164,6 +164,9 @@ function core_secure_create_call($alias, $action_type, $name = NULL, $descriptio
  * Interface to secure_remove_call
  * 
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see secure_remove_call( ... ) in entrypoint.php
  * 
  * @param integer|string $alias Action alias or identifier
  * @param integer $user_id User Moodle id
@@ -172,6 +175,25 @@ function core_secure_create_call($alias, $action_type, $name = NULL, $descriptio
  */
 function core_secure_remove_call( $alias, $user_id ){
     return secure_remove_call( $alias, $user_id );
+}
+
+/**
+ * Interface to secure_create_role
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see secure_create_role( ... ) in entrypoint.php
+ * 
+ * @param string $alias Role alias
+ * @param integer|string $father_role Role id or alias
+ * @param string $name Role name
+ * @param string $description
+ * 
+ * @return integer|null If the operation was correct, return 1
+ */
+function core_secure_create_role( $alias, $father_role = -1, $name = NULL, $description = NULL ){
+    return secure_create_role( $alias, $father_role, $name, $description );
 }
 
 ?>
