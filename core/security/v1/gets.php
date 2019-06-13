@@ -104,7 +104,7 @@ function _core_security_get_role_actions( $role_id, $type = null ){
  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
  *
- * @param integer $user_id
+ * @param integer|string Action type id or alias 
  *
  * @return array
 */
@@ -117,16 +117,13 @@ function _core_security_get_actions( $type = null ){
 	$tablename = $DB_PREFIX . "talentospilos_acciones";
 
 	if( !is_null( $type ) ){
-		if( is_numeric( $type ) ){
-			$type_filter = "WHERE id_tipo_accion = $1";
-			array_push($params, $type);
-		}else{
-			return null;
-		}
+            $action_type = _core_security_get_action_type($type);
+            $type_filter = "AND id_tipo_accion = $1";
+            array_push($params, $action_type['id']);
 	}
 
 	$manager = get_db_manager();
-	$actions = $manager( $query = "SELECT * FROM $tablename $type_filter", $params, $extra = null );
+	$actions = $manager( $query = "SELECT * FROM $tablename WHERE eliminado = 0 $type_filter", $params, $extra = null );
 	return ( count( $actions ) >= 1 ? $actions : null );
 
 }
