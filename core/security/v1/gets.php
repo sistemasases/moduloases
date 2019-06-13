@@ -262,29 +262,33 @@ function _core_security_get_user_rol( $user_id, $time_context = null, $singulari
 }
 
 /**
+ * Function that given a role id or alias, return the role array
  * 
- * @see get_db_manager() in query_manager.php
- *
  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
+ * 
+ * @see get_db_manager() in query_manager.php
+ * 
+ * @param integer|string Role id or alias
  *
  * @return array
 */
-function _core_security_get_role( $role_id ){
+function _core_security_get_role( $in ){
 
 	global $DB_PREFIX;
 
 	$params = [];
 	$tablename = $DB_PREFIX . "talentospilos_roles";
-
-	if( !is_numeric($role_id) ){
-		return null;
+        $criteria = "id";
+        
+	if( !is_numeric( $in ) ){
+            $criteria = "alias";
 	}
 
-	array_push($params, $role_id);
+	array_push($params, $in);
 
 	$manager = get_db_manager();
-	$role = $manager( $query = "SELECT * FROM $tablename WHERE id = $1", $params, $extra = null );
+	$role = $manager( $query = "SELECT * FROM $tablename WHERE $criteria = $1", $params, $extra = null );
 	
 	return ( count( $role ) == 1 ? $role[0] : null );
 
