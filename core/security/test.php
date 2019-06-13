@@ -29,6 +29,8 @@ $singularizations = array(
 
 //print_r(_core_security_check_role( 73380, 4, $time_context = null, $singularizations = null ));
 
-print_r( core_secure_call_checker( __DIR__ . "/../../managers" ) );
+//print_r( core_secure_call_checker( __DIR__ . "/../../managers" ) );
+
+//print_r( core_secure_create_call( "test_aliasxy", "back", $name = NULL, $description = NULL, $log = 0 ) );
 
 ?>
