@@ -152,8 +152,6 @@ function _core_security_register_log( $user_id, $action_id, $call_params, $outpu
  * @param string $xml_route Configuration file route
  * @return array List of aliases in the configuration file
  * 
- * @throws Exception If the file does not exist
- * 
  */
 
 function _core_security_get_config_actions( $xml_route ){
