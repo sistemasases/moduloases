@@ -40,4 +40,6 @@ $singularizations = array(
 //print_r( core_secure_create_call( "say_hello", "back", $name = NULL, $description = NULL, $log = 0 ) );
 
 
+//print_r(core_secure_create_role("rootx", -1, "Super user", "Super usuario") );
+
 ?>
