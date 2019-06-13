@@ -397,4 +397,45 @@ function secure_remove_call( $alias, $user_id ){
     
 }
 
+/**
+ * Function that insert at the DB a new role.
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see get_db_manager( ... ) in query_manager.php
+ * @see _core_security_get_role( ... ) in gets.php
+ * 
+ * @param string $alias Role alias
+ * @param integer|string $father_role Role id or alias
+ * @param string $name Role name
+ * @param string $description
+ * 
+ * @return integer|null If the operation was correct, return 1
+ */
+function secure_create_role( $alias, $father_role = -1, $name = NULL, $description = NULL ){
+    
+    global $DB_PREFIX;
+    
+    $role = _core_security_get_role( $alias );
+    if( is_null( $role ) ){
+        
+        $_father_role = _core_security_get_role( $father_role );
+        //-1 means no father
+        ( $father_role ? $_father_role_id = ($_father_role ? $_father_role['id'] : -1) : null);
+        
+        $tablename  = $DB_PREFIX . "talentospilos_roles";
+        $params = [
+            $alias, $name, $description, $_father_role_id
+        ];
+            
+        $manager = get_db_manager();
+        $query = "INSERT INTO $tablename(alias, nombre, descripcion, id_rol_padre) VALUES ( $1, $2, $3, $4 )";
+        return $manager( $query, $params, $extra = null );
+        
+    }
+    
+    return null;   
+    
+}
+
 ?>
