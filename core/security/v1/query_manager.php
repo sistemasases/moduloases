@@ -168,6 +168,8 @@ function get_db_records( $tablename, $criteria = [], $params = [] ){
         }
     }
     
-    return $manager( $query = "SELECT * FROM $table $where", $params, $extra = null );
+    $result = $manager( $query = "SELECT * FROM $table $where", $params, $extra = null );
+    
+    return ( count( $result ) > 0 ? $result : null );
     
 }
