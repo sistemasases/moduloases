@@ -70,7 +70,6 @@ function get_db_manager( $selector = null ) {
 	*/
 	
 	if( in_array( FLAG_CORE_DB, get_defined_functions()['user']) && $selector_filter[ MANAGER_ALIAS_CORE_DB ] ){
-
 		return function( $query, $params = null, $extra = null ){
 			$select_filter = _is_select( $query );
 			if( is_null( $select_filter ) ){
@@ -85,7 +84,6 @@ function get_db_manager( $selector = null ) {
 		};
 
 	}else if( array_key_exists( FLAG_MOODLE, $GLOBALS ) && $selector_filter[ MANAGER_ALIAS_MOODLE ] ){
-
 		return function( $query, $params = null, $extra = null ){
 			$select_filter = _is_select( $query );
 			if( is_null( $select_filter ) ){
@@ -152,7 +150,7 @@ function get_db_manager( $selector = null ) {
  * 
  * @return array|null 
  */
-function get_db_records( $tablename, $criteria = [], $params = [] ){
+function get_db_records( $tablename, $criteria = null, $params = null ){
     
     global $DB_PREFIX;
 
@@ -172,4 +170,71 @@ function get_db_records( $tablename, $criteria = [], $params = [] ){
     
     return ( count( $result ) > 0 ? $result : null );
     
+}
+
+/**
+ * Function that given a table name, return a description.
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see get_db_manager( ... ) in this file
+ * 
+ * @param string $tablename Table name
+ * 
+ * @return array|null Return an array if table exist
+ */
+function get_table_structure( $tablename ){
+    
+    $manager = get_db_manager('moodle' );
+    
+    $query = "
+        SELECT
+            ROW_NUMBER() OVER (), * 
+        FROM
+            information_schema.COLUMNS
+        WHERE
+            TABLE_NAME = '$tablename'";
+    
+    $result = $manager( $query, $params = [], $extra = null );
+
+    return ( count( $result ) > 0 ? $result : null );
+    
+}
+
+/**
+ * Function that given a table name and schema name, return a list of constrains.
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see get_db_manager( ... ) in this file
+ * 
+ * @param string $tablename Table name
+ * @param string $schema Schema name
+ * 
+ * @return array|null Return an array if exist at least one constraint
+ */
+function get_table_constrains( $tablename, $schema = 'public' ){
+    
+    $manager = get_db_manager();
+    
+    $query = "
+        SELECT 
+            ROW_NUMBER() OVER (), con.*
+        FROM 
+            pg_catalog.pg_constraint con
+        INNER JOIN 
+            pg_catalog.pg_class rel 
+        ON 
+            rel.oid = con.conrelid
+        INNER JOIN 
+            pg_catalog.pg_namespace nsp 
+        ON 
+            nsp.oid = connamespace
+        WHERE 
+            nsp.nspname = '$schema'
+                AND rel.relname = '$tablename'";
+    
+    $result = $manager( $query, $params = null, $extra = null );
+    
+    return ( count( $result ) > 0 ? $result : null );
 }
