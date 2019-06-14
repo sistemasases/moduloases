@@ -185,7 +185,7 @@ function get_db_records( $tablename, $criteria = null, $params = null ){
  */
 function get_table_structure( $tablename ){
     
-    $manager = get_db_manager('moodle' );
+    $manager = get_db_manager();
     
     $query = "
         SELECT
@@ -195,7 +195,7 @@ function get_table_structure( $tablename ){
         WHERE
             TABLE_NAME = '$tablename'";
     
-    $result = $manager( $query, $params = [], $extra = null );
+    $result = $manager( $query, $params = null, $extra = null );
 
     return ( count( $result ) > 0 ? $result : null );
     
