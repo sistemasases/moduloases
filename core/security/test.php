@@ -42,4 +42,9 @@ $singularizations = array(
 
 //print_r(core_secure_create_role("rootx", -1, "Super user", "Super usuario") );
 
+//print_r( get_table_structure("mdl_talentospilos_rol") );
+//print_r( get_table_constrains("mdl_talentospilos_rol") );
+
+//print_r( secure_assing_role_to_user( 15, "root" ) );
+
 ?>
