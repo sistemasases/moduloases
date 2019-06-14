@@ -238,3 +238,37 @@ function get_table_constrains( $tablename, $schema = 'public' ){
     
     return ( count( $result ) > 0 ? $result : null );
 }
+
+function solve_query_variable( $query_variable, $query_params ){
+    
+    $manager = get_db_manager();
+    $to_return = [];
+    
+    $ref_table_name = $query_variable[ 'core_special_var_table_name' ];
+    $ref_table_filters = $query_variable[ 'core_special_var_filters' ];
+    $criteria = "";
+    
+    foreach( $ref_table_filters as $key => $filter ){
+        $criteria .= 
+            $filter . " = " . $query_params[ $filter ] . 
+            ( next( $ref_table_filters ) ? " AND " : null );
+    }
+    
+    $query = "SELECT * FROM $ref_table_name WHERE $criteria";
+    $record = $manager( $query, $param = null, $extra = nul );
+    print_r( $record );
+    //return $to_return;
+    
+}
+
+function solve_array_value_query_variable(  ){
+    /*[
+        'col_name' => '',
+        'ref_table_name' => '',
+         'ref_col_value' => ''
+    ]*/
+}
+
+function solve_simple_value_query_variable(  ){
+    
+}
