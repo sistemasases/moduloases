@@ -438,4 +438,42 @@ function secure_create_role( $alias, $father_role = -1, $name = NULL, $descripti
     
 }
 
+/**
+ * Function ...
+ * 
+ * @param integer $user_id Moodle user id
+ * @param integer|string Role id or alias
+ * @param datetime $start_datetime
+ * @param datetime $end_datetime
+ * @param object $alternative_interval
+ * @param boolean $use_alternative_interval
+ * @param object $singularizator
+ * 
+ */
+function secure_assing_role_to_user( $user_id, $role, $start_datetime = NULL, $end_datetime = NULL, $alternative_interval = NULL, $use_alternative_interval = 0, $singularizator = NULL ){
+    
+    $_user = get_db_records( "user", ['id'], [$user_id] );
+    $_role = _core_security_get_role( $role );
+    
+    
+    $manager = get_db_manager();
+      
+    if( $_user && $_role ){
+        /*
+            SELECT
+                *
+             FROM
+                information_schema.COLUMNS
+             WHERE
+                TABLE_NAME = 'mdl_talentospilos_user_rol';
+        */
+        // 1 >> Code for manage previous system
+        
+        //<< END 1
+        
+    }
+    
+    return null;
+}
+
 ?>
