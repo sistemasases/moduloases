@@ -7,14 +7,41 @@
  * @license   	http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+//General configuration
 const VERSION = 1; //Current version.
-const CORE_PREFIX = "core_secure_render"; // example: {{#core_secure_render_block_to_protect}}
 
 require_once( __DIR__ . "/../../../../config.php");
 require_once( __DIR__ . "/../module_loader.php");
 
 global $DB_PREFIX;
 $DB_PREFIX = $GLOBALS[ 'CFG' ]->prefix;
+
+//Specific configuration
+const CORE_PREFIX = "core_secure_render"; // example: {{#core_secure_render_block_to_protect}}
+
+$CORE_SPECIAL_VAR_PREVIOUS_SYSTEM_TABLE_NAME_FOR_ROLE_DEFINITION = [
+    'core_special_var_table_name' => $DB_PREFIX . "talentospilos_rol",
+    'core_special_var_filters' => [ "nombre_rol" ],
+    'alias' => "nombre_rol"
+];
+
+$CORE_SPECIAL_VAR_PREVIOUS_SYSTEM_TABLE_NAME_FOR_ROLE_ASIGNATION = [
+    'core_special_var_table_name' => $DB_PREFIX . "talentospilos_user_rol",
+    'core_special_var_filters' => [ "id_rol", "id_usuario", "id_semestre" ],
+    'rol_id' => "id_rol",
+    'user_id'=> "id_usuario",
+    'start_date' => [
+        'core_special_var_col_name' => 'id_semestre',
+        'core_special_var_ref_table_name' => $DB_PREFIX . 'talentospilos_semestre',
+        'core_special_var_ref_col_value' => 'fecha_inicio'
+    ],
+    'end_date' => [
+        'core_special_var_col_name' => 'id_semestre',
+        'core_special_var_ref_table_name' => $DB_PREFIX . 'talentospilos_semestre',
+        'core_special_var_ref_col_value' => 'fecha_fin'
+    ]
+];
+
 require_once( __DIR__ . "/v" . VERSION . "/entrypoint.php");
 
 /**
@@ -195,5 +222,7 @@ function core_secure_remove_call( $alias, $user_id ){
 function core_secure_create_role( $alias, $father_role = -1, $name = NULL, $description = NULL ){
     return secure_create_role( $alias, $father_role, $name, $description );
 }
+
+//print_r( solve_query_variable( $CORE_SPECIAL_VAR_PREVIOUS_SYSTEM_TABLE_NAME_FOR_ROLE_ASIGNATION ) );
 
 ?>
