@@ -17,9 +17,9 @@ const MANAGER_ALIAS_CORE_DB = "core_db";
 const MANAGER_ALIAS_MOODLE = "moodle";
 const MANAGER_ALIAS_POSTGRES = "postgres";
 const AVAILABLE_MANAGERS = [ 
-	MANAGER_ALIAS_CORE_DB, 
-	MANAGER_ALIAS_MOODLE, 
-	MANAGER_ALIAS_POSTGRES 
+    MANAGER_ALIAS_CORE_DB, 
+    MANAGER_ALIAS_MOODLE, 
+    MANAGER_ALIAS_POSTGRES 
 ];
 
 /**
@@ -69,7 +69,7 @@ function get_db_manager( $selector = null ) {
 	 * Automatic and specific manager selection.
 	*/
 	
-	if(	in_array( FLAG_CORE_DB, get_defined_functions()['user']) && $selector_filter[ MANAGER_ALIAS_CORE_DB ] ){
+	if( in_array( FLAG_CORE_DB, get_defined_functions()['user']) && $selector_filter[ MANAGER_ALIAS_CORE_DB ] ){
 
 		return function( $query, $params = null, $extra = null ){
 			$select_filter = _is_select( $query );
@@ -136,4 +136,38 @@ function get_db_manager( $selector = null ) {
 
 	}
 
+}
+
+/**
+ * Function that given a table name without prefix, list of criteria and params, 
+ * return a simple selector with a list or records
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see get_db_manager( ... ) in this file
+ * @param string $tablename
+ * @param array $criteria Filters
+ * @param array $params 
+ * 
+ * @return array|null 
+ */
+function get_db_records( $tablename, $criteria = [], $params = [] ){
+    
+    global $DB_PREFIX;
+
+    $table = $DB_PREFIX . $tablename;
+    $manager = get_db_manager();
+    
+    $where = "";
+    if( count($criteria) > 0 ){
+        $where .= "WHERE";
+        foreach ($criteria as $key => $cond){
+            $where .= " $cond = $" . ($key + 1);
+            ( next($criteria) ? $where .= " AND" : null );
+        }
+    }
+    
+    return $manager( $query = "SELECT * FROM $table $where", $params, $extra = null );
+    
 }
