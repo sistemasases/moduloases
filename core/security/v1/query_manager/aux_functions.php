@@ -9,14 +9,19 @@
 
 
 /**
+ * Function that given a SQL query, ...
+ * 
  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
  * @param $query
+ * 
+ * @return bool|null
 */
 function _is_select( $query ){
-
 	if( $query ){
 		$words = explode(' ',trim($query));
-		if( strtolower($words[0]) == "select" ){
+		if( strtolower(trim($words[0])) == "select" ){
 			return true;
 		}else{
 			return false;
