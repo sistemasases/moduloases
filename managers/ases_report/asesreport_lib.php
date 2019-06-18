@@ -132,9 +132,10 @@ function get_cohorts_by_idnumber($id_number){
 function getGraficSex($cohorte, $ases_status, $icetex_status, $program_status, $instance_id){
     global $DB;
     $sql_query = "SELECT COUNT(usuario.id) AS cantidad,
-                CASE WHEN usuario_ases.sexo = 'M' THEN 'Masculino'
-                     WHEN usuario_ases.sexo = 'F' THEN 'Femenino'
-                     ELSE 'N.R'
+                 CASE WHEN usuario_ases.sexo = '1' THEN 'Masculino'
+                      WHEN usuario_ases.sexo = '2' THEN 'Femenino'
+					  WHEN usuario_ases.sexo = '3' THEN 'Intersexual'
+                      ELSE 'N.R'
                 END AS nombre
                 FROM {talentospilos_user_extended} AS usuario
                 INNER JOIN {talentospilos_usuario} AS usuario_ases
