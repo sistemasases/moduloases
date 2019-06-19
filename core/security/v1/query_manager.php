@@ -244,6 +244,8 @@ function get_table_constrains( $tablename, $schema = 'public' ){
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
  * 
+ * @see _build_response( ... ) in this file
+ * 
  * @param array $query_variable 
  * @param array $query_params
  * @param array|null $aditional_filter
@@ -283,6 +285,16 @@ function solve_query_variable( $query_variable, $query_params, $aditional_filter
     
 }
 
+/**
+ * ...
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param array $records
+ * @param array $query_variable
+ * 
+ * @return array
+ */
 function _build_response( $records, $query_variable ){
     
     $to_return = [];
