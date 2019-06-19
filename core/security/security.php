@@ -42,6 +42,10 @@ $CORE_SPECIAL_VAR_PREVIOUS_SYSTEM_TABLE_NAME_FOR_ROLE_ASIGNATION = [
     ]
 ];
 
+/** @var SUPPORT_TO_PREVIOUS_SYSTEM Flag to operate the old system in 
+ * a parallel way */
+const SUPPORT_TO_PREVIOUS_SYSTEM = TRUE;
+
 require_once( __DIR__ . "/v" . VERSION . "/entrypoint.php");
 
 /**
