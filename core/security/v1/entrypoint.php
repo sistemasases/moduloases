@@ -453,7 +453,7 @@ function secure_create_role( $alias, $father_role = -1, $name = NULL, $descripti
 function secure_assing_role_to_user( $user_id, $role, $start_datetime = NULL, $end_datetime = NULL, $alternative_interval = NULL, $use_alternative_interval = 0, $singularizator = NULL ){
 
     $_user = get_db_records( "user", ['id'], [$user_id] );
-    $_role = _core_security_get_role( $role );
+    $_role = _core_security_get_role( $role ); // Rol at the master system
 
     //$manager = get_db_manager();
       
@@ -468,6 +468,7 @@ function secure_assing_role_to_user( $user_id, $role, $start_datetime = NULL, $e
                 'core_special_var_filters' => [ "nombre_rol" ],
                 'alias' => "nombre_rol"
             ];
+            
             $CORE_SPECIAL_VAR_PREVIOUS_SYSTEM_TABLE_NAME_FOR_ROLE_ASIGNATION = [
                 'core_special_var_table_name' => $DB_PREFIX . "talentospilos_user_rol",
                 'core_special_var_filters' => [ "id_rol", "id_usuario", "id_semestre" ],
@@ -485,18 +486,16 @@ function secure_assing_role_to_user( $user_id, $role, $start_datetime = NULL, $e
                 ]
             ];
             
-
             $previous_system_rol = solve_query_variable(
                 $CORE_SPECIAL_VAR_PREVIOUS_SYSTEM_TABLE_NAME_FOR_ROLE_DEFINITION,
                 [ $CORE_SPECIAL_VAR_PREVIOUS_SYSTEM_TABLE_NAME_FOR_ROLE_DEFINITION['alias'] => $_role['alias'] ]
             );
             
-            
-            
             //If rol exist at the previous system
             if( count( $previous_system_rol ) == 1 ){
                 
                 //Registrar en sistema maestro
+                
                 
             }else{
                 
