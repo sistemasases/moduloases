@@ -288,13 +288,10 @@ function solve_query_variable( $query_variable, $query_params, $aditional_filter
             if(!in_array($key, $to_exclude) ){
                 if( gettype($data) == "array" ){
 
-                    $solved_object[$key] = solve_array_value_query_variable( 
-                        $record[ $data[ 'core_special_var_col_name' ] ],
-                        $data[ 'core_special_var_ref_table_name' ],
-                        $data[ 'core_special_var_ref_col_value' ]
-                    )[
-                        $data[ 'core_special_var_ref_col_value' ]
-                    ];
+                    $manager = get_db_manager();
+                    $query = "SELECT ".$data[ 'core_special_var_ref_col_value' ]." FROM ".$data[ 'core_special_var_ref_table_name' ]." WHERE id = $1";
+                    $result =  $manager( $query, $param = [ $record[ $data[ 'core_special_var_col_name' ] ] ], $extra = null );
+                    $solved_object[$key] = $result[0][ $data[ 'core_special_var_ref_col_value' ] ];
 
                 }else{
                     $solved_object[$key] = $record[$data];
@@ -308,10 +305,3 @@ function solve_query_variable( $query_variable, $query_params, $aditional_filter
     
 }
 
-function solve_array_value_query_variable( $id, $tablename, $field_name ){
-    $manager = get_db_manager();
-    $param = [ $id ];
-    $query = "SELECT $field_name FROM $tablename WHERE id = $1";
-    $to_return =  $manager( $query, $param, $extra = null );
-    return ( count( $to_return ) == 1 ? $to_return[0] : null );
-}
