@@ -19,13 +19,7 @@ $DB_PREFIX = $GLOBALS[ 'CFG' ]->prefix;
 //Specific configuration
 const CORE_PREFIX = "core_secure_render"; // example: {{#core_secure_render_block_to_protect}}
 
-$CORE_SPECIAL_VAR_PREVIOUS_SYSTEM_TABLE_NAME_FOR_ROLE_DEFINITION = [
-    'core_special_var_table_name' => $DB_PREFIX . "talentospilos_rol",
-    'core_special_var_filters' => [ "nombre_rol" ],
-    'alias' => "nombre_rol"
-];
-
-$CORE_SPECIAL_VAR_PREVIOUS_SYSTEM_TABLE_NAME_FOR_ROLE_ASIGNATION = [
+/*$CORE_SPECIAL_VAR_PREVIOUS_SYSTEM_TABLE_NAME_FOR_ROLE_ASIGNATION = [
     'core_special_var_table_name' => $DB_PREFIX . "talentospilos_user_rol",
     'core_special_var_filters' => [ "id_rol", "id_usuario", "id_semestre" ],
     'rol_id' => "id_rol",
@@ -40,7 +34,7 @@ $CORE_SPECIAL_VAR_PREVIOUS_SYSTEM_TABLE_NAME_FOR_ROLE_ASIGNATION = [
         'core_special_var_ref_table_name' => $DB_PREFIX . 'talentospilos_semestre',
         'core_special_var_ref_col_value' => 'fecha_fin'
     ]
-];
+];*/
 
 /** @var SUPPORT_TO_PREVIOUS_SYSTEM Flag to operate the old system in 
  * a parallel way */
@@ -245,5 +239,9 @@ function core_secure_create_role( $alias, $father_role = -1, $name = NULL, $desc
                 [ "nombre_rol" => "monitor_ps" ]
             ) 
         );*/
+
+function core_secure_assing_role_to_user( $user_id, $role, $start_datetime = NULL, $end_datetime = NULL, $alternative_interval = NULL, $use_alternative_interval = 0, $singularizator = NULL ){
+    return secure_assing_role_to_user( $user_id, $role, $start_datetime, $end_datetime, $alternative_interval, $use_alternative_interval, $singularizator );
+}
 
 ?>
