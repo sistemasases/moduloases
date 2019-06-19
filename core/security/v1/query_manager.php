@@ -273,7 +273,7 @@ function get_table_constrains( $tablename, $schema = 'public' ){
  * @return array With a transformed result
  */
 
-function solve_query_variable( $query_variable, $query_params, $additional_filter ){
+function solve_query_variable( $query_variable, $query_params, $additional_filter = [] ){
     
     $manager = get_db_manager();
     
@@ -286,7 +286,7 @@ function solve_query_variable( $query_variable, $query_params, $additional_filte
     
     foreach( $ref_table_filters as &$filter ){
         $criteria .= 
-            $filter . " = " . $query_params[ $filter ] . 
+            $filter . " = '" . $query_params[ $filter ] ."'" . 
             ( next( $ref_table_filters ) ? " AND " : null );
     }
     
@@ -294,7 +294,7 @@ function solve_query_variable( $query_variable, $query_params, $additional_filte
     
     foreach( $additional_filter as $key => $filter ){
         $criteria .= 
-            $key . " = " . $filter . 
+            $key . " = '" . $filter . "'" .
             ( next( $additional_filter ) ? " AND " : null );
     }
     
