@@ -223,6 +223,15 @@ function core_secure_create_role( $alias, $father_role = -1, $name = NULL, $desc
     return secure_create_role( $alias, $father_role, $name, $description );
 }
 
-//print_r( solve_query_variable( $CORE_SPECIAL_VAR_PREVIOUS_SYSTEM_TABLE_NAME_FOR_ROLE_ASIGNATION,  [ "id_rol" => 4, "id_usuario" => 123214, "id_semestre" => 9 ] ) );
+print_r( 
+        
+        solve_query_variable( 
+                $CORE_SPECIAL_VAR_PREVIOUS_SYSTEM_TABLE_NAME_FOR_ROLE_ASIGNATION,  
+                [ "id_rol" => 4, "id_usuario" => 123214, "id_semestre" => 9 ],
+                [
+                    "id_instancia" => 450299
+                ]
+            ) 
+        );
 
 ?>
