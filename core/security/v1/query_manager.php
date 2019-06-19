@@ -239,7 +239,19 @@ function get_table_constrains( $tablename, $schema = 'public' ){
     return ( count( $result ) > 0 ? $result : null );
 }
 
-function solve_query_variable( $query_variable, $query_params ){
+/**
+ * ...
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param array $query_variable 
+ * @param array $query_params
+ * @param array|null $aditional_filter
+ * 
+ * @return ...
+ */
+
+function solve_query_variable( $query_variable, $query_params, $aditional_filter ){
     
     $manager = get_db_manager();
     $to_return = [];
@@ -248,27 +260,51 @@ function solve_query_variable( $query_variable, $query_params ){
     $ref_table_filters = $query_variable[ 'core_special_var_filters' ];
     $criteria = "";
     
-    foreach( $ref_table_filters as $key => $filter ){
+    foreach( $ref_table_filters as &$filter ){
         $criteria .= 
             $filter . " = " . $query_params[ $filter ] . 
             ( next( $ref_table_filters ) ? " AND " : null );
     }
     
+    ( count( $aditional_filter ) > 0 ? $criteria .= " AND " : null );
+    
+    foreach( $aditional_filter as $key => $filter ){
+        $criteria .= 
+            $key . " = " . $filter . 
+            ( next( $aditional_filter ) ? " AND " : null );
+    }
+    
     $query = "SELECT * FROM $ref_table_name WHERE $criteria";
-    $record = $manager( $query, $param = null, $extra = nul );
-    print_r( $record );
-    //return $to_return;
+    $records = $manager( $query, $param = null, $extra = null );
+
+    foreach( $records as $key => $record ){
+        $solved_object = [];
+        foreach( $query_variable as $key => $data ){
+            if( (gettype($data) == "array") && ($key != "core_special_var_filters") ){
+                
+                $solved_object[$key] = solve_array_value_query_variable( 
+                    $record[ $data[ 'core_special_var_col_name' ] ],
+                    $data[ 'core_special_var_ref_table_name' ],
+                    $data[ 'core_special_var_ref_col_value' ]
+                )[
+                    $data[ 'core_special_var_ref_col_value' ]
+                ];
+                
+            }else{
+                $solved_object[$key] = $record[$data];
+            }
+        }
+        array_push($to_return, $solved_object);
+    }
+    
+    return $to_return;
     
 }
 
-function solve_array_value_query_variable(  ){
-    /*[
-        'col_name' => '',
-        'ref_table_name' => '',
-         'ref_col_value' => ''
-    ]*/
-}
-
-function solve_simple_value_query_variable(  ){
-    
+function solve_array_value_query_variable( $id, $tablename, $field_name ){
+    $manager = get_db_manager();
+    $param = [ $id ];
+    $query = "SELECT $field_name FROM $tablename WHERE id = $1";
+    $to_return =  $manager( $query, $param, $extra = null );
+    return ( count( $to_return ) == 1 ? $to_return[0] : null );
 }
