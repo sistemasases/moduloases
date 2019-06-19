@@ -277,21 +277,28 @@ function solve_query_variable( $query_variable, $query_params, $aditional_filter
     $query = "SELECT * FROM $ref_table_name WHERE $criteria";
     $records = $manager( $query, $param = null, $extra = null );
 
+    $to_exclude = [
+        "core_special_var_table_name",
+        "core_special_var_filters",
+    ];
+    
     foreach( $records as $key => $record ){
         $solved_object = [];
         foreach( $query_variable as $key => $data ){
-            if( (gettype($data) == "array") && ($key != "core_special_var_filters") ){
-                
-                $solved_object[$key] = solve_array_value_query_variable( 
-                    $record[ $data[ 'core_special_var_col_name' ] ],
-                    $data[ 'core_special_var_ref_table_name' ],
-                    $data[ 'core_special_var_ref_col_value' ]
-                )[
-                    $data[ 'core_special_var_ref_col_value' ]
-                ];
-                
-            }else{
-                $solved_object[$key] = $record[$data];
+            if(!in_array($key, $to_exclude) ){
+                if( gettype($data) == "array" ){
+
+                    $solved_object[$key] = solve_array_value_query_variable( 
+                        $record[ $data[ 'core_special_var_col_name' ] ],
+                        $data[ 'core_special_var_ref_table_name' ],
+                        $data[ 'core_special_var_ref_col_value' ]
+                    )[
+                        $data[ 'core_special_var_ref_col_value' ]
+                    ];
+
+                }else{
+                    $solved_object[$key] = $record[$data];
+                }
             }
         }
         array_push($to_return, $solved_object);
