@@ -254,10 +254,12 @@ function get_table_constrains( $tablename, $schema = 'public' ){
 function solve_query_variable( $query_variable, $query_params, $aditional_filter ){
     
     $manager = get_db_manager();
-    $to_return = [];
     
     $ref_table_name = $query_variable[ 'core_special_var_table_name' ];
     $ref_table_filters = $query_variable[ 'core_special_var_filters' ];
+    unset( $query_variable[ 'core_special_var_table_name' ] );
+    unset( $query_variable[ 'core_special_var_filters' ] );
+    
     $criteria = "";
     
     foreach( $ref_table_filters as &$filter ){
@@ -276,32 +278,30 @@ function solve_query_variable( $query_variable, $query_params, $aditional_filter
     
     $query = "SELECT * FROM $ref_table_name WHERE $criteria";
     $records = $manager( $query, $param = null, $extra = null );
+    
+    return _build_response($records, $query_variable);
+    
+}
 
-    $to_exclude = [
-        "core_special_var_table_name",
-        "core_special_var_filters",
-    ];
+function _build_response( $records, $query_variable ){
+    
+    $to_return = [];
     
     foreach( $records as $key => $record ){
         $solved_object = [];
         foreach( $query_variable as $key => $data ){
-            if(!in_array($key, $to_exclude) ){
-                if( gettype($data) == "array" ){
-
-                    $manager = get_db_manager();
-                    $query = "SELECT ".$data[ 'core_special_var_ref_col_value' ]." FROM ".$data[ 'core_special_var_ref_table_name' ]." WHERE id = $1";
-                    $result =  $manager( $query, $param = [ $record[ $data[ 'core_special_var_col_name' ] ] ], $extra = null );
-                    $solved_object[$key] = $result[0][ $data[ 'core_special_var_ref_col_value' ] ];
-
-                }else{
-                    $solved_object[$key] = $record[$data];
-                }
+            if( gettype( $data ) == "array"  ){
+                $manager = get_db_manager();
+                $query = "SELECT ".$data[ 'core_special_var_ref_col_value' ]." FROM ".$data[ 'core_special_var_ref_table_name' ]." WHERE id = $1";
+                $result =  $manager( $query, $param = [ $record[ $data[ 'core_special_var_col_name' ] ] ], $extra = null );
+                $solved_object[$key] = $result[0][ $data[ 'core_special_var_ref_col_value' ] ];
+            }else{
+                $solved_object[$key] = $record[$data];
             }
         }
         array_push($to_return, $solved_object);
     }
     
     return $to_return;
-    
 }
 
