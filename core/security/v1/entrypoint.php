@@ -451,25 +451,62 @@ function secure_create_role( $alias, $father_role = -1, $name = NULL, $descripti
  * 
  */
 function secure_assing_role_to_user( $user_id, $role, $start_datetime = NULL, $end_datetime = NULL, $alternative_interval = NULL, $use_alternative_interval = 0, $singularizator = NULL ){
-    
+
     $_user = get_db_records( "user", ['id'], [$user_id] );
     $_role = _core_security_get_role( $role );
-    
-    
-    $manager = get_db_manager();
+
+    //$manager = get_db_manager();
       
     if( $_user && $_role ){
-        /*
-            SELECT
-                *
-             FROM
-                information_schema.COLUMNS
-             WHERE
-                TABLE_NAME = 'mdl_talentospilos_user_rol';
-        */
-        // 1 >> Code for manage previous system
         
-        //<< END 1
+        if( SUPPORT_TO_PREVIOUS_SYSTEM ){
+            
+            global $DB_PREFIX;
+            
+            $CORE_SPECIAL_VAR_PREVIOUS_SYSTEM_TABLE_NAME_FOR_ROLE_DEFINITION = [
+                'core_special_var_table_name' => $DB_PREFIX . "talentospilos_rol",
+                'core_special_var_filters' => [ "nombre_rol" ],
+                'alias' => "nombre_rol"
+            ];
+            $CORE_SPECIAL_VAR_PREVIOUS_SYSTEM_TABLE_NAME_FOR_ROLE_ASIGNATION = [
+                'core_special_var_table_name' => $DB_PREFIX . "talentospilos_user_rol",
+                'core_special_var_filters' => [ "id_rol", "id_usuario", "id_semestre" ],
+                'rol_id' => "id_rol",
+                'user_id'=> "id_usuario",
+                'start_date' => [
+                    'core_special_var_col_name' => 'id_semestre',
+                    'core_special_var_ref_table_name' => $DB_PREFIX . 'talentospilos_semestre',
+                    'core_special_var_ref_col_value' => 'fecha_inicio'
+                ],
+                'end_date' => [
+                    'core_special_var_col_name' => 'id_semestre',
+                    'core_special_var_ref_table_name' => $DB_PREFIX . 'talentospilos_semestre',
+                    'core_special_var_ref_col_value' => 'fecha_fin'
+                ]
+            ];
+            
+
+            $previous_system_rol = solve_query_variable(
+                $CORE_SPECIAL_VAR_PREVIOUS_SYSTEM_TABLE_NAME_FOR_ROLE_DEFINITION,
+                [ $CORE_SPECIAL_VAR_PREVIOUS_SYSTEM_TABLE_NAME_FOR_ROLE_DEFINITION['alias'] => $_role['alias'] ]
+            );
+            
+            
+            
+            //If rol exist at the previous system
+            if( count( $previous_system_rol ) == 1 ){
+                
+                //Registrar en sistema maestro
+                
+            }else{
+                
+                //Crear registro
+                //Consulta registrado
+                //Registrar en sistema maestro
+                
+            }
+            
+        }
         
     }
     
