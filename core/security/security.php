@@ -223,7 +223,7 @@ function core_secure_create_role( $alias, $father_role = -1, $name = NULL, $desc
     return secure_create_role( $alias, $father_role, $name, $description );
 }
 
-print_r( 
+/*print_r( 
         
         solve_query_variable( 
                 $CORE_SPECIAL_VAR_PREVIOUS_SYSTEM_TABLE_NAME_FOR_ROLE_ASIGNATION,  
@@ -232,6 +232,14 @@ print_r(
                     "id_instancia" => 450299
                 ]
             ) 
-        );
+        );*/
+
+/*print_r( 
+        
+        solve_query_variable( 
+                $CORE_SPECIAL_VAR_PREVIOUS_SYSTEM_TABLE_NAME_FOR_ROLE_DEFINITION,  
+                [ "nombre_rol" => "monitor_ps" ]
+            ) 
+        );*/
 
 ?>
