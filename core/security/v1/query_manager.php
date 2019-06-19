@@ -240,21 +240,24 @@ function get_table_constrains( $tablename, $schema = 'public' ){
 }
 
 /**
- * Function that given a translation variable, list of parameters and
- * an optional additional filter, return an object or a list of object with
- * the translation variable structure.
+ * Function that given a transformation variable, list of parameters and
+ * an optional additional filter, return an list of object with the 
+ * transformation variable structure.
  * 
  * Structure of a translation variable.
  * 
  * $CORE_SPECIAL_VAR = [
  *   'core_special_var_table_name' => $DB_PREFIX . "talentospilos_user_rol",
  *   'core_special_var_filters' => [ "current_field_name" ],
- *   'new_field_name' => "current_field_name", // 'current_field_name' must be exist at the table defined at core_special_var_table_name
+ *   // 'current_field_name' must be exist at the table defined at core_special_var_table_name
+ *   'new_field_name' => "current_field_name", 
  *   'new_field_name_2'=> "current_field_name_2",
  *   'referenced_field' => [
- *       'core_special_var_col_name' => 'filed_name', // Must be exist at the table defined at core_special_var_table_name
+ *       // Must be exist at the table defined at core_special_var_table_name
+ *       'core_special_var_col_name' => 'filed_name', 
  *       'core_special_var_ref_table_name' => 'tablename',
- *       'core_special_var_ref_col_value' => 'field_name' // Must be exist at the table defined at core_special_var_ref_table_name
+ *       // Must be exist at the table defined at core_special_var_ref_table_name
+ *       'core_special_var_ref_col_value' => 'field_name' 
  *   ]
  *];
  * 
@@ -267,7 +270,7 @@ function get_table_constrains( $tablename, $schema = 'public' ){
  * @param array $query_params
  * @param array|null $additional_filter
  * 
- * @return array With a translated result
+ * @return array With a transformed result
  */
 
 function solve_query_variable( $query_variable, $query_params, $additional_filter ){
@@ -303,14 +306,16 @@ function solve_query_variable( $query_variable, $query_params, $additional_filte
 }
 
 /**
- * ...
+ * Function that given a list of records and a transformation variable return 
+ * a transformed list of records.
+ * 
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
  * 
  * @param array $records
  * @param array $query_variable
  * 
- * @return array
+ * @return array a transformed list of records
  */
 function _build_response( $records, $query_variable ){
     
