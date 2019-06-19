@@ -19,23 +19,6 @@ $DB_PREFIX = $GLOBALS[ 'CFG' ]->prefix;
 //Specific configuration
 const CORE_PREFIX = "core_secure_render"; // example: {{#core_secure_render_block_to_protect}}
 
-/*$CORE_SPECIAL_VAR_PREVIOUS_SYSTEM_TABLE_NAME_FOR_ROLE_ASIGNATION = [
-    'core_special_var_table_name' => $DB_PREFIX . "talentospilos_user_rol",
-    'core_special_var_filters' => [ "id_rol", "id_usuario", "id_semestre" ],
-    'rol_id' => "id_rol",
-    'user_id'=> "id_usuario",
-    'start_date' => [
-        'core_special_var_col_name' => 'id_semestre',
-        'core_special_var_ref_table_name' => $DB_PREFIX . 'talentospilos_semestre',
-        'core_special_var_ref_col_value' => 'fecha_inicio'
-    ],
-    'end_date' => [
-        'core_special_var_col_name' => 'id_semestre',
-        'core_special_var_ref_table_name' => $DB_PREFIX . 'talentospilos_semestre',
-        'core_special_var_ref_col_value' => 'fecha_fin'
-    ]
-];*/
-
 /** @var SUPPORT_TO_PREVIOUS_SYSTEM Flag to operate the old system in 
  * a parallel way */
 const SUPPORT_TO_PREVIOUS_SYSTEM = TRUE;
