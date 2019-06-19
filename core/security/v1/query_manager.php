@@ -240,7 +240,24 @@ function get_table_constrains( $tablename, $schema = 'public' ){
 }
 
 /**
- * ...
+ * Function that given a translation variable, list of parameters and
+ * an optional additional filter, return an object or a list of object with
+ * the translation variable structure.
+ * 
+ * Structure of a translation variable.
+ * 
+ * $CORE_SPECIAL_VAR = [
+ *   'core_special_var_table_name' => $DB_PREFIX . "talentospilos_user_rol",
+ *   'core_special_var_filters' => [ "current_field_name" ],
+ *   'new_field_name' => "current_field_name", // 'current_field_name' must be exist at the table defined at core_special_var_table_name
+ *   'new_field_name_2'=> "current_field_name_2",
+ *   'referenced_field' => [
+ *       'core_special_var_col_name' => 'filed_name', // Must be exist at the table defined at core_special_var_table_name
+ *       'core_special_var_ref_table_name' => 'tablename',
+ *       'core_special_var_ref_col_value' => 'field_name' // Must be exist at the table defined at core_special_var_ref_table_name
+ *   ]
+ *];
+ * 
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
  * 
@@ -248,12 +265,12 @@ function get_table_constrains( $tablename, $schema = 'public' ){
  * 
  * @param array $query_variable 
  * @param array $query_params
- * @param array|null $aditional_filter
+ * @param array|null $additional_filter
  * 
- * @return ...
+ * @return array With a translated result
  */
 
-function solve_query_variable( $query_variable, $query_params, $aditional_filter ){
+function solve_query_variable( $query_variable, $query_params, $additional_filter ){
     
     $manager = get_db_manager();
     
@@ -270,12 +287,12 @@ function solve_query_variable( $query_variable, $query_params, $aditional_filter
             ( next( $ref_table_filters ) ? " AND " : null );
     }
     
-    ( count( $aditional_filter ) > 0 ? $criteria .= " AND " : null );
+    ( count( $additional_filter ) > 0 ? $criteria .= " AND " : null );
     
-    foreach( $aditional_filter as $key => $filter ){
+    foreach( $additional_filter as $key => $filter ){
         $criteria .= 
             $key . " = " . $filter . 
-            ( next( $aditional_filter ) ? " AND " : null );
+            ( next( $additional_filter ) ? " AND " : null );
     }
     
     $query = "SELECT * FROM $ref_table_name WHERE $criteria";
