@@ -16,9 +16,9 @@ require_once( __DIR__ . "/query_manager.php");
  * Example of an alternative interval definition:
  *
  * {
- *		"table_ref": { "name":"table_name", "record_id": 1 },
- *		"col_name_interval_start": "col_start",
- *		"col_name_interval_end": "col_end"
+ *	"table_ref": { "name":"table_name", "record_id": 1 },
+ *	"col_name_interval_start": "col_start",
+ *	"col_name_interval_end": "col_end"
  * }
  *
  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
