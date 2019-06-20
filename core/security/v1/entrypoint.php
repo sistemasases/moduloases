@@ -463,33 +463,7 @@ function secure_assing_role_to_user( $user_id, $role, $start_datetime = NULL, $e
             
             global $DB_PREFIX;
             
-            $CORE_SPECIAL_VAR_PREVIOUS_SYSTEM_TABLE_NAME_FOR_ROLE_DEFINITION = [
-                'core_special_var_table_name' => $DB_PREFIX . "talentospilos_rol",
-                'core_special_var_filters' => [ "nombre_rol" ],
-                'alias' => "nombre_rol"
-            ];
-            
-            $CORE_SPECIAL_VAR_PREVIOUS_SYSTEM_TABLE_NAME_FOR_ROLE_ASIGNATION = [
-                'core_special_var_table_name' => $DB_PREFIX . "talentospilos_user_rol",
-                'core_special_var_filters' => [ "id_rol", "id_usuario", "id_semestre" ],
-                'rol_id' => "id_rol",
-                'user_id'=> "id_usuario",
-                'start_date' => [
-                    'core_special_var_col_name' => 'id_semestre',
-                    'core_special_var_ref_table_name' => $DB_PREFIX . 'talentospilos_semestre',
-                    'core_special_var_ref_col_value' => 'fecha_inicio'
-                ],
-                'end_date' => [
-                    'core_special_var_col_name' => 'id_semestre',
-                    'core_special_var_ref_table_name' => $DB_PREFIX . 'talentospilos_semestre',
-                    'core_special_var_ref_col_value' => 'fecha_fin'
-                ]
-            ];
-            
-            $previous_system_rol = solve_query_variable(
-                $CORE_SPECIAL_VAR_PREVIOUS_SYSTEM_TABLE_NAME_FOR_ROLE_DEFINITION,
-                [ $CORE_SPECIAL_VAR_PREVIOUS_SYSTEM_TABLE_NAME_FOR_ROLE_DEFINITION['alias'] => $_role['alias'] ]
-            );
+            $previous_system_rol;
             
             //If rol exist at the previous system
             if( count( $previous_system_rol ) == 1 ){
