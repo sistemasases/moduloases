@@ -454,30 +454,24 @@ function secure_assing_role_to_user( $user_id, $role, $start_datetime = NULL, $e
 
     $_user = get_db_records( "user", ['id'], [$user_id] );
     $_role = _core_security_get_role( $role ); // Rol at the master system
-
-    //$manager = get_db_manager();
       
     if( $_user && $_role ){
         
         if( SUPPORT_TO_PREVIOUS_SYSTEM ){
             
-            global $DB_PREFIX;
-            
-            $previous_system_rol;
-            
+            $previous_system_rol = _core_security_get_previous_system_role( $_role['alias'] );
+                        
             //If rol exist at the previous system
             if( count( $previous_system_rol ) == 1 ){
-                
-                //Registrar en sistema maestro
-                
-                
+                secure_create_role( $previous_system_rol['nombre_rol'], $father_role = -1, NULL, $previous_system_rol['descripcion'] );
             }else{
-                
-                //Crear registro
-                //Consulta registrado
-                //Registrar en sistema maestro
-                
+                $tablename = $DB_PREFIX . "talentospilos_rol";
+                $params = [ $_role['alias'], "Enlaced role created by Security Core system" ];
+                $query = "INSER INTO $tablename (nombre_rol, descripcion) VALUES ($1, $2)";
+                $manager( $query, $params, $extra = null );
             }
+            
+            
             
         }
         
