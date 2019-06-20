@@ -296,4 +296,17 @@ function _core_security_get_role( $in ){
 }
 
 
+function _core_security_get_previous_system_role( $rol_name ){
+    
+    global $DB_PREFIX;
+            
+    $manager = get_db_manager();
+    
+    $tablename = $DB_PREFIX . "talentospilos_rol";
+    $query = "SELECT * FROM $tablename WHERE nombre_rol = $1";
+    $result = $manager( $query, [ $rol_name ] );
+    return ( count( $result ) == 1 ? $result[0] : null );
+    
+}
+
 ?>
