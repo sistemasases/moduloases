@@ -463,8 +463,24 @@ function secure_assing_role_to_user( $user_id, $role, $start_datetime = NULL, $e
             
             ( $previous_system_rol ?
                 secure_create_role( $previous_system_rol['nombre_rol'], $father_role = -1, NULL, $previous_system_rol['descripcion'] ) :
-                _core_security_create_rol_previous_system_role( $previous_system_rol['nombre_rol'] )
+                _core_security_create_rol_previous_system_role( $_role['alias'] )
             );
+            
+        }
+        
+        if( !_core_security_get_user_rol( $user_id, $start_datetime, $singularizator ) ){
+            
+            global $DB_PREFIX;
+            
+            $manager = get_db_manager();
+
+            $tablename = $DB_PREFIX . "talentospilos_usuario_rol";
+            $params = [ $user_id, $_role['id'], $start_datetime, $end_datetime, $alternative_interval, json_encode($use_alternative_interval), $singularizator ];
+            $query = "INSERT INTO "
+                    . "$tablename "
+                    . "( id_usuario, id_rol, fecha_hora_inicio, fecha_hora_fin, intervalo_validez_alternativo,usar_intervalo_alternativo,singularizador) "
+                    . "VALUES ( $1, $2, $3, $4, $5, $6, $7 )";
+            return $manager( $query, $params, $extra = null );
             
         }
         
