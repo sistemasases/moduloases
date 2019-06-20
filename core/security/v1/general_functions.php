@@ -208,7 +208,7 @@ function _core_security_create_rol_previous_system_role( $rol_name ){
     
     $tablename = $DB_PREFIX . "talentospilos_rol";
     $params = [ $rol_name, "Enlaced role created by Security Core system" ];
-    $query = "INSER INTO $tablename (nombre_rol, descripcion) VALUES ($1, $2)";
+    $query = "INSERT INTO $tablename (nombre_rol, descripcion) VALUES ($1, $2)";
     return $manager( $query, $params, $extra = null );
      
 }
