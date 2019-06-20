@@ -460,18 +460,11 @@ function secure_assing_role_to_user( $user_id, $role, $start_datetime = NULL, $e
         if( SUPPORT_TO_PREVIOUS_SYSTEM ){
             
             $previous_system_rol = _core_security_get_previous_system_role( $_role['alias'] );
-                        
-            //If rol exist at the previous system
-            if( count( $previous_system_rol ) == 1 ){
-                secure_create_role( $previous_system_rol['nombre_rol'], $father_role = -1, NULL, $previous_system_rol['descripcion'] );
-            }else{
-                $tablename = $DB_PREFIX . "talentospilos_rol";
-                $params = [ $_role['alias'], "Enlaced role created by Security Core system" ];
-                $query = "INSER INTO $tablename (nombre_rol, descripcion) VALUES ($1, $2)";
-                $manager( $query, $params, $extra = null );
-            }
             
-            
+            ( $previous_system_rol ?
+                secure_create_role( $previous_system_rol['nombre_rol'], $father_role = -1, NULL, $previous_system_rol['descripcion'] ) :
+                _core_security_create_rol_previous_system_role( $previous_system_rol['nombre_rol'] )
+            );
             
         }
         
