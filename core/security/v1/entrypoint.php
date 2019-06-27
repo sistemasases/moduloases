@@ -452,8 +452,13 @@ function secure_create_role( $alias, $father_role = -1, $name = NULL, $descripti
  */
 function secure_assing_role_to_user( $user_id, $role, $start_datetime = NULL, $end_datetime = NULL, $alternative_interval = NULL, $use_alternative_interval = 0, $singularizator = NULL ){
 
+    if( ( $use_alternative_interval === 0 && $start_datetime === NULL ) ||
+        ( $use_alternative_interval === 0 && $end_datetime === NULL ) ){
+        return null;
+    }
+    
     $_user = get_db_records( "user", ['id'], [$user_id] );
-    $_role = _core_security_get_role( $role ); // Rol at the master system
+    $_role = _core_security_get_role( $role ); // Rol at the master system (Secutiry Core)
       
     if( $_user && $_role ){
         
@@ -462,6 +467,7 @@ function secure_assing_role_to_user( $user_id, $role, $start_datetime = NULL, $e
             $previous_system_rol = _core_security_get_previous_system_role( $_role['alias'] );
             
             ( $previous_system_rol ?
+                // If role exist at the previous system role
                 secure_create_role( $previous_system_rol['nombre_rol'], $father_role = -1, NULL, $previous_system_rol['descripcion'] ) :
                 _core_security_create_rol_previous_system_role( $_role['alias'] )
             );
@@ -476,10 +482,9 @@ function secure_assing_role_to_user( $user_id, $role, $start_datetime = NULL, $e
 
             $tablename = $DB_PREFIX . "talentospilos_usuario_rol";
             $params = [ $user_id, $_role['id'], $start_datetime, $end_datetime, $alternative_interval, json_encode($use_alternative_interval), $singularizator ];
-            $query = "INSERT INTO "
-                    . "$tablename "
-                    . "( id_usuario, id_rol, fecha_hora_inicio, fecha_hora_fin, intervalo_validez_alternativo,usar_intervalo_alternativo,singularizador) "
+            $query = "INSERT INTO $tablename ( id_usuario, id_rol, fecha_hora_inicio, fecha_hora_fin, intervalo_validez_alternativo,usar_intervalo_alternativo,singularizador) "
                     . "VALUES ( $1, $2, $3, $4, $5, $6, $7 )";
+            
             return $manager( $query, $params, $extra = null );
             
         }
