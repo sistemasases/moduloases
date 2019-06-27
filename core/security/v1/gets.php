@@ -253,7 +253,6 @@ function _core_security_get_user_rol( $user_id, $time_context = null, $singulari
 			($time_context <= $rol->end) && 
 			$valid_singularization
 		){
-			
 			return $u_rol;
 		}
 	}
