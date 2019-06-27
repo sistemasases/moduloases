@@ -207,7 +207,6 @@ function _core_security_get_user_rol( $user_id, $time_context = null, $singulari
 
 	$user_roles = $manager( $query = "SELECT * FROM $tablename WHERE id_usuario = $1 AND eliminado = 0", $params, $extra = null );
 
-
 	foreach ($user_roles as $key => $u_rol) {
 
 		$rol = new stdClass();
@@ -229,7 +228,7 @@ function _core_security_get_user_rol( $user_id, $time_context = null, $singulari
 				$rol->end = strtotime($alternative_interval['fecha_hora_fin']);
 			}
 		}
-
+                
 		$valid_singularization = true;
 
 		if( !is_null($u_rol['singularizador']) ){
