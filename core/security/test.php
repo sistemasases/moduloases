@@ -47,7 +47,7 @@ $singularizations = array(
 
 //print_r( secure_assing_role_to_user( 15, "root" ) );
 
-print_r( core_secure_assing_role_to_user( 73380, "root"  ) );
+print_r( core_secure_assing_role_to_user( 73380, "root", strtotime("now"), strtotime("+7 day") ) );
 
 
 ?>
