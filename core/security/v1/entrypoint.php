@@ -455,9 +455,9 @@ function secure_assing_role_to_user( $user_id, $role, $start_datetime = NULL, $e
     if( ( $use_alternative_interval === 0 && $start_datetime === NULL ) ||
         ( $use_alternative_interval === 0 && $end_datetime === NULL ) ){
         return null;
+    }else{
+        if( ($start_datetime >= $end_datetime) ){ return null; }
     }
-    
-    if( ($start_datetime >= $end_datetime) ){ return null; }
     
     $_user = get_db_records( "user", ['id'], [$user_id] );
     $_role = _core_security_get_role( $role ); // Rol at the master system (Secutiry Core)
