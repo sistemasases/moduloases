@@ -476,6 +476,8 @@ function secure_assing_role_to_user( $user_id, $role, $start_datetime = NULL, $e
             
         }
         
+        print_r(_core_security_get_user_rol( $user_id, $start_datetime, $singularizator ));die();
+        
         if( !_core_security_get_user_rol( $user_id, $start_datetime, $singularizator ) ){
             
             global $DB_PREFIX;
