@@ -230,6 +230,8 @@ function _core_security_get_user_rol( $user_id, $time_context = null, $singulari
 		}
                 
 		$valid_singularization = true;
+                echo $time_context;
+                print_r($rol);
 
 		if( !is_null($u_rol['singularizador']) ){
 
