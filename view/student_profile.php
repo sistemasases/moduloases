@@ -236,10 +236,10 @@ if ($student_code != 0) {
  
 
     // General file (ficha general) information
-    $record->puntaje_icfes       = $ases_student->puntaje_icfes;
-    $record->ingreso       = $ases_student->anio_ingreso;
-    $record->estrato       = $ases_student->estrato;
-    $record->res_address = $ases_student->direccion_res;
+    $record->puntaje_icfes = $ases_student->puntaje_icfes;
+    $record->ingreso = $ases_student->anio_ingreso;
+    $record->estrato = $ases_student->estrato;
+    $record->res_address = get_res_address($geographic_object->id);
     $record->init_tel = $ases_student->tel_ini;
     $record->res_tel = $ases_student->tel_res;
     $record->cell_phone = $ases_student->celular;
@@ -347,8 +347,7 @@ if ($student_code != 0) {
 
      //TRAE MUNICIPIOS
     $municipios= get_municipios();
-    $municipio_student = $ases_student->id_ciudad_res;
-
+    $municipio_student = get_id_cuidad_res($geographic_object->id);
     $options_municipios = '';
 
     $options_municipios .= "<optgroup label='Populares'> <option value='1'>NO DEFINIDO</option> </optgroup>" ;   

@@ -259,9 +259,7 @@ function get_student_profile_url($courseid, $instanceid, $student_code): moodle_
  * @see get_cond_excepcion()
  * @return object --> with CONDICIÓN DE EXCEPCIÓN information
  */
-
-
-function  get_cond_excepcion()
+function get_cond_excepcion()
 {
     global $DB; 
    $sql_query = "SELECT * FROM {talentospilos_cond_excepcion}";
@@ -275,8 +273,7 @@ function  get_cond_excepcion()
  * @see get_cond()
  * @return object --> with CONDICIÓN DE EXCEPCIÓN information
  */
-
-function  get_cond($id)
+function get_cond($id)
 {
     global $DB; 
    $sql_query = "SELECT * FROM {talentospilos_cond_excepcion} WHERE id=$id";
@@ -289,27 +286,25 @@ function  get_cond($id)
  * @see get_estados_civiles($id_cond)
  * @return object --> with ESTADO CIVIL information
  */
-
-function  get_estados_civiles()
+function get_estados_civiles()
 {
-    global $DB; 
-   $sql_query = "SELECT * FROM {talentospilos_estado_civil}";
-   return $DB->get_records_sql($sql_query);
+    global $DB;
+    $sql_query = "SELECT * FROM {talentospilos_estado_civil}";
+    return $DB->get_records_sql($sql_query);
 }
+
 /**
  * Get paises registrados
  *
  * @see get_paises()
  * @return object --> with PAIS information
  */
-
-function  get_paises()
+function get_paises()
 {
-    global $DB; 
-   $sql_query = "SELECT * FROM {talentospilos_pais}";
-   return $DB->get_records_sql($sql_query);
+    global $DB;
+    $sql_query = "SELECT * FROM {talentospilos_pais}";
+    return $DB->get_records_sql($sql_query);
 }
-
 
 /**
  * Get ocupaciones registradas
@@ -317,15 +312,12 @@ function  get_paises()
  * @see get_ocupaciones()
  * @return object --> with OCUPACION information
  */
-
-function  get_ocupaciones()
+function get_ocupaciones()
 {
-    global $DB; 
-   $sql_query = "SELECT * FROM {talentospilos_ocupaciones}";
-   return $DB->get_records_sql($sql_query);
+    global $DB;
+    $sql_query = "SELECT * FROM {talentospilos_ocupaciones}";
+    return $DB->get_records_sql($sql_query);
 }
-
-
 
 /**
  * Get municipios registrados
@@ -333,8 +325,7 @@ function  get_ocupaciones()
  * @see get_municipios()
  * @return object --> with MUNICIPIOS information
  */
-
-function  get_municipios()
+function get_municipios()
 {
     global $DB; 
     $array_departamentos = array ();
@@ -345,11 +336,43 @@ function  get_municipios()
         $municipios = $DB->get_records_sql($sql_query);
         $array_departamentos[$departamento->nombre] =  $municipios;
     }
-   
        
    return $array_departamentos;
 }
 
+/**
+ * Gets student's city's id on talentospilos_demografia
+ *
+ * @see get_id_cuidad_res()
+ * @param $id_demografia
+ * @return object 
+ */
+function get_id_cuidad_res($id_demografia)
+{
+    global $DB;
+
+    $sql_query = "SELECT id_ciudad FROM {talentospilos_demografia} WHERE id = $id_demografia";
+    $id_ciudad_res = $DB->get_record_sql($sql_query)->id_ciudad;
+
+   return $id_ciudad_res;
+}
+
+/**
+ * Gets student's address from talentospilos_demografia
+ *
+ * @see get_res_address()
+ * @param $id_demografia
+ * @return object
+ */
+function get_res_address($id_demografia)
+{
+    global $DB;
+
+    $sql_query = "SELECT direccion FROM {talentospilos_demografia} WHERE id = $id_demografia";
+    $id_res_address = $DB->get_record_sql($sql_query)->direccion;
+
+   return $id_res_address;
+}
 
 /**
  * Update genero
