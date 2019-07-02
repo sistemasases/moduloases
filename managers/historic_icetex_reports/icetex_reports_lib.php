@@ -66,7 +66,7 @@ function get_array_students_with_resolution($no_res_bool){
                 INNER JOIN {talentospilos_usuario} AS usuario ON usuario.id = user_extended.id_ases_user
                 INNER JOIN {user} AS moodle_user ON moodle_user.id = user_extended.id_moodle_user
                 CROSS JOIN {talentospilos_semestre} AS semestre 
-                WHERE cohorts.idnumber LIKE 'SPP%' AND user_extended.tracking_status = 1) AS spp_students 
+                WHERE (cohorts.idnumber LIKE 'SPP%' OR cohorts.idnumber LIKE 'SPEX%') AND user_extended.tracking_status = 1) AS spp_students 
 
                 LEFT JOIN 
 
