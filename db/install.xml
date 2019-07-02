@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="blocks/ases/db" VERSION="20190606" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
+<XMLDB PATH="blocks/ases/db" VERSION="20190626" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -560,7 +560,7 @@
         <FIELD NAME="id_ciudad" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="1" SEQUENCE="false"/>
         <FIELD NAME="vive_lejos" TYPE="binary" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="vive_zona_riesgo" TYPE="binary" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="origen" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="nativo" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="nivel_riesgo" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="observaciones" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>

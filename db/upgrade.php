@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2019060608360) {
+    if ($oldversion < 2019062617310) {
       
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
@@ -3832,7 +3832,20 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->add_field($table, $field);
         }
 
-        upgrade_block_savepoint(true, 2019060608360, 'ases');
+        //*****************************************************************************************//
+        // Modificación de campo en talentospilos_demografia: Se renombra el nombre del campo      //
+        // 'origen' por 'nativo'.                                                                  //
+        // Versión: 2019062617310                                                                  //
+        //*****************************************************************************************//
+
+        // Rename field origen on table talentospilos_demografia to nativo.
+        $table = new xmldb_table('talentospilos_demografia');
+        $field = new xmldb_field('origen', XMLDB_TYPE_INTEGER, '1', null, null, null, null, 'vive_zona_riesgo');
+
+        // Launch rename field origen.
+        $dbman->rename_field($table, $field, 'nativo');
+
+        upgrade_block_savepoint(true, 2019062617310, 'ases');
         return $result;
 
     }

@@ -28,28 +28,41 @@ require_once('geographic_lib.php');
 
 date_default_timezone_set('America/Bogota');
 
-if(isset($_POST['func'])){
-    if($_POST['func'] == 'load_geographic_info'){
 
-        $id_ases = $_POST['id_ases'];
+$data = json_decode(file_get_contents("php://input"));
+
+if(isset($data)){
+    if($data->func == 'load_geographic_info'){
+
+        $id_ases = $data->id_ases;
         load_geographic_info($id_ases);
 
     }
-    else if($_POST['func'] == 'save_geographic_info'){
+    else if($data->func == 'save_geographic_info'){
 
-        $id_ases = $_POST['id_ases'];
-        $latitude = $_POST['latitude'];
-        $longitude = $_POST['longitude'];
-        $neighborhood = $_POST['neighborhood'];
-        $geographic_risk = $_POST['geographic_risk'];
-        $duration = $_POST['duration'];
-        $distance = $_POST['distance'];
-        $address = $_POST['address'];
-        $city = $_POST['city'];
+        $id_ases = $data->id_ases;
+        $latitude = $data->latitude;
+        $longitude = $data->longitude;
+        $neighborhood = $data->neighborhood;
+        $geographic_risk = $data->geographic_risk;
+        $duration = $data->duration;
+        $distance = $data->distance;
+        $address = $data->address;
+        $city = $data->city;
+        $observaciones = $data->observaciones;
+        $vive_lejos = $data->vive_lejos;
+        $vive_zona_riesgo = $data->vive_zona_riesgo;
+        $nativo = $data->nativo;
+        $nivel_riesgo = $data->nivel_riesgo;
+
+        $nativo = (isset($nativo))?$nativo:-1;
+        $vive_lejos = ($vive_lejos)?1:0;
+        $vive_zona_riesgo = ($vive_zona_riesgo)?1:0;
+        $nivel_riesgo = (isset($nivel_riesgo))?$nivel_riesgo:-1;
 
         $msg = new stdClass();
 
-        $result_save_info = save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $geographic_risk, $duration, $distance, $address, $city);
+        $result_save_info = save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $geographic_risk, $duration, $distance, $address, $city, $observaciones, $vive_lejos, $vive_zona_riesgo, $nativo, $nivel_riesgo);
 
         if($result_save_info){
             $msg->title = 'Éxito';

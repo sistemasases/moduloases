@@ -23,6 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+ 
 /**
  * Gets geographic information of a student, given his ID
  *
@@ -109,16 +110,25 @@ function load_geographic_info($id_ases){
 /**
  * Saves geographic information of an ASES student 
  *
- * @see save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $geographic_risk)
+ * @see save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $geographic_risk, $duration, $distance, $address, $city)
  * @param $id_ases --> ASES student id
  * @param $latitude --> Latitude
  * @param $longitude --> longitude
  * @param $neighborhood --> neighborhood id
  * @param $geographic_risk --> geographic risk qualification
+ * @param $duration --> duration of the route from the student's residence to Univalle
+ * @param $distance --> distance of the route from the student's residence to Univalle
+ * @param $address --> student's residence address
+ * @param $city --> student's residence city
+ * @param $observaciones --> Geographic tracing observations
+ * @param $vive_lejos --> longitude
+ * @param $vive_zona_riesgo --> neighborhood id
+ * @param $nativo --> Student's origin
+ * @param $nivel_riesgo --> geographic risk level
  * @return integer --> 1 if everything were saved, 0 otherwise
  */
 
-function save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $geographic_risk, $duration, $distance, $address, $city){
+function save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $geographic_risk, $duration, $distance, $address, $city, $observaciones, $vive_lejos, $vive_zona_riesgo, $nativo, $nivel_riesgo){
 
     global $DB;
 
@@ -164,10 +174,13 @@ function save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $g
         $data_object->distancia = $distance;
         $data_object->direccion = $address;
         $data_object->id_ciudad = $city;
-        
+        $data_object->observaciones = $observaciones;
+        $data_object->vive_lejos = $vive_lejos;
+        $data_object->vive_zona_riesgo = $vive_zona_riesgo;
+        $data_object->nativo = $nativo;
+        $data_object->nivel_riesgo = $nivel_riesgo;
     
         $result_geographic_info = $DB->update_record('talentospilos_demografia', $data_object);
-
     }
     else{
         $data_object = new stdClass();
@@ -179,7 +192,11 @@ function save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $g
         $data_object->distancia = $distance;
         $data_object->direccion = $address;
         $data_object->id_ciudad = $city;
-        
+        $data_object->observaciones = $observaciones;
+        $data_object->vive_lejos = $vive_lejos;
+        $data_object->vive_zona_riesgo = $vive_zona_riesgo;
+        $data_object->nativo = $nativo;
+        $data_object->nivel_riesgo = $nivel_riesgo;
 
         $result_geographic_info = $DB->insert_record('talentospilos_demografia', $data_object, true);
     }
