@@ -86,7 +86,7 @@ define(['jquery',
 				var table = $("#tableResolutions").DataTable();
 		
 				var colIndex = $(this).parent().index()+1;
-				table.columns( colIndex-1 ).search( this.value ).draw();		
+				table.columns( colIndex-1 ).search( this.value ).draw();
 			});
 
 	/**
@@ -115,6 +115,21 @@ define(['jquery',
 		});
 	}
 
+	function compute_resolutions_total_amount(table) {
+		var total_current_page = table.column( 3, { page:'current' } ).data().sum();
+		var total_all_pages = table.column( 3 ).data().sum();
+
+		var total_stud_amount_page = table.column( 5, { page:'current' } ).data().sum();
+
+		$( table.column( 3 ).footer() ).html(
+			'$'+total_current_page + '(Total $' + total_all_pages + ')'
+		);
+
+		$( table.column( 5 ).footer() ).html(
+			'$'+total_stud_amount_page
+		);
+	}
+
 	/**
 	 * @method load_resolutions
 	 * @desc Loads the report of all resolutions on a table. Current processing on resolution_reports_processing.php
@@ -128,9 +143,20 @@ define(['jquery',
 			url: "../managers/historic_icetex_reports/resolution_reports_processing.php",
 			success: function(msg){
 				$("#div_resolutions").empty();
-				$("#div_resolutions").fadeIn(1000).append('<table id="tableResolutions" class="display" cellspacing="0" width="100%"><thead><thead></table>');
+				$("#div_resolutions").fadeIn(1000).append('<table id="tableResolutions" class="display" cellspacing="0" width="100%"><thead><thead><tfoot id="table_res_foot"><th></th><th></th><th></th><th></th><th></th><th></th><th></th></tfoot></table>');
 				var table = $("#tableResolutions").DataTable(msg);
-				$('#div_resolutions').css('cursor', 'pointer');			
+				
+				$("#tableResolutions").on( 'page.dt', function () {
+					compute_resolutions_total_amount(table);					
+				});
+
+				$("#tableResolutions").on('draw.dt', function () {
+					compute_resolutions_total_amount(table);					
+				});
+
+				compute_resolutions_total_amount(table);
+				$('#div_resolutions').css('cursor', 'pointer');
+
 			},
 			dataType: "json",
 			cache: false,
