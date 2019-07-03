@@ -22,10 +22,14 @@
      'block_ases/select2',
      'block_ases/jquery.dataTables'
  ], function($, CFG,  loading_indicator, csv, bootstrap, sweetalert, jqueryui, select2) {
+     
+    var asignation_counter = []; 
+     
     var BUTTON_GET_COMPLETE_REPORT_NAME_SELECTOR = '#button-get-complete-report';
     var GET_COMPLETE_REPORT_NAME_FUNCTION_NAME = 'get_monitor_practicing_and_students_report';
     var BASE_API_URL = '/blocks/ases/managers/monitor_assignments/monitor_assignments_api.php';
     var DOWNLOAD_FILE_NAME = "asignaciones_monitor_con_practicantes.csv";
+    
     var api_url = function () {
       return  CFG.wwwroot+BASE_API_URL;
     };
@@ -280,6 +284,7 @@
 
             
             $(document).ready(function(){
+                load_counters();
                 $("select").trigger( "change" );
             });
 
@@ -378,6 +383,8 @@
                                 );
                             }, 0);
                         }
+                        
+                        load_counters();
                     },
                     failure: function(errMsg) {
                         console.log(errMsg);
@@ -452,6 +459,8 @@
                             }, 0);
                             console.log( data );
                         }
+                        
+                        load_counters();
                     },
                     failure: function(errMsg) {
                         console.log(errMsg);
@@ -479,7 +488,7 @@
 
                 $("#transfer-monitor-list").html("");
                 $("#transfer-monitor-list").append( options );
-
+                
             });
 
             $(document).on( 'click', '#btn-execute-transfer', function(e){
@@ -530,11 +539,15 @@
                             }, 0);
                             console.log( data );
                         }
+                        
+                        load_counters();
                     },
                     failure: function(errMsg) {
                         console.log(errMsg);
                     }
                 });
+                
+                
             });
 
             $("select").change(function(){
@@ -592,8 +605,72 @@
                         $(this).removeClass("filter-active");
                         $(".item-general-list.practicant_item").removeClass("oculto-jefe");
                     }
+                    
                 }
             });
+            
+            function load_counters(){
+                
+                asignation_counter = [];
+                
+                var instance_id = $("#monitor_assignments_instance_id").data("instance-id");
+                var api_function = "get_practicants_monitors_and_students";
+                
+                $.ajax({
+                    type: "POST",
+                    url: "../managers/monitor_assignments/monitor_assignments_api.php",
+                    data: JSON.stringify({ "function": api_function, "params": [ instance_id , "2019A" ] }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function(data){
+                        
+                        total = 0;
+                        
+                        data.data_response.forEach( (item) => {
+                            
+                           if( asignation_counter[item.nombre_usuario_moodle__profesional] == undefined ){ 
+                               asignation_counter[item.nombre_usuario_moodle__profesional] = 1; 
+                           }else{
+                               asignation_counter[item.nombre_usuario_moodle__profesional]++;
+                           }
+                           if( asignation_counter[item.codigo_practicante] == undefined ){ 
+                               asignation_counter[item.codigo_practicante] = 1; 
+                           }else{
+                               asignation_counter[item.codigo_practicante]++;
+                           }
+                           if( asignation_counter[item.codigo_monitor] == undefined ){ 
+                               asignation_counter[item.codigo_monitor] = 1; 
+                           }else{
+                               asignation_counter[item.codigo_monitor]++;
+                           }
+                           
+                           total++;
+                           
+                        });
+                        
+                        $(".item-general-list").each( function(key) {
+                            let index_id = $(this).data( "username" );
+                            $(this).find( ".item-text" ).find( ".asignation_counter" ).text( asignation_counter[index_id] );
+                        });
+                        
+                        $(".total_counter").text( total );
+                        
+                        var index_id = $("#select-professional").find(":selected").attr("data-username");
+                        $(".asignation_counter_prof").text( asignation_counter[index_id] );
+                        
+                        $("#select-professional").find("option").each( function(key) {
+                            let index_id = $(this).data( "username" );
+                            let fullname = $(this).data( "fullname" );
+                            $(this).text( fullname + " - " + "( " +  asignation_counter[index_id] + " )" );
+                        });
+                    },
+                    failure: function(errMsg) {
+                        console.log(errMsg);
+                    }
+                });
+                
+            }
+            
         }
     };
 });
