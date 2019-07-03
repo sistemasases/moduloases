@@ -196,11 +196,11 @@ function _core_security_get_user_rol( $user_id, $time_context = null, $singulari
 	if( !is_numeric($user_id) ){
 		return false;
 	}
-
+        
 	if( is_null( $time_context ) ){
 		$time_context = time();
 	}
-
+        
 	array_push($params, $user_id);
 
 	$manager = get_db_manager();
@@ -230,8 +230,6 @@ function _core_security_get_user_rol( $user_id, $time_context = null, $singulari
 		}
                 
 		$valid_singularization = true;
-                echo $time_context;
-                print_r($rol);
 
 		if( !is_null($u_rol['singularizador']) ){
 
@@ -246,15 +244,15 @@ function _core_security_get_user_rol( $user_id, $time_context = null, $singulari
 					break;
 				}
 			}
-
+                        
 		}
-
+                
 		if( 
-			($time_context >= $rol->start) &&
-			($time_context <= $rol->end) && 
-			$valid_singularization
+                    ($time_context >= $rol->start) &&
+                    ($time_context <= $rol->end) && 
+                    $valid_singularization
 		){
-			return $u_rol;
+                    return $u_rol;
 		}
 	}
 
