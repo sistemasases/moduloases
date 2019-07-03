@@ -123,8 +123,9 @@ function get_all_cohort_names(){
 
     $cohorts_options = "<select><option value=''></option>";
 
-    $sql_query = "SELECT substring(idnumber from 0 for 5) AS cohort_name FROM {cohort} 
-                    WHERE substring(idnumber from 0 for 4) = 'SPP'";
+    $sql_query = "SELECT DISTINCT substring(idnumber from 0 for 5) AS cohort_name FROM {cohort} 
+                    WHERE idnumber LIKE 'SPP%' OR idnumber LIKE 'SPEX%'
+                    ORDER BY cohort_name ASC";
 
     $cohorts = $DB->get_records_sql($sql_query);
 
