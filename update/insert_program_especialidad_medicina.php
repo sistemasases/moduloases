@@ -18,7 +18,7 @@ $programa->id_sede = $sede->id;
 $programa->jornada = Jornada::NOCTURNA;
 $programa->id_facultad = $facultad->id;
 $programa->cod_univalle = '5622';
-$programa->codigosnies = '615insert_program_especialidad_medicina.php';
+$programa->codigosnies = '615';
 
 if($programa->save()) {
     echo "El programa $programa->nombre se ha guardado";
