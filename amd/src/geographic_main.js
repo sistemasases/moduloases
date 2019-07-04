@@ -1,8 +1,10 @@
  /**
  * Load and save geographic information
  * @module amd/src/geographic_main
- * @author Jhonier Andrés Calero Rodas, Jorge Eduardo Mayor Fernández
+ * @author Jhonier Andrés Calero Rodas
+ * @author Jorge Eduardo Mayor Fernández
  * @copyright  2018 Jhonier A. Calero <jhonier.calero@correounivalle.edu.co>
+ * @copyright  2019 Jorge Eduardo Mayor <mayor.jorge@correounivalle.edu.co>
  * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */ 
 
@@ -14,6 +16,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
             
             var id_ases = $('#id_ases').val();
             var student_marker;
+
+            load_geographic_info();
 
             /**
              * Executes the method search_direction() by pressing the button search.
@@ -72,7 +76,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 $('#inmigrante').attr('disabled', true);
                 $('#geographic_text_area').attr('disabled', true);
 
-                var ciudad_est = document.getElementById('municipio_act').value;
+                var ciudad_est = document.getElementById('geographic_ciudad').value;
                 var latitude = $('#latitude').val();
                 var longitude = $('#longitude').val();
 
@@ -90,12 +94,14 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 var latitude = $('#latitude').val();
                 var longitude = $('#longitude').val();
                 var address = $('#geographic_direccion').val();
-                var city = $('#municipio_act').val();
+                var city = $('#geographic_ciudad').val();
                 var duration = 0;
                 var distance = 0;
                 var mode;
-
-                var ciudad = document.getElementById("municipio_act");
+                document.getElementById('direccion_res').value = address;
+                document.getElementById('municipio_act').value = city;
+                
+                var ciudad = document.getElementById("geographic_ciudad");
                 var selectedCity = ciudad.options[ciudad.selectedIndex].text;
                 var query = address + " " + selectedCity;
 
@@ -211,13 +217,24 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                     url: "../managers/student_profile/geographic_serverproc.php",
                     success: function(msg) {
 
-                        console.log(msg);
+                        // var data = JSON.parse(msg.info);
+
+                        // var vive_lejos = data.vive_lejos;
+                        // var vive_zona_riesgo = data.vive_zona_riesgo;
+                        // var nativo = data.nativo;
+                        // var nivel_riesgo = data.nivel_riesgo;
+                        // var observaciones = data.observaciones;
+
+                        // document.getElementById("vive_lejos").checked = (vive_lejos)?true:false;
+                        // //$("#vive_lejos").prop("checked", vive_zona_riesgo);
+                        
+                         console.log("msg.text");
                     },
                     dataType: "json", //Json format
                     cache: "false",
                     error: function(msg) {
-                        console.log(msg);
-                    },
+                        console.log("msg");
+                    }
                 });
             }
 
@@ -291,7 +308,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                             msg.title,
                             msg.text,
                             msg.type);
-                    },
+                    }
                 });
             }
         }

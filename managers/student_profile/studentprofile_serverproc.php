@@ -328,7 +328,7 @@ function save_profile($form){
         //$email = "insert email test";
         
         $obj_updatable_moodle->email = $email;
-
+        
         $result = $DB->update_record('talentospilos_usuario', $obj_updatable);
 
         $sql_query = "SELECT id FROM {talentospilos_demografia} WHERE id_usuario = $id_ases";
@@ -338,7 +338,7 @@ function save_profile($form){
         $obj_update_geographic->id_ciudad = $ciudad_res;
 
         $result_geographic = $DB->update_record('talentospilos_demografia', $obj_update_geographic);
-    
+        
         $result_cv_update = studentprofile_update_email_moodle($obj_updatable_moodle);
         
         if($result && $result_cv_update){

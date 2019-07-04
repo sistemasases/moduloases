@@ -69,7 +69,7 @@
     <div class="div-41 col-xs-12 col-sm-12 col-md-12 col-lg-12 seg_geo_vive_lejos">
         <div class="geographic_vive_lejos">
             <label>
-                <input id="geographic_checkbox_vive_lejos" type="checkbox" class="geographic_checkbox_vive_lejos" value="0" disabled>
+                <input id="geographic_checkbox_vive_lejos" type="checkbox" class="geographic_checkbox_vive_lejos" {{#live_far_away}} checked {{/live_far_away}} disabled>
                 Vive lejos
             </label>
         </div>
@@ -77,7 +77,7 @@
     <div class="div-39 col-xs-12 col-sm-12 col-md-12 col-lg-12 seg_geo_vive_zona_riesgo">
         <div class="geographic_zona_riesgo">
             <label>
-                <input id="geographic_checkbox_zona_riesgo" type="checkbox" class="geographic_checkbox_zona_riesgo" value="0" disabled>
+                <input id="geographic_checkbox_zona_riesgo" type="checkbox" class="geographic_checkbox_zona_riesgo" {{#live_risk_zone}} checked {{/live_risk_zone}} disabled>
                 Vive en zona de riesgo
             </label>
         </div>
@@ -87,13 +87,13 @@
         <div class="geographic_origen">
             <div class="geographic_origen_nativo">
                 <label>
-                    <input class="geographic_origen_nativo_radio" type="radio" name="geographic_origen" id="nativo" value="1">
+                    <input class="geographic_origen_nativo_radio" type="radio" name="geographic_origen" id="nativo" value="1" {{#native_origin}} checked {{/native_origin}}>
                     Nativo
                 </label>
             </div>
             <div class="geographic_origen_inmigrante">
                 <label>
-                    <input class="geographic_origen_inmigrante_radio" type="radio" name="geographic_origen" id="inmigrante" value="0">
+                    <input class="geographic_origen_inmigrante_radio" type="radio" name="geographic_origen" id="inmigrante" value="0" {{#inmigrant_origin}} checked {{/inmigrant_origin}}>
                     Inmigrante
                 </label>
             </div>
@@ -104,19 +104,19 @@
         <div class="geographic_nivel_riesgo">
             <div class="geographic_nivel_riesgo_bajo">
                 <label>
-                    <input class="geographic_nivel_riesgo_bajo_radio" type="radio" name="geographic_nivel_riesgo" id="nivel_bajo" value="1" disabled>
+                    <input class="geographic_nivel_riesgo_bajo_radio" type="radio" name="geographic_nivel_riesgo" id="nivel_bajo" value="1" {{#low_level}} checked {{/low_level}} disabled>
                     Bajo
                 </label>
             </div>
             <div class="geographic_nivel_riesgo_medio">
                 <label>
-                    <input class="geographic_nivel_riesgo_medio_radio" type="radio" name="geographic_nivel_riesgo" id="nivel_medio" value="2" disabled>
+                    <input class="geographic_nivel_riesgo_medio_radio" type="radio" name="geographic_nivel_riesgo" id="nivel_medio" value="2" {{#mid_level}} checked {{/mid_level}} disabled>
                     Medio
                 </label>
             </div>
             <div class="geographic_nivel_riesgo_alto">
                 <label>
-                    <input class="geographic_nivel_riesgo_alto_radio" type="radio" name="geographic_nivel_riesgo" id="nivel_alto" value="3" disabled>
+                    <input class="geographic_nivel_riesgo_alto_radio" type="radio" name="geographic_nivel_riesgo" id="nivel_alto" value="3" {{#high_level}} checked {{/high_level}} disabled>
                     Alto
                 </label>
             </div>
@@ -125,7 +125,7 @@
      <div class="div-37 col-xs-12 col-sm-12 col-md-12 col-lg-12 separador_inferior seg_geo_observaciones">
         Observaciones:
         <br>
-        <textarea id="geographic_text_area" class="form-control " name="geographic_text_area" disabled> </textarea>
+        <textarea id="geographic_text_area" class="form-control " name="geographic_text_area" disabled>{{observations}}</textarea>
         <br>
     </div>
      

@@ -22,7 +22,7 @@
  * @copyright  2018 Iader E. García <iadergg@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
+ 
  
 /**
  * Gets geographic information of a student, given his ID
@@ -34,7 +34,9 @@
  
 function get_geographic_info($id_ases){
     global $DB;
-    $sql_query = "SELECT id_usuario AS id_user, latitud AS latitude, longitud AS longitude, barrio AS neighborhood 
+    $sql_query = "SELECT id_usuario AS id_user, latitud AS latitude, longitud AS longitude, barrio AS neighborhood,
+                  vive_lejos AS live_far_away , vive_zona_riesgo AS live_risk_zone, nativo AS native,
+                  nivel_riesgo AS risk_level, observaciones AS observations
                   FROM {talentospilos_demografia} AS demographic_t
                   WHERE demographic_t.id_usuario=".$id_ases;
                   
@@ -92,16 +94,6 @@ function load_geographic_info($id_ases){
 
     $sql_query = "SELECT * FROM {talentospilos_demografia} WHERE id_usuario = $id_ases";
     $result = $DB->get_record_sql($sql_query);
-
-    $sql_query = "SELECT id FROM {talentospilos_riesgos_ases} WHERE nombre = 'geografico'";
-    $id_risk = $DB->get_record_sql($sql_query)->id;
-
-    $sql_query = "SELECT * FROM {talentospilos_riesg_usuario} WHERE id_usuario = $id_ases AND id_riesgo = $id_risk";
-    $register_risk = $DB->get_record_sql($sql_query);
-
-    if($register_risk){
-        $result->risk = $register_risk->calificacion_riesgo;
-    }
 
     return $result;
 

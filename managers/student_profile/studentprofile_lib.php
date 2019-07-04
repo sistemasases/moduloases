@@ -344,14 +344,14 @@ function get_municipios()
  * Gets student's city's id on talentospilos_demografia
  *
  * @see get_id_cuidad_res()
- * @param $id_demografia
+ * @param $id_ases
  * @return object 
  */
-function get_id_cuidad_res($id_demografia)
+function get_id_cuidad_res($id_ases)
 {
     global $DB;
-
-    $sql_query = "SELECT id_ciudad FROM {talentospilos_demografia} WHERE id = $id_demografia";
+    //echo "Hola".$id_ases;
+    $sql_query = "SELECT id_ciudad FROM {talentospilos_demografia} WHERE id_usuario = $id_ases";
     $id_ciudad_res = $DB->get_record_sql($sql_query)->id_ciudad;
 
    return $id_ciudad_res;
@@ -361,14 +361,14 @@ function get_id_cuidad_res($id_demografia)
  * Gets student's address from talentospilos_demografia
  *
  * @see get_res_address()
- * @param $id_demografia
+ * @param $id_ases
  * @return object
  */
-function get_res_address($id_demografia)
+function get_res_address($id_ases)
 {
     global $DB;
 
-    $sql_query = "SELECT direccion FROM {talentospilos_demografia} WHERE id = $id_demografia";
+    $sql_query = "SELECT direccion FROM {talentospilos_demografia} WHERE id_usuario = $id_ases";
     $id_res_address = $DB->get_record_sql($sql_query)->direccion;
 
    return $id_res_address;

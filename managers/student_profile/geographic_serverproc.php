@@ -28,14 +28,26 @@ require_once('geographic_lib.php');
 
 date_default_timezone_set('America/Bogota');
 
-
 $data = json_decode(file_get_contents("php://input"));
 
 if(isset($data)){
     if($data->func == 'load_geographic_info'){
 
         $id_ases = $data->id_ases;
-        load_geographic_info($id_ases);
+        $result = load_geographic_info($id_ases);
+
+        if($result){
+            $msg->title = 'Éxito';
+            $msg->text = "La información geográfica ha sido cargada con éxito";
+            $msg->type = "success";
+            $msg->info = $result;
+        }
+        else{
+            $msg->title = 'Error';
+            $msg->text = "La información geográfica no ha sido cargada. Inténtalo nuevamente.";
+            $msg->type = "error";
+        }
+        echo json_encode($msg);
 
     }
     else if($data->func == 'save_geographic_info'){

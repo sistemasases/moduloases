@@ -1033,9 +1033,14 @@ define(['jquery',
                     },
                 });
 
+                var direccion = document.getElementById('direccion_res').value;
+                var ciudad_act = document.getElementById("municipio_act").value;
+
+                document.getElementById('geographic_direccion').value = direccion;
+                document.getElementById('geographic_ciudad').value = ciudad_act;
+
                 var ciudad = document.getElementById("municipio_act");
                 var selectedCity = ciudad.options[ciudad.selectedIndex].text;
-                var direccion = document.getElementById('direccion_res').value;
                 var query = direccion + " " + selectedCity;
 
                 var request = {
