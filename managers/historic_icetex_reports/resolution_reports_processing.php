@@ -29,9 +29,8 @@
 
 	if(isset($_POST['resR']) && $_POST['resR'] == 'resReport'){		
 		$columns = array();
-		$resolution_options = get_all_resolutions_codes();
 		$semester_options = get_all_semesters_names();
-		array_push($columns, array("title"=>"Código resolución".$resolution_options, "name"=>"codigo_resolucion", "data"=>"codigo_resolucion"));
+		array_push($columns, array("title"=>"Código resolución", "name"=>"codigo_resolucion", "data"=>"codigo_resolucion"));
 		array_push($columns, array("title"=>"Semestre".$semester_options, "name"=>"nombre", "data"=>"nombre"));
 		array_push($columns, array("title"=>"Nota crédito", "name"=>"nota_credito", "data"=>"nota_credito"));
 		array_push($columns, array("title"=>"Total", "className"=>"dt-body-right", "name"=>"monto_total", "data"=>"monto_total"));
