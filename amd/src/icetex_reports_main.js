@@ -115,6 +115,11 @@ define(['jquery',
 		});
 	}
 
+	/**
+	 * @method compute_resolutions_total_amount
+	 * @desc Computes the sum of the current page and all pages for every value in columns three and five of the given table.
+	 * @return {void}
+	 */
 	function compute_resolutions_total_amount(table) {
 		var total_current_page = table.column( 3, { page:'current' } ).data().sum();
 		var total_all_pages = table.column( 3 ).data().sum();
