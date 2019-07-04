@@ -643,8 +643,11 @@
                            }else{
                                asignation_counter[item.codigo_monitor]++;
                            }
-                           
-                           total++;
+                           if( asignation_counter["TODOS"] == undefined ){ 
+                               asignation_counter["TODOS"] = 1; 
+                           }else{
+                               asignation_counter["TODOS"]++;
+                           }
                            
                         });
                         
@@ -653,7 +656,7 @@
                             $(this).find( ".item-text" ).find( ".asignation_counter" ).text( asignation_counter[index_id] );
                         });
                         
-                        $(".total_counter").text( total );
+                        $(".total_counter").text( asignation_counter["TODOS"] );
                         
                         var index_id = $("#select-professional").find(":selected").attr("data-username");
                         $(".asignation_counter_prof").text( asignation_counter[index_id] );
