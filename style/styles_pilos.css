@@ -1007,6 +1007,10 @@ tr.shown td.details-control {
 #peer_trackings{
   padding-left: 0;
   padding-right: 0;
+  padding-top: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-top-width: 0;
 }
 
 a.panel_heading.heading_semester_tracking{
