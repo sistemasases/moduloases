@@ -338,6 +338,33 @@
                 return_with_code( -2 );
             }
 
+        }else if( $input->function == "get_practicants_monitors_and_students" ){
+
+            if( count( $input->params ) == 2 ){
+
+                // Order of params
+                /**
+                 * The id_instance value only can be a number.
+                 * The semester_id value only can be a number.
+                 */
+                
+                if( is_numeric( $input->params[0] ) && is_string( $input->params[1] ) ){
+                    
+                    echo json_encode( 
+                        array(
+                            "status_code" => 0,
+                            "error_message" => "",
+                            "data_response" =>  monitor_assignments_get_practicants_monitors_and_students($input->params[0], $input->params[1])
+                        )
+                    );
+                    
+                }else{
+                    return_with_code( -2 );
+                }
+            }else{
+                return_with_code( -2 );
+            }
+
         } else if ($input->function == ENDPOINT_GET_MONITOR_PRACTICING_AND_STUDENTS_REPORT) {
                 $api = new BaseAPI();
                 $api->post(ENDPOINT_GET_MONITOR_PRACTICING_AND_STUDENTS_REPORT,
