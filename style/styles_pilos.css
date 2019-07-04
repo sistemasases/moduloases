@@ -1024,8 +1024,8 @@ a.collapsed .hading_semester_tracking{
 }
 
 a .heading_semester_tracking{
-  background-color: #D51B23;
-  color: white;
+  background-color: #E5E5E5;
+  color: black;
 
 }
 
@@ -1033,6 +1033,12 @@ a .heading_semester_tracking:hover{
   background-color: #D51B23;
   color: white;
   text-decoration:none;
+}
+
+a .heading_semester_tracking:focus{
+    background-color: #D51B23;
+    color: white;
+    text-decoration:none;
 }
 
 .reporte-seguimiento .hacer-scroll
