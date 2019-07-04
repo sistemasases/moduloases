@@ -188,6 +188,10 @@ pre, code {
     border-bottom-width: 0;
 }
 
+#accordion_v2:last-child .card .card-header_v2 h5 {
+    margin-bottom: 5px;
+}
+
 .ajuste_limpiar{
     display: inline;
     margin-right: 3em;
