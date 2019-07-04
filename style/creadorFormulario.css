@@ -181,7 +181,15 @@ pre, code {
 }
 
 .peer_trackings_v2{
-    margin-bottom: 10px;
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-width: 0;
+}
+
+#accordion_v2:last-child .card .card-header_v2 h5 {
+    margin-bottom: 5px;
 }
 
 .ajuste_limpiar{
