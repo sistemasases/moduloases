@@ -695,6 +695,33 @@ if ($student_code != 0) {
     $record->live_far_away = ($live_far_away)?true:false;
     $record->live_risk_zone = ($live_risk_zone)?true:false;
 
+    if($live_risk_zone){
+        if($native)
+            $record->native_origin = true;
+        else
+            $record->inmigrant_origin = true;
+    } else {
+        $record->native_origin = $record->inmigrant_origin = false;
+    }
+
+    switch ($risk_level) {
+        case 1:
+            $record->low_level = true;
+            $record->mid_level = $record->high_level = false;
+            break;
+        case 2:
+            $record->mid_level = true;
+            $record->low_level = $record->high_level = false;
+            break;
+        case 3:
+            $record->high_level = true;
+            $record->low_level = $record->mid_level = false;
+            break;
+        default:
+            $record->low_level = $record->mid_level = $record->high_level = false;
+            break;
+    }
+
     switch ($geographic_object->risk) {
         case 1:
             $record->geographic_class = 'div_low_risk';
