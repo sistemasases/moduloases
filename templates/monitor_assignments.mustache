@@ -21,7 +21,7 @@
                 <span>Profesional:&nbsp;</span>
                 <select id="select-professional" data-id="professional_selector" name="" {{#not_sistemas}} disabled {{/not_sistemas}} >
                     {{#not_sistemas}} 
-                    <option value="" data-id="{{#user_logged}}{{id}}{{/user_logged}}" data-username={{#user_logged}}{{username}}{{/user_logged}} selected="selected  data-fullname={{#user_logged}}{{fullname}}{{/user_logged}}>
+                    <option value="" data-id="{{#user_logged}}{{id}}{{/user_logged}}" data-username="{{#user_logged}}{{username}}{{/user_logged}}" selected="selected"  data-fullname="{{#user_logged}}{{fullname}}{{/user_logged}}">
                         {{#user_logged}}{{fullname}}{{/user_logged}} - ( 0 )
                     </option> 
                     {{/not_sistemas}}
