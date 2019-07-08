@@ -68,20 +68,20 @@ function get_courses_pilos($instanceid){
     $sem = get_current_semester_start();
     $semestre = $sem->fecha;
 
-    print_r("raw: ");
+    //print_r("raw: ");
     print_r($semestre);
 
     $año = substr($semestre,0,4);
     $mes = substr($semestre,5,2);
-    print_r("año: ");
-    print_r($año);
-    print_r("mes: ");
-    print_r($mes);
+    //print_r("año: ");
+    //print_r($año);
+    //print_r("mes: ");
+    //print_r($mes);
 
     $semestre = $año.$mes;
 
-    print_r("semestre: ");
-    print_r($semestre);
+    //print_r("semestre: ");
+    //print_r($semestre);
     $query_courses = "
         SELECT DISTINCT curso.id,
                         curso.fullname,
