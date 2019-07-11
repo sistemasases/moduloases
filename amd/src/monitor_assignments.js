@@ -615,11 +615,12 @@
                 
                 var instance_id = $("#monitor_assignments_instance_id").data("instance-id");
                 var api_function = "get_practicants_monitors_and_students";
+                var semester_name = get_semester_name();
                 
                 $.ajax({
                     type: "POST",
                     url: "../managers/monitor_assignments/monitor_assignments_api.php",
-                    data: JSON.stringify({ "function": api_function, "params": [ instance_id , "2019A" ] }),
+                    data: JSON.stringify({ "function": api_function, "params": [ instance_id , semester_name ] }),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function(data){
