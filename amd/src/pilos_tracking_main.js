@@ -29,6 +29,12 @@ define(
             var email = "";
             var namerol = "";
             var current_semester = parseInt($("#current_ases_semester").data("info"));
+            
+            $(".loader").click(function(event){
+                event.stopPropagation();
+                
+
+            });
 
 
              /**
@@ -193,6 +199,8 @@ define(
             }
 
             $(document).ready(function() {
+                
+                $(".loader").html(" <a class='btn btn-sm btn-default'>Mostrar conteo </a>");
 
                 ///////////////////////////////////////////////////////////7
 
@@ -250,8 +258,8 @@ define(
                    // when user is 'profesional' then has permissions
                 } else if (namerol == "profesional_ps") {
                     //Starts adding event
-                    put_tracking_count( username, current_semester, parseInt( get_instance() ), false );
-                    consultar_seguimientos_persona(get_instance(), usuario, username);
+                    //put_tracking_count( username, current_semester, parseInt( get_instance() ), false );
+                    onsultar_seguimientos_persona(get_instance(), usuario, username);
                     send_email_new_form(get_instance());
 
                     // when user is 'monitor' then has permissions
