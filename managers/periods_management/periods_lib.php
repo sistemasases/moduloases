@@ -91,6 +91,35 @@ function periods_management_get_current_semester_by_apprx_interval( $start_date,
      return $current_semester;
  }
 
+/**
+ * Función que retorna la fecha de inicio del semestre actual
+ * @see get_current_semester()
+ * @return cadena de texto que representa la fecha de inicio del semestre actual
+ */
+function get_current_semester_start(){
+    global $DB;
+    $sql_query = "SELECT fecha_inicio AS fecha FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
+    $current_semester = $DB->get_record_sql($sql_query);
+    return $current_semester;
+}
+
+/**
+ * Función que retorna la fecha de inicio del semestre actual en el formato #AÑO#MES
+ * @see get_current_semester_start()
+ * @return cadena de texto que representa la fecha de inicio del semestre actual con formato procesado
+ */
+function get_current_semester_processed(){
+    $sem = get_current_semester_start();
+    $semestre = $sem->fecha;
+
+    $año = substr($semestre,0,4);
+    $mes = substr($semestre,5,2);
+
+    $semestre = $año.$mes;
+
+    return $semestre;
+}
+
  /**
  * Function that returns the current semester.
  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>.

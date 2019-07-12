@@ -43,17 +43,7 @@ require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib
 ///*** Get info grade_categories methods ***///
 ///******************************************///
 
-    /**
-     * Función que retorna la fecha de inicio del semestre actual
-     * @see get_current_semester()
-     * @return cadena de texto que representa la fecha de inicio del semestre actual
-     */
-function get_current_semester_start(){
-    global $DB;
-    $sql_query = "SELECT fecha_inicio AS fecha FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
-    $current_semester = $DB->get_record_sql($sql_query);
-    return $current_semester;
-}
+
     /**
      * Obtains all courses organized by their teacher where there are students from an instance
      *
@@ -65,22 +55,8 @@ function get_current_semester_start(){
 function get_courses_pilos($instanceid){
     global $DB;
 
-    $sem = get_current_semester_start();
-    $semestre = $sem->fecha;
+    $semestre = get_current_semester_processed();
 
-    //print_r("raw: ");
-    print_r($semestre);
-
-    $año = substr($semestre,0,4);
-    $mes = substr($semestre,5,2);
-    //print_r("año: ");
-    //print_r($año);
-    //print_r("mes: ");
-    //print_r($mes);
-
-    $semestre = $año.$mes;
-
-    //print_r("semestre: ");
     //print_r($semestre);
     $query_courses = "
         SELECT DISTINCT curso.id,
