@@ -61,7 +61,7 @@ function render_monitor_new_form($students_by_monitor, $period = null)
                                 </h4>
                             </div>
                             <div class='col-xs-12 col-sm-12 col-md-5 col-lg-5' id='counting_$ases_student_code'>
-                                <div class='loader'>Cargando conteo...</div>
+                                <div class='loader'></div>
                             </div>
                             <div class='col-xs-12 col-sm-12 col-md-1 col-lg-1'><span class='open-close-icon glyphicon glyphicon-chevron-left'></span></div>
                         </div>
@@ -160,7 +160,7 @@ function render_practicant_new_form($monitors_of_pract, $instance, $period = nul
         $panel.= "<span class='protected glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : " . count(get_students_of_monitor($monitor_id, $instance));
         $panel.= "</div>";
         $panel.= "<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4' id='counting_" . $monitor->username . "'>";
-        $panel.= '<div class="loader">Cargando conteo...</div>';
+        $panel.= '<div class="loader"></div>';
         $panel.= "</div>";
         $panel.= "<div class='col-xs-12 col-sm-12 col-md-1 col-lg-1 col-lg-offset-1'><span class='open-close-icon glyphicon glyphicon-chevron-left'></span></div>";
         $panel.= "</div>";
@@ -190,34 +190,49 @@ function render_professional_new_form($practicant_of_prof, $instance, $period = 
     $practicant_counting = [];
     $current_semester = get_current_semester();
     foreach($practicant_of_prof as $practicant) {
+        
         $panel.= "<div class='panel panel-default'>";
         $practicant_id = $practicant->id_usuario;
         $monitors_of_pract = get_monitors_of_pract($practicant_id, $instance);
 
         // If the professional has associate practitioners with monitors that show
 
-        $panel.= "<a data-toggle='collapse' data-container='practicant$practicant->username' data-username='$practicant->username' class='practicant collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_practicant' style='text-decoration:none' href='#practicant" . $practicant->username . "'>";
-        $panel.= "<div class='panel-heading heading_practicant_tracking'>";
-        $panel.= "<div class='row'><div class='col-xs-10 col-sm-10 col-md-5 col-lg-5'>";
-        $panel.= "<h4 class='panel-title'>";
-        $panel.= "$practicant->firstname $practicant->lastname";
-        $panel.= "</h4></div>"; //End panel-title
-        $panel.= "<div class='col-xs-2 col-sm-2 col-md-1 col-lg-1'>";
-        $panel.= "<span class='protected glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : " . count(get_monitors_of_pract($practicant_id, $instance));
-        $panel.= "<br /><span class='protected glyphicon glyphicon-education subpanel' style='font-size: 20px;'></span> : " . get_quantity_students_by_pract($practicant_id, $instance);
-        $panel.= "</div>";
-        $panel.= "<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4' id='counting_" . $practicant->username . "'>";
-        $panel.= '<div class="loader">Cargando conteo...</div>';
-        $panel.= "</div>";
-        $panel.= "<div class='col-xs-12 col-sm-12 col-md-1 col-lg-1 col-lg-offset-1'><span class='open-close-icon glyphicon glyphicon-chevron-left'></span></div>";
-        $panel.= "</div>";
-        $panel.= "</div>"; //End panel-heading
-        $panel.= "</a>";
-        $panel.= "<div id='practicant$practicant->username'  class='show collapse_v2 collapse border_rt' role='tabpanel' aria-labelledby='heading_practicant_tracking$practicant->username' aria-expanded='true'>";
-        $panel.= "<div class='panel-body'>";
-        $panel.= "</div>"; // End panel-body
-        $panel.= "</div>"; // End collapse
-        $panel.= "</div>"; // End panel-collapse
+        $panel.= 
+                "<a data-toggle='collapse' data-container='practicant$practicant->username' data-username='$practicant->username' class='practicant collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_practicant' style='text-decoration:none' href='#practicant" . $practicant->username . "'>
+                    <div class='panel-heading heading_practicant_tracking'>
+
+                        <div class='row'>
+                            <div class='col-xs-10 col-sm-10 col-md-5 col-lg-5'>
+                                <h4 class='panel-title'>
+                                    $practicant->firstname $practicant->lastname
+                                </h4>
+                            </div>
+
+                            <div class='col-xs-2 col-sm-2 col-md-1 col-lg-1'>
+                                <span class='protected glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : " . count(get_monitors_of_pract($practicant_id, $instance)) . 
+                                "<br />
+                                <span class='protected glyphicon glyphicon-education subpanel' style='font-size: 20px;'></span> : " . get_quantity_students_by_pract($practicant_id, $instance) .
+                            "</div>
+
+                            <div class='col-xs-12 col-sm-12 col-md-5 col-lg-4' id='counting_" . $practicant->username . "'>
+                                <div class='loader'></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </a>
+                <div>
+                    <div class='row'>
+                        <div class='col-xs-1 col-sm-1 col-md-1 col-lg-1 col-lg-offset-11'>
+                            Mostrar <span class='open-close-icon glyphicon glyphicon-chevron-down'></span>
+                        </div>
+                    </div>
+                </div>
+                <div id='practicant$practicant->username'  class='show collapse_v2 collapse border_rt' role='tabpanel' aria-labelledby='heading_practicant_tracking$practicant->username' aria-expanded='true'>
+                        <div class='panel-body'></div>
+                    </div>
+                </div>";
+        
     }
 
     return $panel;
