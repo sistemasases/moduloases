@@ -184,6 +184,15 @@ function cache_get_obj( $key ){
     
 }
 
+/* Function that given a key, return its asociated value.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param integer|string $key Key.
+ * 
+ * @return string Value stored
+ */
 function cache_get_value( $key ){
     
     general_cache_validation($key);
