@@ -57,6 +57,18 @@ function cache_key_exist( $key ){
     
 }
 
+/* Function that determine if cache is supported and a given key exist
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param integer|string $key 
+ * 
+ * @throws Exception If cache isn't supported.
+ * @throws Exception If a given key doesn't exist.
+ * 
+ * @return void
+ */
 function general_cache_validation($key){
     
     if( !cache_is_supported() ){
