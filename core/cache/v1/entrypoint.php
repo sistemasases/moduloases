@@ -57,7 +57,8 @@ function cache_key_exist( $key ){
     
 }
 
-/* Function that determine if cache is supported and a given key exist
+/* Function that determine if cache is supported and a given key exist.
+ * Don't use this function outside of core/cache/entrypoint.php
  * 
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
