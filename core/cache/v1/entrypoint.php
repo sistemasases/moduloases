@@ -60,7 +60,13 @@ function general_cache_validation($key){
 
 function cache_put_value( $key, $value = NULL, $description = NULL ){
     
-    general_cache_validation($key);
+    if( !cache_is_supported() ){
+        throw new Exception( "Cache isn't supported", -1 );
+    }
+    
+    if( cache_key_exist( $key ) ){
+        throw new Exception( "Key '$key' already exist in cache", -1 );
+    }
     
     global $DB;
         
