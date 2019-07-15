@@ -33,7 +33,7 @@ function core_cache_update_value( $key, $value = NULL ){
     return cache_update_value($key, $value);
 }
 
-function cache_update_description( $key, $description = NULL ){ 
+function core_cache_update_description( $key, $description = NULL ){ 
     return cache_update_description( $key, $description );
 }
 
