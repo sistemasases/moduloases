@@ -140,6 +140,16 @@ function cache_update_value( $key, $value = NULL ){
     
 }
 
+/* Function that given a key, update its asociated description.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param integer|string $key Key.
+ * @param integer|string $description Description to update.
+ * 
+ * @return integer
+ */
 function cache_update_description( $key, $description = NULL ){
     
     general_cache_validation($key);
