@@ -35,6 +35,17 @@ function cache_is_supported(){
     
 }
 
+/* Function that determine if a given key exist.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param integer|string $key 
+ * 
+ * @throws Exception If the provided argumen is null.
+ * 
+ * @return bool True if exist, in other way, False.
+ */
 function cache_key_exist( $key ){
     
     if( is_null( $key ) ){
