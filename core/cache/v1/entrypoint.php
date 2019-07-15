@@ -40,7 +40,7 @@ function cache_is_supported(){
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
  * 
- * @param integer|string $key 
+ * @param integer|string $key Key.
  * 
  * @throws Exception If the provided argumen is null.
  * 
@@ -62,7 +62,7 @@ function cache_key_exist( $key ){
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
  * 
- * @param integer|string $key 
+ * @param integer|string $key Key.
  * 
  * @throws Exception If cache isn't supported.
  * @throws Exception If a given key doesn't exist.
@@ -81,6 +81,21 @@ function general_cache_validation($key){
     
 }
 
+/* Function that store in the cache a value asociated to key and a optional 
+ * description.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param integer|string $key Key.
+ * @param integer|string $value Value to store.
+ * @param integer|string $description Description.
+ * 
+ * @throws Exception If cache isn't supported.
+ * @throws Exception If a given key exist in cache.
+ * 
+ * @return void
+ */
 function cache_put_value( $key, $value = NULL, $description = NULL ){
     
     if( !cache_is_supported() ){
