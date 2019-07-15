@@ -45,15 +45,9 @@ class ItemReporteCursoProfesores {};
 
 function get_reporte_curso_profesores($id_instancia) {
     global $DB;
-    $semestre_object = get_current_semester();
-    $sem = $semestre_object->nombre;
-    $año = substr($sem,0,4);
+    $semestre = get_current_semester_processed();
 
-    if(substr($sem,4,1) == 'A'){
-        $semestre = $año.'02';
-    }else if(substr($sem,4,1) == 'B'){
-        $semestre = $año.'08';
-    }
+    //print_r($semestre);
 
     $sql = <<<SQL
  SELECT DISTINCT ON ( moodle_course.curso_id ) 
