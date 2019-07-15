@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2019051021280 ) {
+    if ($oldversion < 2019061516000 ) {
       
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
@@ -3763,8 +3763,35 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
+        
+        //*****************************************************************************************//
+        // Creación de tablas: Se crean tablas necesarias para el core de cache.                   //
+        // Versión: 2019061516000                                                                  //
+        //*****************************************************************************************//
+        
+        // Define table talentospilos_cache to be created.
+        $table = new xmldb_table('talentospilos_cache');
 
-        upgrade_block_savepoint(true, 2019051021280, 'ases');
+        // Adding fields to table talentospilos_cache.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('clave', XMLDB_TYPE_CHAR, '250', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('valor', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('descripcion', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('fecha_hora_actualizado', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL, null, "now()");
+        $table->add_field('fecha_hora_registro', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL, null, "now()");
+
+        // Adding keys to table talentospilos_cache.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Adding indexes to table talentospilos_cache.
+        $table->add_index('talentospilos_cache_clave_index', XMLDB_INDEX_UNIQUE, array('clave'));
+
+        // Conditionally launch create table for talentospilos_cache.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        upgrade_block_savepoint(true, 2019061516000, 'ases');
         return $result;
 
     }
