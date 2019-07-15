@@ -94,7 +94,7 @@ function general_cache_validation($key){
  * @throws Exception If cache isn't supported.
  * @throws Exception If a given key exist in cache.
  * 
- * @return void
+ * @return integer Record id.
  */
 function cache_put_value( $key, $value = NULL, $description = NULL ){
     
@@ -117,6 +117,16 @@ function cache_put_value( $key, $value = NULL, $description = NULL ){
     
 }
 
+/* Function that given a key, update its asociated value.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param integer|string $key Key.
+ * @param integer|string $value Value to update.
+ * 
+ * @return integer
+ */
 function cache_update_value( $key, $value = NULL ){
     
     general_cache_validation($key);
