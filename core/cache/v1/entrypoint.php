@@ -62,6 +62,9 @@ function cache_key_exist( $key ){
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
  * 
+ * @see cache_is_supported(...) in this file.
+ * @see cache_key_exist(...) in this file.
+ * 
  * @param integer|string $key Key.
  * 
  * @throws Exception If cache isn't supported.
@@ -122,6 +125,9 @@ function cache_put_value( $key, $value = NULL, $description = NULL ){
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
  * 
+ * @see general_cache_validation(...) in this file.
+ * @see cache_get_obj(...) in this file.
+ * 
  * @param integer|string $key Key.
  * @param integer|string $value Value to update.
  * 
@@ -144,6 +150,9 @@ function cache_update_value( $key, $value = NULL ){
  * 
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
+ * 
+ * @see general_cache_validation(...) in this file.
+ * @see cache_get_obj(...) in this file.
  * 
  * @param integer|string $key Key.
  * @param integer|string $description Description to update.
@@ -169,6 +178,8 @@ function cache_update_description( $key, $description = NULL ){
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
  * 
+ * @see general_cache_validation(...) in this file.
+ * 
  * @param integer|string $key Key.
  * 
  * @return stdClass Cache object
@@ -189,6 +200,9 @@ function cache_get_obj( $key ){
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
  * 
+ * @see general_cache_validation(...) in this file.
+ * @see cache_get_obj(...) in this file.
+ * 
  * @param integer|string $key Key.
  * 
  * @return string Value stored
@@ -204,6 +218,8 @@ function cache_get_value( $key ){
  * 
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
+ * 
+ * @see general_cache_validation(...) in this file.
  * 
  * @param integer|string $key Key.
  * 
