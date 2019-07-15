@@ -217,17 +217,13 @@ function render_professional_new_form($practicant_of_prof, $instance, $period = 
                             <div class='col-xs-12 col-sm-12 col-md-5 col-lg-4' id='counting_" . $practicant->username . "'>
                                 <div class='loader'></div>
                             </div>
+                            
+                            <div class='col-xs-12 col-sm-12 col-md-1 col-lg-1 col-lg-offset-1'><span class='open-close-icon glyphicon glyphicon-chevron-left'></span></div>
+                            
                         </div>
 
                     </div>
                 </a>
-                <div>
-                    <div class='row'>
-                        <div class='col-xs-1 col-sm-1 col-md-1 col-lg-1 col-lg-offset-11'>
-                            Mostrar <span class='open-close-icon glyphicon glyphicon-chevron-down'></span>
-                        </div>
-                    </div>
-                </div>
                 <div id='practicant$practicant->username'  class='show collapse_v2 collapse border_rt' role='tabpanel' aria-labelledby='heading_practicant_tracking$practicant->username' aria-expanded='true'>
                         <div class='panel-body'></div>
                     </div>
