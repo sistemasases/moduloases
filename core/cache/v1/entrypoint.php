@@ -164,6 +164,15 @@ function cache_update_description( $key, $description = NULL ){
     
 }
 
+/* Function that given a key, return a cache object.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param integer|string $key Key.
+ * 
+ * @return stdClass Cache object
+ */
 function cache_get_obj( $key ){
     
     general_cache_validation($key);
