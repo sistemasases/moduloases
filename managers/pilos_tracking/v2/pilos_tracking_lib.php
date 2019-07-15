@@ -30,6 +30,9 @@ require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/v2/dphpforms_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/monitor_assignments/monitor_assignments_lib.php';
 
+// Core cache
+require_once $CFG->dirroot.'/blocks/ases/core/cache/cache.php';
+
 /**
  * ..
  * @author Jeison Cardona G??mez. <jeison.cardona@correounivalle.edu.co>
@@ -40,6 +43,12 @@ require_once $CFG->dirroot.'/blocks/ases/managers/monitor_assignments/monitor_as
  */
 
 function pilos_tracking_get_tracking_count( $username, $semester_id, $instance, $is_monitor = false ){
+    
+    if( core_cache_is_supported() ){
+        
+        //...
+        
+    }
     
     global $DB;
 
