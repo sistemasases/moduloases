@@ -200,6 +200,15 @@ function cache_get_value( $key ){
     
 }
 
+/* Function that remove a cache entry.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param integer|string $key Key.
+ * 
+ * @return integer
+ */
 function cache_delete( $key ){
     
     general_cache_validation($key);
