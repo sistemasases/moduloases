@@ -191,7 +191,10 @@ function pilos_tracking_general_get_count( $user_id, $rol, $fecha_inicio_str, $f
     $count['in_not_revisado_practicante'] = 0;
     $count['in_total_practicante'] = 0;
     
-    $cache_prefix = "TRACKING_COUNT_I".$instance."_" . ( ( ($rol == "profesional_ps") || ($rol == "practicante_ps") || ($rol == "monitor_ps") ) ? "M_ID" : "A_ID" ) . "_" ;
+    //I_ID_ = Instance id
+    //M_ID_ = Moodle id
+    //A_ID_ = ASES id
+    $cache_prefix = "TRACKING_COUNT_I_ID_".$instance."_" . ( ( ($rol == "profesional_ps") || ($rol == "practicante_ps") || ($rol == "monitor_ps") ) ? "M_ID" : "A_ID" ) . "_" ;
     
     if( core_cache_is_supported() ){
         
