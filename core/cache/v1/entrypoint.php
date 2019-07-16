@@ -130,7 +130,7 @@ function general_cache_validation($key){
  * 
  * @return integer Record id.
  */
-function cache_put_value( $key, $value = NULL, $description = NULL ){
+function cache_put_value( $key, $value = NULL, $description = NULL, $expiration_time = NULL ){
     
     if( !cache_is_supported() ){
         throw new Exception( "Cache isn't supported", -1 );
@@ -140,12 +140,21 @@ function cache_put_value( $key, $value = NULL, $description = NULL ){
         throw new Exception( "Key '$key' already exist in cache", -3 );
     }
     
+    if( !is_null( $expiration_time ) ){
+        if( !is_numeric( $expiration_time ) ){
+            throw new Exception( "Expiration time must be numeric", -4 );
+        }else{
+            $expiration_time = date( "Y-m-d H:i:s", $expiration_time );
+        }
+    }
+    
     global $DB;
         
     $obj_cache = new stdClass();
     $obj_cache->clave = $key;
     $obj_cache->valor = $value;
     $obj_cache->descripcion = $description;
+    $obj_cache->fecha_hora_expiracion = $expiration_time;
     
     return $DB->insert_record("talentospilos_cache", $obj_cache, true);
     
