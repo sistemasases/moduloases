@@ -23,8 +23,8 @@ require_once( __DIR__ . "/v" . VERSION . "/entrypoint.php");
  * @since 1.0.0
  * @see cache_put_value(...) in entrypoint.php
  */
-function core_cache_put_value( $key, $value = NULL, $description = NULL ){
-    return cache_put_value($key, $value, $description);
+function core_cache_put_value( $key, $value = NULL, $description = NULL, $expiration_time = NULL ){
+    return cache_put_value($key, $value, $description, $expiration_time);
 }
 
 /* Interface function

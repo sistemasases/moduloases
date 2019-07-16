@@ -4,7 +4,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2019061516000 ) {
+    if ($oldversion < 2019061613560 ) {
       
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
@@ -3790,8 +3790,23 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
+        
+        //*****************************************************************************************//
+        // Creación de tablas: Se crean tablas necesarias para el core de cache.                   //
+        // Versión: 2019061613560                                                                  //
+        //*****************************************************************************************//
+        
+        
+        // Define field fecha_hora_expiracion to be added to talentospilos_cache.
+        $table = new xmldb_table('talentospilos_cache');
+        $field = new xmldb_field('fecha_hora_expiracion', XMLDB_TYPE_DATETIME, null, null, null, null, null, 'fecha_hora_registro');
 
-        upgrade_block_savepoint(true, 2019061516000, 'ases');
+        // Conditionally launch add field fecha_hora_expiracion.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_block_savepoint(true, 2019061613560, 'ases');
         return $result;
 
     }

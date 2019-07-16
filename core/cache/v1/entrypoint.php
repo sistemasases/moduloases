@@ -40,6 +40,9 @@ function cache_is_supported(){
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
  * 
+ * @see cache_get_obj(...) in this file.
+ * @see cache_delete(...) in this file.
+ * 
  * @param integer|string $key Key.
  * 
  * @throws Exception If the provided argumen is null.
@@ -48,11 +51,39 @@ function cache_is_supported(){
  */
 function cache_key_exist( $key ){
     
+    
+    
     if( is_null( $key ) ){
         throw new Exception( "Key cannot be null", -1 );
     }else{
+        
         global $DB;
-        return ( $DB->record_exists("talentospilos_cache", array( "clave" => $key )) ? true : false );
+        global $DB_PREFIX;
+            
+        $tablename = $DB_PREFIX . "talentospilos_cache";
+           
+        $data_cache = $DB->get_record_sql( "SELECT id, fecha_hora_expiracion, now() AS current_time FROM $tablename WHERE clave = '$key'" );
+            
+        if( property_exists($data_cache, "id") ){
+                
+            $current_db_time = strtotime($data_cache->current_time);
+            $expiration_time = strtotime($data_cache->fecha_hora_expiracion);
+                        
+            if( $expiration_time != "" ){
+                if( $expiration_time > $current_db_time ){
+                    return true;
+                }else{
+                    $DB->delete_records("talentospilos_cache", array( "clave" => $key ));
+                    return false;
+                }
+            }
+            
+            return true;
+                
+        }else{
+            return false;
+        }
+        
     }
     
 }
@@ -80,7 +111,7 @@ function general_cache_validation($key){
     }
     
     if( !cache_key_exist( $key ) ){
-        throw new Exception( "Key '$key' doesn't exist", -1 );
+        throw new Exception( "Key '$key' doesn't exist", -2 );
     }
     
 }
@@ -94,20 +125,29 @@ function general_cache_validation($key){
  * @param integer|string $key Key.
  * @param integer|string $value Value to store.
  * @param integer|string $description Description.
+ * @param integer $expiration_time Expiration time.
  * 
  * @throws Exception If cache isn't supported.
  * @throws Exception If a given key exist in cache.
  * 
  * @return integer Record id.
  */
-function cache_put_value( $key, $value = NULL, $description = NULL ){
+function cache_put_value( $key, $value = NULL, $description = NULL, $expiration_time = NULL ){
     
     if( !cache_is_supported() ){
         throw new Exception( "Cache isn't supported", -1 );
     }
     
     if( cache_key_exist( $key ) ){
-        throw new Exception( "Key '$key' already exist in cache", -1 );
+        throw new Exception( "Key '$key' already exist in cache", -3 );
+    }
+    
+    if( !is_null( $expiration_time ) ){
+        if( !is_numeric( $expiration_time ) ){
+            throw new Exception( "Expiration time must be numeric", -4 );
+        }else{
+            $expiration_time = date( "Y-m-d H:i:s", $expiration_time );
+        }
     }
     
     global $DB;
@@ -116,6 +156,7 @@ function cache_put_value( $key, $value = NULL, $description = NULL ){
     $obj_cache->clave = $key;
     $obj_cache->valor = $value;
     $obj_cache->descripcion = $description;
+    $obj_cache->fecha_hora_expiracion = $expiration_time;
     
     return $DB->insert_record("talentospilos_cache", $obj_cache, true);
     
@@ -192,7 +233,8 @@ function cache_get_obj( $key ){
     global $DB;
     
     $obj_cache = $DB->get_record("talentospilos_cache", array( "clave" => $key ));
-    return $obj_cache;
+        
+    return (property_exists($obj_cache, "id") ? $obj_cache : null);
     
 }
 
