@@ -247,8 +247,6 @@ define(
                 usuario["name"] = name;
                 usuario["namerol"] = namerol;
 
-                create_specific_counting( usuario );
-
                 // when user is 'practicante' then has permissions
                 if (namerol == "practicante_ps") {
                     put_tracking_count( username, current_semester, parseInt( get_instance() ), false );
@@ -273,6 +271,8 @@ define(
                     anadirEvento(get_instance());
                     send_email_new_form(get_instance());
                 }
+                
+                create_specific_counting( usuario );
 
             });
 
