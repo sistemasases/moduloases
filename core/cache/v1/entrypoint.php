@@ -124,6 +124,7 @@ function general_cache_validation($key){
  * @param integer|string $key Key.
  * @param integer|string $value Value to store.
  * @param integer|string $description Description.
+ * @param integer $expiration_time Expiration time.
  * 
  * @throws Exception If cache isn't supported.
  * @throws Exception If a given key exist in cache.
