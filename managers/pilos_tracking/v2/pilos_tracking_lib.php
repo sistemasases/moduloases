@@ -402,7 +402,7 @@ function pilos_tracking_general_get_count( $user_id, $rol, $fecha_inicio_str, $f
             $value->in_not_revisado_practicante = $count['in_not_revisado_practicante'];
             $value->in_total_practicante = $count['in_total_practicante'];
             
-            core_cache_put_value( $cache_prefix . $user_id, json_encode($value), time() + (60*60*12) );
+            core_cache_put_value( $cache_prefix . $user_id, json_encode($value), "tracking_count", time() + (60*60*12) );
             
         } catch (Exception $exc) {}
             
