@@ -445,7 +445,10 @@ function auxiliary_specific_counting($user_kind, $user_id, $semester, $instance)
 
 function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instance){
     
-    $cache_prefix = "TRACKING_COUNT_I".$instance."_M_ID_" ;
+    //I_ID_ = Instance id
+    //M_ID_ = Moodle id
+    //A_ID_ = ASES id
+    $cache_prefix = "TRACKING_COUNT_I_ID_".$instance."_M_ID_" ;
     
     if( core_cache_is_supported() ){
         
