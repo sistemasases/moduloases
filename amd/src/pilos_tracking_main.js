@@ -29,12 +29,6 @@ define(
             var email = "";
             var namerol = "";
             var current_semester = parseInt($("#current_ases_semester").data("info"));
-            
-            $(".loader").click(function(event){
-                event.stopPropagation();
-                
-
-            });
 
 
              /**
@@ -200,7 +194,7 @@ define(
 
             $(document).ready(function() {
                 
-                $(".loader").html(" <a class='btn btn-sm btn-default'>Mostrar conteo </a>");
+                //$(".loader").html("Cargando conteo...");
 
                 ///////////////////////////////////////////////////////////7
 
