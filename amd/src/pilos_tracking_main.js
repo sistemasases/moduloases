@@ -193,6 +193,8 @@ define(
             }
 
             $(document).ready(function() {
+                
+                //$(".loader").html("Cargando conteo...");
 
                 ///////////////////////////////////////////////////////////7
 
@@ -239,8 +241,6 @@ define(
                 usuario["name"] = name;
                 usuario["namerol"] = namerol;
 
-                create_specific_counting( usuario );
-
                 // when user is 'practicante' then has permissions
                 if (namerol == "practicante_ps") {
                     put_tracking_count( username, current_semester, parseInt( get_instance() ), false );
@@ -250,8 +250,8 @@ define(
                    // when user is 'profesional' then has permissions
                 } else if (namerol == "profesional_ps") {
                     //Starts adding event
-                    put_tracking_count( username, current_semester, parseInt( get_instance() ), false );
-                    consultar_seguimientos_persona(get_instance(), usuario, username);
+                    //put_tracking_count( username, current_semester, parseInt( get_instance() ), false );
+                    onsultar_seguimientos_persona(get_instance(), usuario, username);
                     send_email_new_form(get_instance());
 
                     // when user is 'monitor' then has permissions
@@ -265,6 +265,8 @@ define(
                     anadirEvento(get_instance());
                     send_email_new_form(get_instance());
                 }
+                
+                create_specific_counting( usuario );
 
             });
 
