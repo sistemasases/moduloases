@@ -3799,7 +3799,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         
         // Define field fecha_hora_expiracion to be added to talentospilos_cache.
         $table = new xmldb_table('talentospilos_cache');
-        $field = new xmldb_field('fecha_hora_expiracion', XMLDB_TYPE_INTEGER, '20', null, null, null, null, 'fecha_hora_registro');
+        $field = new xmldb_field('fecha_hora_expiracion', XMLDB_TYPE_DATETIME, null, null, null, null, null, 'fecha_hora_registro');
 
         // Conditionally launch add field fecha_hora_expiracion.
         if (!$dbman->field_exists($table, $field)) {
