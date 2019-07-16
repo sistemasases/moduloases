@@ -27,6 +27,7 @@
 require_once( 'pilos_tracking_lib.php' );
 require_once( dirname(__FILE__) . '/../lib/student_lib.php' );
 require_once( dirname(__FILE__) . '/../dphpforms/dphpforms_get_record.php' );
+require_once( dirname(__FILE__) . '/../../core/cache/cache.php' );
 require_once( dirname(__FILE__) . '/../student_profile/studentprofile_lib.php' );
 require_once( dirname(__FILE__) . '/../seguimiento_grupal/seguimientogrupal_lib.php' );
 require_once( dirname(__FILE__) . '/../dphpforms/v2/dphpforms_lib.php' );
@@ -443,6 +444,34 @@ function auxiliary_specific_counting($user_kind, $user_id, $semester, $instance)
 }
 
 function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instance){
+    
+    $cache_prefix = "TRACKING_COUNT_I".$instance."_M_ID_" ;
+    
+    if( core_cache_is_supported() ){
+        
+        try {
+            
+            $value = json_decode(core_cache_get_value( $cache_prefix . $user_id ));
+            
+            $count['revisado_profesional'] = $value->revisado_profesional;
+            $count['not_revisado_profesional'] = $value->not_revisado_profesional;
+            $count['total_profesional'] = $value->total_profesional;
+            $count['revisado_practicante'] = $value->revisado_practicante;
+            $count['not_revisado_practicante'] = $value->not_revisado_practicante;
+            $count['total_practicante'] = $value->total_practicante;
+
+            $count['in_revisado_profesional'] = $value->in_revisado_profesional;
+            $count['in_not_revisado_profesional'] = $value->in_not_revisado_profesional;
+            $count['in_total_profesional'] = $value->in_total_profesional;
+            $count['in_revisado_practicante'] = $value->in_revisado_practicante;
+            $count['in_not_revisado_practicante'] = $value->in_not_revisado_practicante;
+            $count['in_total_practicante'] = $value->in_total_practicante;
+            
+            return $count;
+            
+        } catch (Exception $exc) {}
+            
+    }
 
     $fecha_inicio = null;
     $fecha_fin = null;
@@ -474,7 +503,6 @@ function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instanc
 
     $fecha_fin_str = $fecha_fin["year"]."-".$mon_tmp."-".$day_tmp;
 
-    $array_final = array();
     if ($user_kind == 'profesional_ps') {
 
 
@@ -586,7 +614,7 @@ function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instanc
         $count['in_not_revisado_practicante'] = $in_not_rev_prac;
         $count['in_total_practicante'] = $in_rev_prac + $in_not_rev_prac;
 
-        return $count;
+        
 
     }else if ($user_kind == 'practicante_ps') {
 
@@ -693,7 +721,7 @@ function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instanc
         $count['in_not_revisado_practicante'] = $in_not_rev_prac;
         $count['in_total_practicante'] = $in_rev_prac + $in_not_rev_prac;
 
-        return $count;
+        
     }else if ($user_kind == 'monitor_ps') {
 
         //Get assignments
@@ -794,10 +822,36 @@ function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instanc
         $count['in_revisado_practicante'] = $in_rev_prac;
         $count['in_not_revisado_practicante'] = $in_not_rev_prac;
         $count['in_total_practicante'] = $in_rev_prac + $in_not_rev_prac;
-
-        return $count;
+                
     }
-    return $array_final;
+    
+    if( core_cache_is_supported() ){
+        
+        try {
+
+            $value = new stdClass();
+
+            $value->revisado_profesional = $count['revisado_profesional'];
+            $value->not_revisado_profesional = $count['not_revisado_profesional'];
+            $value->total_profesional = $count['total_profesional'];
+            $value->revisado_practicante = $count['revisado_practicante'];
+            $value->not_revisado_practicante = $count['not_revisado_practicante'];
+            $value->total_practicante = $count['total_practicante'];
+
+            $value->in_revisado_profesional = $count['in_revisado_profesional'];
+            $value->in_not_revisado_profesional = $count['in_not_revisado_profesional'];
+            $value->in_total_profesional = $count['in_total_profesional'];
+            $value->in_revisado_practicante = $count['in_revisado_practicante'];
+            $value->in_not_revisado_practicante = $count['in_not_revisado_practicante'];
+            $value->in_total_practicante = $count['in_total_practicante'];
+
+            core_cache_put_value( $cache_prefix . $user_id, json_encode($value), time() + 60*60*12 );
+
+        } catch (Exception $exc) {}
+
+    }
+    
+    return $count;
 }
 
 /**
