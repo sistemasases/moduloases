@@ -5,7 +5,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
+/*
 require_once(dirname(__FILE__). '/../../config.php');
 require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/v2/dphpforms_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/monitor_assignments/monitor_assignments_lib.php';
@@ -30,6 +30,6 @@ $trackings = dphpformsV2_find_records($xQuery);
 $asignation = monitor_assignments_get_practicants_monitors_and_students( "450299", "2019A" );
 
 print_r( $asignation[0] );
-print_r( $trackings[0] );
+print_r( $trackings[0] );*/
 
 
