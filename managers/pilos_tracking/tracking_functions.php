@@ -845,7 +845,7 @@ function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instanc
             $value->in_not_revisado_practicante = $count['in_not_revisado_practicante'];
             $value->in_total_practicante = $count['in_total_practicante'];
 
-            core_cache_put_value( $cache_prefix . $user_id, json_encode($value), time() + 60*60*12 );
+            core_cache_put_value( $cache_prefix . $user_id, json_encode($value), "tracking_count", time() + 60*60*12 );
 
         } catch (Exception $exc) {}
 
