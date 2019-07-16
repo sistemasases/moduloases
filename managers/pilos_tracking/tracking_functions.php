@@ -62,7 +62,7 @@ function render_monitor_new_form($students_by_monitor, $period = null)
                                 </h4>
                             </div>
                             <div class='col-xs-12 col-sm-12 col-md-5 col-lg-5' id='counting_$ases_student_code'>
-                                <div class='loader'></div>
+                                <div class='loader'>Cargando conteo...</div>
                             </div>
                             <div class='col-xs-12 col-sm-12 col-md-1 col-lg-1'><span class='open-close-icon glyphicon glyphicon-chevron-left'></span></div>
                         </div>
@@ -161,7 +161,7 @@ function render_practicant_new_form($monitors_of_pract, $instance, $period = nul
         $panel.= "<span class='protected glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : " . count(get_students_of_monitor($monitor_id, $instance));
         $panel.= "</div>";
         $panel.= "<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4' id='counting_" . $monitor->username . "'>";
-        $panel.= '<div class="loader"></div>';
+        $panel.= '<div class="loader">Cargando conteo...</div>';
         $panel.= "</div>";
         $panel.= "<div class='col-xs-12 col-sm-12 col-md-1 col-lg-1 col-lg-offset-1'><span class='open-close-icon glyphicon glyphicon-chevron-left'></span></div>";
         $panel.= "</div>";
@@ -216,7 +216,7 @@ function render_professional_new_form($practicant_of_prof, $instance, $period = 
                             "</div>
 
                             <div class='col-xs-12 col-sm-12 col-md-5 col-lg-4' id='counting_" . $practicant->username . "'>
-                                <div class='loader'></div>
+                                <div class='loader'>Cargando conteo...</div>
                             </div>
                             
                             <div class='col-xs-12 col-sm-12 col-md-1 col-lg-1 col-lg-offset-1'><span class='open-close-icon glyphicon glyphicon-chevron-left'></span></div>
