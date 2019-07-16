@@ -44,12 +44,6 @@ require_once $CFG->dirroot.'/blocks/ases/core/cache/cache.php';
 
 function pilos_tracking_get_tracking_count( $username, $semester_id, $instance, $is_monitor = false ){
     
-    if( core_cache_is_supported() ){
-        
-        //...
-        
-    }
-    
     global $DB;
 
     $fecha_inicio = null;
@@ -197,6 +191,33 @@ function pilos_tracking_general_get_count( $user_id, $rol, $fecha_inicio_str, $f
     $count['in_not_revisado_practicante'] = 0;
     $count['in_total_practicante'] = 0;
     
+    $cache_prefix = "TRACKING_COUNT_I".$instance."_" . ( ( ($rol == "profesional_ps") || ($rol == "practicante_ps") || ($rol == "monitor_ps") ) ? "M_ID" : "A_ID" ) . "_" ;
+    
+    if( core_cache_is_supported() ){
+        
+        try {
+            
+            $value = json_decode(core_cache_get_value( $cache_prefix . $user_id ));
+            
+            $count['revisado_profesional'] = $value->revisado_profesional;
+            $count['not_revisado_profesional'] = $value->not_revisado_profesional;
+            $count['total_profesional'] = $value->total_profesional;
+            $count['revisado_practicante'] = $value->revisado_practicante;
+            $count['not_revisado_practicante'] = $value->not_revisado_practicante;
+            $count['total_practicante'] = $value->total_practicante;
+
+            $count['in_revisado_profesional'] = $value->in_revisado_profesional;
+            $count['in_not_revisado_profesional'] = $value->in_not_revisado_profesional;
+            $count['in_total_profesional'] = $value->in_total_profesional;
+            $count['in_revisado_practicante'] = $value->in_revisado_practicante;
+            $count['in_not_revisado_practicante'] = $value->in_not_revisado_practicante;
+            $count['in_total_practicante'] = $value->in_total_practicante;
+            
+            return $count;
+            
+        } catch (Exception $exc) {}
+            
+    }
     
     $student_list_ids = [];
     $xquery_seguimiento_pares_filterFields = [
@@ -345,7 +366,7 @@ function pilos_tracking_general_get_count( $user_id, $rol, $fecha_inicio_str, $f
         }else{
             $in_not_rev_prac++;
         }
-    }
+    }    
 
     $count['revisado_profesional'] = $rev_pro;
     $count['not_revisado_profesional'] = $not_rev_pro;
@@ -360,6 +381,32 @@ function pilos_tracking_general_get_count( $user_id, $rol, $fecha_inicio_str, $f
     $count['in_revisado_practicante'] = $in_rev_prac;
     $count['in_not_revisado_practicante'] = $in_not_rev_prac;
     $count['in_total_practicante'] = $in_rev_prac + $in_not_rev_prac;
+    
+    if( core_cache_is_supported() ){
+        
+        try {
+            
+            $value = new stdClass();
+            
+            $value->revisado_profesional = $count['revisado_profesional'];
+            $value->not_revisado_profesional = $count['not_revisado_profesional'];
+            $value->total_profesional = $count['total_profesional'];
+            $value->revisado_practicante = $count['revisado_practicante'];
+            $value->not_revisado_practicante = $count['not_revisado_practicante'];
+            $value->total_practicante = $count['total_practicante'];
+
+            $value->in_revisado_profesional = $count['in_revisado_profesional'];
+            $value->in_not_revisado_profesional = $count['in_not_revisado_profesional'];
+            $value->in_total_profesional = $count['in_total_profesional'];
+            $value->in_revisado_practicante = $count['in_revisado_practicante'];
+            $value->in_not_revisado_practicante = $count['in_not_revisado_practicante'];
+            $value->in_total_practicante = $count['in_total_practicante'];
+            
+            core_cache_put_value( $cache_prefix . $user_id, json_encode($value), time() + (60*60*12) );
+            
+        } catch (Exception $exc) {}
+            
+    }
 
     return $count;
 }
