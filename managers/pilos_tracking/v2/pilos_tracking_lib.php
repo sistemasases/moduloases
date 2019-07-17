@@ -29,6 +29,7 @@ require_once $CFG->dirroot.'/blocks/ases/managers/ases_report/asesreport_lib.php
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/v2/dphpforms_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/monitor_assignments/monitor_assignments_lib.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib.php';
 
 // Core cache
 require_once $CFG->dirroot.'/blocks/ases/core/cache/cache.php';
@@ -218,7 +219,36 @@ function pilos_tracking_general_get_count( $user_id, $rol, $fecha_inicio_str, $f
             
             return $count;
             
-        } catch (Exception $exc) {}
+        } catch (Exception $exc) {
+            
+            try{
+                
+                cache_generator( $semester_id, $instance  );
+            
+                $value = json_decode(core_cache_get_value( $cache_prefix . $user_id ));
+
+                $count['revisado_profesional'] = $value->revisado_profesional;
+                $count['not_revisado_profesional'] = $value->not_revisado_profesional;
+                $count['total_profesional'] = $value->total_profesional;
+                $count['revisado_practicante'] = $value->revisado_practicante;
+                $count['not_revisado_practicante'] = $value->not_revisado_practicante;
+                $count['total_practicante'] = $value->total_practicante;
+
+                $count['in_revisado_profesional'] = $value->in_revisado_profesional;
+                $count['in_not_revisado_profesional'] = $value->in_not_revisado_profesional;
+                $count['in_total_profesional'] = $value->in_total_profesional;
+                $count['in_revisado_practicante'] = $value->in_revisado_practicante;
+                $count['in_not_revisado_practicante'] = $value->in_not_revisado_practicante;
+                $count['in_total_practicante'] = $value->in_total_practicante;
+
+                return $count;
+                
+                
+            }catch(Exception $ex){
+                
+            }
+            
+        }
             
     }
     
@@ -389,28 +419,214 @@ function pilos_tracking_general_get_count( $user_id, $rol, $fecha_inicio_str, $f
         
         try {
             
-            $value = new stdClass();
-            
-            $value->revisado_profesional = $count['revisado_profesional'];
-            $value->not_revisado_profesional = $count['not_revisado_profesional'];
-            $value->total_profesional = $count['total_profesional'];
-            $value->revisado_practicante = $count['revisado_practicante'];
-            $value->not_revisado_practicante = $count['not_revisado_practicante'];
-            $value->total_practicante = $count['total_practicante'];
-
-            $value->in_revisado_profesional = $count['in_revisado_profesional'];
-            $value->in_not_revisado_profesional = $count['in_not_revisado_profesional'];
-            $value->in_total_profesional = $count['in_total_profesional'];
-            $value->in_revisado_practicante = $count['in_revisado_practicante'];
-            $value->in_not_revisado_practicante = $count['in_not_revisado_practicante'];
-            $value->in_total_practicante = $count['in_total_practicante'];
-            
-            core_cache_put_value( $cache_prefix . $user_id, json_encode($value), "tracking_count", time() + (60*60*12) );
+            cache_generator( $semester_id, $instance  );
             
         } catch (Exception $exc) {}
             
     }
 
+    return $count;
+}
+
+function cache_generator( $semester_id, $instance  ){
+    
+    $obj_semester = get_semester_by_id($semester_id);
+    
+    $fecha_inicio = null;
+    $fecha_fin = null;
+
+    $interval = get_semester_interval($semester_id);
+    if(!$interval){
+        return -1;
+    }
+    $fecha_inicio = getdate(strtotime($interval->fecha_inicio));
+    $fecha_fin = getdate(strtotime($interval->fecha_fin));
+
+    $mon_tmp = $fecha_inicio["mon"];
+    $day_tmp = $fecha_inicio["mday"];
+    if( $mon_tmp < 10 ){
+        $mon_tmp = "0" . $mon_tmp;
+    }
+    if( $day_tmp < 10 ){
+        $day_tmp = "0" . $day_tmp;
+    }
+
+    $fecha_inicio_str = $fecha_inicio["year"]."-".$mon_tmp."-".$day_tmp;
+
+    $mon_tmp = $fecha_fin["mon"];
+    $day_tmp = $fecha_fin["mday"];
+    if( $mon_tmp < 10 ){
+        $mon_tmp = "0" . $mon_tmp;
+    }
+    if( $day_tmp < 10 ){
+        $day_tmp = "0" . $day_tmp;
+    }
+
+    $fecha_fin_str = $fecha_fin["year"]."-".$mon_tmp."-".$day_tmp;
+    
+    
+    //Seguimientos
+    $xQuery = new stdClass();
+    $xQuery->form = "seguimiento_pares"; // Can be alias(String) or identifier(Number)
+    $xQuery->filterFields = [
+        ["id_estudiante", [["%%", "LIKE"]], false],
+        ["fecha", [[$fecha_inicio_str, ">="], [$fecha_fin_str, "<="]], false],
+        ["revisado_practicante", [["%%", "LIKE"]], false],
+        ["revisado_profesional", [["%%", "LIKE"]], false],
+        ["id_estudiante", [["%%", "LIKE"]], false]
+    ];
+    $xQuery->orderFields = [["fecha", "DESC"]];
+    $xQuery->orderByDatabaseRecordDate = false; // If true, 'orderField' is ignored. DESC
+    $xQuery->recordStatus = ["!deleted"]; // options "deleted" or "!deleted", can be both. Empty = both.
+    $xQuery->asFields = [];
+    $xQuery->selectedFields = []; // Without support.
+
+    $trackings = dphpformsV2_find_records($xQuery);
+
+    //Inasistencias
+    $xQuery = new stdClass();
+    $xQuery->form = "inasistencia"; // Can be alias(String) or identifier(Number)
+    $xQuery->filterFields = [
+        ["in_id_estudiante", [["%%", "LIKE"]], false],
+        ["in_fecha", [[$fecha_inicio_str, ">="], [$fecha_fin_str, "<="]], false],
+        ["in_revisado_practicante", [["%%", "LIKE"]], false],
+        ["in_revisado_profesional", [["%%", "LIKE"]], false],
+        ["in_id_estudiante", [["%%", "LIKE"]], false]
+    ];
+    $xQuery->orderFields = [["in_fecha", "DESC"]];
+    $xQuery->orderByDatabaseRecordDate = false; // If true, 'orderField' is ignored. DESC
+    $xQuery->recordStatus = ["!deleted"]; // options "deleted" or "!deleted", can be both. Empty = both.
+    $xQuery->asFields = [];
+    $xQuery->selectedFields = []; // Without support.
+
+    $in_trackings = dphpformsV2_find_records($xQuery);
+
+    $asignation = monitor_assignments_get_practicants_monitors_and_studentsV2($instance, $obj_semester->nombre);
+
+    $index = [];
+    $count = [];
+
+    foreach ($asignation as $key => $asig) {
+        $index[$asig->codigo_ases] = $asig;
+        if( !array_key_exists($count, $asig->moodle_id_profesional) ){
+            $count = array_merge($count, init_count($asig->moodle_id_profesional));
+        }
+        if( !array_key_exists($count, $asig->moodle_id_practicante) ){
+            $count = array_merge($count, init_count($asig->moodle_id_practicante));
+        }
+        if( !array_key_exists($count, $asig->moodle_id_monitor) ){
+            $count = array_merge($count, init_count($asig->moodle_id_monitor));
+        }
+        if( !array_key_exists($count, "A".$asig->codigo_ases) ){
+            $count = array_merge($count, init_count("A".$asig->codigo_ases));
+        }
+    }
+
+    foreach ($trackings as $track) {
+        if ($track["revisado_profesional"] == 0) {
+            addToCounter1($track['id_estudiante'], 'revisado_profesional', $count, $index);
+        } else {
+            addToCounter1($track['id_estudiante'], 'not_revisado_profesional', $count, $index);
+        }
+        if ($track["revisado_practicante"] == 0) {
+            addToCounter1($track['id_estudiante'], 'revisado_practicante', $count, $index);
+        } else {
+            addToCounter1($track['id_estudiante'], 'not_revisado_practicante', $count, $index);
+        }
+        addToCounter1($track['id_estudiante'], 'total_profesional', $count, $index);
+        addToCounter1($track['id_estudiante'], 'total_practicante', $count, $index);
+    }
+
+    foreach ($in_trackings as $track) {
+        if ($track["in_revisado_profesional"] == 0) {
+            addToCounter1($track['in_id_estudiante'], 'in_revisado_profesional', $count, $index);
+        } else {
+            addToCounter1($track['in_id_estudiante'], 'in_not_revisado_profesional', $count, $index);
+        }
+        if ($track["in_revisado_practicante"] == 0) {
+            addToCounter1($track['in_id_estudiante'], 'in_revisado_practicante', $count, $index);
+        } else {
+            addToCounter1($track['in_id_estudiante'], 'in_not_revisado_practicante', $count, $index);
+        }
+
+        addToCounter1($track['in_id_estudiante'], 'in_total_profesional', $count, $index);
+        addToCounter1($track['in_id_estudiante'], 'in_total_practicante', $count, $index);
+    }
+    
+    foreach ($count as $key => $s_count){
+        
+        $value = new stdClass();
+        $value->revisado_profesional = ($s_count['revisado_profesional'] ? $s_count['revisado_profesional'] : 0);
+        $value->not_revisado_profesional = ($s_count['not_revisado_profesional'] ? $s_count['not_revisado_profesional'] : 0);
+        $value->total_profesional = ($s_count['total_profesional'] ? $s_count['total_profesional'] : 0);
+        $value->revisado_practicante = ($s_count['revisado_practicante'] ? $s_count['revisado_practicante'] : 0);
+        $value->not_revisado_practicante = ($s_count['not_revisado_practicante'] ? $s_count['not_revisado_practicante'] : 0);
+        $value->total_practicante = ($s_count['total_practicante'] ? $s_count['total_practicante'] : 0);
+
+        $value->in_revisado_profesional = ($s_count['in_revisado_profesional'] ? $s_count['in_revisado_profesional'] : 0);
+        $value->in_not_revisado_profesional = ($s_count['in_not_revisado_profesional'] ? $s_count['in_not_revisado_profesional'] : 0);
+        $value->in_total_profesional = ($s_count['in_total_profesional'] ? $s_count['in_total_profesional'] : 0);
+        $value->in_revisado_practicante = ($s_count['in_revisado_practicante'] ? $s_count['in_revisado_practicante'] : 0);
+        $value->in_not_revisado_practicante = ($s_count['in_not_revisado_practicante'] ? $s_count['in_not_revisado_practicante'] : 0);
+        $value->in_total_practicante = ($s_count['in_total_practicante'] ? $s_count['in_total_practicante'] : 0);
+        
+        $cache_prefix = "TRACKING_COUNT_I_ID_".$instance."_M_ID_" ;
+        
+        if( $key[0] == 'A' ){//Ases
+            $cache_prefix = "TRACKING_COUNT_I_ID_".$instance."_A_ID_" ;
+            $nKey = substr($key, 1);
+        }else{
+            $nKey = $key;
+        }
+        
+        try{
+            core_cache_put_value( $cache_prefix . $nKey, json_encode($value), "tracking_count", time() + (60*60*12) );
+        } catch (Exception $e){
+            
+        }
+    }
+}
+
+function addToCounter1( $username, $key, &$count, &$index ){
+        
+    if( is_null( $count[ $index[ $username ]->moodle_id_profesional][$key] ) ){
+        $count[$index[$username]->moodle_id_profesional][$key] = 1;
+    }else{
+        $count[$index[$username]->moodle_id_profesional][$key]++;
+    }
+    
+    if( is_null( $count[ $index[ $username ]->moodle_id_practicante][$key] ) ){
+        $count[$index[$username]->moodle_id_practicante][$key] = 1;
+    }else{
+        $count[$index[$username]->moodle_id_practicante][$key]++;
+    }
+    
+    if( is_null( $count[ $index[ $username ]->moodle_id_monitor][$key] ) ){
+        $count[$index[$username]->moodle_id_monitor][$key] = 1;
+    }else{
+        $count[$index[$username]->moodle_id_monitor][$key]++;
+    }
+    
+    if( is_null( $count[ "A".$index[ $username ]->codigo_ases][$key] ) ){
+        $count["A".$index[$username]->codigo_ases][$key] = 1;
+    }else{
+        $count["A".$index[$username]->codigo_ases][$key]++;
+    }
+}
+
+function init_count( $asig_key ) {
+    $count = [];
+    $count[$asig_key]['revisado_profesional'] = 0;
+    $count[$asig_key]['not_revisado_profesional'] = 0;
+    $count[$asig_key]['revisado_practicante'] = 0;
+    $count[$asig_key]['not_revisado_practicante'] = 0;
+    $count[$asig_key]['total_profesional'] = 0;
+
+    $count[$asig_key]['in_revisado_profesional'] = 0;
+    $count[$asig_key]['in_not_revisado_profesional'] = 0;
+    $count[$asig_key]['in_revisado_practicante'] = 0;
+    $count[$asig_key]['in_not_revisado_practicante'] = 0;
+    $count[$asig_key]['in_total_profesional'] = 0;
     return $count;
 }
 
