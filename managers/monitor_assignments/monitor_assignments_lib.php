@@ -842,6 +842,16 @@ SQL;
 
 }
 
+/**
+ * Return monitor join practicante join estudiante_monitor
+ *
+ * @param $instance_id  string|number Instance id @see talentospilos_instancia.id_instancia
+ * @author Luis Gerardo Manrqiue Cardona <luis.manrique@corereounivalle.edu.co>
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @param $semester_name string Semester name, examples: [2018B, 2019A]
+ * @return array Items are described by MonitorAndStudentAndPracticant
+ * @throws dml_exception
+ */
 function monitor_assignments_get_practicants_monitors_and_studentsV2($instance_id, $semester_name ) {
     global $DB;
     $sql = <<<SQL
@@ -854,7 +864,8 @@ select distinct
                 mdl_user_monitor.id as moodle_id_monitor,
                 concat_ws(' ', mdl_user_monitor.firstname , mdl_user_monitor.lastname) as nombre_monitor ,
                 mdl_user_estudiante.username as codigo_estudiante,
-                concat_ws(' ', mdl_user_estudiante.firstname , mdl_user_estudiante.lastname)  as nombre_estudiante
+                concat_ws(' ', mdl_user_estudiante.firstname , mdl_user_estudiante.lastname)  as nombre_estudiante,
+                mdl_talentospilos_user_extended_estudiante.id_ases_user as codigo_ases
 
 from mdl_user as mdl_user_monitor
        inner join mdl_talentospilos_user_rol as mdl_talentospilos_user_rol_monitor
