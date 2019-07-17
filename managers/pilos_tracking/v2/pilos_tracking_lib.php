@@ -580,7 +580,7 @@ function cache_generator( $semester_id, $instance  ){
         }
         
         try{
-            core_cache_put_value( $cache_prefix . $nKey, json_encode($value), "tracking_count", time() + (60*60*12) );
+            core_cache_put_value( $cache_prefix . $nKey, json_encode($value), "tracking_count", time() + (60*10) );
         } catch (Exception $e){
             
         }
