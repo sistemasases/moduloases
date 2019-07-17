@@ -252,7 +252,7 @@ define(
                    // when user is 'profesional' then has permissions
                 } else if (namerol == "profesional_ps") {
                     //Starts adding event
-                    //put_tracking_count( username, current_semester, parseInt( get_instance() ), false );
+                    put_tracking_count( username, current_semester, parseInt( get_instance() ), false );
                     onsultar_seguimientos_persona(get_instance(), usuario, username);
                     send_email_new_form(get_instance());
 
