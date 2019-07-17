@@ -240,6 +240,8 @@ define(
                 usuario["id"] = id;
                 usuario["name"] = name;
                 usuario["namerol"] = namerol;
+                
+                create_specific_counting( usuario );
 
                 // when user is 'practicante' then has permissions
                 if (namerol == "practicante_ps") {
@@ -265,8 +267,6 @@ define(
                     anadirEvento(get_instance());
                     send_email_new_form(get_instance());
                 }
-                
-                create_specific_counting( usuario );
 
             });
 
