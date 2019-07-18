@@ -430,6 +430,8 @@ function pilos_tracking_general_get_count( $user_id, $rol, $fecha_inicio_str, $f
 
 function cache_generator( $semester_id, $instance  ){
     
+    $cache_duration = 60*30; //30 min
+    
     $obj_semester = get_semester_by_id($semester_id);
     
     $fecha_inicio = null;
@@ -580,7 +582,7 @@ function cache_generator( $semester_id, $instance  ){
         }
         
         try{
-            core_cache_put_value( $cache_prefix . $nKey, json_encode($value), "tracking_count", time() + (60*10) );
+            core_cache_put_value( $cache_prefix . $nKey, json_encode($value), "tracking_count", time() + $cache_duration );
         } catch (Exception $e){
             
         }
