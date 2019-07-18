@@ -362,6 +362,8 @@ function render_student_trackingsV2($peer_tracking_v2){
 
         }
     }
+    
+    $peer_tracking_v2 = NULL;
 
     return $form_rendered;
 }
