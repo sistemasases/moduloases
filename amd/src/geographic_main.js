@@ -91,6 +91,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
             });
 
             $('#button_save_geographic').on('click', function(){
+
                 var latitude = $('#latitude').val();
                 var longitude = $('#longitude').val();
                 var address = $('#geographic_direccion').val();
@@ -184,7 +185,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
             function search_direction () {
                 var geocoder = new google.maps.Geocoder();
                 var select = document.getElementById('geographic_ciudad');
-                var input_address = $('#geographic_direccion').val() + " " + select.options[select.selectedIndex].text;
+                var input_address = $('#geographic_direccion').val() + " " + select.options[select.selectedIndex].text + " " + "Colombia";
                 geocoder.geocode({
                     "address": input_address
                 }, function(results) {
@@ -227,7 +228,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
 
                         // document.getElementById("vive_lejos").checked = (vive_lejos)?true:false;
                         // //$("#vive_lejos").prop("checked", vive_zona_riesgo);
-                        
+
                          console.log("msg.text");
                     },
                     dataType: "json", //Json format
@@ -258,11 +259,18 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 var vive_zona_riesgo = $('#geographic_checkbox_zona_riesgo').prop("checked");
                 var nativo = $('input[name=geographic_origen]:checked').val();
                 var nivel_riesgo = $('input[name=geographic_nivel_riesgo]:checked').val();
-                
+
+                console.log(id_ases+"\n");
+
                 $.ajax({
                     type: "POST",
                     data: JSON.stringify({
-                        func: 'save_geographic_info',
+                        "func": 'save_geographic_info',
+                        "params": [id_ases, latitude, longitude, neighborhood,
+                                    duration, distance, address, city,
+                                    observaciones, vive_lejos, vive_zona_riesgo,
+                                    nativo, nivel_riesgo],
+                        /*
                         id_ases: id_ases,
                         latitude: latitude,
                         longitude: longitude,
@@ -276,14 +284,18 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                         vive_lejos: vive_lejos,
                         vive_zona_riesgo: vive_zona_riesgo,
                         nativo: nativo,
-                        nivel_riesgo: nivel_riesgo
+                        nivel_riesgo: nivel_riesgo*/
                     }),
-                    url: "../managers/student_profile/geographic_serverproc.php",
+                    url: "../managers/student_profile/geographic_api.php",
                     success: function(msg) {
-                        swal(
-                            msg.title,
-                            msg.text,
-                            msg.type);
+                        if(msg.status_code == 0) {
+                            swal(
+                                msg.title,
+                                msg.text,
+                                msg.type);
+                        } else {
+                            console.log(msg);
+                        }
                         
                         $('#button_edit_geographic').removeAttr('hidden');
                         $('#div_save_buttons').attr('hidden', true);
@@ -304,10 +316,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                     dataType: "json",
                     cache: "false",
                     error: function(msg) {
-                        swal(
-                            msg.title,
-                            msg.text,
-                            msg.type);
+                        console.log(msg);
                     }
                 });
             }

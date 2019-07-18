@@ -102,7 +102,7 @@ function load_geographic_info($id_ases){
 /**
  * Saves geographic information of an ASES student 
  *
- * @see save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $geographic_risk, $duration, $distance, $address, $city)
+ * @see student_profile_save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $geographic_risk, $duration, $distance, $address, $city)
  * @param $id_ases --> ASES student id
  * @param $latitude --> Latitude
  * @param $longitude --> longitude
@@ -115,12 +115,12 @@ function load_geographic_info($id_ases){
  * @param $observaciones --> Geographic tracing observations
  * @param $vive_lejos --> longitude
  * @param $vive_zona_riesgo --> neighborhood id
- * @param $nativo --> Student's origin
- * @param $nivel_riesgo --> geographic risk level
+ * @param $nativo --> Student's origin (-1 if is not defined)
+ * @param $nivel_riesgo --> geographic risk level (-1 if is not defined)
  * @return integer --> 1 if everything were saved, 0 otherwise
  */
 
-function save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $geographic_risk, $duration, $distance, $address, $city, $observaciones, $vive_lejos, $vive_zona_riesgo, $nativo, $nivel_riesgo){
+function student_profile_save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $geographic_risk, $duration, $distance, $address, $city, $observaciones, $vive_lejos, $vive_zona_riesgo, $nativo, $nivel_riesgo){
 
     global $DB;
 
