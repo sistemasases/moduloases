@@ -632,6 +632,9 @@
                     if(formulario.attr('action') == 'procesador.php'){
                         url_processor = '../managers/dphpforms/procesador.php';
                     }
+                    
+                    var record_id = $('#dphpforms_record_id').val();
+                    
                     $(formulario).find('button').prop( "disabled", true );
                     $(formulario).find('a').attr("disabled", true);
                     loading_indicator.show();
@@ -647,7 +650,7 @@
                                 var response = JSON.parse(data);
                                 
                                 if(response['status'] == 0){
-                                    $.get( "../managers/pilos_tracking/api_pilos_tracking.php?function=update_last_user_risk&arg=" + get_student_code() + "&rid=-1", function( data ) {
+                                    $.get( "../managers/pilos_tracking/api_pilos_tracking.php?function=update_last_user_risk&arg=" + get_student_code() + "&rid=" + record_id, function( data ) {
                                         console.log( data );
                                     });
                                     var mensaje = '';
