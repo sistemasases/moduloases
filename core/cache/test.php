@@ -15,4 +15,6 @@ module_loader( "cache" );
 //print_r(core_cache_put_value( "C14-2019", "Colombia", NULL, time() + (60*60*12) ) );
 //print_r(core_cache_get_value("C14-2019") );
 
+//print_r(core_cache_purge() );
+
 ?>

@@ -276,5 +276,17 @@ function cache_delete( $key ){
     return $DB->delete_records("talentospilos_cache", array( "clave" => $key ));
 }
 
+/* Function that cleans the entire cache
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @return integer
+ */
+function cache_purge(){
+    global $DB;
+    return $DB->delete_records("talentospilos_cache");
+}
+
 
 ?>
