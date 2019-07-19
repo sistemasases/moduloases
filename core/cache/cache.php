@@ -97,4 +97,14 @@ function core_cache_get_obj( $key ){
     return cache_get_obj( $key );
 }
 
+/* Interface function
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * @see cache_purge(...) in entrypoint.php
+ */
+function core_cache_purge(){
+    return cache_purge();
+}
+
 ?>
