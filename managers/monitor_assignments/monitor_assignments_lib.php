@@ -1071,7 +1071,7 @@ function monitor_assignments_get_monitor_by_student( $instance_id, $student_id, 
 function monitor_assignments_get_current_monitor_by_student( $instance_id, $student_id ){
     
     $current_semester = periods_get_current_semester();
-    return monitor_assignments_get_monitor_by_student( $instance_id, $student_id, $current_semester->id )
+    return monitor_assignments_get_monitor_by_student( $instance_id, $student_id, $current_semester->id );
 
 }
 
