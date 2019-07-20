@@ -90,6 +90,20 @@
             $(BUTTON_GET_COMPLETE_REPORT_NAME_SELECTOR).click(function () {
                 download_report_monitors_practicants_and_students(get_instance_id(), get_semester_name() );
             });
+
+            function load_reverse_assignation( role, instance_id, data_id ){
+              if( role === "monitor" ){
+
+
+
+              }else if( role === "student" ){
+
+                
+                
+              }
+            };
+
+
             /**
              * 
              * @param {Number} instance_id 
@@ -296,6 +310,7 @@
 
             $(document).on( 'click', '.monitor_item', function() {
                 load_assigned_students( $("#monitor_assignments_instance_id").data("instance-id") , $(this).attr("data-id")  );
+                load_reverse_assignation( "monitor", $("#monitor_assignments_instance_id").data("instance-id") , $(this).attr("data-id") );
             });
 
             $(document).on( 'click', '.student_item', function(){

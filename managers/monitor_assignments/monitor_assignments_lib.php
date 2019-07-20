@@ -494,7 +494,7 @@ function monitor_assignments_get_practicant_monitor_relationship_by_instance( $i
  * @return int id
  */
 
- function monitor_assignments_create_monitor_student_relationship( $instance_id, $monitor_id, $student_id ){
+function monitor_assignments_create_monitor_student_relationship( $instance_id, $monitor_id, $student_id ){
 
     global $DB;
 
@@ -1039,5 +1039,23 @@ function monitor_assignments_get_last_student_assignment( $id_ases, $instance_id
 
 }
 
+function monitor_assignments_get_monitor_by_student( $instance_id, $student_id, $semester_id ){
+    global $DB;
+
+    $sql = "SELECT id_monitor AS id
+    FROM {talentospilos_monitor_estud} 
+    WHERE id_semestre = '$semester_id' AND id_instancia = '$instance_id' AND id_estudiante = '$student_id'";
+
+    $monitor = $DB->get_record_sql( $sql );
+    
+    return ( property_exists($monitor, "id") ? $monitor : null );
+}
+
+function monitor_assignments_get_current_monitor_by_student( $instance_id, $student_id ){
+    
+    $current_semester = periods_get_current_semester();
+    return monitor_assignments_get_monitor_by_student( $instance_id, $student_id, $current_semester->id )
+
+}
 
 ?>
