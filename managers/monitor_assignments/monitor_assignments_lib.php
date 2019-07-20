@@ -1039,6 +1039,14 @@ function monitor_assignments_get_last_student_assignment( $id_ases, $instance_id
 
 }
 
+/**
+* Function that given an ASES student id, instance id and semester id, return the monitor assigned.
+* @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+* @param integer $instance_id 
+* @param integer $student_id ASES id.
+* @param integer $semester_id
+* @param stdClass | NULL
+*/
 function monitor_assignments_get_monitor_by_student( $instance_id, $student_id, $semester_id ){
     global $DB;
 
@@ -1051,6 +1059,15 @@ function monitor_assignments_get_monitor_by_student( $instance_id, $student_id, 
     return ( property_exists($monitor, "id") ? $monitor : null );
 }
 
+/**
+* Function that given an ASES student id and instance id, return the current monitor assigned.
+* @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+* @see monitor_assignments_get_monitor_by_student(...) in this file.
+* @see periods_get_current_semester(...) in periods_lib.php
+* @param integer $instance_id 
+* @param integer $student_id ASES id.
+* @param stdClass | NULL
+*/
 function monitor_assignments_get_current_monitor_by_student( $instance_id, $student_id ){
     
     $current_semester = periods_get_current_semester();
