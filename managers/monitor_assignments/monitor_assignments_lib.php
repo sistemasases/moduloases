@@ -1107,7 +1107,7 @@ function monitor_assignments_get_practicant_by_monitor( $instance_id, $monitor_i
 
     $practicant = $DB->get_record_sql( $sql );
 
-    return ( property_exists($practicant, "id") = $practicant->id : NULL );
+    return ( property_exists($practicant, "id") ? $practicant->id : NULL );
 
 }
 
