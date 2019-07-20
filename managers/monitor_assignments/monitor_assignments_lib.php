@@ -1045,7 +1045,7 @@ function monitor_assignments_get_last_student_assignment( $id_ases, $instance_id
 * @param integer $instance_id 
 * @param integer $student_id ASES id.
 * @param integer $semester_id
-* @param stdClass | NULL
+* @param integer | NULL
 */
 function monitor_assignments_get_monitor_by_student( $instance_id, $student_id, $semester_id ){
     global $DB;
@@ -1056,7 +1056,7 @@ function monitor_assignments_get_monitor_by_student( $instance_id, $student_id, 
 
     $monitor = $DB->get_record_sql( $sql );
     
-    return ( property_exists($monitor, "id") ? $monitor : null );
+    return ( property_exists($monitor, "id") ? $monitor->id : null );
 }
 
 /**
@@ -1066,12 +1066,64 @@ function monitor_assignments_get_monitor_by_student( $instance_id, $student_id, 
 * @see periods_get_current_semester(...) in periods_lib.php
 * @param integer $instance_id 
 * @param integer $student_id ASES id.
-* @param stdClass | NULL
+* @param integer | NULL
 */
 function monitor_assignments_get_current_monitor_by_student( $instance_id, $student_id ){
     
     $current_semester = periods_get_current_semester();
     return monitor_assignments_get_monitor_by_student( $instance_id, $student_id, $current_semester->id );
+
+}
+
+/**
+* Function that given an monitor id, instance id and semester id, return the practicant assigned.
+* @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+* @param integer $instance_id 
+* @param integer $monitor_id Moodle id.
+* @param integer $semester_id
+* @param integer | NULL
+*/
+function monitor_assignments_get_practicant_by_monitor( $instance_id, $monitor_id, $semester_id ){
+
+    global $DB;
+
+    $sql = "SELECT user_rol_1.id, user_rol_1.id_jefe AS id
+      FROM {talentospilos_user_rol} AS user_rol_1
+      INNER JOIN (
+        SELECT id_usuario
+            FROM {talentospilos_user_rol} AS user_rol_0
+        WHERE id_rol = ( 
+            SELECT id 
+            FROM {talentospilos_rol} 
+            WHERE nombre_rol = 'practicante_ps'
+        )
+      AND id_instancia = $instance_id 
+      AND id_semestre = ". $current_semester->id . "
+      AND id_usuario = '$monitor_id'
+      AND estado = 1
+    ) AS practicantes_0
+    ON practicantes_0.id_usuario = id_jefe
+    WHERE user_rol_1.id_semestre = ". $semester_id;
+
+    $practicant = $DB->get_record_sql( $sql );
+
+    return ( property_exists($practicant, "id") = $practicant->id : NULL );
+
+}
+
+/**
+* Function that given an monitor id and instance id, return the current practicant assigned.
+* @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+* @see monitor_assignments_get_practicant_by_monitor(...) in this file.
+* @see periods_get_current_semester(...) in periods_lib.php
+* @param integer $instance_id 
+* @param integer $monitor_id Moodle id.
+* @param integer | NULL
+*/
+function monitor_assignments_get_current_practicant_by_monitor( $instance_id, $monitor_id ){
+
+    $current_semester = periods_get_current_semester();
+    return monitor_assignments_get_practicant_by_monitor( $instance_id, $monitor_id, $current_semester->id );
 
 }
 
