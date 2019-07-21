@@ -389,8 +389,49 @@
             });
 
             $(document).on( 'click', '.monitor_item', function() {
-                load_assigned_students( $("#monitor_assignments_instance_id").data("instance-id") , $(this).attr("data-id")  );
-                //load_reverse_assignation( "monitor", $("#monitor_assignments_instance_id").data("instance-id") , $(this).attr("data-id") );
+                let instance_id = $("#monitor_assignments_instance_id").data("instance-id");
+                let data_id = $(this).attr("data-id");
+
+                load_assigned_students( instance_id , data_id  );
+                loading_indicator.show();
+                $.ajax({
+                    type: "POST",
+                    url: "../managers/monitor_assignments/monitor_assignments_api.php",
+                    data: JSON.stringify({ "function": "get_current_practicant_by_monitor", "params": [ instance_id, data_id ] }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function(data){
+                        loading_indicator.hide();
+                        if( data.status_code == 0 ){
+
+                            if( data.data_response ){
+                              load_assigned_monitors( instance_id, data.data_response, true );
+                            }else{
+                              
+                              setTimeout(function(){
+                                swal(
+                                  {
+                                    title:'Información',
+                                    text: 'El monitor seleccionado no tiene asignado un practicante.',
+                                    type: 'info'
+                                  },
+                                  function(){}
+                                );
+                              }, 0);
+                            }
+
+                            
+                        }else{
+                            console.log( data );
+                        }
+                    },
+                    failure: function(errMsg) {
+                      loading_indicator.hide();
+                      console.log(errMsg);
+                    }
+                });
+
+
             });
 
             $(document).on( 'click', '.student_item', function(){
