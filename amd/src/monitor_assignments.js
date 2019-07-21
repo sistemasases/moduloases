@@ -407,6 +407,7 @@
                             if( data.data_response ){
                               load_assigned_monitors( instance_id, data.data_response, true );
                             }else{
+                              
                               setTimeout(function(){
                                 swal(
                                   {
