@@ -94,12 +94,84 @@
             function load_reverse_assignation( role, instance_id, data_id ){
               if( role === "monitor" ){
 
+                loading_indicator.show();
+                $.ajax({
+                    type: "POST",
+                    url: "../managers/monitor_assignments/monitor_assignments_api.php",
+                    data: JSON.stringify({ "function": "get_current_practicant_by_monitor", "params": [ instance_id, data_id ] }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function(data){
+                        loading_indicator.hide();
+                        if( data.status_code == 0 ){
+
+                            if( data.data_response ){
+                              load_assigned_monitors( instance_id, data.data_response, true );
+                            }else{
+                              setTimeout(function(){
+                                swal(
+                                  {
+                                    title:'Información',
+                                    text: 'El monitor seleccionado no tiene asignado un practicante.',
+                                    type: 'info'
+                                  },
+                                  function(){}
+                                );
+                              }, 0);
+                            }
+
+                            
+                        }else{
+                            console.log( data );
+                        }
+                    },
+                    failure: function(errMsg) {
+                      loading_indicator.hide();
+                      console.log(errMsg);
+                    }
+                });
 
 
               }else if( role === "student" ){
 
-                
-                
+                loading_indicator.show();
+
+                $.ajax({
+                    type: "POST",
+                    url: "../managers/monitor_assignments/monitor_assignments_api.php",
+                    data: JSON.stringify({ "function": "get_current_monitor_by_student", "params": [ instance_id, data_id ] }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function(data){
+                        loading_indicator.hide();
+                        if( data.status_code == 0 ){
+
+                            if( data.data_response ){
+                              load_reverse_assignation( "monitor", instance_id, data.data_response );
+                              load_assigned_students( instance_id, data.data_response );
+                            }else{
+                              setTimeout(function(){
+                                swal(
+                                  {
+                                    title:'Información',
+                                    text: 'El estudiante seleccionado no tiene asignado un monitor.',
+                                    type: 'info'
+                                  },
+                                  function(){}
+                                );
+                              }, 0);
+                            }
+                            
+                        }else{
+                            console.log( data );
+                        }
+                    },
+                    failure: function(errMsg) {
+                      loading_indicator.hide();
+                      console.log(errMsg);
+                    }
+                });
+
               }
             };
 
@@ -116,7 +188,7 @@
                 $('#student_column').animate({
                     scrollTop: $('#student_column').scrollTop() + $('#student_assigned').position().top
                 }, 0);
-
+                loading_indicator.show();
                 $.ajax({
                     type: "POST",
                     url: "../managers/monitor_assignments/monitor_assignments_api.php",
@@ -124,6 +196,7 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function(data){
+                        loading_indicator.hide();
                         if( data.status_code == 0 ){
 
                             var monitor_assignments_monitor_students_relationship = data.data_response;
@@ -172,6 +245,7 @@
                         }
                     },
                     failure: function(errMsg) {
+                        loading_indicator.hide();
                         console.log(errMsg);
                     }
                 });
@@ -183,8 +257,8 @@
              * @param {Number} instance_id 
              * @param {Number} data_id practicant identificator
              */
-            function load_assigned_monitors( instance_id, data_id ){
-
+            function load_assigned_monitors( instance_id, data_id, reversed = false ){
+                loading_indicator.show();
                 $("#monitor_assigned").addClass("items_assigned_empty");
                 $("#monitor_assigned").html("Consultando <span>.</span><span>.</span><span>.</span>");
                 $(".monitor_item").removeClass("oculto-asignado");
@@ -199,6 +273,7 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function(data){
+                        loading_indicator.hide();
                         if( data.status_code == 0 ){
                             var monitor_assignments_practicant_monitor_relationship = data.data_response;
                             $(".practicant_item").removeClass("active");
@@ -211,8 +286,12 @@
                             $(".student_item").removeClass("assigned");
                             $(".student_item").removeClass("not-assigned");
                             $(".student_item").addClass("not-assigned");
-                            $("#student_assigned").text("No ha seleccionado un monitor.");
-                            $("#student_assigned").addClass("items_assigned_empty");
+
+                            if( !reversed ){
+                              $("#student_assigned").text("No ha seleccionado un monitor.");
+                              $("#student_assigned").addClass("items_assigned_empty");
+                            }
+
                             $("#monitor_assigned").text("");
                             var elements = false;
                             for( var i = 0; i < monitor_assignments_practicant_monitor_relationship.length; i++ ){
@@ -249,6 +328,7 @@
                         }
                     },
                     failure: function(errMsg) {
+                        loading_indicator.hide();
                         console.log(errMsg);
                     }
                 });
@@ -310,7 +390,7 @@
 
             $(document).on( 'click', '.monitor_item', function() {
                 load_assigned_students( $("#monitor_assignments_instance_id").data("instance-id") , $(this).attr("data-id")  );
-                load_reverse_assignation( "monitor", $("#monitor_assignments_instance_id").data("instance-id") , $(this).attr("data-id") );
+                //load_reverse_assignation( "monitor", $("#monitor_assignments_instance_id").data("instance-id") , $(this).attr("data-id") );
             });
 
             $(document).on( 'click', '.student_item', function(){
@@ -318,6 +398,7 @@
                 $(".student_item").removeClass("active");
                 $(this).addClass("active");
                 $(".student_item[data-id='" + data_id + "']").addClass("active");
+                load_reverse_assignation( "student", $("#monitor_assignments_instance_id").data("instance-id") , data_id );
             });
 
             $(document).on( 'click', '.add', function(e) {
