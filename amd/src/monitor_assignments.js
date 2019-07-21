@@ -383,7 +383,7 @@
             });
 
             $(document).on( 'click', '.practicant_item', function() {
-
+                $(".monitor_item").removeClass("active");
                 load_assigned_monitors( $("#monitor_assignments_instance_id").data("instance-id"), $(this).attr("data-id") );
 
             });
@@ -418,9 +418,31 @@
                 if( item_type == "student" ){
                     api_function = "create_monitor_student_relationship";
                     data_item_0 =  $(".monitor_item.active").attr("data-id");
+                    if( data_item_0 == null ){
+                      setTimeout(function(){
+                        swal(
+                            {title:'Error',
+                            text: 'Debe seleccionar primero a un monitor.',
+                            type: 'error'},
+                            function(){}
+                        );
+                      }, 0);
+                      return;
+                    }
                 }else if( item_type == "monitor" ){
                     api_function = "create_practicant_monitor_relationship";
                     data_item_0 =  $(".practicant_item.active").attr("data-id");
+                    if( data_item_0 == null ){
+                      setTimeout(function(){
+                        swal(
+                            {title:'Error',
+                            text: 'Debe seleccionar primero a un practicante.',
+                            type: 'error'},
+                            function(){}
+                        );
+                      }, 0);
+                      return;
+                    }
                 }
 
                 $.ajax({
