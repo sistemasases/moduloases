@@ -511,17 +511,7 @@ function secure_assign_role_to_user_previous_system( $user_id, $role, $singulari
      * 
      */
     
-    global $DB_PREFIX;
-            
-    $manager = get_db_manager();
-    $date_format = "Y-m-d H:i:s";
-            
-    $tablename = $DB_PREFIX . "talentospilos_usuario_rol";
-    $params = [ $user_id, $_role['id'], date( $date_format, $start_datetime),  date( $date_format, $end_datetime), $alternative_interval, json_encode($use_alternative_interval), $singularizator ];
-    $query = "INSERT INTO $tablename ( id_usuario, id_rol, fecha_hora_inicio, fecha_hora_fin, intervalo_validez_alternativo,usar_intervalo_alternativo,singularizador) "
-                    . "VALUES ( $1, $2, $3, $4, $5, $6, $7 )";
-            
-            return $manager( $query, $params, $extra = null );
+   
 }
 
 
