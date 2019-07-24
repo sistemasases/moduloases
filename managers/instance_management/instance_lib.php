@@ -49,6 +49,7 @@ function consult_instance($id_instance){
  * 
  * @see insert_instance($id_instance)
  * @param $id_instance --> instance id
+ * @param integer Deprecated
  * @return boolean 
  */
 function insert_instance($id_instance, $id_user){
@@ -57,8 +58,9 @@ function insert_instance($id_instance, $id_user){
 
     $object_to_record = new stdClass();
     $object_to_record->id_instancia = $id_instance;
-    $object_to_record->id_administrador = $id_user;
+    //$object_to_record->id_administrador = $id_user; Deprecated, "id_administrador" doesn't exist at talentospilos_instancia;
     $object_to_record->descripcion = "";
+    $object_to_record->id_number = time();
 
     $result_insertion = $DB->insert_record('talentospilos_instancia', $object_to_record, true);
     

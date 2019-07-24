@@ -5,8 +5,6 @@ require_once(dirname(__FILE__).'/../lib/lib.php');
 require_once(dirname(__FILE__).'/../lib/student_lib.php');
 require_once(dirname(__FILE__).'/../user_management/user_lib.php');
 
-//echo json_encode(getGraficPrograma("TODOS", "1"));
-
 /**
  * Función que recupera riesgos 
  *
@@ -39,98 +37,24 @@ function get_cohorts_by_idnumber($id_number){
     return $result;
 }
 
-/**
- * Funcion recupera la informacion necesaria para la grafica de sexo de acuerdo a la cohorte seleccionado
- * 
- * @param $cohorte
- * @return Array 
- */
-function getGraficSex($cohorte){
-    global $DB;
-    $query = "SELECT subconsulta.sexo, COUNT(subconsulta.userid)
-        FROM (SELECT data.userid, usuarios_tal.sexo
-              FROM {talentospilos_usuario} as usuarios_tal 
-                         INNER JOIN {user_info_data} as data ON (cast(usuarios_tal.id AS varchar) = data.data) 
-              WHERE data.fieldid = 2) as subconsulta 
-              INNER JOIN {cohort_members} as cohorts ON subconsulta.userid = cohorts.userid
-              INNER JOIN {cohort} as cohorte ON cohorts.cohortid = cohorte.id
-        WHERE cohorte.name = '$cohorte'
-        GROUP BY sexo";
-    
-    $sql_query = "SELECT  sexo, COUNT(id) FROM {talentospilos_usuario} GROUP BY sexo";
-    
-    //se verifica el cohorte ingresado, de acuerdo al caso se invoca el metodo de moodle con una de las dos
-    //consultar armadas anteriormente
-    if($cohorte == "TODOS"){
-        $result = $DB->get_records_sql($sql_query);
-    } else {
-        $result = $DB->get_records_sql($query);
-    }
-    return $result;
-}
 
 /**
- * Funcion recupera la informacion necesaria para la grafica de edad de acuerdo al cohorte seleccionado
+ * Función que retorna un string, concatenando subconsultas sql dependiendo de los parámetros:
+ * @param integer $ases_status
+ * @param integer $icetex_status
+ * @param integer $program_status
+ * @return String
  * 
- * @param $cohorte
- * @return Array 
  */
-function getGraficAge($cohorte){
-    global $DB;
-    $arrayRetornar=array();
-    
-    $query = "
-        SELECT subconsulta.userid, (now() - subconsulta.fecha_nac)/365 AS age
-            FROM (SELECT data.userid, usuarios_tal.fecha_nac
-                  FROM {talentospilos_usuario} as usuarios_tal 
-                             INNER JOIN {user_info_data} as data ON (cast(usuarios_tal.id AS varchar) = data.data) 
-                  WHERE data.fieldid = 2) as subconsulta 
-                  INNER JOIN {cohort_members} as cohorts ON subconsulta.userid = cohorts.userid
-                  INNER JOIN {cohort} as cohorte ON cohorts.cohortid = cohorte.id
-            WHERE cohorte.name = '$cohorte'";
-    
-    $sql_query = "SELECT id,(now() - fecha_nac)/365 AS age FROM {talentospilos_usuario}";
-    
-    //se verifica el cohorte ingresado, de acuerdo al caso se invoca el metodo de moodle con una de las dos
-    //consultar armadas anteriormente
-    if($cohorte == "TODOS"){
-        $result = $DB->get_records_sql($sql_query);
-    } else {
-        $result = $DB->get_records_sql($query);
-    }
-    
-    //ya que el dato recibido es un dato calculado se sabe que la edad son los dos primeros digitos de dicho campo
-    //razon por la cual se accede a cada valor, se extraen los primeros valores y se retorna el arreglo
-    foreach($result as $datoEdad){
-         $años=substr($datoEdad->age,0,2);
-         
-         array_push($arrayRetornar,$años);
-    }
-    
-    return array_count_values($arrayRetornar);
-    
-}
 
-/**
- * Funcion recupera la informacion necesaria para la grafica de programas de acuerdo al cohorte seleccionado
- * 
- * @param $cohorte
- * @return Array 
- */
-function getGraficPrograma($cohorte, $ases_status, $icetex_status, $program_status, $instance_id){
-    global $DB;
-    
-    $sql_query = "SELECT programa.nombre, COUNT(usuario.id)
-                    FROM {talentospilos_user_extended} AS usuario
-                    INNER JOIN {talentospilos_programa} AS programa 
-                    ON usuario.id_academic_program = programa.id 
-                    ";
-    
+ function subconsultaGraficReport($ases_status, $icetex_status, $program_status, $cohorte, $instance_id){
+    $sub_query = "";
+
     //Se filtra a los estudiantes activos en ASES    
     if($ases_status == 1){
         // echo "Entra
         // ";
-        $sql_query .= "INNER JOIN
+        $sub_query .= "INNER JOIN
                         (SELECT student_ases_status.id_estudiante AS id_ases_student, student_ases_status.id_estado_ases,
                                 MAX(student_ases_status.fecha) AS fecha
                         FROM {talentospilos_est_estadoases} AS student_ases_status
@@ -145,7 +69,7 @@ function getGraficPrograma($cohorte, $ases_status, $icetex_status, $program_stat
     //Se filtra a los estudiantes activos ICETEX
     if($icetex_status == 1){
 
-        $sql_query .= "INNER JOIN
+        $sub_query .= "INNER JOIN
                     (SELECT student_icetex_status.id_estudiante AS id_ases_student, student_icetex_status.id_estado_icetex,
                             MAX(student_icetex_status.fecha) AS fecha
                     FROM {talentospilos_est_est_icetex} AS student_icetex_status
@@ -161,7 +85,7 @@ function getGraficPrograma($cohorte, $ases_status, $icetex_status, $program_stat
     //Se filtra a los estudiantes activos en su respectivo programa
     if($program_status == 1){
 
-        $sql_query .= "INNER JOIN
+        $sub_query .= "INNER JOIN
                     (SELECT DISTINCT id_ases_user
                     FROM {cohort_members} membprog
                     INNER JOIN {talentospilos_user_extended} extprog
@@ -184,7 +108,7 @@ function getGraficPrograma($cohorte, $ases_status, $icetex_status, $program_stat
             $condition = "cohorte.idnumber LIKE 'SPE%'";
         }
 
-        $sql_query .= "INNER JOIN
+        $sub_query .= "INNER JOIN
                         (SELECT DISTINCT id_ases_user
                         FROM {cohort_members} membprog
                         INNER JOIN {talentospilos_user_extended} extprog
@@ -192,17 +116,116 @@ function getGraficPrograma($cohorte, $ases_status, $icetex_status, $program_stat
                         INNER JOIN {cohort} cohorte 
                             ON membprog.cohortid = cohorte.id
                         WHERE $condition) AS selected_cohort
-                        ON selected_cohort.id_ases_user = usuario.id_ases_user
+                        ON selected_cohort.id_ases_user = usuario.id_ases_user                       
 
                         ";
-
     }
-       
-    $sql_query .= "GROUP BY programa.nombre";
-        
-    $result = $DB->get_records_sql($sql_query);
+    return $sub_query;
+ }
 
-    return $result;
+/**
+ * Funcion recupera la informacion necesaria para la grafica de sexo de acuerdo a la cohorte seleccionado
+ * 
+ * @param $cohorte
+ * @return Array 
+ */
+function getGraficSex($cohorte, $ases_status, $icetex_status, $program_status, $instance_id){
+    global $DB;
+    $sql_query = "SELECT COUNT(usuario.id) AS cantidad,
+                 CASE WHEN usuario_ases.sexo = '1' THEN 'Masculino'
+                      WHEN usuario_ases.sexo = '2' THEN 'Femenino'
+					  WHEN usuario_ases.sexo = '3' THEN 'Intersexual'
+                      ELSE 'N.R'
+                END AS nombre
+                FROM {talentospilos_user_extended} AS usuario
+                INNER JOIN {talentospilos_usuario} AS usuario_ases
+                ON usuario.id_ases_user = usuario_ases.id                 
+                ";
+    
+    $sub_query = subconsultaGraficReport($ases_status, $icetex_status, $program_status, $cohorte, $instance_id);
+    $sql_query .= $sub_query;
+       
+    $sql_query .= "GROUP BY nombre
+                   ORDER BY cantidad DESC";
+
+    $result_query = $DB->get_records_sql($sql_query);
+
+    $result_to_return = array();
+
+    foreach($result_query as $result){
+
+        array_push($result_to_return, $result);
+    }
+
+    return $result_to_return;
+
+}
+
+/**
+ * Funcion recupera la informacion necesaria para la grafica de edad de acuerdo al cohorte seleccionado
+ * 
+ * @param $cohorte
+ * @return Array 
+ */
+function getGraficAge($cohorte, $ases_status, $icetex_status, $program_status, $instance_id){
+    global $DB;
+    
+    $sql_query = "SELECT EXTRACT(YEAR FROM age(usuario_ases.fecha_nac)) AS nombre, COUNT(usuario.id) AS cantidad
+                FROM {talentospilos_user_extended} AS usuario               
+                INNER JOIN {talentospilos_usuario} AS usuario_ases
+                ON usuario.id_ases_user = usuario_ases.id
+                WHERE EXTRACT(YEAR FROM age(usuario_ases.fecha_nac)) > 10                
+                ";
+    
+    $sub_query = subconsultaGraficReport($ases_status, $icetex_status, $program_status, $cohorte, $instance_id);
+    $sql_query .= $sub_query;
+       
+    $sql_query .= "GROUP BY nombre
+                   ORDER BY nombre ASC";
+
+    $result_query = $DB->get_records_sql($sql_query);
+
+    $result_to_return = array();
+
+    foreach($result_query as $result){
+
+        array_push($result_to_return, $result);
+    }
+    
+    return $result_to_return;    
+    
+}
+
+/**
+ * Funcion recupera la informacion necesaria para la grafica de programas de acuerdo al cohorte seleccionado
+ * 
+ * @param $cohorte
+ * @return Array 
+ */
+function getGraficPrograma($cohorte, $ases_status, $icetex_status, $program_status, $instance_id){
+    global $DB;
+    
+    $sql_query = "SELECT programa.nombre, COUNT(usuario.id) AS cantidad
+                    FROM {talentospilos_user_extended} AS usuario
+                    INNER JOIN {talentospilos_programa} AS programa 
+                    ON usuario.id_academic_program = programa.id 
+                    ";
+    $sub_query = subconsultaGraficReport($ases_status, $icetex_status, $program_status, $cohorte, $instance_id);
+    $sql_query .= $sub_query;
+       
+    $sql_query .= "GROUP BY programa.nombre
+                   ORDER BY cantidad DESC";
+        
+    $result_query = $DB->get_records_sql($sql_query);
+
+    $result_to_return = array();
+
+    foreach($result_query as $result){
+
+        array_push($result_to_return, $result);
+    }
+
+    return $result_to_return;
 }
 
 /**
@@ -211,33 +234,33 @@ function getGraficPrograma($cohorte, $ases_status, $icetex_status, $program_stat
  * @param $cohorte
  * @return Array 
  */
-function getGraficFacultad($cohorte){
+function getGraficFacultad($cohorte, $ases_status, $icetex_status, $program_status, $instance_id){
     global $DB;
     
-    $sql_query = "SELECT facultad.nombre,COUNT(facultad.nombre) FROM 
-                    (SELECT nombre,programa.id_facultad FROM 
-                        (SELECT DISTINCT  data.userid AS userid,data.data AS codcarrera FROM {talentospilos_usuario} AS usuarios_talentos 
-                         INNER JOIN {user_info_data} AS data ON (cast (usuarios_talentos.id as varchar) = data.data) where data.fieldid=3) 
-                     AS sub INNER JOIN {talentospilos_programa} AS programa ON (CAST(programa.id AS text) = sub.codcarrera)) 
-                  AS subconsulta INNER JOIN {talentospilos_facultad} AS facultad ON (subconsulta.id_facultad=facultad.id) 
-                  GROUP BY facultad.nombre";  
-    // consulta con la parte de los cohortes
-    $query = "SELECT facultad.nombre,COUNT(facultad.nombre) FROM 
-                    (SELECT nombre,programa.id_facultad FROM 
-                        (SELECT DISTINCT data.userid AS userid,data.data AS codcarrera,miembros.cohortid,cohort.name FROM {talentospilos_usuario} AS usuarios_talentos           
-                  INNER JOIN {user_info_data} AS data ON (CAST (usuarios_talentos.id AS varchar) = data.data) INNER JOIN {cohort_members} AS miembros ON
-                  (data.userid=miembros.userid) INNER JOIN {cohort} AS cohort ON (cohort.id=miembros.cohortid) WHERE data.fieldid = 3 AND cohort.name='$cohorte') 
-                     AS sub INNER JOIN {talentospilos_programa} AS programa ON (CAST(programa.id AS text) = sub.codcarrera)) 
-                  AS subconsulta INNER JOIN {talentospilos_facultad} AS facultad ON (subconsulta.id_facultad=facultad.id) 
-                  GROUP BY facultad.nombre";
-    //se verifica el cohorte ingresado, de acuerdo al caso se invoca el metodo de moodle con una de las dos
-    //consultar armadas anteriormente
-    if($cohorte == "TODOS"){
-        $result = $DB->get_records_sql($sql_query);
-    } else {
-        $result = $DB->get_records_sql($query);
+    $sql_query = "SELECT facultad.nombre, COUNT(usuario.id) AS cantidad
+                    FROM {talentospilos_user_extended} AS usuario
+                    INNER JOIN {talentospilos_programa} AS programa
+                    ON usuario.id_academic_program = programa.id 
+                    INNER JOIN {talentospilos_facultad} AS facultad
+                    ON programa.id_facultad = facultad.id
+                    ";
+    
+    $sub_query = subconsultaGraficReport($ases_status, $icetex_status, $program_status, $cohorte, $instance_id);
+    $sql_query .= $sub_query;
+       
+    $sql_query .= "GROUP BY facultad.nombre
+                   ORDER BY cantidad DESC";
+        
+    $result_query = $DB->get_records_sql($sql_query);
+
+    $result_to_return = array();
+
+    foreach($result_query as $result){
+
+        array_push($result_to_return, $result);
     }
-    return $result;
+
+    return $result_to_return;
     
 }
 
@@ -284,6 +307,141 @@ function getGraficEstado($cohorte){
     return $result;
     
 }
+
+
+/**
+ * Funcion recupera la informacion necesaria para la grafica de condiciones de excepción de acuerdo al cohorte seleccionado
+ * 
+ * @param $cohorte
+ * @return Array 
+ */
+function getGraficCondExcepcion($cohorte, $ases_status, $icetex_status, $program_status, $instance_id){
+    global $DB;
+    
+    $sql_query = "SELECT COUNT(usuario.id) AS cantidad, cond_excepcion.condicion_excepcion AS nombre_largo,
+                CASE WHEN cond_excepcion.alias = 'N.A' THEN 'N.A.'
+                     ELSE cond_excepcion.alias
+                END AS nombre
+                FROM {talentospilos_user_extended} AS usuario               
+                INNER JOIN {talentospilos_usuario} AS usuario_ases
+                ON usuario.id_ases_user = usuario_ases.id
+                INNER JOIN {talentospilos_cond_excepcion} AS cond_excepcion
+                ON usuario_ases.id_cond_excepcion = cond_excepcion.id 
+                ";
+    
+    $sub_query = subconsultaGraficReport($ases_status, $icetex_status, $program_status, $cohorte, $instance_id);
+    $sql_query .= $sub_query;
+       
+    $sql_query .= "GROUP BY nombre, nombre_largo
+                   ORDER BY cantidad DESC";
+
+    $result_query = $DB->get_records_sql($sql_query);
+
+    $result_to_return = array();
+
+    foreach($result_query as $result){
+
+        array_push($result_to_return, $result);
+    }
+    
+    return $result_to_return;    
+    
+}
+
+
+
+/**
+ * Funcion recupera la informacion necesaria para la grafica de riesgos de acuerdo al cohorte seleccionado
+ * 
+ * @param $cohorte
+ * @return Array 
+ */
+function getGraficRiesgos($cohorte, $ases_status, $icetex_status, $program_status, $instance_id){
+    global $DB;
+    
+    $sql_query = "SELECT riesgo.nombre AS nombre_riesgo, COUNT(DISTINCT usuario.id) AS cantidad, riesg_usuario.calificacion_riesgo AS calificacion,
+                CASE WHEN riesg_usuario.calificacion_riesgo = 1 THEN 'Bajo'
+                    WHEN riesg_usuario.calificacion_riesgo = 2  THEN 'Medio'
+                    WHEN riesg_usuario.calificacion_riesgo = 3  THEN 'Alto'
+                    WHEN riesg_usuario.calificacion_riesgo = 0  THEN 'N.R.'
+                    ELSE 'N.R.'
+                END AS calificacion_riesgo
+                FROM {talentospilos_user_extended} AS usuario
+                INNER JOIN {talentospilos_riesg_usuario} AS riesg_usuario
+                ON riesg_usuario.id_usuario = usuario.id_ases_user
+                INNER JOIN {talentospilos_riesgos_ases} AS riesgo
+                ON riesgo.id = riesg_usuario.id_riesgo             
+                ";
+    
+    $sub_query = subconsultaGraficReport($ases_status, $icetex_status, $program_status, $cohorte, $instance_id);
+    
+    $sub_query_nr = $sql_query.$sub_query."WHERE riesg_usuario.calificacion_riesgo = 0
+                                    ";
+    $sub_query_bajos = $sql_query.$sub_query."WHERE riesg_usuario.calificacion_riesgo = 1
+                                    ";
+    $sub_query_medios = $sql_query.$sub_query."WHERE riesg_usuario.calificacion_riesgo = 2
+                                    ";
+    $sub_query_altos = $sql_query.$sub_query."WHERE riesg_usuario.calificacion_riesgo = 3    
+                                    ";    
+       
+    $option_group = "GROUP BY nombre_riesgo, calificacion
+                    ORDER BY nombre_riesgo, calificacion";
+
+    $sub_query_nr .= $option_group;
+    $sub_query_bajos .= $option_group;
+    $sub_query_medios .= $option_group;
+    $sub_query_altos .= $option_group;
+    
+    $result_query_nr = $DB->get_records_sql($sub_query_nr);
+    $result_query_bajos = $DB->get_records_sql($sub_query_bajos);
+    $result_query_medios = $DB->get_records_sql($sub_query_medios);    
+    $result_query_altos = $DB->get_records_sql($sub_query_altos);
+    
+    $result_to_return = array();
+    $no_registra = array();
+    $bajos = array();
+    $medios = array();
+    $altos = array();
+    
+    foreach ($result_query_nr as $result){
+        array_push($no_registra, $result);
+    }
+
+    foreach($result_query_bajos as $result){
+        array_push($bajos, $result);
+    }
+
+    foreach($result_query_medios as $result){
+        array_push($medios, $result);
+    }
+
+    foreach($result_query_altos as $result){
+        array_push($altos, $result);
+    }
+
+    for($i = 0; $i < count($bajos); ++$i) {
+        $riesgo = $bajos[$i]->nombre_riesgo;
+        $riesgo = str_replace("_", " ", $riesgo);
+        $riesgo = ucwords($riesgo);
+
+        if($riesgo === "Academico"){
+            $riesgo = "Académico";
+        }else if($riesgo === "Geografico"){
+            $riesgo = "Geográfico";
+        } else if($riesgo === "Economico"){
+            $riesgo = "Económico";
+        }
+
+        $cantidad_nr = $no_registra[$i]->cantidad;
+        $cantidad_bajo = $bajos[$i]->cantidad;        
+        $cantidad_medio = $medios[$i]->cantidad;        
+        $cantidad_alto = $altos[$i]->cantidad;
+        array_push($result_to_return, (object) array('riesgo' => $riesgo, 'bajo' => $cantidad_bajo, 'medio' => $cantidad_medio, 'alto' => $cantidad_alto, "no_registra" => $cantidad_nr));
+    }  
+    
+    return $result_to_return;  
+}
+
 
 /**
  * Función que recupera datos para la tabla de ases_report, dado el estado, la cohorte y un conjunto de campos a extraer.
@@ -1371,4 +1529,68 @@ function get_icetex_states(){
 
 //     return $result;
 // }
+
+/**
+ * Función que retorna las propiedades de una tabla para la sección de reportes grágicos
+ * @return Array
+ * 
+ */
+
+ function get_general_table_graphic($columns, $data){
+    $data = array(
+        "bsort" => false,
+        "columns" => $columns,
+        "data" => $data,
+        "language" => 
+         array(
+            "search"=> "Buscar:",
+            "oPaginate" => array(
+                "sFirst"=>    "Primero",
+                "sLast"=>     "Último",
+                "sNext"=>     "Siguiente",
+                "sPrevious"=> "Anterior"
+                ),
+            "sProcessing"=>     "Procesando...",
+            "sLengthMenu"=>     "Mostrar _MENU_ registros",
+            "sZeroRecords"=>    "No se encontraron resultados",
+            "sEmptyTable"=>     "Ningún dato disponible en esta tabla",
+            "sInfo"=>           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty"=>      "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered"=>   "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix"=>    "",
+            "sSearch"=>         "Buscar:",
+            "sUrl"=>            "",
+            "sInfoThousands"=>  ",",
+            "sLoadingRecords"=> "Cargando...",
+         ),
+        "order"=> array(0, "asc"),
+        "dom"=>'lifrtpB',
+
+        "buttons"=>array(
+            array(
+                "extend"=>'print',
+                "text"=>'Imprimir'
+            ),
+            array(
+                "extend"=>'csvHtml5',
+                "text"=>'CSV'
+            ),
+            array(
+                "extend" => "excel",
+                "text" => 'Excel',
+                "className" => 'buttons-excel',
+                "filename" => 'Export excel',
+                "extension" => '.xls'
+            )
+        )
+
+    );
+
+    return $data;
+
+ }
+
+
+
+
 

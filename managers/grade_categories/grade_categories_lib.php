@@ -43,27 +43,20 @@ require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib
 ///*** Get info grade_categories methods ***///
 ///******************************************///
 
-/**
- * Obtains all courses organized by their teacher where there are students from an instance
- * 
- * @see get_courses_pilos($instanceid)
- * @param $instanceid id of an instance
- * @return array filled with courses
- */
+
+    /**
+     * Obtains all courses organized by their teacher where there are students from an instance
+     *
+     * @see get_courses_pilos($instanceid)
+     * @param $instanceid id of an instance
+     * @return array filled with courses
+     */
 
 function get_courses_pilos($instanceid){
     global $DB;
-    
-    $semestre = get_current_semester();
-    $sem = $semestre->nombre;
 
-    $año = substr($sem,0,4);
+    $semestre = get_current_semester_processed();
 
-    if(substr($sem,4,1) == 'A'){
-        $semestre = $año.'02';
-    }else if(substr($sem,4,1) == 'B'){
-        $semestre = $año.'08';
-    }
     //print_r($semestre);
     $query_courses = "
         SELECT DISTINCT curso.id,

@@ -864,6 +864,9 @@ function get_tracking_current_semesterV3($criterio,$student_id, $semester_id,$in
         $in_trackings = dphpformsV2_find_records( $xQuery );
         
         $all_trackings = array_merge( $trackings, $in_trackings );
+        
+        $trackings = NULL;
+        $in_trackings = NULL;
 
         $fecha = array();
         foreach ($all_trackings as $key => $tracking){
@@ -907,6 +910,9 @@ function get_tracking_current_semesterV3($criterio,$student_id, $semester_id,$in
         $in_trackings = dphpformsV2_find_records( $xQuery );
 
         $all_trackings = array_merge( $trackings, $in_trackings );
+        
+        $trackings = NULL;
+        $in_trackings = NULL;
 
         $fecha = array();
         foreach ($all_trackings as $key => $tracking){
@@ -1194,7 +1200,7 @@ function get_tracking_group_by_semester($id_ases = null, $tracking_type, $id_sem
             $firstsemester = get_id_first_semester($userid->userid);
             $lastsemestre = get_id_last_semester($userid->userid);
     
-            $sql_query .= " WHERE id >=".$firstsemester;
+            $sql_query .= " WHERE id >=".$firstsemester . " AND fecha_inicio < '2017-12-31 00:00:00'";
             
         }
         $sql_query.=" order by fecha_inicio DESC";
@@ -1241,7 +1247,7 @@ function get_tracking_group_by_semester($id_ases = null, $tracking_type, $id_sem
                 }
             }
             
-        }
+        }        
         
         $object_seguimientos =  new stdClass();
         
