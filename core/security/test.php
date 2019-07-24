@@ -45,9 +45,9 @@ $singularizations = array(
 //print_r( get_table_structure("mdl_talentospilos_rol") );
 //print_r( get_table_constrains("mdl_talentospilos_rol") );
 
-//print_r( secure_assing_role_to_user( 15, "root" ) );
+//print_r( secure_assign_role_to_user( 15, "root" ) );
 
-print_r( core_secure_assing_role_to_user( 73380, "root", strtotime("2019-09-27 15:00:00"), strtotime("2019-09-27 15:00:01") ) );
+print_r( core_secure_assign_role_to_user( 73380, "root", strtotime("2019-09-27 15:00:00"), strtotime("2019-09-27 15:00:01") ) );
 
 
 ?>
