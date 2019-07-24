@@ -450,7 +450,7 @@ function secure_create_role( $alias, $father_role = -1, $name = NULL, $descripti
  * @param object $singularizator
  * 
  */
-function secure_assing_role_to_user( $user_id, $role, $start_datetime = NULL, $end_datetime = NULL, $alternative_interval = NULL, $use_alternative_interval = 0, $singularizator = NULL ){
+function secure_assign_role_to_user( $user_id, $role, $start_datetime = NULL, $end_datetime = NULL, $alternative_interval = NULL, $use_alternative_interval = 0, $singularizator = NULL ){
 
     if( ( $use_alternative_interval === 0 && $start_datetime === NULL ) ||
         ( $use_alternative_interval === 0 && $end_datetime === NULL ) ){
@@ -465,11 +465,12 @@ function secure_assing_role_to_user( $user_id, $role, $start_datetime = NULL, $e
     if( $_user && $_role ){
         
         if( SUPPORT_TO_PREVIOUS_SYSTEM ){
-                        
-            (   //Validation if the role exist at the previous system role
-                !_core_security_get_previous_system_role( $_role['alias'] ) ?
-                secure_create_role( $previous_system_rol['nombre_rol'], $father_role = -1, NULL, $previous_system_rol['descripcion'] ) : null 
-            );
+            
+            //Validation if the role exist at the previous system role
+            if ( !_core_security_get_previous_system_role( $_role['alias'] ) ){
+                /*Asignar en sistema previo*/
+                
+            }
             
         }
      
@@ -492,6 +493,40 @@ function secure_assing_role_to_user( $user_id, $role, $start_datetime = NULL, $e
     }
     
     return null;
+}
+
+function secure_assign_role_to_user_previous_system( $user_id, $role, $singularizator ){
+    
+    if( is_null( $singularizator ) ){
+        throw new Exception( "Instance id must be defined at sigularizator", -1 );
+    }
+    
+    /*Singularizators
+     *
+     * estado (DEFAULT = 1)
+     * id_semestre (REQUIRED)
+     * id_jefe 
+     * id_instancia (REQUIRED)
+     * id_programa
+     * 
+     */
+    
+    global $DB_PREFIX;
+            
+    $manager = get_db_manager();
+    $date_format = "Y-m-d H:i:s";
+            
+    $tablename = $DB_PREFIX . "talentospilos_usuario_rol";
+    $params = [ $user_id, $_role['id'], date( $date_format, $start_datetime),  date( $date_format, $end_datetime), $alternative_interval, json_encode($use_alternative_interval), $singularizator ];
+    $query = "INSERT INTO $tablename ( id_usuario, id_rol, fecha_hora_inicio, fecha_hora_fin, intervalo_validez_alternativo,usar_intervalo_alternativo,singularizador) "
+                    . "VALUES ( $1, $2, $3, $4, $5, $6, $7 )";
+            
+            return $manager( $query, $params, $extra = null );
+}
+
+
+function secure_user_asigned_in_previous_system( $user_id, $role, $singularizator ){
+    
 }
 
 ?>
