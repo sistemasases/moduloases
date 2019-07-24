@@ -223,8 +223,8 @@ function core_secure_create_role( $alias, $father_role = -1, $name = NULL, $desc
             ) 
         );*/
 
-function core_secure_assing_role_to_user( $user_id, $role, $start_datetime = NULL, $end_datetime = NULL, $alternative_interval = NULL, $use_alternative_interval = 0, $singularizator = NULL ){
-    return secure_assing_role_to_user( $user_id, $role, $start_datetime, $end_datetime, $alternative_interval, $use_alternative_interval, $singularizator );
+function core_secure_assign_role_to_user( $user_id, $role, $start_datetime = NULL, $end_datetime = NULL, $alternative_interval = NULL, $use_alternative_interval = 0, $singularizator = NULL ){
+    return secure_assign_role_to_user( $user_id, $role, $start_datetime, $end_datetime, $alternative_interval, $use_alternative_interval, $singularizator );
 }
 
 ?>
