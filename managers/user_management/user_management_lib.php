@@ -315,6 +315,8 @@ function user_management_get_crea_stud_mon_prac_prof( $ases_id, $created_by_id, 
 
 /**
  * Function that sets sistemas role to an instance.
+ * Errata in function name, assing must be assign.
+ * 
  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @param integer $semester_id 
  * @param integer $instance_id
@@ -366,6 +368,7 @@ function user_management_assing_sistemas_role( $semester_id, $instance_id, $user
 
 /**
  * Function that sets sistemas role in all instances
+ * Errata in function name, assing must be assign.
  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @param integer $semester_id
  * @param string $username
