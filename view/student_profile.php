@@ -662,22 +662,7 @@ if ($student_code != 0) {
         }else{
             $neighborhoods .= "<option value='" . $neighborhoods_array[$i]->id . "'>" . $neighborhoods_array[$i]->nombre . "</option>";
         }
-        
     }
-
-    $level_risk_array = array('Bajo', 'Medio', 'Alto');
-
-    $select_geographic_risk = "<option>No registra</option>";
-    for ($i = 0; $i < 3; $i++) {
-        $value = $i + 1;
-        if ($i + 1 == (int) $geographic_object->risk) {
-            $select_geographic_risk .= "<option value='$value' selected>" . $level_risk_array[$i] . "</option>";
-        } else {
-            $select_geographic_risk .= "<option value='$value'>" . $level_risk_array[$i] . "</option>";
-        }
-    }
-
-    $record->select_geographic_risk = $select_geographic_risk;
 
     $record->select_neighborhoods = $neighborhoods;
 
@@ -686,7 +671,6 @@ if ($student_code != 0) {
     $record->latitude = $geographic_object->latitude;
     $record->longitude = $geographic_object->longitude;
     $record->observations = $geographic_object->observations;
-
     $native = $geographic_object->native;
     $live_far_away = $geographic_object->live_far_away;
     $live_risk_zone = $geographic_object->live_risk_zone;
@@ -695,44 +679,28 @@ if ($student_code != 0) {
     $record->live_far_away = ($live_far_away)?true:false;
     $record->live_risk_zone = ($live_risk_zone)?true:false;
 
-    if($live_risk_zone){
-        if($native)
-            $record->native_origin = true;
-        else
-            $record->inmigrant_origin = true;
-    } else {
-        $record->native_origin = $record->inmigrant_origin = false;
-    }
+    if($live_risk_zone && $native == 1)
+        $record->native_origin = true;
 
+    $record->risk_level  = $risk_level;
     switch ($risk_level) {
         case 1:
             $record->low_level = true;
             $record->mid_level = $record->high_level = false;
+            $record->geographic_class = 'div_low_risk';
             break;
         case 2:
             $record->mid_level = true;
             $record->low_level = $record->high_level = false;
+            $record->geographic_class = 'div_medium_risk';
             break;
         case 3:
             $record->high_level = true;
             $record->low_level = $record->mid_level = false;
-            break;
-        default:
-            $record->low_level = $record->mid_level = $record->high_level = false;
-            break;
-    }
-
-    switch ($geographic_object->risk) {
-        case 1:
-            $record->geographic_class = 'div_low_risk';
-            break;
-        case 2:
-            $record->geographic_class = 'div_medium_risk';
-            break;
-        case 3:
             $record->geographic_class = 'div_high_risk';
             break;
         default:
+            $record->low_level = $record->mid_level = $record->high_level = false;
             $record->geographic_class = 'div_no_risk';
             break;
     }

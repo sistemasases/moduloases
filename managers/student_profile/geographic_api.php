@@ -38,11 +38,10 @@ if(isset($input->func) && isset($input->params)) {
     if ($input->func == 'save_geographic_info') {
 
         /**
-         * id_ases: int
+         * id_ases: String
          * latitude: float
          * longitude: float
          * neighborhood: String
-         * geographic_risk: int
          * duration: int
          * distance: int
          * address: String
@@ -50,7 +49,7 @@ if(isset($input->func) && isset($input->params)) {
          * observaciones: String
          * vive_lejos: boolean
          * vive_zona_riesgo: boolean
-         * nativo: int
+         * nativo: boolean
          * nivel_riesgo: int
          */
 
@@ -70,36 +69,66 @@ if(isset($input->func) && isset($input->params)) {
             $nativo = $input->params[11];
             $nivel_riesgo = $input->params[12];
 
-            $id_ases = (int) $id_ases;
-            $nativo = (isset($nativo)) ? $nativo : -1;
-            $nivel_riesgo = (isset($nivel_riesgo)) ? $nivel_riesgo : -1;
+            $nivel_riesgo = (int) $nivel_riesgo;
 
-            if (is_int($id_ases) && is_float($latitude) && is_float($longitude) &&
+            if (is_string($id_ases) && is_float($latitude) && is_float($longitude) &&
                 is_string($neighborhood) && is_int($duration) && is_int($distance) &&
                 is_string($address) && is_string($city) && is_string($observaciones) &&
-                is_bool($vive_lejos) && is_bool($vive_zona_riesgo) &&
-                is_int($nativo) && is_int($nivel_riesgo)) {
+                is_bool($vive_lejos) && is_bool($vive_zona_riesgo) && is_bool($nativo) &&
+                is_int($nivel_riesgo)) {
 
                 $vive_lejos = ($vive_lejos) ? 1 : 0;
                 $vive_zona_riesgo = ($vive_zona_riesgo) ? 1 : 0;
+                $nativo = ($nativo) ? 1 : 0;
 
                 $msg = new stdClass();
 
-                $result_save_info = student_profile_save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $geographic_risk, $duration, $distance, $address, $city, $observaciones, $vive_lejos, $vive_zona_riesgo, $nativo, $nivel_riesgo);
+                $result_save_info = student_profile_save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $duration, $distance, $address, $city, $observaciones, $vive_lejos, $vive_zona_riesgo, $nativo, $nivel_riesgo);
 
                 if ($result_save_info) {
                     echo json_encode(
                         array(
                             "status_code" => 0,
                             "title" => 'Éxito',
-                            "text" => "La información geográfica ha sido guardada con éxito",
+                            "message" => "La información geográfica ha sido guardada con éxito",
                             "type" => "success"
                         ));
                 } else {
                     return_with_code(-5);
                 }
             } else {
-                return_with_code(-2, $id_ases);
+                return_with_code(-2, $input->params);
+            }
+        } else if(count($input->params) == 8) {
+
+            $id_ases = $input->params[0];
+            $latitude = $input->params[1];
+            $longitude = $input->params[2];
+            $neighborhood = $input->params[3];
+            $duration = $input->params[4];
+            $distance = $input->params[5];
+            $address = $input->params[6];
+            $city = $input->params[7];
+
+            if(is_string($id_ases) && is_float($latitude) && is_float($longitude) &&
+               is_string($neighborhood) && is_int($duration) && is_int($distance) &&
+               is_string($address) && is_string($city)){
+
+                $msg = new stdClass();
+
+                $result_save_info = student_profile_save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $duration, $distance, $address, $city);
+
+                if ($result_save_info) {
+                    echo json_encode(
+                        array(
+                            "status_code" => 0,
+                            "message" => "La información geográfica ha sido guardada con éxito",
+                        ));
+                } else {
+                    return_with_code(-5);
+                }
+            } else {
+                return_with_code(-2);
             }
         } else {
             return_with_code(-2);
@@ -107,7 +136,7 @@ if(isset($input->func) && isset($input->params)) {
     }
 }
 
-function return_with_code( $code , $input){
+function return_with_code( $code, $input){
 
     switch( $code ){
 

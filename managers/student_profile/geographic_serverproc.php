@@ -39,25 +39,14 @@ if(isset($data)){
         $latitude = $data->latitude;
         $longitude = $data->longitude;
         $neighborhood = $data->neighborhood;
-        $geographic_risk = $data->geographic_risk;
         $duration = $data->duration;
         $distance = $data->distance;
         $address = $data->address;
         $city = $data->city;
-        $observaciones = $data->observaciones;
-        $vive_lejos = $data->vive_lejos;
-        $vive_zona_riesgo = $data->vive_zona_riesgo;
-        $nativo = $data->nativo;
-        $nivel_riesgo = $data->nivel_riesgo;
-
-        $nativo = (isset($nativo))?$nativo:-1;
-        $vive_lejos = ($vive_lejos)?1:0;
-        $vive_zona_riesgo = ($vive_zona_riesgo)?1:0;
-        $nivel_riesgo = (isset($nivel_riesgo))?$nivel_riesgo:-1;
 
         $msg = new stdClass();
 
-        $result_save_info = student_profile_save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $geographic_risk, $duration, $distance, $address, $city, $observaciones, $vive_lejos, $vive_zona_riesgo, $nativo, $nivel_riesgo);
+        $result_save_info = student_profile_save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $duration, $distance, $address, $city);
 
         if($result_save_info){
             $msg->title = 'Éxito';

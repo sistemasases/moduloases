@@ -16,6 +16,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
             
             var id_ases = $('#id_ases').val();
             var student_marker;
+            var old_address = $('#geographic_direccion').val();
 
             load_geographic_info();
 
@@ -23,6 +24,21 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
              * Executes the method search_direction() by pressing the button search.
              */
             $("#button_search_geographic").click(function () {
+                search_direction();
+            });
+
+
+
+            $("#geographic_checkbox_zona_riesgo").click(function () {
+                if($('#geographic_checkbox_zona_riesgo').prop("checked"))
+                    $('#nativo').removeAttr("disabled");
+                else {
+                    $('#nativo').prop("checked", false);
+                    $('#nativo').attr("disabled", true);
+                }
+            });
+
+            $("#geographic_direccion").focusout(function(){
                 search_direction();
             });
 
@@ -40,7 +56,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 $('#button_edit_geographic').attr('hidden', true);
                 $('#div_save_buttons').removeAttr('hidden');
                 $('#select_neighborhood').removeAttr('disabled');
-                $('#select_geographic_risk').removeAttr('disabled');
                 $('#latitude').removeAttr('disabled');
                 $('#longitude').removeAttr('disabled');
                 $('#geographic_direccion').removeAttr('disabled');
@@ -53,6 +68,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 $('#nivel_alto').removeAttr('disabled');
                 $('#geographic_text_area').removeAttr('disabled');
 
+                if($('#geographic_checkbox_zona_riesgo').prop("checked"))
+                    $('#nativo').removeAttr("disabled");
+
                 var latitude = $('#latitude').val();
                 var longitude = $('#longitude').val();
                 student_marker = student_profile.edit_map(latitude, longitude);
@@ -62,7 +80,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 $('#button_edit_geographic').removeAttr('hidden');
                 $('#div_save_buttons').attr('hidden', true);
                 $('#select_neighborhood').attr('disabled', true);
-                $('#select_geographic_risk').attr('disabled', true);
                 $('#latitude').attr('disabled', true);
                 $('#longitude').attr('disabled', true);
                 $('#geographic_direccion').attr('disabled', true);
@@ -75,6 +92,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 $('#nivel_alto').attr('disabled', true);
                 $('#inmigrante').attr('disabled', true);
                 $('#geographic_text_area').attr('disabled', true);
+                $('#nativo').attr("disabled", true);
 
                 var ciudad_est = document.getElementById('geographic_ciudad').value;
                 var latitude = $('#latitude').val();
@@ -92,6 +110,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
 
             $('#button_save_geographic').on('click', function(){
 
+                setTimeout(function(){}, 4000);
+
                 var latitude = $('#latitude').val();
                 var longitude = $('#longitude').val();
                 var address = $('#geographic_direccion').val();
@@ -104,7 +124,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 
                 var ciudad = document.getElementById("geographic_ciudad");
                 var selectedCity = ciudad.options[ciudad.selectedIndex].text;
-                var query = address + " " + selectedCity;
+                var query = address + " " + selectedCity + " " + "Colombia";
 
                 var request = {
                     query: query,
@@ -169,11 +189,33 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 directionsService.route(route_request, function(response, status) {
 
                     var legs = response.routes[0].legs[0];
+                    var nivel_riesgo = $('input[name=geographic_nivel_riesgo]:checked').val();
 
                     distance = legs.distance.value;
                     duration = legs.duration.value;
-                    save_geographic_info(id_ases, latitude, longitude, duration, distance, address, city);
-                    
+                    if($("#geographic_direccion").is(":focus")) {
+                        swal(
+                            "Cargando",
+                            "Buscando dirección del estudiante. Intente guardar nuevamente",
+                            "info");
+                    } else if (city == 1){
+                        swal(
+                            "Error",
+                            "Debe definir la ciudad del estudiante antes de guardar",
+                            "error");
+                    } else if (old_address != address){
+                        swal(
+                            "Error",
+                            "Debe buscar la dirección del estudiante antes de guardar",
+                            "error");
+                    } else if (nivel_riesgo == null){
+                        swal(
+                            "Error",
+                            "Debe definir un nivel de riesgo antes de guardar",
+                            "error");
+                    } else {
+                        save_geographic_info(id_ases, latitude, longitude, duration, distance, address, city, nivel_riesgo);
+                    }
                 });
             });
 
@@ -185,9 +227,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
             function search_direction () {
                 var geocoder = new google.maps.Geocoder();
                 var select = document.getElementById('geographic_ciudad');
-                var input_address = $('#geographic_direccion').val() + " " + select.options[select.selectedIndex].text + " " + "Colombia";
+                var input_address = $('#geographic_direccion').val();
+                var composed_address = $('#geographic_direccion').val() + " " + select.options[select.selectedIndex].text + " " + "Colombia";
+                old_address = input_address;
                 geocoder.geocode({
-                    "address": input_address
+                    "address": composed_address
                 }, function(results) {
                     if (results[0]) {
                         var latitud = results[0].geometry.location.lat();
@@ -217,18 +261,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                     },
                     url: "../managers/student_profile/geographic_serverproc.php",
                     success: function(msg) {
-
-                        // var data = JSON.parse(msg.info);
-
-                        // var vive_lejos = data.vive_lejos;
-                        // var vive_zona_riesgo = data.vive_zona_riesgo;
-                        // var nativo = data.nativo;
-                        // var nivel_riesgo = data.nivel_riesgo;
-                        // var observaciones = data.observaciones;
-
-                        // document.getElementById("vive_lejos").checked = (vive_lejos)?true:false;
-                        // //$("#vive_lejos").prop("checked", vive_zona_riesgo);
-
                          console.log("msg.text");
                     },
                     dataType: "json", //Json format
@@ -245,22 +277,20 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
              * @param {integer} id_ases ASES student id
              * @param {float} latitude latitude coordenate
              * @param {float} longitude longitude coordenate
-             * @param {id} duration 
-             * @param {id} distance 
-             * @param {id} address current student's residencial address
-             * @param {id} city current student's residencial city
+             * @param {integer} duration
+             * @param {integer} distance
+             * @param {integer} address current student's residencial address
+             * @param {integer} city current student's residencial city
+             * @param {integer} student's geographic risk level
              */
-            function save_geographic_info(id_ases, latitude, longitude, duration, distance, address, city){
+            function save_geographic_info(id_ases, latitude, longitude, duration, distance, address, city, nivel_riesgo){
                 
                 var neighborhood = $('#select_neighborhood').val();
-                var geographic_risk = $('#select_geographic_risk').val();
                 var observaciones = $('#geographic_text_area').val();
                 var vive_lejos = $('#geographic_checkbox_vive_lejos').prop("checked");
                 var vive_zona_riesgo = $('#geographic_checkbox_zona_riesgo').prop("checked");
-                var nativo = $('input[name=geographic_origen]:checked').val();
-                var nivel_riesgo = $('input[name=geographic_nivel_riesgo]:checked').val();
+                var nativo = $('#nativo').prop("checked");
 
-                console.log(id_ases+"\n");
 
                 $.ajax({
                     type: "POST",
@@ -270,28 +300,13 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                                     duration, distance, address, city,
                                     observaciones, vive_lejos, vive_zona_riesgo,
                                     nativo, nivel_riesgo],
-                        /*
-                        id_ases: id_ases,
-                        latitude: latitude,
-                        longitude: longitude,
-                        neighborhood: neighborhood,
-                        geographic_risk: geographic_risk,
-                        duration: duration,
-                        distance: distance,
-                        address: address,
-                        city: city,
-                        observaciones: observaciones,
-                        vive_lejos: vive_lejos,
-                        vive_zona_riesgo: vive_zona_riesgo,
-                        nativo: nativo,
-                        nivel_riesgo: nivel_riesgo*/
                     }),
                     url: "../managers/student_profile/geographic_api.php",
                     success: function(msg) {
                         if(msg.status_code == 0) {
                             swal(
                                 msg.title,
-                                msg.text,
+                                msg.message,
                                 msg.type);
                         } else {
                             console.log(msg);
@@ -300,7 +315,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                         $('#button_edit_geographic').removeAttr('hidden');
                         $('#div_save_buttons').attr('hidden', true);
                         $('#select_neighborhood').attr('disabled', true);
-                        $('#select_geographic_risk').attr('disabled', true);
                         $('#latitude').attr('disabled', true);
                         $('#longitude').attr('disabled', true);
                         $('#geographic_direccion').attr('disabled', true);
@@ -312,6 +326,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                         $('#nivel_medio').attr('disabled', true);
                         $('#nivel_alto').attr('disabled', true);
                         $('#geographic_text_area').attr('disabled', true);
+                        $('#nativo').attr("disabled", true);
                     },
                     dataType: "json",
                     cache: "false",

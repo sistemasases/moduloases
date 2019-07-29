@@ -17,6 +17,18 @@
             </div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 form-group">
+
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-sm-4">
             <div class="form-group">
@@ -25,17 +37,6 @@
                         Barrio residencia
                         <select class="form-control" name="select_neighborhood" id="select_neighborhood" disabled>
                             {{{select_neighborhoods}}}
-                        </select>
-                    </label>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-5">
-            <div class="form-group">
-                <div class="col-sm-6">
-                    <label for="select_geographic_risk" class="col-sm-6">Riesgo geográfico
-                        <select class="form-control" name="geographic_risk" id="select_geographic_risk" disabled>
-                            {{{select_geographic_risk}}}
                         </select>
                     </label>
                 </div>
@@ -87,14 +88,8 @@
         <div class="geographic_origen">
             <div class="geographic_origen_nativo">
                 <label>
-                    <input class="geographic_origen_nativo_radio" type="radio" name="geographic_origen" id="nativo" value="1" {{#native_origin}} checked {{/native_origin}}>
+                    <input  id="nativo" type="checkbox" class="geographic_origen_nativo_radio" value="1" {{#native_origin}} checked {{/native_origin}} disabled>
                     Nativo
-                </label>
-            </div>
-            <div class="geographic_origen_inmigrante">
-                <label>
-                    <input class="geographic_origen_inmigrante_radio" type="radio" name="geographic_origen" id="inmigrante" value="0" {{#inmigrant_origin}} checked {{/inmigrant_origin}}>
-                    Inmigrante
                 </label>
             </div>
         </div>

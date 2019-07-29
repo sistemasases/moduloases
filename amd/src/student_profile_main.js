@@ -1003,6 +1003,7 @@ define(['jquery',
                 return msg;
             }, save_form_edit_profile: function (form, object_function, control1, control2, json, marker) {
 
+
                 $.ajax({
                     type: "POST",
                     data: {
@@ -1077,7 +1078,6 @@ define(['jquery',
     
                     var id_ases = $('#id_ases').val();
                     var neighborhood = $('#select_neighborhood').val();
-                    var geographic_risk = $('#select_geographic_risk').val();
                     var ciudad_act = document.getElementById("municipio_act").value;
     
                     var directionsService = new google.maps.DirectionsService();
@@ -1110,27 +1110,26 @@ define(['jquery',
                         var distance = response.routes[0].legs[0].distance.value;
     
                         var duration = response.routes[0].legs[0].duration.value;
-    
+
+                        var address = $('#direccion_res').val();
+
                         $.ajax({
                             type: "POST",
-                            data: {
-                                func: 'save_geographic_info',
-                                id_ases: id_ases,
-                                latitude: latitude,
-                                longitude: longitude,
-                                neighborhood: neighborhood,
-                                geographic_risk: geographic_risk,
-                                duration: duration,
-                                distance: distance
-                            },
-                            url: "../managers/student_profile/geographic_serverproc.php",
+                            data: JSON.stringify({
+                                "func": 'save_geographic_info',
+                                "params": [id_ases, latitude, longitude, neighborhood,
+                                            duration, distance, address, ciudad_act]
+                            }),
+                            url: "../managers/student_profile/geographic_api.php",
                             success: function (msg) {
                                 console.log(msg);
+                                console.log("Successss");
                             },
                             dataType: "json",
                             cache: "false",
                             error: function (msg) {
                                 console.log(msg);
+                                console.log("Fail :c");
                             },
                         });
                     });

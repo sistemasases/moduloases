@@ -120,7 +120,7 @@ function load_geographic_info($id_ases){
  * @return integer --> 1 if everything were saved, 0 otherwise
  */
 
-function student_profile_save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $geographic_risk, $duration, $distance, $address, $city, $observaciones, $vive_lejos, $vive_zona_riesgo, $nativo, $nivel_riesgo){
+function student_profile_save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $duration, $distance, $address, $city, $observaciones, $vive_lejos, $vive_zona_riesgo, $nativo, $nivel_riesgo){
 
     global $DB;
 
@@ -138,18 +138,17 @@ function student_profile_save_geographic_info($id_ases, $latitude, $longitude, $
         $data_object_risk->id = (int)$id_register_risk;
         $data_object_risk->id_usuario = (int)$id_ases;
         $data_object_risk->id_riesgo = (int)$id_risk;
-        $data_object_risk->calificacion_riesgo = (int)$geographic_risk;
+        $data_object_risk->calificacion_riesgo = (int)$nivel_riesgo;
         $data_object_risk->recorder = "other";
 
         $result_geographic_risk = $DB->update_record('talentospilos_riesg_usuario', $data_object_risk);
-
     }
     else{
         $data_object_risk = new stdClass();
         $data_object_risk->id = (int)$id_register_risk;
         $data_object_risk->id_usuario = (int)$id_ases;
         $data_object_risk->id_riesgo = (int)$id_risk;
-        $data_object_risk->calificacion_riesgo = (int)$geographic_risk;
+        $data_object_risk->calificacion_riesgo = (int)$nivel_riesgo;
         $data_object_risk->recorder = "other";
 
         $result_geographic_risk = $DB->insert_record('talentospilos_riesg_usuario', $data_object_risk, true);

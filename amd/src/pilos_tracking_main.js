@@ -193,6 +193,8 @@ define(
             }
 
             $(document).ready(function() {
+                
+                //$(".loader").html("Cargando conteo...");
 
                 ///////////////////////////////////////////////////////////7
 
@@ -238,7 +240,7 @@ define(
                 usuario["id"] = id;
                 usuario["name"] = name;
                 usuario["namerol"] = namerol;
-
+                
                 create_specific_counting( usuario );
 
                 // when user is 'practicante' then has permissions
@@ -251,7 +253,7 @@ define(
                 } else if (namerol == "profesional_ps") {
                     //Starts adding event
                     put_tracking_count( username, current_semester, parseInt( get_instance() ), false );
-                    consultar_seguimientos_persona(get_instance(), usuario, username);
+                    onsultar_seguimientos_persona(get_instance(), usuario, username);
                     send_email_new_form(get_instance());
 
                     // when user is 'monitor' then has permissions
