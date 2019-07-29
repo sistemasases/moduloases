@@ -20,106 +20,85 @@
 
     <div class="row">
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-
+            <h3 class="h-sections-general-tab" id="h-student-info">UBICACIÓN DEL ESTUDIANTE</h3>
+            <hr class="hr-general-tab-fields">
+            <div class="row">
+                <label for="geographic_direccion" class="col-xs-3 col-sm-3 col-md-3 col-lg-3">Dirección</label>
+                <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                    <input type="text" class="form-control" id="geographic_direccion" name="geographic_direccion" value="{{res_address}}" placeholder="Digite dirección" maxlength="100" disabled/>
+                </div>
             </div>
-        </div>
-        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 form-group">
-
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-sm-4">
-            <div class="form-group">
-                <div class="col-sm-12">
-                    <label for="select_neighborhood" class="col-sm-12">
-                        Barrio residencia
-                        <select class="form-control" name="select_neighborhood" id="select_neighborhood" disabled>
-                            {{{select_neighborhoods}}}
-                        </select>
+            <div id="div_search_button">
+                <button type="button" class="button btn-danger" id="button_search_geographic" hidden>Buscar</button>
+            </div>
+            <div class="row">
+                <label for="select_neighborhood" class="col-xs-3 col-sm-3 col-md-3 col-lg-3">Barrio residencia</label>
+                <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                    <select class="form-control" name="select_neighborhood" id="select_neighborhood" disabled>
+                        {{{select_neighborhoods}}}
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <label for="geographic_ciudad" class="col-xs-3 col-sm-3 col-md-3 col-lg-3">Ciudad</label>
+                <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                    <select class="form-control" id="geographic_ciudad" name="geographic_ciudad" disabled>
+                        {{{options_municipio_act}}}
+                    </select>
+                </div>
+            </div>
+            <br>
+            <h3 class="h-sections-general-tab" id="h-student-info">FACTORES DE RIESGO GEOGRÁFICO</h3>
+            <hr class="hr-general-tab-fields">
+            <div class="row">
+                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <input id="geographic_checkbox_vive_lejos" type="checkbox" class="geographic_checkbox_vive_lejos" {{#live_far_away}} checked {{/live_far_away}} disabled>
+                    Vivienda ubicada a mas de 45min de la Universidad (usando transporte público)
+                </label>
+            </div>
+            <div class="row">
+                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <input id="geographic_checkbox_zona_riesgo" type="checkbox" class="geographic_checkbox_zona_riesgo" {{#live_risk_zone}} checked {{/live_risk_zone}} disabled>
+                    Vivienda ubicada en zona con alto indice de hurtos y/o homicidios
+                </label>
+            </div>
+            <div class="row">
+                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <input id="nativo" type="checkbox" class="geographic_origen_nativo_checkbox" value="1" {{#native_origin}} checked {{/native_origin}} disabled>
+                    Origen nativo
+                </label>
+            </div>
+            <br>
+            <div class="row">
+                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12">Nivel de riesgo:</label>
+            </div>
+            <div class="row">
+                <div class="geographic_nivel_riesgo_bajo">
+                    <label class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                        <input class="geographic_nivel_riesgo_bajo_radio" type="radio" name="geographic_nivel_riesgo" id="nivel_bajo" value="1" {{#low_level}} checked {{/low_level}} disabled>
+                        Bajo
+                    </label>
+                </div>
+                <div class="geographic_nivel_riesgo_medio">
+                    <label class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                        <input class="geographic_nivel_riesgo_medio_radio" type="radio" name="geographic_nivel_riesgo" id="nivel_medio" value="2" {{#mid_level}} checked {{/mid_level}} disabled>
+                        Medio
+                    </label>
+                </div>
+                <div class="geographic_nivel_riesgo_alto">
+                    <label class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                        <input class="geographic_nivel_riesgo_alto_radio" type="radio" name="geographic_nivel_riesgo" id="nivel_alto" value="3" {{#high_level}} checked {{/high_level}} disabled>
+                        Alto
                     </label>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-4">
-            <div class="form-group">
-                <div class="col-sm-10">
-                    <label for="geographic_ciudad" class="col-sm-2">Ciudad
-                        <select id="geographic_ciudad" name="geographic_ciudad" disabled>
-                            {{{options_municipio_act}}}
-                        </select>
-                    </label>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="form-group">
-                <div class="col-sm-9">
-                    <label for="geographic_direccion" class="col-sm-12">Dirección<input type="text" class="form-control" id="geographic_direccion" name="geographic_direccion" value="{{res_address}}" placeholder="Digite dirección" maxlength="100" disabled/></label>
-                </div>
-                <div class="col-sm-3" id="div_search_button">
-                    <button type="button" class="button btn-danger" id="button_search_geographic" hidden>Buscar</button>
-                </div>
-            </div>
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" height='396' frameborder='0' style='border:0' id="geographic_map">
         </div>
     </div>
 
-    <div class="div-41 col-xs-12 col-sm-12 col-md-12 col-lg-12 seg_geo_vive_lejos">
-        <div class="geographic_vive_lejos">
-            <label>
-                <input id="geographic_checkbox_vive_lejos" type="checkbox" class="geographic_checkbox_vive_lejos" {{#live_far_away}} checked {{/live_far_away}} disabled>
-                Vive lejos
-            </label>
-        </div>
-    </div>
-    <div class="div-39 col-xs-12 col-sm-12 col-md-12 col-lg-12 seg_geo_vive_zona_riesgo">
-        <div class="geographic_zona_riesgo">
-            <label>
-                <input id="geographic_checkbox_zona_riesgo" type="checkbox" class="geographic_checkbox_zona_riesgo" {{#live_risk_zone}} checked {{/live_risk_zone}} disabled>
-                Vive en zona de riesgo
-            </label>
-        </div>
-    </div>
-    <div class="div-40 col-xs-12 col-sm-12 col-md-12 col-lg-12 separador_inferior ajuste_origen seg_geo_origen">
-        <label>Origen:</label>
-        <div class="geographic_origen">
-            <div class="geographic_origen_nativo">
-                <label>
-                    <input  id="nativo" type="checkbox" class="geographic_origen_nativo_radio" value="1" {{#native_origin}} checked {{/native_origin}} disabled>
-                    Nativo
-                </label>
-            </div>
-        </div>
-    </div>
-    <div class="div-38 col-xs-12 col-sm-12 col-md-12 col-lg-12 seg_geo_nivel_riesgo">
-        <label>Nivel de riesgo:</label>
-        <div class="geographic_nivel_riesgo">
-            <div class="geographic_nivel_riesgo_bajo">
-                <label>
-                    <input class="geographic_nivel_riesgo_bajo_radio" type="radio" name="geographic_nivel_riesgo" id="nivel_bajo" value="1" {{#low_level}} checked {{/low_level}} disabled>
-                    Bajo
-                </label>
-            </div>
-            <div class="geographic_nivel_riesgo_medio">
-                <label>
-                    <input class="geographic_nivel_riesgo_medio_radio" type="radio" name="geographic_nivel_riesgo" id="nivel_medio" value="2" {{#mid_level}} checked {{/mid_level}} disabled>
-                    Medio
-                </label>
-            </div>
-            <div class="geographic_nivel_riesgo_alto">
-                <label>
-                    <input class="geographic_nivel_riesgo_alto_radio" type="radio" name="geographic_nivel_riesgo" id="nivel_alto" value="3" {{#high_level}} checked {{/high_level}} disabled>
-                    Alto
-                </label>
-            </div>
-        </div>
-    </div>
-     <div class="div-37 col-xs-12 col-sm-12 col-md-12 col-lg-12 separador_inferior seg_geo_observaciones">
-        Observaciones:
-        <br>
+     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <label>Observaciones:</label>
         <textarea id="geographic_text_area" class="form-control " name="geographic_text_area" disabled>{{observations}}</textarea>
         <br>
     </div>
@@ -138,9 +117,6 @@
             <button type="button" class="button btn-success" id="button_save_geographic">Aceptar</button>
             <button tyep="button" class="button btn-danger" id="button_cancel_geographic">Cancelar</button>
         </div>
-    </div>
-
-    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" height='396' frameborder='0' style='border:0' id="geographic_map">
     </div>
     {{/view_geographic_config_sp}}
 </div>

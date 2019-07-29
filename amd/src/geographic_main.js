@@ -27,17 +27,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 search_direction();
             });
 
-
-
-            $("#geographic_checkbox_zona_riesgo").click(function () {
-                if($('#geographic_checkbox_zona_riesgo').prop("checked"))
-                    $('#nativo').removeAttr("disabled");
-                else {
-                    $('#nativo').prop("checked", false);
-                    $('#nativo').attr("disabled", true);
-                }
-            });
-
             $("#geographic_direccion").focusout(function(){
                 search_direction();
             });
@@ -67,6 +56,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 $('#nivel_medio').removeAttr('disabled');
                 $('#nivel_alto').removeAttr('disabled');
                 $('#geographic_text_area').removeAttr('disabled');
+                $('#nativo').removeAttr("disabled");
 
                 if($('#geographic_checkbox_zona_riesgo').prop("checked"))
                     $('#nativo').removeAttr("disabled");
