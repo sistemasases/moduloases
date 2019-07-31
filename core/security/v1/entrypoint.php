@@ -467,7 +467,7 @@ function secure_assign_role_to_user( $user_id, $role, $start_datetime = NULL, $e
         if( SUPPORT_TO_PREVIOUS_SYSTEM ){
             
             //Validation if the role exist at the previous system role
-            if ( !_core_security_get_previous_system_role( $_role['alias'] ) ){
+            if ( _core_security_get_previous_system_role( $_role['alias'] ) ){
                 /*Asignar en sistema previo*/
                 
             }
