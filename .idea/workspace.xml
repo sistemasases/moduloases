@@ -2,36 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5df1832f-d7bd-48d0-965f-54aa15d1405b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/core/periods/periods.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/periods/test.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/periods/v1/entrypoint.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/update/update_wrong_users.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/amd/build/dphpforms_form_renderer.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/amd/build/dphpforms_form_renderer.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/amd/build/monitor_assignments.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/amd/build/monitor_assignments.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/amd/src/dphpforms_form_renderer.js" beforeDir="false" afterPath="$PROJECT_DIR$/amd/src/dphpforms_form_renderer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/amd/src/geographic_main.js" beforeDir="false" afterPath="$PROJECT_DIR$/amd/src/geographic_main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/amd/src/monitor_assignments.js" beforeDir="false" afterPath="$PROJECT_DIR$/amd/src/monitor_assignments.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/cache/cache.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/cache/cache.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/cache/test.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/cache/test.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/cache/v1/entrypoint.php" beforeDir="false" afterPath="$PROJECT_DIR$/core/cache/v1/entrypoint.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db/install.xml" beforeDir="false" afterPath="$PROJECT_DIR$/db/install.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db/upgrade.php" beforeDir="false" afterPath="$PROJECT_DIR$/db/upgrade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/managers/instance_management/instance_lib.php" beforeDir="false" afterPath="$PROJECT_DIR$/managers/instance_management/instance_lib.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/managers/menu_options.php" beforeDir="false" afterPath="$PROJECT_DIR$/managers/menu_options.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/managers/monitor_assignments/monitor_assignments_api.php" beforeDir="false" afterPath="$PROJECT_DIR$/managers/monitor_assignments/monitor_assignments_api.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/managers/monitor_assignments/monitor_assignments_lib.php" beforeDir="false" afterPath="$PROJECT_DIR$/managers/monitor_assignments/monitor_assignments_lib.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/managers/pilos_tracking/tracking_functions.php" beforeDir="false" afterPath="$PROJECT_DIR$/managers/pilos_tracking/tracking_functions.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/managers/pilos_tracking/v2/pilos_tracking_lib.php" beforeDir="false" afterPath="$PROJECT_DIR$/managers/pilos_tracking/v2/pilos_tracking_lib.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/managers/student_profile/geographic_api.php" beforeDir="false" afterPath="$PROJECT_DIR$/managers/student_profile/geographic_api.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/managers/student_profile/geographic_lib.php" beforeDir="false" afterPath="$PROJECT_DIR$/managers/student_profile/geographic_lib.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/managers/student_profile/studentprofile_lib.php" beforeDir="false" afterPath="$PROJECT_DIR$/managers/student_profile/studentprofile_lib.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/style/student_profile.css" beforeDir="false" afterPath="$PROJECT_DIR$/style/student_profile.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/monitor_assignments.mustache" beforeDir="false" afterPath="$PROJECT_DIR$/templates/monitor_assignments.mustache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/view_geographic_tab_sp.mustache" beforeDir="false" afterPath="$PROJECT_DIR$/templates/view_geographic_tab_sp.mustache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.php" beforeDir="false" afterPath="$PROJECT_DIR$/test.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/version.php" beforeDir="false" afterPath="$PROJECT_DIR$/version.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/view/student_profile.php" beforeDir="false" afterPath="$PROJECT_DIR$/view/student_profile.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -58,11 +31,20 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/templates/view_geographic_tab_sp.mustache">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="236">
-              <caret line="73" column="44" selection-start-line="73" selection-start-column="28" selection-end-line="73" selection-end-column="44" />
+            <state relative-caret-position="300">
+              <caret line="35" column="77" lean-forward="true" selection-start-line="35" selection-start-column="77" selection-end-line="35" selection-end-column="77" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/style/bootstrap.min.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="15">
+              <caret line="1" column="19" selection-start-line="1" selection-start-column="19" selection-end-line="1" selection-end-column="19" />
             </state>
           </provider>
         </entry>
@@ -94,8 +76,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/managers/student_profile/geographic_api.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="863">
-              <caret line="122" column="50" selection-start-line="122" selection-start-column="50" selection-end-line="122" selection-end-column="50" />
+            <state relative-caret-position="-7">
+              <caret line="100" column="53" lean-forward="true" selection-start-line="100" selection-start-column="53" selection-end-line="100" selection-end-column="53" />
             </state>
           </provider>
         </entry>
@@ -116,33 +98,6 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/version.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="45">
-              <caret line="3" column="35" selection-start-line="3" selection-start-column="22" selection-end-line="3" selection-end-column="35" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/db/upgrade.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="93">
-              <caret line="21" column="63" lean-forward="true" selection-start-line="21" selection-start-column="63" selection-end-line="21" selection-end-column="63" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/db/install.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="4" column="1" lean-forward="true" selection-start-line="4" selection-start-column="1" selection-end-line="4" selection-end-column="1" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/managers/student_profile/geographic_serverproc.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="345">
@@ -154,8 +109,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/managers/student_profile/geographic_lib.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="354">
-              <caret line="169" column="105" selection-start-line="169" selection-start-column="105" selection-end-line="169" selection-end-column="105" />
+            <state relative-caret-position="483">
+              <caret line="168" lean-forward="true" selection-start-line="168" selection-end-line="168" />
             </state>
           </provider>
         </entry>
@@ -208,14 +163,14 @@
         <option value="$PROJECT_DIR$/managers/student_profile/geographic_serverproc.php" />
         <option value="$PROJECT_DIR$/view/student_profile.php" />
         <option value="$USER_HOME$/Racket/201738661-201744936-ProyectoFLP20191/Proyecto.rkt" />
-        <option value="$PROJECT_DIR$/managers/student_profile/geographic_api.php" />
-        <option value="$PROJECT_DIR$/templates/view_geographic_tab_sp.mustache" />
         <option value="$PROJECT_DIR$/style/student_profile.css" />
-        <option value="$PROJECT_DIR$/managers/student_profile/geographic_lib.php" />
         <option value="$PROJECT_DIR$/amd/src/geographic_main.js" />
         <option value="$PROJECT_DIR$/version.php" />
-        <option value="$PROJECT_DIR$/db/upgrade.php" />
         <option value="$PROJECT_DIR$/db/install.xml" />
+        <option value="$PROJECT_DIR$/db/upgrade.php" />
+        <option value="$PROJECT_DIR$/managers/student_profile/geographic_api.php" />
+        <option value="$PROJECT_DIR$/managers/student_profile/geographic_lib.php" />
+        <option value="$PROJECT_DIR$/templates/view_geographic_tab_sp.mustache" />
       </list>
     </option>
   </component>
@@ -251,6 +206,11 @@
               <item name="ases" type="b2602c69:ProjectViewProjectNode" />
               <item name="ases" type="462c0819:PsiDirectoryNode" />
               <item name="db" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="ases" type="b2602c69:ProjectViewProjectNode" />
+              <item name="ases" type="462c0819:PsiDirectoryNode" />
+              <item name="style" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -304,18 +264,17 @@
       <workItem from="1564491283167" duration="1172000" />
       <workItem from="1564602300371" duration="4354000" />
       <workItem from="1564607355223" duration="8568000" />
-      <workItem from="1564662028261" duration="7360000" />
+      <workItem from="1564662028261" duration="10409000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="96157000" />
+    <option name="totallyTimeSpent" value="99206000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-3" y="31" width="1606" height="823" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24646984" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24646984" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -328,7 +287,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" />
       <window_info anchor="bottom" id="Version Control" order="9" weight="0.13428572" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.11" />
+      <window_info anchor="bottom" id="Terminal" order="10" visible="true" weight="0.042857144" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -441,13 +400,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/managers/student_profile/geographic_api.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="863">
-          <caret line="122" column="50" selection-start-line="122" selection-start-column="50" selection-end-line="122" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/view/student_profile.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="208">
@@ -460,17 +412,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/managers/student_profile/geographic_lib.php">
+    <entry file="file://$PROJECT_DIR$/db/install.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="354">
-          <caret line="169" column="105" selection-start-line="169" selection-start-column="105" selection-end-line="169" selection-end-column="105" />
+        <state relative-caret-position="225">
+          <caret line="15" column="13" lean-forward="true" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/view_geographic_tab_sp.mustache">
+    <entry file="file://$PROJECT_DIR$/db/upgrade.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="236">
-          <caret line="73" column="44" selection-start-line="73" selection-start-column="28" selection-end-line="73" selection-end-column="44" />
+        <state relative-caret-position="309">
+          <caret line="3803" lean-forward="true" selection-start-line="3803" selection-end-line="3803" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/version.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" column="35" selection-start-line="3" selection-start-column="22" selection-end-line="3" selection-end-column="35" />
         </state>
       </provider>
     </entry>
@@ -487,24 +446,31 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/version.php">
+    <entry file="file://$PROJECT_DIR$/managers/student_profile/geographic_api.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="35" selection-start-line="3" selection-start-column="22" selection-end-line="3" selection-end-column="35" />
+        <state relative-caret-position="-7">
+          <caret line="100" column="53" lean-forward="true" selection-start-line="100" selection-start-column="53" selection-end-line="100" selection-end-column="53" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/db/upgrade.php">
+    <entry file="file://$PROJECT_DIR$/managers/student_profile/geographic_lib.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="93">
-          <caret line="21" column="63" lean-forward="true" selection-start-line="21" selection-start-column="63" selection-end-line="21" selection-end-column="63" />
+        <state relative-caret-position="483">
+          <caret line="168" lean-forward="true" selection-start-line="168" selection-end-line="168" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/db/install.xml">
+    <entry file="file://$PROJECT_DIR$/style/bootstrap.min.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="1" lean-forward="true" selection-start-line="4" selection-start-column="1" selection-end-line="4" selection-end-column="1" />
+        <state relative-caret-position="15">
+          <caret line="1" column="19" selection-start-line="1" selection-start-column="19" selection-end-line="1" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/view_geographic_tab_sp.mustache">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="35" column="77" lean-forward="true" selection-start-line="35" selection-start-column="77" selection-end-line="35" selection-end-column="77" />
         </state>
       </provider>
     </entry>

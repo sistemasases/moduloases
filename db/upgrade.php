@@ -3850,7 +3850,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
         // Define field origen to be added to talentospilos_demografia.
         $table = new xmldb_table('talentospilos_demografia');
-        $field = new xmldb_field('origen', XMLDB_TYPE_INTEGER, '1', null, null, null, null, 'vive_zona_riesgo');
+        $field = new xmldb_field('nativo', XMLDB_TYPE_INTEGER, '1', null, null, null, null, 'vive_zona_riesgo');
 
         // Conditionally launch add field origen.
         if (!$dbman->field_exists($table, $field)) {
@@ -3874,19 +3874,6 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-
-        //*****************************************************************************************//
-        // Modificación de campo en talentospilos_demografia: Se renombra el nombre del campo      //
-        // 'origen' por 'nativo'.                                                                  //
-        // Versión: 2019062617310                                                                  //
-        //*****************************************************************************************//
-
-        // Rename field origen on table talentospilos_demografia to nativo.
-        $table = new xmldb_table('talentospilos_demografia');
-        $field = new xmldb_field('origen', XMLDB_TYPE_INTEGER, '1', null, null, null, null, 'vive_zona_riesgo');
-
-        // Launch rename field origen.
-        $dbman->rename_field($table, $field, 'nativo');
 
         upgrade_block_savepoint(true, 2019080109210, 'ases');
         return $result;

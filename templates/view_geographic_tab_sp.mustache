@@ -31,6 +31,15 @@
             <div id="div_search_button">
                 <button type="button" class="button btn-danger" id="button_search_geographic" hidden>Buscar</button>
             </div>
+            <div class="row">
+                <label for="geographic_direccion" class="col-xs-3 col-sm-3 col-md-3 col-lg-3">Dirección</label>
+                <div class="input-group col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                    <input type="text" class="form-control" id="geographic_direccion" name="geographic_direccion" value="{{res_address}}" placeholder="Digite dirección" maxlength="100" disabled>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button">Buscar</button>
+                    </span>
+                </div>
+            </div>
             <div class="row margin_bottom_10px">
                 <label for="select_neighborhood" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 center_vertically">Barrio residencia</label>
                 <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">

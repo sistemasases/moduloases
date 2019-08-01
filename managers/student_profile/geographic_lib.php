@@ -117,12 +117,12 @@ function student_profile_load_geographic_info($id_ases){
  * @return integer --> 1 if everything were saved, 0 otherwise
  */
 
-function student_profile_save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $duration, $distance, $address, $city, $observaciones, $vive_lejos, $vive_zona_riesgo, $nativo, $nivel_riesgo){
+function student_profile_save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $duration, $distance, $address, $city, $observaciones = null, $vive_lejos = null, $vive_zona_riesgo = null, $nativo = null, $nivel_riesgo = null){
 
     global $DB;
 
     $sql_query = "SELECT * FROM {talentospilos_demografia} WHERE id_usuario = $id_ases";
-    $geographic_info = $DB->get_record_sql($sql_query)->id;
+    $geographic_info = $DB->get_record_sql($sql_query);
 
     $sql_query = "SELECT id FROM {talentospilos_riesgos_ases} WHERE nombre = 'geografico'";
     $id_risk = $DB->get_record_sql($sql_query)->id;
@@ -153,23 +153,21 @@ function student_profile_save_geographic_info($id_ases, $latitude, $longitude, $
     }
 
     if($geographic_info){
-        $data_object = new stdClass();
-        $data_object->id = $geographic_info->id;
-        $data_object->id_usuario = (isset($id_ases)?$id_ases:$geographic_info->id_usuario);
-        $data_object->latitud = (isset($latitude)?$latitude:$geographic_info->latitud);
-        $data_object->longitud = (isset($longitude)?$longitude:$geographic_info->longitud);
-        $data_object->barrio = (isset($neighborhood)?$neighborhood:$geographic_info->barrio);
-        $data_object->duracion = (isset($duration)?$duration:$geographic_info->duracion);
-        $data_object->distancia = (isset($distance)?$distance:$geographic_info->distancia);
-        $data_object->direccion = (isset($address)?$address:$geographic_info->direccion);
-        $data_object->id_ciudad = (isset($city)?$city:$geographic_info->id_ciudad);
-        $data_object->observaciones = (isset($observaciones)?$observaciones:$geographic_info->observaciones);
-        $data_object->vive_lejos = (isset($vive_lejos)?$vive_lejos:$geographic_info->vive_lejos);
-        $data_object->vive_zona_riesgo = (isset($vive_zona_riesgo)?$vive_zona_riesgo:$geographic_info->vive_zona_riesgo);
-        $data_object->nativo = (isset($nativo)?$nativo:$geographic_info->nativo);
-        $data_object->nivel_riesgo = (isset($nivel_riesgo)?$nivel_riesgo:$geographic_info->nivel_riesgo);
-    
-        $result_geographic_info = $DB->update_record('talentospilos_demografia', $data_object);
+        $geographic_info->id_usuario = (isset($id_ases)?$id_ases:$geographic_info->id_usuario);
+        $geographic_info->latitud = (isset($latitude)?$latitude:$geographic_info->latitud);
+        $geographic_info->longitud = (isset($longitude)?$longitude:$geographic_info->longitud);
+        $geographic_info->barrio = (isset($neighborhood)?$neighborhood:$geographic_info->barrio);
+        $geographic_info->duracion = (isset($duration)?$duration:$geographic_info->duracion);
+        $geographic_info->distancia = (isset($distance)?$distance:$geographic_info->distancia);
+        $geographic_info->direccion = (isset($address)?$address:$geographic_info->direccion);
+        $geographic_info->id_ciudad = (isset($city)?$city:$geographic_info->id_ciudad);
+        $geographic_info->observaciones = (isset($observaciones)?$observaciones:$geographic_info->observaciones);
+        $geographic_info->vive_lejos = (isset($vive_lejos)?$vive_lejos:$geographic_info->vive_lejos);
+        $geographic_info->vive_zona_riesgo = (isset($vive_zona_riesgo)?$vive_zona_riesgo:$geographic_info->vive_zona_riesgo);
+        $geographic_info->nativo = (isset($nativo)?$nativo:$geographic_info->nativo);
+        $geographic_info->nivel_riesgo = (isset($nivel_riesgo)?$nivel_riesgo:$geographic_info->nivel_riesgo);
+
+        $result_geographic_info = $DB->update_record('talentospilos_demografia', $geographic_info);
     }
     else{
         $data_object = new stdClass();
