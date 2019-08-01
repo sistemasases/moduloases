@@ -12,6 +12,8 @@ require_once( __DIR__ . "/gets.php");
 require_once( __DIR__ . "/general_functions.php");
 require_once( __DIR__ . "/checker.php");
 
+module_loader("periods");
+
 const VALID_CHARACTERS = [
     'a','b','c','d','e','f','g',
     'h','i','j','k','l','m','n',
@@ -469,7 +471,7 @@ function secure_assign_role_to_user( $user_id, $role, $start_datetime = NULL, $e
             //Validation if the role exist at the previous system role
             if ( _core_security_get_previous_system_role( $_role['alias'] ) ){
                 /*Asignar en sistema previo*/
-                
+                secure_assign_role_to_user_previous_system( $user_id, $_role['alias'], [ "id_instancia" => 450299 ]);
             }
             
         }
@@ -496,27 +498,64 @@ function secure_assign_role_to_user( $user_id, $role, $start_datetime = NULL, $e
 }
 
 function secure_assign_role_to_user_previous_system( $user_id, $role, $singularizator ){
-    
-    if( is_null( $singularizator ) ){
-        throw new Exception( "Instance id must be defined at sigularizator", -1 );
-    }
-    
-    /*Singularizators
+
+	/*Singularizator
      *
      * estado (DEFAULT = 1)
-     * id_semestre (REQUIRED)
+     * id_semestre (DEFAULT = current )
      * id_jefe 
      * id_instancia (REQUIRED)
      * id_programa
      * 
      */
     
+    if( !isset( $singularizator['id_instancia'] ) ){
+        throw new Exception( "id_instancia must be defined at sigularizator", -1 );
+    }
+
+    $role_id = -1;
+
+    switch ( gettype( $role ) ) {
+    	case 'string':
+    		$role_id = _core_security_get_previous_system_role( $role );
+    		break;
+    	case 'object':
+    		$role_id = $role->id;
+    		break;
+    	case 'integer':
+    		break;
+    	default:
+    		throw new Exception( "role must be an id, role alias or role obj", -2 );
+    		break;
+    }
+    
+    if( !isset($singularizator['id_semestre']) ){
+		$singularizator['id_semestre'] = core_periods_get_current_period()->id;
+    }
+
+    if( !_core_user_asigned_in_previous_system( $user_id, $role, $singularizator ) ){
+    	global $DB_PREFIX;
+            
+        $manager = get_db_manager();
+        $period_id = ( isset($singularizator['id_semestre']) ? $singularizator['id_semestre'] : core_periods_get_current_period()->id );
+            
+        $tablename = $DB_PREFIX . "talentospilos_user_rol";
+        $params = [ 
+        	(int) $role_id, 
+        	(int) $user_id, 
+        	$estado = 1, 
+        	(int) $period_id,  
+        	(isset($singularizator['id_jefe']) ? (int) $singularizator['id_jefe'] : NULL),
+        	(int) $singularizator['id_instancia'],
+        	(isset($singularizator['id_programa']) ? (int) $singularizator['id_programa'] : NULL)
+        ];
+        $query = "INSERT INTO $tablename ( id_rol, id_usuario, estado, id_semestre, id_jefe, id_instancia, id_programa) "
+        		. "VALUES ( $1, $2, $3, $4, $5, $6, $7 )";
+
+    	$manager( $query, $params, $extra = null );
+    }
    
 }
 
-
-function secure_user_asigned_in_previous_system( $user_id, $role, $singularizator ){
-    
-}
 
 ?>
