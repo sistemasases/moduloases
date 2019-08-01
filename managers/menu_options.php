@@ -318,7 +318,8 @@ function create_menu_options($userid, $blockid, $courseid)
 
             }
 
-            if ($function == 'assigned_students_no_trackings_report') {
+            //@deprecated
+            /*if ($function == 'assigned_students_no_trackings_report') {
                 $url = new moodle_url("/blocks/ases/view/assigned_students_no_trackings_report.php", array(
                     'courseid' => $courseid,
                     'instanceid' => $blockid,
@@ -327,7 +328,7 @@ function create_menu_options($userid, $blockid, $courseid)
                 $menu_options = '<a id="menu_assigned_students_no_trackings_report" href= "' . $url . '"> Estudiantes sin seguimientos </a>';
                 $soc_ed_options['Estudiantes sin seguimientos '] = $menu_options;
 
-            }
+            }*/
 
 
             if ($function == 'backup_forms') {
