@@ -307,4 +307,46 @@ function _core_security_get_previous_system_role( $rol_name ){
     
 }
 
+function _core_user_asigned_in_previous_system( $user_id, $role, $singularizator ){
+    
+    global $DB_PREFIX;
+            
+    $manager = get_db_manager();
+
+    $obj_role = _core_security_get_previous_system_role( $role );
+
+    /*Singularizator
+     *
+     * estado (DEFAULT = 1)
+     * id_semestre (DEFAULT = current )
+     * id_jefe 
+     * id_instancia (REQUIRED)
+     * id_programa
+     * 
+     */
+    
+    $period_id = ( isset($singularizator['id_semestre']) ? $singularizator['id_semestre'] : core_periods_get_current_period()->id );
+    $where = 
+    	" id_instancia = " . $singularizator['id_instancia'] . 
+    	" AND id_rol = " . $obj_role['id'] . 
+    	" AND estado = 1 " . 
+    	" AND id_semestre = '$period_id' " . 
+    	" AND id_usuario = '$user_id' ";
+
+    foreach ($singularizator as $key => $value) {
+    	if( $key == "id_semestre" ){ 
+    		continue; 
+    	}else{
+    		$where .= "AND $key = '$value'";
+    	}
+    }
+    
+    $tablename = $DB_PREFIX . "talentospilos_user_rol";
+    $query = "SELECT * FROM $tablename WHERE $where";
+    $result = $manager( $query, [] );
+
+    return ( count( $result ) == 1 ? $result[0] : null );
+
+}
+
 ?>
