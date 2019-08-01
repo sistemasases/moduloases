@@ -22,6 +22,10 @@
     
     return {
         init: function() {
+            
+                $("input[type=date]").keypress(function(e) {
+                    e.preventDefault();
+                });
 
                 $(document).on( "click", ".btn-dphpforms-close", function() {
                     $(this).closest('div[class="mymodal"]').fadeOut(300);
