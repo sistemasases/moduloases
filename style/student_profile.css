@@ -514,6 +514,10 @@
         text-align:center;
         margin-top: 10px;
     }
+
+    #geographic_direccion{
+        height: 34px;
+    }
 }
 
 @media print {

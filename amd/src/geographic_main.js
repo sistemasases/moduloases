@@ -18,13 +18,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
             var student_marker;
 
             /**
-             * Executes the method search_direction() by pressing the button search.
-             */
-            $("#button_search_geographic").click(function () {
-                search_direction();
-            });
-
-            /**
              * Executes the method search_direction() by unfocusing the address text area.
              */
             $("#geographic_direccion").focusout(function(){
@@ -48,7 +41,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 $('#latitude').removeAttr('disabled');
                 $('#longitude').removeAttr('disabled');
                 $('#geographic_direccion').removeAttr('disabled');
-                $('#button_search_geographic').removeAttr('hidden');
                 $('#geographic_ciudad').removeAttr('disabled');
                 $('#geographic_checkbox_vive_lejos').removeAttr('disabled');
                 $('#geographic_checkbox_zona_riesgo').removeAttr('disabled');
@@ -73,7 +65,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 $('#latitude').attr('disabled', true);
                 $('#longitude').attr('disabled', true);
                 $('#geographic_direccion').attr('disabled', true);
-                $('#button_search_geographic').attr('hidden', true);
                 $('#geographic_ciudad').attr('disabled', true);
                 $('#geographic_checkbox_vive_lejos').attr('disabled', true);
                 $('#geographic_checkbox_zona_riesgo').attr('disabled', true);
@@ -181,6 +172,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                     //Calculates the distance and the duration due to the specified route.
                     directionsService.route(route_request, function(response, status) {
 
+                        var nivel_riesgo = $('input[name=geographic_nivel_riesgo]:checked').val();
                         if (city == 1){
                             swal(
                                 "Error",
@@ -192,8 +184,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                                 "Debe definir un nivel de riesgo antes de guardar",
                                 "error");
                         } else {
+
                             var legs = response.routes[0].legs[0];
-                            var nivel_riesgo = $('input[name=geographic_nivel_riesgo]:checked').val();
 
                             distance = legs.distance.value;
                             duration = legs.duration.value;
@@ -279,7 +271,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                         $('#latitude').attr('disabled', true);
                         $('#longitude').attr('disabled', true);
                         $('#geographic_direccion').attr('disabled', true);
-                        $('#button_search_geographic').attr('hidden', true);
                         $('#geographic_ciudad').attr('disabled', true);
                         $('#geographic_checkbox_vive_lejos').attr('disabled', true);
                         $('#geographic_checkbox_zona_riesgo').attr('disabled', true);
