@@ -887,6 +887,9 @@ function get_tracking_current_semesterV3($criterio,$student_id, $semester_id,$in
         $in_trackings = dphpformsV2_find_records( $xQuery );
         
         $all_trackings = array_merge( $trackings, $in_trackings );
+        
+        $trackings = NULL;
+        $in_trackings = NULL;
 
         $fecha = array();
         foreach ($all_trackings as $key => $tracking){
@@ -930,6 +933,9 @@ function get_tracking_current_semesterV3($criterio,$student_id, $semester_id,$in
         $in_trackings = dphpformsV2_find_records( $xQuery );
 
         $all_trackings = array_merge( $trackings, $in_trackings );
+        
+        $trackings = NULL;
+        $in_trackings = NULL;
 
         $fecha = array();
         foreach ($all_trackings as $key => $tracking){

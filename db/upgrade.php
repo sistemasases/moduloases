@@ -4,11 +4,8 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-<<<<<<< HEAD
-    if ($oldversion < 2019062617310) {
-=======
-    if ($oldversion < 2019061613560 ) {
->>>>>>> 74298a9e725fbd478082e9bfef992a7d37cd7f0c
+
+    if ($oldversion < 2019080109210 ) {
       
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
@@ -3810,7 +3807,6 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->add_field($table, $field);
         }
 
-<<<<<<< HEAD
         //*****************************************************************************************//
         // Creación de campos: Se crean campos necesarios para la tabla talentospilos_demografia   //
         // Versión: 2019060608360                                                                  //
@@ -3892,14 +3888,9 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         // Launch rename field origen.
         $dbman->rename_field($table, $field, 'nativo');
 
-        upgrade_block_savepoint(true, 2019062617310, 'ases');
-=======
-        upgrade_block_savepoint(true, 2019061613560, 'ases');
->>>>>>> 74298a9e725fbd478082e9bfef992a7d37cd7f0c
+        upgrade_block_savepoint(true, 2019080109210, 'ases');
         return $result;
 
     }
 }
-
-
 ?>

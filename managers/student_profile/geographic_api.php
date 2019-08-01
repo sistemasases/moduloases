@@ -17,10 +17,8 @@
 /**
  * Ases block
  *
- * @author     Iader E. García Gómez
  * @author     Jorge Eduardo Mayor Fernández
  * @package    block_ases
- * @copyright  2018 Iader E. García <iadergg@gmail.com>
  * @copyright  2019 Jorge Eduardo Mayor <mayor.jorge@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -55,6 +53,8 @@ if(isset($input->func) && isset($input->params)) {
 
         if (count($input->params) == 13) {
 
+            //Come from geographic_main.js
+
             $id_ases = $input->params[0];
             $latitude = $input->params[1];
             $longitude = $input->params[2];
@@ -71,6 +71,7 @@ if(isset($input->func) && isset($input->params)) {
 
             $nivel_riesgo = (int) $nivel_riesgo;
 
+            //Validations of each parameter
             if (is_string($id_ases) && is_float($latitude) && is_float($longitude) &&
                 is_string($neighborhood) && is_int($duration) && is_int($distance) &&
                 is_string($address) && is_string($city) && is_string($observaciones) &&
@@ -101,6 +102,8 @@ if(isset($input->func) && isset($input->params)) {
             }
         } else if(count($input->params) == 8) {
 
+            //Come from student_profile_main.js
+
             $id_ases = $input->params[0];
             $latitude = $input->params[1];
             $longitude = $input->params[2];
@@ -110,6 +113,7 @@ if(isset($input->func) && isset($input->params)) {
             $address = $input->params[6];
             $city = $input->params[7];
 
+            //Validations of each parameter
             if(is_string($id_ases) && is_float($latitude) && is_float($longitude) &&
                is_string($neighborhood) && is_int($duration) && is_int($distance) &&
                is_string($address) && is_string($city)){
@@ -136,7 +140,7 @@ if(isset($input->func) && isset($input->params)) {
     }
 }
 
-function return_with_code( $code, $input){
+function return_with_code($code){
 
     switch( $code ){
 
@@ -155,7 +159,7 @@ function return_with_code( $code, $input){
                 array(
                     "status_code" => $code,
                     "error_message" => "Error in the scheme.",
-                    "data_response" => $input
+                    "data_response" => ""
                 )
             );
             break;

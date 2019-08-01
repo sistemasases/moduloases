@@ -19,7 +19,7 @@
     </div>
 
     <div class="row">
-        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 geographic_information">
             <h3 class="h-sections-general-tab" id="h-student-info">UBICACIÓN DEL ESTUDIANTE</h3>
             <hr class="hr-general-tab-fields">
             <div class="row">
@@ -31,24 +31,23 @@
             <div id="div_search_button">
                 <button type="button" class="button btn-danger" id="button_search_geographic" hidden>Buscar</button>
             </div>
-            <div class="row">
-                <label for="select_neighborhood" class="col-xs-3 col-sm-3 col-md-3 col-lg-3">Barrio residencia</label>
+            <div class="row margin_bottom_10px">
+                <label for="select_neighborhood" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 center_vertically">Barrio residencia</label>
                 <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
                     <select class="form-control" name="select_neighborhood" id="select_neighborhood" disabled>
                         {{{select_neighborhoods}}}
                     </select>
                 </div>
             </div>
-            <div class="row">
-                <label for="geographic_ciudad" class="col-xs-3 col-sm-3 col-md-3 col-lg-3">Ciudad</label>
+            <div class="row margin_bottom_10px">
+                <label for="geographic_ciudad" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 center_vertically">Ciudad</label>
                 <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
                     <select class="form-control" id="geographic_ciudad" name="geographic_ciudad" disabled>
                         {{{options_municipio_act}}}
                     </select>
                 </div>
             </div>
-            <br>
-            <h3 class="h-sections-general-tab" id="h-student-info">FACTORES DE RIESGO GEOGRÁFICO</h3>
+            <h3 class="h-sections-general-tab margin_top_20px" id="h-student-info">FACTORES DE RIESGO GEOGRÁFICO</h3>
             <hr class="hr-general-tab-fields">
             <div class="row">
                 <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -68,9 +67,8 @@
                     Origen nativo
                 </label>
             </div>
-            <br>
             <div class="row">
-                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12">Nivel de riesgo:</label>
+                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12 label_with_bold margin_top_10px">Nivel de riesgo:</label>
             </div>
             <div class="row">
                 <div class="geographic_nivel_riesgo_bajo">
@@ -96,23 +94,22 @@
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" height='396' frameborder='0' style='border:0' id="geographic_map">
         </div>
     </div>
-
-     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <label>Observaciones:</label>
-        <textarea id="geographic_text_area" class="form-control " name="geographic_text_area" disabled>{{observations}}</textarea>
-        <br>
-    </div>
-     
     <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <label>Observaciones:</label>
+            <textarea id="geographic_text_area" class="form-control " name="geographic_text_area" disabled>{{observations}}</textarea>
+        </div>
+    </div>
+
+     
+    <div class="row center_items">
         {{#update_geographic_tab_sp}}
-        <div class="col-sm-6">
-            <div class="form-group" id="div_edit_button">
-                <button type="button" class="button btn-danger" id="button_edit_geographic">Editar</button>
-            </div>
+        <div class="form-group" id="div_edit_button">
+            <button type="button" class="button btn-danger" id="button_edit_geographic">Editar</button>
         </div>
         {{/update_geographic_tab_sp}}
     </div>
-    <div class="col-sm-6">
+    <div class="row center_items">
         <div class="form-group" id="div_save_buttons" hidden>
             <button type="button" class="button btn-success" id="button_save_geographic">Aceptar</button>
             <button tyep="button" class="button btn-danger" id="button_cancel_geographic">Cancelar</button>
@@ -120,9 +117,5 @@
     </div>
     {{/view_geographic_config_sp}}
 </div>
-
-    
-
-
 
 {{!-- End geographic tab --}}

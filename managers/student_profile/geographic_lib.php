@@ -81,14 +81,13 @@ function get_neighborhoods(){
 
 /**
  * Función que carga la información geográfica de un estudiante ASES 
- * Load geographic information of an ASES student 
- *
- * @see load_geographic_info($id_ases)
+ * @desc Load geographic information of an ASES student
+ * @see student_profile_load_geographic_info($id_ases)
  * @param $id_ases --> ASES student id
  * @return object representing the user
  */
 
-function load_geographic_info($id_ases){
+function student_profile_load_geographic_info($id_ases){
     
     global $DB;
 
@@ -96,18 +95,16 @@ function load_geographic_info($id_ases){
     $result = $DB->get_record_sql($sql_query);
 
     return $result;
-
 }
 
 /**
  * Saves geographic information of an ASES student 
  *
- * @see student_profile_save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $geographic_risk, $duration, $distance, $address, $city)
+ * @see student_profile_save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $duration, $distance, $address, $city, $observaciones, $vive_lejos, $vive_zona_riesgo, $nativo, $nivel_riesgo)
  * @param $id_ases --> ASES student id
  * @param $latitude --> Latitude
  * @param $longitude --> longitude
  * @param $neighborhood --> neighborhood id
- * @param $geographic_risk --> geographic risk qualification
  * @param $duration --> duration of the route from the student's residence to Univalle
  * @param $distance --> distance of the route from the student's residence to Univalle
  * @param $address --> student's residence address
@@ -124,14 +121,15 @@ function student_profile_save_geographic_info($id_ases, $latitude, $longitude, $
 
     global $DB;
 
-    $sql_query = "SELECT id FROM {talentospilos_demografia} WHERE id_usuario = $id_ases";
-    $id_register = $DB->get_record_sql($sql_query)->id;
+    $sql_query = "SELECT * FROM {talentospilos_demografia} WHERE id_usuario = $id_ases";
+    $geographic_info = $DB->get_record_sql($sql_query)->id;
 
     $sql_query = "SELECT id FROM {talentospilos_riesgos_ases} WHERE nombre = 'geografico'";
     $id_risk = $DB->get_record_sql($sql_query)->id;
 
     $sql_query = "SELECT id FROM {talentospilos_riesg_usuario} WHERE id_usuario = $id_ases AND id_riesgo = $id_risk";
     $id_register_risk = $DB->get_record_sql($sql_query)->id;
+
 
     if($id_register_risk){
         $data_object_risk = new stdClass();
@@ -154,22 +152,22 @@ function student_profile_save_geographic_info($id_ases, $latitude, $longitude, $
         $result_geographic_risk = $DB->insert_record('talentospilos_riesg_usuario', $data_object_risk, true);
     }
 
-    if($id_register){
+    if($geographic_info){
         $data_object = new stdClass();
-        $data_object->id = $id_register;
-        $data_object->id_usuario = $id_ases;
-        $data_object->latitud = $latitude;
-        $data_object->longitud = $longitude;
-        $data_object->barrio = $neighborhood;
-        $data_object->duracion = $duration;
-        $data_object->distancia = $distance;
-        $data_object->direccion = $address;
-        $data_object->id_ciudad = $city;
-        $data_object->observaciones = $observaciones;
-        $data_object->vive_lejos = $vive_lejos;
-        $data_object->vive_zona_riesgo = $vive_zona_riesgo;
-        $data_object->nativo = $nativo;
-        $data_object->nivel_riesgo = $nivel_riesgo;
+        $data_object->id = $geographic_info->id;
+        $data_object->id_usuario = (isset($id_ases)?$id_ases:$geographic_info->id_usuario);
+        $data_object->latitud = (isset($latitude)?$latitude:$geographic_info->latitud);
+        $data_object->longitud = (isset($longitude)?$longitude:$geographic_info->longitud);
+        $data_object->barrio = (isset($neighborhood)?$neighborhood:$geographic_info->barrio);
+        $data_object->duracion = (isset($duration)?$duration:$geographic_info->duracion);
+        $data_object->distancia = (isset($distance)?$distance:$geographic_info->distancia);
+        $data_object->direccion = (isset($address)?$address:$geographic_info->direccion);
+        $data_object->id_ciudad = (isset($city)?$city:$geographic_info->id_ciudad);
+        $data_object->observaciones = (isset($observaciones)?$observaciones:$geographic_info->observaciones);
+        $data_object->vive_lejos = (isset($vive_lejos)?$vive_lejos:$geographic_info->vive_lejos);
+        $data_object->vive_zona_riesgo = (isset($vive_zona_riesgo)?$vive_zona_riesgo:$geographic_info->vive_zona_riesgo);
+        $data_object->nativo = (isset($nativo)?$nativo:$geographic_info->nativo);
+        $data_object->nivel_riesgo = (isset($nivel_riesgo)?$nivel_riesgo:$geographic_info->nivel_riesgo);
     
         $result_geographic_info = $DB->update_record('talentospilos_demografia', $data_object);
     }

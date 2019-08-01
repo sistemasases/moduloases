@@ -646,7 +646,7 @@ if ($student_code != 0) {
 
     // Geographic information
 
-    $geographic_object = load_geographic_info($student_id);
+    $geographic_object = student_profile_load_geographic_info($student_id);
 
     $neighborhoods_array = get_neighborhoods();
 

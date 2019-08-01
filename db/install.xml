@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<<<<<<< HEAD
-<XMLDB PATH="blocks/ases/db" VERSION="20190626" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
-=======
 <XMLDB PATH="blocks/ases/db" VERSION="20190716" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
->>>>>>> 74298a9e725fbd478082e9bfef992a7d37cd7f0c
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
