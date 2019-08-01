@@ -465,18 +465,18 @@ function secure_assign_role_to_user( $user_id, $role, $start_datetime = NULL, $e
     $_role = _core_security_get_role( $role ); // Rol at the master system (Secutiry Core)
       
     if( $_user && $_role ){
-        
-        if( SUPPORT_TO_PREVIOUS_SYSTEM ){
-            
-            //Validation if the role exist at the previous system role
-            if ( _core_security_get_previous_system_role( $_role['alias'] ) ){
-                /*Asignar en sistema previo*/
-                secure_assign_role_to_user_previous_system( $user_id, $_role['alias'], [ "id_instancia" => 450299 ]);
-            }
-            
-        }
      
         if( is_null(_core_security_get_user_rol( $user_id, $start_datetime, $singularizator )) ){
+
+        	if( SUPPORT_TO_PREVIOUS_SYSTEM ){
+            
+	            //Validation if the role exist at the previous system role
+	            if ( _core_security_get_previous_system_role( $_role['alias'] ) ){
+	                /*Asignar en sistema previo*/
+	                secure_assign_role_to_user_previous_system( $user_id, $_role['alias'], [ "id_instancia" => 450299 ]);
+	            }
+	            
+	        }
             
             global $DB_PREFIX;
             
