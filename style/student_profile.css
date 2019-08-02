@@ -24,8 +24,6 @@
         height: 30px;
     }
 
-
-
     .select2.select2-container.select2-container--default{
         width: 100% !important;
         font-size: 200%;
@@ -488,6 +486,37 @@
     }
     .update-profile-image-modal-body > form > fieldset > div > .fitem > .fitemtitle {
         text-align: left;
+    }
+
+    .geographic_information > .row > label:not(.label_with_bold), .geographic_information > .row > .geographic_nivel_riesgo_bajo > label,
+    .geographic_information > .row > .geographic_nivel_riesgo_medio > label, .geographic_information > .row > .geographic_nivel_riesgo_alto > label{
+        font-weight: normal !important;
+    }
+
+    .margin_bottom_10px{
+        margin-bottom: 10px;
+    }
+
+    .margin_top_10px{
+        margin-top: 10px;
+    }
+
+    .margin_top_20px{
+        margin-top: 25px !important;
+    }
+
+    .center_vertically{
+        vertical-align: middle;
+        margin-top: 1%;
+    }
+
+    .center_items{
+        text-align:center;
+        margin-top: 10px;
+    }
+
+    #geographic_direccion{
+        height: 34px;
     }
 }
 

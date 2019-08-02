@@ -1,91 +1,118 @@
 {{!-- Geographic tab--}}
 <div class="tab-pane" id="geographic_tab">
-    
-  {{#view_geographic_config_sp}}
-    <div class="row">
+    {{#view_geographic_config_sp}}
+    <div class="row" hidden>
         <div class="col-sm-4">
             <div class="form-group">
-                <label for="latitude" class="col-sm-3">Latitud</label>
                 <div class="col-sm-9">
-                    <input type="number" class="form-control" id="latitude" name="latitude" value={{latitude}} placeholder="Digite latitud" disabled/>
+                    <label for="latitude" class="col-sm-12">Latitud<input type="number" class="form-control" id="latitude" name="latitude" value={{latitude}} placeholder="Digite latitud" disabled/></label>
                 </div>
             </div>
         </div>
-        <div class="col-sm-5">
+        <div class="col-sm-4">
             <div class="form-group">
-                <label for="select_neighborhood" class="col-sm-6">Barrio residencia</label>
-                <div class="col-sm-6">
-                    <select class="form-control" name="select_neighborhood" id="select_neighborhood" disabled>
-                    {{{select_neighborhoods}}}
-                    </select>
+                <div class="col-sm-9">
+                    <label for="longitude" class="col-sm-12">Longitud<input type="number" class="form-control" id="longitude" name="longitude" value={{longitude}} placeholder="Digite longitud" disabled/></label>
                 </div>
-            </div>
-        </div>
-        <div class="col-sm-3">
-            {{#update_geographic_tab_sp}}
-            <div class="form-group" id="div_edit_button">
-                <button type="button" class="button btn-danger" id="button_edit_geographic">Editar</button>
-            </div>
-            {{/update_geographic_tab_sp}}
-            <div class="form-group" id="div_save_buttons" hidden>
-                <button type="button" class="button btn-success" id="button_save_geographic">Aceptar</button>
-                <button type="button" class="button btn-danger" id="button_cancel_geographic">Cancelar</button>
             </div>
         </div>
     </div>
+
     <div class="row">
-        <div class="col-sm-4">
-            <div class="form-group">
-                <label for="longitude" class="col-sm-3">Longitud</label>
-                <div class="col-sm-9">
-                    <input type="number" class="form-control" id="longitude" name="longitude" value={{longitude}} placeholder="Digite longitud" disabled/>
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 geographic_information">
+            <h3 class="h-sections-general-tab" id="h-student-info">UBICACIÓN DEL ESTUDIANTE</h3>
+            <hr class="hr-general-tab-fields">
+            <div class="row">
+                <label for="geographic_direccion" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 center_vertically">Dirección</label>
+                <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                    <input type="text" class="form-control" id="geographic_direccion" name="geographic_direccion" value="{{res_address}}" placeholder="Digite dirección" maxlength="100" disabled>
                 </div>
             </div>
-        </div>
-        <div class="col-sm-5">
-            <div class="form-group">
-                <label for="select_geographic_risk" class="col-sm-6">Riesgo geográfico</label>
-                <div class="col-sm-6">
-                    <select class="form-control" name="geographic_risk" id="select_geographic_risk" disabled>
-                    {{{select_geographic_risk}}}
+            <div class="row margin_bottom_10px">
+                <label for="select_neighborhood" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 center_vertically">Barrio residencia</label>
+                <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                    <select class="form-control" name="select_neighborhood" id="select_neighborhood" disabled>
+                        {{{select_neighborhoods}}}
                     </select>
                 </div>
             </div>
+            <div class="row margin_bottom_10px">
+                <label for="geographic_ciudad" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 center_vertically">Ciudad</label>
+                <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+                    <select class="form-control" id="geographic_ciudad" name="geographic_ciudad" disabled>
+                        {{{options_municipio_act}}}
+                    </select>
+                </div>
+            </div>
+            <h3 class="h-sections-general-tab margin_top_20px" id="h-student-info">FACTORES DE RIESGO GEOGRÁFICO</h3>
+            <hr class="hr-general-tab-fields">
+            <div class="row">
+                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <input id="geographic_checkbox_vive_lejos" type="checkbox" class="geographic_checkbox_vive_lejos" {{#live_far_away}} checked {{/live_far_away}} disabled>
+                    Vivienda ubicada a mas de 45min de la Universidad (usando transporte público)
+                </label>
+            </div>
+            <div class="row">
+                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <input id="geographic_checkbox_zona_riesgo" type="checkbox" class="geographic_checkbox_zona_riesgo" {{#live_risk_zone}} checked {{/live_risk_zone}} disabled>
+                    Vivienda ubicada en zona con alto indice de hurtos y/o homicidios
+                </label>
+            </div>
+            <div class="row">
+                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <input id="nativo" type="checkbox" class="geographic_origen_nativo_checkbox" value="1" {{#native_origin}} checked {{/native_origin}} disabled>
+                    Origen nativo
+                </label>
+            </div>
+            <div class="row">
+                <label class="col-xs-12 col-sm-12 col-md-12 col-lg-12 label_with_bold margin_top_10px">Nivel de riesgo:</label>
+            </div>
+            <div class="row">
+                <div class="geographic_nivel_riesgo_bajo">
+                    <label class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                        <input class="geographic_nivel_riesgo_bajo_radio" type="radio" name="geographic_nivel_riesgo" id="nivel_bajo" value="1" {{#low_level}} checked {{/low_level}} disabled>
+                        Bajo
+                    </label>
+                </div>
+                <div class="geographic_nivel_riesgo_medio">
+                    <label class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                        <input class="geographic_nivel_riesgo_medio_radio" type="radio" name="geographic_nivel_riesgo" id="nivel_medio" value="2" {{#mid_level}} checked {{/mid_level}} disabled>
+                        Medio
+                    </label>
+                </div>
+                <div class="geographic_nivel_riesgo_alto">
+                    <label class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                        <input class="geographic_nivel_riesgo_alto_radio" type="radio" name="geographic_nivel_riesgo" id="nivel_alto" value="3" {{#high_level}} checked {{/high_level}} disabled>
+                        Alto
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" height='396' frameborder='0' style='border:0' id="geographic_map">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <label>Observaciones:</label>
+            <textarea id="geographic_text_area" class="form-control " name="geographic_text_area" disabled>{{observations}}</textarea>
+        </div>
+    </div>
+
+     
+    <div class="row center_items">
+        {{#update_geographic_tab_sp}}
+        <div class="form-group" id="div_edit_button">
+            <button type="button" class="button btn-danger" id="button_edit_geographic">Editar</button>
+        </div>
+        {{/update_geographic_tab_sp}}
+    </div>
+    <div class="row center_items">
+        <div class="form-group" id="div_save_buttons" hidden>
+            <button type="button" class="button btn-success" id="button_save_geographic">Aceptar</button>
+            <button tyep="button" class="button btn-danger" id="button_cancel_geographic">Cancelar</button>
         </div>
     </div>
     {{/view_geographic_config_sp}}
-
-    <div class="row">
-        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11 geographic_track_container">
-                <!--
-                    + Histórico de riesgo, Alerta si es alto
-                 -->
-                 {{#geographic_trackings_sp}}
-                <div id="accordion_geo_tab" role="tablist" aria-multiselectable="true">
-                        <div class="panel panel-default" id="panelGeo">
-                           <div class="panel-heading" role="tab" id="headingGeo">
-                              <h4 class="panel-title">
-                                 <a class="collapsed" data-toggle="collapse" data-parent="#accordion_geo_tab" href="#collapseGeo" aria-expanded="false" aria-controls="collapseGeo">
-                                      Seguimiento geográfico
-                                 </a>
-                              </h4>
-                           </div>
-                           <div id="collapseGeo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingGeo" aria-expanded="false">
-                                {{#registro_seguimiento_geografico}}
-                                <button type="button" id="button_add_geographic_track" class="btn-primary">
-                                    Registrar seguimiento
-                                </button>
-                                {{/registro_seguimiento_geografico}}
-                                {{#actualizar_seguimiento_geografico}}
-                                <button type="button" id="button_update_geographic_track" data-record-id="{{id_seguimiento_geografico}}" class="btn-primary">
-                                    Ver/Actualizar seguimiento
-                                </button>
-                                {{/actualizar_seguimiento_geografico}}
-                            </div>
-                        </div>
-                </div>
-                {{/geographic_trackings_sp}}
-        </div>
-    </div>
 </div>
+
 {{!-- End geographic tab --}}

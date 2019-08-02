@@ -140,8 +140,6 @@
           <div id="cond_excepcion_alias" hidden>
             {{condition_excepcion_alias}}
           </div>
-                
-           
           
           {{^student_cohorts}} No registra cohortes asociadas. {{/student_cohorts}}
         </div>
@@ -185,26 +183,32 @@
           <span><b>INDIVIDUAL</b></span>
         </div>
         <div hidden>{{individual_risk}}</div>
+
         <div class="{{familiar_class}} col-sm-2" data-risk-level="{{level_familiar}}" id="familiar_risk">
           <b> <span>FAMILIAR</span></b>
         </div>
         <div hidden>{{familiar_risk}}</div>
+
         <div class="{{academic_class}} col-sm-2" data-risk-level="{{level_academic}}" id="academic_risk">
           <b><span>ACADÉMICO</span></b>
         </div>
         <div hidden>{{academic_risk}}</div>
+
         <div class="{{economic_class}} col-sm-2" data-risk-level="{{level_economic}}" id="economic_risk">
           <b><span>ECONÓMICO</span></b>
         </div>
         <div hidden>{{economic_risk}}</div>
+
         <div class="{{life_class}} col-sm-2" data-risk-level="{{level_life}}" id="life_risk">
           <b>VIDA UNIV.</b>
         </div>
         <div hidden>{{life_risk}}</div>
-        <div class="{{geographic_class}} col-sm-2" id="geo_risk">
+
+        <div class="{{geographic_class}} col-sm-2" data-risk-level="{{risk_level}}" id="geo_risk">
           <b><span>GEOGRÁFICO</span></b>
         </div>
-        <div hidden>{{geographic_risk}}</div>
+        <div hidden>{{risk_level}}</div>
+
       </div>
       <div class="col-sm-2" id="div_buttons_risk">
         <button class="risk_graph_button col-sm-6" type="button" id="view_graph_radial_button">Radial</button>

@@ -308,7 +308,7 @@ function save_profile($form){
         $obj_updatable->id_cond_excepcion = $cond;
         $obj_updatable->id_pais = $pais;
         $obj_updatable->id_ciudad_res = $ciudad_res;
-        $obj_updatable->id_etnia      = $etnia;
+        $obj_updatable->id_etnia = $etnia;
         $obj_updatable->estrato = $estrato;
         $obj_updatable->anio_ingreso = $anio_ingreso;
         $obj_updatable->puntaje_icfes = $puntaje_icfes;
@@ -322,29 +322,35 @@ function save_profile($form){
         //Data object to update record in mdl_user
         //----------------------------------------------
 
-        $obj_updatable_moodle->id       =  get_moodle_id($id_ases);
+        $obj_updatable_moodle->id = get_moodle_id($id_ases);
 
         //Test: email validation
         //$email = "insert email test";
         
-        $obj_updatable_moodle->email    =  $email;
+        $obj_updatable_moodle->email = $email;
+        
+        $result = $DB->update_record('talentospilos_usuario', $obj_updatable);
 
+        $sql_query = "SELECT id FROM {talentospilos_demografia} WHERE id_usuario = $id_ases";
+        $id_demografia = $DB->get_record_sql($sql_query)->id;
 
-            $result = $DB->update_record('talentospilos_usuario', $obj_updatable);
-     
-            $result_cv_update = studentprofile_update_email_moodle($obj_updatable_moodle);
-            
-            if($result && $result_cv_update){
-                $msg->title = "Éxito";
-                $msg->status = "success";
-                $msg->msg = "Se ha actualizado toda la información.";
-            }
-            else{
-                $msg->title = "Error";
-                $msg->status = "error";
-                $msg->msg = "Error al guardar la información en el servidor.";
-                }
-            
+        $obj_update_geographic->id = $id_demografia;
+        $obj_update_geographic->id_ciudad = $ciudad_res;
+
+        $result_geographic = $DB->update_record('talentospilos_demografia', $obj_update_geographic);
+        
+        $result_cv_update = studentprofile_update_email_moodle($obj_updatable_moodle);
+        
+        if($result && $result_cv_update){
+            $msg->title = "Éxito";
+            $msg->status = "success";
+            $msg->msg = "Se ha actualizado toda la información.";
+        }
+        else{
+            $msg->title = "Error";
+            $msg->status = "error";
+            $msg->msg = "Error al guardar la información en el servidor.";
+        } 
      
         echo json_encode($msg);
         
