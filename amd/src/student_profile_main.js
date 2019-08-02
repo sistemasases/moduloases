@@ -1123,13 +1123,11 @@ define(['jquery',
                             url: "../managers/student_profile/geographic_api.php",
                             success: function (msg) {
                                 console.log(msg);
-                                console.log("Successss");
                             },
                             dataType: "json",
                             cache: "false",
                             error: function (msg) {
                                 console.log(msg);
-                                console.log("Fail :c");
                             },
                         });
                     });

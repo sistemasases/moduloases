@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5df1832f-d7bd-48d0-965f-54aa15d1405b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/amd/build/geographic_main.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/amd/build/geographic_main.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/amd/build/student_profile_main.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/amd/build/student_profile_main.min.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/amd/src/geographic_main.js" beforeDir="false" afterPath="$PROJECT_DIR$/amd/src/geographic_main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/style/student_profile.css" beforeDir="false" afterPath="$PROJECT_DIR$/style/student_profile.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/view_geographic_tab_sp.mustache" beforeDir="false" afterPath="$PROJECT_DIR$/templates/view_geographic_tab_sp.mustache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/amd/src/student_profile_main.js" beforeDir="false" afterPath="$PROJECT_DIR$/amd/src/student_profile_main.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -35,41 +35,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/view_geographic_tab_sp.mustache">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="27" column="84" selection-start-line="27" selection-start-column="64" selection-end-line="27" selection-end-column="84" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/style/student_profile.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="430">
-              <caret line="518" column="21" selection-start-line="518" selection-start-column="21" selection-end-line="518" selection-end-column="21" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/amd/src/student_profile_main.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="12525">
-              <caret line="1121" column="31" selection-start-line="1121" selection-start-column="31" selection-end-line="1122" selection-end-column="76" />
+            <state relative-caret-position="135">
+              <caret line="36" column="22" selection-start-line="36" selection-start-column="22" selection-end-line="36" selection-end-column="22" />
               <folding>
-                <element signature="e#27934#30860#0" />
-                <element signature="e#30715#30844#0" />
-                <element signature="e#37472#47421#0" />
-                <element signature="e#37511#47377#0" />
+                <element signature="n#style#0;n#div#1;n#div#1;n#div#0;n#!!top" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/managers/student_profile/geographic_api.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1305">
-              <caret line="100" column="53" selection-start-line="100" selection-start-column="53" selection-end-line="100" selection-end-column="53" />
             </state>
           </provider>
         </entry>
@@ -77,8 +47,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/amd/src/geographic_main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="383">
-              <caret line="186" selection-start-line="186" selection-end-line="186" />
+            <state relative-caret-position="240">
+              <caret line="16" column="46" lean-forward="true" selection-end-line="291" selection-end-column="2" />
               <folding>
                 <element signature="n#style#0;n#iframe#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#iframe#0;n#!!top" expanded="true" />
@@ -90,19 +60,35 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/managers/student_profile/geographic_serverproc.php">
+        <entry file="file://$PROJECT_DIR$/amd/src/student_profile_main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="36" column="53" selection-start-line="36" selection-start-column="53" selection-end-line="36" selection-end-column="53" />
+            <state relative-caret-position="153">
+              <caret line="1118" column="63" lean-forward="true" selection-end-line="2268" selection-end-column="7" />
+              <folding>
+                <element signature="n#style#0;n#iframe#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#iframe#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#button#0;n#td#0;n#!!top" expanded="true" />
+                <element signature="e#27934#30860#0" />
+                <element signature="e#30715#30844#0" />
+                <element signature="e#37472#47421#0" />
+                <element signature="e#37511#47377#0" />
+                <element signature="n#style#0;n#iframe#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#iframe#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/managers/student_profile/geographic_lib.php">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/amd/build/student_profile_main.min.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2325">
-              <caret line="168" selection-start-line="168" selection-end-line="168" />
+            <state>
+              <caret column="33478" selection-start-column="33478" selection-end-column="33478" />
             </state>
           </provider>
         </entry>
@@ -111,8 +97,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>select_geographic_risk</find>
-      <find>geographic_risk</find>
       <find>risk</find>
       <find>geographic_checkbox_zona_riesgo</find>
       <find>dir</find>
@@ -141,6 +125,8 @@
       <find>button_search_geographic</find>
       <find>div_sear</find>
       <find>n_search</find>
+      <find>console.log</find>
+      <find>api</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -149,7 +135,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/amd/src/student_profile_main.js" />
         <option value="$PROJECT_DIR$/templates/student_profile.mustache" />
         <option value="$PROJECT_DIR$/templates/view_general_tab_sp.mustache" />
         <option value="$PROJECT_DIR$/managers/student_profile/geographic_serverproc.php" />
@@ -160,9 +145,12 @@
         <option value="$PROJECT_DIR$/db/upgrade.php" />
         <option value="$PROJECT_DIR$/managers/student_profile/geographic_api.php" />
         <option value="$PROJECT_DIR$/managers/student_profile/geographic_lib.php" />
-        <option value="$PROJECT_DIR$/amd/src/geographic_main.js" />
         <option value="$PROJECT_DIR$/templates/view_geographic_tab_sp.mustache" />
         <option value="$PROJECT_DIR$/style/student_profile.css" />
+        <option value="$PROJECT_DIR$/amd/src/geographic_main.js" />
+        <option value="$PROJECT_DIR$/amd/build/geographic_main.min.js" />
+        <option value="$PROJECT_DIR$/amd/src/student_profile_main.js" />
+        <option value="$PROJECT_DIR$/amd/build/student_profile_main.min.js" />
       </list>
     </option>
   </component>
@@ -198,12 +186,13 @@
             <path>
               <item name="ases" type="b2602c69:ProjectViewProjectNode" />
               <item name="ases" type="462c0819:PsiDirectoryNode" />
-              <item name="db" type="462c0819:PsiDirectoryNode" />
+              <item name="amd" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="ases" type="b2602c69:ProjectViewProjectNode" />
               <item name="ases" type="462c0819:PsiDirectoryNode" />
-              <item name="style" type="462c0819:PsiDirectoryNode" />
+              <item name="amd" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -259,22 +248,23 @@
       <workItem from="1564662028261" duration="10409000" />
       <workItem from="1564672749031" duration="80000" />
       <workItem from="1564677027107" duration="705000" />
-      <workItem from="1564677848755" duration="1233000" />
+      <workItem from="1564677848755" duration="1295000" />
+      <workItem from="1564748143657" duration="1076000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="101224000" />
+    <option name="totallyTimeSpent" value="102362000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-3" y="31" width="1606" height="823" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25609756" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25930682" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info active="true" anchor="bottom" id="Find" order="1" visible="true" weight="0.13" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.56857145" />
       <window_info anchor="bottom" id="Run" order="2" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
@@ -283,7 +273,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" />
       <window_info anchor="bottom" id="Version Control" order="9" weight="0.13428572" />
-      <window_info anchor="bottom" id="Terminal" order="10" weight="0.19" />
+      <window_info anchor="bottom" id="Terminal" order="10" visible="true" weight="0.09714286" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -409,26 +399,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/amd/src/student_profile_main.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="12525">
-          <caret line="1121" column="31" selection-start-line="1121" selection-start-column="31" selection-end-line="1122" selection-end-column="76" />
-          <folding>
-            <element signature="e#27934#30860#0" />
-            <element signature="e#30715#30844#0" />
-            <element signature="e#37472#47421#0" />
-            <element signature="e#37511#47377#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/managers/student_profile/geographic_api.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1305">
-          <caret line="100" column="53" selection-start-line="100" selection-start-column="53" selection-end-line="100" selection-end-column="53" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/managers/student_profile/geographic_serverproc.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="345">
@@ -443,10 +413,34 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/managers/student_profile/geographic_api.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="490">
+          <caret line="100" column="53" selection-start-line="100" selection-start-column="53" selection-end-line="100" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/style/student_profile.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="97">
+          <caret line="518" column="21" selection-start-line="518" selection-start-column="21" selection-end-line="518" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/view_geographic_tab_sp.mustache">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="36" column="22" selection-start-line="36" selection-start-column="22" selection-end-line="36" selection-end-column="22" />
+          <folding>
+            <element signature="n#style#0;n#div#1;n#div#1;n#div#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/amd/src/geographic_main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="383">
-          <caret line="186" selection-start-line="186" selection-end-line="186" />
+        <state relative-caret-position="240">
+          <caret line="16" column="46" lean-forward="true" selection-end-line="291" selection-end-column="2" />
           <folding>
             <element signature="n#style#0;n#iframe#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#iframe#0;n#!!top" expanded="true" />
@@ -456,17 +450,40 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/view_geographic_tab_sp.mustache">
+    <entry file="file://$PROJECT_DIR$/amd/build/geographic_main.min.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="27" column="84" selection-start-line="27" selection-start-column="64" selection-end-line="27" selection-end-column="84" />
+        <state>
+          <caret column="6592" selection-start-column="6592" selection-end-column="6592" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/style/student_profile.css">
+    <entry file="file://$PROJECT_DIR$/amd/src/student_profile_main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="430">
-          <caret line="518" column="21" selection-start-line="518" selection-start-column="21" selection-end-line="518" selection-end-column="21" />
+        <state relative-caret-position="153">
+          <caret line="1118" column="63" lean-forward="true" selection-end-line="2268" selection-end-column="7" />
+          <folding>
+            <element signature="n#style#0;n#iframe#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#iframe#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#button#0;n#td#0;n#!!top" expanded="true" />
+            <element signature="e#27934#30860#0" />
+            <element signature="e#30715#30844#0" />
+            <element signature="e#37472#47421#0" />
+            <element signature="e#37511#47377#0" />
+            <element signature="n#style#0;n#iframe#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#iframe#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/amd/build/student_profile_main.min.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="33478" selection-start-column="33478" selection-end-column="33478" />
         </state>
       </provider>
     </entry>
