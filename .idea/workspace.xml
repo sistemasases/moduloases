@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5df1832f-d7bd-48d0-965f-54aa15d1405b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/amd/build/geographic_main.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/amd/build/geographic_main.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/amd/build/student_profile_main.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/amd/build/student_profile_main.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/amd/src/geographic_main.js" beforeDir="false" afterPath="$PROJECT_DIR$/amd/src/geographic_main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/amd/src/student_profile_main.js" beforeDir="false" afterPath="$PROJECT_DIR$/amd/src/student_profile_main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -44,51 +42,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/amd/src/geographic_main.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="16" column="46" lean-forward="true" selection-end-line="291" selection-end-column="2" />
-              <folding>
-                <element signature="n#style#0;n#iframe#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#iframe#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#iframe#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#iframe#0;n#!!top" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/amd/src/student_profile_main.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="1118" column="63" lean-forward="true" selection-end-line="2268" selection-end-column="7" />
-              <folding>
-                <element signature="n#style#0;n#iframe#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#iframe#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#button#0;n#td#0;n#!!top" expanded="true" />
-                <element signature="e#27934#30860#0" />
-                <element signature="e#30715#30844#0" />
-                <element signature="e#37472#47421#0" />
-                <element signature="e#37511#47377#0" />
-                <element signature="n#style#0;n#iframe#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#iframe#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/amd/build/student_profile_main.min.js">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="33478" selection-start-column="33478" selection-end-column="33478" />
+            <state relative-caret-position="105">
+              <caret line="7" lean-forward="true" selection-start-line="7" selection-end-line="7" />
             </state>
           </provider>
         </entry>
@@ -151,6 +109,7 @@
         <option value="$PROJECT_DIR$/amd/build/geographic_main.min.js" />
         <option value="$PROJECT_DIR$/amd/src/student_profile_main.js" />
         <option value="$PROJECT_DIR$/amd/build/student_profile_main.min.js" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -182,17 +141,6 @@
             <path>
               <item name="ases" type="b2602c69:ProjectViewProjectNode" />
               <item name="ases" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ases" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ases" type="462c0819:PsiDirectoryNode" />
-              <item name="amd" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ases" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ases" type="462c0819:PsiDirectoryNode" />
-              <item name="amd" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -249,18 +197,18 @@
       <workItem from="1564672749031" duration="80000" />
       <workItem from="1564677027107" duration="705000" />
       <workItem from="1564677848755" duration="1295000" />
-      <workItem from="1564748143657" duration="1076000" />
+      <workItem from="1564748143657" duration="1815000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="102362000" />
+    <option name="totallyTimeSpent" value="103101000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-3" y="31" width="1606" height="823" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25930682" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25930682" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -273,7 +221,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" />
       <window_info anchor="bottom" id="Version Control" order="9" weight="0.13428572" />
-      <window_info anchor="bottom" id="Terminal" order="10" visible="true" weight="0.09714286" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.38857144" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -427,29 +375,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/view_geographic_tab_sp.mustache">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="36" column="22" selection-start-line="36" selection-start-column="22" selection-end-line="36" selection-end-column="22" />
-          <folding>
-            <element signature="n#style#0;n#div#1;n#div#1;n#div#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/amd/src/geographic_main.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="16" column="46" lean-forward="true" selection-end-line="291" selection-end-column="2" />
-          <folding>
-            <element signature="n#style#0;n#iframe#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#iframe#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#iframe#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#iframe#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/amd/build/geographic_main.min.js">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -457,10 +382,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/amd/build/student_profile_main.min.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="33478" selection-start-column="33478" selection-end-column="33478" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/amd/src/student_profile_main.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="153">
-          <caret line="1118" column="63" lean-forward="true" selection-end-line="2268" selection-end-column="7" />
+          <caret line="1118" column="63" lean-forward="true" selection-start-line="1118" selection-start-column="63" selection-end-line="1118" selection-end-column="63" />
           <folding>
             <element signature="n#style#0;n#iframe#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#iframe#0;n#!!top" expanded="true" />
@@ -480,10 +412,33 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/amd/build/student_profile_main.min.js">
+    <entry file="file://$PROJECT_DIR$/amd/src/geographic_main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="33478" selection-start-column="33478" selection-end-column="33478" />
+        <state relative-caret-position="240">
+          <caret line="16" column="46" lean-forward="true" selection-end-line="291" selection-end-column="2" />
+          <folding>
+            <element signature="n#style#0;n#iframe#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#iframe#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#iframe#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#iframe#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/view_geographic_tab_sp.mustache">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="36" column="22" selection-start-line="36" selection-start-column="22" selection-end-line="36" selection-end-column="22" />
+          <folding>
+            <element signature="n#style#0;n#div#1;n#div#1;n#div#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" lean-forward="true" selection-start-line="7" selection-end-line="7" />
         </state>
       </provider>
     </entry>

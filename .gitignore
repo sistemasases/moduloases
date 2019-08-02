@@ -4,3 +4,4 @@ composer.lock
 nbproject/*
 package-lock.json
 /nbproject/private/
+.vscode
