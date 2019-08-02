@@ -491,6 +491,7 @@
                   });
 
                 }
+                
 
 
                 function load_record_updater(form_id, record_id){
@@ -577,6 +578,74 @@
                                 }
                                 
                             }
+                            
+                            let separator = '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"> \
+                                <hr style="border-color:#424242;margin-bottom:3px;">\
+                            </div>';
+                        
+                            $('#dphpforms_record_id[value='+record_id+']').parent().parent().append( separator );
+                            
+                            $.ajax({
+                                type: "POST",
+                                data: JSON.stringify({
+                                    function: "get_pretty_record_history",
+                                    params: [ record_id ]
+                                }),
+                                url: "../managers/dphpforms/v2/dphpforms_api.php",
+                                async: false,
+                                dataType: "json",
+                                cache: "false",
+                                success: function(data) {
+                                    let history = JSON.parse(data.data_response);
+                                    
+                                    let element_date = '<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="font-size:0.9em;"><strong style="color:#424242;">Fecha y hora</strong></div>';
+                                    let element_name = '<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="font-size:0.9em;"><strong style="color:#424242;">Usuario que realiza la acci&oacute;n</strong></div>';
+                                    let element_action = '<div class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="font-size:0.9em;"><strong style="color:#424242;">Acci&oacute;n</strong></div>';
+                                    let element_status = '<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="font-size:0.9em;"><strong style="color:#424242;">Estado</strong></div>';
+                                    let tseparator = '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"> \
+                                        <hr style="border-color:#424242; margin-top:0px; margin-bottom:10px;">\
+                                    </div>';
+                                    $('#dphpforms_record_id[value='+record_id+']').parent().parent().append( element_date + element_name + element_action + element_status + tseparator );
+                                    
+                                    history.forEach((item)=>{
+                                        let element_date = '<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">' 
+                                            + item.fecha_hora_registro +
+                                        '</div>';
+                                        let element_name = '<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">'
+                                            + item.usuario_moodle +
+                                        '</div>';
+                                
+                                        let action = "";
+                                        
+                                        switch ( item.accion ){
+                                            case "INSERT":
+                                                action = "CREA";
+                                                break;
+                                            case "UPDATE":
+                                                action = "ACTUALIZA";
+                                                break;
+                                            case "DELETE":
+                                                action = "ELIMINA";
+                                                break;
+                                            default:
+                                                action = "DESCONOCIDA";
+                                                break;
+                                        }
+                                
+                                        let element_action = '<div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">'
+                                            + action +
+                                        '</div>';
+                                        let element_status = '<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">'
+                                            + (item.cod_retorno !== "0" ? "( No completado )" : "( Completado )") +
+                                        '</div>';
+                                        $('#dphpforms_record_id[value='+record_id+']').parent().parent().append( '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"  style="padding:0px;font-size:0.9em;">' + element_date + element_name + element_action + element_status + '</div>' );
+                                    });
+                                    
+                                },
+                                error: function(data) {
+                                    console.log(data);
+                                }
+                            });
 
                             $("#permissions_informationr").html("");
 
