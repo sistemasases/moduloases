@@ -227,14 +227,14 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
             /**
              * @method save_geographic_info
              * @desc Saves a student geographic information. Current processing on geographic_serverproc.php
-             * @param {integer} id_ases ASES student id
+             * @param {int} id_ases ASES student id
              * @param {float} latitude latitude coordenate
              * @param {float} longitude longitude coordenate
-             * @param {integer} duration
-             * @param {integer} distance
-             * @param {integer} address current student's residencial address
-             * @param {integer} city current student's residencial city
-             * @param {integer} student's geographic risk level
+             * @param {int} duration
+             * @param {int} distance
+             * @param {int} address current student's residencial address
+             * @param {int} city current student's residencial city
+             * @param {int} nivel_riesgo student's geographic risk level
              * @return {void}
              */
             function save_geographic_info(id_ases, latitude, longitude, duration, distance, address, city, nivel_riesgo){
