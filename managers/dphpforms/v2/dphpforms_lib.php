@@ -1556,4 +1556,131 @@ function dphpformsV2_get_json_xquery( $query ){
     
 }
 
+/**
+ * Function that given a record id, return its history. 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @param integer $record_id
+ * @return array History.
+ */
+function dphpformsV2_get_record_history( $record_id ){
+    
+    if( !is_numeric( $record_id ) ){
+        throw new Exception( "Invalid record id", -1 );
+    }
+    
+    global $DB;
+    
+    $query = "
+        SELECT 
+            * 
+        FROM 
+            {talentospilos_df_dwarehouse}
+        WHERE 
+            id_registro_respuesta_form = '$record_id'
+        ORDER BY 
+            fecha_hora_registro ASC";
+    
+    $history = $DB->get_records_sql( $query );
+    
+    return $history;
+    
+}
+
+print_r( dphpformsV2_get_pretty_record_history( 31908 ) ) ;
+
+/**
+ * Function that given a record id, return its history. 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @see dphpformsV2_get_record_history(...) in this file.
+ * @param integer $record_id
+ * @return array History.
+ */
+function dphpformsV2_get_pretty_record_history( $record_id ){
+       
+    $history = dphpformsV2_get_record_history( $record_id );
+    return array_values(array_filter(array_map(function($in){
+        
+        global $DB;
+        
+        if( strpos($in->accion, "PRE-") !== false ){
+            return NULL;
+        }
+        
+        $user_id = $in->id_usuario_moodle;
+        
+        unset( $in->datos_previos );
+        unset( $in->datos_enviados );
+        unset( $in->datos_almacenados );
+        unset( $in->dts_retorno );
+        unset( $in->navegador );
+        unset( $in->id_usuario_moodle );
+        unset( $in->url_request );
+        unset( $in->id );
+        unset( $in->id_registro_respuesta_form );
+        
+        $query = "
+            SELECT 
+                CONCAT( firstname, ' ', lastname ) AS fullname 
+            FROM 
+                {user}
+            WHERE 
+                id = $user_id";
+        
+        $user = $DB->get_record_sql( $query );
+        
+        $in->usuario_moodle = $user->fullname;
+        
+        $y = date("Y",  strtotime($in->fecha_hora_registro));
+        $m = date("m",  strtotime($in->fecha_hora_registro));
+        $d = date("d",  strtotime($in->fecha_hora_registro));
+        $time = date("h:i:s a",  strtotime($in->fecha_hora_registro));
+        
+        switch ($m){
+            case 1:
+                $m = "enero";
+                break;
+            case 2:
+                $m = "febrero";
+                break;
+            case 3:
+                $m = "marzo";
+                break;
+            case 4:
+                $m = "abril";
+                break;
+            case 5:
+                $m = "mayo";
+                break;
+            case 6:
+                $m = "junio";
+                break;
+            case 7:
+                $m = "julio";
+                break;
+            case 8:
+                $m = "agosto";
+                break;
+            case 9:
+                $m = "septiembre";
+                break;
+            case 10:
+                $m = "octubre";
+                break;
+            case 11:
+                $m = "noviembre";
+                break;
+            case 12:
+                $m = "diciembre";
+                break;
+        }
+            
+        
+        $in->fecha_hora_registro = "$d de $m de $y - Hora $time";
+        
+        return $in;
+        
+    }, $history)));
+    
+}
+
 ?>
