@@ -28,33 +28,33 @@ require_once('geographic_lib.php');
 
 date_default_timezone_set('America/Bogota');
 
-if(isset($_POST['func'])){
-    if($_POST['func'] == 'load_geographic_info'){
-
-        $id_ases = $_POST['id_ases'];
+$data = json_decode(file_get_contents("php://input"));
+if(isset($data)){
+    if($data->func == 'load_geographic_info'){
+        $id_ases = $data->id_ases;
         load_geographic_info($id_ases);
 
-    }else if($_POST['func'] == 'save_geographic_info'){
-
-        $id_ases = $_POST['id_ases'];
-        $latitude = $_POST['latitude'];
-        $longitude = $_POST['longitude'];
-        $neighborhood = $_POST['neighborhood'];
-        $geographic_risk = $_POST['geographic_risk'];
-        $duration = $_POST['duration'];
-        $distance = $_POST['distance'];
+    } else if($data->func == 'save_geographic_info'){
+        $id_ases = $data->id_ases;
+        $latitude = $data->latitude;
+        $longitude = $data->longitude;
+        $neighborhood = $data->neighborhood;
+        $duration = $data->duration;
+        $distance = $data->distance;
+        $address = $data->address;
+        $city = $data->city;
 
         $msg = new stdClass();
 
-        $result_save_info = save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $geographic_risk, $duration, $distance);
-        
+        $result_save_info = student_profile_save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $duration, $distance, $address, $city);
+
         if($result_save_info){
             $msg->title = 'Éxito';
             $msg->text = "La información geográfica ha sido guardada con éxito";
             $msg->type = "success";
         }else{
             $msg->title = 'Error';
-            $msg->text = "La información geográfica no ha sido guardada. Intentalo nuevamente.";
+            $msg->text = "La información geográfica no ha sido guardada. Inténtalo nuevamente.";
             $msg->type = "error";
         }
         echo json_encode($msg);
