@@ -1586,8 +1586,6 @@ function dphpformsV2_get_record_history( $record_id ){
     
 }
 
-print_r( dphpformsV2_get_pretty_record_history( 31908 ) ) ;
-
 /**
  * Function that given a record id, return its history. 
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
