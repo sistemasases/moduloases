@@ -34,11 +34,11 @@ define(['jquery',
 
                 // Agrega iframe para Google Maps
 
-                var ciudad_est = document.getElementById('municipio_act').value;
+                var ciudad_est = $('#municipio_act').val();
                 var latitude = $('#latitude').val();
                 var longitude = $('#longitude').val();
 
-                if (ciudad_est == 1079) {
+                if (ciudad_est == 'CALI') {
 
                     document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=transit'></iframe>";
 
@@ -692,7 +692,6 @@ define(['jquery',
                     $('#cond_excepcion').prop('disabled', false);
                     $('#act_simultanea').prop('disabled', false);
                     $('#etnia').prop('disabled', false);
-                    $('#municipio_act').prop('disabled', false);
                     $('#otro_act_simultanea').prop('disabled', false);
                     $('#otro_genero').prop('disabled', false);
                     $('#otro_genero').prop('required', false);
@@ -705,11 +704,9 @@ define(['jquery',
                     $('.input-tracking').prop('disabled', false);
                     $('#div_add_persona_vive').show();
                     $('#edit_person_vive').show();
+                    $('#age').hide();
+                    $('#birthdate').show();
                     //$('#edit_institucion').show();
-                    
-                    var latitude = $('#latitude').val();
-                    var longitude = $('#longitude').val();
-                    marker = object_function.edit_map(latitude, longitude);
 
                     $('#genero').on('click', function () {
                         if ((document.getElementById("genero").value) == 0) {
@@ -1003,7 +1000,6 @@ define(['jquery',
                 return msg;
             }, save_form_edit_profile: function (form, object_function, control1, control2, json, marker) {
 
-
                 $.ajax({
                     type: "POST",
                     data: {
@@ -1034,104 +1030,6 @@ define(['jquery',
                     },
                 });
 
-                var direccion = document.getElementById('direccion_res').value;
-                var ciudad_act = document.getElementById("municipio_act").value;
-
-                document.getElementById('geographic_direccion').value = direccion;
-                document.getElementById('geographic_ciudad').value = ciudad_act;
-
-                var ciudad = document.getElementById("municipio_act");
-                var selectedCity = ciudad.options[ciudad.selectedIndex].text;
-                var query = direccion + " " + selectedCity;
-
-                var request = {
-                    query: query,
-                    fields: ['photos', 'formatted_address', 'name', 'rating', 'opening_hours', 'geometry'],
-                };
-
-                var map = document.getElementById('mapa');
-                service = new google.maps.places.PlacesService(map);
-                service.findPlaceFromQuery(request, callback);
-
-                function callback(results) {
-                    var place;
-
-                    if (results != null) {
-                        place = results[0];
-                    }
-                    save_lat_lng(place);
-                }
-
-                function save_lat_lng(destination) {
-
-                    var latitude;
-                    var longitude;
-    
-                    if (destination != null) {
-                        latitude = destination.geometry.location.lat();
-                        longitude = destination.geometry.location.lng();
-                    } else {
-    
-                        latitude = marker.getPosition().lat();
-                        longitude = marker.getPosition().lng();
-                    }
-    
-                    var id_ases = $('#id_ases').val();
-                    var neighborhood = $('#select_neighborhood').val();
-                    var ciudad_act = document.getElementById("municipio_act").value;
-    
-                    var directionsService = new google.maps.DirectionsService();
-    
-                    var second_request;
-    
-                    if (ciudad_act == 1079) {
-
-                        document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=transit' allowfullscreen></iframe>";
-
-                        second_request = {
-                            origin: { lat: latitude, lng: longitude },
-                            destination: { lat: 3.3759493, lng: -76.5355789 },
-                            travelMode: 'TRANSIT'
-                        };
-
-                    } else {
-
-                        document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=driving' allowfullscreen></iframe>";
-
-                        second_request = {
-                            origin: { lat: latitude, lng: longitude },
-                            destination: { lat: 3.3759493, lng: -76.5355789 },
-                            travelMode: 'DRIVING'
-                        };
-                    }
-
-                    directionsService.route(second_request, function (response, status) {
-    
-                        var distance = response.routes[0].legs[0].distance.value;
-    
-                        var duration = response.routes[0].legs[0].duration.value;
-
-                        var address = $('#direccion_res').val();
-
-                        $.ajax({
-                            type: "POST",
-                            data: JSON.stringify({
-                                "func": 'save_geographic_info',
-                                "params": [id_ases, latitude, longitude, neighborhood,
-                                            duration, distance, address, ciudad_act]
-                            }),
-                            url: "../managers/student_profile/geographic_api.php",
-                            success: function (msg) {
-                                console.log(msg);
-                            },
-                            dataType: "json",
-                            cache: "false",
-                            error: function (msg) {
-                                console.log(msg);
-                            },
-                        });
-                    });
-                }
                 object_function.cancel_edition();
             }, cancel_edition: function () {
 
@@ -1152,7 +1050,6 @@ define(['jquery',
                 $('#cond_excepcion').prop('disabled', true);
                 $('#act_simultanea').prop('disabled', true);
                 $('#etnia').prop('disabled', true);
-                $('#municipio_act').prop('disabled', true);
                 $('#estado_civil').prop('disabled', true);
                 $('#pais').prop('disabled', true);
                 $('#observacion').prop('readonly', true);

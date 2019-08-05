@@ -100,42 +100,6 @@ if(isset($input->func) && isset($input->params)) {
             } else {
                 return_with_code(-2, $input->params);
             }
-        } else if(count($input->params) == 8) {
-
-            //Come from student_profile_main.js
-
-            $id_ases = $input->params[0];
-            $latitude = $input->params[1];
-            $longitude = $input->params[2];
-            $neighborhood = $input->params[3];
-            $duration = $input->params[4];
-            $distance = $input->params[5];
-            $address = $input->params[6];
-            $city = $input->params[7];
-
-            //Validations of each parameter
-            if(is_string($id_ases) && is_float($latitude) && is_float($longitude) &&
-               is_string($neighborhood) && is_int($duration) && is_int($distance) &&
-               is_string($address) && is_string($city)){
-
-                $msg = new stdClass();
-
-                $result_save_info = student_profile_save_geographic_info($id_ases, $latitude, $longitude, $neighborhood, $duration, $distance, $address, $city);
-
-                if ($result_save_info) {
-                    echo json_encode(
-                        array(
-                            "status_code" => 0,
-                            "message" => "La información geográfica ha sido guardada con éxito",
-                        ));
-                } else {
-                    return_with_code(-5);
-                }
-            } else {
-                return_with_code(-2);
-            }
-        } else {
-            return_with_code(-2);
         }
     }
 }
