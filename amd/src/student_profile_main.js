@@ -34,11 +34,11 @@ define(['jquery',
 
                 // Agrega iframe para Google Maps
 
-                var ciudad_est = document.getElementById('municipio_act').value;
+                var ciudad_est = $('#municipio_act').val();
                 var latitude = $('#latitude').val();
                 var longitude = $('#longitude').val();
 
-                if (ciudad_est == 1079) {
+                if (ciudad_est == 'CALI') {
 
                     document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=transit'></iframe>";
 
@@ -48,7 +48,7 @@ define(['jquery',
                 }
 
                 /**
-                 * Funcion para mover el mapa de Google Maps de la
+                 * Evento que mueve el mapa de Google Maps de la
                  * pestaña "General" a "Geografico".
                  */
                 $("#geographic_li").click(function () {
@@ -57,7 +57,7 @@ define(['jquery',
                 });
 
                 /**
-                 * Funcion para mover el mapa de Google Maps de la
+                 * Evento que mueve el mapa de Google Maps de la
                  * pestaña "Geografico" a "General".
                  */
                 $("#general_li").click(function () {
@@ -692,7 +692,6 @@ define(['jquery',
                     $('#cond_excepcion').prop('disabled', false);
                     $('#act_simultanea').prop('disabled', false);
                     $('#etnia').prop('disabled', false);
-                    $('#municipio_act').prop('disabled', false);
                     $('#otro_act_simultanea').prop('disabled', false);
                     $('#otro_genero').prop('disabled', false);
                     $('#otro_genero').prop('required', false);
@@ -705,11 +704,9 @@ define(['jquery',
                     $('.input-tracking').prop('disabled', false);
                     $('#div_add_persona_vive').show();
                     $('#edit_person_vive').show();
+                    $('#age').hide();
+                    $('#birthdate').show();
                     //$('#edit_institucion').show();
-                    
-                    var latitude = $('#latitude').val();
-                    var longitude = $('#longitude').val();
-                    marker = object_function.edit_map(latitude, longitude);
 
                     $('#genero').on('click', function () {
                         if ((document.getElementById("genero").value) == 0) {
@@ -787,7 +784,7 @@ define(['jquery',
                             data_persons.push(objeto);
                         }
                         data_persons = JSON.stringify(data_persons);
-                        object_function.save_form_edit_profile(form_with_changes, object_function, update_or_insert1, update_or_insert2, data_persons, marker);
+                        object_function.save_form_edit_profile(form_with_changes, object_function, update_or_insert1, update_or_insert2, data_persons);
                         $('#otro_genero').prop('disabled', true);
                         $('#otro_act_simultanea').prop('disabled', true);
                         $('#otro_genero').prop('required', false);
@@ -1001,8 +998,7 @@ define(['jquery',
                 };
 
                 return msg;
-            }, save_form_edit_profile: function (form, object_function, control1, control2, json, marker) {
-
+            }, save_form_edit_profile: function (form, object_function, control1, control2, json) {
 
                 $.ajax({
                     type: "POST",
@@ -1034,104 +1030,6 @@ define(['jquery',
                     },
                 });
 
-                var direccion = document.getElementById('direccion_res').value;
-                var ciudad_act = document.getElementById("municipio_act").value;
-
-                document.getElementById('geographic_direccion').value = direccion;
-                document.getElementById('geographic_ciudad').value = ciudad_act;
-
-                var ciudad = document.getElementById("municipio_act");
-                var selectedCity = ciudad.options[ciudad.selectedIndex].text;
-                var query = direccion + " " + selectedCity;
-
-                var request = {
-                    query: query,
-                    fields: ['photos', 'formatted_address', 'name', 'rating', 'opening_hours', 'geometry'],
-                };
-
-                var map = document.getElementById('mapa');
-                service = new google.maps.places.PlacesService(map);
-                service.findPlaceFromQuery(request, callback);
-
-                function callback(results) {
-                    var place;
-
-                    if (results != null) {
-                        place = results[0];
-                    }
-                    save_lat_lng(place);
-                }
-
-                function save_lat_lng(destination) {
-
-                    var latitude;
-                    var longitude;
-    
-                    if (destination != null) {
-                        latitude = destination.geometry.location.lat();
-                        longitude = destination.geometry.location.lng();
-                    } else {
-    
-                        latitude = marker.getPosition().lat();
-                        longitude = marker.getPosition().lng();
-                    }
-    
-                    var id_ases = $('#id_ases').val();
-                    var neighborhood = $('#select_neighborhood').val();
-                    var ciudad_act = document.getElementById("municipio_act").value;
-    
-                    var directionsService = new google.maps.DirectionsService();
-    
-                    var second_request;
-    
-                    if (ciudad_act == 1079) {
-
-                        document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=transit' allowfullscreen></iframe>";
-
-                        second_request = {
-                            origin: { lat: latitude, lng: longitude },
-                            destination: { lat: 3.3759493, lng: -76.5355789 },
-                            travelMode: 'TRANSIT'
-                        };
-
-                    } else {
-
-                        document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=driving' allowfullscreen></iframe>";
-
-                        second_request = {
-                            origin: { lat: latitude, lng: longitude },
-                            destination: { lat: 3.3759493, lng: -76.5355789 },
-                            travelMode: 'DRIVING'
-                        };
-                    }
-
-                    directionsService.route(second_request, function (response, status) {
-    
-                        var distance = response.routes[0].legs[0].distance.value;
-    
-                        var duration = response.routes[0].legs[0].duration.value;
-
-                        var address = $('#direccion_res').val();
-
-                        $.ajax({
-                            type: "POST",
-                            data: JSON.stringify({
-                                "func": 'save_geographic_info',
-                                "params": [id_ases, latitude, longitude, neighborhood,
-                                            duration, distance, address, ciudad_act]
-                            }),
-                            url: "../managers/student_profile/geographic_api.php",
-                            success: function (msg) {
-                                console.log(msg);
-                            },
-                            dataType: "json",
-                            cache: "false",
-                            error: function (msg) {
-                                console.log(msg);
-                            },
-                        });
-                    });
-                }
                 object_function.cancel_edition();
             }, cancel_edition: function () {
 
@@ -1152,7 +1050,6 @@ define(['jquery',
                 $('#cond_excepcion').prop('disabled', true);
                 $('#act_simultanea').prop('disabled', true);
                 $('#etnia').prop('disabled', true);
-                $('#municipio_act').prop('disabled', true);
                 $('#estado_civil').prop('disabled', true);
                 $('#pais').prop('disabled', true);
                 $('#observacion').prop('readonly', true);
@@ -1167,70 +1064,6 @@ define(['jquery',
                     $('#' + form[field].name).val(form[field].value);
                 }
                 location.reload(true);
-            }, edit_map: function (latitude, longitude){
-
-                document.getElementById('mapa').innerHTML = "";
-
-                var geocoder;
-                
-                var latLng_univalle = new google.maps.LatLng(3.3759493, -76.5355789);
-                var opciones = {
-                    center: latLng_univalle,
-                    zoom: 14
-                };
-                
-                var map = new google.maps.Map(document.getElementById('mapa'), opciones);
-
-                var initial_marker = new google.maps.Marker({
-                    position: latLng_univalle,
-                    map: map,
-                    title: 'Universidad del Valle'
-                });
-
-                var new_infowindow = new google.maps.InfoWindow();
-                new_infowindow.setContent("Universidad del Valle");
-                new_infowindow.open(map, initial_marker);
-
-                var marker = new google.maps.Marker({
-                    position: {
-                        lat: parseFloat(latitude),
-                        lng: parseFloat(longitude)
-                    },
-                    map: map
-                });
-
-                geocoder = new google.maps.Geocoder();
-
-                var infowindow = new google.maps.InfoWindow();
-                infowindow.setContent("Residencia Estudiante");
-                infowindow.open(map, marker);
-
-                google.maps.event.addListener(map, 'click', function (event) {
-                    geocoder.geocode({
-                        'latLng': event.latLng
-                    },
-                    function (results, status) {
-                        if (status == google.maps.GeocoderStatus.OK) {
-                            if (results[0]) {
-                                if (marker) {
-                                    marker.setPosition(event.latLng);
-                                } else {
-                                    marker = new google.maps.Marker({
-                                        position: event.latLng,
-                                        map: map
-                                    });
-                                }
-                                infowindow.setContent(results[0].formatted_address + '<br/> Coordenadas: ' + results[0].geometry.location);
-                                infowindow.open(map, marker);
-                            } else {
-                                console.log("No se encontraron resultados");
-                            }
-                        } else {
-                            console.log("Geocodificación ha fallado debido a: " + status);
-                        }
-                    });
-                });
-                return marker;
             }
         };
 
