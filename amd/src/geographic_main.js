@@ -55,7 +55,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
 
                 var latitude = $('#latitude').val();
                 var longitude = $('#longitude').val();
-                student_marker = student_profile.edit_map(latitude, longitude);
+                student_marker = edit_map(latitude, longitude);
             });
 
             $('#button_cancel_geographic').on('click', function(){
@@ -92,7 +92,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
             $('#button_save_geographic').on('click', function(){
                 swal({
                     title: "Atención",
-                    text: "¿Confirmó que la ubicación del marcador en el mapa coincidiera con la dirección dada por el estudiante?",
+                    text: "¿Está seguro que la ubicación del marcador en el mapa coincide con la dirección del estudiante?",
                     type: "warning",
                     showCancelButton: true,
                     confirmButtonClass: "btn-danger",
@@ -220,23 +220,93 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 var geocoder = new google.maps.Geocoder();
                 var select = document.getElementById('geographic_ciudad');
                 var input_address = $('#geographic_direccion').val();
-                var composed_address = $('#geographic_direccion').val() + " " + select.options[select.selectedIndex].text + " " + "Colombia";
+                var composed_address = input_address + " " + select.options[select.selectedIndex].text + " " + "Colombia";
                 geocoder.geocode({
                     "address": composed_address
                 }, function(results) {
                     if (results[0]) {
                         var latitud = results[0].geometry.location.lat();
                         var longitud = results[0].geometry.location.lng();
-                        student_marker = student_profile.edit_map(latitud, longitud);
+                        student_marker = edit_map(latitud, longitud);
                         document.getElementById('latitude').value = latitud;
                         document.getElementById('longitude').value = longitud;
-                        console.log("Dirección: " + results[0].formatted_address + " Coordenadas: " + results[0].geometry.location);
                     } else {
                         console.log("No se encontraron resultados");
                     }
                 });
             }
 
+            /**
+             * @method edit_map
+             * @desc Makes the map editable and sets the student's marker due to a latitude and a longitude
+             * @param latitude
+             * @param longitude
+             * @return {object} Student's marker
+             */
+            function edit_map(latitude, longitude){
+                document.getElementById('mapa').innerHTML = "";
+
+                var geocoder;
+
+                var latLng_univalle = new google.maps.LatLng(3.3759493, -76.5355789);
+                var opciones = {
+                    center: latLng_univalle,
+                    zoom: 14
+                };
+
+                var map = new google.maps.Map(document.getElementById('mapa'), opciones);
+
+                var initial_marker = new google.maps.Marker({
+                    position: latLng_univalle,
+                    map: map,
+                    title: 'Universidad del Valle'
+                });
+
+                var new_infowindow = new google.maps.InfoWindow();
+                new_infowindow.setContent("Universidad del Valle");
+                new_infowindow.open(map, initial_marker);
+
+                var marker = new google.maps.Marker({
+                    position: {
+                        lat: parseFloat(latitude),
+                        lng: parseFloat(longitude)
+                    },
+                    map: map
+                });
+
+                geocoder = new google.maps.Geocoder();
+
+                var infowindow = new google.maps.InfoWindow();
+                infowindow.setContent("Residencia Estudiante");
+                infowindow.open(map, marker);
+
+                google.maps.event.addListener(map, 'click', function (event) {
+                    geocoder.geocode({
+                            'latLng': event.latLng
+                        },
+                        function (results, status) {
+                            if (status == google.maps.GeocoderStatus.OK) {
+                                if (results[0]) {
+                                    if (marker) {
+                                        marker.setPosition(event.latLng);
+                                    } else {
+                                        marker = new google.maps.Marker({
+                                            position: event.latLng,
+                                            map: map
+                                        });
+                                    }
+                                    infowindow.setContent(results[0].formatted_address + '<br/> Coordenadas: ' + results[0].geometry.location);
+                                    infowindow.open(map, marker);
+                                } else {
+                                    console.log("No se encontraron resultados");
+                                }
+                            } else {
+                                console.log("Geocodificación ha fallado debido a: " + status);
+                            }
+                        });
+                });
+                return marker;
+            }
             /**
              * @method save_geographic_info
              * @desc Saves a student geographic information. Current processing on geographic_serverproc.php
