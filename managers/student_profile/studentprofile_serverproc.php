@@ -347,8 +347,7 @@ function save_profile($form){
         $msg->title = $e->getMessage();
         $msg->status = "error";
         $msg->msg = "Error al guardar la información. 
-                        Posibles Causas: Si usted cambió el número de cedula, es posible que el nuevo número ya exista en la base de datos. 
-                                        Revise los cambios realizados e intentelo de nuevo. El formato del correo institucional puede tener errores.";
+                        Contacte al componente de sistemas.";
 
        echo json_encode($msg);
     }
