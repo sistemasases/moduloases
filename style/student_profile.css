@@ -91,10 +91,24 @@
         margin-bottom: 0px;
     }
 
-
     #div_input_cc{
         padding-left: 0px;
         padding-right: 0px;
+        width: 13%;
+    }
+
+    #div_age{
+        padding-left: 4px;
+        width: 8.5%;
+    }
+
+    #birthdate{
+        width: 152%;
+        display: none;
+    }
+
+    #div_email_moodle{
+        padding-left: 20px;
     }
 
     #div_doc_type{
