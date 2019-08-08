@@ -382,7 +382,7 @@
                 function custom_actions( form, action ){
 
                     if( (form == 'primer_acercamiento' ) && ( action == 'insert' )){ 
-
+                        
                     }else if( (form == 'primer_acercamiento' ) && ( action == 'update' )){ 
 
                     }else if( (form == 'inasistencia' )&&( action == 'insert' )){
@@ -455,8 +455,11 @@
                        $("#modal_v2_groupal_tracking").find('form').find('.oculto.id_estudiante').find('input').val(create.slice(0,-1));
 
                     }else if( (form=='seguimiento_grupal')&&( action == 'update' ) ){
-
-                        $("#modal_v2_edit_groupal_tracking").find(".btn-dphpforms-delete-record").remove();
+                       
+                        let role_support = $('#dphpforms_role_support').attr('data-info');
+                        if( (role_support != "profesional_ps") && (role_support != "sistemas") ){
+                            $("#modal_v2_edit_groupal_tracking").find(".btn-dphpforms-delete-record").remove();
+                        }; 
 
                     }
 
