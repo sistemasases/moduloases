@@ -263,7 +263,7 @@ define(
                 } else if (namerol == "profesional_ps") {
                     //Starts adding event
                     put_tracking_count( username, current_semester, parseInt( get_instance() ), false );
-                    onsultar_seguimientos_persona(get_instance(), usuario, username);
+                    consultar_seguimientos_persona(get_instance(), usuario, username);
                     send_email_new_form(get_instance());
 
                     // when user is 'monitor' then has permissions
