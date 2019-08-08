@@ -105,7 +105,7 @@ $ases_student = null;
 if ($student_code != 0) {
     
     $ases_student = get_ases_user_by_code($student_code);
-
+    $record->birthdate = $ases_student->fecha_nac;
     $student_id = $ases_student->id;
     //echo $student_id ;
     //die;
@@ -247,36 +247,36 @@ if ($student_code != 0) {
     
   
     
-      $personas = '';
-      $pos = 1;
+    $personas = '';
+    $pos = 1;
     
-        //Extraer json y decodificar datos de personas con quien vive
-        $objeto_json = json_decode($ases_student->vive_con);
-        //Recorrer el objeto json (array) y contruir los tr y td de la tabla
-        foreach($objeto_json as $objeto){ 
-           $personas  .= "<tr> <td>  <input   name = 'name_person'class= 'input_fields_general_tab' readonly type='text' value='$objeto->name' /></td>
-           <td><input name = 'parentesco_person'  class= 'input_fields_general_tab' readonly type='text' value='$objeto->parentesco' /></td> <td>
-           <button type = 'button' class='bt_delete_person' title='Eliminar persona' name  = 'btn_delete_person' style= 'visibility:hidden;' value='$pos'></button></td></tr>";
-            $pos ++;
-        }
+    //Extraer json y decodificar datos de personas con quien vive
+    $objeto_json = json_decode($ases_student->vive_con);
+    //Recorrer el objeto json (array) y contruir los tr y td de la tabla
+    foreach($objeto_json as $objeto){
+       $personas  .= "<tr> <td>  <input   name = 'name_person'class= 'input_fields_general_tab' readonly type='text' value='$objeto->name' /></td>
+       <td><input name = 'parentesco_person'  class= 'input_fields_general_tab' readonly type='text' value='$objeto->parentesco' /></td> <td>
+       <button type = 'button' class='bt_delete_person' title='Eliminar persona' name  = 'btn_delete_person' style= 'visibility:hidden;' value='$pos'></button></td></tr>";
+        $pos ++;
+    }
 
    
-   $record->personas_con_quien_vive = $personas;
+    $record->personas_con_quien_vive = $personas;
     //TRAE ESTADOS CIVILES
-     $estados= get_estados_civiles();
+    $estados= get_estados_civiles();
     $options_estado_civil = '';
 
     $estado_student->id_estado_civil = $ases_student->id_estado_civil;
-     //Buscar la posición del estado civil soltero, colocar al inicio del select
+    //Buscar la posición del estado civil soltero, colocar al inicio del select
 
-     $i = 0;
+    $i = 0;
     foreach($estados as $estado){
         if($estado->estado_civil=='Soltero(a)'){
-            $options_estado_civil .= "<option value='$estado->id'>$estado->estado_civil</option>";   
+            $options_estado_civil .= "<option value='$estado->id'>$estado->estado_civil</option>";
             $pose = $i;
             break;
-        } 
-    $i++;
+        }
+        $i++;
     }
     //Eliminar estado civil agregado al inicio del select del array
     array_splice($estados,$pose,1);
@@ -294,21 +294,19 @@ if ($student_code != 0) {
 
 
 
-     //TRAE OCUPACIONES
+    //TRAE OCUPACIONES
     $ocupaciones= get_ocupaciones();
     $options_ocupaciones= '';
 
     $i=0;
 
-            $options_ocupaciones .= "<option selected= 'selected' value='option_ninguna' title='NINGUNA DE LAS ANTERIORES'>NINGUNA DE LAS ANTERIORES</option>";
+    $options_ocupaciones .= "<option selected= 'selected' value='option_ninguna' title='NINGUNA DE LAS ANTERIORES'>NINGUNA DE LAS ANTERIORES</option>";
+
     foreach($ocupaciones as $ocupacion){
             $options_ocupaciones .= "<option value='$ocupacion->value' title='$ocupacion->ocupacion'>$ocupacion->alias...</option>";
     }
 
     $record->ocupaciones = $options_ocupaciones;
-
-
-
 
     //TRAE PAISES
     $paises= get_paises();
@@ -355,6 +353,7 @@ if ($student_code != 0) {
         foreach($municipio as $mun){
             if($municipio_student == $mun->id){
                 $options_municipios .= "<option value='$mun->id' selected='selected'>$mun->nombre</option>";
+                $record->municipio_act = $mun->nombre;
             }else{
                 $options_municipios .= "<option value='$mun->id'>$mun->nombre</option>";
             }
@@ -362,35 +361,10 @@ if ($student_code != 0) {
 
         next($municipios);
 
-        $options_municipios .= "</optgroup>";   
+        $options_municipios .= "</optgroup>";
     }
-    //  $options_municipios = '';
- 
-    //  $municipio_student = $ases_student->id_ciudad_res;
-    //  //Buscar la posición del municipio CALI
-    //  $i=0;
-    //  foreach($municipios as $mun){
-    //      if($mun->nombre=="CALI"){
-    //      $posp=$i;
-    //      $options_municipios .= "<optgroup label='Populares'> <option value='$mun->id'>$mun->nombre</option> </optgroup>" ;   
-    //      break; }
-    //      $i++;
-    //  }
- 
-     //Eliminar municipio CALI puesto al inicio
-    //  array_splice($municipios,$posp,1);
-    
-    //  $options_municipios .= "<optgroup label = 'Otros'>";
-    //  foreach($municipios as $mun){
-    //      if($municipio_student == $mun->id){
-    //          $options_municipios .= "<option value='$mun->id' selected='selected'>$mun->nombre</option>";
-    //      }else{
-    //          $options_municipios .= "<option value='$mun->id'>$mun->nombre</option>";
-    //      }
-    //  }
-    //  $options_municipios .= "</optgroup>";   
- 
-     $record->options_municipio_act = $options_municipios;
+
+    $record->options_municipio_act = $options_municipios;
 
 
          //TRAE ETNIAS

@@ -36,7 +36,7 @@ if(isset($_POST['func'])){
         $form = $_POST['form'];
         save_profile($form);
     }elseif($_POST['func'] == 'save_icetex_status') {
-        
+
         if(isset($_POST['id_ases'])){
             $id_ases = $_POST['id_ases'];
         }else{
@@ -78,7 +78,7 @@ if(isset($_POST['func'])){
             $result = update_status_program($_POST['program_id'], $_POST['status'], $_POST['student_id']);
             $msg = new stdClass();
 
-            if($result){                
+            if($result){
                 $msg->title = 'Éxito';
                 $msg->msg = 'Estado del programa actualizado con éxito.';
                 $msg->status = 'success';
@@ -105,10 +105,10 @@ if(isset($_POST['func'])){
             }else{
                 $result = update_status_ases($_POST['current_status'], $_POST['new_status'], $_POST['instance_id'], $_POST['code_student']);
             }
-            
+
             $msg = new stdClass();
 
-            if($result){                
+            if($result){
                 $msg->title = 'Éxito';
                 $msg->msg = 'Estado actualizado con éxito.';
                 $msg->status = 'success';
@@ -150,7 +150,7 @@ if(isset($_POST['func'])){
             $msg->msg = "El campo se ha actualizado con éxito";
             $msg->status = "success";
             echo json_encode($msg);
-        }else{
+        } else {
             $msg =  new stdClass();
             $msg->title = "Error";
             $msg->msg = "Error al actualizar el campo";
@@ -160,11 +160,11 @@ if(isset($_POST['func'])){
     } else if($_POST['func'] == 'update_user_image'){
         $new_user_image = $_FILES['new_image_file'];
         $user_id = $_POST['mdl_user_id'];
-        $user = new class{};
+        $user = new stdClass();
         $user->id = $user_id;
         update_user_image_profile($user->id, 0);
         print_r($user_id);
-       
+
     } else{
         $msg->msg = "No se reconoce la función a ejecutar. Contacte al área de sistemas.";
         echo json_encode($msg);
@@ -177,25 +177,25 @@ if(isset($_POST['func'])){
  /**
  * Updates every field on {talentospilos_usuario} table
  *
- * 
+ *
  * @see save_profile($form)
  * @param $form --> Array containing the fields to update
  * @return object in a json format
  */
 function save_profile($form){
-    
+
     global $DB;
-    
+
     try{
         $id_ases = $form[0]['value'];
         $msg = new stdClass();
 
         //Info to update will be added here
         $obj_updatable = array();
-        
+
         // Required fields are inserted
         for($i = 0; $i < count($form); $i++){
-          
+
             if($form[$i]['name'] == "tipo_doc" || $form[$i]['name'] == "tipo_doc_ini"){
                 $sql_query = "SELECT id FROM {talentospilos_tipo_documento} WHERE nombre = '".$form[$i]['value']."'";
                 $id_doc_type = $DB->get_record_sql($sql_query)->id;
@@ -203,14 +203,8 @@ function save_profile($form){
             }else{
                 $obj_updatable[$form[$i]['name']] = $form[$i]['value'];
             }
-            if($form[$i]['name']=="cond_excepcion"){
-                $cond = $form[$i]['value'];
-            }
             if($form[$i]['name']=="pais"){
                 $pais = $form[$i]['value'];
-            }
-            if($form[$i]['name'] == 'municipio_act'){
-                $ciudad_res =  $form[$i]['value'];
             }
             if($form[$i]['name']=="genero"){
                 $genero = $form[$i]['value'];
@@ -245,7 +239,9 @@ function save_profile($form){
             if($form[$i]['name']=="sexo"){
                 $sexo = $form[$i]['value'];
             }
-                        
+            if($form[$i]['name']=="fecha_nac"){
+                $fecha_nac = $form[$i]['value'];
+            }
         }
         $obj_updatable = (object) $obj_updatable;
         //an id is assigned to update
@@ -257,62 +253,61 @@ function save_profile($form){
 
         //Agregar campos nuevos
 
-        
+
         if($act_sim == 0){
-            
+
             if($_POST['option2']==""){
-            //Agregar otra actividad a la base de datos de act_simultanea (si no existe), y guardar en usuario
-            add_record_act($otro_act_sim);
-            }else {
-            //Actualizar actividad en base de datos y guardar en usuario
-            $id_otro_act = get_id_act($_POST['option2']);
-            $act = new stdClass();
-            $act->id = $id_otro_act;
-            $act->actividad = $otro_act_sim;
-            $act->opcion_general = 0;
-            update_record_act($act);
+                //Agregar otra actividad a la base de datos de act_simultanea (si no existe), y guardar en usuario
+                add_record_act($otro_act_sim);
+            } else {
+                //Actualizar actividad en base de datos y guardar en usuario
+                $id_otro_act = get_id_act($_POST['option2']);
+                $act = new stdClass();
+                $act->id = $id_otro_act;
+                $act->actividad = $otro_act_sim;
+                $act->opcion_general = 0;
+                update_record_act($act);
             }
             $id_otro_act= get_id_act($otro_act_sim);
-            
-           $obj_updatable->id_act_simultanea = $id_otro_act;
-        }else{
+
+            $obj_updatable->id_act_simultanea = $id_otro_act;
+        } else {
             //Guardar con género existente en opciones generales
-            $obj_updatable->id_act_simultanea = $act_sim; 
+            $obj_updatable->id_act_simultanea = $act_sim;
         }
 
-
         if($genero == 0){
-            
+
             if($_POST['option1']==""){
-            //Agregar otro género a la base de datos de generos (si no existe), y guardar en usuario
-            add_record_genero($otro);
-            }else {
-            //Actualizar género en base de datos y guardar en usuario
-            $id_otro_genero = get_id_genero($_POST['option1']);
-            $gen = new stdClass();
-            $gen->id = $id_otro_genero;
-            $gen->genero = $otro;
-            $gen->opcion_general = 0;
-            update_record_genero($gen);
+                //Agregar otro género a la base de datos de generos (si no existe), y guardar en usuario
+                add_record_genero($otro);
+            } else {
+                //Actualizar género en base de datos y guardar en usuario
+                $id_otro_genero = get_id_genero($_POST['option1']);
+                $gen = new stdClass();
+                $gen->id = $id_otro_genero;
+                $gen->genero = $otro;
+                $gen->opcion_general = 0;
+                update_record_genero($gen);
             }
             $id_otro_genero = get_id_genero($otro);
-            
-           $obj_updatable->id_identidad_gen = $id_otro_genero;
-        }else{
+
+            $obj_updatable->id_identidad_gen = $id_otro_genero;
+        } else {
             //Guardar con género existente en opciones generales
-            $obj_updatable->id_identidad_gen = $genero; 
+            $obj_updatable->id_identidad_gen = $genero;
         }
 
         $obj_updatable->vive_con = $_POST['vive_con'];
         $obj_updatable->id_estado_civil = $estado_civil;
-        $obj_updatable->id_cond_excepcion = $cond;
         $obj_updatable->id_pais = $pais;
-        $obj_updatable->id_ciudad_res = $ciudad_res;
         $obj_updatable->id_etnia = $etnia;
         $obj_updatable->estrato = $estrato;
         $obj_updatable->anio_ingreso = $anio_ingreso;
         $obj_updatable->puntaje_icfes = $puntaje_icfes;
         $obj_updatable->sexo = $sexo;
+        $obj_updatable->fecha_nac = $fecha_nac;
+
         //____________________________________________
         $conc_observations = $obj_updatable->observacion."\n".$observations;
 
@@ -322,25 +317,18 @@ function save_profile($form){
         //Data object to update record in mdl_user
         //----------------------------------------------
 
+        $obj_updatable_moodle = new stdClass();
         $obj_updatable_moodle->id = get_moodle_id($id_ases);
 
         //Test: email validation
         //$email = "insert email test";
-        
+
         $obj_updatable_moodle->email = $email;
-        
+
         $result = $DB->update_record('talentospilos_usuario', $obj_updatable);
 
-        $sql_query = "SELECT id FROM {talentospilos_demografia} WHERE id_usuario = $id_ases";
-        $id_demografia = $DB->get_record_sql($sql_query)->id;
-
-        $obj_update_geographic->id = $id_demografia;
-        $obj_update_geographic->id_ciudad = $ciudad_res;
-
-        $result_geographic = $DB->update_record('talentospilos_demografia', $obj_update_geographic);
-        
         $result_cv_update = studentprofile_update_email_moodle($obj_updatable_moodle);
-        
+
         if($result && $result_cv_update){
             $msg->title = "Éxito";
             $msg->status = "success";
@@ -350,20 +338,18 @@ function save_profile($form){
             $msg->title = "Error";
             $msg->status = "error";
             $msg->msg = "Error al guardar la información en el servidor.";
-        } 
-     
+        }
+
         echo json_encode($msg);
-        
+
     }catch(Exception $e){
-        
-        $msg->title = "Error";
+
+        $msg->title = $e->getMessage();
         $msg->status = "error";
         $msg->msg = "Error al guardar la información. 
-                        Posibles Causas: Si usted cambió el número de cedula, es posible que el nuevo número ya exista en la base de datos. 
-                                        Revise los cambios realizados e intentelo de nuevo. El formato del correo institucional puede tener errores.";
+                        Contacte al componente de sistemas.";
 
        echo json_encode($msg);
-       
     }
 }
 
@@ -375,9 +361,9 @@ function save_profile($form){
  * @param $id_ases --> ASES student id
  * @param $id_reason = null --> Retirement reason id
  * @param $observations = null --> observations to save
- * @return object in a json format 
+ * @return object in a json format
  */
- 
+
 function save_status_icetex_proc($new_status, $id_ases, $id_reason = null,  $observations=null){
 
     $result = save_status_icetex($new_status, $id_ases, $id_reason, $observations);
@@ -394,9 +380,9 @@ function save_status_icetex_proc($new_status, $id_ases, $id_reason = null,  $obs
  * @param $id_ses --> ASES student id
  * @param $id_reason = null --> Retirement reason id
  * @param $observations = null --> observations to save
- * @return object in a json format 
+ * @return object in a json format
  */
- 
+
 function save_status_ases_proc($new_status, $id_ases, $id_reason = null, $observations=null){
 
     $result = save_status_ases($new_status, $id_ases, $id_reason, $observations);
@@ -406,16 +392,16 @@ function save_status_ases_proc($new_status, $id_ases, $id_reason = null, $observ
 
 /**
  * Returns the saveMotivoRetiro(PARAMETERS) function output or an error message in case it fails
- * 
+ *
  * @see save_reason_dropout_student()
  * @return integer in a json format
  */
 function save_reason_dropout_student(){
-    
+
     if(isset($_POST['talentosid']) && isset($_POST['motivoid']) && isset($_POST['detalle']))
     {
         echo json_encode(saveMotivoRetiro($_POST['talentosid'], $_POST['motivoid'],$_POST['detalle']));
-        
+
     }else{
         $msg =  new stdClass();
         $msg->error = "Error :(";
@@ -436,7 +422,7 @@ function loadMotivoRetiroStudent(){
     if(isset($_POST['talentosid']))
     {
         echo json_encode(getMotivoRetiroEstudiante($_POST['talentosid']));
-        
+
     }else{
         $msg =  new stdClass();
         $msg->error = "Error :(";
@@ -455,7 +441,7 @@ function validate_form_tracking_peer(){
     if(!isset($_POST['date'])){
         return "El campo FECHA no llegó al servidor.";
     }else if(!isset($_POST['place'])){
-        return "El campo LUGAR no llegó al servidor.";    
+        return "El campo LUGAR no llegó al servidor.";
     }else if(!isset($_POST['h_ini'])){
         return "El campo HORA INICIAL no llegó al servidor.";
     }else if(!isset($_POST['m_ini'])){
@@ -557,7 +543,7 @@ function save_tracking_peer_proc(){
         $result_msg->type = "error";
 
         echo json_encode($result_msg);
-    }   
+    }
 }
 
 /**
