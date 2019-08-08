@@ -297,7 +297,11 @@ define(['jquery',
 
                     $(".equalize").height(maxHeight);
 
-                    $("#birthdate").datepicker({dateFormat: "yy-mm-dd"});
+                    $("#birthdate").datepicker({
+                        dateFormat: "yy-mm-dd",
+                        changeYear: true,
+                        changeMonth: true,
+                    });
                 });
             }, update_status_program: function (current_status, element) {
 
@@ -707,7 +711,7 @@ define(['jquery',
                     $('#div_add_persona_vive').show();
                     $('#edit_person_vive').show();
                     $('#age').hide();
-                    $('#div_birthdate').show();
+                    $('#birthdate').show();
                     //$('#edit_institucion').show();
 
                     $('#genero').on('click', function () {
@@ -1068,7 +1072,7 @@ define(['jquery',
                 $('.input-tracking').prop('disabled', true);
                 $(".bt_delete_person").css("visibility", "hidden");
                 $('#age').show();
-                $('#div_birthdate').hide();
+                $('#birthdate').hide();
 
             }, revert_changes: function (form) {
                 // Revertir cualquier cambio después de cancelar la edición

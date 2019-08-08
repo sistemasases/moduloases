@@ -102,17 +102,9 @@
         width: 8.5%;
     }
 
-    #div_birthdate{
-        display: none;
-    }
-
-    #label_birthdate{
-        width: 150%;
-        font-weight: normal;
-    }
-
     #birthdate{
         width: 152%;
+        display: none;
     }
 
     #div_email_moodle{
