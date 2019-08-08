@@ -284,19 +284,20 @@ define(['jquery',
                         $('#lb_otro').show();
                         $('#div_otro_genero').show();
                     }
+
                     if (document.getElementById("act_simultanea").value == 0) {
                         $('#lb_otro_act').show();
                         $('#div_otro_act').show();
                     }
 
-
                     var heights = $(".equalize").map(function () {
                         return $(this).height();
                     }).get(),
-
                         maxHeight = Math.max.apply(null, heights);
 
                     $(".equalize").height(maxHeight);
+
+                    $("#birthdate").datepicker({dateFormat: "yy-mm-dd"});
                 });
             }, update_status_program: function (current_status, element) {
 
@@ -669,9 +670,10 @@ define(['jquery',
                     options: chart_options
                 });
             }, edit_profile: function (object_function) {
-                
-                var marker;
+
                 var form_wihtout_changes = $('#ficha_estudiante').serializeArray();
+                console.log(form_wihtout_changes);
+
                 var update_or_insert1 = document.getElementById("otro_genero").value;
                 var update_or_insert2 = document.getElementById("otro_act_simultanea").value;
 
@@ -705,7 +707,7 @@ define(['jquery',
                     $('#div_add_persona_vive').show();
                     $('#edit_person_vive').show();
                     $('#age').hide();
-                    $('#birthdate').show();
+                    $('#div_birthdate').show();
                     //$('#edit_institucion').show();
 
                     $('#genero').on('click', function () {
@@ -744,13 +746,12 @@ define(['jquery',
                         closeOnConfirm: true,
                         allowEscapeKey: false
 
-                    },
-                        function (isConfirm) {
-                            if (isConfirm) {
-                                object_function.cancel_edition();
-                                object_function.revert_changes(data.data.form);
-                            }
-                        });
+                    }, function (isConfirm) {
+                        if (isConfirm) {
+                            object_function.cancel_edition();
+                            object_function.revert_changes(data.data.form);
+                        }
+                    });
                 });
 
                 $('#span-icon-save-profile').on('click', function () {
@@ -823,18 +824,27 @@ define(['jquery',
                                 msg.msg = "El campo " + form[field].name + " no cumple con el formato institucional.";
                                 return msg;
                             }
+                            break;
+                        case "fecha_nac":
 
-                            // if (!validate_email) {
-                            //     msg.title = "Error";
-                            //     msg.status = "error";
-                            //     msg.msg = "El campo " + form[field].name + " no cumple con el formato institucional.";
-                            //     return msg;
-                            // }
+                            let regexDateWithTime = /^((19[5-9][0-9]|20[0-5][0-9])-(1[012]|0?[1-9])-([12][0-9]|3[01]|0?[1-9]) 00:00:00)$/;
+                            let regexDateWithoutTime = /^((19[5-9][0-9]|20[0-5][0-9])-(1[012]|0?[1-9])-([12][0-9]|3[01]|0?[1-9]))$/;
 
+                            let validateDateWithTime = regexDateWithTime.exec(form[field].value);
+                            let validateDateWithoutTime = regexDateWithoutTime.exec(form[field].value);
 
+                            if (validateDateWithTime == null) {
+                                if(validateDateWithoutTime == null){
+                                    msg.title = "Error";
+                                    msg.status = "error";
+                                    msg.msg = "El campo " + form[field].name + " no cumple con el formato de fecha aceptado (yyyy-mm-dd).";
+                                    return msg;
+                                } else{
+                                    form[field].value +=" 00:00:00";
+                                }
+                            }
                             break;
                         case "estrato":
-
 
                             if (form[field].value < 0) {
                                 msg.title = "Error";
@@ -1057,6 +1067,8 @@ define(['jquery',
                 $('.input_fields_general_tab').prop('readonly', true);
                 $('.input-tracking').prop('disabled', true);
                 $(".bt_delete_person").css("visibility", "hidden");
+                $('#age').show();
+                $('#div_birthdate').hide();
 
             }, revert_changes: function (form) {
                 // Revertir cualquier cambio después de cancelar la edición

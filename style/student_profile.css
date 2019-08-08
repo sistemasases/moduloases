@@ -91,10 +91,32 @@
         margin-bottom: 0px;
     }
 
-
     #div_input_cc{
         padding-left: 0px;
         padding-right: 0px;
+        width: 13%;
+    }
+
+    #div_age{
+        padding-left: 4px;
+        width: 8.5%;
+    }
+
+    #div_birthdate{
+        display: none;
+    }
+
+    #label_birthdate{
+        width: 150%;
+        font-weight: normal;
+    }
+
+    #birthdate{
+        width: 152%;
+    }
+
+    #div_email_moodle{
+        padding-left: 20px;
     }
 
     #div_doc_type{

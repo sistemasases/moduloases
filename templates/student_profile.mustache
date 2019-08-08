@@ -51,13 +51,16 @@
             </select>
           </div>
 
-          <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 div_general_fields" id="div_input_cc">
+          <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 div_general_fields" id="div_input_cc">
               <input type="text" class="form-control" name="num_doc" id="num_doc" value="{{num_doc}}" maxlength="12" readonly>
           </div>
 
-          <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 div-general-fields">
+          <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 div-general-fields" id="div_age">
               <span id="age">{{age}} años</span>
-              <!--<input type="text" id="birthdate" class="brithdate_picker" maxlength="10" value="{{birthdate}}"/> -->
+              <div id="div_birthdate">
+                  <!--<label id="label_birthdate">Fecha Nac.</label>-->
+                  <input type="text" id="birthdate" name="fecha_nac" class="brithdate_picker" maxlength="10" value="{{birthdate}}"/>
+              </div>
           </div>
 
           <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 div-general-fields" id="div_email_moodle">
@@ -171,7 +174,7 @@
       </div>
     </div>
 
-    <!-- Semaforo de riestos -->
+    <!-- Semaforo de riesgos -->
     <div class="row div_risk">
       <div class="col-sm-1 no-padding-left">
         <div id="div_title_risk">
