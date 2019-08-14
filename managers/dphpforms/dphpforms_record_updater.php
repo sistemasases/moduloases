@@ -311,9 +311,13 @@
                             */
                             $required_temporal = $field_attr_required;
                             for($x = 0; $x < $number_opciones; $x++){
-                                $opcion = (array) $array_opciones[$x];
-
                                 
+                                $pos_aux = array();
+                                foreach ($array_opciones as $key => $row){
+                                    $pos_aux[$key] = $row->posicion;
+                                }
+                                array_multisort($pos_aux, SORT_ASC, $array_opciones);
+                                $opcion = (array) $array_opciones[$x];
 
                                 $checked = null;
                                 if($valor === $opcion['valor']){
@@ -381,7 +385,11 @@
                             }
                             
                             for($x = 0; $x < $number_opciones; $x++){
-
+                                $pos_aux = array();
+                                foreach ($array_opciones as $key => $row){
+                                    $pos_aux[$key] = $row->posicion;
+                                }
+                                array_multisort($pos_aux, SORT_ASC, $array_opciones);
                                 $opcion = (array) $array_opciones[$x];
                                 if($number_opciones > 1){
                                     $valores_marcados = json_decode($valor);
