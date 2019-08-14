@@ -252,7 +252,13 @@
                             }
                                               
                             $html = $html .  '<div class="opcionesRadio ' .  $field_attr_group_radio_class . '" style="margin-bottom:0.4em">';
+                            
                             for($x = 0; $x < $number_opciones; $x++){
+                                $pos_aux = array();
+                                foreach ($array_opciones as $key => $row){
+                                    $pos_aux[$key] = $row->posicion;
+                                }
+                                array_multisort($pos_aux, SORT_ASC, $array_opciones);
                                 $opcion = (array) $array_opciones[$x];
 
                                 $html = $html .  '
@@ -293,8 +299,13 @@
                             if($number_opciones > 1){
                                 $name_checkbox = $row->{'mod_id_formulario_pregunta'} . '[]';
                             }
-
+                                                       
                             for($x = 0; $x < $number_opciones; $x++){
+                                $pos_aux = array();
+                                foreach ($array_opciones as $key => $row){
+                                    $pos_aux[$key] = $row->posicion;
+                                }
+                                array_multisort($pos_aux, SORT_ASC, $array_opciones);
                                 $opcion = (array) $array_opciones[$x];
                                 $html = $html . '<div class="checkbox ' . $field_attr_checkclass . '">' . "\n";
 
