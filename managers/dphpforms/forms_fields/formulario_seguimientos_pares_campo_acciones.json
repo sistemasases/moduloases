@@ -1,0 +1,188 @@
+{
+    "id_temporal": "cmp_xx",
+    "enunciado": "Acciones",
+    "tipo_campo": "CHECKBOX",
+    "atributos_campo": {
+        "name": "acciones",
+        "required": "true",
+        "checkclass": "checkbox-acciones col-xs-12 col-sm-6 col-md-4 col-lg-4",
+        "local_alias": "acciones",
+        "class": "ajuste_acciones separador_superior col-xs-12 col-sm-12 col-md-12 col-lg-12"
+    },
+    "opciones_campo": [
+        {
+            "enunciado": "Apoyo académico",
+            "identificador": "c_acciones_monitor_apoyo_academico",
+            "valor": "c_acciones_monitor_apoyo_academico",
+            "posicion": "1"
+        },
+        {
+            "enunciado": "Taller par-par",
+            "identificador": "c_acciones_monitor_taller_par_par",
+            "valor": "c_acciones_monitor_taller_par_par",
+            "posicion": "6"
+        },
+        {
+            "enunciado": "Reconocimiento ciudad y U.",
+            "identificador": "c_acciones_monitor_apoyo_reconocimiento_ciudad_universidad",
+            "valor": "c_acciones_monitor_apoyo_reconocimiento_ciudad_universidad",
+            "posicion": "11"
+        },
+        {
+            "enunciado": "Rem. Profesional SE",
+            "identificador": "c_rem_int_estrategia_profesional_socioeducativo",
+            "valor": "c_rem_int_estrategia_profesional_socioeducativo",
+            "posicion": "2"
+        },
+        {
+            "enunciado": "Rem. Practicante SE",
+            "identificador": "c_rem_int_estrategia_practicante_socioeducativo",
+            "valor": "c_rem_int_estrategia_practicante_socioeducativo",
+            "posicion": "7"
+        },
+        {
+            "enunciado": "Rem. Actividades grupales",
+            "identificador": "c_rem_int_estrategia_actividades_grupales",
+            "valor": "c_rem_int_estrategia_actividades_grupales",
+            "posicion": "12"
+        },
+        {
+            "enunciado": "Rem. Monitorías académicas",
+            "identificador": "c_rem_int_estrategia_monitorias_academicas",
+            "valor": "c_rem_int_estrategia_monitorias_academicas",
+            "posicion": "3"
+        },
+        {
+            "enunciado": "Rem. Proyectos de la Universidad",
+            "identificador": "c_rem_int_uni_proyectos_universidad",
+            "valor": "identificacion",
+            "posicion": "8"
+        },
+        {
+            "enunciado": "Rem. Servicio de salud",
+            "identificador": "c_rem_int_uni_servicio_salud",
+            "valor": "c_rem_int_uni_servicio_salud",
+            "posicion": "13"
+        },
+        {
+            "enunciado": "Rem. Registro académico",
+            "identificador": "c_rem_int_uni_registro_academico",
+            "valor": "c_rem_int_uni_registro_academico",
+            "posicion": "4"
+        },
+        {
+            "enunciado": "Rem. Matrícula financiera",
+            "identificador": "c_rem_int_uni_matricula_financiera",
+            "valor": "c_rem_int_uni_matricula_financiera",
+            "posicion": "9"
+        },
+        {
+            "enunciado": "Rem. Desarrollo humano y promoción SE",
+            "identificador": "c_rem_int_uni_desarrollo_humano_promocion_socioeconomica",
+            "valor": "c_rem_int_uni_desarrollo_humano_promocion_socioeconomica",
+            "posicion": "14"
+        },
+        {
+            "enunciado": "Rem. Directores de programa",
+            "identificador": "c_rem_int_uni_desarrollo_humano_promocion_socioeconomica",
+            "valor": "c_rem_int_uni_desarrollo_humano_promocion_socioeconomica",
+            "posicion": "5"
+        },
+        {
+            "enunciado": "Rem. Grupos de la Universidad",
+            "identificador": "c_rem_int_uni_desarrollo_humano_promocion_socioeconomica",
+            "valor": "c_rem_int_uni_desarrollo_humano_promocion_socioeconomica",
+            "posicion": "10"
+        },
+        {
+            "enunciado": "Rem. Externa",
+            "identificador": "c_rem_ext_uni_externa",
+            "valor": "c_rem_ext_uni_externa",
+            "posicion": "15"
+        }
+    ],
+    "permisos_campo": [
+        {
+            "rol": "administrativo",
+            "permisos": [
+                "lectura"
+            ]
+        },
+        {
+            "rol": "reportes",
+            "permisos": [
+                "lectura"
+            ]
+        },
+        {
+            "rol": "profesional_ps",
+            "permisos": [
+                "lectura",
+                "escritura"
+            ]
+        },
+        {
+            "rol": "monitor_ps",
+            "permisos": [
+                "lectura",
+                "escritura"
+            ]
+        },
+        {
+            "rol": "estudiante_t",
+            "permisos": [
+                "lectura"
+            ]
+        },
+        {
+            "rol": "sistemas",
+            "permisos": [
+                "lectura",
+                "escritura"
+            ]
+        },
+        {
+            "rol": "practicante_ps",
+            "permisos": [
+                "lectura",
+                "escritura"
+            ]
+        },
+        {
+            "rol": "geografo",
+            "permisos": [
+                "lectura"
+            ]
+        },
+        {
+            "rol": "academico",
+            "permisos": [
+                "lectura"
+            ]
+        },
+        {
+            "rol": "director_prog",
+            "permisos": [
+                "lectura"
+            ]
+        },
+        {
+            "rol": "geografico",
+            "permisos": [
+                "lectura"
+            ]
+        },
+        {
+            "rol": "dir_socioeducativo",
+            "permisos": [
+                "lectura"
+            ]
+        },
+        {
+            "rol": "financiero",
+            "permisos": [
+                "lectura"
+            ]
+        }
+    ]
+}
