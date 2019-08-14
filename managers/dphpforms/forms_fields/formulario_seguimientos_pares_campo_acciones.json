@@ -20,37 +20,37 @@
             "enunciado": "Taller par-par",
             "identificador": "c_acciones_monitor_taller_par_par",
             "valor": "c_acciones_monitor_taller_par_par",
-            "posicion": "6"
+            "posicion": "4"
         },
         {
             "enunciado": "Reconocimiento ciudad y U.",
             "identificador": "c_acciones_monitor_apoyo_reconocimiento_ciudad_universidad",
             "valor": "c_acciones_monitor_apoyo_reconocimiento_ciudad_universidad",
-            "posicion": "11"
+            "posicion": "7"
         },
         {
             "enunciado": "Rem. Profesional SE",
             "identificador": "c_rem_int_estrategia_profesional_socioeducativo",
             "valor": "c_rem_int_estrategia_profesional_socioeducativo",
-            "posicion": "2"
+            "posicion": "10"
         },
         {
             "enunciado": "Rem. Practicante SE",
             "identificador": "c_rem_int_estrategia_practicante_socioeducativo",
             "valor": "c_rem_int_estrategia_practicante_socioeducativo",
-            "posicion": "7"
+            "posicion": "13"
         },
         {
             "enunciado": "Rem. Actividades grupales",
             "identificador": "c_rem_int_estrategia_actividades_grupales",
             "valor": "c_rem_int_estrategia_actividades_grupales",
-            "posicion": "12"
+            "posicion": "2"
         },
         {
             "enunciado": "Rem. Monitorías académicas",
             "identificador": "c_rem_int_estrategia_monitorias_academicas",
             "valor": "c_rem_int_estrategia_monitorias_academicas",
-            "posicion": "3"
+            "posicion": "5"
         },
         {
             "enunciado": "Rem. Proyectos de la Universidad",
@@ -62,37 +62,37 @@
             "enunciado": "Rem. Servicio de salud",
             "identificador": "c_rem_int_uni_servicio_salud",
             "valor": "c_rem_int_uni_servicio_salud",
-            "posicion": "13"
+            "posicion": "11"
         },
         {
             "enunciado": "Rem. Registro académico",
             "identificador": "c_rem_int_uni_registro_academico",
             "valor": "c_rem_int_uni_registro_academico",
-            "posicion": "4"
+            "posicion": "14"
         },
         {
             "enunciado": "Rem. Matrícula financiera",
             "identificador": "c_rem_int_uni_matricula_financiera",
             "valor": "c_rem_int_uni_matricula_financiera",
-            "posicion": "9"
+            "posicion": "3"
         },
         {
             "enunciado": "Rem. Desarrollo humano y promoción SE",
             "identificador": "c_rem_int_uni_desarrollo_humano_promocion_socioeconomica",
             "valor": "c_rem_int_uni_desarrollo_humano_promocion_socioeconomica",
-            "posicion": "14"
+            "posicion": "6"
         },
         {
             "enunciado": "Rem. Directores de programa",
             "identificador": "c_rem_int_uni_desarrollo_humano_promocion_socioeconomica",
             "valor": "c_rem_int_uni_desarrollo_humano_promocion_socioeconomica",
-            "posicion": "5"
+            "posicion": "9"
         },
         {
             "enunciado": "Rem. Grupos de la Universidad",
             "identificador": "c_rem_int_uni_desarrollo_humano_promocion_socioeconomica",
             "valor": "c_rem_int_uni_desarrollo_humano_promocion_socioeconomica",
-            "posicion": "10"
+            "posicion": "12"
         },
         {
             "enunciado": "Rem. Externa",
