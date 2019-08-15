@@ -1,6 +1,6 @@
 {
     "id_temporal": "cmp_xx",
-    "enunciado": "Acciones",
+    "enunciado": "Acciones (Ubique el cursor sobre la acción para obtener más información)",
     "tipo_campo": "CHECKBOX",
     "atributos_campo": {
         "name": "acciones",
