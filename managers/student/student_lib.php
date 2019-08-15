@@ -192,7 +192,7 @@ function get_active_semesters($id_instance, $cohort_id, $include_current_semeste
         $cambio_carrera = $students_with_active_semester->cambio_carrera;
         $ases_user_id = $students_with_active_semester->mdl_talentospilos_usuario_id;
         if(!$include_current_semester && $nombre_semestre === $current_semester_name) {
-            break;
+            continue;
         }
         if(array_key_exists($talentos_usuario_id, $active_semesters_report_fields)) {
 
