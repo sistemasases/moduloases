@@ -14,91 +14,106 @@
             "enunciado": "Apoyo académico",
             "identificador": "c_acciones_monitor_apoyo_academico",
             "valor": "c_acciones_monitor_apoyo_academico",
-            "posicion": "1"
+            "posicion": "1",
+            "title": "Apoyo por parte del monitor socioeducativo en la resolución de talleres o preparación de trabajos en el marco de los mismos acompañamientos entre pares."
         },
         {
             "enunciado": "Taller par-par",
             "identificador": "c_acciones_monitor_taller_par_par",
             "valor": "c_acciones_monitor_taller_par_par",
-            "posicion": "4"
+            "posicion": "4",
+            "title": "Talleres individuales y específicos desarrollados por el monitor en el marco del acompañamiento entre pares que busca profundizar en temas específicos Ejemplo: historia de vida, manejo del tiempo, estrategias de estudio etc."
         },
         {
             "enunciado": "Reconocimiento ciudad y U.",
             "identificador": "c_acciones_monitor_apoyo_reconocimiento_ciudad_universidad",
             "valor": "c_acciones_monitor_apoyo_reconocimiento_ciudad_universidad",
-            "posicion": "7"
+            "posicion": "7",
+            "title": "Apoyo por parte del monitor en el establecimiento en la ciudad y reconocimiento de espacios en la Universidad."
         },
         {
             "enunciado": "Rem. Profesional SE",
             "identificador": "c_rem_int_estrategia_profesional_socioeducativo",
             "valor": "c_rem_int_estrategia_profesional_socioeducativo",
-            "posicion": "10"
+            "posicion": "10",
+            "title": "El monitor discute con el estudiante la posibilidad de que este asista a una orientación individual con el profesional o habla con este para que contacte al estudiante, debido a dificultades en alguna de las dimensiones."
         },
         {
             "enunciado": "Rem. Practicante SE",
             "identificador": "c_rem_int_estrategia_practicante_socioeducativo",
             "valor": "c_rem_int_estrategia_practicante_socioeducativo",
-            "posicion": "13"
+            "posicion": "13",
+            "title": "El monitor discute con el estudiante la posibilidad de que este asista con el practicante encargado a una sesión de acompañamiento o en su defecto habla directamente con el practicante para que este contacte al estudiante, debido a dificultades en alguna de las dimensiones."
         },
         {
             "enunciado": "Rem. Actividades grupales",
             "identificador": "c_rem_int_estrategia_actividades_grupales",
             "valor": "c_rem_int_estrategia_actividades_grupales",
-            "posicion": "2"
+            "posicion": "2",
+            "title": "El monitor invita al estudiante a participar en uno de los talleres grupales que el practicante o alguno de los profesionales de la estrategia ha creado para suplir algunos temas de interés (Ej. Talleres Dinamo)."
         },
         {
             "enunciado": "Rem. Monitorías académicas",
             "identificador": "c_rem_int_estrategia_monitorias_academicas",
             "valor": "c_rem_int_estrategia_monitorias_academicas",
-            "posicion": "5"
+            "posicion": "5",
+            "title": "El monitor invita al estudiante a participar de las sesiones de trabajo grupales que se ofertan en la estrategia para suplir temas de orden académico (Ej. Monitoria de Calculo)."
         },
         {
             "enunciado": "Rem. Proyectos de la Universidad",
             "identificador": "c_rem_int_uni_proyectos_universidad",
             "valor": "identificacion",
-            "posicion": "8"
+            "posicion": "8",
+            "title": "El monitor invita al estudiante a asistir a alguno de los proyectos formativos de la Universidad (Ej. GRACA)."
         },
         {
             "enunciado": "Rem. Servicio de salud",
             "identificador": "c_rem_int_uni_servicio_salud",
             "valor": "c_rem_int_uni_servicio_salud",
-            "posicion": "11"
+            "posicion": "11",
+            "title": "El monitor acompaña o solicita al estudiante pedir cita a servicio médico, psicológico u odontológico."
         },
         {
             "enunciado": "Rem. Registro académico",
             "identificador": "c_rem_int_uni_registro_academico",
             "valor": "c_rem_int_uni_registro_academico",
-            "posicion": "14"
+            "posicion": "14",
+            "title": "El monitor acompaña o solicita al estudiante realizar trámites ante Registro Académico (Ej. procesos de matrícula, cancelación de semestre, solicitud de reingreso, entre otros."
         },
         {
             "enunciado": "Rem. Matrícula financiera",
             "identificador": "c_rem_int_uni_matricula_financiera",
             "valor": "c_rem_int_uni_matricula_financiera",
-            "posicion": "3"
+            "posicion": "3",
+            "title": "El monitor acompaña o solicita al estudiante realizar trámites ante Matrícula Financiera (Ej. solicitud de plazo, Convenio Icetex, entre otros)."
         },
         {
             "enunciado": "Rem. Desarrollo humano y promoción SE",
             "identificador": "c_rem_int_uni_desarrollo_humano_promocion_socioeconomica",
             "valor": "c_rem_int_uni_desarrollo_humano_promocion_socioeconomica",
-            "posicion": "6"
+            "posicion": "6",
+            "title": "El monitor acompaña o solicita al estudiante realizar trámites ante la sección de Desarrollo Humano y Promoción Socioeconómica (Ej. solicitud de becas, subsidios, revisión de matrícula, padrinazgo, entre otros)."
         },
         {
             "enunciado": "Rem. Directores de programa",
             "identificador": "c_rem_int_uni_desarrollo_humano_promocion_socioeconomica",
             "valor": "c_rem_int_uni_desarrollo_humano_promocion_socioeconomica",
-            "posicion": "9"
+            "posicion": "9",
+            "title": "El monitor acompaña o solicita al estudiante realizar trámites o buscar apoyo con el Director de su Programa Académico."
         },
         {
             "enunciado": "Rem. Grupos de la Universidad",
             "identificador": "c_rem_int_uni_desarrollo_humano_promocion_socioeconomica",
             "valor": "c_rem_int_uni_desarrollo_humano_promocion_socioeconomica",
-            "posicion": "12"
+            "posicion": "12",
+            "title": "Invitación a la participación en los grupos Culturales, Académicos, Recreativos, Políticos, Espirituales y Deportivos que existen en la Universidad."
         },
         {
             "enunciado": "Rem. Externa",
             "identificador": "c_rem_ext_uni_externa",
             "valor": "c_rem_ext_uni_externa",
-            "posicion": "15"
+            "posicion": "15",
+            "title": "Remisión a programas de apoyo económico externos a la Universidad (Ej. Icetex, Jóvenes en Acción, prestamos financieros), portabilidad EPS, opciones laborales, entre otros."
         }
     ],
     "permisos_campo": [
