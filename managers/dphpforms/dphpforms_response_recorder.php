@@ -260,9 +260,14 @@
                                 }
                                 array_multisort($pos_aux, SORT_ASC, $array_opciones);
                                 $opcion = (array) $array_opciones[$x];
+                                
+                                $option_title = '';
+                                if(array_key_exists('title', $opcion)){
+                                    $option_title = $opcion['title'];
+                                }
 
                                 $html = $html .  '
-                                    <div id="'.$row->{'mod_id_formulario_pregunta'}.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" class="radio ' . $field_attr_radioclass . '">
+                                    <div id="'.$row->{'mod_id_formulario_pregunta'}.'" name="'.$row->{'mod_id_formulario_pregunta'}.'" class="radio ' . $field_attr_radioclass . '" title="' . $option_title . '">
                                         <label><input type="radio" class=" ' . $field_attr_inputclass . '" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$opcion['valor'].'" name="optradio" '.$enabled.'   ' . $required_temporal . '>'.$opcion['enunciado'].'</label>
                                     </div>
                                 ' . "\n";
@@ -307,7 +312,14 @@
                                 }
                                 array_multisort($pos_aux, SORT_ASC, $array_opciones);
                                 $opcion = (array) $array_opciones[$x];
-                                $html = $html . '<div class="checkbox ' . $field_attr_checkclass . '">' . "\n";
+                                
+                                
+                                $option_title = '';
+                                if(array_key_exists('title', $opcion)){
+                                    $option_title = $opcion['title'];
+                                }
+                                
+                                $html = $html . '<div class="checkbox ' . $field_attr_checkclass . '" title="' . $option_title . '" >' . "\n";
 
                                 $option_attr_checkclass = '';
                                 if(array_key_exists('class', $opcion)){
