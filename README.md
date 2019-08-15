@@ -8,7 +8,7 @@ El Módulo ASES permite:
 * Registrar en detalle todo el proceso socioeducativo que se le hace a los beneficiarios del programa.
 * Realizar reportes con el fin de mostrar información relevante respecto a los seguimientos socioeducativos.
 
-## Construido con (Herramientas usadas para el desarrollo)
+## Construido con (Tecnologías usadas para el desarrollo)
 
 * PostgreSQL 9.6 (https://www.postgresql.org/) - Base de datos
 * Apache 2 (https://httpd.apache.org/) - Servidor 
