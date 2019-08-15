@@ -323,8 +323,14 @@
                                 if($valor === $opcion['valor']){
                                     $checked = 'checked';
                                 }
+                                
+                                $option_title = '';
+                                if(array_key_exists('title', $opcion)){
+                                    $option_title = $opcion['title'];
+                                }
+                                
                                 $html = $html .  '
-                                    <div class="radio ' . $field_attr_radioclass . '">
+                                    <div class="radio ' . $field_attr_radioclass . '" title="' . $option_title . '">
                                         <label><input type="radio" class="'.$row->{'mod_id_formulario_pregunta'}.' ' . $field_attr_inputclass . '" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$opcion['valor'].'" name="optradio" '.$enabled.'  '.$checked.' ' . $required_temporal . '>'.$opcion['enunciado'].'</label>
                                     </div>' . "\n";
                                 
@@ -409,7 +415,12 @@
                                     $option_attr_checkclass = $opcion['class'];
                                 }
                                 
-                                $html = $html . '<div class="checkbox ' . $field_attr_checkclass . '">';
+                                $option_title = '';
+                                if(array_key_exists('title', $opcion)){
+                                    $option_title = $opcion['title'];
+                                }
+                                
+                                $html = $html . '<div class="checkbox ' . $field_attr_checkclass . '" title="' . $option_title . '">';
                                 if($number_opciones == 1){
                                     $html = $html . '   <input type="hidden" name="'.$name_checkbox.'" value="'.$valor_marcado.'" '.$enabled.'>';
                                 }
