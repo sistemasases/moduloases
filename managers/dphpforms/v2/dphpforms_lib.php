@@ -1110,11 +1110,25 @@ function dphpformsV2_generate_RADIOBUTTON( $id_formulario_pregunta, $context, $s
     $required_temporal = $field_attr_required;
                       
     $html = $html .  '<div class="opcionesRadio ' .  $field_attr_group_radio_class . '" style="margin-bottom:0.4em">';
+    
+    // Pendiente de pruebas
+    $option_pos = array();
+    foreach ($options as $key => $row){
+        $option_pos[$key] = $row->posicion;
+    }
+    array_multisort($option_pos, SORT_ASC, $options);
+    // Fin del pendiente
+    
     foreach($options as $key => $option){
         $option = (array) $option;
+        
+        $option_title = '';
+        if(array_key_exists('title', $opcion)){
+            $option_title = $opcion['title'];
+        }
 
         $html = $html .  '
-            <div id="'.$id_formulario_pregunta.'" name="'.$id_formulario_pregunta.'" class="radio ' . $field_attr_radioclass . '">
+            <div id="'.$id_formulario_pregunta.'" name="'.$id_formulario_pregunta.'" class="radio ' . $field_attr_radioclass . '" title=' . $option_title . '>
                 <label><input type="radio" class=" ' . $field_attr_inputclass . '" name="'.$id_formulario_pregunta.'" value="'.$option['valor'].'" name="optradio" '.$enabled.'   ' . $required_temporal . '>'.$option['enunciado'].'</label>
             </div>
         ' . "\n";
@@ -1163,10 +1177,24 @@ function dphpformsV2_generate_CHECKBOX( $id_formulario_pregunta, $context, $stat
     if($number_options > 1){
         $name_checkbox = $id_formulario_pregunta . '[]';
     }
+    
+    // Pendiente de pruebas
+    $option_pos = array();
+    foreach ($options as $key => $row){
+        $option_pos[$key] = $row->posicion;
+    }
+    array_multisort($option_pos, SORT_ASC, $options);
+    // Fin del pendiente
 
     foreach( $options as $key => $option ){
         $option = (array) $option;
-        $html = $html . '<div class="checkbox ' . $field_attr_checkclass . '">' . "\n";
+        
+        $option_title = '';
+        if(array_key_exists('title', $opcion)){
+            $option_title = $opcion['title'];
+        }
+        
+        $html = $html . '<div class="checkbox ' . $field_attr_checkclass . '" title="' . $option_title . '">' . "\n";
 
         $option_attr_checkclass = '';
         if(array_key_exists('class', $option)){
