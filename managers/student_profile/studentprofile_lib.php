@@ -320,27 +320,6 @@ function get_ocupaciones()
 }
 
 /**
- * Get municipios registrados
- *
- * @see get_municipios()
- * @return object --> with MUNICIPIOS information
- */
-function get_municipios()
-{
-    global $DB; 
-    $array_departamentos = array ();
-    $sql_query_dpto = "SELECT id, nombre FROM {talentospilos_departamento}";
-    $departamentos  = $DB->get_records_sql($sql_query_dpto);
-    foreach($departamentos as $departamento){
-        $sql_query = "SELECT  id, nombre   FROM {talentospilos_municipio} WHERE cod_depto = $departamento->id";
-        $municipios = $DB->get_records_sql($sql_query);
-        $array_departamentos[$departamento->nombre] =  $municipios;
-    }
-
-   return $array_departamentos;
-}
-
-/**
  * Gets student's city on talentospilos_demografia
  *
  * @see get_id_ciudad_res()

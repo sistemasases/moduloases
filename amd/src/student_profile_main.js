@@ -68,49 +68,16 @@ define(['jquery',
                                 console.log(msg);
 
                                 $.ajax({
-                                    url: "../templates/view_geographic_tab_sp.mustache",//"../templates/geographic_tab2.mustache",//
+                                    url: "../templates/view_geographic_tab_sp.mustache",
                                     data: null,
                                     dataType: "text",
                                     async: false,
                                     success: function( template ){
 
-                                        var url = '../style/student_profile.css';
-                                        $(mustache.parse( template ));
                                         let geographic_tab = $(mustache.render(  template, msg.data_response  ));
                                         $(".tab-content").append( geographic_tab );
-
-                                        if(document.createStyleSheet) {
-                                            try { document.createStyleSheet(url); } catch (e) { }
-                                        }
-                                        else {
-                                            var css;
-                                            css         = document.createElement('link');
-                                            css.rel     = 'stylesheet';
-                                            css.type    = 'text/css';
-                                            css.media   = "all";
-                                            css.href    = url;
-                                            document.getElementsByTagName("head")[0].appendChild(css);
-                                        }
-                                        console.log("completada");
-
-                                        /*
-                                        $.ajax({
-                                            url:"../style/student_profile.css",
-                                            data: null,
-                                            dataType:"text",
-                                            async:false,
-                                            success:function(css){
-                                                console.log(css);
-
-                                                let geographic_tab = $(mustache.render(  template, msg.data_response  ));
-                                                $(".tab-content").append( geographic_tab );
-                                                $("<style></style>").appendTo("#geographic_tab").html(css);
-                                                console.log("completada");
-                                            },
-                                            error: function(){
-                                                console.log("../style/student_profile.css cannot be reached.");
-                                            }
-                                        });*/
+                                        $(".active").removeClass("active");
+                                        $("#geographic_tab").addClass("active");
                                     },
                                     error: function(){
                                         console.log( "../templates/view_geographic_tab_sp.mustache cannot be reached. " );

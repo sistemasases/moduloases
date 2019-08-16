@@ -197,6 +197,27 @@ function student_profile_save_geographic_info($id_ases, $latitude, $longitude, $
 }
 
 /**
+ * Get municipios registrados
+ *
+ * @see student_profile_get_municipios()
+ * @return object --> with MUNICIPIOS information
+ */
+function student_profile_get_municipios()
+{
+    global $DB;
+    $array_departamentos = array ();
+    $sql_query_dpto = "SELECT id, nombre FROM {talentospilos_departamento}";
+    $departamentos  = $DB->get_records_sql($sql_query_dpto);
+    foreach($departamentos as $departamento){
+        $sql_query = "SELECT  id, nombre   FROM {talentospilos_municipio} WHERE cod_depto = $departamento->id";
+        $municipios = $DB->get_records_sql($sql_query);
+        $array_departamentos[$departamento->nombre] =  $municipios;
+    }
+
+    return $array_departamentos;
+}
+
+/**
  * @see student_profile_load_geographic_tab($id_ases)
  * @desc Gets all the geographic information of an student
  * @param $id_ases --> ASES student id
@@ -208,7 +229,8 @@ function student_profile_load_geographic_tab($id_ases){
 
     $geographic_object = get_geographic_info($id_ases);
     $neighborhoods_array = get_neighborhoods();
-    /*$municipios= get_municipios();
+    $municipios= student_profile_get_municipios();
+
     $municipio_student = $geographic_object->id_city;
 
     $options_municipios = '';
@@ -231,9 +253,10 @@ function student_profile_load_geographic_tab($id_ases){
 
         $options_municipios .= "</optgroup>";
     }
-*/
-   // $record->options_municipio_act = $options_municipios;
 
+    $record->options_municipio_act = $options_municipios;
+
+    $record->muni = $municipios;
     $neighborhoods = "<option>No registra</option>";
 
     for ($i = 1; $i <= count($neighborhoods_array); $i++) {
@@ -247,6 +270,9 @@ function student_profile_load_geographic_tab($id_ases){
             $neighborhoods .= "<option value='" . $neighborhoods_array[$i]->id . "'>" . $neighborhoods_array[$i]->nombre . "</option>";
         }
     }
+
+    $record->view_geographic_config_sp = true;
+    $record->update_geographic_tab_sp = true;
 
     $native = $geographic_object->native;
     $live_far_away = $geographic_object->live_far_away;
