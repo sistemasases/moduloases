@@ -33,15 +33,6 @@
                     </div>
                 </div>
 
-                <div class="row" style="padding-top: 10px;">
-                    <label for="input-dir-res" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Dirección
-                        residencia</label>
-                    <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab" id="div-input-dir-res">
-                        <input type="text" class="input_fields_general_tab" name="direccion_res" id="direccion_res"
-                            value="{{res_address}}" maxlength="100" readonly>
-                    </div>
-                </div>
-
                 <div class="row">
                     <label for="tel_res" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Teléfono
                         residencia</label>
@@ -50,6 +41,7 @@
                             maxlength="15">
                     </div>
                 </div>
+
                 <div class="row">
                     <label for="tel3" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Celular</label>
                     <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab" id="div-input-cellphone">
@@ -57,6 +49,7 @@
                             maxlength="15">
                     </div>
                 </div>
+
                 <div class="row">
                     <label for="email_alt" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Email
                         alternativo</label>
@@ -66,13 +59,12 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <label for="pais" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">País de
-                        origen </label>
-                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 div_select" id="div_pais">
-                        <select id="pais" name="pais"  style="width: 105%;" disabled>
-                            {{{options_pais}}}
-                        </select>
+                <div class="row" style="padding-top: 10px;">
+                    <label for="input-dir-res" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Dirección
+                        residencia</label>
+                    <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab" id="div-input-dir-res">
+                        <input class="" name="direccion_res" id="direccion_res"
+                               value="{{res_address}}" maxlength="100" readonly>
                     </div>
                 </div>
 
@@ -80,8 +72,16 @@
                     <label for="input-municipio_act" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Municipio
                         actual</label>
                     <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab" id="div-input-municipio_act">
-                        <select id="municipio_act" name="municipio_act" disabled style="width: 70%;">
-                            {{{options_municipio_act}}}
+                        <input id="municipio_act" name="municipio_act" style="width: 70%;" value="{{municipio_act}}" readonly>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <label for="pais" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">País de
+                        origen </label>
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 div_select" id="div_pais">
+                        <select id="pais" name="pais"  style="width: 105%;" disabled>
+                            {{{options_pais}}}
                         </select>
                     </div>
                 </div>
@@ -228,17 +228,15 @@
                     </div>
                 </div>
                 {{/flag_with_assignation}}
-                
 
             </div>
 
         </div>
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" id="second_column_general_tab">
-            <div class="row" id="mapa">
-
+            <div id="movableMap">
+                <div class="row" id="mapa">
+                </div>
             </div>
-
-
 
             <h3 class="h-sections-general-tab2">PERSONAS CON QUIEN VIVE</h3>
             <hr class="hr-general-tab-fields">

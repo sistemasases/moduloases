@@ -66,6 +66,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                 ' cellspacing="0" width="100%"><thead> </thead></table>');
 
             $("#tableResultStudent").DataTable(data);
+            console.log(data);
 
         },
         load_total_table: function (data) {
@@ -75,6 +76,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                 ' cellspacing="0" width="100%"><thead> </thead></table>');
 
             $("#tableResultTotal").DataTable(data);
+            console.log(data);
         }
     };
 

@@ -29,6 +29,16 @@ define(
             var email = "";
             var namerol = "";
             var current_semester = parseInt($("#current_ases_semester").data("info"));
+            
+            $("#msg-cache").click(function(){
+                
+                swal({
+                    title: "¡Información!",
+                    text: "Está observando una versión reciente del conteo, más no una versión en vivo. El conteo se actualizará en un intervalo de tiempo no mayor a 30 minutos.",
+                    type: 'info'
+                });                
+                
+            });
 
 
              /**
@@ -253,7 +263,7 @@ define(
                 } else if (namerol == "profesional_ps") {
                     //Starts adding event
                     put_tracking_count( username, current_semester, parseInt( get_instance() ), false );
-                    onsultar_seguimientos_persona(get_instance(), usuario, username);
+                    consultar_seguimientos_persona(get_instance(), usuario, username);
                     send_email_new_form(get_instance());
 
                     // when user is 'monitor' then has permissions

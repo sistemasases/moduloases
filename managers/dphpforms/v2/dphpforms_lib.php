@@ -1110,11 +1110,25 @@ function dphpformsV2_generate_RADIOBUTTON( $id_formulario_pregunta, $context, $s
     $required_temporal = $field_attr_required;
                       
     $html = $html .  '<div class="opcionesRadio ' .  $field_attr_group_radio_class . '" style="margin-bottom:0.4em">';
+    
+    // Pendiente de pruebas
+    $option_pos = array();
+    foreach ($options as $key => $row){
+        $option_pos[$key] = $row->posicion;
+    }
+    array_multisort($option_pos, SORT_ASC, $options);
+    // Fin del pendiente
+    
     foreach($options as $key => $option){
         $option = (array) $option;
+        
+        $option_title = '';
+        if(array_key_exists('title', $opcion)){
+            $option_title = $opcion['title'];
+        }
 
         $html = $html .  '
-            <div id="'.$id_formulario_pregunta.'" name="'.$id_formulario_pregunta.'" class="radio ' . $field_attr_radioclass . '">
+            <div id="'.$id_formulario_pregunta.'" name="'.$id_formulario_pregunta.'" class="radio ' . $field_attr_radioclass . '" title=' . $option_title . '>
                 <label><input type="radio" class=" ' . $field_attr_inputclass . '" name="'.$id_formulario_pregunta.'" value="'.$option['valor'].'" name="optradio" '.$enabled.'   ' . $required_temporal . '>'.$option['enunciado'].'</label>
             </div>
         ' . "\n";
@@ -1163,10 +1177,24 @@ function dphpformsV2_generate_CHECKBOX( $id_formulario_pregunta, $context, $stat
     if($number_options > 1){
         $name_checkbox = $id_formulario_pregunta . '[]';
     }
+    
+    // Pendiente de pruebas
+    $option_pos = array();
+    foreach ($options as $key => $row){
+        $option_pos[$key] = $row->posicion;
+    }
+    array_multisort($option_pos, SORT_ASC, $options);
+    // Fin del pendiente
 
     foreach( $options as $key => $option ){
         $option = (array) $option;
-        $html = $html . '<div class="checkbox ' . $field_attr_checkclass . '">' . "\n";
+        
+        $option_title = '';
+        if(array_key_exists('title', $opcion)){
+            $option_title = $opcion['title'];
+        }
+        
+        $html = $html . '<div class="checkbox ' . $field_attr_checkclass . '" title="' . $option_title . '">' . "\n";
 
         $option_attr_checkclass = '';
         if(array_key_exists('class', $option)){
@@ -1553,6 +1581,131 @@ function dphpformsV2_get_json_xquery( $query ){
     }
     
     return json_encode( $_xquery );
+    
+}
+
+/**
+ * Function that given a record id, return its history. 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @param integer $record_id
+ * @return array History.
+ */
+function dphpformsV2_get_record_history( $record_id ){
+    
+    if( !is_numeric( $record_id ) ){
+        throw new Exception( "Invalid record id", -1 );
+    }
+    
+    global $DB;
+    
+    $query = "
+        SELECT 
+            * 
+        FROM 
+            {talentospilos_df_dwarehouse}
+        WHERE 
+            id_registro_respuesta_form = '$record_id'
+        ORDER BY 
+            fecha_hora_registro ASC";
+    
+    $history = $DB->get_records_sql( $query );
+    
+    return $history;
+    
+}
+
+/**
+ * Function that given a record id, return its history. 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @see dphpformsV2_get_record_history(...) in this file.
+ * @param integer $record_id
+ * @return array History.
+ */
+function dphpformsV2_get_pretty_record_history( $record_id ){
+       
+    $history = dphpformsV2_get_record_history( $record_id );
+    return array_values(array_filter(array_map(function($in){
+        
+        global $DB;
+        
+        if( strpos($in->accion, "PRE-") !== false ){
+            return NULL;
+        }
+        
+        $user_id = $in->id_usuario_moodle;
+        
+        unset( $in->datos_previos );
+        unset( $in->datos_enviados );
+        unset( $in->datos_almacenados );
+        unset( $in->dts_retorno );
+        unset( $in->navegador );
+        unset( $in->id_usuario_moodle );
+        unset( $in->url_request );
+        unset( $in->id );
+        unset( $in->id_registro_respuesta_form );
+        
+        $query = "
+            SELECT 
+                CONCAT( firstname, ' ', lastname ) AS fullname 
+            FROM 
+                {user}
+            WHERE 
+                id = $user_id";
+        
+        $user = $DB->get_record_sql( $query );
+        
+        $in->usuario_moodle = $user->fullname;
+        
+        $y = date("Y",  strtotime($in->fecha_hora_registro));
+        $m = date("m",  strtotime($in->fecha_hora_registro));
+        $d = date("d",  strtotime($in->fecha_hora_registro));
+        $time = date("h:i:s a",  strtotime($in->fecha_hora_registro));
+        
+        switch ($m){
+            case 1:
+                $m = "enero";
+                break;
+            case 2:
+                $m = "febrero";
+                break;
+            case 3:
+                $m = "marzo";
+                break;
+            case 4:
+                $m = "abril";
+                break;
+            case 5:
+                $m = "mayo";
+                break;
+            case 6:
+                $m = "junio";
+                break;
+            case 7:
+                $m = "julio";
+                break;
+            case 8:
+                $m = "agosto";
+                break;
+            case 9:
+                $m = "septiembre";
+                break;
+            case 10:
+                $m = "octubre";
+                break;
+            case 11:
+                $m = "noviembre";
+                break;
+            case 12:
+                $m = "diciembre";
+                break;
+        }
+            
+        
+        $in->fecha_hora_registro = "$d de $m de $y - Hora $time";
+        
+        return $in;
+        
+    }, $history)));
     
 }
 

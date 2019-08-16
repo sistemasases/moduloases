@@ -63,9 +63,11 @@ if (isset($_POST['type']) && $_POST['type'] == "user_specific_counting" && isset
         $user = $_POST['user'];
     }
     
-    $role = get_id_rol_($user, $_POST['instance']);
-    $role_name = get_name_rol($role);
+    
+    
     $current_semester = get_current_semester();
+    $role = get_id_rol_v2($user, $_POST['instance'], $current_semester->max);
+    $role_name = get_name_rol($role);
     $array_final = null;
 
     if($role_name == 'profesional_ps'){

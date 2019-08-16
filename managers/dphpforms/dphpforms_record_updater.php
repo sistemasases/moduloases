@@ -311,16 +311,26 @@
                             */
                             $required_temporal = $field_attr_required;
                             for($x = 0; $x < $number_opciones; $x++){
-                                $opcion = (array) $array_opciones[$x];
-
                                 
+                                $pos_aux = array();
+                                foreach ($array_opciones as $key => $row){
+                                    $pos_aux[$key] = $row->posicion;
+                                }
+                                array_multisort($pos_aux, SORT_ASC, $array_opciones);
+                                $opcion = (array) $array_opciones[$x];
 
                                 $checked = null;
                                 if($valor === $opcion['valor']){
                                     $checked = 'checked';
                                 }
+                                
+                                $option_title = '';
+                                if(array_key_exists('title', $opcion)){
+                                    $option_title = $opcion['title'];
+                                }
+                                
                                 $html = $html .  '
-                                    <div class="radio ' . $field_attr_radioclass . '">
+                                    <div class="radio ' . $field_attr_radioclass . '" title="' . $option_title . '">
                                         <label><input type="radio" class="'.$row->{'mod_id_formulario_pregunta'}.' ' . $field_attr_inputclass . '" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$opcion['valor'].'" name="optradio" '.$enabled.'  '.$checked.' ' . $required_temporal . '>'.$opcion['enunciado'].'</label>
                                     </div>' . "\n";
                                 
@@ -381,7 +391,11 @@
                             }
                             
                             for($x = 0; $x < $number_opciones; $x++){
-
+                                $pos_aux = array();
+                                foreach ($array_opciones as $key => $row){
+                                    $pos_aux[$key] = $row->posicion;
+                                }
+                                array_multisort($pos_aux, SORT_ASC, $array_opciones);
                                 $opcion = (array) $array_opciones[$x];
                                 if($number_opciones > 1){
                                     $valores_marcados = json_decode($valor);
@@ -401,7 +415,12 @@
                                     $option_attr_checkclass = $opcion['class'];
                                 }
                                 
-                                $html = $html . '<div class="checkbox ' . $field_attr_checkclass . '">';
+                                $option_title = '';
+                                if(array_key_exists('title', $opcion)){
+                                    $option_title = $opcion['title'];
+                                }
+                                
+                                $html = $html . '<div class="checkbox ' . $field_attr_checkclass . '" title="' . $option_title . '">';
                                 if($number_opciones == 1){
                                     $html = $html . '   <input type="hidden" name="'.$name_checkbox.'" value="'.$valor_marcado.'" '.$enabled.'>';
                                 }

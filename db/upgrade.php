@@ -4,7 +4,8 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     $dbman = $DB->get_manager();
     $result = true;
-    if ($oldversion < 2019061613560 ) {
+
+    if ($oldversion < 2019080109210 ) {
       
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
@@ -3806,11 +3807,77 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->add_field($table, $field);
         }
 
-        upgrade_block_savepoint(true, 2019061613560, 'ases');
+        //*****************************************************************************************//
+        // Creación de campos: Se crean campos necesarios para la tabla talentospilos_demografia   //
+        // Versión: 2019060608360                                                                  //
+        //*****************************************************************************************//
+
+        // Define field id_ciudad to be added to talentospilos_demografia.
+        $table = new xmldb_table('talentospilos_demografia');
+        $field = new xmldb_field('id_ciudad', XMLDB_TYPE_INTEGER, '10', null, null, null, '1', 'barrio');
+
+        // Conditionally launch add field id_ciudad.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field direccion to be added to talentospilos_demografia.
+        $table = new xmldb_table('talentospilos_demografia');
+        $field = new xmldb_field('direccion', XMLDB_TYPE_TEXT, null, null, null, null, null, 'id_ciudad');
+
+        // Conditionally launch add field direccion.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field vive_lejos to be added to talentospilos_demografia.
+        $table = new xmldb_table('talentospilos_demografia');
+        $field = new xmldb_field('vive_lejos', XMLDB_TYPE_BINARY, null, null, null, null, null, 'direccion');
+
+        // Conditionally launch add field vive_lejos.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field vive_zona_riesgo to be added to talentospilos_demografia.
+        $table = new xmldb_table('talentospilos_demografia');
+        $field = new xmldb_field('vive_zona_riesgo', XMLDB_TYPE_BINARY, null, null, null, null, null, 'vive_lejos');
+
+        // Conditionally launch add field vive_zona_riesgo.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field origen to be added to talentospilos_demografia.
+        $table = new xmldb_table('talentospilos_demografia');
+        $field = new xmldb_field('nativo', XMLDB_TYPE_INTEGER, '1', null, null, null, null, 'vive_zona_riesgo');
+
+        // Conditionally launch add field origen.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field nivel_riesgo to be added to talentospilos_demografia.
+        $table = new xmldb_table('talentospilos_demografia');
+        $field = new xmldb_field('nivel_riesgo', XMLDB_TYPE_INTEGER, '1', null, null, null, null, 'origen');
+
+        // Conditionally launch add field nivel_riesgo.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field observaciones to be added to talentospilos_demografia.
+        $table = new xmldb_table('talentospilos_demografia');
+        $field = new xmldb_field('observaciones', XMLDB_TYPE_TEXT, null, null, null, null, null, 'nivel_riesgo');
+
+        // Conditionally launch add field observaciones.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_block_savepoint(true, 2019080109210, 'ases');
         return $result;
 
     }
 }
-
-
 ?>

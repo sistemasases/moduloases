@@ -279,7 +279,7 @@ function periods_get_current_semester(){
  * @param $name -> name of the semester
  * @param $beginning_date -> semester's starting date
  * @param $ending_date -> semester's ending date
- * @return string
+ * @return number
  */
 
  function create_semester($name, $beginning_date, $ending_date){

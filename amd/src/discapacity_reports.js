@@ -28,7 +28,6 @@ define([
             loading_indicator.show();
             $(".bt_students_data").click(function(){
 
-
                 var icon = $(this).children("span");
 
                 if (icon.hasClass('glyphicon-chevron-right')) {
@@ -54,7 +53,7 @@ define([
                 // Obtenemos la primer columna de la fila seleccionada
                 // seleccionada
                id =  $(this).parents("tr").find("td:first").html();
-                 
+
                // alert(valores);
                 get_others_data_discapacity(id);
 
@@ -85,7 +84,7 @@ define([
                 });
                 get_data_to_graphic();
 
-        });
+            });
 
             function get_others_data_discapacity(id){
                 //Get one form switch id
@@ -215,14 +214,8 @@ define([
                     data: data,
                     options: chart_options
                 }
-                   
-                 
-
             );
-
-            } 
-
-}
-
+        } 
+    }
 };
 });

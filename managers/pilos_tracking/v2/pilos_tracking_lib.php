@@ -507,20 +507,20 @@ function cache_generator( $semester_id, $instance  ){
 
     $index = [];
     $count = [];
-
+    
     foreach ($asignation as $key => $asig) {
         $index[$asig->codigo_ases] = $asig;
         if( !array_key_exists($count, $asig->moodle_id_profesional) ){
-            $count = array_merge($count, init_count($asig->moodle_id_profesional));
+            init_count($count, $asig->moodle_id_profesional);
         }
         if( !array_key_exists($count, $asig->moodle_id_practicante) ){
-            $count = array_merge($count, init_count($asig->moodle_id_practicante));
+            init_count($count, $asig->moodle_id_practicante);
         }
         if( !array_key_exists($count, $asig->moodle_id_monitor) ){
-            $count = array_merge($count, init_count($asig->moodle_id_monitor));
+            init_count($count, $asig->moodle_id_monitor);
         }
         if( !array_key_exists($count, "A".$asig->codigo_ases) ){
-            $count = array_merge($count, init_count("A".$asig->codigo_ases));
+           init_count($count, "A".$asig->codigo_ases);
         }
     }
 
@@ -616,8 +616,8 @@ function addToCounter1( $username, $key, &$count, &$index ){
     }
 }
 
-function init_count( $asig_key ) {
-    $count = [];
+function init_count( &$count, $asig_key ) {    
+    
     $count[$asig_key]['revisado_profesional'] = 0;
     $count[$asig_key]['not_revisado_profesional'] = 0;
     $count[$asig_key]['revisado_practicante'] = 0;
@@ -629,7 +629,7 @@ function init_count( $asig_key ) {
     $count[$asig_key]['in_revisado_practicante'] = 0;
     $count[$asig_key]['in_not_revisado_practicante'] = 0;
     $count[$asig_key]['in_total_profesional'] = 0;
-    return $count;
+    
 }
 
 ?>

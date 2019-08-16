@@ -285,7 +285,8 @@ function create_menu_options($userid, $blockid, $courseid)
 
             }
 
-            if ($function == 'not_assigned_students') {
+            //@deprecated
+            /*if ($function == 'not_assigned_students') {
                 $url = new moodle_url("/blocks/ases/view/not_assigned_students.php", array(
                     'courseid' => $courseid,
                     'instanceid' => $blockid,
@@ -294,7 +295,7 @@ function create_menu_options($userid, $blockid, $courseid)
                 $menu_options = '<a id="menu_not_assigned_students" href= "' . $url . '"> Estudiantes sin asignar </a>';
                 $academic_options['Estudiantes sin asignar'] = $menu_options;
 
-            }
+            }*/
 
             if ($function == 'dphpforms_reports') {
                 $url = new moodle_url("/blocks/ases/view/dphpforms_reports.php", array(
@@ -328,7 +329,6 @@ function create_menu_options($userid, $blockid, $courseid)
                 $soc_ed_options['Estudiantes sin seguimientos '] = $menu_options;
 
             }
-
 
             if ($function == 'backup_forms') {
                 $url = new moodle_url("/blocks/ases/view/backup_forms.php", array(

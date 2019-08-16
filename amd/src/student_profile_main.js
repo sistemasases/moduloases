@@ -19,6 +19,8 @@ define(['jquery',
 
         return {
             init: function (data_init) {
+                var self = this;
+
                 //Validar si en las cohortes hay una condición de excepción
                 $("#cohorts_table tbody").find("td").each(function () {
                     if ($(this).text().indexOf("Condición de Excepción") != -1) {
@@ -32,11 +34,11 @@ define(['jquery',
 
                 // Agrega iframe para Google Maps
 
-                var ciudad_est = document.getElementById('municipio_act').value;
+                var ciudad_est = $('#municipio_act').val();
                 var latitude = $('#latitude').val();
                 var longitude = $('#longitude').val();
 
-                if (ciudad_est == 1079) {
+                if (ciudad_est == 'CALI') {
 
                     document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=transit'></iframe>";
 
@@ -45,6 +47,23 @@ define(['jquery',
                     document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=driving'></iframe>";
                 }
 
+                /**
+                 * Evento que mueve el mapa de Google Maps de la
+                 * pestaña "General" a "Geografico".
+                 */
+                $("#geographic_li").click(function () {
+
+                    $("#mapa").appendTo("#geographic_map");
+                });
+
+                /**
+                 * Evento que mueve el mapa de Google Maps de la
+                 * pestaña "Geografico" a "General".
+                 */
+                $("#general_li").click(function () {
+
+                    $("#mapa").appendTo("#movableMap");
+                });
 
                 // Carga una determinada pestaña
 
@@ -53,7 +72,6 @@ define(['jquery',
                 $(document).on('click', '#table_vive_con tbody tr td button', function () {
                     $(this).parent().parent().remove();
                 });
-
 
                 /**
                  * Funcion para añadir una nueva fila en la tabla
@@ -73,8 +91,6 @@ define(['jquery',
 
                 var parameters = get_url_parameters(document.location.search);
                 var panel_collapse = $('.panel-collapse.collapse.in');
-
-                var self = this;
 
                 // Select search
                 $("#asignados").select2({
@@ -268,19 +284,24 @@ define(['jquery',
                         $('#lb_otro').show();
                         $('#div_otro_genero').show();
                     }
+
                     if (document.getElementById("act_simultanea").value == 0) {
                         $('#lb_otro_act').show();
                         $('#div_otro_act').show();
                     }
 
-
                     var heights = $(".equalize").map(function () {
                         return $(this).height();
                     }).get(),
-
                         maxHeight = Math.max.apply(null, heights);
 
                     $(".equalize").height(maxHeight);
+
+                    $("#birthdate").datepicker({
+                        dateFormat: "yy-mm-dd",
+                        changeYear: true,
+                        changeMonth: true,
+                    });
                 });
             }, update_status_program: function (current_status, element) {
 
@@ -655,11 +676,10 @@ define(['jquery',
             }, edit_profile: function (object_function) {
 
                 var form_wihtout_changes = $('#ficha_estudiante').serializeArray();
+                console.log(form_wihtout_changes);
+
                 var update_or_insert1 = document.getElementById("otro_genero").value;
                 var update_or_insert2 = document.getElementById("otro_act_simultanea").value;
-                // var json_personas_incial = document.getElementById("vive_con").value;
-
-                var marker;
 
                 $('#span-icon-edit').on('click', function () {
                     $(this).hide();
@@ -678,7 +698,6 @@ define(['jquery',
                     $('#cond_excepcion').prop('disabled', false);
                     $('#act_simultanea').prop('disabled', false);
                     $('#etnia').prop('disabled', false);
-                    $('#municipio_act').prop('disabled', false);
                     $('#otro_act_simultanea').prop('disabled', false);
                     $('#otro_genero').prop('disabled', false);
                     $('#otro_genero').prop('required', false);
@@ -691,79 +710,9 @@ define(['jquery',
                     $('.input-tracking').prop('disabled', false);
                     $('#div_add_persona_vive').show();
                     $('#edit_person_vive').show();
+                    $('#age').hide();
+                    $('#birthdate').show();
                     //$('#edit_institucion').show();
-
-                    document.getElementById('mapa').innerHTML = "";
-
-                    var latitude = $('#latitude').val();
-                    var longitude = $('#longitude').val();
-                    var id_ases = $('#id_ases').val();
-                    var neighborhood = $('#select_neighborhood').val();
-                    var geographic_risk = $('#select_geographic_risk').val();
-
-                    var map;
-                    var geocoder;
-                    var infoWindow;
-
-                    var latLng = new google.maps.LatLng(3.3759493, -76.5355789);
-                    var opciones = {
-                        center: latLng,
-                        zoom: 14
-                    };
-                    var map = new google.maps.Map(document.getElementById('mapa'), opciones);
-
-                    var initial_marker = new google.maps.Marker({
-                        position: {
-                            lat: 3.3759493,
-                            lng: -76.5355789
-                        },
-                        map: map,
-                        title: 'Universidad del Valle'
-                    });
-
-                    var new_infowindow = new google.maps.InfoWindow();
-                    new_infowindow.setContent("Universidad del Valle");
-                    new_infowindow.open(map, initial_marker);
-
-                    marker = new google.maps.Marker({
-                        position: {
-                            lat: parseFloat(latitude),
-                            lng: parseFloat(longitude)
-                        },
-                        map: map
-                    });
-
-                    geocoder = new google.maps.Geocoder();
-                    infowindow = new google.maps.InfoWindow();
-
-                    infowindow.setContent("Residencia Estudiante");
-                    infowindow.open(map, marker);
-
-                    google.maps.event.addListener(map, 'click', function (event) {
-                        geocoder.geocode({
-                            'latLng': event.latLng
-                        },
-                            function (results, status) {
-                                if (status == google.maps.GeocoderStatus.OK) {
-                                    if (results[0]) {
-                                        if (marker) {
-                                            marker.setPosition(event.latLng);
-                                        } else {
-                                            marker = new google.maps.Marker({
-                                                position: event.latLng,
-                                                map: map
-                                            });
-                                        }
-                                        infowindow.setContent(results[0].formatted_address + '<br/> Coordenadas: ' + results[0].geometry.location);
-                                        infowindow.open(map, marker);
-                                    } else {
-                                        console.log("No se encontraron resultados");
-                                    }
-                                } else {
-                                    console.log("Geocodificación  ha fallado debido a: " + status);
-                                }
-                            });
-                    });
 
                     $('#genero').on('click', function () {
                         if ((document.getElementById("genero").value) == 0) {
@@ -801,19 +750,17 @@ define(['jquery',
                         closeOnConfirm: true,
                         allowEscapeKey: false
 
-                    },
-                        function (isConfirm) {
-                            if (isConfirm) {
-                                object_function.cancel_edition();
-                                object_function.revert_changes(data.data.form);
-                            }
-                        });
+                    }, function (isConfirm) {
+                        if (isConfirm) {
+                            object_function.cancel_edition();
+                            object_function.revert_changes(data.data.form);
+                        }
+                    });
                 });
 
                 $('#span-icon-save-profile').on('click', function () {
 
                     var form_with_changes = $('#ficha_estudiante').serializeArray();
-
 
                     var result_validation = object_function.validate_form(form_with_changes);
 
@@ -842,7 +789,7 @@ define(['jquery',
                             data_persons.push(objeto);
                         }
                         data_persons = JSON.stringify(data_persons);
-                        object_function.save_form_edit_profile(form_with_changes, object_function, update_or_insert1, update_or_insert2, data_persons, marker);
+                        object_function.save_form_edit_profile(form_with_changes, object_function, update_or_insert1, update_or_insert2, data_persons);
                         $('#otro_genero').prop('disabled', true);
                         $('#otro_act_simultanea').prop('disabled', true);
                         $('#otro_genero').prop('required', false);
@@ -864,9 +811,9 @@ define(['jquery',
                         case "email":
 
                             let regexemail = /((?:[a-z]+\.)*[a-z]+(?:@correounivalle\.edu\.co))/;
-                            //console.log(form[field].value);
+                            
                             let validate_email = regexemail.exec(form[field].value);
-                            //console.log(validate_email);
+
 
                             if (validate_email !== null) {
                                 if (!(validate_email[0] === form[field].value)) {
@@ -881,18 +828,27 @@ define(['jquery',
                                 msg.msg = "El campo " + form[field].name + " no cumple con el formato institucional.";
                                 return msg;
                             }
+                            break;
+                        case "fecha_nac":
 
-                            // if (!validate_email) {
-                            //     msg.title = "Error";
-                            //     msg.status = "error";
-                            //     msg.msg = "El campo " + form[field].name + " no cumple con el formato institucional.";
-                            //     return msg;
-                            // }
+                            let regexDateWithTime = /^((19[5-9][0-9]|20[0-5][0-9])-(1[012]|0?[1-9])-([12][0-9]|3[01]|0?[1-9]) 00:00:00)$/;
+                            let regexDateWithoutTime = /^((19[5-9][0-9]|20[0-5][0-9])-(1[012]|0?[1-9])-([12][0-9]|3[01]|0?[1-9]))$/;
 
+                            let validateDateWithTime = regexDateWithTime.exec(form[field].value);
+                            let validateDateWithoutTime = regexDateWithoutTime.exec(form[field].value);
 
+                            if (validateDateWithTime == null) {
+                                if(validateDateWithoutTime == null){
+                                    msg.title = "Error";
+                                    msg.status = "error";
+                                    msg.msg = "El campo " + form[field].name + " no cumple con el formato de fecha aceptado (yyyy-mm-dd).";
+                                    return msg;
+                                } else{
+                                    form[field].value +=" 00:00:00";
+                                }
+                            }
                             break;
                         case "estrato":
-
 
                             if (form[field].value < 0) {
                                 msg.title = "Error";
@@ -1056,7 +1012,7 @@ define(['jquery',
                 };
 
                 return msg;
-            }, save_form_edit_profile: function (form, object_function, control1, control2, json, marker) {
+            }, save_form_edit_profile: function (form, object_function, control1, control2, json) {
 
                 $.ajax({
                     type: "POST",
@@ -1088,123 +1044,7 @@ define(['jquery',
                     },
                 });
 
-                var ciudad = document.getElementById("municipio_act");
-                var selectedCity = ciudad.options[ciudad.selectedIndex].text;
-                var direccion = document.getElementById('direccion_res').value;
-                var query = direccion + " " + selectedCity;
-                console.log("Query: " + query);
-
-                var request = {
-                    query: query,
-                    fields: ['photos', 'formatted_address', 'name', 'rating', 'opening_hours', 'geometry'],
-                };
-
-                var map = document.getElementById('mapa');
-                service = new google.maps.places.PlacesService(map);
-                service.findPlaceFromQuery(request, callback);
-
-                function callback(results, status) {
-                    var place;
-
-                    if (results != null) {
-                        for (var i = 0; i < results.length; i++) {
-                            place = results[i];
-                            break;
-                        }
-                    }
-
-                    save_lat_lng(place);
-                }
-
-                function save_lat_lng(destination) {
-
-                    var latitude;
-                    var longitude;
-
-                    if (destination != null) {
-                        latitude = destination.geometry.location.lat();
-                        longitude = destination.geometry.location.lng();
-                    } else {
-
-                        latitude = marker.getPosition().lat();
-                        longitude = marker.getPosition().lng();
-                    }
-
-                    var id_ases = $('#id_ases').val();
-                    var neighborhood = $('#select_neighborhood').val();
-                    var geographic_risk = $('#select_geographic_risk').val();
-                    var ciudad_act = document.getElementById("municipio_act").value;
-
-                    var directionsService = new google.maps.DirectionsService();
-
-                    var second_request;
-
-                    if (ciudad_act == 1079) {
-
-                        document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=transit' allowfullscreen></iframe>";
-
-                        second_request = {
-                            origin: { lat: latitude, lng: longitude },
-                            destination: { lat: 3.3759493, lng: -76.5355789 },
-                            travelMode: 'TRANSIT'
-                        };
-
-                    } else {
-
-                        document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=driving' allowfullscreen></iframe>";
-
-                        second_request = {
-                            origin: { lat: latitude, lng: longitude },
-                            destination: { lat: 3.3759493, lng: -76.5355789 },
-                            travelMode: 'DRIVING'
-                        };
-                    }
-
-                    directionsService.route(second_request, function (response, status) {
-
-                        var distance = response.routes[0].legs[0].distance.value;
-
-                        var duration = response.routes[0].legs[0].duration.value;
-
-                        $.ajax({
-                            type: "POST",
-                            data: {
-                                func: 'save_geographic_info',
-                                id_ases: id_ases,
-                                latitude: latitude,
-                                longitude: longitude,
-                                neighborhood: neighborhood,
-                                geographic_risk: geographic_risk,
-                                duration: duration,
-                                distance: distance
-                            },
-                            url: "../managers/student_profile/geographic_serverproc.php",
-                            success: function (msg) {
-
-                                console.log(msg);
-                                //swal(
-                                //    msg.title,
-                                //    msg.text,
-                                //    msg.type);
-                            },
-                            dataType: "json",
-                            cache: "false",
-                            error: function (msg) {
-
-                                console.log(msg);
-                                //swal(
-                                //    msg.title,
-                                //    msg.text,
-                                //    msg.type);
-                            },
-                        });
-
-                    });
-
-                }
-
                 object_function.cancel_edition();
-
             }, cancel_edition: function () {
 
                 // Deshabilitar campos para el ingreso de datos
@@ -1224,7 +1064,6 @@ define(['jquery',
                 $('#cond_excepcion').prop('disabled', true);
                 $('#act_simultanea').prop('disabled', true);
                 $('#etnia').prop('disabled', true);
-                $('#municipio_act').prop('disabled', true);
                 $('#estado_civil').prop('disabled', true);
                 $('#pais').prop('disabled', true);
                 $('#observacion').prop('readonly', true);
@@ -1232,6 +1071,8 @@ define(['jquery',
                 $('.input_fields_general_tab').prop('readonly', true);
                 $('.input-tracking').prop('disabled', true);
                 $(".bt_delete_person").css("visibility", "hidden");
+                $('#age').show();
+                $('#birthdate').hide();
 
             }, revert_changes: function (form) {
                 // Revertir cualquier cambio después de cancelar la edición
@@ -1241,7 +1082,6 @@ define(['jquery',
                 location.reload(true);
             }
         };
-
 
         // Funciones para la validación de formularios
         function has_letters(str) {
@@ -2205,9 +2045,6 @@ define(['jquery',
         function procesarJSON() {
             // Asignación de gráficas y manejo del JSON para graficar
 
-
-
-
             for (var i = 0; i < Object.keys(datos['informacion']).length; i++) {
                 var arregloDimensionTmp = [];
                 var nombreDimensionTmp;
@@ -2278,5 +2115,4 @@ define(['jquery',
                 }
             });
         };
-
     });
