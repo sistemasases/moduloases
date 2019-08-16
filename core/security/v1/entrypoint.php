@@ -514,23 +514,22 @@ function secure_assign_role_to_user_previous_system( $user_id, $role, $singulari
     }
 
     $role_id = -1;
-
+    
     switch ( gettype( $role ) ) {
     	case 'string':
-    		$role_id = _core_security_get_previous_system_role( $role );
-    		break;
+            $role_id = _core_security_get_previous_system_role( $role )['id'];
+            break;
     	case 'object':
-    		$role_id = $role->id;
-    		break;
+            $role_id = $role->id;
+            break;
     	case 'integer':
-    		break;
+            break;
     	default:
-    		throw new Exception( "role must be an id, role alias or role obj", -2 );
-    		break;
+            throw new Exception( "role must be an id, role alias or role obj", -2 );
     }
     
     if( !isset($singularizator['id_semestre']) ){
-		$singularizator['id_semestre'] = core_periods_get_current_period()->id;
+        $singularizator['id_semestre'] = core_periods_get_current_period()->id;
     }
 
     if( !_core_user_asigned_in_previous_system( $user_id, $role, $singularizator ) ){
