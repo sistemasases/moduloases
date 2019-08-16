@@ -61,8 +61,13 @@ global $USER;
 include "../classes/output/student_profile_page.php";
 include "../classes/output/renderer.php";
 
+
+
 $new_forms_date =strtotime('2018-01-01 00:00:00');
 
+
+
+//$initial_date = date('H:i:s.u');
 // Set up the page.
 $title = "Ficha estudiante";
 $pagetitle = $title;
@@ -235,7 +240,7 @@ if ($student_code != 0) {
     $record->puntaje_icfes = $ases_student->puntaje_icfes;
     $record->ingreso = $ases_student->anio_ingreso;
     $record->estrato = $ases_student->estrato;
-    $record->res_address = get_res_address($student_id);
+
     $record->init_tel = $ases_student->tel_ini;
     $record->res_tel = $ases_student->tel_res;
     $record->cell_phone = $ases_student->celular;
@@ -338,39 +343,11 @@ if ($student_code != 0) {
 
     $record->options_pais = $options_pais;
 
+    $record->municipio_act = get_ciudad_res($student_id);
 
-    //TRAE MUNICIPIOS
-    $municipios= get_municipios();
-    $municipio_student = get_id_cuidad_res($student_id);
-    $options_municipios = '';
-
-    $options_municipios .= "<optgroup label='Populares'> <option value='1'>NO DEFINIDO</option> </optgroup>" ;   
-
-    foreach($municipios as $municipio){
-        $key = key($municipios);
-        $options_municipios .= "<optgroup label = '$key'>";
-
-        foreach($municipio as $mun){
-            if($municipio_student == $mun->id){
-                $options_municipios .= "<option value='$mun->id' selected='selected'>$mun->nombre</option>";
-                $record->municipio_act = $mun->nombre;
-            }else{
-                $options_municipios .= "<option value='$mun->id'>$mun->nombre</option>";
-            }
-        }
-
-        next($municipios);
-
-        $options_municipios .= "</optgroup>";
-    }
-
-    $record->options_municipio_act = $options_municipios;
-
-
-         //TRAE ETNIAS
+    //TRAE ETNIAS
     $etnias= get_etnias();
     $options_etnia = '';
-    
 
     $etnia_student = $ases_student->id_etnia;
 
@@ -622,42 +599,13 @@ if ($student_code != 0) {
 
     $geographic_object = student_profile_load_geographic_info($student_id);
 
-    $neighborhoods_array = get_neighborhoods();
-
-    $neighborhoods = "<option>No registra</option>";
-
-    for ($i = 1; $i <= count($neighborhoods_array); $i++) {
-        if(isset($geographic_object->barrio)){
-            if ($neighborhoods_array[$i]->id == (int) $geographic_object->barrio) {
-                $neighborhoods .= "<option value='" . $neighborhoods_array[$i]->id . "' selected>" . $neighborhoods_array[$i]->nombre . "</option>";
-            } else {
-                $neighborhoods .= "<option value='" . $neighborhoods_array[$i]->id . "'>" . $neighborhoods_array[$i]->nombre . "</option>";
-            }
-        }else{
-            $neighborhoods .= "<option value='" . $neighborhoods_array[$i]->id . "'>" . $neighborhoods_array[$i]->nombre . "</option>";
-        }
-    }
-
-    $record->select_neighborhoods = $neighborhoods;
-
     $geographic_object = get_geographic_info($student_id);
 
-    $record->latitude = $geographic_object->latitude;
-    $record->longitude = $geographic_object->longitude;
-    $record->observations = $geographic_object->observations;
-    $native = $geographic_object->native;
-    $live_far_away = $geographic_object->live_far_away;
-    $live_risk_zone = $geographic_object->live_risk_zone;
-    $risk_level = $geographic_object->risk_level;
+    $geographic_risk_level = $geographic_object->risk_level;
 
-    $record->live_far_away = ($live_far_away)?true:false;
-    $record->live_risk_zone = ($live_risk_zone)?true:false;
+    $record->geographic_risk_level  = $geographic_risk_level;
 
-    if($live_risk_zone && $native == 1)
-        $record->native_origin = true;
-
-    $record->risk_level  = $risk_level;
-    switch ($risk_level) {
+    switch ($geographic_risk_level) {
         case 1:
             $record->low_level = true;
             $record->mid_level = $record->high_level = false;
@@ -678,6 +626,7 @@ if ($student_code != 0) {
             $record->geographic_class = 'div_no_risk';
             break;
     }
+
 
     // Students risks
 
@@ -825,6 +774,10 @@ if ($student_code != 0) {
         'start' => strtotime( "2019-01-01" ),
         'end' => strtotime( "2019-04-30" )
     ];
+
+    $fecha_i = new DateTime();
+    $initial_date =  $fecha_i->format('s:u');
+/*
     foreach( $periods as $key => $period ){
 
         if( strtotime( $period->fecha_inicio ) >= $new_forms_date ){
@@ -887,7 +840,14 @@ if ($student_code != 0) {
 
         }
 
-    }
+    }*/
+
+    $fecha_f = new DateTime();
+    $final_date =  $fecha_f->format('s:u');
+    $dates = $final_date." ".$initial_date;
+    //$record->res_address = $dates;
+
+
 
     $record->peer_tracking_v3 =  array_reverse( $peer_tracking_v3 );
 
@@ -1658,7 +1618,7 @@ if( $dphpforms_ases_user ){
         $record->last_assignment_practicant = $last_assignment['pract_obj']->firstname . " " . $last_assignment['pract_obj']->lastname;
         $record->last_assignment_professional = $last_assignment['prof_obj']->firstname . " " . $last_assignment['prof_obj']->lastname;
     }
-}   
+}
 
 //Menu items are created
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
@@ -1697,7 +1657,6 @@ $PAGE->requires->css('/blocks/ases/style/creadorFormulario.css', true);
 $PAGE->requires->js_call_amd('block_ases/ases_incident_system', 'init');
 $PAGE->requires->js_call_amd('block_ases/student_profile_main', 'init', $data_init);
 $PAGE->requires->js_call_amd('block_ases/student_profile_main', 'equalize');
-
 $PAGE->requires->js_call_amd('block_ases/geographic_main', 'init');
 $PAGE->requires->js_call_amd('block_ases/dphpforms_form_renderer', 'init');
 $PAGE->requires->js_call_amd('block_ases/dphpforms_form_discapacity', 'init');

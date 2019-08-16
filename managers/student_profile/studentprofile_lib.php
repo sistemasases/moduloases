@@ -336,25 +336,28 @@ function get_municipios()
         $municipios = $DB->get_records_sql($sql_query);
         $array_departamentos[$departamento->nombre] =  $municipios;
     }
-       
+
    return $array_departamentos;
 }
 
 /**
- * Gets student's city's id on talentospilos_demografia
+ * Gets student's city on talentospilos_demografia
  *
- * @see get_id_cuidad_res()
+ * @see get_id_ciudad_res()
  * @param $id_ases
  * @return object 
  */
-function get_id_cuidad_res($id_ases)
+function get_ciudad_res($id_ases)
 {
     global $DB;
-    //echo "Hola".$id_ases;
+
     $sql_query = "SELECT id_ciudad FROM {talentospilos_demografia} WHERE id_usuario = $id_ases";
     $id_ciudad_res = $DB->get_record_sql($sql_query)->id_ciudad;
 
-   return $id_ciudad_res;
+    $sql_query = "SELECT nombre FROM {talentospilos_municipio} WHERE id = $id_ciudad_res";
+    $nombre_ciudad_res = $DB->get_record_sql($sql_query)->nombre;
+
+   return $nombre_ciudad_res;
 }
 
 /**

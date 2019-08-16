@@ -35,7 +35,7 @@
 function get_geographic_info($id_ases){
     global $DB;
     $sql_query = "SELECT id_usuario AS id_user, latitud AS latitude, longitud AS longitude, barrio AS neighborhood,
-                  vive_lejos AS live_far_away , vive_zona_riesgo AS live_risk_zone, nativo AS native,
+                  id_ciudad AS id_city, direccion AS res_address, vive_lejos AS live_far_away , vive_zona_riesgo AS live_risk_zone, nativo AS native,
                   nivel_riesgo AS risk_level, observaciones AS observations
                   FROM {talentospilos_demografia} AS demographic_t
                   WHERE demographic_t.id_usuario=".$id_ases;
@@ -194,4 +194,95 @@ function student_profile_save_geographic_info($id_ases, $latitude, $longitude, $
     else{
         return 0;
     }    
+}
+
+/**
+ * @see student_profile_load_geographic_tab($id_ases)
+ * @desc Gets all the geographic information of an student
+ * @param $id_ases --> ASES student id
+ * @return Object
+ */
+function student_profile_load_geographic_tab($id_ases){
+
+    $record = new stdClass();
+
+    $geographic_object = get_geographic_info($id_ases);
+    $neighborhoods_array = get_neighborhoods();
+    /*$municipios= get_municipios();
+    $municipio_student = $geographic_object->id_city;
+
+    $options_municipios = '';
+
+    $options_municipios .= "<optgroup label='Populares'> <option value='1'>NO DEFINIDO</option> </optgroup>" ;
+
+    foreach($municipios as $municipio){
+        $key = key($municipios);
+        $options_municipios .= "<optgroup label = '$key'>";
+
+        foreach($municipio as $mun){
+            if($municipio_student == $mun->id){
+                $options_municipios .= "<option value='$mun->id' selected='selected'>$mun->nombre</option>";
+            }else{
+                $options_municipios .= "<option value='$mun->id'>$mun->nombre</option>";
+            }
+        }
+
+        next($municipios);
+
+        $options_municipios .= "</optgroup>";
+    }
+*/
+   // $record->options_municipio_act = $options_municipios;
+
+    $neighborhoods = "<option>No registra</option>";
+
+    for ($i = 1; $i <= count($neighborhoods_array); $i++) {
+        if(isset($geographic_object->neighborhood)){
+            if ($neighborhoods_array[$i]->id == (int) $geographic_object->neighborhood) {
+                $neighborhoods .= "<option value='" . $neighborhoods_array[$i]->id . "' selected>" . $neighborhoods_array[$i]->nombre . "</option>";
+            } else {
+                $neighborhoods .= "<option value='" . $neighborhoods_array[$i]->id . "'>" . $neighborhoods_array[$i]->nombre . "</option>";
+            }
+        }else{
+            $neighborhoods .= "<option value='" . $neighborhoods_array[$i]->id . "'>" . $neighborhoods_array[$i]->nombre . "</option>";
+        }
+    }
+
+    $native = $geographic_object->native;
+    $live_far_away = $geographic_object->live_far_away;
+    $live_risk_zone = $geographic_object->live_risk_zone;
+    $geographic_risk_level = $geographic_object->risk_level;
+
+    $record->select_neighborhoods = $neighborhoods;
+    $record->live_far_away = ($live_far_away)?true:false;
+    $record->live_risk_zone = ($live_risk_zone)?true:false;
+    $record->latitude = $geographic_object->latitude;
+    $record->res_address = $geographic_object->res_address;
+    $record->longitude = $geographic_object->longitude;
+    $record->observations = $geographic_object->observations;
+    $record->geographic_risk_level  = $geographic_risk_level;
+
+    if($live_risk_zone && $native == 1)
+        $record->native_origin = true;
+
+    switch ($geographic_risk_level) {
+        case 1:
+            $record->low_level = true;
+            $record->mid_level = $record->high_level = false;
+            break;
+        case 2:
+            $record->mid_level = true;
+            $record->low_level = $record->high_level = false;
+            break;
+        case 3:
+            $record->high_level = true;
+            $record->low_level = $record->mid_level = false;
+            break;
+        default:
+            $record->low_level = $record->mid_level = $record->high_level = false;
+            break;
+    }
+
+    return $record;
+
 }

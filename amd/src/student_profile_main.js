@@ -15,7 +15,8 @@ define(['jquery',
     'block_ases/sweetalert',
     'block_ases/jqueryui',
     'block_ases/select2',
-    'block_ases/Chart'], function ($, bootstrap, d3, sweetalert, jqueryui, select2, Chart) {
+    'block_ases/Chart',
+    'block_ases/mustache'], function ($, bootstrap, d3, sweetalert, jqueryui, select2, Chart, mustache) {
 
         return {
             init: function (data_init) {
@@ -48,12 +49,86 @@ define(['jquery',
                 }
 
                 /**
-                 * Evento que mueve el mapa de Google Maps de la
-                 * pestaña "General" a "Geografico".
+                 * Evento que preapara la pestaña "Geográfico" y
+                 * mueve el mapa de Google Maps de la pestaña
+                 * "General" a esta.
                  */
                 $("#geographic_li").click(function () {
 
-                    $("#mapa").appendTo("#geographic_map");
+                    var id_ases = $('#id_ases').val();
+                    $.ajax({
+                        type: "POST",
+                        data: JSON.stringify({
+                            "func": 'load_geographic_tab',
+                            "params": [id_ases],
+                        }),
+                        url: "../managers/student_profile/geographic_api.php",
+                        success: function(msg) {
+                            if(msg.status_code == 0) {
+                                console.log(msg);
+
+                                $.ajax({
+                                    url: "../templates/view_geographic_tab_sp.mustache",//"../templates/geographic_tab2.mustache",//
+                                    data: null,
+                                    dataType: "text",
+                                    async: false,
+                                    success: function( template ){
+
+                                        var url = '../style/student_profile.css';
+                                        $(mustache.parse( template ));
+                                        let geographic_tab = $(mustache.render(  template, msg.data_response  ));
+                                        $(".tab-content").append( geographic_tab );
+
+                                        if(document.createStyleSheet) {
+                                            try { document.createStyleSheet(url); } catch (e) { }
+                                        }
+                                        else {
+                                            var css;
+                                            css         = document.createElement('link');
+                                            css.rel     = 'stylesheet';
+                                            css.type    = 'text/css';
+                                            css.media   = "all";
+                                            css.href    = url;
+                                            document.getElementsByTagName("head")[0].appendChild(css);
+                                        }
+                                        console.log("completada");
+
+                                        /*
+                                        $.ajax({
+                                            url:"../style/student_profile.css",
+                                            data: null,
+                                            dataType:"text",
+                                            async:false,
+                                            success:function(css){
+                                                console.log(css);
+
+                                                let geographic_tab = $(mustache.render(  template, msg.data_response  ));
+                                                $(".tab-content").append( geographic_tab );
+                                                $("<style></style>").appendTo("#geographic_tab").html(css);
+                                                console.log("completada");
+                                            },
+                                            error: function(){
+                                                console.log("../style/student_profile.css cannot be reached.");
+                                            }
+                                        });*/
+                                    },
+                                    error: function(){
+                                        console.log( "../templates/view_geographic_tab_sp.mustache cannot be reached. " );
+                                    }
+                                });
+
+                                $("#mapa").appendTo("#geographic_map");
+
+                            } else {
+                                console.log(msg);
+                            }
+                        },
+                        dataType: "json",
+                        cache: "false",
+                        error: function(msg) {
+                            console.log(msg);
+                        }
+                    });
                 });
 
                 /**
