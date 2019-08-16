@@ -668,6 +668,9 @@
                             if( is_inasistencia != -1 ){
                                 custom_actions( 'seguimiento_grupal', 'update' );
                             };
+                            $("input[type=date]").keypress(function(e) {
+                                e.preventDefault();
+                            });
                     });
                 }
 
