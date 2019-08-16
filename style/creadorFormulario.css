@@ -250,15 +250,27 @@ pre, code {
     margin-top: 10px;
 }
 
-.ajuste_acciones > .checkbox:nth-child(2){
+.dphpforms-response > .ajuste_acciones > .checkbox:nth-child(2){
     margin-top: 10px;
 }
 
-.ajuste_acciones > .checkbox:nth-child(3){
+.dphpforms-response > .ajuste_acciones > .checkbox:nth-child(3){
     margin-top: 10px;
 }
 
-.ajuste_acciones > .checkbox:nth-child(4){
+.dphpforms-response > .ajuste_acciones > .checkbox:nth-child(4){
+    margin-top: 10px;
+}
+
+.dphpforms-updater > .ajuste_acciones > .checkbox:nth-child(3){
+    margin-top: 10px;
+}
+
+.dphpforms-updater > .ajuste_acciones > .checkbox:nth-child(4){
+    margin-top: 10px;
+}
+
+.dphpforms-updater > .ajuste_acciones > .checkbox:nth-child(5){
     margin-top: 10px;
 }
 
