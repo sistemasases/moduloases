@@ -499,7 +499,7 @@ function secure_assign_role_to_user( $user_id, $role, $start_datetime = NULL, $e
 
 function secure_assign_role_to_user_previous_system( $user_id, $role, $singularizator ){
 
-	/*Singularizator
+    /*Singularizator
      *
      * estado (DEFAULT = 1)
      * id_semestre (DEFAULT = current )
@@ -554,6 +554,61 @@ function secure_assign_role_to_user_previous_system( $user_id, $role, $singulari
     	$manager( $query, $params, $extra = null );
     }
    
+}
+
+function secure_remove_role_from_user_previous_system( $user_id, $role, $singularizator ){
+    
+    /*Singularizator
+     *
+     * id_semestre (DEFAULT = current )
+     * id_instancia (REQUIRED)
+     * 
+     */
+    
+    if( !isset( $singularizator['id_instancia'] ) ){
+        throw new Exception( "id_instancia must be defined at sigularizator", -1 );
+    }
+
+    $role_id = -1;
+    
+    switch ( gettype( $role ) ) {
+    	case 'string':
+            $role_id = _core_security_get_previous_system_role( $role )['id'];
+            break;
+    	case 'object':
+            $role_id = $role->id;
+            break;
+    	case 'integer':
+            break;
+    	default:
+            throw new Exception( "role must be an id, role alias or role obj", -2 );
+    }
+    
+    if( !isset($singularizator['id_semestre']) ){
+        $singularizator['id_semestre'] = core_periods_get_current_period()->id;
+    }
+
+    if( !_core_user_asigned_in_previous_system( $user_id, $role, $singularizator ) ){
+    	global $DB_PREFIX;
+            
+        $manager = get_db_manager();
+        $period_id = ( isset($singularizator['id_semestre']) ? $singularizator['id_semestre'] : core_periods_get_current_period()->id );
+            
+        $tablename = $DB_PREFIX . "talentospilos_user_rol";
+        $params = [ 
+        	(int) $role_id, 
+        	(int) $user_id, 
+        	$estado = 1, 
+        	(int) $period_id,  
+        	(isset($singularizator['id_jefe']) ? (int) $singularizator['id_jefe'] : NULL),
+        	(int) $singularizator['id_instancia'],
+        	(isset($singularizator['id_programa']) ? (int) $singularizator['id_programa'] : NULL)
+        ];
+        $query = "INSERT INTO $tablename ( id_rol, id_usuario, estado, id_semestre, id_jefe, id_instancia, id_programa) "
+        		. "VALUES ( $1, $2, $3, $4, $5, $6, $7 )";
+
+    	$manager( $query, $params, $extra = null );
+    }
 }
 
 
