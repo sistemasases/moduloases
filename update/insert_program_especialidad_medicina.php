@@ -1,5 +1,5 @@
 <?php
-
+/*
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -30,5 +30,5 @@ if($programa->save()) {
 } else {
     echo "No se ha podido guardar el programa $programa->nombre";
 }
-
+*/
 ?>
