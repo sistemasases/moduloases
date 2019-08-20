@@ -328,6 +328,10 @@ if ($student_code != 0) {
         $i++;
     }
 
+    $coordenates = student_profile_get_coordenates($student_id);
+    $record->latitude = $coordenates->latitude;
+    $record->longitude = $coordenates->longitude;
+
     //Eliminar país Colombia puesto al inicio
     array_splice($paises,$posp,1);
    
@@ -775,9 +779,6 @@ if ($student_code != 0) {
         'end' => strtotime( "2019-04-30" )
     ];
 
-    $fecha_i = new DateTime();
-    $initial_date =  $fecha_i->format('s:u');
-/*
     foreach( $periods as $key => $period ){
 
         if( strtotime( $period->fecha_inicio ) >= $new_forms_date ){
@@ -837,17 +838,8 @@ if ($student_code != 0) {
 
                 array_push( $peer_tracking_v3, $peer_tracking );
             }
-
         }
-
-    }*/
-
-    $fecha_f = new DateTime();
-    $final_date =  $fecha_f->format('s:u');
-    $dates = $final_date." ".$initial_date;
-    //$record->res_address = $dates;
-
-
+    }
 
     $record->peer_tracking_v3 =  array_reverse( $peer_tracking_v3 );
 
@@ -1657,7 +1649,6 @@ $PAGE->requires->css('/blocks/ases/style/creadorFormulario.css', true);
 $PAGE->requires->js_call_amd('block_ases/ases_incident_system', 'init');
 $PAGE->requires->js_call_amd('block_ases/student_profile_main', 'init', $data_init);
 $PAGE->requires->js_call_amd('block_ases/student_profile_main', 'equalize');
-$PAGE->requires->js_call_amd('block_ases/geographic_main', 'init');
 $PAGE->requires->js_call_amd('block_ases/dphpforms_form_renderer', 'init');
 $PAGE->requires->js_call_amd('block_ases/dphpforms_form_discapacity', 'init');
 $PAGE->requires->js_call_amd('block_ases/students_profile_others_tab_sp', 'init');

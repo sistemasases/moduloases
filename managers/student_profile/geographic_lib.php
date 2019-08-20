@@ -61,6 +61,24 @@ function get_geographic_info($id_ases){
 }
 
 /**
+ * @desc Gets the latitude and longitude from {talentospilos_demografia} table
+ * @see student_profile_get_coordenates()
+ * @param $id_ases --> ASES student id
+ * @return array
+ */
+function student_profile_get_coordenates($id_ases){
+
+    global $DB;
+
+    $sql_query = "SELECT longitud AS longitude, latitud AS latitude FROM {talentospilos_demografia} WHERE id_usuario = ".$id_ases;
+
+    $array_coordenates = $DB->get_record_sql($sql_query);
+
+    return $array_coordenates;
+
+}
+
+/**
  * Obtains all neighborhoods from {talentospilos_barrios} table
  *
  * @see get_neighborhoods()
@@ -282,9 +300,7 @@ function student_profile_load_geographic_tab($id_ases){
     $record->select_neighborhoods = $neighborhoods;
     $record->live_far_away = ($live_far_away)?true:false;
     $record->live_risk_zone = ($live_risk_zone)?true:false;
-    $record->latitude = $geographic_object->latitude;
     $record->res_address = $geographic_object->res_address;
-    $record->longitude = $geographic_object->longitude;
     $record->observations = $geographic_object->observations;
     $record->geographic_risk_level  = $geographic_risk_level;
 
