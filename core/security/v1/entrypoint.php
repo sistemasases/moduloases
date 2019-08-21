@@ -452,7 +452,7 @@ function secure_create_role( $alias, $father_role = -1, $name = NULL, $descripti
  * @param object $singularizator
  * 
  */
-function secure_assign_role_to_user( $user_id, $role, $start_datetime = NULL, $end_datetime = NULL, $alternative_interval = NULL, $use_alternative_interval = false, $singularizator = NULL ){
+function secure_assign_role_to_user( $user_id, $role, $start_datetime = NULL, $end_datetime = NULL, $singularizator = NULL, $alternative_interval = NULL, $use_alternative_interval = false ){
 
     if( ( $use_alternative_interval === false && $start_datetime === NULL ) ||
         ( $use_alternative_interval === false && $end_datetime === NULL ) ){
@@ -483,12 +483,13 @@ function secure_assign_role_to_user( $user_id, $role, $start_datetime = NULL, $e
             $manager = get_db_manager();
             $date_format = "Y-m-d H:i:s";
             
-            if( gettype($use_alternative_interval) === "boolean" ){
-                $use_alternative_interval = ( $use_alternative_interval ? 1 : 0 );
-            }
+            //Valid format
+            $use_alternative_interval = ( $use_alternative_interval ? 1 : 0 );
+            $alternative_interval = ( is_null($alternative_interval) ? NULL : json_encode($alternative_interval) );
+            $singularizator = ( is_null($singularizator) ? NULL : json_encode($singularizator) );
             
             $tablename = $DB_PREFIX . "talentospilos_usuario_rol";
-            $params = [ $user_id, $_role['id'], date( $date_format, $start_datetime),  date( $date_format, $end_datetime), json_encode($alternative_interval), $use_alternative_interval, json_encode($singularizator) ];
+            $params = [ $user_id, $_role['id'], date( $date_format, $start_datetime),  date( $date_format, $end_datetime), $alternative_interval, $use_alternative_interval, $singularizator ];
             $query = "INSERT INTO $tablename ( id_usuario, id_rol, fecha_hora_inicio, fecha_hora_fin, intervalo_validez_alternativo, usar_intervalo_alternativo, singularizador) "
                     . "VALUES ( $1, $2, $3, $4, $5, $6, $7 )";
             
