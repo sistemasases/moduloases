@@ -454,13 +454,13 @@ function secure_create_role( $alias, $father_role = -1, $name = NULL, $descripti
  */
 function secure_assign_role_to_user( $user_id, $role, $start_datetime = NULL, $end_datetime = NULL, $alternative_interval = NULL, $use_alternative_interval = false, $singularizator = NULL ){
 
-    if( ( $use_alternative_interval === 0 && $start_datetime === NULL ) ||
-        ( $use_alternative_interval === 0 && $end_datetime === NULL ) ){
+    if( ( $use_alternative_interval === false && $start_datetime === NULL ) ||
+        ( $use_alternative_interval === false && $end_datetime === NULL ) ){
         return null;
     }else{
         if( ($start_datetime >= $end_datetime) ){ return null; }
     }
-    
+
     $_user = get_db_records( "user", ['id'], [$user_id] );
     $_role = _core_security_get_role( $role ); // Rol at the master system (Secutiry Core)
       
@@ -473,7 +473,7 @@ function secure_assign_role_to_user( $user_id, $role, $start_datetime = NULL, $e
 	            //Validation if the role exist at the previous system role
 	            if ( _core_security_get_previous_system_role( $_role['alias'] ) ){
 	                /*Asignar en sistema previo*/
-	                secure_assign_role_to_user_previous_system( $user_id, $_role['alias'], [ "id_instancia" => 450299 ]);
+	                secure_assign_role_to_user_previous_system( $user_id, $_role['alias'], $singularizator);
 	            }
 	            
 	        }
@@ -489,7 +489,7 @@ function secure_assign_role_to_user( $user_id, $role, $start_datetime = NULL, $e
             
             $tablename = $DB_PREFIX . "talentospilos_usuario_rol";
             $params = [ $user_id, $_role['id'], date( $date_format, $start_datetime),  date( $date_format, $end_datetime), json_encode($alternative_interval), $use_alternative_interval, json_encode($singularizator) ];
-            $query = "INSERT INTO $tablename ( id_usuario, id_rol, fecha_hora_inicio, fecha_hora_fin, intervalo_validez_alternativo,usar_intervalo_alternativo,singularizador) "
+            $query = "INSERT INTO $tablename ( id_usuario, id_rol, fecha_hora_inicio, fecha_hora_fin, intervalo_validez_alternativo, usar_intervalo_alternativo, singularizador) "
                     . "VALUES ( $1, $2, $3, $4, $5, $6, $7 )";
             
             return $manager( $query, $params, $extra = null );
