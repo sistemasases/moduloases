@@ -441,18 +441,51 @@ function secure_create_role( $alias, $father_role = -1, $name = NULL, $descripti
 }
 
 /**
- * Function ...
+ * Function that assign a role to a given user.
  * 
- * @param integer $user_id Moodle user id
+ * Singularizer is a set of key-value tuples with the objective of differentiate
+ * assignations in the system, for example, the next list of assignations, are 
+ * different everyone to each others: 
+ * 
+ * user_id: 15, sigularizator:  { "filter_1":111, "filter_2":"ABC"  }
+ * user_id: 15, sigularizator:  { "filter_1":111  }
+ * user_id: 15, sigularizator:  { "filter_2":"ABC"  }
+ * user_id: 15, sigularizator:  { "ff_1":111  }
+ * 
+ * If $use_alternative_interval true, then an alternative_interval must be defined.
+ * 
+ * Example of an alternative interval definition:
+ *
+ * {
+ *	"table_ref": { "name":"table_name", "record_id": 1 },
+ *	"col_name_interval_start": "col_start",
+ *	"col_name_interval_end": "col_end"
+ * }
+ * 
+ * table_ref is the table of reference.
+ * col_name_interval_start is the name where the start date time is stored.
+ * col_name_interval_start is the name where the end date time is stored.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * 
+ * @see get_db_records( ... ) in query_manager.php
+ * @see _core_security_get_role( ... ) in gets.php
+ * @see _core_security_get_user_rol( ... ) in gets.php
+ * @see _core_security_get_previous_system_role( ... ) in gets.php
+ * @see secure_assign_role_to_user_previous_system( ... ) in entrypoint.php
+ * @see get_db_manager( ... ) in query_manager.php
+ * 
+ * @param integer $user_id User id
  * @param integer|string Role id or alias
  * @param datetime $start_datetime
  * @param datetime $end_datetime
- * @param object $alternative_interval
+ * @param object $singularizer
  * @param boolean $use_alternative_interval
- * @param object $singularizator
+ * @param object $alternative_interval
  * 
+ * @return integer|NULL 1 if okay, null if  assignation already exist.
  */
-function secure_assign_role_to_user( $user_id, $role, $start_datetime = NULL, $end_datetime = NULL, $singularizator = NULL, $alternative_interval = NULL, $use_alternative_interval = false ){
+function secure_assign_role_to_user( $user_id, $role, $start_datetime = NULL, $end_datetime = NULL, $singularizer = NULL, $use_alternative_interval = false, $alternative_interval = NULL ){
 
     if( ( $use_alternative_interval === false && $start_datetime === NULL ) ||
         ( $use_alternative_interval === false && $end_datetime === NULL ) ){
@@ -466,14 +499,14 @@ function secure_assign_role_to_user( $user_id, $role, $start_datetime = NULL, $e
       
     if( $_user && $_role ){
      
-        if( is_null(_core_security_get_user_rol( $user_id, $start_datetime, $singularizator )) ){
+        if( is_null(_core_security_get_user_rol( $user_id, $start_datetime, $singularizer )) ){
 
         	if( SUPPORT_TO_PREVIOUS_SYSTEM ){
             
 	            //Validation if the role exist at the previous system role
 	            if ( _core_security_get_previous_system_role( $_role['alias'] ) ){
 	                /*Asignar en sistema previo*/
-	                secure_assign_role_to_user_previous_system( $user_id, $_role['alias'], $singularizator);
+	                secure_assign_role_to_user_previous_system( $user_id, $_role['alias'], $singularizer);
 	            }
 	            
 	        }
@@ -486,10 +519,10 @@ function secure_assign_role_to_user( $user_id, $role, $start_datetime = NULL, $e
             //Valid format
             $use_alternative_interval = ( $use_alternative_interval ? 1 : 0 );
             $alternative_interval = ( is_null($alternative_interval) ? NULL : json_encode($alternative_interval) );
-            $singularizator = ( is_null($singularizator) ? NULL : json_encode($singularizator) );
+            $singularizer = ( is_null($singularizer) ? NULL : json_encode($singularizer) );
             
             $tablename = $DB_PREFIX . "talentospilos_usuario_rol";
-            $params = [ $user_id, $_role['id'], date( $date_format, $start_datetime),  date( $date_format, $end_datetime), $alternative_interval, $use_alternative_interval, $singularizator ];
+            $params = [ $user_id, $_role['id'], date( $date_format, $start_datetime),  date( $date_format, $end_datetime), $alternative_interval, $use_alternative_interval, $singularizer ];
             $query = "INSERT INTO $tablename ( id_usuario, id_rol, fecha_hora_inicio, fecha_hora_fin, intervalo_validez_alternativo, usar_intervalo_alternativo, singularizador) "
                     . "VALUES ( $1, $2, $3, $4, $5, $6, $7 )";
             
@@ -502,9 +535,9 @@ function secure_assign_role_to_user( $user_id, $role, $start_datetime = NULL, $e
     return null;
 }
 
-function secure_assign_role_to_user_previous_system( $user_id, $role, $singularizator ){
+function secure_assign_role_to_user_previous_system( $user_id, $role, $singularizer ){
 
-    /*Singularizator
+    /*Singularizer
      *
      * estado (DEFAULT = 1)
      * id_semestre (DEFAULT = current )
@@ -514,7 +547,7 @@ function secure_assign_role_to_user_previous_system( $user_id, $role, $singulari
      * 
      */
     
-    if( !isset( $singularizator['id_instancia'] ) ){
+    if( !isset( $singularizer['id_instancia'] ) ){
         throw new Exception( "id_instancia must be defined at sigularizator", -1 );
     }
 
@@ -533,15 +566,15 @@ function secure_assign_role_to_user_previous_system( $user_id, $role, $singulari
             throw new Exception( "role must be an id, role alias or role obj", -2 );
     }
     
-    if( !isset($singularizator['id_semestre']) ){
-        $singularizator['id_semestre'] = core_periods_get_current_period()->id;
+    if( !isset($singularizer['id_semestre']) ){
+        $singularizer['id_semestre'] = core_periods_get_current_period()->id;
     }
 
-    if( !_core_user_asigned_in_previous_system( $user_id, $role, $singularizator ) ){
+    if( !_core_user_asigned_in_previous_system( $user_id, $role, $singularizer ) ){
     	global $DB_PREFIX;
             
         $manager = get_db_manager();
-        $period_id = ( isset($singularizator['id_semestre']) ? $singularizator['id_semestre'] : core_periods_get_current_period()->id );
+        $period_id = ( isset($singularizer['id_semestre']) ? $singularizer['id_semestre'] : core_periods_get_current_period()->id );
             
         $tablename = $DB_PREFIX . "talentospilos_user_rol";
         $params = [ 
@@ -549,9 +582,9 @@ function secure_assign_role_to_user_previous_system( $user_id, $role, $singulari
         	(int) $user_id, 
         	$estado = 1, 
         	(int) $period_id,  
-        	(isset($singularizator['id_jefe']) ? (int) $singularizator['id_jefe'] : NULL),
-        	(int) $singularizator['id_instancia'],
-        	(isset($singularizator['id_programa']) ? (int) $singularizator['id_programa'] : NULL)
+        	(isset($singularizer['id_jefe']) ? (int) $singularizer['id_jefe'] : NULL),
+        	(int) $singularizer['id_instancia'],
+        	(isset($singularizer['id_programa']) ? (int) $singularizer['id_programa'] : NULL)
         ];
         $query = "INSERT INTO $tablename ( id_rol, id_usuario, estado, id_semestre, id_jefe, id_instancia, id_programa) "
         		. "VALUES ( $1, $2, $3, $4, $5, $6, $7 )";
@@ -561,16 +594,16 @@ function secure_assign_role_to_user_previous_system( $user_id, $role, $singulari
    
 }
 
-function secure_remove_role_from_user_previous_system( $user_id, $role, $singularizator ){
+function secure_remove_role_from_user_previous_system( $user_id, $role, $singularizer ){
     
-    /*Singularizator
+    /*Singularizer
      *
      * id_semestre (DEFAULT = current )
      * id_instancia (REQUIRED)
      * 
      */
     
-    if( !isset( $singularizator['id_instancia'] ) ){
+    if( !isset( $singularizer['id_instancia'] ) ){
         throw new Exception( "id_instancia must be defined at sigularizator", -1 );
     }
 
@@ -589,15 +622,15 @@ function secure_remove_role_from_user_previous_system( $user_id, $role, $singula
             throw new Exception( "role must be an id, role alias or role obj", -2 );
     }
     
-    if( !isset($singularizator['id_semestre']) ){
-        $singularizator['id_semestre'] = core_periods_get_current_period()->id;
+    if( !isset($singularizer['id_semestre']) ){
+        $singularizer['id_semestre'] = core_periods_get_current_period()->id;
     }
 
-    if( !_core_user_asigned_in_previous_system( $user_id, $role, $singularizator ) ){
+    if( !_core_user_asigned_in_previous_system( $user_id, $role, $singularizer ) ){
     	global $DB_PREFIX;
             
         $manager = get_db_manager();
-        $period_id = ( isset($singularizator['id_semestre']) ? $singularizator['id_semestre'] : core_periods_get_current_period()->id );
+        $period_id = ( isset($singularizer['id_semestre']) ? $singularizer['id_semestre'] : core_periods_get_current_period()->id );
             
         $tablename = $DB_PREFIX . "talentospilos_user_rol";
         $params = [ 
@@ -605,9 +638,9 @@ function secure_remove_role_from_user_previous_system( $user_id, $role, $singula
         	(int) $user_id, 
         	$estado = 1, 
         	(int) $period_id,  
-        	(isset($singularizator['id_jefe']) ? (int) $singularizator['id_jefe'] : NULL),
-        	(int) $singularizator['id_instancia'],
-        	(isset($singularizator['id_programa']) ? (int) $singularizator['id_programa'] : NULL)
+        	(isset($singularizer['id_jefe']) ? (int) $singularizer['id_jefe'] : NULL),
+        	(int) $singularizer['id_instancia'],
+        	(isset($singularizer['id_programa']) ? (int) $singularizer['id_programa'] : NULL)
         ];
         $query = "INSERT INTO $tablename ( id_rol, id_usuario, estado, id_semestre, id_jefe, id_instancia, id_programa) "
         		. "VALUES ( $1, $2, $3, $4, $5, $6, $7 )";
