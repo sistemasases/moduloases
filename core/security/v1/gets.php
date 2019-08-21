@@ -166,15 +166,15 @@ function _core_security_get_action_type( $alias = null ){
 }
 
 /**
- * Function that return a rol given an user id.
+ * Function that return a role given an user id.
  *
- * Singylarizations are extra filters.
+ * Singularizers are extra filters.
  *
  * Example:
  *
  * 	array(
  * 		'filter_1' => "value",
- *  	'filter_2' => "value"
+ *              'filter_2' => "value"
  * 	)
  *
  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
@@ -231,19 +231,24 @@ function _core_security_get_user_rol( $user_id, $time_context = null, $singulari
         $valid_singularization = true;
 
         if( !is_null($u_rol['singularizador']) ){
-            
-            foreach (json_decode($u_rol['singularizador']) as $key => $db_singularization) {
-                if( array_key_exists($key, $singularizations) ){
-                    if( !($db_singularization->value == $singularizations[ $db_singularization->key ]) ){
+           
+            $db_singularizers = (array) json_decode($u_rol['singularizador']);
+            if( count( $singularizations ) === count( $db_singularizers ) ){
+                
+                foreach ($db_singularizers as $key => $db_singularization) {
+                    if( array_key_exists($key, $singularizations) ){
+                        if( $db_singularization !== $singularizations[ $key ] ){
+                            $valid_singularization = false;
+                            break;
+                        }
+                    }else{
                         $valid_singularization = false;
                         break;
                     }
-                }else{
-                    $valid_singularization = false;
-                    break;
                 }
-            }
-                        
+            }else{
+                 $valid_singularization = false;
+            }      
         }
                 
         if( ($time_context >= $rol->start) && ($time_context <= $rol->end) && $valid_singularization ){
