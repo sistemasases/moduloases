@@ -310,7 +310,7 @@ function _core_user_asigned_in_previous_system( $user_id, $role, $singularizer )
 
     $obj_role = _core_security_get_previous_system_role( $role );
 
-    /*Singularizator
+    /*Singularizer
      *
      * estado (DEFAULT = 1)
      * id_semestre (DEFAULT = current )
