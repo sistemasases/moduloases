@@ -182,11 +182,11 @@ function _core_security_get_action_type( $alias = null ){
  *
  * @param integer $user_id
  * @param integer $time_context
- * @param array $singularizations
+ * @param array $singularizers
  *
  * @return object|null
 */
-function _core_security_get_user_rol( $user_id, $time_context = null, $singularizations = null ){
+function _core_security_get_user_rol( $user_id, $time_context = null, $singularizers = null ){
 
     global $DB_PREFIX;
 
@@ -233,11 +233,11 @@ function _core_security_get_user_rol( $user_id, $time_context = null, $singulari
         if( !is_null($u_rol['singularizador']) ){
            
             $db_singularizers = (array) json_decode($u_rol['singularizador']);
-            if( count( $singularizations ) === count( $db_singularizers ) ){
+            if( count( $singularizers ) === count( $db_singularizers ) ){
                 
                 foreach ($db_singularizers as $key => $db_singularization) {
-                    if( array_key_exists($key, $singularizations) ){
-                        if( $db_singularization !== $singularizations[ $key ] ){
+                    if( array_key_exists($key, $singularizers) ){
+                        if( $db_singularization !== $singularizers[ $key ] ){
                             $valid_singularization = false;
                             break;
                         }
