@@ -188,75 +188,70 @@ function _core_security_get_action_type( $alias = null ){
 */
 function _core_security_get_user_rol( $user_id, $time_context = null, $singularizations = null ){
 
-	global $DB_PREFIX;
+    global $DB_PREFIX;
 
-	$params = [];
-	$tablename = $DB_PREFIX . "talentospilos_usuario_rol";
+    $params = [];
+    $tablename = $DB_PREFIX . "talentospilos_usuario_rol";
 
-	if( !is_numeric($user_id) ){
-		return false;
-	}
+    if( !is_numeric($user_id) ){
+        return false;
+    }
+
+    if( is_null( $time_context ) ){
+        $time_context = time();
+    }
         
-	if( is_null( $time_context ) ){
-		$time_context = time();
-	}
+    array_push($params, $user_id);
+
+    $manager = get_db_manager();
+    $user_roles = $manager( $query = "SELECT * FROM $tablename WHERE id_usuario = $1 AND eliminado = 0", $params, $extra = null );
+
+    foreach ($user_roles as $key => $u_rol) {
         
-	array_push($params, $user_id);
-
-	$manager = get_db_manager();
-
-	$user_roles = $manager( $query = "SELECT * FROM $tablename WHERE id_usuario = $1 AND eliminado = 0", $params, $extra = null );
-
-	foreach ($user_roles as $key => $u_rol) {
-
-		$rol = new stdClass();
+        $rol = new stdClass();
 		
-		if( 
-			( $u_rol->usar_intervalo_alternativo == 0 ) && 
-			( !is_null( $u_rol['fecha_hora_inicio'] ) ) && 
-			( !is_null( $u_rol['fecha_hora_fin'] ) )
-		){
-			$rol->start = strtotime($u_rol['fecha_hora_inicio']);
-			$rol->end = strtotime($u_rol['fecha_hora_fin']);
-		}else if( 
-			( $u_rol['usar_intervalo_alternativo'] == 1 ) && 
-			( !is_null( $u_rol['usar_intervalo_alternativo'] ) )
-		){
-			$alternative_interval = _core_security_solve_alternative_interval( $u_rol['intervalo_validez_alternativo'] );
-			if( $alternative_interval ){
-				$rol->start = strtotime($alternative_interval['fecha_hora_inicio']);
-				$rol->end = strtotime($alternative_interval['fecha_hora_fin']);
-			}
-		}
+        if( 
+            ( $u_rol->usar_intervalo_alternativo == 0 ) && 
+            ( !is_null( $u_rol['fecha_hora_inicio'] ) ) && 
+            ( !is_null( $u_rol['fecha_hora_fin'] ) )
+        ){
+            $rol->start = strtotime($u_rol['fecha_hora_inicio']);
+            $rol->end = strtotime($u_rol['fecha_hora_fin']);
+        }else if( 
+            ( $u_rol['usar_intervalo_alternativo'] == 1 ) && 
+            ( !is_null( $u_rol['usar_intervalo_alternativo'] ) )
+        ){
+            $alternative_interval = _core_security_solve_alternative_interval( $u_rol['intervalo_validez_alternativo'] );
+            if( $alternative_interval ){
+                $rol->start = strtotime($alternative_interval['fecha_hora_inicio']);
+                $rol->end = strtotime($alternative_interval['fecha_hora_fin']);
+            }
+        }
                 
-		$valid_singularization = true;
+        $valid_singularization = true;
 
-		if( !is_null($u_rol['singularizador']) ){
-
-			foreach (json_decode($u_rol['singularizador']) as $key => $db_singularization) {
-				if( array_key_exists($db_singularization->key, $singularizations) ){
-					if( !($db_singularization->value == $singularizations[ $db_singularization->key ]) ){
-						$valid_singularization = false;
-						break;
-					}
-				}else{
-					$valid_singularization = false;
-					break;
-				}
-			}
+        if( !is_null($u_rol['singularizador']) ){
+            
+            foreach (json_decode($u_rol['singularizador']) as $key => $db_singularization) {
+                if( array_key_exists($key, $singularizations) ){
+                    if( !($db_singularization->value == $singularizations[ $db_singularization->key ]) ){
+                        $valid_singularization = false;
+                        break;
+                    }
+                }else{
+                    $valid_singularization = false;
+                    break;
+                }
+            }
                         
-		}
+        }
                 
-		if( 
-                    ($time_context >= $rol->start) &&
-                    ($time_context <= $rol->end) && 
-                    $valid_singularization
-		){
-                    return $u_rol;
-		}
-	}
+        if( ($time_context >= $rol->start) && ($time_context <= $rol->end) && $valid_singularization ){
+            return $u_rol;
+        }
+    }
 
-	return null;
+    return null;
 }
 
 /**
