@@ -447,24 +447,23 @@ function secure_create_role( $alias, $father_role = -1, $name = NULL, $descripti
  * assignations in the system, for example, the next list of assignations, are 
  * different everyone to each others: 
  * 
- * user_id: 15, Singularizer:  { "filter_1":111, "filter_2":"ABC"  }
- * user_id: 15, Singularizer:  { "filter_1":111  }
- * user_id: 15, Singularizer:  { "filter_2":"ABC"  }
- * user_id: 15, Singularizer:  { "ff_1":111  }
+ * user_id: 15, Singularizer:  { "filter_1":111, "filter_2":"ABC"  }    <br>  
+ * user_id: 15, Singularizer:  { "filter_1":111  }                      <br>  
+ * user_id: 15, Singularizer:  { "filter_2":"ABC"  }                    <br>    
+ * user_id: 15, Singularizer:  { "ff_1":111  }                          
  * 
  * If $use_alternative_interval true, then an alternative_interval must be defined.
- * 
  * Example of an alternative interval definition:
  *
  * {
  *	"table_ref": { "name":"table_name", "record_id": 1 },
- *	"col_name_interval_start": "col_start",
- *	"col_name_interval_end": "col_end"
+ *	"col_name_interval_start": "col_start", 
+ *	"col_name_interval_end": "col_end" 
  * }
  * 
- * table_ref is the table of reference.
- * col_name_interval_start is the name where the start date time is stored.
- * col_name_interval_start is the name where the end date time is stored.
+ * table_ref is the table of reference.                                     <br>  
+ * col_name_interval_start is the name where the start date time is stored. <br>  
+ * col_name_interval_start is the name where the end date time is stored.   <br>  
  * 
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * 
@@ -475,15 +474,14 @@ function secure_create_role( $alias, $father_role = -1, $name = NULL, $descripti
  * @see secure_assign_role_to_user_previous_system( ... ) in entrypoint.php
  * @see get_db_manager( ... ) in query_manager.php
  * 
- * @param integer $user_id User id
- * @param integer|string Role id or alias
- * @param datetime $start_datetime
- * @param datetime $end_datetime
- * @param object $singularizer
- * @param boolean $use_alternative_interval
- * @param object $alternative_interval
- * 
- * @throws Exception If an inherit role is to be assigned with a key-value tuple that doesn't exist at the table talentospilos_user_rol.
+ * @param integer $user_id User id.
+ * @param integer|string $role Role id or alias.
+ * @param datetime $start_datetime Start date time.
+ * @param datetime $end_datetime End date time.
+ * @param object $singularizer Singularizer is a set of key-value tuples with the objective of differentiate assignations in the system. See the example above..
+ * @param boolean $use_alternative_interval If true, then an alternative_interval must be defined.
+ * @param object $alternative_interval Definition de alternative interval, used to take as valid interval of existence an interval stored in other table. See the example above.
+ * @throws Exception If an inherit role is to be assigned with a key-value tuple that doesn't exist at the table talentospilos_user_rol or if exist but its value isn't valid.
  * 
  * @return integer|NULL 1 if okay, null if  assignation already exist.
  */
