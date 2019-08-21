@@ -50,6 +50,9 @@ $singularizations = array(
 
 //print_r( core_secure_assign_role_to_user( 73380, "monitor_ps", strtotime("2019-09-27 15:00:00"), strtotime("2019-09-27 15:00:01") ) );
 
+//print_r( core_secure_assign_role_to_user( 73380, 'profesional_ps', strtotime("2019-09-27 15:00:00"), strtotime("2019-09-27 15:00:01"), [ "id_instancia" => 450299, "id_semestre" => 8 ] ));
 //print_r( core_secure_assign_role_to_user( 73380, 'profesional_ps', strtotime("2019-09-27 15:00:00"), strtotime("2019-09-27 15:00:01"), [ "id_instancia" => 450299 ] ));
+//print_r( core_secure_assign_role_to_user( 73380, 'root', strtotime("2019-09-27 15:00:00"), strtotime("2019-09-27 15:00:01"), [ "id_instancia" => 450299, "id_semestre" => 99, 999 => 999 ] ));
+
 
 ?>
