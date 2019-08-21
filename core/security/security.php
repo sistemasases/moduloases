@@ -204,27 +204,25 @@ function core_secure_create_role( $alias, $father_role = -1, $name = NULL, $desc
     return secure_create_role( $alias, $father_role, $name, $description );
 }
 
-/*print_r( 
-        
-        solve_query_variable( 
-                $CORE_SPECIAL_VAR_PREVIOUS_SYSTEM_TABLE_NAME_FOR_ROLE_ASIGNATION,  
-                [ "id_rol" => 4, "id_usuario" => 123214, "id_semestre" => 9 ],
-                [
-                    "id_instancia" => 450299
-                ]
-            ) 
-        );*/
-
-/*print_r( 
-        
-        solve_query_variable( 
-                $CORE_SPECIAL_VAR_PREVIOUS_SYSTEM_TABLE_NAME_FOR_ROLE_DEFINITION,  
-                [ "nombre_rol" => "monitor_ps" ]
-            ) 
-        );*/
-
-function core_secure_assign_role_to_user( $user_id, $role, $start_datetime = NULL, $end_datetime = NULL, $alternative_interval = NULL, $use_alternative_interval = 0, $singularizator = NULL ){
-    return secure_assign_role_to_user( $user_id, $role, $start_datetime, $end_datetime, $alternative_interval, $use_alternative_interval, $singularizator );
+/**
+ * Interface to secure_assign_role_to_user
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * 
+ * @see secure_assign_role_to_user( ... ) in entrypoint.php
+ * 
+ * @param integer $user_id System user id.
+ * @param integer|string $role Role id or role alias.
+ * @param time|NULL $start_datetime
+ * @param time|NULL $end_datetime
+ * @param array|NULL $singularizator
+ * @param array|NULL $alternative_interval
+ * @param boolean $use_alternative_interval
+ * 
+ * @return integer|NULL 1 to okay, null if assignation already exist.
+ */
+function core_secure_assign_role_to_user( $user_id, $role, $start_datetime = NULL, $end_datetime = NULL, $singularizator = NULL, $alternative_interval = NULL, $use_alternative_interval = false ){
+    return secure_assign_role_to_user( $user_id, $role, $start_datetime, $end_datetime, $singularizator, $alternative_interval, $use_alternative_interval );
 }
 
 ?>
