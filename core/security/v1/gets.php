@@ -302,7 +302,7 @@ function _core_security_get_previous_system_role( $rol_name ){
     
 }
 
-function _core_user_asigned_in_previous_system( $user_id, $role, $singularizator ){
+function _core_user_asigned_in_previous_system( $user_id, $role, $singularizer ){
     
     global $DB_PREFIX;
             
@@ -320,15 +320,15 @@ function _core_user_asigned_in_previous_system( $user_id, $role, $singularizator
      * 
      */
     
-    $period_id = ( isset($singularizator['id_semestre']) ? $singularizator['id_semestre'] : core_periods_get_current_period()->id );
+    $period_id = ( isset($singularizer['id_semestre']) ? $singularizer['id_semestre'] : core_periods_get_current_period()->id );
     $where = 
-    	" id_instancia = " . $singularizator['id_instancia'] . 
+    	" id_instancia = " . $singularizer['id_instancia'] . 
     	" AND id_rol = " . $obj_role['id'] . 
     	" AND estado = 1 " . 
     	" AND id_semestre = '$period_id' " . 
     	" AND id_usuario = '$user_id' ";
 
-    foreach ($singularizator as $key => $value) {
+    foreach ($singularizer as $key => $value) {
     	if( $key == "id_semestre" ){ 
     		continue; 
     	}else{
