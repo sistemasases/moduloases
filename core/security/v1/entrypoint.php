@@ -452,7 +452,7 @@ function secure_create_role( $alias, $father_role = -1, $name = NULL, $descripti
  * @param object $singularizator
  * 
  */
-function secure_assign_role_to_user( $user_id, $role, $start_datetime = NULL, $end_datetime = NULL, $alternative_interval = NULL, $use_alternative_interval = 0, $singularizator = NULL ){
+function secure_assign_role_to_user( $user_id, $role, $start_datetime = NULL, $end_datetime = NULL, $alternative_interval = NULL, $use_alternative_interval = false, $singularizator = NULL ){
 
     if( ( $use_alternative_interval === 0 && $start_datetime === NULL ) ||
         ( $use_alternative_interval === 0 && $end_datetime === NULL ) ){
@@ -482,6 +482,10 @@ function secure_assign_role_to_user( $user_id, $role, $start_datetime = NULL, $e
             
             $manager = get_db_manager();
             $date_format = "Y-m-d H:i:s";
+            
+            if( gettype($use_alternative_interval) === "boolean" ){
+                $use_alternative_interval = ( $use_alternative_interval ? 1 : 0 );
+            }
             
             $tablename = $DB_PREFIX . "talentospilos_usuario_rol";
             $params = [ $user_id, $_role['id'], date( $date_format, $start_datetime),  date( $date_format, $end_datetime), json_encode($alternative_interval), $use_alternative_interval, json_encode($singularizator) ];
