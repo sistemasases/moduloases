@@ -447,10 +447,10 @@ function secure_create_role( $alias, $father_role = -1, $name = NULL, $descripti
  * assignations in the system, for example, the next list of assignations, are 
  * different everyone to each others: 
  * 
- * user_id: 15, sigularizator:  { "filter_1":111, "filter_2":"ABC"  }
- * user_id: 15, sigularizator:  { "filter_1":111  }
- * user_id: 15, sigularizator:  { "filter_2":"ABC"  }
- * user_id: 15, sigularizator:  { "ff_1":111  }
+ * user_id: 15, Singularizer:  { "filter_1":111, "filter_2":"ABC"  }
+ * user_id: 15, Singularizer:  { "filter_1":111  }
+ * user_id: 15, Singularizer:  { "filter_2":"ABC"  }
+ * user_id: 15, Singularizer:  { "ff_1":111  }
  * 
  * If $use_alternative_interval true, then an alternative_interval must be defined.
  * 
@@ -482,6 +482,8 @@ function secure_create_role( $alias, $father_role = -1, $name = NULL, $descripti
  * @param object $singularizer
  * @param boolean $use_alternative_interval
  * @param object $alternative_interval
+ * 
+ * @throws Exception If an inherit role is to be assigned with a key-value tuple that doesn't exist at the table talentospilos_user_rol.
  * 
  * @return integer|NULL 1 if okay, null if  assignation already exist.
  */
