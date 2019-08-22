@@ -8,13 +8,13 @@
     <div class="row">
         <div class="col-sm-8">
             <h2>REPORTE GENERAL GRÁFICO DE ESTUDIANTES</h2>
-            <h5>Por favor seleccione los campos a incluir en el reporte</h5>
+            <h5 hidden>Por favor seleccione los campos a incluir en el reporte</h5>
         </div>
         <div class="col-sm-4" id="div_cohorts">
             <label for="">Cohorte:  </label>
                 {{{cohorts_checks}}}
         </div>  
-        <div class="top_options">      
+        <div class="top_options" hidden>
             <div class="col-sm-12 col-md-12">
                 <fieldset id="status_fields" style="top_options">
                     <div class="checkbox">
@@ -53,9 +53,9 @@
                                     </div>                            
                                 </div>                
                             </div>
-                        {{! <div class="row">
-                            <button id="save-btn">Guardar Gráfico</button>
-                            </div>  }}
+                            <div class="row" hidden>
+                            <button id="save_btn_programa">Guardar Gráfico</button>
+                            </div>
                         </div>
                     </div>            
                 </div>
