@@ -98,12 +98,50 @@ if(isset($input->func) && isset($input->params)) {
                     return_with_code(-5);
                 }
             } else {
-                return_with_code(-2, $input->params);
+                return_with_code(-2);
             }
+        } else {
+            return_with_code(-6);
         }
+    }else if($input->func == 'load_geographic_tab'){
+
+        /**
+         * [0] => id_ases: string
+         */
+        if(count($input->params) == 1)
+        {
+            $id_ases = $input->params[0];
+            if(is_string($id_ases)) {
+                $result = student_profile_load_geographic_tab($id_ases);
+                if($result != null){
+                    echo json_encode(
+                        array(
+                            "status_code" => 0,
+                            "message" => "Geographic information",
+                            "data_response" => $result
+                        )
+                    );
+                } else {
+                    return_with_code(-5);
+                }
+            } else {
+                return_with_code(-2);
+            }
+        } else {
+            return_with_code(-6);
+        }
+    } else {
+        return_with_code(-4);
     }
 }
 
+
+/**
+ * @method return_with_code
+ * Returns a message with the code of the error.
+ * codes reserved: -1, -2, -3, -4, -5, -6, -99.
+ * @param $code
+ */
 function return_with_code($code){
 
     switch( $code ){
@@ -153,6 +191,16 @@ function return_with_code($code){
                 array(
                     "status_code" => $code,
                     "error_message" => "Duplicate.",
+                    "data_response" => ""
+                )
+            );
+            break;
+
+        case -6:
+            echo json_encode(
+                array(
+                    "status_code" => $code,
+                    "error_message" => "Wrong quantity of parameters in input.",
                     "data_response" => ""
                 )
             );

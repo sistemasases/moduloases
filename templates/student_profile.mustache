@@ -204,10 +204,10 @@
         </div>
         <div hidden>{{life_risk}}</div>
 
-        <div class="{{geographic_class}} col-sm-2" data-risk-level="{{risk_level}}" id="geo_risk">
+        <div class="{{geographic_class}} col-sm-2" data-risk-level="{{geographic_risk_level}}" id="geo_risk">
           <b><span>GEOGRÁFICO</span></b>
         </div>
-        <div hidden>{{risk_level}}</div>
+        <div hidden>{{geographic_risk_level}}</div>
 
       </div>
       <div class="col-sm-2" id="div_buttons_risk">
@@ -285,7 +285,7 @@
 
           <!-- End academic tab -->
 
-          {{#view_geographic_tab_sp}} {{> block_ases/view_geographic_tab_sp}} {{/view_geographic_tab_sp}}
+          
           {{#view_others_tab_sp}} {{> block_ases/view_others_tab_sp}} {{/view_others_tab_sp}}
         </div>
       </div>

@@ -8,7 +8,7 @@
  * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */ 
 
-define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/jqueryui', 'block_ases/student_profile_main'], function($, bootstrap, sweetalert, jqueryui, student_profile) {
+define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/jqueryui'], function($, bootstrap, sweetalert, jqueryui) {
 
     return {
 
