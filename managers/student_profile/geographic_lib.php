@@ -18,8 +18,10 @@
  * Ases block
  *
  * @author     Iader E. García Gómez
+ * @author     Jorge Eduardo Mayor
  * @package    block_ases
  * @copyright  2018 Iader E. García <iadergg@gmail.com>
+ * @copyright  2019 Jorge Eduardo Mayor <mayor.jorge@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
  
