@@ -42,6 +42,14 @@
         border-radius: 0 0 0px 0px;
     }
 
+    .margin_bottom_10px .select2.select2-container.select2-container--default {
+
+        font-size: 15px !important;
+        font-weight: normal !important;
+
+
+    }
+
     /* Controles datos generales */
     .div_general_fields{
         padding-top: 0px;
