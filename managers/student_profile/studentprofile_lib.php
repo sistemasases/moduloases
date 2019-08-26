@@ -324,7 +324,7 @@ function get_ocupaciones()
  *
  * @see get_ciudad_res()
  * @param $id_ases
- * @return object
+ * @return string
  */
 function get_ciudad_res($id_ases)
 {
