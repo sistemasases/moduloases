@@ -272,6 +272,7 @@ function is_todos_cohort($cohort_value): bool {
  */
 function get_cohort_groups() {
     return array(['id'=>'SPP', 'name'=>'Ser Pilo Paga'],
+        ['id'=>'SPT', 'name'=>'Ser Pilo Paga Talentos'],
         ['id'=>'SPE', 'name'=>'Condición de Excepción'],
         ['id'=>'3740', 'name'=>'Ingeniería Topográfica'],
         ['id'=>'OTROS', 'name'=>'Otros ASES']);
@@ -288,6 +289,8 @@ function get_html_cohorts_select($instance_id, $include_todos=true,  $name='cond
     $cohorts = load_cohorts_by_instance($instance_id);
     $info_instance = \get_info_instance($instance_id);
     $cohorts_select = "<select name=\"$name\" id=\"$id\" class=\"$class\">" ;
+    $status_cohorts = array();
+
     if($info_instance->id_number == 'ases'){
 
         $cohorts_groups = get_cohort_groups();
@@ -296,6 +299,15 @@ function get_html_cohorts_select($instance_id, $include_todos=true,  $name='cond
             $cohorts_select.='<option value="TODOS">Todas las cohortes</option>';
         }
 
+        /*foreach($cohorts as $ch){
+            $cohorte = new stdClass();//create a new
+            $cohorte->idnumber = $ch->idnumber;
+            $cohorte->assigned = false;
+
+            array_push($status_cohorts, $cohorte);
+        }*/
+
+
         foreach($cohorts_groups as $cohort_group){
             $cohorts_select.="<optgroup label='".$cohort_group['name']."'>";
             if($include_todos) {
@@ -303,13 +315,21 @@ function get_html_cohorts_select($instance_id, $include_todos=true,  $name='cond
             }
 
             foreach($cohorts as $ch){
+                //$ch->assigned = false;
                 if(substr($ch->idnumber, 0, 3) == substr($cohort_group['id'], 0, 3)){
+                    //$ch->assigned = true;
                     $cohorts_select.= "<option value='$ch->idnumber'>$ch->name</option>";
                 }
             }
 
             $cohorts_select.="</optgroup>";
         }
+
+        /*foreach($cohorts as $ch){
+            if(!$ch->assigned){
+                $cohorts_select.= "<option value='$ch->idnumber'>$ch->name</option>";
+            }
+        }*/
 
     }else{
         foreach($cohorts as $ch){

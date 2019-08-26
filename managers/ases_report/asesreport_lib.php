@@ -4,6 +4,7 @@ require_once(dirname(__FILE__).'/../instance_management/instance_lib.php');
 require_once(dirname(__FILE__).'/../lib/lib.php');
 require_once(dirname(__FILE__).'/../lib/student_lib.php');
 require_once(dirname(__FILE__).'/../user_management/user_lib.php');
+require_once(dirname(__FILE__).'/../cohort/cohort_lib.php');
 
 /**
  * Función que recupera riesgos 
@@ -801,8 +802,9 @@ function get_ases_report($general_fields=null,
         }
     }
 
-    // Subconsulta relacionados con los campos por defecto
-    if($conditions[0] == 'TODOS'){
+    if($conditions[0] == "TODOS-OTROS"){
+
+
         $subquery_cohort = "(SELECT moodle_user.username, 
                                 moodle_user.firstname,  
                                 moodle_user.lastname,
@@ -822,6 +824,44 @@ function get_ases_report($general_fields=null,
                             INNER JOIN {talentospilos_usuario} AS ases_user ON ases_user.id = user_extended.id_ases_user
                             INNER JOIN {talentospilos_estad_programa} AS program_statuses ON program_statuses.id = user_extended.program_status
                             WHERE instance_cohort.id_instancia = $instance_id AND user_extended.tracking_status = 1
+                                AND cohort.idnumber NOT LIKE 'SPP%'
+                                AND cohort.idnumber NOT LIKE 'SPE%'                                
+                                AND cohort.idnumber NOT LIKE 'SPT%'
+                                AND cohort.idnumber NOT LIKE '3740%'
+                            GROUP BY moodle_user.username, 
+                                     moodle_user.firstname, 
+                                     moodle_user.lastname, 
+                                     student_id,
+                                     moodle_user.email,
+                                     ases_user.celular,
+                                     ases_user.direccion_res,
+                                     ases_user.num_doc, 
+                                     program_statuses.nombre, 
+                                     user_extended.id_academic_program) AS ases_students";
+    }
+
+
+    // Subconsulta relacionados con los campos por defecto
+    else if($conditions[0] == 'TODOS'){
+        $subquery_cohort = "(SELECT moodle_user.username, 
+                                moodle_user.firstname,  
+                                moodle_user.lastname,
+                                ases_user.num_doc,
+                                ases_user.id AS student_id,
+                                moodle_user.email,
+                                ases_user.celular,
+                                ases_user.direccion_res,
+                                STRING_AGG(cohort.idnumber, ', ') AS cohorts_student,
+                                program_statuses.nombre AS program_status,
+                                user_extended.id_academic_program	     
+                            FROM {cohort} AS cohort 
+                            INNER JOIN {talentospilos_inst_cohorte} AS instance_cohort ON cohort.id = instance_cohort.id_cohorte
+                            INNER JOIN {cohort_members} AS cohort_member ON cohort_member.cohortid = cohort.id
+                            INNER JOIN {user} AS moodle_user ON moodle_user.id = cohort_member.userid
+                            INNER JOIN {talentospilos_user_extended} AS user_extended ON user_extended.id_moodle_user = moodle_user.id
+                            INNER JOIN {talentospilos_usuario} AS ases_user ON ases_user.id = user_extended.id_ases_user
+                            INNER JOIN {talentospilos_estad_programa} AS program_statuses ON program_statuses.id = user_extended.program_status
+                            WHERE instance_cohort.id_instancia = $instance_id AND user_extended.tracking_status = 1                                
                             GROUP BY moodle_user.username, 
                                      moodle_user.firstname, 
                                      moodle_user.lastname, 
