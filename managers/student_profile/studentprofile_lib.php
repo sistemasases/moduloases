@@ -53,14 +53,13 @@ require_once($CFG->dirroot.'/user/lib.php');
      
      return $reasons_array;
  }
- 
- /**
+
+/**
  * Get id switch event name 
  *
  * @see  getIdEventLogs()
  * @return int id event
  */
-
  function getIdEventLogs($eventname){
 
     global $DB;
@@ -68,10 +67,6 @@ require_once($CFG->dirroot.'/user/lib.php');
     return $DB->get_record_sql($sql_query);
 
  }
- 
-
-
-
 
 /**
  * Update the user image profile from php file by user id
@@ -114,7 +109,8 @@ function update_user_image_profile($mdl_user_id, $php_file) {
 
     print_r($userform->get_data());
 }
- /**
+
+/**
  * Gets a set of ASES status
  *
  * @see get_status_ases()
@@ -131,7 +127,7 @@ function update_user_image_profile($mdl_user_id, $php_file) {
      return $status_ases_array;
  }
 
-  /**
+/**
  * Gets true or false if register economics_data exist
  *
  * @see get_exist_economics_data()
@@ -145,7 +141,7 @@ function get_exist_economics_data($id_ases_user){
     return $DB->record_exists('talentospilos_economics_data',array('id_ases_user'=> $id_ases_user));
 }
 
-  /**
+/**
  * Gets record with student economics_data information
  *
  * @see get_economics_data($id_ases)
@@ -166,7 +162,7 @@ function get_economics_data($id_ases){
     
 }
 
-  /**
+/**
  * Gets record with student academics_data information
  *
  * @see get_academics_data($id_ases)
@@ -186,7 +182,7 @@ function get_academics_data($id_ases){
 }
 
 
-   /**
+/**
  * Gets true or false if register academics_data exist
  *
  * @see get_exist_academics_data()
@@ -200,7 +196,7 @@ function get_exist_academics_data($id_ases_user){
     return $DB->record_exists('talentospilos_academics_data',array('id_ases_user'=> $id_ases_user));
 }
 
-   /**
+/**
  * Gets true or false if register health_data exist
  *
  * @see get_exist_health_data()
@@ -214,7 +210,7 @@ function get_exist_health_data($id_ases_user){
     return $DB->record_exists('talentospilos_health_data',array('id_ases_user'=> $id_ases_user));
 }
 
-  /**
+/**
  * Gets record with student health_data information
  *
  * @see get_health_data($id_ases)
@@ -234,8 +230,6 @@ function get_health_data($id_ases){
     
 }
 
-
-
 /**
  * Return a moodle url for student profile given a student code by input
  * @param $courseid
@@ -253,7 +247,7 @@ function get_student_profile_url($courseid, $instanceid, $student_code): moodle_
 }
 
 
- /**
+/**
  * Get Condición de excepción registradas
  *
  * @see get_cond_excepcion()
@@ -267,7 +261,7 @@ function get_cond_excepcion()
 }
 
 
- /**
+/**
  * Get Condición de excepción segun id
  *
  * @see get_cond()
@@ -280,7 +274,7 @@ function get_cond($id)
    return $DB->get_record_sql($sql_query);
 }
 
- /**
+/**
  * Get estados civiles registrados
  *
  * @see get_estados_civiles($id_cond)

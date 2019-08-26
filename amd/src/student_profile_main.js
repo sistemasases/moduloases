@@ -52,7 +52,7 @@ define(['jquery',
             /**
              * Event that loads asynchronously the geographic tab
              */
-            $("#geographic_li").on('click',load_geographic_tab);
+            $("#geographic_li").on('click', {tab_to_load: 'geographic'}, load_tabs);
 
             /**
              * Event that moves the Google Maps map from
@@ -1089,55 +1089,76 @@ define(['jquery',
 
     /**
      * @author Jorge Eduardo Mayor <mayor.jorge@correounivale.edu.co>
-     * @see load_geographic_tab()
-     * @desc Loads the geographic tab
+     * @see load_tabs()
+     * @desc Loads the specified tab on the student profile.
      */
-    function load_geographic_tab() {
+    function load_tabs(event) {
 
-            var id_ases = $('#id_ases').val();
-            $.ajax({
-                type: "POST",
-                data: JSON.stringify({
-                    "func": 'load_geographic_tab',
-                    "params": [id_ases],
-                }),
-                url: "../managers/student_profile/geographic_api.php",
-                success: function(msg) {
-                    if(msg.status_code == 0) {
-                        console.log(msg);
+        var tab_to_load = event.data.tab_to_load;
+        var id_ases = $('#id_ases').val();
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({
+                "func": 'load_geographic_tab',
+                "params": [id_ases],
+            }),
+            url: "../managers/student_profile/geographic_api.php",
+            success: function(msg) {
+                if(msg.status_code == 0) {
+                    console.log(msg);
 
-                        $.ajax({
-                            url: "../templates/view_geographic_tab_sp.mustache",
-                            data: null,
-                            dataType: "text",
-                            async: false,
-                            success: function( template ){
+                    $.ajax({
+                        url: "../templates/view_"+tab_to_load+"_tab_sp.mustache",
+                        data: null,
+                        dataType: "text",
+                        async: false,
+                        success: function( template ){
 
-                                let geographic_tab = $(mustache.render( template, msg.data_response ));
-                                $(".tab-content").append( geographic_tab );
-                                $(".active").removeClass("active");
-                                $("#geographic_tab").addClass("active");
-                                $("#geographic_li").addClass("active");
-                                geographic.init();
-                                $("#mapa").appendTo("#geographic_map");
-                                $("#geographic_li").off('click', load_geographic_tab);
-                            },
-                            error: function(){
-                                console.log( "../templates/view_geographic_tab_sp.mustache cannot be reached. " );
+                            switch(tab_to_load){
+                                case 'socioed':
+                                    let socioed_tab = $(mustache.render( template, msg.data_response ));
+                                    $(".tab-content").append( socioed_tab );
+                                    socied.init();
+                                    break;
+                                case 'academic':
+                                    let academic_tab = $(mustache.render( template, msg.data_response ));
+                                    $(".tab-content").append( academic_tab );
+                                    academic.init();
+                                    break;
+                                case 'geographic':
+                                    let geographic_tab = $(mustache.render( template, msg.data_response ));
+                                    $(".tab-content").append( geographic_tab );
+                                    geographic.init();
+                                    $("#mapa").appendTo("#geographic_map");
+                                    break;
+                                case 'others':
+                                    let others_tab = $(mustache.render( template, msg.data_response ));
+                                    $(".tab-content").append( others_tab );
+                                   others.init();
+                                    break;
                             }
-                        });
 
-                    } else {
-                        console.log(msg);
-                    }
-                },
-                dataType: "json",
-                cache: "false",
-                error: function(msg) {
+                            $(".active").removeClass("active");
+                            $("#"+tab_to_load+"_tab").addClass("active");
+                            $("#"+tab_to_load+"_li").addClass("active");
+                            $("#"+tab_to_load+"_li").off('click', load_tabs);
+                        },
+                        error: function(){
+                            console.log( "../templates/view_"+tab_to_load+"_tab_sp.mustache cannot be reached." );
+                        }
+                    });
+
+                } else {
                     console.log(msg);
                 }
-            });
-        }
+            },
+            dataType: "json",
+            cache: "false",
+            error: function(msg) {
+                console.log(msg);
+            }
+        });
+    }
 
         // Funciones para la validación de formularios
         function has_letters(str) {
