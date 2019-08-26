@@ -43,11 +43,13 @@
     }
 
     .margin_bottom_10px .select2.select2-container.select2-container--default {
-
         font-size: 15px !important;
+    }
+
+    #select2-select_neighborhood-container, #select2-geographic_ciudad-container{
+        line-height: 14px !important;
         font-weight: normal !important;
-
-
+        padding-top: 12px !important;
     }
 
     /* Controles datos generales */
