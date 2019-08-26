@@ -35,6 +35,23 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
             });
 
             $("#select_neighborhood").select2({
+
+                language: {
+
+                    noResults: function() {
+
+                        return "No hay resultado";
+                    },
+                    searching: function() {
+
+                        return "Buscando..";
+                    }
+                },
+                dropdownAutoWidth: true,
+            });
+
+            $("#geographic_ciudad").select2({
+
                 language: {
 
                     noResults: function() {

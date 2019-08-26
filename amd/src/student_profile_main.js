@@ -1117,6 +1117,7 @@ define(['jquery',
                                 $(".tab-content").append( geographic_tab );
                                 $(".active").removeClass("active");
                                 $("#geographic_tab").addClass("active");
+                                $("#geographic_li").addClass("active");
                                 geographic.init();
                                 $("#mapa").appendTo("#geographic_map");
                                 $("#geographic_li").off('click', load_geographic_tab);
