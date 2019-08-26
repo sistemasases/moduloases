@@ -322,9 +322,9 @@ function get_ocupaciones()
 /**
  * Gets student's city on talentospilos_demografia
  *
- * @see get_id_ciudad_res()
+ * @see get_ciudad_res()
  * @param $id_ases
- * @return object 
+ * @return object
  */
 function get_ciudad_res($id_ases)
 {
@@ -333,10 +333,14 @@ function get_ciudad_res($id_ases)
     $sql_query = "SELECT id_ciudad FROM {talentospilos_demografia} WHERE id_usuario = $id_ases";
     $id_ciudad_res = $DB->get_record_sql($sql_query)->id_ciudad;
 
-    $sql_query = "SELECT nombre FROM {talentospilos_municipio} WHERE id = $id_ciudad_res";
-    $nombre_ciudad_res = $DB->get_record_sql($sql_query)->nombre;
+    if($id_ciudad_res) {
+        $sql_query = "SELECT nombre FROM {talentospilos_municipio} WHERE id = $id_ciudad_res";
+        $nombre_ciudad_res = $DB->get_record_sql($sql_query)->nombre;
 
-   return $nombre_ciudad_res;
+        return $nombre_ciudad_res;
+    } else{
+        return "NO DEFINIDO";
+    }
 }
 
 /**
