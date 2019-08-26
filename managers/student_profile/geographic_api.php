@@ -103,16 +103,37 @@ if(isset($input->func) && isset($input->params)) {
         } else {
             return_with_code(-6);
         }
-    }else if($input->func == 'load_geographic_tab'){
+    }else if($input->func == 'load_tabs'){
 
         /**
          * [0] => id_ases: string
+         * [1] => tab_to_load: string
          */
-        if(count($input->params) == 1)
+        if(count($input->params) == 2)
         {
             $id_ases = $input->params[0];
+            $tab_to_load = $input->params[1];
+
             if(is_string($id_ases)) {
-                $result = student_profile_load_geographic_tab($id_ases);
+
+                switch($tab_to_load){
+                    case 'socioed':
+                        $result = student_profile_load_geographic_tab($id_ases);
+                        break;
+                    case 'academic':
+                        $result = student_profile_load_geographic_tab($id_ases);
+                        break;
+                    case 'geographic':
+                        $result = student_profile_load_geographic_tab($id_ases);
+                        break;
+                    case 'others':
+                        $result = student_profile_load_geographic_tab($id_ases);
+                        break;
+                    default:
+                        return_with_code(-3);
+                        break;
+                }
+
                 if($result != null){
                     echo json_encode(
                         array(
