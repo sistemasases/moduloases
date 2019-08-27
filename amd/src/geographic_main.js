@@ -34,6 +34,38 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 }
             });
 
+            $("#select_neighborhood").select2({
+
+                language: {
+
+                    noResults: function() {
+
+                        return "No hay resultado";
+                    },
+                    searching: function() {
+
+                        return "Buscando..";
+                    }
+                },
+                dropdownAutoWidth: true,
+            });
+
+            $("#geographic_ciudad").select2({
+
+                language: {
+
+                    noResults: function() {
+
+                        return "No hay resultado";
+                    },
+                    searching: function() {
+
+                        return "Buscando..";
+                    }
+                },
+                dropdownAutoWidth: true,
+            });
+
             $('#button_edit_geographic').on('click', function(){
                 $('#button_edit_geographic').attr('hidden', true);
                 $('#div_save_buttons').removeAttr('hidden');

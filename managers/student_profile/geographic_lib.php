@@ -18,8 +18,10 @@
  * Ases block
  *
  * @author     Iader E. García Gómez
+ * @author     Jorge Eduardo Mayor
  * @package    block_ases
  * @copyright  2018 Iader E. García <iadergg@gmail.com>
+ * @copyright  2019 Jorge Eduardo Mayor <mayor.jorge@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
  
@@ -253,14 +255,16 @@ function student_profile_load_geographic_tab($id_ases){
 
     $options_municipios = '';
 
-    $options_municipios .= "<optgroup label='Populares'> <option value='1'>NO DEFINIDO</option> </optgroup>" ;
+
+    //$mun->id = 1 is the not define city
+    //$mun->id = 1079 is Cali
 
     foreach($municipios as $municipio){
         $key = key($municipios);
         $options_municipios .= "<optgroup label = '$key'>";
 
         foreach($municipio as $mun){
-            if($municipio_student == $mun->id){
+            if(($municipio_student == 1 && $mun->id==1079) || ($municipio_student == $mun->id && $municipio_student != 1)){
                 $options_municipios .= "<option value='$mun->id' selected='selected'>$mun->nombre</option>";
             }else{
                 $options_municipios .= "<option value='$mun->id'>$mun->nombre</option>";
