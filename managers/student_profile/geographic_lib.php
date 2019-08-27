@@ -222,8 +222,7 @@ function student_profile_save_geographic_info($id_ases, $latitude, $longitude, $
  * @see student_profile_get_municipios()
  * @return object --> with MUNICIPIOS information
  */
-function student_profile_get_municipios()
-{
+function student_profile_get_municipios(){
     global $DB;
     $array_departamentos = array ();
     $sql_query_dpto = "SELECT id, nombre FROM {talentospilos_departamento}";
@@ -238,23 +237,43 @@ function student_profile_get_municipios()
 }
 
 /**
- * @see student_profile_load_geographic_tab($id_ases)
- * @desc Gets all the geographic information of an student
- * @param $id_ases --> ASES student id
- * @return Object
+ * @see student_profile_get_options_neighborhoods($student_neighborhood)
+ * @desc Constructs a select with the neighborhoods.
+ * @param $student_neighborhood --> Neighborhood's student id
+ * @return String
  */
-function student_profile_load_geographic_tab($id_ases){
+function student_profile_get_options_neighborhoods($student_neighborhood){
 
-    $record = new stdClass();
-
-    $geographic_object = get_geographic_info($id_ases);
     $neighborhoods_array = get_neighborhoods();
+
+    $neighborhoods = "<option>No registra</option>";
+
+    for ($i = 1; $i <= count($neighborhoods_array); $i++) {
+        if(isset($student_neighborhood)){
+            if ($neighborhoods_array[$i]->id == (int) $student_neighborhood) {
+                $neighborhoods .= "<option value='" . $neighborhoods_array[$i]->id . "' selected>" . $neighborhoods_array[$i]->nombre . "</option>";
+            } else {
+                $neighborhoods .= "<option value='" . $neighborhoods_array[$i]->id . "'>" . $neighborhoods_array[$i]->nombre . "</option>";
+            }
+        }else{
+            $neighborhoods .= "<option value='" . $neighborhoods_array[$i]->id . "'>" . $neighborhoods_array[$i]->nombre . "</option>";
+        }
+    }
+
+    return $neighborhoods;
+}
+
+/**
+ * @see student_profile_get_options_municipios($student_city)
+ * @desc Constructs a select with the cities.
+ * @param $student_city --> City's student id
+ * @return String
+ */
+function student_profile_get_options_municipios($student_city){
+
     $municipios= student_profile_get_municipios();
 
-    $municipio_student = $geographic_object->id_city;
-
     $options_municipios = '';
-
 
     //$mun->id = 1 is the not define city
     //$mun->id = 1079 is Cali
@@ -264,7 +283,7 @@ function student_profile_load_geographic_tab($id_ases){
         $options_municipios .= "<optgroup label = '$key'>";
 
         foreach($municipio as $mun){
-            if(($municipio_student == 1 && $mun->id==1079) || ($municipio_student == $mun->id && $municipio_student != 1)){
+            if(($student_city == 1 && $mun->id==1079) || ($student_city == $mun->id && $student_city != 1)){
                 $options_municipios .= "<option value='$mun->id' selected='selected'>$mun->nombre</option>";
             }else{
                 $options_municipios .= "<option value='$mun->id'>$mun->nombre</option>";
@@ -276,22 +295,26 @@ function student_profile_load_geographic_tab($id_ases){
         $options_municipios .= "</optgroup>";
     }
 
-    $record->options_municipio_act = $options_municipios;
+    return $options_municipios;
+}
 
-    $record->muni = $municipios;
-    $neighborhoods = "<option>No registra</option>";
+/**
+ * @see student_profile_load_geographic_tab($id_ases)
+ * @desc Gets all the geographic information of an student
+ * @param $id_ases --> ASES student id
+ * @return Object
+ */
+function student_profile_load_geographic_tab($id_ases){
 
-    for ($i = 1; $i <= count($neighborhoods_array); $i++) {
-        if(isset($geographic_object->neighborhood)){
-            if ($neighborhoods_array[$i]->id == (int) $geographic_object->neighborhood) {
-                $neighborhoods .= "<option value='" . $neighborhoods_array[$i]->id . "' selected>" . $neighborhoods_array[$i]->nombre . "</option>";
-            } else {
-                $neighborhoods .= "<option value='" . $neighborhoods_array[$i]->id . "'>" . $neighborhoods_array[$i]->nombre . "</option>";
-            }
-        }else{
-            $neighborhoods .= "<option value='" . $neighborhoods_array[$i]->id . "'>" . $neighborhoods_array[$i]->nombre . "</option>";
-        }
-    }
+    $record = new stdClass();
+
+    $geographic_object = get_geographic_info($id_ases);
+
+    $student_city = $geographic_object->id_city;
+    $student_neighborhood = $geographic_object->neighborhood;
+
+    $record->options_municipio_act = student_profile_get_options_municipios($student_city);
+    $record->select_neighborhoods = student_profile_get_options_neighborhoods($student_neighborhood);
 
     $record->view_geographic_config_sp = true;
     $record->update_geographic_tab_sp = true;
@@ -301,7 +324,6 @@ function student_profile_load_geographic_tab($id_ases){
     $live_risk_zone = $geographic_object->live_risk_zone;
     $geographic_risk_level = $geographic_object->risk_level;
 
-    $record->select_neighborhoods = $neighborhoods;
     $record->live_far_away = ($live_far_away)?true:false;
     $record->live_risk_zone = ($live_risk_zone)?true:false;
     $record->res_address = $geographic_object->res_address;
@@ -330,5 +352,4 @@ function student_profile_load_geographic_tab($id_ases){
     }
 
     return $record;
-
 }

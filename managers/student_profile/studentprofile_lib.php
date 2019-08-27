@@ -37,6 +37,10 @@ require_once($CFG->dirroot.'/user/editlib.php');
 require_once($CFG->dirroot.'/user/profile/lib.php');
 require_once($CFG->dirroot.'/user/lib.php');
 
+require_once('academic_lib.php');
+require_once('geographic_lib.php');
+require_once('others_tab_lib.php');
+
 /**
  * Gets all reasons a student quit or delay studies
  *
@@ -1892,3 +1896,4 @@ function update_tracking_status($id_ases_user, $id_academic_program){
 
     return $result;
 }
+

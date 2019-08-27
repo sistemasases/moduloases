@@ -2104,7 +2104,6 @@ define(['jquery',
                         "error"
                     );
                 }
-
             },
             dataType: "text",
             cache: "false",
@@ -2114,7 +2113,6 @@ define(['jquery',
                     "Error al comunicarse con el servidor, por favor intentelo nuevamente.",
                     "error"
                 );
-
             },
         });
     }
