@@ -25,6 +25,7 @@
 require_once(dirname(__FILE__). '/../../../../config.php');
 require_once('../lib/student_lib.php');
 require_once('geographic_lib.php');
+require_once('studentprofile_lib.php');
 
 date_default_timezone_set('America/Bogota');
 
@@ -118,16 +119,16 @@ if(isset($input->func) && isset($input->params)) {
 
                 switch($tab_to_load){
                     case 'socioed':
-                        $result = student_profile_load_geographic_tab($id_ases);
+                        $result = student_profile_load_socioed_tab($id_ases);
                         break;
                     case 'academic':
-                        $result = student_profile_load_geographic_tab($id_ases);
+                        $result = student_profile_load_academic_tab($id_ases);
                         break;
                     case 'geographic':
                         $result = student_profile_load_geographic_tab($id_ases);
                         break;
                     case 'others':
-                        $result = student_profile_load_geographic_tab($id_ases);
+                        $result = student_profile_load_others_tab($id_ases);
                         break;
                     default:
                         return_with_code(-3);

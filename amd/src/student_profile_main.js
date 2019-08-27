@@ -17,7 +17,8 @@ define(['jquery',
     'block_ases/select2',
     'block_ases/Chart',
     'block_ases/mustache',
-    'block_ases/geographic_main'], function ($, bootstrap, d3, sweetalert, jqueryui, select2, Chart, mustache, geographic) {
+    'block_ases/academic_profile_main',
+    'block_ases/geographic_main'], function ($, bootstrap, d3, sweetalert, jqueryui, select2, Chart, mustache, academic, geographic) {
 
     return {
         init: function (data_init) {
@@ -48,6 +49,11 @@ define(['jquery',
 
                 document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=driving'></iframe>";
             }
+
+            /**
+             * Event that loads asynchronously the academic tab
+             */
+            $("#academic_li").on('click', {tab_to_load: 'academic'}, load_tabs);
 
             /**
              * Event that loads asynchronously the geographic tab
@@ -649,7 +655,7 @@ define(['jquery',
                     borderWidth: 2,
                     fontsize: 12
                 }]
-            }
+            };
 
             var chart_options = {
                 scale: {
@@ -1118,7 +1124,6 @@ define(['jquery',
                                 case 'socioed':
                                     let socioed_tab = $(mustache.render( template, msg.data_response ));
                                     $(".tab-content").append( socioed_tab );
-                                    socied.init();
                                     break;
                                 case 'academic':
                                     let academic_tab = $(mustache.render( template, msg.data_response ));
@@ -1134,7 +1139,6 @@ define(['jquery',
                                 case 'others':
                                     let others_tab = $(mustache.render( template, msg.data_response ));
                                     $(".tab-content").append( others_tab );
-                                   others.init();
                                     break;
                             }
 
