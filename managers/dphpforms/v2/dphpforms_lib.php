@@ -1113,8 +1113,8 @@ function dphpformsV2_generate_RADIOBUTTON( $id_formulario_pregunta, $context, $s
     
     // Pendiente de pruebas
     $option_pos = array();
-    foreach ($options as $key => $row){
-        $option_pos[$key] = $row->posicion;
+    foreach ($options as $key => $_row){
+        $option_pos[$key] = $_row->posicion;
     }
     array_multisort($option_pos, SORT_ASC, $options);
     // Fin del pendiente
@@ -1180,8 +1180,8 @@ function dphpformsV2_generate_CHECKBOX( $id_formulario_pregunta, $context, $stat
     
     // Pendiente de pruebas
     $option_pos = array();
-    foreach ($options as $key => $row){
-        $option_pos[$key] = $row->posicion;
+    foreach ($options as $key => $_row){
+        $option_pos[$key] = $_row->posicion;
     }
     array_multisort($option_pos, SORT_ASC, $options);
     // Fin del pendiente
