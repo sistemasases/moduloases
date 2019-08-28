@@ -299,14 +299,9 @@ function get_html_cohorts_select($instance_id, $include_todos=true,  $name='cond
             $cohorts_select.='<option value="TODOS">Todas las cohortes</option>';
         }
 
-        /*foreach($cohorts as $ch){
-            $cohorte = new stdClass();//create a new
-            $cohorte->idnumber = $ch->idnumber;
-            $cohorte->assigned = false;
-
-            array_push($status_cohorts, $cohorte);
-        }*/
-
+        foreach($cohorts as $ch) {
+            $ch->assigned = false;
+        }
 
         foreach($cohorts_groups as $cohort_group){
             $cohorts_select.="<optgroup label='".$cohort_group['name']."'>";
@@ -315,21 +310,24 @@ function get_html_cohorts_select($instance_id, $include_todos=true,  $name='cond
             }
 
             foreach($cohorts as $ch){
-                //$ch->assigned = false;
                 if(substr($ch->idnumber, 0, 3) == substr($cohort_group['id'], 0, 3)){
-                    //$ch->assigned = true;
+                    $ch->assigned = true;
                     $cohorts_select.= "<option value='$ch->idnumber'>$ch->name</option>";
+                }
+            }
+
+            if($cohort_group['id'] == 'OTROS'){
+                foreach($cohorts as $ch){
+                    if(!$ch->assigned){
+                        $cohorts_select.= "<option value='$ch->idnumber'>$ch->name</option>";
+                    }
                 }
             }
 
             $cohorts_select.="</optgroup>";
         }
 
-        /*foreach($cohorts as $ch){
-            if(!$ch->assigned){
-                $cohorts_select.= "<option value='$ch->idnumber'>$ch->name</option>";
-            }
-        }*/
+
 
     }else{
         foreach($cohorts as $ch){
