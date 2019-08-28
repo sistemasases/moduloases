@@ -115,6 +115,40 @@ SQL;
     return $DB->get_records_sql($sql);
 }
 
+/*
+ used tables:
+mdl_talentospilos_history_academ
+    | id | id_estudiante | id_semestre | id_programa | promedio semestre | promedio_acumulado | json_materias |
+
+mdl_cohort_members
+    | id | cohortid | userid | timeadded |
+
+mdl_talentospilos_usuario
+    | id | tipo_doc_ini | num_doc_ini | tipo_doc | num_doc | dir_ini | barrio_ini | id_ciudad_ini | tel_ini | direccion_res | barrio_res | id_ciudad_res | tel_res | celular | emailpilos | acudiente | tel_acudiente | fecha_nac | id_ciudad_nac | sexo | colegio | estamento | observacion | estado | grupo | id_discapacidad | ayuda_disc | estado_ases | id_pais | vive_con | hijos | id_cond_excepcion | id_estado_civil | id_identidad_gen | id_act_simultanea | id_economics_data | anio_ingreso | actividades_ocio_deporte | id_schema_json | json_detalle | puntaje_icfes | estrato | id_etnia |
+
+mdl_talentospilos_history_academ
+    | id | id_estudiante | id_semestre | id_programa | promedio_semestre | promedio_acumulado | json_materias |
+
+mdl_talentospilos_history_cancel
+    | id | id_history | fecha_cancelacion |
+
+mdl_talentospilos_user_extended
+    | id | id_moodle_user | id_ases_user | id_academic_program | tracking_status | program_status |
+
+mdl_talentospilos_semestre
+    | id | nombre | fecha_inicio | fecha_fin |
+
+mdl_user
+    | id| auth| confirmed| policyagreed| deleted| username| password| email| emailstop| icq| skype| yahoo| aim| msn| phone1| phone2| institution| department| address| city| country| theme| timezone| firstaccess| lastaccess| lastlogin| currentlogin| lastip| secret| picture| url| description| mailformat| maildigest| maildisplay| autosubscribe| trackforums| timemodified| trustbitmask| imagealt| mnethostid| firstname| lastname| lang| idnumber| descriptionformat| timecreated| suspended| lastnamephonetic| firstnamephonetic| middlename| alternatename| calendartype |
+
+mdl_talentospilos_inst_cohorte
+    | id | id_cohorte | id_instancia |
+
+mdl_cohort
+    | id | contextid | name | idnumber | description | descriptionformat | component | timecreated | timemodified | visible | theme |
+
+ */
+
 
 class ActiveSemestersReportField {
     public $codigo;
