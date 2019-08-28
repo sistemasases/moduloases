@@ -4,6 +4,7 @@ require_once(dirname(__FILE__).'/../instance_management/instance_lib.php');
 require_once(dirname(__FILE__).'/../lib/lib.php');
 require_once(dirname(__FILE__).'/../lib/student_lib.php');
 require_once(dirname(__FILE__).'/../user_management/user_lib.php');
+require_once(dirname(__FILE__).'/../cohort/cohort_lib.php');
 
 /**
  * Función que recupera riesgos 
@@ -123,6 +124,35 @@ function get_cohorts_by_idnumber($id_number){
     return $sub_query;
  }
 
+
+
+ function condicionCohorte($cohorte, $instance_id){
+
+     $sql_where = "";
+
+     if ($cohorte == 'TODOS-OTROS') {
+         $sql_where .= " WHERE instance_cohort.id_instancia = $instance_id AND user_extended.tracking_status = 1
+                         AND cohort.idnumber NOT LIKE 'SPP%'
+                         AND cohort.idnumber NOT LIKE 'SPE%'
+                         AND cohort.idnumber NOT LIKE 'SPT%'
+                         AND cohort.idnumber NOT LIKE '3740%'  ";
+     } else if ($cohorte == 'TODOS') {
+         $sql_where .= " WHERE instance_cohort.id_instancia = $instance_id AND user_extended.tracking_status = 1 ";
+     } else if (substr($cohorte, 0, 5) == 'TODOS') {
+
+         $idnumber_cohort = substr($cohorte, 6);
+
+         $sql_where .= " WHERE instance_cohort.id_instancia = $instance_id AND user_extended.tracking_status = 1
+                                  AND cohort.idnumber LIKE '$idnumber_cohort%' ";
+     } else {
+         $sql_where .= " WHERE instance_cohort.id_instancia = $instance_id AND user_extended.tracking_status = 1
+                                  AND cohort.idnumber = '$cohorte' ";
+     }
+
+     return $sql_where;
+ }
+
+
 /**
  * Funcion recupera la informacion necesaria para la grafica de sexo de acuerdo a la cohorte seleccionado
  * 
@@ -132,20 +162,7 @@ function get_cohorts_by_idnumber($id_number){
 function getGraficSex($cohorte, $ases_status, $icetex_status, $program_status, $instance_id){
     global $DB;
 
-    $sql_where = "";
-
-    if($cohorte == 'TODOS'){
-        $sql_where = " WHERE instance_cohort.id_instancia = $instance_id AND user_extended.tracking_status = 1 ";
-    }else if (substr($cohorte, 0, 5) == 'TODOS'){
-
-        $idnumber_cohort = substr($cohorte, 6);
-
-        $sql_where = " WHERE instance_cohort.id_instancia = $instance_id AND user_extended.tracking_status = 1
-                                  AND cohort.idnumber LIKE '$idnumber_cohort%' ";
-    }else{
-        $sql_where = " WHERE instance_cohort.id_instancia = $instance_id AND user_extended.tracking_status = 1
-                                  AND cohort.idnumber = '$cohorte' ";
-    }
+    $sql_where = condicionCohorte($cohorte, $instance_id);
 
     $sql_query = "SELECT sexo AS nombre, COUNT(*) AS cantidad FROM
                     
@@ -193,20 +210,7 @@ function getGraficSex($cohorte, $ases_status, $icetex_status, $program_status, $
 function getGraficAge($cohorte, $ases_status, $icetex_status, $program_status, $instance_id){
     global $DB;
 
-    $sql_where = "";
-
-    if($cohorte == 'TODOS'){
-        $sql_where = " WHERE instance_cohort.id_instancia = $instance_id AND user_extended.tracking_status = 1 ";
-    }else if (substr($cohorte, 0, 5) == 'TODOS'){
-
-        $idnumber_cohort = substr($cohorte, 6);
-
-        $sql_where = " WHERE instance_cohort.id_instancia = $instance_id AND user_extended.tracking_status = 1
-                                  AND cohort.idnumber LIKE '$idnumber_cohort%' ";
-    }else{
-        $sql_where = " WHERE instance_cohort.id_instancia = $instance_id AND user_extended.tracking_status = 1
-                                  AND cohort.idnumber = '$cohorte' ";
-    }
+    $sql_where = condicionCohorte($cohorte, $instance_id);
 
     $sql_query = "SELECT edad AS nombre, COUNT(*) AS cantidad FROM                    
                         (SELECT 
@@ -248,22 +252,7 @@ function getGraficAge($cohorte, $ases_status, $icetex_status, $program_status, $
 function getGraficPrograma($cohorte, $ases_status, $icetex_status, $program_status, $instance_id){
     global $DB;
 
-
-
-    $sql_where = "";
-
-    if($cohorte == 'TODOS'){
-        $sql_where = " WHERE instance_cohort.id_instancia = $instance_id AND user_extended.tracking_status = 1 ";
-    }else if (substr($cohorte, 0, 5) == 'TODOS'){
-
-        $idnumber_cohort = substr($cohorte, 6);
-
-        $sql_where = " WHERE instance_cohort.id_instancia = $instance_id AND user_extended.tracking_status = 1
-                                  AND cohort.idnumber LIKE '$idnumber_cohort%' ";
-    }else{
-        $sql_where = " WHERE instance_cohort.id_instancia = $instance_id AND user_extended.tracking_status = 1
-                                  AND cohort.idnumber = '$cohorte' ";
-    }
+    $sql_where = condicionCohorte($cohorte, $instance_id);
 
     
     $sql_query = " SELECT nombre_programa AS nombre, COUNT(*) AS cantidad FROM
@@ -320,20 +309,7 @@ function getGraficFacultad($cohorte, $ases_status, $icetex_status, $program_stat
     global $DB;
 
 
-    $sql_where = "";
-
-    if($cohorte == 'TODOS'){
-        $sql_where = " WHERE instance_cohort.id_instancia = $instance_id AND user_extended.tracking_status = 1 ";
-    }else if (substr($cohorte, 0, 5) == 'TODOS'){
-
-        $idnumber_cohort = substr($cohorte, 6);
-
-        $sql_where = " WHERE instance_cohort.id_instancia = $instance_id AND user_extended.tracking_status = 1
-                                  AND cohort.idnumber LIKE '$idnumber_cohort%' ";
-    }else{
-        $sql_where = " WHERE instance_cohort.id_instancia = $instance_id AND user_extended.tracking_status = 1
-                                  AND cohort.idnumber = '$cohorte' ";
-    }
+    $sql_where = condicionCohorte($cohorte, $instance_id);
 
     $sql_query = "SELECT nombre_facultad AS nombre, COUNT(*) AS cantidad FROM
 
@@ -429,20 +405,7 @@ function getGraficEstado($cohorte){
 function getGraficCondExcepcion($cohorte, $ases_status, $icetex_status, $program_status, $instance_id){
     global $DB;
 
-    $sql_where = "";
-
-    if($cohorte == 'TODOS'){
-        $sql_where = " WHERE instance_cohort.id_instancia = $instance_id AND user_extended.tracking_status = 1 ";
-    }else if (substr($cohorte, 0, 5) == 'TODOS'){
-
-        $idnumber_cohort = substr($cohorte, 6);
-
-        $sql_where = " WHERE instance_cohort.id_instancia = $instance_id AND user_extended.tracking_status = 1
-                                  AND cohort.idnumber LIKE '$idnumber_cohort%' ";
-    }else{
-        $sql_where = " WHERE instance_cohort.id_instancia = $instance_id AND user_extended.tracking_status = 1
-                                  AND cohort.idnumber = '$cohorte' ";
-    }
+    $sql_where = condicionCohorte($cohorte, $instance_id);
 
     $sql_query = "SELECT COUNT(*) AS cantidad, nombre_largo, nombre FROM
 
@@ -801,8 +764,9 @@ function get_ases_report($general_fields=null,
         }
     }
 
-    // Subconsulta relacionados con los campos por defecto
-    if($conditions[0] == 'TODOS'){
+    if($conditions[0] == "TODOS-OTROS"){
+
+
         $subquery_cohort = "(SELECT moodle_user.username, 
                                 moodle_user.firstname,  
                                 moodle_user.lastname,
@@ -822,6 +786,44 @@ function get_ases_report($general_fields=null,
                             INNER JOIN {talentospilos_usuario} AS ases_user ON ases_user.id = user_extended.id_ases_user
                             INNER JOIN {talentospilos_estad_programa} AS program_statuses ON program_statuses.id = user_extended.program_status
                             WHERE instance_cohort.id_instancia = $instance_id AND user_extended.tracking_status = 1
+                                AND cohort.idnumber NOT LIKE 'SPP%'
+                                AND cohort.idnumber NOT LIKE 'SPE%'                                
+                                AND cohort.idnumber NOT LIKE 'SPT%'
+                                AND cohort.idnumber NOT LIKE '3740%'
+                            GROUP BY moodle_user.username, 
+                                     moodle_user.firstname, 
+                                     moodle_user.lastname, 
+                                     student_id,
+                                     moodle_user.email,
+                                     ases_user.celular,
+                                     ases_user.direccion_res,
+                                     ases_user.num_doc, 
+                                     program_statuses.nombre, 
+                                     user_extended.id_academic_program) AS ases_students";
+    }
+
+
+    // Subconsulta relacionados con los campos por defecto
+    else if($conditions[0] == 'TODOS'){
+        $subquery_cohort = "(SELECT moodle_user.username, 
+                                moodle_user.firstname,  
+                                moodle_user.lastname,
+                                ases_user.num_doc,
+                                ases_user.id AS student_id,
+                                moodle_user.email,
+                                ases_user.celular,
+                                ases_user.direccion_res,
+                                STRING_AGG(cohort.idnumber, ', ') AS cohorts_student,
+                                program_statuses.nombre AS program_status,
+                                user_extended.id_academic_program	     
+                            FROM {cohort} AS cohort 
+                            INNER JOIN {talentospilos_inst_cohorte} AS instance_cohort ON cohort.id = instance_cohort.id_cohorte
+                            INNER JOIN {cohort_members} AS cohort_member ON cohort_member.cohortid = cohort.id
+                            INNER JOIN {user} AS moodle_user ON moodle_user.id = cohort_member.userid
+                            INNER JOIN {talentospilos_user_extended} AS user_extended ON user_extended.id_moodle_user = moodle_user.id
+                            INNER JOIN {talentospilos_usuario} AS ases_user ON ases_user.id = user_extended.id_ases_user
+                            INNER JOIN {talentospilos_estad_programa} AS program_statuses ON program_statuses.id = user_extended.program_status
+                            WHERE instance_cohort.id_instancia = $instance_id AND user_extended.tracking_status = 1                                
                             GROUP BY moodle_user.username, 
                                      moodle_user.firstname, 
                                      moodle_user.lastname, 
