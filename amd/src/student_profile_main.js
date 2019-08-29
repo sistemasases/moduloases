@@ -1108,7 +1108,7 @@ define(['jquery',
                 "func": 'load_tabs',
                 "params": [id_ases, tab_to_load],
             }),
-            url: "../managers/student_profile/geographic_api.php",
+            url: "../managers/student_profile/studentprofile_api.php",
             success: function(msg) {
                 if(msg.status_code == 0) {
                     console.log(msg);

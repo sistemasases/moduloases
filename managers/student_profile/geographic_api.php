@@ -24,7 +24,6 @@
  */
 require_once(dirname(__FILE__). '/../../../../config.php');
 require_once('../lib/student_lib.php');
-require_once('geographic_lib.php');
 require_once('studentprofile_lib.php');
 
 date_default_timezone_set('America/Bogota');
@@ -54,7 +53,7 @@ if(isset($input->func) && isset($input->params)) {
 
         if (count($input->params) == 13) {
 
-            //Come from geographic_main.js
+            //Comes from geographic_main.js
 
             $id_ases = $input->params[0];
             $latitude = $input->params[1];
@@ -104,56 +103,6 @@ if(isset($input->func) && isset($input->params)) {
         } else {
             return_with_code(-6);
         }
-    }else if($input->func == 'load_tabs'){
-
-        /**
-         * [0] => id_ases: string
-         * [1] => tab_to_load: string
-         */
-        if(count($input->params) == 2)
-        {
-            $id_ases = $input->params[0];
-            $tab_to_load = $input->params[1];
-
-            if(is_string($id_ases)) {
-
-                switch($tab_to_load){
-                    case 'socioed':
-                        $result = student_profile_load_socioed_tab($id_ases);
-                        break;
-                    case 'academic':
-                        $result = student_profile_load_academic_tab($id_ases);
-                        break;
-                    case 'geographic':
-                        $result = student_profile_load_geographic_tab($id_ases);
-                        break;
-                    case 'others':
-                        $result = student_profile_load_others_tab($id_ases);
-                        break;
-                    default:
-                        return_with_code(-3);
-                        break;
-                }
-
-                if($result != null){
-                    echo json_encode(
-                        array(
-                            "status_code" => 0,
-                            "message" => "Geographic information",
-                            "data_response" => $result
-                        )
-                    );
-                } else {
-                    return_with_code(-5);
-                }
-            } else {
-                return_with_code(-2);
-            }
-        } else {
-            return_with_code(-6);
-        }
-    } else {
-        return_with_code(-4);
     }
 }
 
@@ -161,7 +110,7 @@ if(isset($input->func) && isset($input->params)) {
 /**
  * @method return_with_code
  * Returns a message with the code of the error.
- * codes reserved: -1, -2, -3, -4, -5, -6, -99.
+ * reserved codes: -1, -2, -3, -4, -5, -6, -99.
  * @param $code
  */
 function return_with_code($code){
