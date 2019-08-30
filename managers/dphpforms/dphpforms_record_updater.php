@@ -313,8 +313,8 @@
                             for($x = 0; $x < $number_opciones; $x++){
                                 
                                 $pos_aux = array();
-                                foreach ($array_opciones as $key => $row){
-                                    $pos_aux[$key] = $row->posicion;
+                                foreach ($array_opciones as $key => $_row){
+                                    $pos_aux[$key] = $_row->posicion;
                                 }
                                 array_multisort($pos_aux, SORT_ASC, $array_opciones);
                                 $opcion = (array) $array_opciones[$x];
@@ -392,8 +392,8 @@
                             
                             for($x = 0; $x < $number_opciones; $x++){
                                 $pos_aux = array();
-                                foreach ($array_opciones as $key => $row){
-                                    $pos_aux[$key] = $row->posicion;
+                                foreach ($array_opciones as $key => $_row){
+                                    $pos_aux[$key] = $_row->posicion;
                                 }
                                 array_multisort($pos_aux, SORT_ASC, $array_opciones);
                                 $opcion = (array) $array_opciones[$x];
