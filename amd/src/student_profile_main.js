@@ -1136,7 +1136,7 @@ define(['jquery',
                                     geographic.init();
                                     $("#mapa").appendTo("#geographic_map");
                                     break;
-                                case 'others':
+                                case 'tracing_others':
                                     let others_tab = $(mustache.render( template, msg.data_response ));
                                     $(".tab-content").append( others_tab );
                                     break;
