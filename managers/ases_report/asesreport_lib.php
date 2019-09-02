@@ -407,14 +407,14 @@ function getGraficCondExcepcion($cohorte, $ases_status, $icetex_status, $program
 
     $sql_where = condicionCohorte($cohorte, $instance_id);
 
-    $sql_query = "SELECT COUNT(*) AS cantidad, nombre_largo, nombre FROM
+    $sql_query = "SELECT COUNT(*) AS cantidad, nombre, alias FROM
 
                     (SELECT DISTINCT 
                          ases_students.username,
-                         cond_excepcion.condicion_excepcion AS nombre_largo,
+                         cond_excepcion.condicion_excepcion AS nombre,
                          CASE WHEN cond_excepcion.alias = 'N.A' THEN 'N.A.'
                               ELSE cond_excepcion.alias
-                         END AS nombre
+                         END AS alias
                         FROM
                         (SELECT 
                                 moodle_user.username,
@@ -429,7 +429,7 @@ function getGraficCondExcepcion($cohorte, $ases_status, $icetex_status, $program
                                 $sql_where
                                 GROUP BY moodle_user.username, ases_user.id_cond_excepcion) AS ases_students
                         INNER JOIN {talentospilos_cond_excepcion} AS cond_excepcion ON ases_students.id_cond_excepcion = cond_excepcion.id ) AS subquery
-                    GROUP BY nombre, nombre_largo
+                    GROUP BY nombre, alias
                     ORDER BY cantidad DESC";
 
 
