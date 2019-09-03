@@ -710,9 +710,10 @@ function secure_remove_role_from_user_previous_system( $user_id, $role, $singula
         $tablename = $DB_PREFIX . "talentospilos_user_rol";
         $params = [ 
             $estado = 0,
-            $assignation['id']
+            $assignation['id'], 
+            $period_id
         ];
-        $query = "UPDATE $tablename SET estado = $1 WHERE id = $2";
+        $query = "UPDATE $tablename SET estado = $1 WHERE id = $2 AND id_semestre = $3";
     	return $manager( $query, $params, $extra = null );
     }
 }
