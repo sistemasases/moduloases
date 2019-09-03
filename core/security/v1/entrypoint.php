@@ -611,27 +611,59 @@ function secure_remove_role_to_user( $user_id, $role, $start_datetime, $singular
         $singularizer['id_semestre'] = core_periods_get_current_period()->id;
     }
     
-    $asignation_in_master_system = _core_security_get_user_rol( $user_id, $start_datetime, $singularizer );
-    $asignation_in_previous_system = _core_user_asigned_in_previous_system( $user_id, $role, $singularizer );
+    $inherited_role = _core_check_inherited_role($role);
     
+    $remove_master_system = false;
+    $remove_previous_system = false;
     
-    if( _core_check_inherited_role($role) && $asignation_in_master_system && $asignation_in_previous_system ){
+    $assignation_in_master_system = _core_security_get_user_rol( $user_id, $start_datetime, $singularizer );
+    $assignation_in_previous_system = NULL;
+    
+    try{
+        //Used to track inconsistencies.
+        $assignation_in_previous_system = _core_user_asigned_in_previous_system( $user_id, $role, $singularizer );
+    }catch( Exception $ex ){}
+    
+    if( $inherited_role && $assignation_in_master_system && $assignation_in_previous_system ){
         // Case 1: Asignation exist in both systems
-    }else if( !_core_check_inherited_role($role) && $asignation_in_master_system && !$asignation_in_previous_system ){
+        $remove_master_system = true;
+        $remove_previous_system = true;
+        
+    }else if( !$inherited_role && $assignation_in_master_system && !$assignation_in_previous_system ){
         // Case 2: Asignation exist only in master system and it isn't an inherited role
+        $remove_master_system = true;
        
-    }else if( !_core_check_inherited_role($role) && !$asignation_in_master_system && $asignation_in_previous_system ){
-        // Case 3:Asignation exist only in previous system and it isn't an inherited role
+    }else if( !$inherited_role && !$assignation_in_master_system && $assignation_in_previous_system ){
+        // Case 3: Asignation exist only in previous system and it isn't an inherited role
+        $remove_previous_system = true;
         
-    }else if( _core_check_inherited_role($role) && $asignation_in_master_system && !$asignation_in_previous_system ){
-        // Case 4:Asignation exist only in master system and it is an inherited role
+    }else if( $inherited_role && $assignation_in_master_system && !$assignation_in_previous_system ){
+        // Case 4: Asignation exist only in master system and it is an inherited role
+        $remove_master_system = true;
         
-    }else if( _core_check_inherited_role($role) && !$asignation_in_master_system && $asignation_in_previous_system ){
-        // Case 5:Asignation exist only in previous system and it is an inherited role
-        
+    }else if( $inherited_role && !$assignation_in_master_system && $assignation_in_previous_system ){
+        // Case 5: Asignation exist only in previous system and it is an inherited role
+        $remove_previous_system = true;
     }else{
         // Case 6: Asignation doesn't exist.
         return true;
+    }
+    
+    if( $remove_master_system ){
+        global $DB_PREFIX;
+            
+        $manager = get_db_manager();
+        $tablename = $DB_PREFIX . "talentospilos_usuario_rol";
+        $params = [
+            $estado = 1,
+            $asignation_in_master_system['id']
+        ];
+        $query = "UPDATE $tablename SET eliminado = $1 WHERE id = $2";
+    	$manager( $query, $params, $extra = null );
+    }
+    
+    if( $remove_previous_system ){
+        secure_remove_role_from_user_previous_system( $user_id, $role, $singularizer );
     }
     
 }
@@ -668,7 +700,8 @@ function secure_remove_role_from_user_previous_system( $user_id, $role, $singula
         $singularizer['id_semestre'] = core_periods_get_current_period()->id;
     }
 
-    if( !_core_user_asigned_in_previous_system( $user_id, $role, $singularizer ) ){
+    $assignation = _core_user_asigned_in_previous_system( $user_id, $role, $singularizer );
+    if( $assignation ){
     	global $DB_PREFIX;
             
         $manager = get_db_manager();
@@ -676,17 +709,10 @@ function secure_remove_role_from_user_previous_system( $user_id, $role, $singula
             
         $tablename = $DB_PREFIX . "talentospilos_user_rol";
         $params = [ 
-        	(int) $role_id, 
-        	(int) $user_id, 
-        	$estado = 1, 
-        	(int) $period_id,  
-        	(isset($singularizer['id_jefe']) ? (int) $singularizer['id_jefe'] : NULL),
-        	(int) $singularizer['id_instancia'],
-        	(isset($singularizer['id_programa']) ? (int) $singularizer['id_programa'] : NULL)
+            $estado = 0,
+            $assignation['id']
         ];
-        $query = "INSERT INTO $tablename ( id_rol, id_usuario, estado, id_semestre, id_jefe, id_instancia, id_programa) "
-        		. "VALUES ( $1, $2, $3, $4, $5, $6, $7 )";
-
+        $query = "UPDATE $tablename SET estado = $1 WHERE id = $2";
     	$manager( $query, $params, $extra = null );
     }
 }
