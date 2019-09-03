@@ -93,20 +93,20 @@ function _core_security_check_role( $user_id, $role_id, $time_context = null, $s
 
 
 	$user_role = _core_security_get_user_rol( $user_id, $time_context, $singularizations = null );
-	$asigned_role = _core_security_get_role( $user_role['id_rol'] );
+	$assigned_role = _core_security_get_role( $user_role['id_rol'] );
 
 	$role_wanted = _core_security_get_role( $role_id );
 	
-	if( $role_wanted && $asigned_role ){
+	if( $role_wanted && $assigned_role ){
 
 		$found_role = false;
 		do{
-			$current_role = $asigned_role;
-			if( $role_wanted['id'] == $asigned_role['id'] ){
+			$current_role = $assigned_role;
+			if( $role_wanted['id'] == $assigned_role['id'] ){
 				$found_role = true;
 			}
 			if( $current_role['id_rol_padre'] != "-1" ){
-				$asigned_role = _core_security_get_role( $asigned_role['id_rol_padre'] );
+				$assigned_role = _core_security_get_role( $assigned_role['id_rol_padre'] );
 			}
 		}while( $current_role['id_rol_padre'] != "-1" );
 		
