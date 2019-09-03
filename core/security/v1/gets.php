@@ -308,7 +308,7 @@ function _core_security_get_previous_system_role( $rol_name ){
     
 }
 
-function _core_user_asigned_in_previous_system( $user_id, $role, $singularizer ){
+function _core_user_assigned_in_previous_system( $user_id, $role, $singularizer ){
     
     global $DB_PREFIX;
             
