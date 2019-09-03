@@ -33,31 +33,23 @@ define(['jquery',
                 window.graficas = {};    //Objeto para guardar las gráficas de manera dinámica
                 const secciones = ["programa", "facultad", "sexo", "edad", "condExcepcion", "riesgos"];                                                
                 
-                //Eventos para cargar tablas y gráficas una vez se abra cada panel
+                for (i = 0; i < secciones.length; i++) {
 
-                $("#list-students-programa-panel").on('click', function(){                                   
-                    getDataGraphicTable("programa");
-                });
+                    //Eventos para cargar tablas y gráficas una vez se abra cada panel
+                    $("#list-students-"+secciones[i]+"-panel").on('click', function (event) {
+                        var id_button = String(event.currentTarget.id);
+                        var id = id_button.split('-')[2];
+                        getDataGraphicTable(id);
+                    });
 
-                $("#list-students-facultad-panel").on('click', function(){
-                    getDataGraphicTable("facultad");
-                });                                       
+                    //Eventos para descargar grafico correspondiente una vez se presione el boton de descargar
+                    $('#save_btn_'+secciones[i]).on('click', function (event) {
+                        var id_button = String(event.target.id);
+                        var id = id_button.split('_')[2];
+                        document.getElementById('download_'+id).click();
+                    });
+                }
 
-                $("#list-students-sexo-panel").on('click', function(){
-                    getDataGraphicTable("sexo");
-                }); 
-
-                $("#list-students-edad-panel").on('click', function(){
-                    getDataGraphicTable("edad");
-                }); 
-
-                $("#list-students-condExcepcion-panel").on('click', function(){
-                    getDataGraphicTable("condExcepcion");
-                }); 
-
-                $("#list-students-riesgos-panel").on('click', function(){
-                    getDataGraphicTable("riesgos");
-                });              
                 
                 //Eventos para actualizar tablas y gráficas cada vez que cambien los checkboxes de los filtros
 
@@ -80,20 +72,6 @@ define(['jquery',
                         }
                     }
                 });
-
-
-                /**$('#save_btn_programa').on('click', function () {
-                    document.getElementById('download_programa').click();
-                });**/
-
-
-                for (i = 0; i < secciones.length; i++) {
-                    $('#save_btn_'+secciones[i]).on('click', function (event) {
-                        var id_button = String(event.target.id);
-                        var id = id_button.split('_')[2];
-                        document.getElementById('download_'+id).click();
-                    });
-                }
 
             }            
         }
