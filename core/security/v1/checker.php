@@ -15,6 +15,8 @@ require_once( __DIR__ . "/gets.php");
  *
  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
+ * 
+ * @see get_db_manager( ... ) in query_manager.php
  *
  * @param integer $rol_id
  * @param integer $action_id
@@ -48,6 +50,8 @@ function _core_security_can_be_executed( $rol_id, $action_id ){
  *
  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
+ * 
+ * @see get_db_manager( ... ) in query_manager.php
  *
  * @param integer $user_id
  *
@@ -78,6 +82,8 @@ function _core_security_user_exist( $user_id ){
  *
  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
+ * 
+ * @see _core_security_get_role( ... ) in gets.php
  *
  * @param integer $user_id
  *
@@ -117,6 +123,10 @@ function _core_security_check_role( $user_id, $role_id, $time_context = null, $s
  * inherited role is a role that exist in both systems with the same alias ("nombre" in the previous system).
  * 
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see _core_security_get_role( ... ) in gets.php
+ * @see _core_security_get_previous_system_role( ... ) in gets.php
  * 
  * @param mixed $role Role alias.
  * @return bool Indicates if the given role is an inherited role.
