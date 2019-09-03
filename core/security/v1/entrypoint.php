@@ -570,7 +570,7 @@ function secure_assign_role_to_user_previous_system( $user_id, $role, $singulari
         $singularizer['id_semestre'] = core_periods_get_current_period()->id;
     }
 
-    if( !_core_user_asigned_in_previous_system( $user_id, $role, $singularizer ) ){
+    if( !_core_user_assigned_in_previous_system( $user_id, $role, $singularizer ) ){
     	global $DB_PREFIX;
             
         $manager = get_db_manager();
@@ -621,7 +621,7 @@ function secure_remove_role_to_user( $user_id, $role, $start_datetime, $singular
     
     try{
         //Used to track inconsistencies.
-        $assignation_in_previous_system = _core_user_asigned_in_previous_system( $user_id, $role, $singularizer );
+        $assignation_in_previous_system = _core_user_assigned_in_previous_system( $user_id, $role, $singularizer );
     }catch( Exception $ex ){}
     
     if( $inherited_role && $assignation_in_master_system && $assignation_in_previous_system ){
@@ -700,7 +700,7 @@ function secure_remove_role_from_user_previous_system( $user_id, $role, $singula
         $singularizer['id_semestre'] = core_periods_get_current_period()->id;
     }
 
-    $assignation = _core_user_asigned_in_previous_system( $user_id, $role, $singularizer );
+    $assignation = _core_user_assigned_in_previous_system( $user_id, $role, $singularizer );
     if( $assignation ){
     	global $DB_PREFIX;
             
