@@ -2090,6 +2090,7 @@ define(['jquery',
 
     function load_student(code_student) {
 
+        console.log(code_student);
         $.ajax({
             type: "POST",
             data: {
@@ -2120,7 +2121,7 @@ define(['jquery',
             error: function (msg) {
                 swal(
                     "Error",
-                    "Error al comunicarse con el servidor, por favor intentelo nuevamente.",
+                    "Error al comunicarse con el servidor, por favor inténtelo nuevamente.",
                     "error"
                 );
             },
