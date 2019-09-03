@@ -186,15 +186,10 @@ define(['jquery',
             for(var x in data){
 
                 nombre = data[x][label];
-                cantidad = data[x][labelCantidad];  
+                cantidad = data[x][labelCantidad];
 
-                if(nombre === 'LICENCIATURA EN EDUCACIÓN BÁSICA CON ÉNFASIS EN CIENCIAS NATURALES Y EDUCACIÓN AMBIENTAL'){
-                    nombre = 'LIC. EN EDU. BÁSICA ÉNFASIS EN CIENCIAS NATURALES Y EDU. AMBIENTAL'
-                }
-
-                if(nombre === 'LICENCIATURA EN EDUCACIÓN BÁSICA CON ÉNFASIS EN CIENCIAS SOCIALES'){
-                    nombre = 'LIC. EN EDU. BÁSICA CON ÉNFASIS EN CIENCIAS SOCIALES'
-                } 
+                nombre = nombre.replace("LICENCIATURA", 'LIC.');
+                nombre = nombre.replace(/EDUCACIÓN/g, 'EDU.');
                                                                                     
                 labelsGrafica.push(nombre);
                 cantidades.push(cantidad);               
@@ -219,6 +214,7 @@ define(['jquery',
                     borderColors.push('rgba(130, 130, 130, 1)');
                 }
             }
+
 
             //Se crea la gráfica en el elemento "grafica_<type>", ej: grafica_programa
             var ctx = document.getElementById("grafica_"+type).getContext('2d');
@@ -280,7 +276,12 @@ define(['jquery',
                                 },
                                 categoryPercentage: 1.0,
                                 barPercentage: 1.0
-                            }]                       
+                            }]  ,
+                            xAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
                         },
                         maintainAspectRatio: false,
                         plugins: {
