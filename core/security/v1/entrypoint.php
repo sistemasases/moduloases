@@ -656,7 +656,7 @@ function secure_remove_role_to_user( $user_id, $role, $start_datetime, $singular
         $tablename = $DB_PREFIX . "talentospilos_usuario_rol";
         $params = [
             $estado = 1,
-            $asignation_in_master_system['id']
+            $assignation_in_master_system['id']
         ];
         $query = "UPDATE $tablename SET eliminado = $1 WHERE id = $2";
     	$manager( $query, $params, $extra = null );
