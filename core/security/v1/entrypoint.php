@@ -594,6 +594,48 @@ function secure_assign_role_to_user_previous_system( $user_id, $role, $singulari
    
 }
 
+function secure_remove_role_to_user( $user_id, $role, $start_datetime, $singularizer ){
+    
+    /*Singularizer
+     *
+     * id_semestre (DEFAULT = current )
+     * id_instancia (REQUIRED)
+     * 
+     */
+    
+    if( !isset( $singularizer['id_instancia'] ) ){
+        throw new Exception( "id_instancia must be defined at sigularizator", -1 );
+    }
+    
+    if( !isset($singularizer['id_semestre']) ){
+        $singularizer['id_semestre'] = core_periods_get_current_period()->id;
+    }
+    
+    $asignation_in_master_system = _core_security_get_user_rol( $user_id, $start_datetime, $singularizer );
+    $asignation_in_previous_system = _core_user_asigned_in_previous_system( $user_id, $role, $singularizer );
+    
+    
+    if( _core_check_inherited_role($role) && $asignation_in_master_system && $asignation_in_previous_system ){
+        // Case 1: Asignation exist in both systems
+    }else if( !_core_check_inherited_role($role) && $asignation_in_master_system && !$asignation_in_previous_system ){
+        // Case 2: Asignation exist only in master system and it isn't an inherited role
+       
+    }else if( !_core_check_inherited_role($role) && !$asignation_in_master_system && $asignation_in_previous_system ){
+        // Case 3:Asignation exist only in previous system and it isn't an inherited role
+        
+    }else if( _core_check_inherited_role($role) && $asignation_in_master_system && !$asignation_in_previous_system ){
+        // Case 4:Asignation exist only in master system and it is an inherited role
+        
+    }else if( _core_check_inherited_role($role) && !$asignation_in_master_system && $asignation_in_previous_system ){
+        // Case 5:Asignation exist only in previous system and it is an inherited role
+        
+    }else{
+        // Case 6: Asignation doesn't exist.
+        return true;
+    }
+    
+}
+
 function secure_remove_role_from_user_previous_system( $user_id, $role, $singularizer ){
     
     /*Singularizer
