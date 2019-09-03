@@ -659,11 +659,11 @@ function secure_remove_role_to_user( $user_id, $role, $start_datetime, $singular
             $assignation_in_master_system['id']
         ];
         $query = "UPDATE $tablename SET eliminado = $1 WHERE id = $2";
-    	$manager( $query, $params, $extra = null );
+    	return $manager( $query, $params, $extra = null );
     }
     
     if( $remove_previous_system ){
-        secure_remove_role_from_user_previous_system( $user_id, $role, $singularizer );
+        return secure_remove_role_from_user_previous_system( $user_id, $role, $singularizer );
     }
     
 }
@@ -713,7 +713,7 @@ function secure_remove_role_from_user_previous_system( $user_id, $role, $singula
             $assignation['id']
         ];
         $query = "UPDATE $tablename SET estado = $1 WHERE id = $2";
-    	$manager( $query, $params, $extra = null );
+    	return $manager( $query, $params, $extra = null );
     }
 }
 
