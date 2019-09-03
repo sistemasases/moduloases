@@ -33,15 +33,17 @@ $input = json_decode(file_get_contents("php://input"));
 
 if(isset($input->func) && isset($input->params)) {
 
+    $function = $input->func;
+
     //Loads tabs of student profile
-    if($input->func == 'load_tabs'){
+    if($function == 'load_tabs') {
 
         /**
          * [0] => id_ases: string
          * [1] => tab_to_load: string
          */
-        if(count($input->params) == 2)
-        {
+        if(count($input->params) == 2) {
+
             $id_ases = $input->params[0];
             $tab_to_load = $input->params[1];
 
@@ -82,9 +84,47 @@ if(isset($input->func) && isset($input->params)) {
         } else {
             return_with_code(-6);
         }
+    } else if($function == 'save_profile'){
+
+        /**
+         * [0] => form: array
+         * [1] => option1: string
+         * [2] => option2: string
+         * [3] => live_with: string (json)
+         */
+        $params = $input->params;
+
+        if(count($params) == 4){
+
+            $form = $params[0];
+            $option1 = $params[1];
+            $option2 = $params[2];
+            $live_with = $params[3];
+
+            if(is_array($params) && is_string($option1) && is_string($option2) &&
+               is_string($live_with)) {
+                $msg = save_profile($form, $option1, $option2, $live_with);
+                echo json_encode(
+                    array(
+                        "status_code" => 0,
+                        "title" => $msg->title,
+                        "status" => $msg->status,
+                        "message" => $msg->msg
+                    )
+                );
+            } else {
+                return_with_code(-2, $params);
+            }
+        } else {
+            return_with_code(-6);
+        }
+    } else if($function == 'save_icetex_status') {
+
     } else {
         return_with_code(-4);
     }
+} else {
+    return_with_code(-1);
 }
 
 /**
@@ -93,7 +133,7 @@ if(isset($input->func) && isset($input->params)) {
  * reserved codes: -1, -2, -3, -4, -5, -6, -99.
  * @param $code
  */
-function return_with_code($code){
+function return_with_code($code, $p){
 
     switch( $code ){
 
@@ -101,7 +141,7 @@ function return_with_code($code){
             echo json_encode(
                 array(
                     "status_code" => $code,
-                    "error_message" => "You are not allowed to access this resource.",
+                    "error_message" => "Error en el servidor.",
                     "data_response" => ""
                 )
             );
@@ -112,7 +152,7 @@ function return_with_code($code){
                 array(
                     "status_code" => $code,
                     "error_message" => "Error in the scheme.",
-                    "data_response" => ""
+                    "data_response" => $p
                 )
             );
             break;

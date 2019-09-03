@@ -62,10 +62,7 @@ include "../classes/output/student_profile_page.php";
 include "../classes/output/renderer.php";
 
 
-
 $new_forms_date =strtotime('2018-01-01 00:00:00');
-
-
 
 //$initial_date = date('H:i:s.u');
 // Set up the page.

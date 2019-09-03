@@ -1024,33 +1024,39 @@ define(['jquery',
             return msg;
         }, save_form_edit_profile: function (form, object_function, control1, control2, json) {
 
+            console.log(form);
+            console.log(control1);
+            console.log(control2);
+            console.log(json);
+
             $.ajax({
                 type: "POST",
-                data: {
-                    func: 'save_profile',
-                    form: form,
-                    option1: control1,
-                    option2: control2,
-                    vive_con: json
-                },
-                url: "../managers/student_profile/studentprofile_serverproc.php",
+                data: JSON.stringify({
+                    "func": 'save_profile',
+                    "params": [form, control1, control2, json]
+                }),
+                url: "../managers/student_profile/studentprofile_api.php",
                 success: function (msg) {
 
-                    swal(
-                        msg.title,
-                        msg.msg,
-                        msg.status
-                    );
-
+                    if(msg.status_code == 0) {
+                        swal(
+                            msg.title,
+                            msg.message,
+                            msg.status
+                        );
+                    }
+                    console.log(msg);
                 },
                 dataType: "json",
                 cache: "false",
                 error: function (msg) {
+
                     swal(
                         msg.title,
                         msg.msg,
                         msg.status
                     );
+                    console.log(msg);
                 },
             });
 
