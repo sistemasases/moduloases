@@ -594,7 +594,7 @@ function secure_assign_role_to_user_previous_system( $user_id, $role, $singulari
    
 }
 
-function secure_remove_role_to_user( $user_id, $role, $start_datetime, $singularizer ){
+function secure_remove_role_to_user( $user_id, $role, $start_datetime, $executed_by, $singularizer ){
     
     /*Singularizer
      *
@@ -605,6 +605,14 @@ function secure_remove_role_to_user( $user_id, $role, $start_datetime, $singular
     
     if( !isset( $singularizer['id_instancia'] ) ){
         throw new Exception( "id_instancia must be defined at sigularizator", -1 );
+    }
+    
+    if( is_null( $executed_by ) ){
+        throw new Exception( "The user who executes must be provided.", -2 );
+    }
+    
+    if( is_null( get_db_records( "user", ["id"], [$executed_by] ) ) ){
+        throw new Exception( "The user who executes the action ('$executed_by') does not exist", -3 );
     }
     
     if( !isset($singularizer['id_semestre']) ){
@@ -656,9 +664,11 @@ function secure_remove_role_to_user( $user_id, $role, $start_datetime, $singular
         $tablename = $DB_PREFIX . "talentospilos_usuario_rol";
         $params = [
             $estado = 1,
+            $remove_datetime = "now()",
+            $executed_by,
             $assignation_in_master_system['id']
         ];
-        $query = "UPDATE $tablename SET eliminado = $1 WHERE id = $2";
+        $query = "UPDATE $tablename SET eliminado = $1, fecha_hora_eliminacion = $2, id_usuario_eliminador = $3 WHERE id = $4";
     	return $manager( $query, $params, $extra = null );
     }
     
@@ -716,6 +726,44 @@ function secure_remove_role_from_user_previous_system( $user_id, $role, $singula
         $query = "UPDATE $tablename SET estado = $1 WHERE id = $2 AND id_semestre = $3";
     	return $manager( $query, $params, $extra = null );
     }
+}
+
+function secure_update_role_to_user( $user_id, $role, 
+        $old_start_datetime = NULL, $old_singularizer = NULL,
+        $start_datetime = NULL, $end_datetime = NULL, $singularizer = NULL, $use_alternative_interval = false, $alternative_interval = NULL 
+    ){
+    
+    $old_assignation_in_master_system = _core_security_get_user_rol( $user_id, $old_start_datetime, $old_singularizer );
+    $old_assignation_in_previous_system = NULL;
+    
+    try{
+        //Used to track inconsistencies.
+        $old_assignation_in_previous_system = _core_user_assigned_in_previous_system( $user_id, $old_start_datetime, $old_singularizer );
+    }catch( Exception $ex ){}
+    
+    if( !$old_assignation_in_master_system ){
+        throw new Exception( "The user '$user_id' does not have an assignation.", -1 );
+    }
+    
+    $new_assignation_in_master_system = _core_security_get_user_rol( $user_id, $start_datetime, $singularizer );
+    $new_assignation_in_previous_system = NULL;
+    
+    try{
+        //Used to track inconsistencies.
+        $new_assignation_in_previous_system = _core_user_assigned_in_previous_system( $user_id, $start_datetime, $singularizer );
+    }catch( Exception $ex ){}
+        
+    if( !is_null( $new_assignation_in_master_system ) ){
+        if( $old_assignation_in_master_system['id'] != $new_assignation_in_master_system['id'] ){
+            throw new Exception( "The assignment collides with the record '" . $new_assignation_in_master_system['id'] . "'.", -1 );
+        }
+    }
+    
+    //Validar intervaloa alternativo
+    
+    secure_remove_role_to_user( $user_id, $old_start_datetime, $old_singularizer );
+    secure_assign_role_to_user( $user_id, $role, $start_datetime, $end_datetime, $singularizer, $use_alternative_interval, $alternative_interval );
+    
 }
 
 
