@@ -294,8 +294,17 @@ function _core_security_get_role( $in ){
 
 }
 
-
-function _core_security_get_previous_system_role( $rol_name ){
+/**
+ * Function that, given a role name return a role object.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param string $role_name Role name to find.
+ * 
+ * @return NULL | array Null if no exist.
+ */
+function _core_security_get_previous_system_role( $role_name ){
     
     global $DB_PREFIX;
             
@@ -303,11 +312,34 @@ function _core_security_get_previous_system_role( $rol_name ){
     
     $tablename = $DB_PREFIX . "talentospilos_rol";
     $query = "SELECT * FROM $tablename WHERE nombre_rol = $1";
-    $result = $manager( $query, [ $rol_name ] );
+    $result = $manager( $query, [ $role_name ] );
     return ( count( $result ) == 1 ? $result[0] : null );
     
 }
 
+/**
+ * Function that check role assignations in the previous system.
+ * 
+ * Singularizer
+ *
+ * estado (DEFAULT = 1)
+ * id_semestre (DEFAULT = current )
+ * id_jefe 
+ * id_instancia (REQUIRED)
+ * id_programa
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see core_periods_get_current_period( ... ) in core periods.
+ * @see get_db_manager( ... ) in query_manager.php
+ * 
+ * @param integer $user_id Moodle user id.
+ * @param string $role Role alias (Name in the previous system).
+ * @param object $singularizer Filter to select.
+ * 
+ * @return NULL | array NULL if the assignation doesn't exist.
+ */
 function _core_user_assigned_in_previous_system( $user_id, $role, $singularizer ){
     
     global $DB_PREFIX;
@@ -315,16 +347,6 @@ function _core_user_assigned_in_previous_system( $user_id, $role, $singularizer 
     $manager = get_db_manager();
 
     $obj_role = _core_security_get_previous_system_role( $role );
-
-    /*Singularizer
-     *
-     * estado (DEFAULT = 1)
-     * id_semestre (DEFAULT = current )
-     * id_jefe 
-     * id_instancia (REQUIRED)
-     * id_programa
-     * 
-     */
     
     $period_id = ( isset($singularizer['id_semestre']) ? $singularizer['id_semestre'] : core_periods_get_current_period()->id );
     $where = 
