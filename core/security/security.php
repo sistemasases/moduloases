@@ -261,4 +261,11 @@ function core_secure_remove_role_to_user( $user_id, $role, $start_datetime, $exe
     return secure_remove_role_to_user( $user_id, $role, $start_datetime, $executed_by, $singularizer );
 }
 
+function core_secure_update_role_to_user( $user_id, $role, 
+        $old_start_datetime = NULL, $old_singularizer = NULL,
+        $start_datetime = NULL, $end_datetime = NULL, $singularizer = NULL, $use_alternative_interval = false, $alternative_interval = NULL 
+   ){
+    return secure_update_role_to_user( $user_id, $role, $old_start_datetime, $old_singularizer, $start_datetime, $end_datetime, $singularizer, $use_alternative_interval, $alternative_interval );
+}
+
 ?>
