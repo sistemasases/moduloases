@@ -688,25 +688,38 @@ function verify_ases_status($id_ases_student){
     return $result;
 }
 
+/**
+ * Returns result of query at table 'talentospilos_retiros'
+ *
+ * @author  Juan Pablo Castro. GitHub: jpcv222
+ * @see save_reason_dropout_student()
+ * @param $code_student
+ * @return string
+ */
 
 function getReasonDropoutStudent($code_student){
 
     global $DB;
 
     $sql_query = "SELECT detalle FROM {talentospilos_retiros}  WHERE id_usuario=$code_student";
-
-    return $DB->get_record_sql($sql_query);
+    $tmp_result = $DB->get_record_sql($sql_query);
+    if(!empty($tmp_result)){
+        $result = "Motivo retiro: " . $tmp_result;
+    }
+    return $result;
 }
 
 
 /**
- * Returns the saveMotivoRetiro(PARAMETERS) function output or an error message in case it fails
+ * Returns result of the transaction at database: table 'talentospilos_retiros'
+ *
+ * @author  Juan Pablo Castro. GitHub: jpcv222
  *
  * @see save_reason_dropout_student()
  * @param $code_student
  * @param $reason
  * @param $observation
- * @return integer in a json format
+ * @return integer
  */
 
 function save_reason_dropout_ases($code_student, $reason, $observation){
