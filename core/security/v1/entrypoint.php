@@ -728,10 +728,18 @@ function secure_remove_role_from_user_previous_system( $user_id, $role, $singula
     }
 }
 
-function secure_update_role_to_user( $user_id, $role, 
+function secure_update_role_to_user( $user_id, $role, $executed_by, 
         $old_start_datetime = NULL, $old_singularizer = NULL,
         $start_datetime = NULL, $end_datetime = NULL, $singularizer = NULL, $use_alternative_interval = false, $alternative_interval = NULL 
     ){
+    
+     if( is_null( $executed_by ) ){
+        throw new Exception( "The user who executes must be provided.", -2 );
+    }
+    
+    if( is_null( get_db_records( "user", ["id"], [$executed_by] ) ) ){
+        throw new Exception( "The user who executes the action ('$executed_by') does not exist", -3 );
+    }
     
     $old_assignation_in_master_system = _core_security_get_user_rol( $user_id, $old_start_datetime, $old_singularizer );
     $old_assignation_in_previous_system = NULL;
@@ -781,7 +789,7 @@ function secure_update_role_to_user( $user_id, $role,
         }
     }
     
-    secure_remove_role_to_user( $user_id, $old_start_datetime, $old_singularizer );
+    secure_remove_role_to_user( $user_id, $role, $old_start_datetime, $executed_by, $old_singularizer );
     secure_assign_role_to_user( $user_id, $role, $start_datetime, $end_datetime, $singularizer, $use_alternative_interval, $alternative_interval );
     
 }
