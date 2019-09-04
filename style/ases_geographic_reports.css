@@ -1,0 +1,22 @@
+#map-canvas{
+    width: 100%;
+    height: 100%
+}
+
+#map-container{
+    width:100%;
+    height:600px
+}
+
+#top_options{
+    text-align: center;
+}
+
+#maps_fields{
+    text-align: center;
+}
+
+.checkbox{
+    display:inline-block !important;
+    margin: 1em 2em 0 1em;
+}
