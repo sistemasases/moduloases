@@ -745,6 +745,28 @@ function secure_update_role_to_user( $user_id, $role,
         throw new Exception( "The user '$user_id' does not have an assignation.", -1 );
     }
     
+    if( $use_alternative_interval ){
+        try{
+            $alt_interval = _core_security_solve_alternative_interval( $alternative_interval_json );
+            if( $alt_interval ){
+                $start_datetime = strtotime($alt_interval['fecha_hora_inicio']);
+                $end_datetime = strtotime($alt_interval['fecha_hora_fin']);
+                if( $start_datetime >= $end_datetime ){
+                    throw new Exception( "Invalid interval.", -2 );
+                }
+            }else{
+                throw new Exception( "Invalid value to alternative interval or it doesn't exist.", -3 );
+            }
+        }catch( Exception $ex ){
+            throw new Exception( "Invalid value to alternative interval." -4 );
+        }
+    }
+    
+    if( $use_alternative_interval ){
+        $rol->start = strtotime($u_rol['fecha_hora_inicio']);
+        $rol->end = strtotime($u_rol['fecha_hora_fin']);
+    }
+    
     $new_assignation_in_master_system = _core_security_get_user_rol( $user_id, $start_datetime, $singularizer );
     $new_assignation_in_previous_system = NULL;
     
@@ -758,8 +780,6 @@ function secure_update_role_to_user( $user_id, $role,
             throw new Exception( "The assignment collides with the record '" . $new_assignation_in_master_system['id'] . "'.", -1 );
         }
     }
-    
-    //Validar intervaloa alternativo
     
     secure_remove_role_to_user( $user_id, $old_start_datetime, $old_singularizer );
     secure_assign_role_to_user( $user_id, $role, $start_datetime, $end_datetime, $singularizer, $use_alternative_interval, $alternative_interval );
