@@ -699,21 +699,17 @@ function verify_ases_status($id_ases_student){
  * @return integer in a json format
  */
 
-function save_reason_dropout_student($code_student, $reason, $observation){
-
-    $id_ases_student = get_ases_user_by_code($code_student)->id;
-
-    if(isset($_POST['talentosid']) && isset($_POST['motivoid']) && isset($_POST['detalle']))
-    {
+function save_reason_dropout_ases($code_student, $reason, $observation){
         global $DB;
+        $id_ases_student = get_ases_user_by_code($code_student)->id;
 
         $record = new stdClass();
-        $record->id_usuario = $talentosid;
-        $record->id_motivo = $motivoid;
-        $record->detalle = $detalle;
+        $record->id_usuario = $id_ases_student;
+        $record->id_motivo = $reason;
+        $record->detalle = $observation;
 
 
-        $sql_query = "SELECT id FROM {talentospilos_retiros} WHERE id_usuario=".$talentosid;
+        $sql_query = "SELECT id FROM {talentospilos_retiros} WHERE id_usuario= '$id_ases_student'";
         $exists = $DB->get_record_sql($sql_query);
 
         if($exists)
@@ -726,9 +722,6 @@ function save_reason_dropout_student($code_student, $reason, $observation){
             return $DB->insert_record('talentospilos_retiros', $record, false);
         }
 
-    }else{
-      return  0;
-    }
 }
 
 

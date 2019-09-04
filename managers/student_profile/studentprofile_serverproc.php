@@ -101,7 +101,7 @@ if(isset($_POST['func'])){
 
         if(isset($_POST['current_status']) && isset($_POST['new_status']) && isset($_POST['instance_id']) && isset($_POST['code_student'])){
             if(isset($_POST['id_reason_dropout']) && isset($_POST['observation'])){
-                $result_save_dropout =s ave_reason_dropout_student($_POST['code_student'], $_POST['id_reason_dropout'], $_POST('observation'));
+                $result_save_dropout = save_reason_dropout_ases($_POST['code_student'], $_POST['id_reason_dropout'], $_POST['observation']);
                 $result = update_status_ases($_POST['current_status'], $_POST['new_status'], $_POST['instance_id'], $_POST['code_student'], $_POST['id_reason_dropout']);
 
             }else{
