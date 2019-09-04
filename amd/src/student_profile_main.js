@@ -416,51 +416,54 @@ define(['jquery',
                                 modal_dropout.show();
 
                                 $('#save_changes_dropout').on('click', function () {
-                                    data.id_reason_dropout = $('#reasons_select').val();
-                                    data.observation = $('#description_dropout').val();
 
-                                    $.ajax({
-                                        type: "POST",
-                                        data: data,
-                                        url: "../managers/student_profile/studentprofile_serverproc.php",
-                                        success: function (msg) {
+                                        data.id_reason_dropout = $('#reasons_select').val();
+                                        data.observation = $('#description_dropout').val();
 
-                                            current_status = new_status;
-                                            $('#input_status_ases').val(new_status);
+                                        $.ajax({
+                                            type: "POST",
+                                            data: data,
+                                            url: "../managers/student_profile/studentprofile_serverproc.php",
+                                            success: function (msg) {
 
-                                            if (msg.previous_status == 'seguimiento') {
-                                                $('#icon-tracking').removeClass('i-tracking-t');
-                                                $('#icon-tracking').addClass('i-tracking-n');
-                                                $('#tip_ases_status').html('Se realiza seguimiento en otra instancia');
-                                            } else if (msg.previous_status == 'sinseguimiento') {
-                                                $('#icon-tracking').removeClass('i-tracking-f');
-                                                $('#icon-tracking').addClass('i-tracking-t');
-                                                $('#tip_ases_status').html('Se realiza seguimiento en esta instancia');
-                                            } else if (msg.previous_status == '') {
-                                                $('#icon-tracking').removeClass('i-tracking-n');
-                                                $('#icon-tracking').addClass('i-tracking-t');
-                                                $('#tip_ases_status').html('No se realiza seguimiento');
-                                            }
+                                                current_status = new_status;
+                                                $('#input_status_ases').val(new_status);
 
-                                            modal_dropout.hide();
+                                                if (msg.previous_status == 'seguimiento') {
+                                                    $('#icon-tracking').removeClass('i-tracking-t');
+                                                    $('#icon-tracking').addClass('i-tracking-n');
+                                                    $('#tip_ases_status').html('Se realiza seguimiento en otra instancia');
+                                                } else if (msg.previous_status == 'sinseguimiento') {
+                                                    $('#icon-tracking').removeClass('i-tracking-f');
+                                                    $('#icon-tracking').addClass('i-tracking-t');
+                                                    $('#tip_ases_status').html('Se realiza seguimiento en esta instancia');
+                                                } else if (msg.previous_status == '') {
+                                                    $('#icon-tracking').removeClass('i-tracking-n');
+                                                    $('#icon-tracking').addClass('i-tracking-t');
+                                                    $('#tip_ases_status').html('No se realiza seguimiento');
+                                                }
 
-                                            swal(
-                                                msg.title,
-                                                msg.msg,
-                                                msg.status
-                                            );
-                                        },
-                                        dataType: "json",
-                                        cache: "false",
-                                        error: function (msg) {
-                                            modal_dropout.hide();
-                                            swal(
-                                                msg.title,
-                                                msg.msg,
-                                                msg.status
-                                            );
-                                        },
-                                    });
+                                                modal_dropout.hide();
+
+                                                swal(
+                                                    msg.title,
+                                                    msg.msg,
+                                                    msg.status
+                                                );
+                                            },
+                                            dataType: "json",
+                                            cache: "false",
+                                            error: function (msg) {
+                                                modal_dropout.hide();
+                                                swal(
+                                                    msg.title,
+                                                    msg.msg,
+                                                    msg.status
+                                                );
+                                            },
+                                        });
+
+
                                 });
                             } else if (new_status == 'seguimiento') {
                                 $.ajax({
