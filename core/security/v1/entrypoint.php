@@ -480,6 +480,7 @@ function secure_create_role( $alias, $father_role = -1, $name = NULL, $descripti
  * @see _core_security_get_previous_system_role( ... ) in gets.php
  * @see secure_assign_role_to_user_previous_system( ... ) in entrypoint.php
  * @see get_db_manager( ... ) in query_manager.php
+ * @see get_db_records( ... ) in query_manager.php
  * 
  * @param integer $user_id User id.
  * @param integer|string $role Role id or alias.
@@ -623,6 +624,12 @@ function secure_assign_role_to_user_previous_system( $user_id, $role, $singulari
 /**
  * Function that remove a role to an user in the system.
  * 
+ * Singularizer values
+ *
+ *  id_semestre (DEFAULT = current )
+ *  id_instancia (REQUIRED)
+ * 
+ * 
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
  * 
@@ -631,6 +638,7 @@ function secure_assign_role_to_user_previous_system( $user_id, $role, $singulari
  * @see _core_security_get_user_rol( ... ) in gets.php
  * @see _core_user_assigned_in_previous_system( ... ) in gets.php
  * @see get_db_manager( ... ) in query_manager.php
+ * @see get_db_records( ... ) in query_manager.php
  * @see secure_remove_role_from_user_previous_system( ... ) in entrypoint.php
  * 
  * @param integer $user_id Moodle user id.
@@ -646,14 +654,7 @@ function secure_assign_role_to_user_previous_system( $user_id, $role, $singulari
  * @return void
  */
 function secure_remove_role_to_user( $user_id, $role, $start_datetime, $executed_by, $singularizer ){
-    
-    /*Singularizer
-     *
-     * id_semestre (DEFAULT = current )
-     * id_instancia (REQUIRED)
-     * 
-     */
-    
+        
     if( !isset( $singularizer['id_instancia'] ) ){
         throw new Exception( "id_instancia must be defined at singularizer", -1 );
     }
@@ -729,17 +730,36 @@ function secure_remove_role_to_user( $user_id, $role, $start_datetime, $executed
     
 }
 
+/**
+ * Function that remove a role to an user in the previous system.
+ * 
+ * Singularizer values
+ *
+ *  id_semestre (DEFAULT = current )
+ *  id_instancia (REQUIRED)
+ * 
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see _core_security_get_previous_system_role( ... ) in gets.php
+ * @see core_periods_get_current_period( ... ) in core of periods.
+ * @see _core_user_assigned_in_previous_system( ... ) in gets.php
+ * @see get_db_manager( ... ) in query_manager.php
+ * 
+ * @param integer $user_id Moodle user id.
+ * @param integer|string|object $role Role id or alias (name).
+ * @param object $singularizer Filters to selection.
+ * 
+ * @throws Exception If id_instancia doesn't exist in singularizer.
+ * @throws Exception If role param isn't an integer, string or object
+ * 
+ * @return integer Response of DB manager. 
+ */
 function secure_remove_role_from_user_previous_system( $user_id, $role, $singularizer ){
     
-    /*Singularizer
-     *
-     * id_semestre (DEFAULT = current )
-     * id_instancia (REQUIRED)
-     * 
-     */
-    
     if( !isset( $singularizer['id_instancia'] ) ){
-        throw new Exception( "id_instancia must be defined at sigularizator", -1 );
+        throw new Exception( "id_instancia must be defined at singularizer", -1 );
     }
 
     $role_id = -1;
@@ -779,6 +799,45 @@ function secure_remove_role_from_user_previous_system( $user_id, $role, $singula
     }
 }
 
+/**
+ * Function that update a role to an user in the system.
+ * 
+ * Singularizer values
+ *
+ *  id_semestre (DEFAULT = current )
+ *  id_instancia (REQUIRED)
+ * 
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see get_db_records( ... ) in query_manager.php
+ * @see _core_security_get_user_rol( ... ) in gets.php
+ * @see _core_user_assigned_in_previous_system( ... ) in gets.php
+ * @see _core_security_solve_alternative_interval( ... ) in general_functions.php
+ * @see secure_remove_role_to_user( ... ) in entrypoint.php
+ * @see secure_assign_role_to_user( ... ) in entrypoint.php
+ * 
+ * @param integer $user_id Moodle user id.
+ * @param integer|string|object $role Role id or alias (name).
+ * @param integer $executed_by Moodle id.
+ * @param integer $old_start_datetime Unix time.
+ * @param integer $old_singularizer Filters to selection.
+ * @param integer $start_datetime New start time (Unix time).
+ * @param integer $end_datetime New end time (Unix time).
+ * @param integer $singularizer New filter to selection.
+ * @param boolean $use_alternative_interval Indicates if an alternative interval must be used.
+ * @param json $alternative_interval JSON with the data about the new interval.
+ * 
+ * @throws Exception If executed_by is null.
+ * @throws Exception If doesn't exist an assignation.
+ * @throws Exception If executed_by doesn't exist at {prefix}_user.
+ * @thross Exception If alternative_interval doesn't have a valid JSON structure.
+ * @thross Exception If alternative_interval keys aren't valid.
+ * @throws Exception If the new assignation collides with other record.
+ * 
+ * @return void.
+ */
 function secure_update_role_to_user( $user_id, $role, $executed_by, 
         $old_start_datetime = NULL, $old_singularizer = NULL,
         $start_datetime = NULL, $end_datetime = NULL, $singularizer = NULL, $use_alternative_interval = false, $alternative_interval = NULL 
