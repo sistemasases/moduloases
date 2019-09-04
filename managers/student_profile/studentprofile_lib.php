@@ -701,8 +701,9 @@ function getReasonDropoutStudent($code_student){
 
     global $DB;
 
+    $result = "";
     $sql_query = "SELECT detalle FROM {talentospilos_retiros}  WHERE id_usuario=$code_student";
-    $tmp_result = $DB->get_record_sql($sql_query);
+    $tmp_result = $DB->get_record_sql($sql_query)->detalle;
     if(!empty($tmp_result)){
         $result = "Motivo retiro: " . $tmp_result;
     }

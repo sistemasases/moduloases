@@ -98,6 +98,7 @@ if(isset($_POST['func'])){
             echo json_encode($msg_error);
         }
     }elseif($_POST['func'] == 'update_status_ases'){
+        $result_save_dropout  = 1;
 
         if(isset($_POST['current_status']) && isset($_POST['new_status']) && isset($_POST['instance_id']) && isset($_POST['code_student'])){
             if(isset($_POST['id_reason_dropout']) && isset($_POST['observation'])){
