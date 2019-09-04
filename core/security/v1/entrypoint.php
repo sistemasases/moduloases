@@ -555,7 +555,7 @@ function secure_assign_role_to_user( $user_id, $role, $start_datetime = NULL, $e
  * 
  * @param integer $user_id Moodle user id.
  * @param integer|string|object $role Role id or alias (name).
- * @param object $singularizer Filters to selection.
+ * @param object $singularizer Filters to select.
  * 
  * @throws Exception If id_instancia doesn't exist in singularizer.
  * @throws Exception If role param isn't an integer, string or object
@@ -645,7 +645,7 @@ function secure_assign_role_to_user_previous_system( $user_id, $role, $singulari
  * @param integer|string|object $role Role id or alias (name).
  * @param integer $start_datetime Unix time.
  * @param integer $executed_by Moodle user id.
- * @param object $singularizer Filters to selection.
+ * @param object $singularizer Filters to select.
  * 
  * @throws Exception If id_instancia doesn't exist in singularizer.
  * @throws Exception If executed_by is null.
@@ -749,7 +749,7 @@ function secure_remove_role_to_user( $user_id, $role, $start_datetime, $executed
  * 
  * @param integer $user_id Moodle user id.
  * @param integer|string|object $role Role id or alias (name).
- * @param object $singularizer Filters to selection.
+ * @param object $singularizer Filters to select.
  * 
  * @throws Exception If id_instancia doesn't exist in singularizer.
  * @throws Exception If role param isn't an integer, string or object
@@ -822,10 +822,10 @@ function secure_remove_role_from_user_previous_system( $user_id, $role, $singula
  * @param integer|string|object $role Role id or alias (name).
  * @param integer $executed_by Moodle id.
  * @param integer $old_start_datetime Unix time.
- * @param integer $old_singularizer Filters to selection.
+ * @param integer $old_singularizer Filters to select.
  * @param integer $start_datetime New start time (Unix time).
  * @param integer $end_datetime New end time (Unix time).
- * @param integer $singularizer New filter to selection.
+ * @param integer $singularizer New filter to select.
  * @param boolean $use_alternative_interval Indicates if an alternative interval must be used.
  * @param json $alternative_interval JSON with the data about the new interval.
  * 
