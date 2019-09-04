@@ -689,6 +689,16 @@ function verify_ases_status($id_ases_student){
 }
 
 
+function getReasonDropoutStudent($code_student){
+
+    global $DB;
+
+    $sql_query = "SELECT detalle FROM {talentospilos_retiros}  WHERE id_usuario=$code_student";
+
+    return $DB->get_record_sql($sql_query);
+}
+
+
 /**
  * Returns the saveMotivoRetiro(PARAMETERS) function output or an error message in case it fails
  *
