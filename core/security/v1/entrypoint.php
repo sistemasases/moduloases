@@ -26,14 +26,80 @@ const VALID_CHARACTERS = [
 /**
  * Function that processes a secure call request.
  *
- * This function requieres a context to execute, an example of this context:
+* Consider this function to read the rest of the documentation.
  *
- * $context = array(
- * 	'fun_name' => array( 
+ * function hello_world( $times ){
+ *		to_return = [];
+ * 		for($i = 0; $i < $times; $i++ ) { array_push( $output, "hello world" ); }
+ *		return $to_return;
+ * }
+ *
+ * What is a context?
+ *
+ * A context provide the information necesary for the execution. A set of secure_calls can be defined at 
+ * the same context.
+ *
+ * Context structure:
+ *
+ * array(
+ * 	'fun1_name' => array( 
+ *		'action_alias' => 'one_alias',
+ *		'params_alias' => "one_alias"
+ *	),
+ * 'fun2_name' => array( 
  *		'action_alias' => 'one_alias',
  *		'params_alias' => "one_alias"
  *	)
+ * );
+ *
+ * Example:
+ * 
+ * array(
+ *	'hello_world' => array(
+ *		'action_alias' => 'say_hello',
+ *		'params_alias' => "any"
+ *	)
  * )
+ *
+ * Singularization: An user can be assigned to multiples roles, with a differentiate factor, the singularizations,
+ * this allow pick up the current rol, work as a flag, for example, an user can stay in multiple chat rooms, but
+ * this user cannot have the same role at all chat rooms, sigularize this user can be possible with the next definition
+ * of a singularization.
+ *
+ * In this example, the user with the identifier 9999, have two roles inside the same system.
+ *
+ * User id: 		9999
+ * Rol id:			5 (standard member)
+ * sigularization:	[	
+ *						"chat_room" => "Family"
+ *					]	
+ *
+ * User id: 		9999
+ * Rol id:			1 (admin member)
+ * sigularization:	[	
+ *						"chat_room" => "Sales"	
+ *					]	
+ *
+ * Powerful example: in this case, the user 9999 have the role 'standard' between in a interval at the day,  and admin 
+ * the rest of the time, every day. The singularizations keys and values need be defined at the user-role relationship.
+ *
+ * User id: 		9999
+ * Rol id:			1 (standard member)
+ * sigularization:	[	
+ *						"start" => "00:00:00",
+ *						"end" => "06:00:00"	
+ *					]
+ * User id: 		9999
+ * Rol id:			1 (admin member)
+ * sigularization:	[	
+ *						"start" => "06:00:01",
+ *						"end" => "23:59:59"			
+ *					]
+ *
+ * Time context: The system need determine the "current" role valid, how can be possible be coordinate with many 
+ * time source, for example: database server time, web server time, fixed time, etc. The "current" time need be 
+ * provided, if not is provided, the system determine it with time() function.
+ *
  *
  * @see get_action( $in ) in gets.php.
  * @see user_exist( $user_id ) in this file.
