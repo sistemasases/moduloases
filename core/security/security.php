@@ -207,37 +207,10 @@ function core_secure_create_role( $alias, $father_role = -1, $name = NULL, $desc
 /**
  * Interface to secure_assign_role_to_user
  * 
- * 
- * Singularizer is a set of key-value tuples with the objective of differentiate
- * assignations in the system, for example, the next list of assignations, are 
- * different everyone to each others: 
- * 
- * user_id: 15, Singularizer:  { "filter_1":111, "filter_2":"ABC"  }    <br>  
- * user_id: 15, Singularizer:  { "filter_1":111  }                      <br>  
- * user_id: 15, Singularizer:  { "filter_2":"ABC"  }                    <br>    
- * user_id: 15, Singularizer:  { "ff_1":111  }                          
- * 
- * If $use_alternative_interval true, then an alternative_interval must be defined.
- * Example of an alternative interval definition:
- *
- * {
- *	"table_ref": { "name":"table_name", "record_id": 1 },
- *	"col_name_interval_start": "col_start", 
- *	"col_name_interval_end": "col_end" 
- * }
- * 
- * table_ref is the table of reference.                                     <br>  
- * col_name_interval_start is the name where the start date time is stored. <br>  
- * col_name_interval_start is the name where the end date time is stored.   <br>  
- * 
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
  * 
- * @see get_db_records( ... ) in query_manager.php
- * @see _core_security_get_role( ... ) in gets.php
- * @see _core_security_get_user_rol( ... ) in gets.php
- * @see _core_security_get_previous_system_role( ... ) in gets.php
- * @see secure_assign_role_to_user_previous_system( ... ) in entrypoint.php
- * @see get_db_manager( ... ) in query_manager.php
+ * @see secure_assign_role_to_user( ... ) in entrypoint.php
  * 
  * @param integer $user_id User id.
  * @param integer|string $role Role id or alias.
@@ -255,7 +228,24 @@ function core_secure_assign_role_to_user( $user_id, $role, $start_datetime = NUL
 }
 
 /**
+ * Interface to secure_remove_role_to_user
+ *  
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
  * 
+ * @see secure_remove_role_to_user( ... ) in entrypoint.php
+ * 
+ * @param integer $user_id Moodle user id.
+ * @param integer|string|object $role Role id or alias (name).
+ * @param integer $start_datetime Unix time.
+ * @param integer $executed_by Moodle user id.
+ * @param object $singularizer Filters to select.
+ * 
+ * @throws Exception If id_instancia doesn't exist in singularizer.
+ * @throws Exception If executed_by is null.
+ * @throws Exception If executed_by doesn't exist in {prefix}_user.
+ * 
+ * @return void
  */
 function core_secure_remove_role_to_user( $user_id, $role, $start_datetime, $executed_by, $singularizer = NULL ){
     return secure_remove_role_to_user( $user_id, $role, $start_datetime, $executed_by, $singularizer );
