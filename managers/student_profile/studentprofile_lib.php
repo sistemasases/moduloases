@@ -735,6 +735,7 @@ function update_status_ases($current_status, $new_status, $instance_id, $code_st
         $record->fecha = $today_timestamp;
         $record->id_instancia = $instance->id_instancia;
         $record->id_motivo_retiro = $reason;
+        $record->descripcion_retiro = $observation;
 
         if($instance->id_instancia == $instance_id){
             $record->id_estado_ases = $id_new_status;
