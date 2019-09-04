@@ -416,17 +416,7 @@ define(['jquery',
                                 modal_dropout.show();
 
                                 $('#save_changes_dropout').on('click', function () {
-                                    let tmp_reason, tmp_observation;
-                                    tmp_reason = $('#reasons_select').val();
-                                    tmp_observation =  $('#description_dropout').val();
 
-                                    if(isEmptyObject(tmp_reason) || isNullOrUndefined(tmp_reason)|| isEmptyObject(tmp_observation) || isNullOrUndefined(tmp_observation)){
-                                        swal(
-                                            'Error',
-                                            'Debe completar los campos raz�n y observaci�n.',
-                                            'error'
-                                        );
-                                    }else{
                                         data.id_reason_dropout = $('#reasons_select').val();
                                         data.observation = $('#description_dropout').val();
 
@@ -472,7 +462,7 @@ define(['jquery',
                                                 );
                                             },
                                         });
-                                    }
+
 
                                 });
                             } else if (new_status == 'seguimiento') {
