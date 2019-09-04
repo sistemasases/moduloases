@@ -63,4 +63,14 @@ $singularizations = array(
 //print_r(_core_security_get_user_rol( 73380,  strtotime("2019-09-27 15:00:00"), [ "id_instancia" => 450299, "id_semestre" => 8 ] ) );
 
 //print_r(secure_remove_role_to_user( 73380, "profesional_ps",  strtotime("2019-09-27 15:00:00"), [ "id_instancia" => 450299, "id_semestre" => 9 ] ));
+
+/*print_r(
+        
+    core_secure_update_role_to_user( 73380, "root", 1,
+        strtotime("2019-09-27 15:00:00"), [ "id_instancia" => 450299, "id_semestre" => 99, 999 => 999 ],
+        $start_datetime = strtotime("2019-09-27 15:00:00"), $end_datetime = strtotime("2019-12-27 15:00:00"), $singularizer = [ "id_instancia" => 450299, "id_semestre" => 99, 999 => 9991 ], $use_alternative_interval = false, $alternative_interval = NULL 
+    )
+        
+);*/
+
 ?>
