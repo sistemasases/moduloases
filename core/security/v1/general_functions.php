@@ -153,7 +153,6 @@ function _core_security_register_log( $user_id, $action_id, $call_params, $outpu
  * @return array List of aliases in the configuration file
  * 
  */
-
 function _core_security_get_config_actions( $xml_route ){
     
     /** @var object $config SimpleXMLElement with the call 
