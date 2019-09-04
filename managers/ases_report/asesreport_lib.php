@@ -425,38 +425,49 @@ function getGraficRiesgos($cohorte, $ases_status, $icetex_status, $program_statu
     $sql_where = condicionCohorte($cohorte, $instance_id, $program_status);
     $subconsulta_filtros = subconsultaGraficReport($ases_status, $icetex_status, $instance_id);
 
-    $sql_query = "SELECT riesgo.nombre AS nombre_riesgo, COUNT(DISTINCT user_extended.id) AS cantidad, riesg_usuario.calificacion_riesgo AS calificacion, riesgo.id AS id_riesgo,
-                   CASE WHEN riesg_usuario.calificacion_riesgo = 1 THEN 'Bajo'
-                        WHEN riesg_usuario.calificacion_riesgo = 2  THEN 'Medio'
-                        WHEN riesg_usuario.calificacion_riesgo = 3  THEN 'Alto'
-                        WHEN riesg_usuario.calificacion_riesgo = 0  THEN 'N.R.'
+    $sql_query = "                    
+                  SELECT COUNT(DISTINCT student_id) AS cantidad, nombre_riesgo, calificacion_riesgo, calificacion, id_riesgo FROM 
+
+                  (SELECT ases_students.username, ases_students.student_id, ases_students.nombre_riesgo, ases_students.calificacion_riesgo AS calificacion, ases_students.id_riesgo,
+                   CASE WHEN ases_students.calificacion_riesgo = 1 THEN 'Bajo'
+                        WHEN ases_students.calificacion_riesgo = 2  THEN 'Medio'
+                        WHEN ases_students.calificacion_riesgo = 3  THEN 'Alto'
+                        WHEN ases_students.calificacion_riesgo = 0  THEN 'N.R.'
                         ELSE 'N.R.'
                      END AS calificacion_riesgo
-                   FROM {cohort} AS cohort
-                      INNER JOIN {talentospilos_inst_cohorte} AS instance_cohort ON cohort.id = instance_cohort.id_cohorte
-                      INNER JOIN {cohort_members} AS cohort_member ON cohort_member.cohortid = cohort.id
-                      INNER JOIN {user} AS moodle_user ON moodle_user.id = cohort_member.userid
-                      INNER JOIN {talentospilos_user_extended} AS user_extended ON user_extended.id_moodle_user = moodle_user.id
-                      INNER JOIN {talentospilos_usuario} AS ases_user ON ases_user.id = user_extended.id_ases_user
-                      INNER JOIN {talentospilos_estad_programa} AS program_statuses ON program_statuses.id = user_extended.program_status
-                      INNER JOIN {talentospilos_riesg_usuario} AS riesg_usuario ON riesg_usuario.id_usuario = user_extended.id_ases_user
-                      INNER JOIN {talentospilos_riesgos_ases} AS riesgo ON riesgo.id = riesg_usuario.id_riesgo
-                      $sql_where
+                   FROM  
+                    (SELECT 
+                          moodle_user.username,
+                          ases_user.id AS student_id,
+                          riesg_usuario.calificacion_riesgo,
+                          riesgo.nombre AS nombre_riesgo,
+                          riesgo.id AS id_riesgo
+                          FROM {cohort} AS cohort
+                          INNER JOIN {talentospilos_inst_cohorte} AS instance_cohort ON cohort.id = instance_cohort.id_cohorte
+                          INNER JOIN {cohort_members} AS cohort_member ON cohort_member.cohortid = cohort.id
+                          INNER JOIN {user} AS moodle_user ON moodle_user.id = cohort_member.userid
+                          INNER JOIN {talentospilos_user_extended} AS user_extended ON user_extended.id_moodle_user = moodle_user.id
+                          INNER JOIN {talentospilos_usuario} AS ases_user ON ases_user.id = user_extended.id_ases_user
+                          INNER JOIN {talentospilos_estad_programa} AS program_statuses ON program_statuses.id = user_extended.program_status
+                          INNER JOIN {talentospilos_riesg_usuario} AS riesg_usuario ON riesg_usuario.id_usuario = user_extended.id_ases_user
+                          INNER JOIN {talentospilos_riesgos_ases} AS riesgo ON riesgo.id = riesg_usuario.id_riesgo
+                          $sql_where 
                 ";
-    
-    $sub_query = subconsultaGraficReport($ases_status, $icetex_status, $program_status, $cohorte, $instance_id);
+
+    $ending_query = "  )  AS ases_students
+                          $subconsulta_filtros ) AS subquery ";
     
     $sub_query_nr = $sql_query."AND riesg_usuario.calificacion_riesgo = 0
-                                    ";
+                                    ".$ending_query;
     $sub_query_bajos = $sql_query."AND riesg_usuario.calificacion_riesgo = 1
-                                    ";
+                                    ".$ending_query;
     $sub_query_medios = $sql_query."AND riesg_usuario.calificacion_riesgo = 2
-                                    ";
+                                    ".$ending_query;
     $sub_query_altos = $sql_query."AND riesg_usuario.calificacion_riesgo = 3    
-                                    ";    
+                                    ".$ending_query;
        
-    $option_group = "GROUP BY nombre_riesgo, riesgo.id, calificacion
-                    ORDER BY riesgo.id";
+    $option_group = "GROUP BY nombre_riesgo, id_riesgo, calificacion, calificacion_riesgo
+                    ORDER BY id_riesgo";
 
     $sub_query_nr .= $option_group;
     $sub_query_bajos .= $option_group;
