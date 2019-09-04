@@ -187,14 +187,26 @@ function _core_security_get_config_actions( $xml_route ){
     
 }
 
-function _core_security_create_rol_previous_system_role( $rol_name ){
+/**
+ * Function that insert a new role into previous system.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see get_db_manager( ... ) in query_manager.php
+ * 
+ * @param string $role_name Name of the new role.
+ * 
+ * @return integer Response of DB Manager.
+ */
+function _core_security_create_rol_previous_system_role( $role_name ){
     
     global $DB_PREFIX;
             
     $manager = get_db_manager();
     
     $tablename = $DB_PREFIX . "talentospilos_rol";
-    $params = [ $rol_name, "Enlaced role created by Security Core system" ];
+    $params = [ $role_name, "Enlaced role created by Security Core system" ];
     $query = "INSERT INTO $tablename (nombre_rol, descripcion) VALUES ($1, $2)";
     return $manager( $query, $params, $extra = null );
      
