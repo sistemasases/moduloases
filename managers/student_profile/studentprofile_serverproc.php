@@ -101,22 +101,34 @@ if(isset($_POST['func'])){
 
         if(isset($_POST['current_status']) && isset($_POST['new_status']) && isset($_POST['instance_id']) && isset($_POST['code_student'])){
             if(isset($_POST['id_reason_dropout']) && isset($_POST['observation'])){
-                $result = update_status_ases($_POST['current_status'], $_POST['new_status'], $_POST['instance_id'], $_POST['code_student'], $_POST['id_reason_dropout'], $_POST['observation']);
+                $result_save_dropout =s ave_reason_dropout_student($_POST['code_student'], $_POST['id_reason_dropout'], $_POST('observation'));
+                $result = update_status_ases($_POST['current_status'], $_POST['new_status'], $_POST['instance_id'], $_POST['code_student'], $_POST['id_reason_dropout']);
+
             }else{
                 $result = update_status_ases($_POST['current_status'], $_POST['new_status'], $_POST['instance_id'], $_POST['code_student']);
             }
 
             $msg = new stdClass();
 
-            if($result){
+            if($result && $result_save_dropout){
+
                 $msg->title = 'Éxito';
                 $msg->msg = 'Estado actualizado con éxito.';
                 $msg->status = 'success';
                 $msg->previous_status = $_POST['current_status'];
+
             }else{
-                $msg->title = 'Error';
-                $msg->msg = 'Error al guardar estado en la base de datos.';
+
+                $msg->title = "Error";
+                $msg->msg = "Error al realizar registro.";
                 $msg->status = 'error';
+                if(!$result_save_retiro){
+                    $msg->msg .= "No se guarda motivo de retiro en la base de datos.";
+                }
+                if(!$result) {
+                    $msg->msg .= 'No se guarda estado en la base de datos.';
+
+                }
             }
 
             echo json_encode($msg);
@@ -388,26 +400,6 @@ function save_status_ases_proc($new_status, $id_ases, $id_reason = null, $observ
     $result = save_status_ases($new_status, $id_ases, $id_reason, $observations);
 
     echo json_encode($result);
-}
-
-/**
- * Returns the saveMotivoRetiro(PARAMETERS) function output or an error message in case it fails
- *
- * @see save_reason_dropout_student()
- * @return integer in a json format
- */
-function save_reason_dropout_student(){
-
-    if(isset($_POST['talentosid']) && isset($_POST['motivoid']) && isset($_POST['detalle']))
-    {
-        echo json_encode(saveMotivoRetiro($_POST['talentosid'], $_POST['motivoid'],$_POST['detalle']));
-
-    }else{
-        $msg =  new stdClass();
-        $msg->error = "Error :(";
-        $msg->msg = "Error al comunicarse con el servidor. No se encuentran las variables necesarias para guardar el motivo retiro";
-        echo json_encode($msg);
-    }
 }
 
 function loadMotivos(){

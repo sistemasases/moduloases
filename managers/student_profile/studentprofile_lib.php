@@ -688,6 +688,50 @@ function verify_ases_status($id_ases_student){
     return $result;
 }
 
+
+/**
+ * Returns the saveMotivoRetiro(PARAMETERS) function output or an error message in case it fails
+ *
+ * @see save_reason_dropout_student()
+ * @param $code_student
+ * @param $reason
+ * @param $observation
+ * @return integer in a json format
+ */
+
+function save_reason_dropout_student($code_student, $reason, $observation){
+
+    $id_ases_student = get_ases_user_by_code($code_student)->id;
+
+    if(isset($_POST['talentosid']) && isset($_POST['motivoid']) && isset($_POST['detalle']))
+    {
+        global $DB;
+
+        $record = new stdClass();
+        $record->id_usuario = $talentosid;
+        $record->id_motivo = $motivoid;
+        $record->detalle = $detalle;
+
+
+        $sql_query = "SELECT id FROM {talentospilos_retiros} WHERE id_usuario=".$talentosid;
+        $exists = $DB->get_record_sql($sql_query);
+
+        if($exists)
+        {
+            $record->id = $exists->id;
+            return $DB->update_record('talentospilos_retiros', $record);
+        }
+        else
+        {
+            return $DB->insert_record('talentospilos_retiros', $record, false);
+        }
+
+    }else{
+      return  0;
+    }
+}
+
+
 /**
  * Update the ASES status for a student
  *
@@ -735,7 +779,6 @@ function update_status_ases($current_status, $new_status, $instance_id, $code_st
         $record->fecha = $today_timestamp;
         $record->id_instancia = $instance->id_instancia;
         $record->id_motivo_retiro = $reason;
-        $record->descripcion_retiro = $observation;
 
         if($instance->id_instancia == $instance_id){
             $record->id_estado_ases = $id_new_status;
