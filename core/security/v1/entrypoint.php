@@ -217,14 +217,17 @@ function secure_render( &$data, $user_id = null, $singularizations = null, $time
 }
 
 /**
- * ...
+ * Function that checks if new permissions are declared in every template.
  *
  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
+ * 
+ * @see _core_security_get_action_type( ... ) in gets.php
+ * @see _core_security_get_actions( ... ) in gets.php
  *
- * @param string $templates_dir, Folder with mustache files.
+ * @param string $templates_dir Folder with mustache files.
  *
- * @return array
+ * @return array List of new permissions.
 */
 function secure_template_checker( $templates_dir ){
     
@@ -275,6 +278,10 @@ function secure_template_checker( $templates_dir ){
  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
  *
+ * @see _core_security_get_action_type( ... ) in gets.php
+ * @see _core_security_get_actions( ... ) in gets.php
+ * @see _core_security_get_config_actions( ... ) in general_functions.php
+ * 
  * @param string $managers_dir Folder with managers.
  *
  * @return array List of call aliases that does not exist at the database
@@ -357,7 +364,7 @@ function secure_create_call($alias, $action_type, $name = NULL, $description = N
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @sicen 1.0.0
  * 
- * @see _core_security_get_action( ... ) in tgets.php
+ * @see _core_security_get_action( ... ) in gets.php
  * @see get_db_manager( ... ) in query_manager.php
  * 
  * @param integer|string $alias Action alias or identifier
@@ -534,7 +541,26 @@ function secure_assign_role_to_user( $user_id, $role, $start_datetime = NULL, $e
     
     return null;
 }
-
+/**
+ * Function that assign a role to an user in the previous system.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see _core_security_get_previous_system_role( ... ) in gets.php
+ * @see core_periods_get_current_period( ... ) in core of periods.
+ * @see _core_user_assigned_in_previous_system( ... ) in gets.php
+ * @see get_db_manager( ... ) in query_manager.php
+ * 
+ * @param integer $user_id Moodle user id.
+ * @param integer|string|object $role Role id or alias (name).
+ * @param object $singularizer Filters to selection.
+ * 
+ * @throws Exception If id_instancia doesn't exist in singularizer.
+ * @throws Exception If role param isn't an integer, string or object
+ * 
+ * @return integer Response of DB manager.
+ */
 function secure_assign_role_to_user_previous_system( $user_id, $role, $singularizer ){
 
     /*Singularizer
@@ -594,6 +620,31 @@ function secure_assign_role_to_user_previous_system( $user_id, $role, $singulari
    
 }
 
+/**
+ * Function that remove a role to an user in the system.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see core_periods_get_current_period( ... ) in core of periods.
+ * @see _core_check_inherited_role( ... ) in checker.php
+ * @see _core_security_get_user_rol( ... ) in gets.php
+ * @see _core_user_assigned_in_previous_system( ... ) in gets.php
+ * @see get_db_manager( ... ) in query_manager.php
+ * @see secure_remove_role_from_user_previous_system( ... ) in entrypoint.php
+ * 
+ * @param integer $user_id Moodle user id.
+ * @param integer|string|object $role Role id or alias (name).
+ * @param integer $start_datetime Unix time.
+ * @param integer $executed_by Moodle user id.
+ * @param object $singularizer Filters to selection.
+ * 
+ * @throws Exception If id_instancia doesn't exist in singularizer.
+ * @throws Exception If executed_by is null.
+ * @throws Exception If executed_by doesn't exist in {prefix}_user.
+ * 
+ * @return void
+ */
 function secure_remove_role_to_user( $user_id, $role, $start_datetime, $executed_by, $singularizer ){
     
     /*Singularizer
@@ -604,7 +655,7 @@ function secure_remove_role_to_user( $user_id, $role, $start_datetime, $executed
      */
     
     if( !isset( $singularizer['id_instancia'] ) ){
-        throw new Exception( "id_instancia must be defined at sigularizator", -1 );
+        throw new Exception( "id_instancia must be defined at singularizer", -1 );
     }
     
     if( is_null( $executed_by ) ){
@@ -669,11 +720,11 @@ function secure_remove_role_to_user( $user_id, $role, $start_datetime, $executed
             $assignation_in_master_system['id']
         ];
         $query = "UPDATE $tablename SET eliminado = $1, fecha_hora_eliminacion = $2, id_usuario_eliminador = $3 WHERE id = $4";
-    	return $manager( $query, $params, $extra = null );
+    	$manager( $query, $params, $extra = null );
     }
     
     if( $remove_previous_system ){
-        return secure_remove_role_from_user_previous_system( $user_id, $role, $singularizer );
+        secure_remove_role_from_user_previous_system( $user_id, $role, $singularizer );
     }
     
 }
