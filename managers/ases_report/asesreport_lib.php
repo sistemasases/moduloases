@@ -43,7 +43,7 @@ function get_cohorts_by_idnumber($id_number){
  * Función que retorna un string, concatenando subconsultas sql dependiendo de los parámetros:
  * @param integer $ases_status
  * @param integer $icetex_status
- * @param integer $program_status
+ * @param string $instance_id
  * @return String
  * 
  */
@@ -103,6 +103,15 @@ function get_cohorts_by_idnumber($id_number){
  }
 
 
+/**
+ * Función general que retorna un string relacionado a la condicion WHERE de los reportes graficos dependiendo de los
+ * parametros:
+ * @param String $cohorte
+ * @param String $instance_id
+ * @param integer $program_status
+ * @return String
+ *
+ */
 
  function condicionCohorte($cohorte, $instance_id, $program_status){
 
@@ -280,13 +289,6 @@ function getGraficPrograma($cohorte, $ases_status, $icetex_status, $program_stat
                     ORDER BY cantidad DESC";
 
 
-    $sql_query .= "  ";
-
-    //$sub_query = subconsultaGraficReport($ases_status, $icetex_status, $program_status, $cohorte, $instance_id);
-    //$sql_query .= $sub_query;
-       
-    $sql_query .= " ";
-        
     $result_query = $DB->get_records_sql($sql_query);
 
     $result_to_return = array();
@@ -337,11 +339,7 @@ function getGraficFacultad($cohorte, $ases_status, $icetex_status, $program_stat
                         $subconsulta_filtros ) AS subquery
                     GROUP BY nombre
                     ORDER BY cantidad DESC";
-    
-    //$sub_query = subconsultaGraficReport($ases_status, $icetex_status, $program_status, $cohorte, $instance_id);
-    //$sql_query .= $sub_query;
 
-        
     $result_query = $DB->get_records_sql($sql_query);
 
     $result_to_return = array();
@@ -1065,8 +1063,6 @@ function get_ases_report($general_fields=null,
     if(property_exists($actions, 'search_all_students_ar') || property_exists($actions, 'status_report_agr')){
         
         $sql_query = $select_clause.$from_clause.$subquery_cohort.$sub_query_status.$sub_query_academic.$sub_query_assignment_fields;
-        //print($sql_query);
-        //print_r($sql_query); die();
         $result_query = $DB->get_records_sql($sql_query);
 
     }else if(property_exists($actions, 'search_assigned_students_ar')){
