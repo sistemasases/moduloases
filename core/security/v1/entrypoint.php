@@ -770,11 +770,6 @@ function secure_update_role_to_user( $user_id, $role, $executed_by,
         }
     }
     
-    if( $use_alternative_interval ){
-        $rol->start = strtotime($u_rol['fecha_hora_inicio']);
-        $rol->end = strtotime($u_rol['fecha_hora_fin']);
-    }
-    
     $new_assignation_in_master_system = _core_security_get_user_rol( $user_id, $start_datetime, $singularizer );
     $new_assignation_in_previous_system = NULL;
     
