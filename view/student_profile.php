@@ -348,6 +348,7 @@ if ($student_code != 0) {
     $record->options_pais = $options_pais;
 
     $record->municipio_act = get_ciudad_res($student_id);
+    $record->res_address = get_res_address($student_id);
 
     //TRAE ETNIAS
     $etnias= get_etnias();
