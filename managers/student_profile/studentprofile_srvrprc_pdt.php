@@ -574,4 +574,3 @@ function validate_student_proc($code_student){
     echo $confirm_msg;
 
 }
-

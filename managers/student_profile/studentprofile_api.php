@@ -113,13 +113,33 @@ if(isset($input->func) && isset($input->params)) {
                     )
                 );
             } else {
-                return_with_code(-2, $params);
+                return_with_code(-2);
             }
         } else {
             return_with_code(-6);
         }
     } else if($function == 'save_icetex_status') {
 
+        /**
+         * [0] => id_ases: string
+         * [1] => new_status:
+         * [2] => id_reason:
+         * [3] => observations:
+         */
+
+        $params = $input->params;
+        if(count($params) == 4){
+
+            $id_ases = $params[0];
+            $new_status = $params[1];
+            $id_reason = $params[2];
+            $observations = params[3];
+
+
+
+        } else {
+            return_with_code(-6);
+        }
     } else {
         return_with_code(-4);
     }
@@ -133,7 +153,7 @@ if(isset($input->func) && isset($input->params)) {
  * reserved codes: -1, -2, -3, -4, -5, -6, -99.
  * @param $code
  */
-function return_with_code($code, $p){
+function return_with_code($code){
 
     switch( $code ){
 
@@ -152,7 +172,7 @@ function return_with_code($code, $p){
                 array(
                     "status_code" => $code,
                     "error_message" => "Error in the scheme.",
-                    "data_response" => $p
+                    "data_response" => ""
                 )
             );
             break;
