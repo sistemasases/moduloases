@@ -132,7 +132,7 @@ function _core_security_check_role( $user_id, $role_id, $time_context = null, $s
  * @return bool Indicates if the given role is an inherited role.
  * 
  */
-function _core_check_inherited_role( $role ){ 
+function _core_security_check_inherited_role( $role ){ 
     return ( ( _core_security_get_role( $role ) && _core_security_get_previous_system_role( $role ) ) ? true : false );
 }
 
