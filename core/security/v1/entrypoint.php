@@ -700,7 +700,7 @@ function secure_assign_role_to_user_previous_system( $user_id, $role, $singulari
  * @since 1.0.0
  * 
  * @see core_periods_get_current_period( ... ) in core of periods.
- * @see _core_check_inherited_role( ... ) in checker.php
+ * @see _core_security_check_inherited_role( ... ) in checker.php
  * @see _core_security_get_user_rol( ... ) in gets.php
  * @see _core_user_assigned_in_previous_system( ... ) in gets.php
  * @see get_db_manager( ... ) in query_manager.php
@@ -737,7 +737,7 @@ function secure_remove_role_to_user( $user_id, $role, $start_datetime, $executed
         $singularizer['id_semestre'] = core_periods_get_current_period()->id;
     }
     
-    $inherited_role = _core_check_inherited_role($role);
+    $inherited_role = _core_security_check_inherited_role($role);
     
     $remove_master_system = false;
     $remove_previous_system = false;
@@ -909,7 +909,7 @@ function secure_update_role_to_user( $user_id, $role, $executed_by,
         $start_datetime = NULL, $end_datetime = NULL, $singularizer = NULL, $use_alternative_interval = false, $alternative_interval = NULL 
     ){
     
-     if( is_null( $executed_by ) ){
+    if( is_null( $executed_by ) ){
         throw new Exception( "The user who executes must be provided.", -2 );
     }
     
@@ -962,6 +962,38 @@ function secure_update_role_to_user( $user_id, $role, $executed_by,
     
     secure_remove_role_to_user( $user_id, $role, $old_start_datetime, $executed_by, $old_singularizer );
     secure_assign_role_to_user( $user_id, $role, $start_datetime, $end_datetime, $singularizer, $use_alternative_interval, $alternative_interval );
+    
+}
+
+function secure_remove_role( $role, $executed_by ){
+    
+    $db_role = _core_security_get_role( $role );
+    if( $db_role ){
+        
+        $can_be_removed = _core_security_check_subroles( $role );
+        if( $can_be_removed ){
+            
+            global $DB_PREFIX;
+            $manager = get_db_manager();
+            
+            $tablename = $DB_PREFIX . "talentospilos_roles";
+            $params = [ 
+                $role_id = $db_role['id'],
+                $eliminado = 1,
+                $fecha_hora_eliminacion = "now()",
+                $id_usuario_eliminador = $exceuted_by
+            ];
+            $query = "UPDATE $tablename SET eliminado = $2, fecha_hora_eliminacion = $3, id_usuario_eliminador = $4 WHERE id = $1 AND eliminado = 0";
+            return $manager( $query, $params, $extra = null );
+            
+        }else{
+            throw new Exception( "A parent role cannot be removed." );
+        }
+        
+        
+    }else{
+        throw new Exception( "'$role' doesn't exist." );
+    }
     
 }
 
