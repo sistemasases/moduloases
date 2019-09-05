@@ -73,4 +73,11 @@ $singularizations = array(
         
 );*/
 
+/*print_r(
+    _core_security_check_subroles( "profesional_ps", 3 )
+);*/
+
+function test(array $a=[]){ echo $a; };
+test();
+
 ?>
