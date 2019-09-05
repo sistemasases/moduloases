@@ -318,29 +318,6 @@ function get_ocupaciones()
 }
 
 /**
- * Gets student's city on talentospilos_demografia
- *
- * @see get_ciudad_res()
- * @param $id_ases
- * @return string
- */
-function get_ciudad_res($id_ases)
-{
-    global $DB;
-
-    $sql_query = "SELECT id_ciudad FROM {talentospilos_demografia} WHERE id_usuario = $id_ases";
-    $id_ciudad_res = $DB->get_record_sql($sql_query)->id_ciudad;
-
-    if($id_ciudad_res) {
-        $sql_query = "SELECT nombre FROM {talentospilos_municipio} WHERE id = $id_ciudad_res";
-        $nombre_ciudad_res = $DB->get_record_sql($sql_query)->nombre;
-
-        return $nombre_ciudad_res;
-    }
-    return "NO DEFINIDO";
-}
-
-/**
  * Gets student's address from talentospilos_demografia
  *
  * @see get_res_address()
@@ -2165,7 +2142,6 @@ function student_profile_load_geographic_tab($id_ases){
 
     $record->live_far_away = ($live_far_away)?true:false;
     $record->live_risk_zone = ($live_risk_zone)?true:false;
-    $record->res_address = $geographic_object->res_address;
     $record->observations = $geographic_object->observations;
     $record->geographic_risk_level  = $geographic_risk_level;
 

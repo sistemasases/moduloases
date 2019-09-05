@@ -81,6 +81,49 @@ function student_profile_get_coordenates($id_ases){
 }
 
 /**
+ * Gets student's city on talentospilos_demografia
+ *
+ * @see student_profile_get_ciudad_res()
+ * @param $id_ases
+ * @return string
+ */
+function student_profile_get_ciudad_res($id_ases)
+{
+    global $DB;
+
+    $sql_query = "SELECT id_ciudad FROM {talentospilos_demografia} WHERE id_usuario = $id_ases";
+    $id_ciudad_res = $DB->get_record_sql($sql_query)->id_ciudad;
+
+    if($id_ciudad_res) {
+        $sql_query = "SELECT nombre FROM {talentospilos_municipio} WHERE id = $id_ciudad_res";
+        $nombre_ciudad_res = $DB->get_record_sql($sql_query)->nombre;
+
+        return $nombre_ciudad_res;
+    }
+    return "NO DEFINIDO";
+}
+
+/**
+ * Gets student's residential address on talentospilos_demografia
+ *
+ * @see student_profile_get_res_address()
+ * @param $id_ases
+ * @return string
+ */
+function student_profile_get_res_address($id_ases)
+{
+    global $DB;
+
+    $sql_query = "SELECT direccion FROM {talentospilos_demografia} WHERE id_usuario = $id_ases";
+    $res_address = $DB->get_record_sql($sql_query)->id_ciudad;
+
+    if($res_address) {
+        return $res_address;
+    }
+    return "NO DEFINIDO";
+}
+
+/**
  * Obtains all neighborhoods from {talentospilos_barrios} table
  *
  * @see get_neighborhoods()
