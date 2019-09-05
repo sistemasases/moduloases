@@ -348,6 +348,7 @@ if ($student_code != 0) {
     $record->options_pais = $options_pais;
 
     $record->municipio_act = get_ciudad_res($student_id);
+    $record->res_address = get_res_address($student_id);
 
     //TRAE ETNIAS
     $etnias= get_etnias();
@@ -520,6 +521,7 @@ if ($student_code != 0) {
     }else{
         $record->sons = $ases_student->hijos;
     }
+
 
     $reasons_dropout_observations = getReasonDropoutStudent ($ases_student->id);
     $record->observations = $reasons_dropout_observations."\n".$ases_student->observacion;
