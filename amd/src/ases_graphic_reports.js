@@ -33,31 +33,23 @@ define(['jquery',
                 window.graficas = {};    //Objeto para guardar las gráficas de manera dinámica
                 const secciones = ["programa", "facultad", "sexo", "edad", "condExcepcion", "riesgos"];                                                
                 
-                //Eventos para cargar tablas y gráficas una vez se abra cada panel
+                for (i = 0; i < secciones.length; i++) {
 
-                $("#list-students-programa-panel").on('click', function(){                                   
-                    getDataGraphicTable("programa");
-                });
+                    //Eventos para cargar tablas y gráficas una vez se abra cada panel
+                    $("#list-students-"+secciones[i]+"-panel").on('click', function (event) {
+                        var id_button = String(event.currentTarget.id);
+                        var id = id_button.split('-')[2];
+                        getDataGraphicTable(id);
+                    });
 
-                $("#list-students-facultad-panel").on('click', function(){
-                    getDataGraphicTable("facultad");
-                });                                       
+                    //Eventos para descargar grafico correspondiente una vez se presione el boton de descargar
+                    $('#save_btn_'+secciones[i]).on('click', function (event) {
+                        var id_button = String(event.target.id);
+                        var id = id_button.split('_')[2];
+                        document.getElementById('download_'+id).click();
+                    });
+                }
 
-                $("#list-students-sexo-panel").on('click', function(){
-                    getDataGraphicTable("sexo");
-                }); 
-
-                $("#list-students-edad-panel").on('click', function(){
-                    getDataGraphicTable("edad");
-                }); 
-
-                $("#list-students-condExcepcion-panel").on('click', function(){
-                    getDataGraphicTable("condExcepcion");
-                }); 
-
-                $("#list-students-riesgos-panel").on('click', function(){
-                    getDataGraphicTable("riesgos");
-                });              
                 
                 //Eventos para actualizar tablas y gráficas cada vez que cambien los checkboxes de los filtros
 
@@ -80,6 +72,7 @@ define(['jquery',
                         }
                     }
                 });
+
             }            
         }
 
@@ -171,15 +164,10 @@ define(['jquery',
             for(var x in data){
 
                 nombre = data[x][label];
-                cantidad = data[x][labelCantidad];  
+                cantidad = data[x][labelCantidad];
 
-                if(nombre === 'LICENCIATURA EN EDUCACIÓN BÁSICA CON ÉNFASIS EN CIENCIAS NATURALES Y EDUCACIÓN AMBIENTAL'){
-                    nombre = 'LIC. EN EDU. BÁSICA ÉNFASIS EN CIENCIAS NATURALES Y EDU. AMBIENTAL'
-                }
-
-                if(nombre === 'LICENCIATURA EN EDUCACIÓN BÁSICA CON ÉNFASIS EN CIENCIAS SOCIALES'){
-                    nombre = 'LIC. EN EDU. BÁSICA CON ÉNFASIS EN CIENCIAS SOCIALES'
-                } 
+                nombre = nombre.replace("LICENCIATURA", 'LIC.');
+                nombre = nombre.replace(/EDUCACIÓN/g, 'EDU.');
                                                                                     
                 labelsGrafica.push(nombre);
                 cantidades.push(cantidad);               
@@ -205,6 +193,7 @@ define(['jquery',
                 }
             }
 
+
             //Se crea la gráfica en el elemento "grafica_<type>", ej: grafica_programa
             var ctx = document.getElementById("grafica_"+type).getContext('2d');
             var data = {
@@ -227,17 +216,27 @@ define(['jquery',
                     texto = 'Condición de Excepción'
                 }
 
+                Chart.plugins.register({
+                    beforeDraw: function(c) {
+                        var ctx = c.chart.ctx;
+                        ctx.fillStyle = 'white';
+                        ctx.fillRect(0, 0, c.chart.width, c.chart.height);
+                    }
+                });
+
                 window.graficas["chart_"+type] = new Chart(ctx, {               
                     type: type_chart,
                     data: data,
                     options: {
                         // Elements options apply to all of the options unless overridden in a dataset
                         // In this case, we are setting the border of each horizontal bar to be 2px wide
+
                         elements: {
                             rectangle: {
                                 borderWidth: 2,                            
                             }
                         },
+                        backgroundColor: 'white',
                         responsive: true,
                         legend: {
                             position: 'top',
@@ -255,7 +254,12 @@ define(['jquery',
                                 },
                                 categoryPercentage: 1.0,
                                 barPercentage: 1.0
-                            }]                       
+                            }]  ,
+                            xAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
                         },
                         maintainAspectRatio: false,
                         plugins: {
@@ -264,7 +268,19 @@ define(['jquery',
                                align: 'center',
                                anchor: 'center'
                             }
-                         }                    
+                         },
+
+                        animation: {
+                            duration: 0,
+                                onProgress: function(animation) {
+                            },
+                            onComplete: function(animation) {
+
+                                var imagen = document.getElementById("grafica_"+type).toDataURL("image/jpeg");
+                                $('#download_'+type).attr('href', imagen);
+                                $('#download_'+type).attr('download', 'reporte_'+type+'.jpg');
+                            }
+                        }
                     }
                 }
                 );
@@ -321,6 +337,14 @@ define(['jquery',
                 if(type ==='condExcepcion'){
                     texto = 'Condición de Excepción'
                 }
+
+                Chart.plugins.register({
+                    beforeDraw: function(c) {
+                        var ctx = c.chart.ctx;
+                        ctx.fillStyle = 'white';
+                        ctx.fillRect(0, 0, c.chart.width, c.chart.height);
+                    }
+                });
             
                 var chart_options = {
                     
@@ -333,12 +357,22 @@ define(['jquery',
                         display: true
                     },
                     starAngle: 0,
+                    showTooltips: true,
+                    showPercentages: true,
+
                     animation: {
                         animateRotate: true,
-                        animateScale: true
-                    },
-                    showTooltips: true,
-                    showPercentages: true
+                        animateScale: true,
+                        duration: 0,
+                        onProgress: function(animation) {
+                        },
+                        onComplete: function(animation) {
+
+                            var imagen = document.getElementById("grafica_"+type).toDataURL("image/jpeg");
+                            $('#download_'+type).attr('href', imagen);
+                            $('#download_'+type).attr('download', 'reporte_'+type+'.jpg');
+                        }
+                    }
                 };
 
                 Chart.defaults.polarArea.animation.animateScale = false;
@@ -418,8 +452,17 @@ define(['jquery',
                 ]
             }
 
-            if(!window.graficas["chart_riesgos"]){ //Si la gráfica no existe, se crea desde cero                     
-            
+            if(!window.graficas["chart_riesgos"]){ //Si la gráfica no existe, se crea desde cero
+
+                Chart.plugins.register({
+                    beforeDraw: function(c) {
+                        var ctx = c.chart.ctx;
+                        ctx.fillStyle = 'white';
+                        ctx.fillRect(0, 0, c.chart.width, c.chart.height);
+                    }
+                });
+
+
                 var chart_options = {
                     
                     title: {
@@ -435,10 +478,6 @@ define(['jquery',
                         }
                     },
                     starAngle: 0,
-                    animation: {
-                        animateRotate: true,
-                        animateScale: true
-                    },
                     scales: {
                         xAxes: [{
                             ticks: {
@@ -448,7 +487,21 @@ define(['jquery',
                         }]
                     },
                     showTooltips: true,
-                    showPercentages: true
+                    showPercentages: true,
+
+                    animation: {
+                        animateRotate: true,
+                        animateScale: true,
+                        duration: 0,
+                        onProgress: function(animation) {
+                        },
+                        onComplete: function(animation) {
+
+                            var imagen = document.getElementById("grafica_riesgos").toDataURL("image/jpeg");
+                            $('#download_riesgos').attr('href', imagen);
+                            $('#download_riesgos').attr('download', 'reporte_riesgos.jpg');
+                        }
+                    }
                 };
 
                 Chart.defaults.polarArea.animation.animateScale = false;

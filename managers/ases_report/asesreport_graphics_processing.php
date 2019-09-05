@@ -96,9 +96,9 @@ if(isset($_POST['type'])&&$_POST['type']=="condExcepcion"&&isset($_POST['cohort'
 
     $columns = array();
 
-    array_push($columns, array("title"=>"Condición de excepción", "name"=>"nombre", "data"=>"nombre"));
+    array_push($columns, array("title"=>"Condición de excepción", "name"=>"nombre", "data"=>"alias"));
     array_push($columns, array("title"=>"Cantidad", "name"=>"cantidad", "data"=>"cantidad"));        
-    array_push($columns, array("title"=>"Nombre", "name"=>"nombre_largo", "data"=>"nombre_largo"));
+    array_push($columns, array("title"=>"Nombre", "name"=>"nombre_largo", "data"=>"nombre"));
 
     $data = get_general_table_graphic($columns, $result);
 
