@@ -136,5 +136,27 @@ function _core_security_check_inherited_role( $role ){
     return ( ( _core_security_get_role( $role ) && _core_security_get_previous_system_role( $role ) ) ? true : false );
 }
 
+function _core_security_check_subroles( $role ){
+    
+    $db_role = _core_security_get_role( $role ); 
+    
+    if( is_null( $role ) ){
+        throw new Exception( "Role '$role' doesn't exist.", -1 );
+    }
+    
+    $role_id = $db_role['id'];
+    
+    global $DB_PREFIX;
+    
+    $tablename = $DB_PREFIX . "talentospilos_roles";
+    $params = [ $role_id ];
+    
+    $manager = get_db_manager();
+    $user = $manager( $query = "SELECT * FROM $tablename WHERE id_rol_padre = $1", $params, $extra = NULL );
+
+    return ( count( $user ) == 1 ? true : false );
+    
+}
+
 
 ?>
