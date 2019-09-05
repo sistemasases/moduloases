@@ -689,6 +689,69 @@ function verify_ases_status($id_ases_student){
 }
 
 /**
+ * Returns result of query at table 'talentospilos_retiros'
+ *
+ * @author  Juan Pablo Castro. GitHub: jpcv222
+ * @see save_reason_dropout_student()
+ * @param $code_student
+ * @return string
+ */
+
+function getReasonDropoutStudent($code_student){
+
+    global $DB;
+
+    $result = "";
+    $sql_query = "SELECT detalle, id_motivo FROM {talentospilos_retiros}  WHERE id_usuario=$code_student";
+    $tmp_result = $DB->get_record_sql($sql_query);
+    if(!empty($tmp_result)){
+        $sql_query ="SELECT descripcion FROM {talentospilos_motivos} WHERE id = $tmp_result->id_motivo";
+        $motivo =  $DB->get_record_sql($sql_query)->descripcion;
+        $result = "Motivo retiro: " . $motivo . "\nDetalle: ".$tmp_result->detalle;
+    }
+    return $result;
+}
+
+
+/**
+ * Returns result of the transaction at database: table 'talentospilos_retiros'
+ *
+ * @author  Juan Pablo Castro. GitHub: jpcv222
+ *
+ * @see save_reason_dropout_student()
+ * @param $code_student
+ * @param $reason
+ * @param $observation
+ * @return integer
+ */
+
+function save_reason_dropout_ases($code_student, $reason, $observation){
+        global $DB;
+        $id_ases_student = get_ases_user_by_code($code_student)->id;
+
+        $record = new stdClass();
+        $record->id_usuario = $id_ases_student;
+        $record->id_motivo = $reason;
+        $record->detalle = $observation;
+
+
+        $sql_query = "SELECT id FROM {talentospilos_retiros} WHERE id_usuario= '$id_ases_student'";
+        $exists = $DB->get_record_sql($sql_query);
+
+        if($exists)
+        {
+            $record->id = $exists->id;
+            return $DB->update_record('talentospilos_retiros', $record);
+        }
+        else
+        {
+            return $DB->insert_record('talentospilos_retiros', $record, false);
+        }
+
+}
+
+
+/**
  * Update the ASES status for a student
  *
  * @see update_status_ases

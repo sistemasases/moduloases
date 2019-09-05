@@ -41,7 +41,7 @@ include("../classes/output/ases_graphic_reports_page.php");
 include("../classes/output/renderer.php");
 
 // Set up the page.
-$pagetitle = 'Reporte general gráfico';
+$pagetitle = 'Reporte general gráfico ';
 $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
 $id_current_user = $USER->id;
@@ -109,7 +109,7 @@ $data->summary_3740_cohorts = get_summary_group_cohorts('3740', $blockid);
 
 // Navigation setup
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
-$blocknode = navigation_node::create('Reporte general gráfico',$url, null, 'block', $blockid);
+$blocknode = navigation_node::create('Reporte general gráfico ',$url, null, 'block', $blockid);
 $coursenode->add_node($blocknode);
 
 $PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
