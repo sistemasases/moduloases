@@ -339,3 +339,29 @@ function _build_response( $records, $query_variable ){
     return $to_return;
 }
 
+function check_db_records(string $tablename, array $criteria = [], array $params = [] ): bool
+{
+   
+    global $DB_PREFIX;
+
+    $table = $DB_PREFIX . $tablename;
+    $manager = get_db_manager();
+    
+    $where = "";
+    if( count($criteria) > 0 ){
+        $where .= "WHERE";
+        foreach ($criteria as $key => $cond){
+            $where .= " $cond = $" . ($key + 1);
+            ( next($criteria) ? $where .= " AND" : null );
+        }
+    }
+    
+    $result = $manager( $query = "SELECT * FROM $table $where", $params, $extra = null );
+    
+    if( count( $result ) == 0 || is_null( $result ) ){
+        
+        throw new Exception( "Record(s) doesn't exist. Criteria :" . json_encode( $criteria ) . ", Values :" . json_encode( $params ) . "." );
+    
+    }
+    
+}
