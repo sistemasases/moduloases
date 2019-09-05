@@ -522,6 +522,7 @@ if ($student_code != 0) {
         $record->sons = $ases_student->hijos;
     }
 
+
     $reasons_dropout_observations = getReasonDropoutStudent ($ases_student->id);
     $record->observations = $reasons_dropout_observations."\n".$ases_student->observacion;
 
