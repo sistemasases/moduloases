@@ -676,10 +676,12 @@ function getReasonDropoutStudent($code_student){
     global $DB;
 
     $result = "";
-    $sql_query = "SELECT detalle FROM {talentospilos_retiros}  WHERE id_usuario=$code_student";
-    $tmp_result = $DB->get_record_sql($sql_query)->detalle;
+    $sql_query = "SELECT detalle, id_motivo FROM {talentospilos_retiros}  WHERE id_usuario=$code_student";
+    $tmp_result = $DB->get_record_sql($sql_query);
     if(!empty($tmp_result)){
-        $result = "Motivo retiro: " . $tmp_result;
+        $sql_query ="SELECT descripcion FROM {talentospilos_motivos} WHERE id = $tmp_result->id_motivo";
+        $motivo =  $DB->get_record_sql($sql_query)->descripcion;
+        $result = "Motivo retiro: " . $motivo . "\nDetalle: ".$tmp_result->detalle;
     }
     return $result;
 }

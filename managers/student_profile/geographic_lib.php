@@ -120,7 +120,7 @@ function student_profile_get_res_address($id_ases)
     if($res_address) {
         return $res_address;
     }
-    return "NO DEFINIDO";
+    return "NO DEFINIDA";
 }
 
 /**

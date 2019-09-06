@@ -1,8 +1,8 @@
 <?php 
 /**
- * @package		block_ases
+ * @package	block_ases
  * @subpackage	core.security
- * @author 		Jeison Cardona Gómez
+ * @author 	Jeison Cardona Gómez
  * @copyright 	(C) 2019 Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @license   	http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -15,6 +15,8 @@ require_once( __DIR__ . "/gets.php");
  *
  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
+ * 
+ * @see get_db_manager( ... ) in query_manager.php
  *
  * @param integer $rol_id
  * @param integer $action_id
@@ -48,6 +50,8 @@ function _core_security_can_be_executed( $rol_id, $action_id ){
  *
  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
+ * 
+ * @see get_db_manager( ... ) in query_manager.php
  *
  * @param integer $user_id
  *
@@ -78,6 +82,8 @@ function _core_security_user_exist( $user_id ){
  *
  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
+ * 
+ * @see _core_security_get_role( ... ) in gets.php
  *
  * @param integer $user_id
  *
@@ -87,20 +93,20 @@ function _core_security_check_role( $user_id, $role_id, $time_context = null, $s
 
 
 	$user_role = _core_security_get_user_rol( $user_id, $time_context, $singularizations = null );
-	$asigned_role = _core_security_get_role( $user_role['id_rol'] );
+	$assigned_role = _core_security_get_role( $user_role['id_rol'] );
 
 	$role_wanted = _core_security_get_role( $role_id );
 	
-	if( $role_wanted && $asigned_role ){
+	if( $role_wanted && $assigned_role ){
 
 		$found_role = false;
 		do{
-			$current_role = $asigned_role;
-			if( $role_wanted['id'] == $asigned_role['id'] ){
+			$current_role = $assigned_role;
+			if( $role_wanted['id'] == $assigned_role['id'] ){
 				$found_role = true;
 			}
 			if( $current_role['id_rol_padre'] != "-1" ){
-				$asigned_role = _core_security_get_role( $asigned_role['id_rol_padre'] );
+				$assigned_role = _core_security_get_role( $assigned_role['id_rol_padre'] );
 			}
 		}while( $current_role['id_rol_padre'] != "-1" );
 		
@@ -111,5 +117,24 @@ function _core_security_check_role( $user_id, $role_id, $time_context = null, $s
 	}
 
 }
+
+/**
+ * Function that, given a role id or alias, return if it's an inherited role. An 
+ * inherited role is a role that exist in both systems with the same alias ("nombre" in the previous system).
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see _core_security_get_role( ... ) in gets.php
+ * @see _core_security_get_previous_system_role( ... ) in gets.php
+ * 
+ * @param mixed $role Role alias.
+ * @return bool Indicates if the given role is an inherited role.
+ * 
+ */
+function _core_check_inherited_role( $role ){ 
+    return ( ( _core_security_get_role( $role ) && _core_security_get_previous_system_role( $role ) ) ? true : false );
+}
+
 
 ?>
