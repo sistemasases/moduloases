@@ -60,7 +60,7 @@ if(isset($input->func) && isset($input->params)) {
                         $result = student_profile_load_geographic_tab($id_ases);
                         break;
                     case 'others':
-                        $result = student_profile_load_others_tab($id_ases);
+                        $result = student_profile_load_tracing_others_tab($id_ases);
                         break;
                     default:
                         return_with_code(-3);

@@ -34,7 +34,6 @@ $msg = new stdClass();
 if(isset($_POST['func'])){
 
     if($_POST['func'] == 'save_icetex_status') {
-
         if(isset($_POST['id_ases'])){
             $id_ases = $_POST['id_ases'];
         }else{

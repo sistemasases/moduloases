@@ -1357,36 +1357,12 @@ define(['jquery',
         var id_reason = $('#reasons_select').val();
         var reasons_dropout = $('#description_dropout').val();
 
-        data.push({
-            name: "func",
-            value: "save_icetex_status"
-        });
-        data.push({
-            name: 'new_status',
-            value: new_status
-        });
-        data.push({
-            name: 'id_ases',
-            value: id_ases
-        });
-
-        if (id_reason != '') {
-            data.push({
-                name: 'id_reason',
-                value: id_reason
-            });
-        };
-
-        if (reasons_dropout != '') {
-            data.push({
-                name: 'observations',
-                value: reasons_dropout
-            });
-        }
-
         $.ajax({
             type: "POST",
-            data: data,
+            data: JSON.stringify({
+                "func": 'save_icetex_status',
+                "params": [id_ases, new_status, id_reason, reasons_dropout],
+            }),
             url: "../../ases/managers/student_profile/studentprofile_serverproc.php",
             success: function (msg) {
                 swal({
