@@ -2157,6 +2157,37 @@ function student_profile_load_academic_tab($id_ases){
 
     $record = new stdClass();
 
+    $academic_programs = get_status_program_for_profile_aditional($id_ases);
+    $id_user_moodle = get_id_user_moodle($id_ases);
+
+    foreach ($academic_programs as $program) {
+        if($program->tracking_status == 1){
+            $academic_program_id = $program->academic_program_id;
+            break;
+        }
+    }
+
+    //Current data
+    //weighted average
+    $promedio = get_promedio_ponderado($id_ases, $academic_program_id);
+    $record->promedio = $promedio;
+
+    //num bajos
+    $bajos = get_bajos_rendimientos($id_ases, $academic_program_id);
+    $record->bajos = $bajos;
+
+    //num estimulos
+    $estimulos = get_estimulos($id_ases, $academic_program_id);
+    $record->estimulos = $estimulos;
+
+    //Current semester
+    $html_academic_table = get_grades_courses_student_last_semester($id_user_moodle);
+    $record->academic_semester_act = $html_academic_table;
+
+    //historic academic
+    $html_historic_academic = get_historic_academic_by_student($id_ases);
+    $record->historic_academic = $html_historic_academic;
+
     return $record;
 }
 

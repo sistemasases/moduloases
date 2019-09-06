@@ -118,7 +118,7 @@ if ($student_code != 0) {
     
     $html_profile_image = AsesUser::get_HTML_img_profile_image($contextblock->id, $ases_student->id);
     //$academic_programs = get_status_program_for_profile($student_id);
-    $academic_programs   = get_status_program_for_profile_aditional($student_id);
+    $academic_programs = get_status_program_for_profile_aditional($student_id);
     $student_cohorts = get_cohorts_by_student($id_user_moodle);
     $status_ases_array = get_ases_status($ases_student->id, $blockid);
 
@@ -734,35 +734,6 @@ if ($student_code != 0) {
     $select = make_select_ficha($USER->id, $rol, $student_code, $blockid, $actions);
     $record->code = $select;
 
-    // Loading academic information
-
-    foreach ($academic_programs as $program) {
-        if($program->tracking_status == 1){
-            
-            $academic_program_id = $program->academic_program_id;
-            break;
-        }
-    }
-    //Current data
-    //weighted average
-    $promedio = get_promedio_ponderado($student_id, $academic_program_id);
-    $record->promedio = $promedio;
-
-    // //num bajos
-    $bajos = get_bajos_rendimientos($student_id, $academic_program_id);
-    $record->bajos = $bajos;
-
-    // // //num estimulos
-    $estimulos = get_estimulos($student_id, $academic_program_id);
-    $record->estimulos = $estimulos;
-
-    // //Current semester
-    $html_academic_table = get_grades_courses_student_last_semester($id_user_moodle);
-    $record->academic_semester_act = $html_academic_table;
-
-    // //historic academic
-    $html_historic_academic = get_historic_academic_by_student($student_id);
-    $record->historic_academic = $html_historic_academic;
 
     // Student trackings (Seguimientos)
 
