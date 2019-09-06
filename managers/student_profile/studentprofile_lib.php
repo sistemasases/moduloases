@@ -318,23 +318,6 @@ function get_ocupaciones()
 }
 
 /**
- * Gets student's address from talentospilos_demografia
- *
- * @see get_res_address()
- * @param $id_ases
- * @return object
- */
-function get_res_address($id_ases)
-{
-    global $DB;
-
-    $sql_query = "SELECT direccion FROM {talentospilos_demografia} WHERE id_usuario = $id_ases";
-    $id_res_address = $DB->get_record_sql($sql_query)->direccion;
-
-   return $id_res_address;
-}
-
-/**
  * Update genero
  *
  * @see update_record_genero($genero)
@@ -2195,9 +2178,6 @@ function student_profile_load_geographic_tab($id_ases){
     $record->options_municipio_act = student_profile_get_options_municipios($student_city);
     $record->select_neighborhoods = student_profile_get_options_neighborhoods($student_neighborhood);
 
-    $record->view_geographic_config_sp = true;
-    $record->update_geographic_tab_sp = true;
-
     $native = $geographic_object->native;
     $live_far_away = $geographic_object->live_far_away;
     $live_risk_zone = $geographic_object->live_risk_zone;
@@ -2206,6 +2186,7 @@ function student_profile_load_geographic_tab($id_ases){
     $record->live_far_away = ($live_far_away)?true:false;
     $record->live_risk_zone = ($live_risk_zone)?true:false;
     $record->observations = $geographic_object->observations;
+    $record->res_address = $geographic_object->res_address;
     $record->geographic_risk_level  = $geographic_risk_level;
 
     if($live_risk_zone && $native == 1)
@@ -2228,6 +2209,8 @@ function student_profile_load_geographic_tab($id_ases){
             $record->low_level = $record->mid_level = $record->high_level = false;
             break;
     }
+
+    $record->obj = $geographic_object;
 
     return $record;
 }

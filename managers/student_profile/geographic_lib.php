@@ -115,7 +115,7 @@ function student_profile_get_res_address($id_ases)
     global $DB;
 
     $sql_query = "SELECT direccion FROM {talentospilos_demografia} WHERE id_usuario = $id_ases";
-    $res_address = $DB->get_record_sql($sql_query)->id_ciudad;
+    $res_address = $DB->get_record_sql($sql_query)->direccion;
 
     if($res_address) {
         return $res_address;

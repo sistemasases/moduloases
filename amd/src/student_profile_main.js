@@ -689,7 +689,6 @@ define(['jquery',
         }, edit_profile: function (object_function) {
 
             var form_wihtout_changes = $('#ficha_estudiante').serializeArray();
-            console.log(form_wihtout_changes);
 
             var update_or_insert1 = document.getElementById("otro_genero").value;
             var update_or_insert2 = document.getElementById("otro_act_simultanea").value;
@@ -1013,7 +1012,6 @@ define(['jquery',
                         };
                         break;
                     case "emailpilos":
-                        console.log(is_email(form[field].value));
                         if (!is_email(form[field].value)) {
                             msg.title = "Error";
                             msg.status = "error";
@@ -1027,11 +1025,6 @@ define(['jquery',
             return msg;
         }, save_form_edit_profile: function (form, object_function, control1, control2, json) {
 
-            console.log(form);
-            console.log(control1);
-            console.log(control2);
-            console.log(json);
-
             $.ajax({
                 type: "POST",
                 data: JSON.stringify({
@@ -1040,7 +1033,6 @@ define(['jquery',
                 }),
                 url: "../managers/student_profile/studentprofile_api.php",
                 success: function (msg) {
-
                     if(msg.status_code == 0) {
                         swal(
                             msg.title,
@@ -1048,18 +1040,15 @@ define(['jquery',
                             msg.status
                         );
                     }
-                    console.log(msg);
                 },
                 dataType: "json",
                 cache: "false",
                 error: function (msg) {
-
                     swal(
                         msg.title,
                         msg.msg,
                         msg.status
                     );
-                    console.log(msg);
                 },
             });
 
@@ -1120,8 +1109,6 @@ define(['jquery',
             url: "../managers/student_profile/studentprofile_api.php",
             success: function(msg) {
                 if(msg.status_code == 0) {
-                    console.log(msg);
-
                     $.ajax({
                         url: "../templates/view_"+tab_to_load+"_tab_sp.mustache",
                         data: null,
@@ -2093,7 +2080,6 @@ define(['jquery',
 
     function load_student(code_student) {
 
-        console.log(code_student);
         $.ajax({
             type: "POST",
             data: {
