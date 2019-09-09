@@ -135,8 +135,37 @@ if(isset($input->func) && isset($input->params)) {
             $id_reason = $params[2];
             $observations = params[3];
 
+            if(is_string($id_ases )){
 
+                if(is_string($new_status)){
 
+                    $id_reason=(isset($id_reason))?:null;
+                    $observations=(isset($observations))?:null;
+
+                    $result = save_status_icetex($new_status, $id_ases, $id_reason, $observations);
+
+                    echo json_encode(
+                        array(
+                            "status_code" => 0,
+                            "title" => $result->title,
+                            "type" => $result->type,
+                            "message" => $result->msg
+                        )
+                    );
+                }else{
+                    $msg_error->title = "Error";
+                    $msg_error->msg = "Problema en la conexión al servidor. El Nuevo Estado del estudiante no llegó al servidor.";
+                    $msg_error->type = "error";
+
+                    return $msg_error;
+                }
+            }else{
+                $msg_error->title = "Error";
+                $msg_error->msg = "Problema en la conexión al servidor. El ID del estudiante no llegó al servidor.";
+                $msg_error->type = "error";
+
+                return $msg_error;
+            }
         } else {
             return_with_code(-6);
         }
