@@ -1709,6 +1709,51 @@ function get_icetex_states(){
 
  }
 
+function getGeographicReport($cohorte, $instance_id){
+
+    global $DB;
+
+    $sql_where = condicionCohorte($cohorte, $instance_id, 0);
+
+    $sql_query = "SELECT DISTINCT
+   ases_students.student_id,
+   demografia.latitud AS latitude,
+   demografia.longitud AS longitude,
+   demografia.barrio AS neighborhood
+FROM
+   (SELECT
+      ases_user.id AS student_id,
+      user_extended.id_academic_program,
+      program_statuses.nombre AS program_status
+    FROM {cohort} AS cohort
+      INNER JOIN {talentospilos_inst_cohorte} AS instance_cohort ON cohort.id = instance_cohort.id_cohorte
+      INNER JOIN {cohort_members} AS cohort_member ON cohort_member.cohortid = cohort.id
+      INNER JOIN {user} AS moodle_user ON moodle_user.id = cohort_member.userid
+      INNER JOIN {talentospilos_user_extended} AS user_extended ON user_extended.id_moodle_user = moodle_user.id
+      INNER JOIN {talentospilos_usuario} AS ases_user ON ases_user.id = user_extended.id_ases_user
+      INNER JOIN {talentospilos_estad_programa} AS program_statuses ON program_statuses.id = user_extended.program_status
+    $sql_where
+    GROUP BY student_id, user_extended.id_academic_program, program_statuses.nombre) AS ases_students
+     INNER JOIN {talentospilos_demografia} AS demografia ON demografia.id_usuario = ases_students.student_id";
+
+
+     $result_query = $DB->get_records_sql($sql_query);
+
+     $result_to_return = array();
+
+     foreach($result_query as $result){
+
+         array_push($result_to_return, $result);
+     }
+
+     return $result_to_return;
+
+
+ }
+
+
+
+
 
 
 

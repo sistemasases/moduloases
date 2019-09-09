@@ -26,6 +26,7 @@ define(['jquery',
             init: function () {
                 window.JSZip = jszip;
                 initMap();
+                getDataMap();
 
             }
         }
@@ -50,6 +51,24 @@ define(['jquery',
                 title: 'Hello World!'
             });
 
+        }
+
+        function getDataMap(){
+
+            $.ajax({
+
+                type: "POST",
+                data: { type: 'mapa', cohort: $('#conditions').val(), instance_id: getIdinstancia() },
+                url: "../managers/ases_report/asesreport_graphics_processing.php",
+                success: function (msg) {
+                    console.log(msg);
+                },
+                dataType: "json",
+                cache: false,
+                async: true,
+
+                failure: function (msg) { }
+            });
         }
 
         function getPoints() {
