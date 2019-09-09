@@ -1100,6 +1100,10 @@ define(['jquery',
 
         var tab_to_load = event.data.tab_to_load;
         var id_ases = $('#id_ases').val();
+
+        $(".active").removeClass("active");
+        $("#"+tab_to_load+"_li").addClass("active");
+
         $.ajax({
             type: "POST",
             data: JSON.stringify({
@@ -1115,7 +1119,6 @@ define(['jquery',
                         dataType: "text",
                         async: false,
                         success: function( template ){
-
                             switch(tab_to_load){
                                 case 'socioed':
                                     let socioed_tab = $(mustache.render( template, msg.data_response ));
@@ -1138,9 +1141,7 @@ define(['jquery',
                                     break;
                             }
 
-                            $(".active").removeClass("active");
                             $("#"+tab_to_load+"_tab").addClass("active");
-                            $("#"+tab_to_load+"_li").addClass("active");
                             $("#"+tab_to_load+"_li").off('click', load_tabs);
                         },
                         error: function(){
