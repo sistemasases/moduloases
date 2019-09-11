@@ -77,7 +77,6 @@ $singularizations = array(
     _core_security_check_subroles( "profesional_ps", 3 )
 );*/
 
-function test(array $a=[]){ echo $a; };
-test();
+prin_r(check_db_records("user", $criteria = ["id"], $params = [7332080] ));
 
 ?>
