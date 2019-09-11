@@ -8,15 +8,12 @@
     height:600px
 }
 
-#top_options{
+
+#maps_fields, #conventions-container{
     text-align: center;
 }
 
-#maps_fields{
-    text-align: center;
-}
-
-.checkbox{
+.checkbox, .convention{
     display:inline-block !important;
     margin: 1em 2em 0 1em;
 }
