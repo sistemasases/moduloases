@@ -339,7 +339,7 @@ function _build_response( $records, $query_variable ){
     return $to_return;
 }
 
-function check_db_records(string $tablename, array $criteria = [], array $params = [] ): bool
+function check_db_records(string $tablename, array $criteria = [], array $params = [], bool $generate_exception = false ) 
 {
    
     global $DB_PREFIX;
@@ -358,10 +358,11 @@ function check_db_records(string $tablename, array $criteria = [], array $params
     
     $result = $manager( $query = "SELECT * FROM $table $where", $params, $extra = null );
     
-    if( count( $result ) == 0 || is_null( $result ) ){
-        
-        throw new Exception( "Record(s) doesn't exist. Criteria :" . json_encode( $criteria ) . ", Values :" . json_encode( $params ) . "." );
     
+    if( ( count( $result ) == 0 || is_null( $result ) ) &&  $generate_exception  ){
+        throw new Exception( "Record(s) doesn't exist. Criteria :" . json_encode( $criteria ) . ", Values :" . json_encode( $params ) . "." );
+    }elseif ( ( count( $result ) == 0 || is_null( $result ) ) &&  $generate_exception ) {
+        return false;
     }
     
 }
