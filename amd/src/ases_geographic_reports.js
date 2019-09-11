@@ -8,19 +8,10 @@
  * @module block_ases/ases_geographic_reports
  */
 define(['jquery',
-        'block_ases/jszip',
-        'block_ases/dataTables.autoFill',
-        'block_ases/dataTables.buttons',
-        'block_ases/buttons.html5',
-        'block_ases/buttons.flash',
-        'block_ases/buttons.print',
-        'block_ases/bootstrap',
-        'block_ases/sweetalert2',
-        'block_ases/jqueryui',
-        'block_ases/select2',
+        'block_ases/jszip'
     ],
 
-    function ($, jszip, autoFill, buttons, html5, flash, print, bootstrap, sweetalert, jqueryui, select2) {
+    function ($, jszip) {
 
         return {
             init: function () {
@@ -48,6 +39,11 @@ define(['jquery',
 
                 });
 
+                var options = $('#conditions option');
+
+                var values = $.map(options ,function(option) {
+                    console.log( option.value);
+                });
 
                 $('#conditions').on('change', function () {
                     getDataMap();
@@ -85,16 +81,18 @@ define(['jquery',
                 });
             }
 
-            var puntosMapa = [];
+            var puntosMapa = [], cohortes = [];
             var latitud, longitud;
 
             for (var x in data){
                 latitud = Number(data[x].latitude);
                 longitud = Number(data[x].longitude);
                 puntosMapa.push(new google.maps.LatLng(latitud,longitud));
+                cohortes.push(data[x].cohorte);
             };
 
             window.puntosMapa = puntosMapa;
+            window.cohortes = cohortes;
 
             mapaCalor(puntosMapa);
             marcadoresMapa(puntosMapa);
@@ -130,18 +128,41 @@ define(['jquery',
 
             if($("#markers_map").is(":checked")) {
 
-                var icon = {
-                    url: "https://raw.githubusercontent.com/Concept211/Google-Maps-Markers/master/images/marker_blue.png", // url
-                    scaledSize: new google.maps.Size(11, 20) // scaled size
-                };
-
                 window.markers = [];
+                var icon, color;
 
                 for (var x in window.puntosMapa) {
+
+                    switch (window.cohortes[x]) {
+
+                        case 'SPP':
+                            color = 'blue';
+                            break;
+                        case 'SPE':
+                            color = 'green';
+                            break;
+                        case 'SPT':
+                            color = 'red';
+                            break;
+                        case '3740':
+                            color = 'purple';
+                            break;
+                        case 'Otros':
+                            color = 'orange';
+                            break;
+                    };
+
+
+                    icon = {
+                        url: "https://raw.githubusercontent.com/Concept211/Google-Maps-Markers/master/images/marker_"+ color +".png", // url
+                        scaledSize: new google.maps.Size(11, 20) // scaled size
+                    };
+
                     window.markers.push(new google.maps.Marker({
                         position: window.puntosMapa[x],
                         map: map,
-                        icon: icon
+                        icon: icon,
+                        title: window.cohortes[x]
                     }));
                 }
             }
