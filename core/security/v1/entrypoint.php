@@ -990,7 +990,6 @@ function secure_remove_role( $role, $executed_by ){
             throw new Exception( "A parent role cannot be removed." );
         }
         
-        
     }else{
         throw new Exception( "'$role' doesn't exist." );
     }
