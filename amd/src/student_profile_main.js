@@ -316,16 +316,9 @@ define(['jquery',
             });
         }, update_status_program: function (current_status, element) {
 
-            var program_id = element.attr('id').split("-")[1];
-            var status = element.val();
-            var student_id = element.parent().parent().attr('id').split("-")[1];
-
-            var data = {
-                func: 'update_status_program',
-                program_id: program_id,
-                status: status,
-                student_id: student_id
-            };
+            var id_moodle = element.parent().parent().attr('id').split("-")[1];
+            var id_program = element.attr('id').split("-")[1];
+            var status_program = element.val();
 
             swal({
                 title: "Advertencia",
@@ -341,19 +334,26 @@ define(['jquery',
                     if (isConfirm) {
                         $.ajax({
                             type: "POST",
-                            data: data,
-                            url: "../managers/student_profile/studentprofile_serverproc.php",
+                            data: JSON.stringify({
+                                "func": 'update_status_program',
+                                "params": [id_moodle, id_program, status_program]
+                            }),
+                            url: "../managers/student_profile/studentprofile_api.php",
                             success: function (msg) {
-                                if ($('#select-' + data.program_id).val() == "ACTIVO") {
-                                    $('#tr-' + data.student_id).addClass('is-active');
+                                if(msg.status_code == 0) {
+                                    if ($('#select-' + id_program).val() == "ACTIVO") {
+                                        $('#tr-' + id_moodle).addClass('is-active');
+                                    } else {
+                                        $('#tr-' + id_moodle).removeClass('is-active');
+                                    }
+                                    swal(
+                                        msg.title,
+                                        msg.message,
+                                        msg.status
+                                    );
                                 } else {
-                                    $('#tr-' + data.student_id).removeClass('is-active');
+                                    console.log(msg);
                                 }
-                                swal(
-                                    msg.title,
-                                    msg.msg,
-                                    msg.status
-                                );
                             },
                             dataType: "json",
                             cache: "false",
@@ -368,7 +368,6 @@ define(['jquery',
                     } else {
                         $('#select-' + data.program_id).val(current_status);
                     }
-
                 });
         }, update_status_ases: function (parameters_url) {
 
@@ -689,6 +688,7 @@ define(['jquery',
         }, edit_profile: function (object_function) {
 
             var form_wihtout_changes = $('#ficha_estudiante').serializeArray();
+            console.log(form_wihtout_changes);
 
             var update_or_insert1 = document.getElementById("otro_genero").value;
             var update_or_insert2 = document.getElementById("otro_act_simultanea").value;
@@ -1595,7 +1595,7 @@ define(['jquery',
         var form = $('#tracking_peer_form');
         var modal_peer_tracking = $('#modal_peer_tracking');
         var data = form.serializeArray();
-
+        console.log(form);
         var url_parameters = get_url_parameters(document.location.search);
 
         var result_validation = validate_tracking_peer_form(data);
@@ -1608,10 +1608,6 @@ define(['jquery',
                 html: true
             });
         } else {
-            data.push({
-                name: "func",
-                value: "save_tracking_peer"
-            });
 
             var id_ases = $('#id_ases').val();
 
@@ -1619,6 +1615,7 @@ define(['jquery',
                 name: "id_ases",
                 value: id_ases
             });
+
             data.push({
                 name: "id_instance",
                 value: url_parameters.instanceid
@@ -1626,7 +1623,10 @@ define(['jquery',
 
             $.ajax({
                 type: "POST",
-                data: data,
+                data: JSON.stringify({
+                    "func": 'save_tracking_peer',
+                    "params": data
+                }),
                 url: "../../ases/managers/student_profile/studentprofile_serverproc.php",
                 success: function (msg) {
                     swal({
@@ -1864,13 +1864,12 @@ define(['jquery',
 
         $.ajax({
             type: "POST",
-            data: {
-                func: 'delete_tracking_peer',
-                id_tracking: id_tracking
-            },
+            data: JSON.stringify({
+                "func": 'delete_tracking_peer',
+                "params": [id_tracking]
+            }),
             url: "../managers/student_profile/studentprofile_serverproc.php",
             success: function (msg) {
-
                 swal(
                     msg.title,
                     msg.msg,
@@ -2059,14 +2058,16 @@ define(['jquery',
 
         $.ajax({
             type: "POST",
-            data: {
-                func: 'is_student',
-                code_student: code_student
-            },
-            url: "../managers/student_profile/studentprofile_serverproc.php",
+            data: JSON.stringify({
+                "func": 'is_student',
+                "params": [code_student]
+            }),
+            url: "../managers/student_profile/studentprofile_api.php",
             success: function (msg) {
 
-                if (msg == "1") {
+                var result = JSON.parse(msg);
+
+                if (result == "1") {
                     var parameters = get_url_parameters(document.location.search);
                     var full_url = String(document.location);
                     var url = full_url.split("?");

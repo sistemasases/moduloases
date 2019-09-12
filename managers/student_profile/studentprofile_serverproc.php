@@ -33,112 +33,48 @@ $msg = new stdClass();
 
 if(isset($_POST['func'])){
 
-    if($_POST['func'] == 'save_icetex_status') {
-        if(isset($_POST['id_ases'])){
-            $id_ases = $_POST['id_ases'];
-        }else{
-            $msg_error->title = "Error";
-            $msg_error->msg = "Problema en la conexión al servidor. El ID del estudiante no llegó al servidor.";
-            $msg_error->type = "error";
+    if($_POST['func'] == 'update_status_ases') {
+        $result_save_dropout = 1;
 
-            return $msg_error;
-        }
-
-        if(isset($_POST['new_status'])){
-            $new_status = $_POST['new_status'];
-        }else{
-            $msg_error->title = "Error";
-            $msg_error->msg = "Problema en la conexión al servidor. El Nuevo Estado del estudiante no llegó al servidor.";
-            $msg_error->type = "error";
-
-            return $msg_error;
-        }
-
-        if(isset($_POST['id_reason'])){
-            $id_reason = $_POST['id_reason'];
-        }else{
-            $id_reason = null;
-        }
-
-        if(isset($_POST['observations'])){
-            $observations = $_POST['observations'];
-        }else{
-            $observations = null;
-        }
-
-        save_status_icetex_proc($new_status, $id_ases, $id_reason, $observations);
-
-
-    }elseif($_POST['func'] == 'update_status_program'){
-        if(isset($_POST['program_id']) && isset($_POST['status']) && isset($_POST['student_id'])){
-
-            $result = update_status_program($_POST['program_id'], $_POST['status'], $_POST['student_id']);
-            $msg = new stdClass();
-
-            if($result){
-                $msg->title = 'Éxito';
-                $msg->msg = 'Estado del programa actualizado con éxito.';
-                $msg->status = 'success';
-            }else{
-                $msg->title = 'Error';
-                $msg->msg = 'Error al guardar estado en la base de datos.';
-                $msg->status = 'error';
-            }
-
-            echo json_encode($msg);
-        }else{
-            $msg_error = new stdClass();
-            $msg_error->title = 'Error';
-            $msg_error->msg = 'Error al conectarse con el servidor.';
-            $msg_error->status = 'error';
-
-            echo json_encode($msg_error);
-        }
-    }elseif($_POST['func'] == 'update_status_ases'){
-        $result_save_dropout  = 1;
-
-        if(isset($_POST['current_status']) && isset($_POST['new_status']) && isset($_POST['instance_id']) && isset($_POST['code_student'])){
-            if(isset($_POST['id_reason_dropout']) && isset($_POST['observation'])){
-                if($_POST['id_reason_dropout'].trim() != "" && $_POST['observation'].trim() != ""){
+        if (isset($_POST['current_status']) && isset($_POST['new_status']) && isset($_POST['instance_id']) && isset($_POST['code_student'])) {
+            if (isset($_POST['id_reason_dropout']) && isset($_POST['observation'])) {
+                if ($_POST['id_reason_dropout'] . trim() != "" && $_POST['observation'] . trim() != "") {
                     $result_save_dropout = save_reason_dropout_ases($_POST['code_student'], $_POST['id_reason_dropout'], $_POST['observation']);
                     $result = update_status_ases($_POST['current_status'], $_POST['new_status'], $_POST['instance_id'], $_POST['code_student'], $_POST['id_reason_dropout']);
-                }else{
+                } else {
                     $result = 0;
                     $result_save_dropout = 0;
                 }
-
-            }else{
+            } else {
                 $result = update_status_ases($_POST['current_status'], $_POST['new_status'], $_POST['instance_id'], $_POST['code_student']);
             }
 
             $msg = new stdClass();
 
-            if($result && $result_save_dropout){
-
+            if ($result && $result_save_dropout) {
                 $msg->title = 'Éxito';
                 $msg->msg = 'Estado actualizado con éxito.';
                 $msg->status = 'success';
                 $msg->previous_status = $_POST['current_status'];
 
-            }else{
-
+            } else {
                 $msg->title = "Error";
                 $msg->msg = "Error al realizar registro.";
                 $msg->status = 'error';
-                if(!$result_save_retiro){
+                if (!$result_save_retiro) {
                     $msg->msg .= "\nNo se guarda motivo de retiro en la base de datos.";
                 }
-                if(!$result) {
+                if (!$result) {
                     $msg->msg .= "\nNo se guarda estado en la base de datos.";
 
                 }
-                if(!$result && !$result_save_dropout){
+                if (!$result && !$result_save_dropout) {
                     $msg->msg .= "\nCampos obligatorios no enviados.";
                 }
             }
 
             echo json_encode($msg);
-        }else{
+        } else {
             $msg_error = new stdClass();
             $msg_error->title = 'Error';
             $msg_error->msg = 'Error al conectarse con el servidor.';
@@ -146,15 +82,11 @@ if(isset($_POST['func'])){
 
             echo json_encode($msg_error);
         }
-
     }elseif($_POST['func'] == 'save_tracking_peer'){
         save_tracking_peer_proc();
     }elseif($_POST['func'] == 'delete_tracking_peer' && isset($_POST['id_tracking'])){
         $id_tracking_peer = $_POST['id_tracking'];
         delete_tracking_peer_proc($id_tracking_peer);
-    }elseif($_POST['func'] == 'is_student'){
-        $code_student = $_POST['code_student'];
-        validate_student_proc($code_student);
     }else if($_POST['func'] == 'send_email'){
         send_email($_POST["risk_array"], $_POST["observations_array"],'' ,$_POST["id_student_moodle"], $_POST["id_student_pilos"], $_POST["date"],'', '', $_POST["url"]);
     }else if($_POST['func'] == 'update_tracking_status'){
@@ -182,34 +114,7 @@ if(isset($_POST['func'])){
         $user->id = $user_id;
         update_user_image_profile($user->id, 0);
         print_r($user_id);
-
-    } else{
-        $msg->msg = "No se reconoce la función a ejecutar. Contacte al área de sistemas.";
-        echo json_encode($msg);
     }
-}else{
-    $msg->msg = "Error en el servidor.";
-    echo json_encode($msg);
-}
-
-
-/**
- * Updates 'estado Icetex' field on {talentospilos_usuario} table
- *
- * @see save_status_icetex_proc($new_status, $id_ases, $id_reason = null,  $observations=null)
- * @param $new_status --> new status to save on 'estado Icetex' field
- * @param $id_ases --> ASES student id
- * @param $id_reason = null --> Retirement reason id
- * @param $observations = null --> observations to save
- * @return object in a json format
- */
-
-function save_status_icetex_proc($new_status, $id_ases, $id_reason = null,  $observations=null){
-
-    $result = save_status_icetex($new_status, $id_ases, $id_reason, $observations);
-
-    echo json_encode($result);
-
 }
 
 /**
@@ -365,33 +270,3 @@ function save_tracking_peer_proc(){
         echo json_encode($result_msg);
     }
 }
-
-/**
- * Executes a track (seguimiento) logical delete, changing its status on database
- *
- * @param $id_tracking_peer --> track id to delete
- * @return string --> Operation result
- */
-function delete_tracking_peer_proc($id_tracking_peer){
-
-    $result_delete = delete_tracking_peer((int)$id_tracking_peer);
-
-    echo json_encode($result_delete);
-}
-
-/**
- * Validates if a student is on the database
- *
- * @see validate_student_proc($code_student)
- * @param $code_student --> student id
- * @return integer --> 1 if exists, 0 if not
- */
-
-function validate_student_proc($code_student){
-
-    $confirm_msg = validate_student($code_student);
-
-    echo $confirm_msg;
-
-}
-
