@@ -77,7 +77,7 @@ function _get_semesters_names_after_cohort($id_instance, $ases_cohort_id, $inclu
 function _student_and_active_semesters_to_row($semester_names, $student_and_active_semesters) {
     $row = array();
     foreach ($semester_names as $semester_name) {
-        $row[$semester_name] = $student_and_active_semesters->have_active_semester($semester_name)? 'SI': $student_and_active_semesters->egresado;
+        $row[$semester_name] = $student_and_active_semesters->have_active_semester($semester_name)? 'SI' : $student_and_active_semesters->egresado;
     }
     $row['num_doc'] = $student_and_active_semesters->num_doc;
     $row['nombre'] = $student_and_active_semesters->nombre;

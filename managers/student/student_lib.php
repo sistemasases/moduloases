@@ -77,40 +77,41 @@ function get_active_semesters_db($id_instance, $ases_cohort_id) {
     }
 
     $sql = <<<SQL
-select
-       mdl_talentospilos_history_academ.id AS mdl_talentospilos_history_academ_id ,
-       mdl_cohort_members.id as mdl_cohort_members_id,
-       tracking_status,
-       mdl_talentospilos_usuario_outer.num_doc, 
-              (case when mdl_talentospilos_history_academ.id   in (select id_history from mdl_talentospilos_history_cancel)
-                        then 'SI' else 'NO' end) as cancela,
-              (select count(*) from mdl_talentospilos_user_extended 
-              where mdl_talentospilos_user_extended.id_ases_user = mdl_talentospilos_usuario_outer.id) as num_carreras,
-              (case when program_status = 3 and id_academic_program != 1 then 'EGRESADO'  else 'NO' end) as egresado,
-       mdl_talentospilos_usuario_outer.id as mdl_talentospilos_usuario_id,
-       username as codigo,
-       firstname,
-       lastname,
-       mdl_talentospilos_semestre.nombre as mdl_talentospilos_semestre_nombre,
-       program_status
-from mdl_talentospilos_history_academ
-    inner join mdl_talentospilos_semestre
-      on mdl_talentospilos_semestre.id = mdl_talentospilos_history_academ.id_semestre
-    inner join mdl_talentospilos_user_extended
-      on mdl_talentospilos_user_extended.id_ases_user = mdl_talentospilos_history_academ.id_estudiante
-    inner join mdl_user
-      on mdl_user.id = mdl_talentospilos_user_extended.id_moodle_user
-    inner join mdl_talentospilos_usuario as  mdl_talentospilos_usuario_outer
-      on mdl_talentospilos_usuario_outer.id = mdl_talentospilos_user_extended.id_ases_user
-    inner join mdl_cohort_members
-      on mdl_cohort_members.userid = mdl_user.id
-    inner join mdl_talentospilos_inst_cohorte
-      on mdl_cohort_members.cohortid = mdl_talentospilos_inst_cohorte.id_cohorte
-    inner join mdl_cohort
-      on mdl_cohort.id = mdl_talentospilos_inst_cohorte.id_cohorte
-     where mdl_talentospilos_inst_cohorte.id_instancia = $id_instance
-    $cohort_sql_conditions
-order by codigo desc
+    select
+           mdl_talentospilos_history_academ.id AS mdl_talentospilos_history_academ_id ,
+           mdl_cohort_members.id as mdl_cohort_members_id,
+           tracking_status,
+           mdl_talentospilos_usuario_outer.num_doc, 
+                  (case when mdl_talentospilos_history_academ.id   in (select id_history from mdl_talentospilos_history_cancel)
+                            then 'SI' else 'NO' end) as cancela,
+                  (select count(*) from mdl_talentospilos_user_extended 
+                  where mdl_talentospilos_user_extended.id_ases_user = mdl_talentospilos_usuario_outer.id) as num_carreras,
+                  (case when program_status = 3 and id_programa != 1 then 'EGRESADO'  else 'NO' end) as egresado,
+           mdl_talentospilos_usuario_outer.id as mdl_talentospilos_usuario_id,
+           username as codigo,
+           firstname,
+           lastname,
+           mdl_talentospilos_semestre.nombre as mdl_talentospilos_semestre_nombre,
+           program_status,
+           id_programa as programa
+    from mdl_talentospilos_history_academ
+        inner join mdl_talentospilos_semestre
+          on mdl_talentospilos_semestre.id = mdl_talentospilos_history_academ.id_semestre
+        inner join mdl_talentospilos_user_extended
+          on mdl_talentospilos_user_extended.id_ases_user = mdl_talentospilos_history_academ.id_estudiante
+        inner join mdl_user
+          on mdl_user.id = mdl_talentospilos_user_extended.id_moodle_user
+        inner join mdl_talentospilos_usuario as  mdl_talentospilos_usuario_outer
+          on mdl_talentospilos_usuario_outer.id = mdl_talentospilos_user_extended.id_ases_user
+        inner join mdl_cohort_members
+          on mdl_cohort_members.userid = mdl_user.id
+        inner join mdl_talentospilos_inst_cohorte
+          on mdl_cohort_members.cohortid = mdl_talentospilos_inst_cohorte.id_cohorte
+        inner join mdl_cohort
+          on mdl_cohort.id = mdl_talentospilos_inst_cohorte.id_cohorte
+         where mdl_talentospilos_inst_cohorte.id_instancia = $id_instance
+        $cohort_sql_conditions
+    order by codigo desc
 SQL;
     return $DB->get_records_sql($sql);
 }
@@ -154,12 +155,13 @@ class ActiveSemestersReportField {
     public $ases_user_id;
     public $num_carreras;
     public $egresado;
+    public $carreras;
 /**
  * @var array $semestres_activos Array of string than identify the active semesters of a student
  *  Example: ['2016A', '2016B' ...]
  */
     public $semestres_activos;
-    public function __construct($codigo, $nombre, $talentos_usuario_id, $num_doc, $ases_user_id, $egresado, $num_carreras = false, $semestres_activos = array())
+    public function __construct($codigo, $nombre, $talentos_usuario_id, $num_doc, $ases_user_id, $egresado, $num_carreras = false, $programa, $semestres_activos = array())
     {
         $this->codigo = $codigo;
         $this->talentos_usuario_id = $talentos_usuario_id;
@@ -169,6 +171,7 @@ class ActiveSemestersReportField {
         $this->num_doc = $num_doc;
         $this->semestres_activos = $semestres_activos;
         $this->egresado = $egresado;
+        $this->programa = $programa;
     }
 
 
@@ -224,6 +227,8 @@ function get_active_semesters($id_instance, $cohort_id, $include_current_semeste
         $num_carreras = $students_with_active_semester->num_carreras;
         $ases_user_id = $students_with_active_semester->mdl_talentospilos_usuario_id;
         $egresado = $students_with_active_semester->egresado;
+        $programa = $students_with_active_semester->programa;
+
         if(!$include_current_semester && $nombre_semestre === $current_semester_name) {
             continue;
         }
@@ -239,7 +244,7 @@ function get_active_semesters($id_instance, $cohort_id, $include_current_semeste
 
         } else {
             $nombre = $students_with_active_semester->firstname . ' ' . $students_with_active_semester->lastname;
-            $active_semesters_report_field = new ActiveSemestersReportField($codigo, $nombre, $talentos_usuario_id,  $num_doc, $ases_user_id, $egresado, $num_carreras);
+            $active_semesters_report_field = new ActiveSemestersReportField($codigo, $nombre, $talentos_usuario_id,  $num_doc, $ases_user_id, $egresado, $num_carreras, $programa);
             if( !($cancel_semester === $semester_is_canceled)) {
                 $active_semesters_report_field->add_active_semester($nombre_semestre);
             }
