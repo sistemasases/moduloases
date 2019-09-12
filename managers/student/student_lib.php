@@ -86,7 +86,7 @@ select
                         then 'SI' else 'NO' end) as cancela,
               (select count(*) from mdl_talentospilos_user_extended 
               where mdl_talentospilos_user_extended.id_ases_user = mdl_talentospilos_usuario_outer.id) as num_carreras,
-              (case when program_status = 3 and tracking_status = 1 then 'EGRESADO'  else 'NO' end) as egresado,
+              (case when program_status = 3 and id_academic_program != 1 then 'EGRESADO'  else 'NO' end) as egresado,
        mdl_talentospilos_usuario_outer.id as mdl_talentospilos_usuario_id,
        username as codigo,
        firstname,
@@ -145,7 +145,6 @@ mdl_cohort
     | id | contextid | name | idnumber | description | descriptionformat | component | timecreated | timemodified | visible | theme |
 
  */
-
 
 class ActiveSemestersReportField {
     public $codigo;

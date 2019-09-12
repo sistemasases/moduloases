@@ -55,3 +55,7 @@ Las columnas (de la 1 a la 3 -- index desde 1) son: codigo, nombre y numero docu
 td.active_semester {
     background-color: #5aafad!important;
 }
+
+td.graduated_student {
+    background-color: #7daf8c !important;
+}
