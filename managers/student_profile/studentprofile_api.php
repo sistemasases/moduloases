@@ -122,25 +122,18 @@ if(isset($input->func) && isset($input->params)) {
 
         /**
          * [0] => id_ases: string
-         * [1] => new_status:
-         * [2] => id_reason:
-         * [3] => observations:
+         * [1] => id_new_status: string
          */
-
         $params = $input->params;
-        if(count($params) == 4){
+
+        if(count($params) == 2){
 
             $id_ases = $params[0];
-            $new_status = $params[1];
-            $id_reason = $params[2];
-            $observations = params[3];
+            $id_new_status = $params[1];
 
-            if(is_string($id_ases ) && is_string($new_status)){
+            if(is_string($id_ases ) && is_string($id_new_status)){
 
-                $id_reason=(isset($id_reason))?$id_reason:null;
-                $observations=(isset($observations))?$observations:null;
-
-                $result = save_status_icetex($new_status, $id_ases, $id_reason, $observations);
+                $result = save_status_icetex($id_new_status, $id_ases);
 
                 echo json_encode(
                     array(
@@ -202,130 +195,6 @@ if(isset($input->func) && isset($input->params)) {
         }
     } else if($function == 'update_status_ases'){
 
-    } else if($function == 'save_tracking_peer'){
-
-        /**
-         * [0] => tracking_peer:
-         * [1] => id_monitor:
-         * [2] => created:
-         * [3] => fecha:
-         * [4] => lugar:
-         * [5] => h_ini:
-         * [6] => m_ini:
-         * [7] => h_fin:
-         * [8] => m_fin:
-         * [9] => tema:
-         * [10] => objetivos:
-         * [11] => individual:
-         * [12] => riesgo_ind:
-         * [13] => familiar:
-         * [14] => riesgo_familiar:
-         * [15] => academico:
-         * [16] => riesgo_aca:
-         * [17] => economico:
-         * [18] => riesgo_econom:
-         * [19] => vida_uni:
-         * [20] => riesgo_uni:
-         * [21] => observaciones:
-         * [22] => id_ases: string
-         * [23] => id_instance:
-         */
-        $params = $input->params;
-
-        if(count($params) == 3){
-
-            $id_tracking_peer = $params[0];
-            $id_monitor = $params[1]; //Pendiente - $USER->id
-            $created = $params[2]; //Pendiente - tiempo
-            $fecha = $params[3];
-            $lugar = $params[4];
-            $h_ini = $params[5];
-            $m_ini = $params[6];
-            $h_fin = $params[7];
-            $m_fin = $params[8];
-            $tema = $params[9];
-            $objetivos = $params[10];
-            $individual = $params[11];
-            $riesgo_ind = $params[12];
-            $familiar = $params[13];
-            $riesgo_familiar = $params[14];
-            $academico = $params[15];
-            $riesgo_aca = $params[16];
-            $economico = $params[17];
-            $riesgo_econom = $params[18];
-            $vida_uni = $params[19];
-            $riesgo_uni = $params[20];
-            $observaciones = $params[21];
-            $id_ases = $parms[22];
-            $id_instance = $params[23];
-
-            if(is_string($id_moodle) && is_string($id_program) && is_string($status_program)) {
-
-                $tracking_object = new stdClass();
-                $tracking_object->id = (int)$id_tracking_peer;
-                $tracking_object->id_monitor = $id_monitor;
-                $tracking_object->created = $created;
-                $tracking_object->fecha = strtotime($fecha);
-                $tracking_object->lugar = $lugar;
-                $tracking_object->hora_ini = $h_ini.":".$m_ini;
-                $tracking_object->hora_fin = $h_fin.":".$m_fin;
-                $tracking_object->tema = $tema;
-                $tracking_object->objetivos = $objetivos;
-                $tracking_object->individual = $individual;
-                $tracking_object->individual_riesgo = $riesgo_ind;
-                $tracking_object->familiar_desc = $familiar;
-                $tracking_object->familiar_riesgo = $riesgo_familiar;
-                $tracking_object->academico = $academico;
-                $tracking_object->academico_riesgo = $riesgo_aca;
-                $tracking_object->economico = $economico;
-                $tracking_object->economico_riesgo = $riesgo_econom;
-                $tracking_object->vida_uni = $vida_uni;
-                $tracking_object->vida_uni_riesgo = $riesgo_uni;
-                $tracking_object->observaciones = $observaciones;
-                $tracking_object->id_estudiante_ases = $id_ases;
-                $tracking_object->id_instancia = $id_instance;
-                $tracking_object->tipo = "PARES";
-                $tracking_object->status = 1;
-                $tracking_object->revisado_profesional = 0;
-                $tracking_object->revisado_practicante = 0;
-
-                $result_saving = save_tracking_peer($tracking_object);
-
-                echo json_encode($result_saving);
-            } else {
-                return_with_code(-2);
-            }
-        } else {
-            return_with_code(-6);
-        }
-    } else if($function == 'delete_tracking_peer'){
-
-        /**
-         * [0] => id_tracking: string
-         */
-        $params = $input->params;
-
-        if(count($params) == 1){
-
-            $id_tracking = $params[0];
-
-            if(is_string($id_tracking)) {
-                $result = delete_tracking_peer((int)$id_tracking_peer);
-
-                echo json_encode(
-                    array(
-                        "status_code" => 0,
-                        "title" => $result->title,
-                        "status" => $result->type,
-                        "msg" => $result->msg
-                    )
-                );
-            } else {
-                return_with_code(-2);
-            }
-        } else {
-            return_with_code(-6);
-        }
     } else if($function == 'is_student'){
 
         /**

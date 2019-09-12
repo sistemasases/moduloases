@@ -153,10 +153,11 @@ define(['jquery',
 
             $('.select_statuses_program').on('focus', function (event) { current_status = event.target.value });
 
-            $('.select_statuses_program').on('change', { current_status: current_status },
-                function () {
-                    self.update_status_program(current_status, $(this));
-                });
+            $('.select_statuses_program').on('change', { current_status: current_status }, function () {
+                self.update_status_program(current_status, $(this));
+            });
+
+            $('#icetex_status').on('click',{previous_status: $('#icetex_status option:selected').text()}, manage_icetex_status);
 
             $('#icon-tracking').on('click', function () { self.update_status_ases(parameters); });
 
@@ -1199,81 +1200,72 @@ define(['jquery',
     }
 
     // Funciones para la administración de estados
-    function manage_icetex_status() {
+    function manage_icetex_status(event) {
+
         //validar cambio en estado
-        var previous;
-        $('#estado').on('focus', function () {
-            // se guarda el valor previo con focus
-            previous = $('#estado option:selected').text();
-        }).change(function () {
-            var newstatus = $('#estado option:selected').text();
+        var previous_status = event.data.previous_status;
 
-            if (newstatus == "RETIRADO") {
+        $('#icetex_status').change(function () {
+            var new_status = $('#icetex_status option:selected').text();
+            console.log(previous_status);
+            console.log(new_status);
 
-                $('#modal_dropout').show();
+            swal({
+                title: "¿Está seguro/a de realizar este cambio?",
+                text: "El estado Icetex del estudiante pasará de " + previous_status + " a " + new_status,
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d51b23",
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+                closeOnConfirm: true,
+                allowEscapeKey: false
+            }, function (isConfirm) {
+                if (isConfirm) {
+                    save_icetex_status();
+                } else {
+                    $('#icetex_status').val(previous_status);
+                }
+            });
+        });
+    }
 
-                $('#save_changes_dropout').click(function () {
-                    if ($('reasons_select').val() == '') {
-                        swal({
-                            title: "Error",
-                            text: "Seleccione un mótivo",
-                            type: "error"
-                        });
-                    } else {
-                        save_icetex_status();
-                    }
-                });
+    function save_icetex_status() {
 
-            } else if (newstatus == "APLAZADO") {
+        var id_ases = $('#id_ases').val();
+        var id_new_status = $('#icetex_status').val();
 
-                $('#modal_dropout').show();
-
-                $('#save_changes_dropout').click(function () {
-                    if ($('reasons_select').val() == '') {
-                        swal({
-                            title: "Error",
-                            text: "Seleccione un mótivo",
-                            type: "error"
-                        });
-                    } else {
-                        save_icetex_status();
-                    }
-                });
-
-            } else if (newstatus == "NO REGISTRA") {
-                swal({
-                    title: "Error",
-                    text: "Por favor seleccione un Estado Ases.",
-                    type: "error"
-                });
-            } else {
-                swal({
-                    title: "¿Está seguro/a de realizar este cambio?",
-                    text: "El estado Icetex del estudiante pasará de " + previous + " a " + newstatus,
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#d51b23",
-                    confirmButtonText: "Si",
-                    cancelButtonText: "No",
-                    closeOnConfirm: true,
-                    allowEscapeKey: false
-                },
-                    function (isConfirm) {
-                        if (isConfirm) {
-
-                            var result_status = save_icetex_status();
-
-
-                            swal(
-                                result_status.title,
-                                result_status.msg,
-                                resul_status.status);
-                        }
-                        else {
-                            $('#estado').val(previous);
-                        }
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({
+                "func": 'save_icetex_status',
+                "params": [id_ases, id_new_status]
+            }),
+            dataType: "json",
+            cache: "false",
+            url: "../../ases/managers/student_profile/studentprofile_api.php",
+            success: function (msg) {
+                if(msg.status_code == 0)
+                {
+                    swal({
+                        title: msg.title,
+                        text: msg.message,
+                        type: msg.type
                     });
-            }
+                } else {
+                    console.log(msg);
+                }
+
+                //$('#modal_dropout').hide();
+                //clean_modal_dropout();
+            },
+            error: function (msg) {
+                swal(
+                    'Error',
+                    'No se puede contactar con el servidor.',
+                    'error'
+                );
+            },
         });
     }
 
@@ -1348,41 +1340,6 @@ define(['jquery',
                         }
                     });
             }
-        });
-    }
-
-    function save_icetex_status() {
-        var data = new Array();
-        var new_status = $('#estado').val();
-        var id_ases = $('#id_ases').val();
-        var id_reason = $('#reasons_select').val();
-        var reasons_dropout = $('#description_dropout').val();
-
-        $.ajax({
-            type: "POST",
-            data: JSON.stringify({
-                "func": 'save_icetex_status',
-                "params": [id_ases, new_status, id_reason, reasons_dropout],
-            }),
-            url: "../../ases/managers/student_profile/studentprofile_serverproc.php",
-            success: function (msg) {
-                swal({
-                    title: msg.title,
-                    text: msg.msg,
-                    type: msg.type
-                });
-                $('#modal_dropout').hide();
-                clean_modal_dropout();
-            },
-            dataType: "json",
-            cache: "false",
-            error: function (msg) {
-                swal(
-                    'Error',
-                    'No se puede contactar con el servidor.',
-                    'error'
-                );
-            },
         });
     }
 
@@ -1595,7 +1552,7 @@ define(['jquery',
         var form = $('#tracking_peer_form');
         var modal_peer_tracking = $('#modal_peer_tracking');
         var data = form.serializeArray();
-        console.log(form);
+
         var url_parameters = get_url_parameters(document.location.search);
 
         var result_validation = validate_tracking_peer_form(data);
@@ -1608,6 +1565,10 @@ define(['jquery',
                 html: true
             });
         } else {
+            data.push({
+                name: "func",
+                value: "save_tracking_peer"
+            });
 
             var id_ases = $('#id_ases').val();
 
@@ -1615,7 +1576,6 @@ define(['jquery',
                 name: "id_ases",
                 value: id_ases
             });
-
             data.push({
                 name: "id_instance",
                 value: url_parameters.instanceid
@@ -1623,10 +1583,7 @@ define(['jquery',
 
             $.ajax({
                 type: "POST",
-                data: JSON.stringify({
-                    "func": 'save_tracking_peer',
-                    "params": data
-                }),
+                data: data,
                 url: "../../ases/managers/student_profile/studentprofile_serverproc.php",
                 success: function (msg) {
                     swal({
@@ -1864,12 +1821,13 @@ define(['jquery',
 
         $.ajax({
             type: "POST",
-            data: JSON.stringify({
-                "func": 'delete_tracking_peer',
-                "params": [id_tracking]
-            }),
+            data: {
+                func: 'delete_tracking_peer',
+                id_tracking: id_tracking
+            },
             url: "../managers/student_profile/studentprofile_serverproc.php",
             success: function (msg) {
+
                 swal(
                     msg.title,
                     msg.msg,

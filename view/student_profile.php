@@ -239,7 +239,7 @@ if ($student_code != 0) {
 
     $record->init_tel = $ases_student->tel_ini;
     $record->res_tel = $ases_student->tel_res;
-    $record->cell_phone = $USER->id;
+    $record->cell_phone = $ases_student->celular;
     $record->emailpilos = $ases_student->emailpilos;
     $record->attendant = $ases_student->acudiente;
     $record->attendant_tel = $ases_student->tel_acudiente;
