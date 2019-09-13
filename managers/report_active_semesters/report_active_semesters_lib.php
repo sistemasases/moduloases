@@ -76,15 +76,14 @@ function _get_semesters_names_after_cohort($id_instance, $ases_cohort_id, $inclu
  */
 function _student_and_active_semesters_to_row($semester_names, $student_and_active_semesters) {
     $row = array();
-    $cambio_carrera_afirmativo = 'SI';
     foreach ($semester_names as $semester_name) {
-        $row[$semester_name] = $student_and_active_semesters->have_active_semester($semester_name)? 'SI': 'NO';
+        $row[$semester_name] = $student_and_active_semesters->have_active_semester($semester_name)? 'SI' : $student_and_active_semesters->egresado;
     }
     $row['num_doc'] = $student_and_active_semesters->num_doc;
     $row['nombre'] = $student_and_active_semesters->nombre;
     $row['codigo'] = $student_and_active_semesters->codigo;
     $row['ases_user_id'] = $student_and_active_semesters->ases_user_id;
-    $row['cambio_carrera'] = $student_and_active_semesters->cambio_carrera === $cambio_carrera_afirmativo ? 'CAMBIO': '-';
+    $row['num_carreras'] = $student_and_active_semesters->num_carreras;
     return $row;
 }
 function _students_and_active_semesters_to_rows($semester_names, $students_and_active_semesters) {
@@ -123,10 +122,10 @@ function get_report_active_semesters($id_instance, $ases_cohort_id, $include_cur
         new Column('num_doc', 'Número de documento',  null, 'Número de documento'));
     array_push($columns,
         new Column(
-            'cambio_carrera',
-            'Cambio de carrera',
+            'num_carreras',
+            'Numero de carreras',
             null,
-            'Si el estudiante ha pertenecido más de un programa se indicará'));
+            'Numero de carreras que ha cursado el estudiante'));
     /* Por cada semestre, habrá una columna en la tabla*/
     foreach($semester_names as $semester_name) {
         array_push($columns, new \jquery_datatable\Column($semester_name));

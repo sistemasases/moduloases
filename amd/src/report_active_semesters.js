@@ -61,6 +61,7 @@ define([
             var NUM_DOC_COLUMN = 'num_doc';
             var tfoot_total_active_title_prefix = 'Total activos';
             var tfoot_total_inactive_title_prefix = 'Total inactivos';
+            var tfoot_total_graduated_students_prefix = 'Total Egresados';
             var known_columns = [CODIGO_COLUMN, NOMBRE_COLUMN, NUM_DOC_COLUMN];
             /** go to ficha general on click **/
             $(document).on('click', '#tableActiveSemesters tbody tr td', function () {
@@ -85,7 +86,7 @@ define([
                 function PercentageResumeReport(resume_report /* instance of ResumeReport */, semesters /* Array of strings */) {
                     var total_students = resume_report.total_students;
                     semesters.forEach(semester => {
-                            var student_cancel = total_students - resume_report[semester];
+                            var student_cancel = total_students - (resume_report.semesters[semester][0] + resume_report.semesters[semester][1]);
                             this[semester] = student_cancel * 100 / total_students;
                         }
 
@@ -103,19 +104,37 @@ define([
                  */
                function ResumeReport(semesters, total_students) {
                    this.total_students = total_students? total_students: 0;
-                   semesters.forEach((value) => {
-                        this[value] = 0;
-                   });
+                   this.semesters = [];
+                   var tam = semesters.length;
+                   for(var i = 0; i < tam; i++){
+                       this.semesters[semesters[i]] = [0, 0];
+                   }
                }
+               //console.log(semesters);
                ResumeReport.prototype.init_from_data = function init_from_data(data /*DataTable.data*/, semesters) {
+
                    data.forEach( (item) => {
-                      semesters.forEach( semester => {
-                         if(item[semester] === 'SI') {
-                             this[semester]++;
-                         }
-                      }) ;
+                       semesters.forEach( semester => {
+                           if(item[semester] === 'SI') {
+                               this.semesters[semester][0]++;
+                           }else if (item[semester] === 'EGRESADO'){
+                               this.semesters[semester][1]++;
+                           }
+                       }) ;
                    });
+/*
+                    for(var item = 0; item < data.length; item++){
+                        var tam = semesters.length;
+                        for(var semester = 0; semester < tam; semester++){
+                            if(data[item][semester] === 'SI') {
+                                console.log('sel');
+                                this[semester][0]++;
+                            }else console.log('nel');
+                        }
+                    }*/
+                   //console.log(semesters);
                };
+
                return ResumeReport;
             }());
             function get_filter_column_indexes(filter_column_names, column_names) {
@@ -135,10 +154,14 @@ define([
                 /* Add the first cell of tfoot title */
                 $('#tableActiveSemesters tfoot tr.total_active th')[0].textContent= tfoot_total_active_title_prefix + ' ' + cohort_id;
                 $('#tableActiveSemesters tfoot tr.total_inactive th')[0].textContent = tfoot_total_inactive_title_prefix + ' ' + cohort_id;
+                $('#tableActiveSemesters tfoot tr.total_grads th')[0].textContent = tfoot_total_graduated_students_prefix + ' ' + cohort_id;
                 /* Add the total active students in each semester at tfoot */
                 semesters.forEach(function(semester) {
-                    $('#tableActiveSemesters tfoot tr.total_active th.'+semester).html(resume_report[semester]); //active students
-                    $('#tableActiveSemesters tfoot tr.total_inactive th.'+semester).html(resume_report.total_students - resume_report[semester]); //inactive students
+                    //console.log(resume_report.semesters[semester][1]);
+                    //console.log(semester);
+                    $('#tableActiveSemesters tfoot tr.total_active th.'+semester).html(resume_report.semesters[semester][0]); //active students
+                    $('#tableActiveSemesters tfoot tr.total_inactive th.'+semester).html(resume_report.total_students - (resume_report.semesters[semester][0] + resume_report.semesters[semester][1])); //inactive students
+                    $('#tableActiveSemesters tfoot tr.total_grads th.'+semester).html(resume_report.semesters[semester][1]); //graduated students
                 });
             }
             var resume_report /* ResumeReport */ = null; // null initialized for now
@@ -239,12 +262,13 @@ define([
                 }).done(
                     function (dataFromApi /*instance of DataFromAPI*/){
                         loading_indicator.hide();
-                        console.log(dataFromApi);
+                        //console.log(dataFromApi);
                         var dataTable = dataFromApi.dataTable;
                         $('#download_percentage_desertion').css("display", "inline"); //Show the hidden download button
                         semesters = dataFromApi.semesters;
                         var column_names = dataTable.columns.map( column => column.name );
                         var total_students = dataTable.data.length;
+                        console.log(semesters);
                         resume_report = new ResumeReport(semesters, total_students);
                         resume_report.init_from_data(dataTable.data, semesters);
                         percentage_resume_report = new PercentageResumeReport(resume_report, semesters);
@@ -258,6 +282,8 @@ define([
                                 function (index_, value) {
                                     if (data[value] === "SI") {
                                         $("td." + value , row).addClass("active_semester");
+                                    }else if (data[value] === "EGRESADO"){
+                                        $("td." + value , row).addClass("graduated_student");
                                     }
                                 }
                             );
@@ -307,6 +333,9 @@ define([
                         );
                         $("#tableActiveSemesters").append(
                             $('<tfoot/>').append( $("#tableActiveSemesters thead tr").clone().addClass('total_inactive') )//total inactive
+                        );
+                        $("#tableActiveSemesters").append(
+                            $('<tfoot/>').append( $("#tableActiveSemesters thead tr").clone().addClass('total_grads') )//total inactive
                         );
 
                         /* Init resume in tfoot*/

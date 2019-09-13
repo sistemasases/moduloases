@@ -53,5 +53,9 @@ Las columnas (de la 1 a la 3 -- index desde 1) son: codigo, nombre y numero docu
     align-self: center;
 }
 td.active_semester {
-    background-color: #5aafad!important;
+    background-color: #a0f2a7!important;
+}
+
+td.graduated_student {
+    background-color: #26c6e9 !important;
 }
