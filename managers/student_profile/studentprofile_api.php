@@ -200,6 +200,7 @@ if(isset($input->func) && isset($input->params)) {
                 is_string($student_code) && is_string($id_reason_dropout) && is_string($observation)) {
 
                 if (trim($id_reason_dropout) != "" && trim($observation) != "") {
+
                     $result_save_dropout = save_reason_dropout_ases($student_code, $id_reason_dropout, $observation);
                     $result = update_status_ases($current_status, $new_status, $instance_id, $student_code, $id_reason_dropout);
 

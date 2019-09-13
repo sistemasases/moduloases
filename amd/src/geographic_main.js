@@ -229,6 +229,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                                     "Error",
                                     "Debe definir un nivel de riesgo antes de guardar",
                                     "error");
+                            } else if (address.trim() == ""){
+                                swal(
+                                    "Error",
+                                    "Debe definir una dirección antes de guardar",
+                                    "error");
                             } else {
 
                                 var legs = response.routes[0].legs[0];
