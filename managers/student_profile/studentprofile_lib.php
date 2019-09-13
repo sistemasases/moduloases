@@ -695,16 +695,19 @@ function save_reason_dropout_ases($code_student, $reason, $observation){
         $sql_query = "SELECT id FROM {talentospilos_retiros} WHERE id_usuario= '$id_ases_student'";
         $exists = $DB->get_record_sql($sql_query);
 
-        if($exists)
-        {
+        if($exists) {
             $record->id = $exists->id;
-            return $DB->update_record('talentospilos_retiros', $record);
+            $result = $DB->update_record('talentospilos_retiros', $record);
         }
-        else
-        {
-            return $DB->insert_record('talentospilos_retiros', $record, false);
+        else {
+            $result = $DB->insert_record('talentospilos_retiros', $record, false);
         }
 
+        if($result) {
+            return 1;
+        } else {
+            return 0;
+        }
 }
 
 
@@ -716,7 +719,7 @@ function save_reason_dropout_ases($code_student, $reason, $observation){
  * @param $new_status
  * @param $instance_id
  * @param $code_student
- * @return int
+ * @return integer
  */
 function update_status_ases($current_status, $new_status, $instance_id, $code_student, $reason=null, $observation=null){
 
@@ -775,7 +778,7 @@ function update_status_ases($current_status, $new_status, $instance_id, $code_st
         }
     }
 
-    return $result;
+    return ($result)?1:0;
 }
  
 

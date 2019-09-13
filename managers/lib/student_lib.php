@@ -615,11 +615,20 @@ function update_status_program($program_id, $status, $student_id){
     $result = $DB->update_record('talentospilos_user_extended', $object_updatable);
 
     if($result){
-        return 1;
+        return array(
+            "status_code" => 0,
+            "title" => 'Éxito',
+            "status" => 'success',
+            "message" => 'Estado del programa actualizado con éxito.'
+        );
     }else{
-        return 0;
+        return array(
+            "status_code" => 0,
+            "title" => 'Error',
+            "status" => 'error',
+            "message" => 'Error al guardar estado en la base de datos.'
+        );
     }
-
 }
 
 /* Obtains name, lastname and email from a monitor assigned to a student, given the student id

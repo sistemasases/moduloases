@@ -19,7 +19,7 @@
  *
  * @author     Jorge Eduardo Mayor Fernández
  * @package    block_ases
- * @copyright  2019 Jorge E. Mayor <mayor.jorge@correounivalle.edu.co>
+ * @copyright  2019 Jorge Eduardo Mayor <mayor.jorge@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -168,24 +168,55 @@ if(isset($input->func) && isset($input->params)) {
 
                 $result = update_status_program($id_program, $status_program, $id_moodle);
 
-                if($result){
-                    echo json_encode(
-                        array(
-                            "status_code" => 0,
-                            "title" => 'Éxito',
-                            "status" => 'success',
-                            "message" => 'Estado del programa actualizado con éxito.'
-                        )
-                    );
+                echo json_encode($result);
+            } else {
+                return_with_code(-2);
+            }
+        } else {
+            return_with_code(-6);
+        }
+    } else if($function == 'update_ases_status_without_traking'){
+
+        /**
+         * [0] => current_status: string
+         * [1] => new_status: string
+         * [2] => instance_id: string
+         * [3] => student_code: string
+         * [4] => id_reason_dropout: string
+         * [5] => observation: string
+         */
+        $params = $input->params;
+
+        if(count($params) == 6){
+
+            $current_status = $params[0];
+            $new_status = $params[1];
+            $instance_id = $params[2];
+            $student_code = $params[3];
+            $id_reason_dropout = $params[4];
+            $observation = $params[5];
+
+            if(is_string($current_status) && is_string($new_status) && is_string($instance_id) &&
+                is_string($student_code) && is_string($id_reason_dropout) && is_string($observation)) {
+
+                if (trim($id_reason_dropout) != "" && trim($observation) != "") {
+                    $result_save_dropout = save_reason_dropout_ases($student_code, $id_reason_dropout, $observation);
+                    $result = update_status_ases($current_status, $new_status, $instance_id, $student_code, $id_reason_dropout);
+
+                    if ($result && $result_save_dropout) {
+                        echo json_encode(
+                            Array (
+                                "status_code" => 0,
+                                "title" => 'Éxito',
+                                "msg" => 'Estado actualizado con éxito.',
+                                "status" => 'success'
+                            )
+                        );
+                    } else {
+                        return_with_code(-7);
+                    }
                 } else {
-                    echo json_encode(
-                        array(
-                            "status_code" => 0,
-                            "title" => 'Error',
-                            "status" => 'error',
-                            "message" => 'Error al guardar estado en la base de datos.'
-                        )
-                    );
+                    return_with_code(-8);
                 }
             } else {
                 return_with_code(-2);
@@ -193,8 +224,46 @@ if(isset($input->func) && isset($input->params)) {
         } else {
             return_with_code(-6);
         }
-    } else if($function == 'update_status_ases'){
+    } else if($function = 'update_ases_status_on_traking') {
 
+        /**
+         * [0] => current_status: string
+         * [1] => new_status: string
+         * [2] => instance_id: string
+         * [3] => student_code: string
+         */
+        $params = $input->params;
+
+        if(count($params) == 4){
+
+            $current_status = $params[0];
+            $new_status = $params[1];
+            $instance_id = $params[2];
+            $student_code = $params[3];
+
+            if(is_string($current_status) && is_string($new_status) && is_string($instance_id) &&
+                is_string($student_code)) {
+
+                $result = update_status_ases($current_status, $new_status, $instance_id, $student_code);
+
+                if ($result) {
+                    echo json_encode(
+                        Array (
+                            "status_code" => 0,
+                            "title" => 'Éxito',
+                            "msg" => 'Estado actualizado con éxito.',
+                            "status" => 'success'
+                        )
+                    );
+                } else {
+                    return_with_code(-7);
+                }
+            } else {
+                return_with_code(-2);
+            }
+        } else {
+            return_with_code(-6);
+        }
     } else if($function == 'is_student'){
 
         /**
@@ -223,6 +292,28 @@ if(isset($input->func) && isset($input->params)) {
 
     } else if($function == 'update_user_image'){
 
+        /**
+         * [0] => id_moodle: string
+         * [1] => image_file:
+         */
+        $params = $input->params;
+
+        if(count($params) == 2){
+
+            $id_moodle = $params[0];
+            $image_file = $params[1];
+
+            if(is_string($id_moodle) && isset($image_file)) {
+
+                update_user_image_profile($user->id, 0);
+
+                print_r($id_moodle);
+            } else {
+                return_with_code(-2);
+            }
+        } else {
+            return_with_code(-6);
+        }
     } else {
         return_with_code(-4);
     }
@@ -233,7 +324,7 @@ if(isset($input->func) && isset($input->params)) {
 /**
  * @method return_with_code
  * Returns a message with the code of the error.
- * reserved codes: -1, -2, -3, -4, -5, -6, -99.
+ * reserved codes: -1, -2, -3, -4, -5, -6, -7, -99.
  * @param $code
  */
 function return_with_code($code){
@@ -295,6 +386,26 @@ function return_with_code($code){
                 array(
                     "status_code" => $code,
                     "error_message" => "Wrong quantity of parameters in input.",
+                    "data_response" => ""
+                )
+            );
+            break;
+
+        case -7:
+            echo json_encode(
+                array(
+                    "status_code" => $code,
+                    "error_message" => "Error al realizar registro.",
+                    "data_response" => ""
+                )
+            );
+            break;
+
+        case -8:
+            echo json_encode(
+                array(
+                    "status_code" => $code,
+                    "error_message" => "Todos los campos son obligatorios",
                     "data_response" => ""
                 )
             );
