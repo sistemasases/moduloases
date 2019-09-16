@@ -372,4 +372,39 @@ function _core_user_assigned_in_previous_system( $user_id, $role, $singularizer 
 
 }
 
+/**
+ * Function that check if exist inherited role from a given role.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see _core_security_get_role( ... ) in gets.php
+ * @see get_db_manager( ... ) in query_manager.php
+ * 
+ * @param mixed $role Role id or alias.
+ * 
+ * @throws Exception If the given role doesn't exist in the system.
+ * 
+ * @return array Inherited roles.
+ */
+function _core_security_get_subroles( $role ): array
+{
+    
+    $db_role = _core_security_get_role( $role );                                // Get role data.
+    if( is_null( $role ) ){                                                     // Throw new exception is the given role doesn't exist.
+        throw new Exception( "Role '$role' doesn't exist.", -1 );               // Exception if role doesn't exist
+    }
+    
+    global $DB_PREFIX;                                                          // Moodle DB prefix. Ex. mdl_                           
+    $tablename = $DB_PREFIX . "talentospilos_roles";                            // Moodle tablename. Ex. mdl_talentospilos_user
+    $params = [ $db_role['id'] ];                                               // Params to query. [0] Role id.
+    
+    $manager = get_db_manager();                                                // Security core database manager.
+    return $manager(                                                            // Roles that inherit from role given.
+        "SELECT * FROM $tablename WHERE id_rol_padre = $1 AND eliminado = 0",    // DB query to get inherited roles.
+        $params                                                                 // Query params. $1 is assigned to $params[0]
+    );
+    
+}
+
 ?>
