@@ -373,7 +373,7 @@ function _core_user_assigned_in_previous_system( $user_id, $role, $singularizer 
 }
 
 /**
- * Function that check if exist inherited role from a given role.
+ * Function that get all inherited role from a given role.
  * 
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
@@ -404,6 +404,30 @@ function _core_security_get_inherited_roles( $role ): array
         "SELECT * FROM $tablename WHERE id_rol_padre = $1 AND eliminado = 0",    // DB query to get inherited roles.
         $params                                                                 // Query params. $1 is assigned to $params[0]
     );
+    
+}
+
+/**
+ * Function that return every assignation over a given role, even if was removed.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co> 
+ * @since 1.0.0
+ * 
+ * @param mixed $role Role ID or alias.
+ * 
+ * @return array|null List of assignations whit the given role. Null if empty.
+ */
+function _core_security_get_historical_role_assignation( $role ){
+    
+    global $DB_PREFIX;                                                          // Moodle DB prefix. Ex. mdl_
+    $tablename = $DB_PREFIX. "talentospilos_usuario_rol";                       // Moodle tablename with prefix. Ex. mdl_talentospilos_usuarios.
+    
+    $db_role = _core_security_get_role( $role );                                // Get role data.
+    if( is_null( $role ) ){                                                     // Throw new exception is the given role doesn't exist.
+        throw new Exception( "Role '$role' doesn't exist.", -1 );               // Exception if role doesn't exist
+    }
+    
+    return get_db_records($tablename, [ 'id_rol' => $db_role['id'] ]);          // Get every assignation, deleted records included.
     
 }
 
