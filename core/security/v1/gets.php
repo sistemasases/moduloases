@@ -387,7 +387,7 @@ function _core_user_assigned_in_previous_system( $user_id, $role, $singularizer 
  * 
  * @return array Inherited roles.
  */
-function _core_security_get_subroles( $role ): array
+function _core_security_get_inherited_roles( $role ): array
 {
     
     $db_role = _core_security_get_role( $role );                                // Get role data.
