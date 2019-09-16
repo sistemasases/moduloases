@@ -148,9 +148,9 @@ function get_db_manager( $selector = null ) {
  * @param string $tablename
  * @param array $criteria Filter to query, [ 'db_col_name' => 'value' ]
  * 
- * @return array List of records.
+ * @return Null|array List of records.
  */
-function get_db_records( string $tablename, array $criteria = [] ): array
+function get_db_records( string $tablename, array $criteria = [] )
 {
     global $DB_PREFIX;                                                          // Moodle db prefix, Ex. mdl
 
