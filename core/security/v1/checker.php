@@ -156,5 +156,20 @@ function _core_security_check_inherited_roles( $role ): bool
     
 }
 
+/**
+ * Function that check if a role was used.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param mixed $role Role ID or alias.
+ * 
+ * @return bool If the given role never was used, return false.
+ */
+function _core_security_check_role_in_use( $role ): bool
+{
+    $assignations = _core_security_get_historical_role_assignation( $role );    // Historical of assignations.
+    return ( is_null($assignations) ? false : true );                           // If the role never was used, return false.
+}
 
 ?>
