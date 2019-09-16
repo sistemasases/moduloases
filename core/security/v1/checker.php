@@ -138,7 +138,7 @@ function _core_security_check_inherited_role( $role ){
 }
 
 /**
- * Function that check if exist inherited role from a given role.
+ * Function that check if exist inherited roles from a given role.
  * 
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
