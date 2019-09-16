@@ -540,7 +540,6 @@ function secure_create_role( $alias, $father_role = -1, $name = NULL, $descripti
  * 
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * 
- * @see get_db_records( ... ) in query_manager.php
  * @see _core_security_get_role( ... ) in gets.php
  * @see _core_security_get_user_rol( ... ) in gets.php
  * @see _core_security_get_previous_system_role( ... ) in gets.php
@@ -568,7 +567,7 @@ function secure_assign_role_to_user( $user_id, $role, $start_datetime = NULL, $e
         if( ($start_datetime >= $end_datetime) ){ return null; }
     }
 
-    $_user = get_db_records( "user", ['id'], [$user_id] );
+    $_user = get_db_records( "user", ['id' => $user_id] );
     $_role = _core_security_get_role( $role ); // Rol at the master system (Secutiry Core)
       
     if( $_user && $_role ){
@@ -729,7 +728,7 @@ function secure_remove_role_to_user( $user_id, $role, $start_datetime, $executed
         throw new Exception( "The user who executes must be provided.", -2 );
     }
     
-    if( is_null( get_db_records( "user", ["id"], [$executed_by] ) ) ){
+    if( is_null( get_db_records( "user", ["id" => $executed_by] ) ) ){
         throw new Exception( "The user who executes the action ('$executed_by') does not exist", -3 );
     }
     
@@ -913,7 +912,7 @@ function secure_update_role_to_user( $user_id, $role, $executed_by,
         throw new Exception( "The user who executes must be provided.", -2 );
     }
     
-    if( is_null( get_db_records( "user", ["id"], [$executed_by] ) ) ){
+    if( is_null( get_db_records( "user", ["id" => $executed_by] ) ) ){
         throw new Exception( "The user who executes the action ('$executed_by') does not exist", -3 );
     }
     
@@ -971,7 +970,8 @@ function secure_update_role_to_user( $user_id, $role, $executed_by,
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
  * 
- * @see _core_security_check_subroles( ... ) in checker.php
+ * @see _core_security_check_inherited_roles( ... ) in checker.php
+ * @see _core_security_check_role_in_use( ... ) in checker.php
  * @see _core_security_get_role( ... ) in gets.php
  * @see get_db_manager( ... ) in query_manager.php
  * 
@@ -979,13 +979,22 @@ function secure_update_role_to_user( $user_id, $role, $executed_by,
  * @param int $exceuted_by User that remove the role.
  * 
  * @throws Exception If the given role has inheritance.
+ * @throws Exception If the given role has at least one historical assignation.
  * 
- * @return void
+ * @return integer Result of execute the update query.
  */
 function secure_remove_role( $role, int $exceuted_by )
 {
-    $is_father = _core_security_check_inherited_roles( $role );                        // Check if the given role has inherited roles.
+    $is_father = _core_security_check_inherited_roles( $role );                 // Check if the given role has inherited roles.
     if( !$is_father ){
+        
+        if( _core_security_check_role_in_use( $role ) ){                        // Exception. If the given role has inheritance.
+            throw new Exception( 
+                "Cannot be removed a role with at least 
+                 one historical assignation.",
+                -1 
+            );      
+        }
         
         $db_role = _core_security_get_role( $role );                            // Get role data.
         
@@ -1004,7 +1013,7 @@ function secure_remove_role( $role, int $exceuted_by )
         return $manager( $query, $params );                                     // Return of excute the query with Security core database manager.
             
     }else{
-        throw new Exception( "A role with inheritance cannot be removed." );    // Exception. If the given role has inheritance.
+        throw new Exception( "A role with inheritance cannot be removed.", -2 );// Exception. If the given role has inheritance.
     }
 }
 
