@@ -345,8 +345,7 @@ function _build_response( $records, $query_variable ){
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
  * 
- * @see get_db_manager( ... ) in query_manager.php
- * @see is_empty_exception( ... ) in general_functions.php
+ * @see get_db_records( ... ) in query_manager.php
  * 
  * @param string $tablename
  * @param array $criteria Filter to query, [ 'db_col_name' => 'value' ]
@@ -355,28 +354,12 @@ function _build_response( $records, $query_variable ){
  */
 function check_db_records( string $tablename, array $criteria = [] ): bool
 {
-   
-    global $DB_PREFIX;                                                          // Moodle db prefix, Ex. mdl
-
-    $table = $DB_PREFIX . $tablename;                                           // Ex. mdl_ . talentospilos_user
-    $manager = get_db_manager();                                                // Database security core manager.
     
-    $where = ( count($criteria) > 0 ? "WHERE" : "" );                           // WHERE is added if a criteria was defined. Ex. [ 'user_id' => 15, 'removed' => 0  ]
+    $records = get_db_records($tablename, $criteria);
     
-    foreach ($criteria as $col_name => $col_value){
-        is_empty_exception(['col_name' => $col_name,'col_value' => $col_value]);// Check if col and value are valid, that means different to NULL or empty.
-        $where .=
-                " $col_name = '$col_value'" .                                   // Ex: ... AND user_id = 15
-                ( next( $criteria ) ? " AND" : "" );                            // Next criteria
-    }
-    
-    $result = $manager( "SELECT * FROM $table $where" );                        // Result of execute the sentence
-    
-    if( is_null( $result ) ){                                                    
+    if( is_null( $records ) ){                                                    
         return false;
-    }
-    
-    if ( count( $result ) > 0 ) {
+    }else if ( count( $records ) > 0 ) {
         return true;
     }else{
         return false;
