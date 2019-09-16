@@ -1017,5 +1017,4 @@ function secure_remove_role( $role, int $exceuted_by )
     }
 }
 
-
 ?>
