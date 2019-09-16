@@ -77,6 +77,8 @@ $singularizations = array(
     _core_security_check_subroles( "profesional_ps", 3 )
 );*/
 
-prin_r(check_db_records("user", $criteria = ["id"], $params = [7332080] ));
+/*print_r(
+    secure_remove_role( "profesional_ps", 73380 )
+);*/
 
 ?>
