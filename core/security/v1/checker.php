@@ -129,6 +129,7 @@ function _core_security_check_role( $user_id, $role_id, $time_context = null, $s
  * @see _core_security_get_previous_system_role( ... ) in gets.php
  * 
  * @param mixed $role Role alias.
+ * 
  * @return bool Indicates if the given role is an inherited role.
  * 
  */
@@ -138,34 +139,20 @@ function _core_security_check_inherited_role( $role ){
 
 /**
  * Function that check if exist inherited role from a given role.
+ * 
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
  * 
- * @param mixed $role Role id or alias.
+ * @see _core_security_get_inherited_roles( ... ) in gets.php
  * 
- * @throws Exception If the given role doesn't exist in the system.
+ * @param mixed $role Role id or alias.
  * 
  * @return bool True if exist one or more inherited roles.
  */
-function _core_security_check_subroles( $role ): bool
+function _core_security_check_inherited_roles( $role ): bool
 {
-    
-    $db_role = _core_security_get_role( $role );                                // Get role data.
-    if( is_null( $role ) ){                                                     // Throw new exception is the given role doesn't exist.
-        throw new Exception( "Role '$role' doesn't exist.", -1 );               // Exception if role doesn't exist
-    }
-    
-    global $DB_PREFIX;                                                          // Moodle DB prefix. Ex. mdl_                           
-    $tablename = $DB_PREFIX . "talentospilos_roles";                            // Moodle tablename. Ex. mdl_talentospilos_user
-    $params = [ $db_role['id'] ];                                               // Params to query. [0] Role id.
-    
-    $manager = get_db_manager();                                                // Security core database manager.
-    $inheritance = $manager(                                                    // Roles that inherit from role given.
-        $query = "SELECT * FROM $tablename WHERE id_rol_padre = $1",            // DB query to get inherited roles.
-        $params                                                                 // Query params. $1 is assigned to $params[0]
-    );
-
-    return ( count( $inheritance ) > 1 ? true : false );                        // If exist one or more inherited roles then return true.
+    $inherited_roles = _core_security_get_inherited_roles( $role );             // Get inherited roles from a given role ID or alias.
+    return ( count( $inherited_roles ) > 1 ? true : false );                    // If exist one or more inherited roles then return true.
     
 }
 
