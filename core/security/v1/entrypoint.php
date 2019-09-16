@@ -965,35 +965,47 @@ function secure_update_role_to_user( $user_id, $role, $executed_by,
     
 }
 
-function secure_remove_role( $role, $executed_by ){
-    
-    $db_role = _core_security_get_role( $role );
-    if( $db_role ){
+/**
+ * Function that remove a given role by ID or alias.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see _core_security_check_subroles( ... ) in checker.php
+ * @see _core_security_get_role( ... ) in gets.php
+ * @see get_db_manager( ... ) in query_manager.php
+ * 
+ * @param mixed $role mixed Role ID or alias.
+ * @param int $exceuted_by User that remove the role.
+ * 
+ * @throws Exception If the given role has inheritance.
+ * 
+ * @return void
+ */
+function secure_remove_role( $role, int $exceuted_by )
+{
+    $is_father = _core_security_check_inherited_roles( $role );                        // Check if the given role has inherited roles.
+    if( !$is_father ){
         
-        $can_be_removed = _core_security_check_subroles( $role );
-        if( $can_be_removed ){
-            
-            global $DB_PREFIX;
-            $manager = get_db_manager();
-            
-            $tablename = $DB_PREFIX . "talentospilos_roles";
-            $params = [ 
-                $role_id = $db_role['id'],
-                $eliminado = 1,
-                $fecha_hora_eliminacion = "now()",
-                $id_usuario_eliminador = $exceuted_by
-            ];
-            $query = "UPDATE $tablename SET eliminado = $2, fecha_hora_eliminacion = $3, id_usuario_eliminador = $4 WHERE id = $1 AND eliminado = 0";
-            return $manager( $query, $params, $extra = null );
-            
-        }else{
-            throw new Exception( "A parent role cannot be removed." );
-        }
+        $db_role = _core_security_get_role( $role );                            // Get role data.
         
+        global $DB_PREFIX;                                                      // Moodle prefix. Ex. mdl_
+        $manager = get_db_manager();                                            // Security core database manager.
+        $tablename = $DB_PREFIX . "talentospilos_roles";                        // Moodle tablename with Moodle prefix. Ex. mdl_talentospilos_usuario
+        $params = [ $db_role['id'],  1, "now()", $exceuted_by ];                // [0] Role id. [1] Status: 1 = Removed. [2] Time when it was removed. [3] User id that makes the acction
+            
+        $query = "UPDATE $tablename" .                                          // Query to remove in a logical way the record from the Database. See $param var.
+            "SET eliminado = $2, " .                                            // Existence status, 0 = exist, 1 = no exist. See $param var.
+            "   fecha_hora_eliminacion = $3, ".                                 // Time when was removed. See $param var.
+            "   id_usuario_eliminador = $4  ".                                  // User that remove. See $param var.
+            "WHERE  ".
+            "    id = $1 AND eliminado = 0";                                    // Criteria.
+            
+        return $manager( $query, $params );                                     // Return of excute the query with Security core database manager.
+            
     }else{
-        throw new Exception( "'$role' doesn't exist." );
+        throw new Exception( "A role with inheritance cannot be removed." );    // Exception. If the given role has inheritance.
     }
-    
 }
 
 
