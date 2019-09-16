@@ -1003,7 +1003,7 @@ function secure_remove_role( $role, int $exceuted_by )
         $tablename = $DB_PREFIX . "talentospilos_roles";                        // Moodle tablename with Moodle prefix. Ex. mdl_talentospilos_usuario
         $params = [ $db_role['id'],  1, "now()", $exceuted_by ];                // [0] Role id. [1] Status: 1 = Removed. [2] Time when it was removed. [3] User id that makes the acction
             
-        $query = "UPDATE $tablename" .                                          // Query to remove in a logical way the record from the Database. See $param var.
+        $query = "UPDATE $tablename " .                                          // Query to remove in a logical way the record from the Database. See $param var.
             "SET eliminado = $2, " .                                            // Existence status, 0 = exist, 1 = no exist. See $param var.
             "   fecha_hora_eliminacion = $3, ".                                 // Time when was removed. See $param var.
             "   id_usuario_eliminador = $4  ".                                  // User that remove. See $param var.
