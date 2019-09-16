@@ -258,4 +258,21 @@ function core_secure_update_role_to_user( $user_id, $role, $executed_by,
     return secure_update_role_to_user( $user_id, $role, $executed_by, $old_start_datetime, $old_singularizer, $start_datetime, $end_datetime, $singularizer, $use_alternative_interval, $alternative_interval );
 }
 
+/**
+ * Interface to secure_remove_role
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see secure_remove_role( ... ) in entrypoint.php
+ * 
+ * @param mixed $role mixed Role ID or alias.
+ * @param int $exceuted_by User that remove the role.
+ * 
+ * @return integer Result of execute the update query.
+ */
+function core_secure_remove_role( $role, int $exceuted_by ){
+    return secure_remove_role( $role, $exceuted_by );
+}
+
 ?>

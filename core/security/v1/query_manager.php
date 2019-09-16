@@ -137,36 +137,36 @@ function get_db_manager( $selector = null ) {
 }
 
 /**
- * Function that given a table name without prefix, list of criteria and params, 
- * return a simple selector with a list or records
+ * Function that return a list of records, given a criteria.
  * 
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
  * 
- * @see get_db_manager( ... ) in this file
- * @param string $tablename
- * @param array $criteria Filters
- * @param array $params 
+ * @see get_db_manager( ... ) in query_manager.php
+ * @see is_empty_exception( ... ) in general_functions.php
  * 
- * @return array|null 
+ * @param string $tablename
+ * @param array $criteria Filter to query, [ 'db_col_name' => 'value' ]
+ * 
+ * @return Null|array List of records.
  */
-function get_db_records( $tablename, $criteria = null, $params = null ){
-    
-    global $DB_PREFIX;
+function get_db_records( string $tablename, array $criteria = [] )
+{
+    global $DB_PREFIX;                                                          // Moodle db prefix, Ex. mdl
 
-    $table = $DB_PREFIX . $tablename;
-    $manager = get_db_manager();
+    $table = $DB_PREFIX . $tablename;                                           // Ex. mdl_ . talentospilos_user
+    $manager = get_db_manager();                                                // Database security core manager.
     
-    $where = "";
-    if( count($criteria) > 0 ){
-        $where .= "WHERE";
-        foreach ($criteria as $key => $cond){
-            $where .= " $cond = $" . ($key + 1);
-            ( next($criteria) ? $where .= " AND" : null );
-        }
+    $where = ( count($criteria) > 0 ? "WHERE" : "" );                           // WHERE is added if a criteria was defined. Ex. [ 'user_id' => 15, 'removed' => 0  ]
+    
+    foreach ($criteria as $col_name => $col_value){
+        is_empty_exception(['col_name' => $col_name,'col_value' => $col_value]);// Check if col and value are valid, that means different to NULL or empty.
+        $where .=
+                " $col_name = '$col_value'" .                                   // Ex: ... AND user_id = 15
+                ( next( $criteria ) ? " AND" : "" );                            // Next criteria
     }
     
-    $result = $manager( $query = "SELECT * FROM $table $where", $params, $extra = null );
+    $result = $manager( "SELECT * FROM $table $where" );                        // Result of execute the sentence
     
     return ( count( $result ) > 0 ? $result : null );
     
@@ -339,3 +339,30 @@ function _build_response( $records, $query_variable ){
     return $to_return;
 }
 
+/**
+ * Function that checks if exist records, given a criteria.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see get_db_records( ... ) in query_manager.php
+ * 
+ * @param string $tablename
+ * @param array $criteria Filter to query, [ 'db_col_name' => 'value' ]
+ * 
+ * @return bool True if exist.
+ */
+function check_db_records( string $tablename, array $criteria = [] ): bool
+{
+    
+    $records = get_db_records($tablename, $criteria);
+    
+    if( is_null( $records ) ){                                                    
+        return false;
+    }else if ( count( $records ) > 0 ) {
+        return true;
+    }else{
+        return false;
+    }
+        
+}
