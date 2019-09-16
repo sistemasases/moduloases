@@ -419,15 +419,15 @@ function _core_security_get_inherited_roles( $role ): array
  */
 function _core_security_get_historical_role_assignation( $role ){
     
-    global $DB_PREFIX;                                                          // Moodle DB prefix. Ex. mdl_
-    $tablename = $DB_PREFIX. "talentospilos_usuario_rol";                       // Moodle tablename with prefix. Ex. mdl_talentospilos_usuarios.
-    
     $db_role = _core_security_get_role( $role );                                // Get role data.
-    if( is_null( $role ) ){                                                     // Throw new exception is the given role doesn't exist.
+    if( is_null( $db_role ) ){                                                     // Throw new exception is the given role doesn't exist.
         throw new Exception( "Role '$role' doesn't exist.", -1 );               // Exception if role doesn't exist
     }
     
-    return get_db_records($tablename, [ 'id_rol' => $db_role['id'] ]);          // Get every assignation, deleted records included.
+    return get_db_records(                                                      // Get every assignation, deleted records included.
+            "talentospilos_usuario_rol",                                        // Tablename without prefix.
+            [ 'id_rol' => $db_role['id'] ]                                      // Criteria
+    );          
     
 }
 
