@@ -90,4 +90,6 @@ $singularizations = array(
 
 //print_r(secure_update_role( "profesional_ps", 's', 'NULLs' ));
 
+//print_r( secure_update_action( "create_user", NULL, "", true ) );
+
 ?>
