@@ -1017,4 +1017,53 @@ function secure_remove_role( $role, int $exceuted_by )
     }
 }
 
+/**
+ * Function that assign to a given role the permission over an action (Call).
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see _core_security_get_action( ... ) in gets.php
+ * @see _core_security_get_role( ... ) in gets.php
+ * @see is_empty_exception( ... ) in general_functions.php
+ * @see _core_security_get_role_actions( ... ) in gets.php
+ * @see get_db_manager( ... ) in query_manager.php
+ * 
+ * @throws Exception If the given call already was assigned.
+ * 
+ * @return integer Result of INSERT with query manager.
+ */
+function secure_assign_call_to_role( $call, $role )
+{
+    
+    $obj_action = _core_security_get_action( $call );                           // Get action (call) data from database.
+    $obj_role = _core_security_get_role( $role );                               // Get role data from database
+    is_empty_exception( [ 'action' => $obj_action , 'role' => $obj_role ] );    // Check if role and action exist.
+    
+    $actions_by_role = _core_security_get_role_actions( $obj_role['id'] );      // Get action assigned to a given role.
+    
+    $exist = false;                                                             // Assigment exist.
+    foreach ( $actions_by_role as &$action ){                                   // Check every acction if is equal to the new acction to assign.
+        if( $action['alias'] == $obj_action['alias'] ){                         // Check an action if is equal to the new acction to assign.
+            $exist = true;                                                      
+            break;
+        }
+    }
+    
+    if( !$exist ){                                                              // If doesn't exist the role-action tuple.
+        
+        global $DB_PREFIX;                                                      // Moodle prefix. Ex. mdl_
+        $tablename = $DB_PREFIX . "talentospilos_roles_acciones";               // Moodle tablename with prefix. Ex. mdl_talentospilos_usuarios.
+        $manager = get_db_manager();                                            // Get Security core database manager.
+        $params = [ $obj_role['id'], $obj_action['id'] ];                       // [0] Role ID. [1] Action (call) ID.
+        $query = "INSERT INTO $tablename (id_rol, id_accion) VALUES($1, $2)";   // Query to INSERT a new role-acction tuple.
+        
+        return $manager( $query, $params );                                     // Return the query execution.
+        
+    }
+        
+    throw new Exception( "Assignment already exists", -1 );                     // Exception if already assigned.
+    
+    
+}
 ?>
