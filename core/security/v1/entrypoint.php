@@ -1119,7 +1119,7 @@ function secure_remove_call_role( $call, $role, int $exec_by )
 }
 
 /**
- * Function that update name or description from a role.
+ * Function that update name or description from a role. You cannot update the role father or alias.
  * 
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
