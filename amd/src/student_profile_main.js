@@ -51,14 +51,19 @@ define(['jquery',
             }
 
             /**
+             * Event that loads asynchronously the socio-educational tab
+             */
+            $("#socioed_li").on('click', {tab_name: 'socioed'}, load_tabs);
+
+            /**
              * Event that loads asynchronously the academic tab
              */
-            $("#academic_li").on('click', {tab_to_load: 'academic'}, load_tabs);
+            $("#academic_li").on('click', {tab_name: 'academic'}, load_tabs);
 
             /**
              * Event that loads asynchronously the geographic tab
              */
-            $("#geographic_li").on('click', {tab_to_load: 'geographic'}, load_tabs);
+            $("#geographic_li").on('click', {tab_name: 'geographic'}, load_tabs);
 
             /**
              * Event that moves the Google Maps map from
@@ -1106,54 +1111,49 @@ define(['jquery',
      */
     function load_tabs(event) {
 
-        var tab_to_load = event.data.tab_to_load;
+        var tab_name = event.data.tab_name;
         var id_ases = $('#id_ases').val();
 
         $(".active").removeClass("active");
-        $("#"+tab_to_load+"_li").addClass("active");
+        $("#"+tab_name+"_li").addClass("active");
 
         $.ajax({
             type: "POST",
             data: JSON.stringify({
                 "func": 'load_tabs',
-                "params": [id_ases, tab_to_load],
+                "params": [id_ases, tab_name],
             }),
             url: "../managers/student_profile/studentprofile_api.php",
             success: function(msg) {
                 if(msg.status_code == 0) {
                     $.ajax({
-                        url: "../templates/view_"+tab_to_load+"_tab_sp.mustache",
+                        url: "../templates/view_"+tab_name+"_tab_sp.mustache",
                         data: null,
                         dataType: "text",
                         async: false,
                         success: function( template ){
-                            switch(tab_to_load){
+                            let tab_to_load = $(mustache.render( template, msg.data_response ));
+                            $(".tab-content").append( tab_to_load );
+
+                            switch(tab_name){
                                 case 'socioed':
-                                    let socioed_tab = $(mustache.render( template, msg.data_response ));
-                                    $(".tab-content").append( socioed_tab );
                                     break;
                                 case 'academic':
-                                    let academic_tab = $(mustache.render( template, msg.data_response ));
-                                    $(".tab-content").append( academic_tab );
                                     academic.init();
                                     break;
                                 case 'geographic':
-                                    let geographic_tab = $(mustache.render( template, msg.data_response ));
-                                    $(".tab-content").append( geographic_tab );
                                     geographic.init();
                                     $("#mapa").appendTo("#geographic_map");
                                     break;
                                 case 'tracing_others':
-                                    let others_tab = $(mustache.render( template, msg.data_response ));
-                                    $(".tab-content").append( others_tab );
                                     break;
                             }
 
-                            $("#"+tab_to_load+"_tab").addClass("active");
-                            $("#"+tab_to_load+"_li").off('click', load_tabs);
+                            $("#"+tab_name+"_tab").addClass("active");
+                            $("#"+tab_name+"_li").off('click', load_tabs);
                         },
                         error: function(){
-                            console.log( "../templates/view_"+tab_to_load+"_tab_sp.mustache cannot be reached." );
+                            console.log( "../templates/view_"+tab_name+"_tab_sp.mustache cannot be reached." );
                         }
                     });
 
