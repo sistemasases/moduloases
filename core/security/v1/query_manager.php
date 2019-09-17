@@ -156,14 +156,17 @@ function get_db_records( string $tablename, array $criteria = [] )
 
     $table = $DB_PREFIX . $tablename;                                           // Ex. mdl_ . talentospilos_user
     $manager = get_db_manager();                                                // Database security core manager.
+    $criteria_size = count($criteria);
     
-    $where = ( count($criteria) > 0 ? "WHERE" : "" );                           // WHERE is added if a criteria was defined. Ex. [ 'user_id' => 15, 'removed' => 0  ]
+    $where = ( $criteria_size > 0 ? "WHERE" : "" );                           // WHERE is added if a criteria was defined. Ex. [ 'user_id' => 15, 'removed' => 0  ]
     
     foreach ($criteria as $col_name => $col_value){
+        
         is_empty_exception(['col_name' => $col_name,'col_value' => $col_value]);// Check if col and value are valid, that means different to NULL or empty.
         $where .=
                 " $col_name = '$col_value'" .                                   // Ex: ... AND user_id = 15
-                ( next( $criteria ) ? " AND" : "" );                            // Next criteria
+                ( $criteria_size > 1  ? " AND" : "" );                            // Next criteria
+        $criteria_size--;
     }
     
     $result = $manager( "SELECT * FROM $table $where" );                        // Result of execute the sentence
