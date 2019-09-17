@@ -618,14 +618,14 @@ function update_status_program($program_id, $status, $student_id){
         return array(
             "status_code" => 0,
             "title" => 'Éxito',
-            "status" => 'success',
+            "type" => 'success',
             "message" => 'Estado del programa actualizado con éxito.'
         );
     }else{
         return array(
             "status_code" => 0,
             "title" => 'Error',
-            "status" => 'error',
+            "type" => 'error',
             "message" => 'Error al guardar estado en la base de datos.'
         );
     }

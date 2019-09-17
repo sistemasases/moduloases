@@ -203,8 +203,6 @@ define(['jquery',
                 var id_moodle = $('#id_moodle').val();
                 var image_file = document.getElementById('profile-image-input').files[0];
 
-                console.log(image_file);
-
                 $.ajax({
                     url: '../managers/student_profile/studentprofile_api.php',
                     data: JSON.stringify({
@@ -351,7 +349,7 @@ define(['jquery',
                                     swal(
                                         msg.title,
                                         msg.message,
-                                        msg.status
+                                        msg.type
                                     );
                                 } else {
                                     console.log(msg);
@@ -363,7 +361,7 @@ define(['jquery',
                                 swal(
                                     msg.title,
                                     msg.msg,
-                                    msg.status
+                                    msg.type
                                 );
                             },
                         });
@@ -448,15 +446,17 @@ define(['jquery',
 
                                             swal(
                                                 msg.title,
-                                                msg.msg,
-                                                msg.status
+                                                msg.message,
+                                                msg.type
+                                            );
+                                        } else if(msg.status_code == -7 || msg.status_code == -8){
+                                            swal(
+                                                msg.title,
+                                                msg.error_message,
+                                                msg.type
                                             );
                                         } else {
-                                            swal(
-                                                "Error",
-                                                msg.error_message,
-                                                "error"
-                                            );
+                                            console.log(msg);
                                         }
                                     },
                                     dataType: "json",
@@ -465,16 +465,14 @@ define(['jquery',
                                         modal_dropout.hide();
                                         swal(
                                             msg.title,
-                                            msg.msg,
-                                            msg.status
+                                            msg.message,
+                                            msg.type
                                         );
                                     },
                                 });
                             });
                         } else if (new_status == 'seguimiento') {
-                            var data = [current_status, new_status,
-                                parameters_url.instanceid, parameters_url.student_code];
-                            console.log(data);
+
                             $.ajax({
                                 type: "POST",
                                 data: JSON.stringify({
@@ -511,8 +509,8 @@ define(['jquery',
                             }).then(function (msg) {
                                 swal(
                                     msg.title,
-                                    msg.msg,
-                                    msg.status
+                                    msg.message,
+                                    msg.type
                                 );
                             });
                         }
@@ -699,7 +697,6 @@ define(['jquery',
         }, edit_profile: function (object_function) {
 
             var form_wihtout_changes = $('#ficha_estudiante').serializeArray();
-            console.log(form_wihtout_changes);
 
             var update_or_insert1 = document.getElementById("otro_genero").value;
             var update_or_insert2 = document.getElementById("otro_act_simultanea").value;
@@ -1048,7 +1045,7 @@ define(['jquery',
                         swal(
                             msg.title,
                             msg.message,
-                            msg.status
+                            msg.type
                         );
                     }
                 },
@@ -1058,7 +1055,7 @@ define(['jquery',
                     swal(
                         msg.title,
                         msg.msg,
-                        msg.status
+                        msg.type
                     );
                 },
             });
@@ -1217,8 +1214,6 @@ define(['jquery',
 
         $('#icetex_status').change(function () {
             var new_status = $('#icetex_status option:selected').text();
-            console.log(previous_status);
-            console.log(new_status);
 
             swal({
                 title: "¿Está seguro/a de realizar este cambio?",
@@ -2034,8 +2029,6 @@ define(['jquery',
             success: function (msg) {
 
                 var result = JSON.parse(msg);
-
-                console.log(result);
 
                 if (result == 1) {
                     var parameters = get_url_parameters(document.location.search);

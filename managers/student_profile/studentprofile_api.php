@@ -108,7 +108,7 @@ if(isset($input->func) && isset($input->params)) {
                     array(
                         "status_code" => 0,
                         "title" => $msg->title,
-                        "status" => $msg->status,
+                        "type" => $msg->status,
                         "message" => $msg->msg
                     )
                 );
@@ -209,8 +209,8 @@ if(isset($input->func) && isset($input->params)) {
                             Array (
                                 "status_code" => 0,
                                 "title" => 'Éxito',
-                                "msg" => 'Estado actualizado con éxito.',
-                                "status" => 'success'
+                                "message" => 'Estado actualizado con éxito.',
+                                "type" => 'success'
                             )
                         );
                     } else {
@@ -252,8 +252,8 @@ if(isset($input->func) && isset($input->params)) {
                         Array (
                             "status_code" => 0,
                             "title" => 'Éxito',
-                            "msg" => 'Estado actualizado con éxito.',
-                            "status" => 'success'
+                            "message" => 'Estado actualizado con éxito.',
+                            "type" => 'success'
                         )
                     );
                 } else {
@@ -263,7 +263,7 @@ if(isset($input->func) && isset($input->params)) {
                 return_with_code(-2);
             }
         } else {
-            return_with_code(-6, $params);
+            return_with_code(-6);
         }
     } else if($function == 'is_student'){
 
@@ -359,7 +359,7 @@ if(isset($input->func) && isset($input->params)) {
  * reserved codes: -1, -2, -3, -4, -5, -6, -7, -8, -9 -99.
  * @param $code
  */
-function return_with_code($code, $params=null){
+function return_with_code($code){
 
     switch( $code ){
 
@@ -418,7 +418,7 @@ function return_with_code($code, $params=null){
                 array(
                     "status_code" => $code,
                     "error_message" => "Wrong quantity of parameters in input.",
-                    "data_response" => $params
+                    "data_response" => ""
                 )
             );
             break;
@@ -427,7 +427,9 @@ function return_with_code($code, $params=null){
             echo json_encode(
                 array(
                     "status_code" => $code,
+                    "title" => "Error",
                     "error_message" => "Error al realizar registro.",
+                    "type" => "error",
                     "data_response" => ""
                 )
             );
@@ -437,7 +439,9 @@ function return_with_code($code, $params=null){
             echo json_encode(
                 array(
                     "status_code" => $code,
+                    "title" => "Error",
                     "error_message" => "Todos los campos son obligatorios",
+                    "type" => "error",
                     "data_response" => ""
                 )
             );
@@ -447,10 +451,10 @@ function return_with_code($code, $params=null){
             echo json_encode(
                 array(
                     "status_code" => $code,
+                    "title" => "Error",
                     "message" => "Error al actualizar el campo",
-                    "data_response" => "",
                     "type" => "error",
-                    "title" => "Error"
+                    "data_response" => ""
                 )
             );
             break;
