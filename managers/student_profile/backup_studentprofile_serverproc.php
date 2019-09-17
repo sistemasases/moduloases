@@ -22,6 +22,9 @@
  * @copyright  2018 Iader E. García <iadergg@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+/*
+
 require_once(dirname(__FILE__). '/../../../../config.php');
 require_once('../lib/student_lib.php');
 require_once('../student_profile/studentprofile_lib.php');
@@ -181,7 +184,7 @@ if(isset($_POST['func'])){
  * @see save_profile($form)
  * @param $form --> Array containing the fields to update
  * @return object in a json format
- */
+ *
 function save_profile($form){
 
     global $DB;
@@ -362,7 +365,7 @@ function save_profile($form){
  * @param $id_reason = null --> Retirement reason id
  * @param $observations = null --> observations to save
  * @return object in a json format
- */
+ *
 
 function save_status_icetex_proc($new_status, $id_ases, $id_reason = null,  $observations=null){
 
@@ -381,7 +384,7 @@ function save_status_icetex_proc($new_status, $id_ases, $id_reason = null,  $obs
  * @param $id_reason = null --> Retirement reason id
  * @param $observations = null --> observations to save
  * @return object in a json format
- */
+ *
 
 function save_status_ases_proc($new_status, $id_ases, $id_reason = null, $observations=null){
 
@@ -395,7 +398,7 @@ function save_status_ases_proc($new_status, $id_ases, $id_reason = null, $observ
  *
  * @see save_reason_dropout_student()
  * @return integer in a json format
- */
+ *
 function save_reason_dropout_student(){
 
     if(isset($_POST['talentosid']) && isset($_POST['motivoid']) && isset($_POST['detalle']))
@@ -436,7 +439,7 @@ function loadMotivoRetiroStudent(){
  *
  * @see validate_form_tracking_peer()
  * @return string --> validation result
- */
+ *
 function validate_form_tracking_peer(){
     if(!isset($_POST['date'])){
         return "El campo FECHA no llegó al servidor.";
@@ -492,7 +495,7 @@ function validate_form_tracking_peer(){
  *
  * @see save_tracking_peer_proc()
  * @return string --> validation result
- */
+ *
 function save_tracking_peer_proc(){
 
     global $USER;
@@ -551,7 +554,7 @@ function save_tracking_peer_proc(){
  *
  * @param $id_tracking_peer --> track id to delete
  * @return string --> Operation result
- */
+ *
 function delete_tracking_peer_proc($id_tracking_peer){
 
     $result_delete = delete_tracking_peer((int)$id_tracking_peer);
@@ -565,7 +568,7 @@ function delete_tracking_peer_proc($id_tracking_peer){
  * @see validate_student_proc($code_student)
  * @param $code_student --> student id
  * @return integer --> 1 if exists, 0 if not
- */
+ *
 
 function validate_student_proc($code_student){
 
@@ -574,3 +577,5 @@ function validate_student_proc($code_student){
     echo $confirm_msg;
 
 }
+
+*/
