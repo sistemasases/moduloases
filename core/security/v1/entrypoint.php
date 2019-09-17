@@ -1174,7 +1174,7 @@ function secure_update_role( $role, string $name = NULL, string $description = N
             
     $query = "UPDATE $tablename " .                                             // Query to update a given role in the Database. See $param var.
         "SET nombre = $2, " .                                                   // New name.
-        "   descripcion = $3, ".                                                // New description.
+        "   descripcion = $3 ".                                                // New description.
         "WHERE  ".
         "    id = $1 AND eliminado = 0";                                        // Criteria.
             
