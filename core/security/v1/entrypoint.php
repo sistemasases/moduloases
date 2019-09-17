@@ -1029,6 +1029,9 @@ function secure_remove_role( $role, int $exceuted_by )
  * @see _core_security_get_role_actions( ... ) in gets.php
  * @see get_db_manager( ... ) in query_manager.php
  * 
+ * @param integer|string $call Action (call) ID or alias.
+ * @param integer|string $role Role ID or alias.
+ * 
  * @throws Exception If the given call already was assigned.
  * 
  * @return integer Result of INSERT with query manager.
