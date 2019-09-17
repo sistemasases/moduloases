@@ -120,15 +120,15 @@ require_once( __DIR__ . "/v" . VERSION . "/entrypoint.php");
  *
  */
 function core_secure_call( $function_name, $args = null, $context = null, $user_id = null, $singularizations = null, $time_context = null ){
-	return secure_Call( $function_name, $args, $context, $user_id, $singularizations, $time_context ); 
+    return secure_Call( $function_name, $args, $context, $user_id, $singularizations, $time_context ); 
 }
 
 function core_secure_render( &$data, $user_id = null, $singularizations = null, $time_context = null ){
-	return secure_render( $data, $user_id, $singularizations, $time_context ); 
+    return secure_render( $data, $user_id, $singularizations, $time_context ); 
 }
 
 function core_secure_template_checker( $dir ){
-	return secure_template_checker( $dir );
+    return secure_template_checker( $dir );
 }
 
 /**
