@@ -1118,4 +1118,68 @@ function secure_remove_call_role( $call, $role, int $exec_by )
     
 }
 
+/**
+ * Function that update name or description from a role.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param mixed $role Role ID or alias.
+ * @param string $name New name. Use NULL if you won't update this values, or '' if you want update this value to NULL.
+ * @param string $description Use NULL if you won't update this values, or '' if you want update this value to NULL.
+ * 
+ * @throws Exception If the name and description are both NULL. NULL means no change, use '' if you want update this value to NULL.
+ * 
+ * @return mixed Result of query manager.
+ */
+function secure_update_role( $role, string $name = NULL, string $description = NULL ){
+    
+    if(is_null( $name ) && is_null( $description ) ){                           // Throw an exception if no changes.
+        throw new Exception( 
+            "NULL means 'without changes', ".                                   // Exception message.
+            "if you want update to NULL use an ".
+            "empty string '' instead.", 
+             -1                                                                 // Exception code.
+        );
+    }
+    
+    $db_role = _core_security_get_role( $role );                                // Get role data.
+    is_empty_exception( ['db_role' => $db_role] );                              // Check is data isn't empty or NULL.
+    
+    $new_name = (                                                               // Check for a new name
+        is_null( $name ) ?                                                      // If the new name is NULL, means no change.
+        $db_role['nombre'] :                                                    // If true old name keep
+        ( 
+            $name === '' ?                                                      // Check if the new name is NULL
+            NULL :                                                              // If new name is an empty string, the new name is NULL.
+            $name                                                               // If new name is a non empty string, $new_name = $name
+        )                                         
+    );
+    
+    $new_description = (                                                        // Check for a new name
+        is_null( $description ) ?                                               // If the new name is NULL, means no change.
+        $db_role['descripcion'] :                                               // If true old name keep
+        ( 
+            $description === '' ?                                               // Check if the new name is NULL
+            NULL :                                                              // If new name is an empty string, the new name is NULL.
+            $description                                                        // If new name is a non empty string, $new_name = $name
+        )                                         
+    );
+    
+    
+    global $DB_PREFIX;                                                          // Moodle prefix. Ex. mdl_
+    $manager = get_db_manager();                                                // Security core database manager.
+    $tablename = $DB_PREFIX . "talentospilos_roles";                            // Moodle tablename with Moodle prefix. Ex. mdl_talentospilos_usuario
+    $params = [ $db_role['id'], $new_name, $new_description ];                  // [0] Role id. [1] New action name. [2] New description name.
+            
+    $query = "UPDATE $tablename " .                                             // Query to update a given role in the Database. See $param var.
+        "SET nombre = $2, " .                                                   // New name.
+        "   descripcion = $3, ".                                                // New description.
+        "WHERE  ".
+        "    id = $1 AND eliminado = 0";                                        // Criteria.
+            
+    return $manager( $query, $params );  
+    
+}
+
 ?>
