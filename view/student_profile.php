@@ -62,10 +62,7 @@ include "../classes/output/student_profile_page.php";
 include "../classes/output/renderer.php";
 
 
-
 $new_forms_date =strtotime('2018-01-01 00:00:00');
-
-
 
 //$initial_date = date('H:i:s.u');
 // Set up the page.
@@ -112,8 +109,7 @@ if ($student_code != 0) {
     $ases_student = get_ases_user_by_code($student_code);
     $record->birthdate = $ases_student->fecha_nac;
     $student_id = $ases_student->id;
-    //echo $student_id ;
-    //die;
+
     // Student information to display on file header (ficha)
     $id_user_moodle = get_id_user_moodle($ases_student->id);
     $id_user_moodle_ = $id_user_moodle;
@@ -122,7 +118,7 @@ if ($student_code != 0) {
     
     $html_profile_image = AsesUser::get_HTML_img_profile_image($contextblock->id, $ases_student->id);
     //$academic_programs = get_status_program_for_profile($student_id);
-    $academic_programs   = get_status_program_for_profile_aditional($student_id);
+    $academic_programs = get_status_program_for_profile_aditional($student_id);
     $student_cohorts = get_cohorts_by_student($id_user_moodle);
     $status_ases_array = get_ases_status($ases_student->id, $blockid);
 
@@ -347,8 +343,8 @@ if ($student_code != 0) {
 
     $record->options_pais = $options_pais;
 
-    $record->municipio_act = get_ciudad_res($student_id);
-    $record->res_address = get_res_address($student_id);
+    $record->municipio_act = student_profile_get_ciudad_res($student_id);
+    $record->res_address = student_profile_get_res_address($student_id);
 
     //TRAE ETNIAS
     $etnias= get_etnias();
@@ -738,35 +734,6 @@ if ($student_code != 0) {
     $select = make_select_ficha($USER->id, $rol, $student_code, $blockid, $actions);
     $record->code = $select;
 
-    // Loading academic information
-
-    foreach ($academic_programs as $program) {
-        if($program->tracking_status == 1){
-            
-            $academic_program_id = $program->academic_program_id;
-            break;
-        }
-    }
-    //Current data
-    //weighted average
-    $promedio = get_promedio_ponderado($student_id, $academic_program_id);
-    $record->promedio = $promedio;
-
-    // //num bajos
-    $bajos = get_bajos_rendimientos($student_id, $academic_program_id);
-    $record->bajos = $bajos;
-
-    // // //num estimulos
-    $estimulos = get_estimulos($student_id, $academic_program_id);
-    $record->estimulos = $estimulos;
-
-    // //Current semester
-    $html_academic_table = get_grades_courses_student_last_semester($id_user_moodle);
-    $record->academic_semester_act = $html_academic_table;
-
-    // //historic academic
-    $html_historic_academic = get_historic_academic_by_student($student_id);
-    $record->historic_academic = $html_historic_academic;
 
     // Student trackings (Seguimientos)
 
