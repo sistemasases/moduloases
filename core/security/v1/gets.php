@@ -431,4 +431,23 @@ function _core_security_get_historical_role_assignation( $role ){
     
 }
 
+/**
+ * Function that return a role-action tuple.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param integer $role_id Role ID.
+ * @param integer $action_id Action ID.
+ * 
+ * @return NULL|array Array with role-action tuple data.
+ */
+function _core_security_get_action_role( int $role_id, int $action_id ){
+    $role_action = get_db_records(                                              // Get role-action tuple.
+        "talentospilos_roles_acciones",                                         // Tablename without prefix.
+        [ 'id_rol' => $role_id, 'id_accion' => $action_id, 'eliminado' => 0 ]   // Criteria
+    ); 
+    return ( is_null( $role_action ) ? NULL : $role_action[0] );                
+}
+
 ?>
