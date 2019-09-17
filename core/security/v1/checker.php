@@ -172,4 +172,23 @@ function _core_security_check_role_in_use( $role ): bool
     return ( is_null($assignations) ? false : true );                           // If the role never was used, return false.
 }
 
+/**
+ * Function that return a role-action tuple exist.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see _core_security_get_action_role( ... ) in gets.php
+ * 
+ * @param integer $role_id Role ID.
+ * @param integer $action_id Action ID.
+ * 
+ * @return bool True if exist.
+ */
+function _core_security_check_action_role( int $role_id, int $action_id ):bool
+{
+    $role_action = _core_security_get_action_role($role_id, $action_id);
+    return ( is_null( $role_action ) ? false : true );                
+}
+
 ?>

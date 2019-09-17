@@ -224,7 +224,7 @@ function _core_security_create_rol_previous_system_role( $role_name ){
 function is_empty_exception( array $var_list ): void
 {
     foreach( $var_list as $var_name => $var_value ){
-        if( is_null( $var_value ) || $var_value == "" ){
+        if( is_null( $var_value ) || $var_value === "" ){
             throw new Exception( "Sorry, $var_name cannot be empty." ,-1 );
         }
     }

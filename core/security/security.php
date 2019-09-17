@@ -282,6 +282,8 @@ function core_secure_remove_role( $role, int $exceuted_by ){
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
  * 
+ * @see secure_assign_call_to_role( ... ) in entrypoint.php
+ * 
  * @param integer|string $call Action (call) ID or alias.
  * @param integer|string $role Role ID or alias.
  * 
@@ -289,6 +291,24 @@ function core_secure_remove_role( $role, int $exceuted_by ){
  */
 function core_secure_assign_call_to_role( $call, $role ){
     return secure_assign_call_to_role( $call, $role );
+}
+
+/**
+ * Interface to secure_remove_call_role
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see secure_remove_call_role( ... ) in entrypoint.php
+ * 
+ * @param integer|string $call Action(call) ID or alias.
+ * @param integer|string $role Role ID or alias.
+ * @param integer $exec_by User ID that remove the tuple.
+ * 
+ * @return mixed Query manager return of execute the update query.
+ */
+function core_secure_remove_call_role( $call, $role, int $exec_by ){
+    return secure_remove_call_role( $call, $role, $exec_by );
 }
 
 ?>
