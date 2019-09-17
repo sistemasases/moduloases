@@ -1093,7 +1093,7 @@ function secure_remove_call_role( $call, $role, int $exec_by )
 {
     $obj_role = _core_security_get_role( $role );                               // Get role data from database
     $obj_action = _core_security_get_action( $call );                           // Get action (call) data from database.
-                               
+    
     is_empty_exception( [ 'role' => $obj_role, 'action' => $obj_action ] );     // Check if role and action exist.
     
     if(_core_security_check_action_role($obj_role['id'], $obj_action['id']) ){
