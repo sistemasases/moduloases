@@ -1125,8 +1125,8 @@ function secure_remove_call_role( $call, $role, int $exec_by )
  * @since 1.0.0
  * 
  * @param mixed $role Role ID or alias.
- * @param string $name New name. Use NULL if you won't update this values, or '' if you want update this value to NULL.
- * @param string $description Use NULL if you won't update this values, or '' if you want update this value to NULL.
+ * @param string $name New name. Use NULL if you won't update this value, or '' if you want update this value to NULL.
+ * @param string $description Use NULL if you won't update this value, or '' if you want update this value to NULL.
  * 
  * @throws Exception If the name and description are both NULL. NULL means no change, use '' if you want update this value to NULL.
  * 
@@ -1146,23 +1146,23 @@ function secure_update_role( $role, string $name = NULL, string $description = N
     $db_role = _core_security_get_role( $role );                                // Get role data.
     is_empty_exception( ['db_role' => $db_role] );                              // Check is data isn't empty or NULL.
     
-    $new_name = (                                                               // Check for a new name
+    $new_name = (                                                               // Check for a new name.
         is_null( $name ) ?                                                      // If the new name is NULL, means no change.
-        $db_role['nombre'] :                                                    // If true old name keep
+        $db_role['nombre'] :                                                    // If true old name keep.
         ( 
-            $name === '' ?                                                      // Check if the new name is NULL
+            $name === '' ?                                                      // Check if the new name is NULL.
             NULL :                                                              // If new name is an empty string, the new name is NULL.
-            $name                                                               // If new name is a non empty string, $new_name = $name
+            $name                                                               // If new name is a non empty string, $new_name = $name.
         )                                         
     );
     
-    $new_description = (                                                        // Check for a new name
+    $new_description = (                                                        // Check for a new name.
         is_null( $description ) ?                                               // If the new name is NULL, means no change.
-        $db_role['descripcion'] :                                               // If true old name keep
+        $db_role['descripcion'] :                                               // If true old name keep.
         ( 
-            $description === '' ?                                               // Check if the new name is NULL
+            $description === '' ?                                               // Check if the new name is NULL.
             NULL :                                                              // If new name is an empty string, the new name is NULL.
-            $description                                                        // If new name is a non empty string, $new_name = $name
+            $description                                                        // If new name is a non empty string, $new_name = $name.
         )                                         
     );
     
@@ -1170,11 +1170,82 @@ function secure_update_role( $role, string $name = NULL, string $description = N
     global $DB_PREFIX;                                                          // Moodle prefix. Ex. mdl_
     $manager = get_db_manager();                                                // Security core database manager.
     $tablename = $DB_PREFIX . "talentospilos_roles";                            // Moodle tablename with Moodle prefix. Ex. mdl_talentospilos_usuario
-    $params = [ $db_role['id'], $new_name, $new_description ];                  // [0] Role id. [1] New action name. [2] New description name.
+    $params = [ $db_role['id'], $new_name, $new_description ];                  // [0] Role id. [1] New role name. [2] New role description.
             
     $query = "UPDATE $tablename " .                                             // Query to update a given role in the Database. See $param var.
         "SET nombre = $2, " .                                                   // New name.
-        "   descripcion = $3 ".                                                // New description.
+        "   descripcion = $3 ".                                                 // New description.
+        "WHERE  ".
+        "    id = $1 AND eliminado = 0";                                        // Criteria.
+            
+    return $manager( $query, $params );  
+    
+}
+
+/**
+ * Function that update name or description from an action. You cannot update the action alias.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param mixed $call Action(call) ID or alias.
+ * @param string $name New name. Use NULL if you won't update this value, or '' if you want update this value to NULL.
+ * @param string $description Use NULL if you won't update this value, or '' if you want update this value to NULL.
+ * @param integer $log Use NULL if you won't update this value.
+ * 
+ * @throws Exception If the name and description are both NULL. NULL means no change, use '' if you want update this value to NULL.
+ * 
+ * @return mixed Result of query manager.
+ */
+function secure_update_action( $call, string $name = NULL, string $description = NULL, bool $log = NULL ){
+    
+    if(is_null( $name ) && is_null( $description ) ){                           // Throw an exception if no changes.
+        throw new Exception( 
+            "NULL means 'without changes', ".                                   // Exception message.
+            "if you want update to NULL use an ".
+            "empty string '' instead.", 
+             -1                                                                 // Exception code.
+        );
+    }
+    
+    $db_call = _core_security_get_action( $call );                              // Get role data.
+    is_empty_exception( ['db_call' => $db_call] );                              // Check is data isn't empty or NULL.
+    
+    $new_name = (                                                               // Check for a new name.
+        is_null( $name ) ?                                                      // If the new name is NULL, means no change.
+        $db_call['nombre'] :                                                    // If true old name keep.
+        ( 
+            $name === '' ?                                                      // Check if the new name is NULL.
+            NULL :                                                              // If new name is an empty string, the new name is NULL.
+            $name                                                               // If new name is a non empty string, $new_name = $name.
+        )                                         
+    );
+    
+    $new_description = (                                                        // Check for a new name.
+        is_null( $description ) ?                                               // If the new name is NULL, means no change.
+        $db_call['descripcion'] :                                               // If true old name keep.
+        ( 
+            $description === '' ?                                               // Check if the new name is NULL
+            NULL :                                                              // If new name is an empty string, the new name is NULL.
+            $description                                                        // If new name is a non empty string, $new_name = $name
+        )                                         
+    );
+    
+    $new_log = (                                                                // Check for a new log configuration.
+        is_null( $log ) ?                                                       // If the new log is NULL, means no change.
+        $db_call['registra_log'] :                                              // If true old name keep
+        ($new_log ? 1 : 0 )                                                     // Explicit conversion.
+    );
+    
+    global $DB_PREFIX;                                                          // Moodle prefix. Ex. mdl_
+    $manager = get_db_manager();                                                // Security core database manager.
+    $tablename = $DB_PREFIX . "talentospilos_acciones";                         // Moodle tablename with Moodle prefix. Ex. mdl_talentospilos_usuario
+    $params = [ $db_call['id'], $new_name, $new_description, $new_log ];        // [0] Action id. [1] New action name. [2] New action description. [3] New log configuration.
+            
+    $query = "UPDATE $tablename " .                                             // Query to update a given action in the Database. See $param var.
+        "SET nombre = $2, " .                                                   // New name.
+        "   descripcion = $3 ".                                                 // New description.
+        "   registra_log = $4 ".                                                // New log configuration.
         "WHERE  ".
         "    id = $1 AND eliminado = 0";                                        // Criteria.
             
