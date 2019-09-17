@@ -40,16 +40,16 @@ if(isset($input->func) && isset($input->params)) {
 
         /**
          * [0] => id_ases: string
-         * [1] => tab_to_load: string
+         * [1] => tab_name: string
          */
         if(count($input->params) == 2) {
 
             $id_ases = $input->params[0];
-            $tab_to_load = $input->params[1];
+            $tab_name = $input->params[1];
 
             if(is_string($id_ases)) {
 
-                switch($tab_to_load){
+                switch($tab_name){
                     case 'socioed':
                         $result = student_profile_load_socioed_tab($id_ases);
                         break;
