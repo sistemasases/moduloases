@@ -1081,6 +1081,10 @@ function secure_assign_call_to_role( $call, $role )
  * @see _core_security_check_action_role( ... ) in checker.php
  * @see get_db_manager( ... ) in query_manager
  * 
+ * @param integer|string $call Action(call) ID or alias.
+ * @param integer|string $role Role ID or alias.
+ * @param integer $exec_by User ID that remove the tuple.
+ * 
  * @throws Exception If the tuple role-action(call) doesn't exist.
  * 
  * @return mixed Query manager return of execute the update query.
