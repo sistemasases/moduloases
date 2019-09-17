@@ -62,6 +62,7 @@ define([
             var tfoot_total_active_title_prefix = 'Total activos';
             var tfoot_total_inactive_title_prefix = 'Total inactivos';
             var tfoot_total_graduated_students_prefix = 'Total Egresados';
+            var tfoot_total_students_prefix = 'Total Estudiantes';
             var known_columns = [CODIGO_COLUMN, NOMBRE_COLUMN, NUM_DOC_COLUMN];
             /** go to ficha general on click **/
             $(document).on('click', '#tableActiveSemesters tbody tr td', function () {
@@ -95,6 +96,19 @@ define([
                 return PercentageResumeReport;
             }());
 
+            var PercentageGradReport = (function () {
+                function PercentageGradReport(resume_report /* instance of ResumeReport */, semesters /* Array of strings */) {
+                    var total_students = resume_report.total_students;
+                    semesters.forEach(semester => {
+                            var student_grad = resume_report.semesters[semester][1];
+                            this[semester] = student_grad * 100 / total_students;
+                        }
+
+                    );
+                };
+                return PercentageGradReport;
+            }());
+
             var ResumeReport = (function () {
                 /**
                  * Constructor
@@ -115,9 +129,9 @@ define([
 
                    data.forEach( (item) => {
                        semesters.forEach( semester => {
-                           if(item[semester] === 'SI') {
+                           if(item[semester].includes('SI')) {
                                this.semesters[semester][0]++;
-                           }else if (item[semester] === 'EGRESADO'){
+                           }else if (item[semester].includes('EGRESADO')){
                                this.semesters[semester][1]++;
                            }
                        }) ;
@@ -152,13 +166,15 @@ define([
                 /* All the cells of tfoot should have no text at start*/
                 $('#tableActiveSemesters tfoot th').html('');
                 /* Add the first cell of tfoot title */
-                $('#tableActiveSemesters tfoot tr.total_active th')[0].textContent= tfoot_total_active_title_prefix + ' ' + cohort_id;
-                $('#tableActiveSemesters tfoot tr.total_inactive th')[0].textContent = tfoot_total_inactive_title_prefix + ' ' + cohort_id;
-                $('#tableActiveSemesters tfoot tr.total_grads th')[0].textContent = tfoot_total_graduated_students_prefix + ' ' + cohort_id;
+                $('#tableActiveSemesters tfoot tr.total_students th')[1].textContent = tfoot_total_students_prefix + ' ' + cohort_id;
+                $('#tableActiveSemesters tfoot tr.total_active th')[1].textContent= tfoot_total_active_title_prefix + ' ' + cohort_id;
+                $('#tableActiveSemesters tfoot tr.total_inactive th')[1].textContent = tfoot_total_inactive_title_prefix + ' ' + cohort_id;
+                $('#tableActiveSemesters tfoot tr.total_grads th')[1].textContent = tfoot_total_graduated_students_prefix + ' ' + cohort_id;
                 /* Add the total active students in each semester at tfoot */
                 semesters.forEach(function(semester) {
                     //console.log(resume_report.semesters[semester][1]);
                     //console.log(semester);
+                    $('#tableActiveSemesters tfoot tr.total_students th.'+semester).html(resume_report.total_students); //graduated students
                     $('#tableActiveSemesters tfoot tr.total_active th.'+semester).html(resume_report.semesters[semester][0]); //active students
                     $('#tableActiveSemesters tfoot tr.total_inactive th.'+semester).html(resume_report.total_students - (resume_report.semesters[semester][0] + resume_report.semesters[semester][1])); //inactive students
                     $('#tableActiveSemesters tfoot tr.total_grads th.'+semester).html(resume_report.semesters[semester][1]); //graduated students
@@ -166,6 +182,7 @@ define([
             }
             var resume_report /* ResumeReport */ = null; // null initialized for now
             var percentage_resume_report /* PercentageResumeReport */ = null; // null initialized for now
+            var percentage_grad_report /* PercentageGradReport */ = null; // null initialized for now
 
             /**
              * Validate the given columns with a known columns
@@ -184,10 +201,12 @@ define([
                    $(this).attr('href', graph_image_url);
                 });
             }
-            function init_graph(semesters, percentage_resume_report, callback /*PercentageResumeReport*/) {
+            function init_graph(semesters, percentage_resume_report, percentage_grad_report, callback /*PercentageResumeReport*/) {
                 var data = [];
+                var grads = [];
                 semesters.forEach(semester => {
                    data.push(percentage_resume_report[semester]);
+                   grads.push(percentage_grad_report[semester]);
                 });
                 var config = {
                     type: 'line',
@@ -198,6 +217,13 @@ define([
                             backgroundColor: 'red',
                             borderColor: 'red',
                             data: data,
+                            fill: false,
+                        },
+                            {
+                            label: 'Porcentaje de estudiantes graduados durante el periodo',
+                            backgroundColor: 'blue',
+                            borderColor: 'blue',
+                            data: grads,
                             fill: false,
                         }]
                     },
@@ -266,42 +292,51 @@ define([
                         var dataTable = dataFromApi.dataTable;
                         $('#download_percentage_desertion').css("display", "inline"); //Show the hidden download button
                         semesters = dataFromApi.semesters;
-                        var column_names = dataTable.columns.map( column => column.name );
+                        var columns = dataTable.columns;
+                        var column_names = columns.map( column => column.name );
                         var total_students = dataTable.data.length;
                         console.log(semesters);
                         resume_report = new ResumeReport(semesters, total_students);
                         resume_report.init_from_data(dataTable.data, semesters);
                         percentage_resume_report = new PercentageResumeReport(resume_report, semesters);
+                        percentage_grad_report = new PercentageGradReport(resume_report, semesters);
 
                         /*Init graph*/
-                        init_graph(semesters, percentage_resume_report, init_download_percentage_desertion_element);
+                        init_graph(semesters, percentage_resume_report, percentage_grad_report, init_download_percentage_desertion_element);
                         /* Put a class to each cell than have the 'SI' value, see
                         * https://datatables.net/reference/option/rowCallback */
                         dataTable.rowCallback =  function(row, data, index) {
                             $(semesters).each(
                                 function (index_, value) {
-                                    if (data[value] === "SI") {
+                                    if (data[value].includes('SI')) {
                                         $("td." + value , row).addClass("active_semester");
-                                    }else if (data[value] === "EGRESADO"){
+                                    }else if (data[value].includes('EGRESADO')){
                                         $("td." + value , row).addClass("graduated_student");
                                     }
                                 }
                             );
                         };
+
                         dataTable.initComplete = function () {
+                            $("th:contains('20')").each(
+                                function(){
+                                    $(this).addClass("Semestre");
+                                }
+                            );
                             /*Add filter to column headers*/
                             var column_names = dataTable.columns.map(column => column.name ? column.name : null);
                             /* Indexes of the semester columns */
                             /*Filter columns*/
                             var filter_column_names = semesters;
-                            filter_column_names.push('cambio_carrera');
+                            filter_column_names.push('num_carreras');
+                            console.log(semesters);
                             var filter_column_indexes = get_filter_column_indexes(filter_column_names, column_names);
                             this.api().columns(filter_column_indexes).every(function () {
                                 var column = this;
 
 
                                 var select = $('<select><option value=""></option></select>')
-                                    .appendTo($(column.header()))
+                                    //.appendTo($(column.header()))
                                     .on('change', function () {
                                         var val = $.fn.dataTable.util.escapeRegex(
                                             $(this).val()
@@ -327,6 +362,9 @@ define([
                         table = $("#tableActiveSemesters").DataTable(
                             dataTable
                         );
+                        $("#tableActiveSemesters").append(
+                            $('<tfoot/>').append( $("#tableActiveSemesters thead tr").clone().addClass('total_students') )//total students
+                        );
                         /*Append a t foot with a clone of thead for the totals*/
                         $("#tableActiveSemesters").append(
                             $('<tfoot/>').append( $("#tableActiveSemesters thead tr").clone().addClass('total_active') ) //total active
@@ -335,7 +373,7 @@ define([
                             $('<tfoot/>').append( $("#tableActiveSemesters thead tr").clone().addClass('total_inactive') )//total inactive
                         );
                         $("#tableActiveSemesters").append(
-                            $('<tfoot/>').append( $("#tableActiveSemesters thead tr").clone().addClass('total_grads') )//total inactive
+                            $('<tfoot/>').append( $("#tableActiveSemesters thead tr").clone().addClass('total_grads') )//total graduated_students
                         );
 
                         /* Init resume in tfoot*/
