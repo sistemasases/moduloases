@@ -81,4 +81,9 @@ $singularizations = array(
     secure_remove_role( "profesional_ps", 73380 )
 );*/
 
+
+//print_r( core_secure_create_call( "create_user", "back", $name = "Create a new user.", $description = "--", $log = 1 ) );
+
+//print_r(secure_assign_call_to_role( "create_user", "profesional_ps" ) );
+
 ?>
