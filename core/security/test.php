@@ -88,4 +88,6 @@ $singularizations = array(
 
 //print_r( core_secure_remove_call_role( "create_user", "profesional_ps", 73380 ) );
 
+//print_r(secure_update_role( "profesional_ps", 's', 'NULLs' ));
+
 ?>
