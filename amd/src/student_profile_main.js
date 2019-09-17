@@ -156,7 +156,7 @@ define(['jquery',
                 self.update_status_program(current_status, $(this));
             });
 
-            $('#icetex_status').on('click',{previous_status: $('#icetex_status option:selected').text()}, manage_icetex_status);
+            $('#icetex_status').on('click',{ previous_status: $('#icetex_status option:selected').text() }, manage_icetex_status);
 
             $('#icon-tracking').on('click', function () { self.update_status_ases(parameters); });
 
@@ -472,6 +472,9 @@ define(['jquery',
                                 });
                             });
                         } else if (new_status == 'seguimiento') {
+                            var data = [current_status, new_status,
+                                parameters_url.instanceid, parameters_url.student_code];
+                            console.log(data);
                             $.ajax({
                                 type: "POST",
                                 data: JSON.stringify({
@@ -547,19 +550,22 @@ define(['jquery',
 
                                 $.ajax({
                                     type: "POST",
-                                    data: {
-                                        func: 'update_tracking_status',
-                                        id_ases_student: id_ases_student,
-                                        id_academic_program: id_academic_program
-                                    },
-                                    url: "../managers/student_profile/studentprofile_serverproc.php",
+                                    data: JSON.stringify({
+                                        "func": 'update_tracking_status',
+                                        "params": [id_ases_student, id_academic_program]
+                                    }),
+                                    url: "../managers/student_profile/studentprofile_api.php",
                                     success: function (msg) {
                                         setTimeout(function () {
-                                            swal(
-                                                msg.title,
-                                                msg.msg,
-                                                msg.status
-                                            );
+                                            if(msg.status_code == 0 || msg.status_code == -9) {
+                                                swal(
+                                                    msg.title,
+                                                    msg.message,
+                                                    msg.type
+                                                );
+                                            } else {
+                                                console.log(msg);
+                                            }
                                         }, 100);
                                     },
                                     dataType: "json",
@@ -2029,7 +2035,9 @@ define(['jquery',
 
                 var result = JSON.parse(msg);
 
-                if (result == "1") {
+                console.log(result);
+
+                if (result == 1) {
                     var parameters = get_url_parameters(document.location.search);
                     var full_url = String(document.location);
                     var url = full_url.split("?");

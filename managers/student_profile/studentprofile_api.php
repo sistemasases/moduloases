@@ -225,7 +225,7 @@ if(isset($input->func) && isset($input->params)) {
         } else {
             return_with_code(-6);
         }
-    } else if($function = 'update_ases_status_on_traking') {
+    } else if($function == 'update_ases_status_on_traking') {
 
         /**
          * [0] => current_status: string
@@ -263,7 +263,7 @@ if(isset($input->func) && isset($input->params)) {
                 return_with_code(-2);
             }
         } else {
-            return_with_code(-6);
+            return_with_code(-6, $params);
         }
     } else if($function == 'is_student'){
 
@@ -287,10 +287,41 @@ if(isset($input->func) && isset($input->params)) {
         } else {
             return_with_code(-6);
         }
-    } else if($function == 'send_email'){
-
     } else if($function == 'update_tracking_status'){
 
+        /**
+         * [0] => id_ases_student: string
+         * [1] => id_academic_program: string
+         */
+        $params = $input->params;
+
+        if(count($params) == 2){
+
+            $id_ases_student = $params[0];
+            $id_academic_program = $params[1];
+
+            if(is_string($id_ases_student) && is_string($id_academic_program)) {
+
+                $result = update_tracking_status($id_ases_student, $id_academic_program);
+
+                if($result){
+                    echo json_encode(
+                        array(
+                            "status_code" => 0,
+                            "title" => "Éxito",
+                            "message" => "El campo se ha actualizado con éxito",
+                            "type" => "success"
+                        )
+                    );
+                } else {
+                    return_with_code(-9);
+                }
+            } else {
+                return_with_code(-2);
+            }
+        } else {
+            return_with_code(-6);
+        }
     } else if($function == 'update_user_image'){
 
         /**
@@ -325,10 +356,10 @@ if(isset($input->func) && isset($input->params)) {
 /**
  * @method return_with_code
  * Returns a message with the code of the error.
- * reserved codes: -1, -2, -3, -4, -5, -6, -7, -99.
+ * reserved codes: -1, -2, -3, -4, -5, -6, -7, -8, -9 -99.
  * @param $code
  */
-function return_with_code($code){
+function return_with_code($code, $params=null){
 
     switch( $code ){
 
@@ -387,7 +418,7 @@ function return_with_code($code){
                 array(
                     "status_code" => $code,
                     "error_message" => "Wrong quantity of parameters in input.",
-                    "data_response" => ""
+                    "data_response" => $params
                 )
             );
             break;
@@ -408,6 +439,18 @@ function return_with_code($code){
                     "status_code" => $code,
                     "error_message" => "Todos los campos son obligatorios",
                     "data_response" => ""
+                )
+            );
+            break;
+
+        case -9:
+            echo json_encode(
+                array(
+                    "status_code" => $code,
+                    "message" => "Error al actualizar el campo",
+                    "data_response" => "",
+                    "type" => "error",
+                    "title" => "Error"
                 )
             );
             break;
