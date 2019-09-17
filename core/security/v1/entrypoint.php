@@ -1067,6 +1067,51 @@ function secure_assign_call_to_role( $call, $role )
         
     throw new Exception( "Assignment already exists", -1 );                     // Exception if already assigned.
     
+}
+
+/**
+ * Function that remove a tuple role-action(call)
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see _core_security_get_role( ... ) in gets.php
+ * @see _core_security_get_action( ... ) in gets.php
+ * @see is_empty_exception( ... ) in general_functions.php
+ * @see _core_security_check_action_role( ... ) in checker.php
+ * @see get_db_manager( ... ) in query_manager
+ * 
+ * @throws Exception If the tuple role-action(call) doesn't exist.
+ * 
+ * @return mixed Query manager return of execute the update query.
+ */
+function secure_remove_call_role( $call, $role, int $exec_by )
+{
+    $obj_role = _core_security_get_role( $role );                               // Get role data from database
+    $obj_action = _core_security_get_action( $call );                           // Get action (call) data from database.
+                               
+    is_empty_exception( [ 'role' => $obj_role, 'action' => $obj_action ] );     // Check if role and action exist.
+    
+    if(_core_security_check_action_role($obj_role['id'], $obj_action['id']) ){
+        
+        global $DB_PREFIX;                                                      // Moodle prefix. Ex. mdl_
+        $manager = get_db_manager();                                            // Security core database manager.
+        $tablename = $DB_PREFIX . "talentospilos_roles_acciones";               // Moodle tablename with Moodle prefix. Ex. mdl_talentospilos_usuario
+        $params = [ $obj_role['id'], $obj_action['id'],  1, "now()", $exec_by ];// [0] Role id. [1] Action ID. [2] Status: 1 = Removed. [3] Time when it was removed. [4] User id that makes the acction
+            
+        $query = "UPDATE $tablename " .                                         // Query to remove in a logical way the record from the Database. See $param var.
+            "SET eliminado = $3, " .                                            // Existence status, 0 = exist, 1 = no exist. See $param var.
+            "   fecha_hora_eliminacion = $4, ".                                 // Time when was removed. See $param var.
+            "   id_usuario_eliminador = $5  ".                                  // User that remove. See $param var.
+            "WHERE  ".
+            "    id_rol = $1 AND id_accion = $2 AND eliminado = 0";             // Criteria.
+            
+        return $manager( $query, $params );      
+        
+    }else{
+        throw new Exception( "Tuple action(call)-role doesn't exist.", -1);
+    }
     
 }
+
 ?>
