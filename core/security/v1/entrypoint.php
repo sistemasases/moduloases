@@ -1199,7 +1199,7 @@ function secure_update_role( $role, string $name = NULL, string $description = N
  */
 function secure_update_action( $call, string $name = NULL, string $description = NULL, bool $log = NULL ){
     
-    if(is_null( $name ) && is_null( $description ) ){                           // Throw an exception if no changes.
+    if(is_null( $name ) && is_null( $description ) && is_null($log) ){                           // Throw an exception if no changes.
         throw new Exception( 
             "NULL means 'without changes', ".                                   // Exception message.
             "if you want update to NULL use an ".
@@ -1244,7 +1244,7 @@ function secure_update_action( $call, string $name = NULL, string $description =
             
     $query = "UPDATE $tablename " .                                             // Query to update a given action in the Database. See $param var.
         "SET nombre = $2, " .                                                   // New name.
-        "   descripcion = $3 ".                                                 // New description.
+        "   descripcion = $3, ".                                                 // New description.
         "   registra_log = $4 ".                                                // New log configuration.
         "WHERE  ".
         "    id = $1 AND eliminado = 0";                                        // Criteria.
