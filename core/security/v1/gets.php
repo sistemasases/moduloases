@@ -437,6 +437,8 @@ function _core_security_get_historical_role_assignation( $role ){
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
  * 
+ * @see get_db_records( ... ) in query_manager.php
+ * 
  * @param integer $role_id Role ID.
  * @param integer $action_id Action ID.
  * 
