@@ -93,7 +93,7 @@ function get_active_semesters_db($id_instance, $ases_cohort_id) {
            lastname,
            mdl_talentospilos_semestre.nombre as mdl_talentospilos_semestre_nombre,
            program_status,
-           id_programa as programa
+           cod_univalle as programa
     from mdl_talentospilos_history_academ
         inner join mdl_talentospilos_semestre
           on mdl_talentospilos_semestre.id = mdl_talentospilos_history_academ.id_semestre
@@ -109,6 +109,8 @@ function get_active_semesters_db($id_instance, $ases_cohort_id) {
           on mdl_cohort_members.cohortid = mdl_talentospilos_inst_cohorte.id_cohorte
         inner join mdl_cohort
           on mdl_cohort.id = mdl_talentospilos_inst_cohorte.id_cohorte
+        inner join mdl_talentospilos_programa
+          on mdl_talentospilos_history_academ.id_programa = mdl_talentospilos_programa.id
          where mdl_talentospilos_inst_cohorte.id_instancia = $id_instance
         $cohort_sql_conditions
     order by codigo desc
@@ -145,6 +147,9 @@ mdl_talentospilos_inst_cohorte
 mdl_cohort
     | id | contextid | name | idnumber | description | descriptionformat | component | timecreated | timemodified | visible | theme |
 
+mdl_talentospilos_programa
+    | id | codigosnies | cod_univalle | nombre | id_sede | jornada | id_facultad
+
  */
 
 class ActiveSemestersReportField {
@@ -155,13 +160,12 @@ class ActiveSemestersReportField {
     public $ases_user_id;
     public $num_carreras;
     public $egresado;
-    public $carreras;
 /**
  * @var array $semestres_activos Array of string than identify the active semesters of a student
  *  Example: ['2016A', '2016B' ...]
  */
-    public $semestres_activos;
-    public function __construct($codigo, $nombre, $talentos_usuario_id, $num_doc, $ases_user_id, $egresado, $num_carreras = false, $programa, $semestres_activos = array())
+    public $semestres_activos = array();
+    public function __construct($codigo, $nombre, $talentos_usuario_id, $num_doc, $ases_user_id, $egresado, $num_carreras = false)
     {
         $this->codigo = $codigo;
         $this->talentos_usuario_id = $talentos_usuario_id;
@@ -169,15 +173,13 @@ class ActiveSemestersReportField {
         $this->ases_user_id = $ases_user_id;
         $this->num_carreras = $num_carreras;
         $this->num_doc = $num_doc;
-        $this->semestres_activos = $semestres_activos;
         $this->egresado = $egresado;
-        $this->programa = $programa;
     }
 
 
     /**
      * Add active semester to current report
-     * @param string $active_semester
+     * @param array $active_semester
      */
     public function add_active_semester($active_semester) {
         if(false === array_search($active_semester, $this->semestres_activos)){
@@ -193,11 +195,26 @@ class ActiveSemestersReportField {
     }
 
     public function have_active_semester($semester): bool {
-       if(array_search($semester, $this->semestres_activos) === false) {
-           return false;
+       foreach($this->semestres_activos as $semestre){
+           if($semester === $semestre[0]) {
+               return true;
+           }
        }
-       return true;
 
+       return false;
+
+    }
+
+    public function list_active_careers($semester): string{
+        $lista = '';
+        foreach($this->semestres_activos as $semestre){
+            if($semester === $semestre[0]) {
+                $lista.='SI - ';
+                $lista.=$semestre[1];
+                $lista.='<br>';
+            }
+        }
+        return $lista;
     }
 
 }
@@ -228,6 +245,7 @@ function get_active_semesters($id_instance, $cohort_id, $include_current_semeste
         $ases_user_id = $students_with_active_semester->mdl_talentospilos_usuario_id;
         $egresado = $students_with_active_semester->egresado;
         $programa = $students_with_active_semester->programa;
+        $semestre = array($nombre_semestre, $programa);
 
         if(!$include_current_semester && $nombre_semestre === $current_semester_name) {
             continue;
@@ -236,7 +254,7 @@ function get_active_semesters($id_instance, $cohort_id, $include_current_semeste
 
             if( !($cancel_semester === $semester_is_canceled)) {
                 /** @var  $active_semesters_report_fields[$talentos_usuario_id] ActiveSemestersReportField*/
-                $active_semesters_report_fields[$talentos_usuario_id]->add_active_semester($nombre_semestre);
+                $active_semesters_report_fields[$talentos_usuario_id]->add_active_semester($semestre);
                 /* If the current registry have other code and have active tracking status the code is updated  */
 
             }
@@ -244,9 +262,9 @@ function get_active_semesters($id_instance, $cohort_id, $include_current_semeste
 
         } else {
             $nombre = $students_with_active_semester->firstname . ' ' . $students_with_active_semester->lastname;
-            $active_semesters_report_field = new ActiveSemestersReportField($codigo, $nombre, $talentos_usuario_id,  $num_doc, $ases_user_id, $egresado, $num_carreras, $programa);
+            $active_semesters_report_field = new ActiveSemestersReportField($codigo, $nombre, $talentos_usuario_id,  $num_doc, $ases_user_id, $egresado, $num_carreras);
             if( !($cancel_semester === $semester_is_canceled)) {
-                $active_semesters_report_field->add_active_semester($nombre_semestre);
+                $active_semesters_report_field->add_active_semester($semestre);
             }
             $active_semesters_report_fields[$talentos_usuario_id]  = $active_semesters_report_field;
         }
