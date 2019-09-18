@@ -68,7 +68,7 @@ $PAGE->set_title($pagetitle);
 
 echo $output->header();
 $data = new stdClass();
-$data->cohorts_select = \cohort_lib\get_html_cohorts_select($blockid, false, 'cohorts', 'cohorts');
+$data->cohorts_select = \cohort_lib\get_html_cohorts_select($blockid, true, 'cohorts', 'cohorts');
 
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 $data->menu = $menu_option;

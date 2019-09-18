@@ -109,6 +109,19 @@ define([
                 return PercentageGradReport;
             }());
 
+            var PercentageActiveReport = (function () {
+                function PercentageActiveReport(resume_report /* instance of ResumeReport */, semesters /* Array of strings */) {
+                    var total_students = resume_report.total_students;
+                    semesters.forEach(semester => {
+                            var student_active = resume_report.semesters[semester][0];
+                            this[semester] = student_active * 100 / total_students;
+                        }
+
+                    );
+                };
+                return PercentageActiveReport;
+            }());
+
             var ResumeReport = (function () {
                 /**
                  * Constructor
@@ -183,6 +196,7 @@ define([
             var resume_report /* ResumeReport */ = null; // null initialized for now
             var percentage_resume_report /* PercentageResumeReport */ = null; // null initialized for now
             var percentage_grad_report /* PercentageGradReport */ = null; // null initialized for now
+            var percentage_active_report /* PercentageGradReport */ = null; // null initialized for now
 
             /**
              * Validate the given columns with a known columns
@@ -201,18 +215,27 @@ define([
                    $(this).attr('href', graph_image_url);
                 });
             }
-            function init_graph(semesters, percentage_resume_report, percentage_grad_report, callback /*PercentageResumeReport*/) {
+            function init_graph(semesters, percentage_resume_report, percentage_grad_report, percentage_active_report, callback /*PercentageResumeReport*/) {
                 var data = [];
                 var grads = [];
+                var active = [];
                 semesters.forEach(semester => {
                    data.push(percentage_resume_report[semester]);
                    grads.push(percentage_grad_report[semester]);
+                   active.push(percentage_active_report[semester]);
                 });
                 var config = {
                     type: 'line',
                     data: {
                         labels: semesters,
                         datasets: [{
+                            label: 'Porcentaje de estudiantes activos durante el periodo',
+                            backgroundColor: 'green',
+                            borderColor: 'green',
+                            data: active,
+                            fill: false,
+                        },
+                            {
                             label: 'Porcentaje de estudiantes inactivos durante el periodo',
                             backgroundColor: 'red',
                             borderColor: 'red',
@@ -300,9 +323,10 @@ define([
                         resume_report.init_from_data(dataTable.data, semesters);
                         percentage_resume_report = new PercentageResumeReport(resume_report, semesters);
                         percentage_grad_report = new PercentageGradReport(resume_report, semesters);
+                        percentage_active_report = new PercentageActiveReport(resume_report, semesters);
 
                         /*Init graph*/
-                        init_graph(semesters, percentage_resume_report, percentage_grad_report, init_download_percentage_desertion_element);
+                        init_graph(semesters, percentage_resume_report, percentage_grad_report, percentage_active_report, init_download_percentage_desertion_element);
                         /* Put a class to each cell than have the 'SI' value, see
                         * https://datatables.net/reference/option/rowCallback */
                         dataTable.rowCallback =  function(row, data, index) {

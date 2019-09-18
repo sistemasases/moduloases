@@ -76,9 +76,27 @@ function _get_semesters_names_after_cohort($id_instance, $ases_cohort_id, $inclu
  */
 function _student_and_active_semesters_to_row($semester_names, $student_and_active_semesters) {
     $row = array();
-    foreach ($semester_names as $semester_name) {
-        $row[$semester_name] = $student_and_active_semesters->have_active_semester($semester_name)? $student_and_active_semesters->list_active_careers($semester_name) : $student_and_active_semesters->egresado;
+
+    $index = count($semester_names);
+
+    $stop_egresado = false;
+
+    while($index) {
+        $index--;
+        $current = $index;
+        if($student_and_active_semesters->have_active_semester($semester_names[$current])){
+            $row[$semester_names[$current]] = $student_and_active_semesters->list_active_careers($semester_names[$current]);
+            $stop_egresado = true;
+        }else if(!$stop_egresado){
+            $row[$semester_names[$current]] = $student_and_active_semesters->egresado;
+        }else {
+            $row[$semester_names[$current]] = 'NO';
+        }
     }
+
+/*    foreach ($semester_names as $semester_name) {
+        $row[$semester_name] = $student_and_active_semesters->have_active_semester($semester_name)? $student_and_active_semesters->list_active_careers($semester_name) : $student_and_active_semesters->egresado;
+    }*/
     $row['num_doc'] = $student_and_active_semesters->num_doc;
     $row['nombre'] = $student_and_active_semesters->nombre;
     $row['codigo'] = $student_and_active_semesters->codigo;
