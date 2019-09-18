@@ -53,7 +53,7 @@ define(['jquery',
             /**
              * Event that loads asynchronously the socio-educational tab
              */
-            $("#socioed_li").on('click', {tab_name: 'socioed'}, load_tabs);
+            //$("#socioed_li").on('click', {tab_name: 'socioed'}, load_tabs);
 
             /**
              * Event that loads asynchronously the academic tab
