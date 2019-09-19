@@ -1118,6 +1118,7 @@ function secure_remove_call_role( $call, $role, int $exec_by )
     
 }
 
+
 /**
  * Function that update name or description from a role. You cannot update the role father or alias.
  * 
@@ -1181,6 +1182,7 @@ function secure_update_role( $role, string $name = NULL, string $description = N
     return $manager( $query, $params );  
     
 }
+
 
 /**
  * Function that update name or description from an action. You cannot update the action alias.

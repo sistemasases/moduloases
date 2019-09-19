@@ -311,4 +311,43 @@ function core_secure_remove_call_role( $call, $role, int $exec_by ){
     return secure_remove_call_role( $call, $role, $exec_by );
 }
 
+
+/**
+ * Interface to core_secure_update_role
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ *
+ * @see  secure_update_role( ... ) in entrypoint.php
+ * 
+ * @param mixed $role Role ID or alias.
+ * @param string $name New name. Use NULL if you won't update this value, or '' if you want update this value to NULL.
+ * @param string $description Use NULL if you won't update this value, or '' if you want update this value to NULL.
+ *  
+ * @return mixed Result of query manager.
+ */
+function core_secure_update_role( $role, string $name = NULL, string $description = NULL ){
+    return secure_update_role( $role, $name, $description );
+}
+
+
+/**
+ * Interface to core_secure_update_action
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ *
+ * @see  secure_update_action( ... ) in entrypoint.php
+ * 
+ * @param mixed $call Action(call) ID or alias.
+ * @param string $name New name. Use NULL if you won't update this value, or '' if you want update this value to NULL.
+ * @param string $description Use NULL if you won't update this value, or '' if you want update this value to NULL.
+ * @param integer $log Use NULL if you won't update this value.
+ * 
+ * @return mixed Result of query manager.
+ */
+function core_secure_update_action( $call, string $name = NULL, string $description = NULL, bool $log = NULL ){
+    return secure_update_action( $call, $name, $description, $log );
+}
+
 ?>
