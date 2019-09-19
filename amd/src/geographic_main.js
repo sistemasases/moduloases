@@ -20,7 +20,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
             /**
              * Executes the method search_direction() by unfocusing the address text area.
              */
-            $("#geographic_direccion").focusout(function(){
+            $("#geographic_direccion").focusout(function() {
                 search_direction();
             });
 
@@ -32,6 +32,13 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 if (keycode == '13') {
                     search_direction();
                 }
+            });
+
+            /**
+             * Searches the location on the map if the city has been changed
+             */
+            $("#geographic_ciudad").on('change', function () {
+                search_direction();
             });
 
             $("#select_neighborhood").select2({
@@ -228,6 +235,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                                 swal(
                                     "Error",
                                     "Debe definir un nivel de riesgo antes de guardar",
+                                    "error");
+                            } else if (address.trim() == ""){
+                                swal(
+                                    "Error",
+                                    "Debe definir una dirección antes de guardar",
                                     "error");
                             } else {
 

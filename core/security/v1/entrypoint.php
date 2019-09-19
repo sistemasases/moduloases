@@ -1,8 +1,8 @@
 <?php 
 /**
- * @package		block_ases
+ * @package	block_ases
  * @subpackage	core.security
- * @author 		Jeison Cardona Gómez
+ * @author 	Jeison Cardona Gómez
  * @copyright 	(C) 2019 Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @license   	http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -540,7 +540,6 @@ function secure_create_role( $alias, $father_role = -1, $name = NULL, $descripti
  * 
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * 
- * @see get_db_records( ... ) in query_manager.php
  * @see _core_security_get_role( ... ) in gets.php
  * @see _core_security_get_user_rol( ... ) in gets.php
  * @see _core_security_get_previous_system_role( ... ) in gets.php
@@ -568,7 +567,7 @@ function secure_assign_role_to_user( $user_id, $role, $start_datetime = NULL, $e
         if( ($start_datetime >= $end_datetime) ){ return null; }
     }
 
-    $_user = get_db_records( "user", ['id'], [$user_id] );
+    $_user = get_db_records( "user", ['id' => $user_id] );
     $_role = _core_security_get_role( $role ); // Rol at the master system (Secutiry Core)
       
     if( $_user && $_role ){
@@ -700,7 +699,7 @@ function secure_assign_role_to_user_previous_system( $user_id, $role, $singulari
  * @since 1.0.0
  * 
  * @see core_periods_get_current_period( ... ) in core of periods.
- * @see _core_check_inherited_role( ... ) in checker.php
+ * @see _core_security_check_inherited_role( ... ) in checker.php
  * @see _core_security_get_user_rol( ... ) in gets.php
  * @see _core_user_assigned_in_previous_system( ... ) in gets.php
  * @see get_db_manager( ... ) in query_manager.php
@@ -729,7 +728,7 @@ function secure_remove_role_to_user( $user_id, $role, $start_datetime, $executed
         throw new Exception( "The user who executes must be provided.", -2 );
     }
     
-    if( is_null( get_db_records( "user", ["id"], [$executed_by] ) ) ){
+    if( is_null( get_db_records( "user", ["id" => $executed_by] ) ) ){
         throw new Exception( "The user who executes the action ('$executed_by') does not exist", -3 );
     }
     
@@ -737,7 +736,7 @@ function secure_remove_role_to_user( $user_id, $role, $start_datetime, $executed
         $singularizer['id_semestre'] = core_periods_get_current_period()->id;
     }
     
-    $inherited_role = _core_check_inherited_role($role);
+    $inherited_role = _core_security_check_inherited_role($role);
     
     $remove_master_system = false;
     $remove_previous_system = false;
@@ -909,11 +908,11 @@ function secure_update_role_to_user( $user_id, $role, $executed_by,
         $start_datetime = NULL, $end_datetime = NULL, $singularizer = NULL, $use_alternative_interval = false, $alternative_interval = NULL 
     ){
     
-     if( is_null( $executed_by ) ){
+    if( is_null( $executed_by ) ){
         throw new Exception( "The user who executes must be provided.", -2 );
     }
     
-    if( is_null( get_db_records( "user", ["id"], [$executed_by] ) ) ){
+    if( is_null( get_db_records( "user", ["id" => $executed_by] ) ) ){
         throw new Exception( "The user who executes the action ('$executed_by') does not exist", -3 );
     }
     
@@ -965,5 +964,293 @@ function secure_update_role_to_user( $user_id, $role, $executed_by,
     
 }
 
+/**
+ * Function that remove a given role by ID or alias.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see _core_security_check_inherited_roles( ... ) in checker.php
+ * @see _core_security_check_role_in_use( ... ) in checker.php
+ * @see _core_security_get_role( ... ) in gets.php
+ * @see get_db_manager( ... ) in query_manager.php
+ * 
+ * @param mixed $role mixed Role ID or alias.
+ * @param int $exceuted_by User that remove the role.
+ * 
+ * @throws Exception If the given role has inheritance.
+ * @throws Exception If the given role has at least one historical assignation.
+ * 
+ * @return integer Result of execute the update query.
+ */
+function secure_remove_role( $role, int $exceuted_by )
+{
+    $is_father = _core_security_check_inherited_roles( $role );                 // Check if the given role has inherited roles.
+    if( !$is_father ){
+        
+        if( _core_security_check_role_in_use( $role ) ){                        // Exception. If the given role has inheritance.
+            throw new Exception( 
+                "Cannot be removed a role with at least 
+                 one historical assignation.",
+                -1 
+            );      
+        }
+        
+        $db_role = _core_security_get_role( $role );                            // Get role data.
+        
+        global $DB_PREFIX;                                                      // Moodle prefix. Ex. mdl_
+        $manager = get_db_manager();                                            // Security core database manager.
+        $tablename = $DB_PREFIX . "talentospilos_roles";                        // Moodle tablename with Moodle prefix. Ex. mdl_talentospilos_usuario
+        $params = [ $db_role['id'],  1, "now()", $exceuted_by ];                // [0] Role id. [1] Status: 1 = Removed. [2] Time when it was removed. [3] User id that makes the acction
+            
+        $query = "UPDATE $tablename " .                                          // Query to remove in a logical way the record from the Database. See $param var.
+            "SET eliminado = $2, " .                                            // Existence status, 0 = exist, 1 = no exist. See $param var.
+            "   fecha_hora_eliminacion = $3, ".                                 // Time when was removed. See $param var.
+            "   id_usuario_eliminador = $4  ".                                  // User that remove. See $param var.
+            "WHERE  ".
+            "    id = $1 AND eliminado = 0";                                    // Criteria.
+            
+        return $manager( $query, $params );                                     // Return of excute the query with Security core database manager.
+            
+    }else{
+        throw new Exception( "A role with inheritance cannot be removed.", -2 );// Exception. If the given role has inheritance.
+    }
+}
+
+/**
+ * Function that assign to a given role the permission over an action (Call).
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see _core_security_get_action( ... ) in gets.php
+ * @see _core_security_get_role( ... ) in gets.php
+ * @see is_empty_exception( ... ) in general_functions.php
+ * @see _core_security_get_role_actions( ... ) in gets.php
+ * @see get_db_manager( ... ) in query_manager.php
+ * 
+ * @param integer|string $call Action (call) ID or alias.
+ * @param integer|string $role Role ID or alias.
+ * 
+ * @throws Exception If the given call already was assigned.
+ * 
+ * @return integer Result of INSERT with query manager.
+ */
+function secure_assign_call_to_role( $call, $role )
+{
+    
+    $obj_action = _core_security_get_action( $call );                           // Get action (call) data from database.
+    $obj_role = _core_security_get_role( $role );                               // Get role data from database
+    is_empty_exception( [ 'action' => $obj_action , 'role' => $obj_role ] );    // Check if role and action exist.
+    
+    $actions_by_role = _core_security_get_role_actions( $obj_role['id'] );      // Get action assigned to a given role.
+    
+    $exist = false;                                                             // Assigment exist.
+    foreach ( $actions_by_role as &$action ){                                   // Check every acction if is equal to the new acction to assign.
+        if( $action['alias'] == $obj_action['alias'] ){                         // Check an action if is equal to the new acction to assign.
+            $exist = true;                                                      
+            break;
+        }
+    }
+    
+    if( !$exist ){                                                              // If doesn't exist the role-action tuple.
+        
+        global $DB_PREFIX;                                                      // Moodle prefix. Ex. mdl_
+        $tablename = $DB_PREFIX . "talentospilos_roles_acciones";               // Moodle tablename with prefix. Ex. mdl_talentospilos_usuarios.
+        $manager = get_db_manager();                                            // Get Security core database manager.
+        $params = [ $obj_role['id'], $obj_action['id'] ];                       // [0] Role ID. [1] Action (call) ID.
+        $query = "INSERT INTO $tablename (id_rol, id_accion) VALUES($1, $2)";   // Query to INSERT a new role-acction tuple.
+        
+        return $manager( $query, $params );                                     // Return the query execution.
+        
+    }
+        
+    throw new Exception( "Assignment already exists", -1 );                     // Exception if already assigned.
+    
+}
+
+/**
+ * Function that remove a tuple role-action(call)
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see _core_security_get_role( ... ) in gets.php
+ * @see _core_security_get_action( ... ) in gets.php
+ * @see is_empty_exception( ... ) in general_functions.php
+ * @see _core_security_check_action_role( ... ) in checker.php
+ * @see get_db_manager( ... ) in query_manager
+ * 
+ * @param integer|string $call Action(call) ID or alias.
+ * @param integer|string $role Role ID or alias.
+ * @param integer $exec_by User ID that remove the tuple.
+ * 
+ * @throws Exception If the tuple role-action(call) doesn't exist.
+ * 
+ * @return mixed Query manager return of execute the update query.
+ */
+function secure_remove_call_role( $call, $role, int $exec_by )
+{
+    $obj_role = _core_security_get_role( $role );                               // Get role data from database
+    $obj_action = _core_security_get_action( $call );                           // Get action (call) data from database.
+    
+    is_empty_exception( [ 'role' => $obj_role, 'action' => $obj_action ] );     // Check if role and action exist.
+    
+    if(_core_security_check_action_role($obj_role['id'], $obj_action['id']) ){
+        
+        global $DB_PREFIX;                                                      // Moodle prefix. Ex. mdl_
+        $manager = get_db_manager();                                            // Security core database manager.
+        $tablename = $DB_PREFIX . "talentospilos_roles_acciones";               // Moodle tablename with Moodle prefix. Ex. mdl_talentospilos_usuario
+        $params = [ $obj_role['id'], $obj_action['id'],  1, "now()", $exec_by ];// [0] Role id. [1] Action ID. [2] Status: 1 = Removed. [3] Time when it was removed. [4] User id that makes the acction
+            
+        $query = "UPDATE $tablename " .                                         // Query to remove in a logical way the record from the Database. See $param var.
+            "SET eliminado = $3, " .                                            // Existence status, 0 = exist, 1 = no exist. See $param var.
+            "   fecha_hora_eliminacion = $4, ".                                 // Time when was removed. See $param var.
+            "   id_usuario_eliminador = $5  ".                                  // User that remove. See $param var.
+            "WHERE  ".
+            "    id_rol = $1 AND id_accion = $2 AND eliminado = 0";             // Criteria.
+            
+        return $manager( $query, $params );      
+        
+    }else{
+        throw new Exception( "Tuple action(call)-role doesn't exist.", -1);
+    }
+    
+}
+
+/**
+ * Function that update name or description from a role. You cannot update the role father or alias.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param mixed $role Role ID or alias.
+ * @param string $name New name. Use NULL if you won't update this value, or '' if you want update this value to NULL.
+ * @param string $description Use NULL if you won't update this value, or '' if you want update this value to NULL.
+ * 
+ * @throws Exception If the name and description are both NULL. NULL means no change, use '' if you want update this value to NULL.
+ * 
+ * @return mixed Result of query manager.
+ */
+function secure_update_role( $role, string $name = NULL, string $description = NULL ){
+    
+    if(is_null( $name ) && is_null( $description ) ){                           // Throw an exception if no changes.
+        throw new Exception( 
+            "NULL means 'without changes', ".                                   // Exception message.
+            "if you want update to NULL use an ".
+            "empty string '' instead.", 
+             -1                                                                 // Exception code.
+        );
+    }
+    
+    $db_role = _core_security_get_role( $role );                                // Get role data.
+    is_empty_exception( ['db_role' => $db_role] );                              // Check is data isn't empty or NULL.
+    
+    $new_name = (                                                               // Check for a new name.
+        is_null( $name ) ?                                                      // If the new name is NULL, means no change.
+        $db_role['nombre'] :                                                    // If true old name keep.
+        ( 
+            $name === '' ?                                                      // Check if the new name is NULL.
+            NULL :                                                              // If new name is an empty string, the new name is NULL.
+            $name                                                               // If new name is a non empty string, $new_name = $name.
+        )                                         
+    );
+    
+    $new_description = (                                                        // Check for a new name.
+        is_null( $description ) ?                                               // If the new name is NULL, means no change.
+        $db_role['descripcion'] :                                               // If true old name keep.
+        ( 
+            $description === '' ?                                               // Check if the new name is NULL.
+            NULL :                                                              // If new name is an empty string, the new name is NULL.
+            $description                                                        // If new name is a non empty string, $new_name = $name.
+        )                                         
+    );
+    
+    
+    global $DB_PREFIX;                                                          // Moodle prefix. Ex. mdl_
+    $manager = get_db_manager();                                                // Security core database manager.
+    $tablename = $DB_PREFIX . "talentospilos_roles";                            // Moodle tablename with Moodle prefix. Ex. mdl_talentospilos_usuario
+    $params = [ $db_role['id'], $new_name, $new_description ];                  // [0] Role id. [1] New role name. [2] New role description.
+            
+    $query = "UPDATE $tablename " .                                             // Query to update a given role in the Database. See $param var.
+        "SET nombre = $2, " .                                                   // New name.
+        "   descripcion = $3 ".                                                 // New description.
+        "WHERE  ".
+        "    id = $1 AND eliminado = 0";                                        // Criteria.
+            
+    return $manager( $query, $params );  
+    
+}
+
+/**
+ * Function that update name or description from an action. You cannot update the action alias.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param mixed $call Action(call) ID or alias.
+ * @param string $name New name. Use NULL if you won't update this value, or '' if you want update this value to NULL.
+ * @param string $description Use NULL if you won't update this value, or '' if you want update this value to NULL.
+ * @param integer $log Use NULL if you won't update this value.
+ * 
+ * @throws Exception If the name and description are both NULL. NULL means no change, use '' if you want update this value to NULL.
+ * 
+ * @return mixed Result of query manager.
+ */
+function secure_update_action( $call, string $name = NULL, string $description = NULL, bool $log = NULL ){
+    
+    if(is_null( $name ) && is_null( $description ) && is_null($log) ){                           // Throw an exception if no changes.
+        throw new Exception( 
+            "NULL means 'without changes', ".                                   // Exception message.
+            "if you want update to NULL use an ".
+            "empty string '' instead.", 
+             -1                                                                 // Exception code.
+        );
+    }
+    
+    $db_call = _core_security_get_action( $call );                              // Get role data.
+    is_empty_exception( ['db_call' => $db_call] );                              // Check is data isn't empty or NULL.
+    
+    $new_name = (                                                               // Check for a new name.
+        is_null( $name ) ?                                                      // If the new name is NULL, means no change.
+        $db_call['nombre'] :                                                    // If true old name keep.
+        ( 
+            $name === '' ?                                                      // Check if the new name is NULL.
+            NULL :                                                              // If new name is an empty string, the new name is NULL.
+            $name                                                               // If new name is a non empty string, $new_name = $name.
+        )                                         
+    );
+    
+    $new_description = (                                                        // Check for a new name.
+        is_null( $description ) ?                                               // If the new name is NULL, means no change.
+        $db_call['descripcion'] :                                               // If true old name keep.
+        ( 
+            $description === '' ?                                               // Check if the new name is NULL
+            NULL :                                                              // If new name is an empty string, the new name is NULL.
+            $description                                                        // If new name is a non empty string, $new_name = $name
+        )                                         
+    );
+    
+    $new_log = (                                                                // Check for a new log configuration.
+        is_null( $log ) ?                                                       // If the new log is NULL, means no change.
+        $db_call['registra_log'] :                                              // If true old name keep
+        ($new_log ? 1 : 0 )                                                     // Explicit conversion.
+    );
+    
+    global $DB_PREFIX;                                                          // Moodle prefix. Ex. mdl_
+    $manager = get_db_manager();                                                // Security core database manager.
+    $tablename = $DB_PREFIX . "talentospilos_acciones";                         // Moodle tablename with Moodle prefix. Ex. mdl_talentospilos_usuario
+    $params = [ $db_call['id'], $new_name, $new_description, $new_log ];        // [0] Action id. [1] New action name. [2] New action description. [3] New log configuration.
+            
+    $query = "UPDATE $tablename " .                                             // Query to update a given action in the Database. See $param var.
+        "SET nombre = $2, " .                                                   // New name.
+        "   descripcion = $3, ".                                                 // New description.
+        "   registra_log = $4 ".                                                // New log configuration.
+        "WHERE  ".
+        "    id = $1 AND eliminado = 0";                                        // Criteria.
+            
+    return $manager( $query, $params );  
+    
+}
 
 ?>

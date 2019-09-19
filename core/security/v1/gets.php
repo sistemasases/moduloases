@@ -372,4 +372,84 @@ function _core_user_assigned_in_previous_system( $user_id, $role, $singularizer 
 
 }
 
+/**
+ * Function that get all inherited role from a given role.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see _core_security_get_role( ... ) in gets.php
+ * @see get_db_manager( ... ) in query_manager.php
+ * 
+ * @param mixed $role Role id or alias.
+ * 
+ * @throws Exception If the given role doesn't exist in the system.
+ * 
+ * @return array Inherited roles.
+ */
+function _core_security_get_inherited_roles( $role ): array
+{
+    
+    $db_role = _core_security_get_role( $role );                                // Get role data.
+    if( is_null( $role ) ){                                                     // Throw new exception is the given role doesn't exist.
+        throw new Exception( "Role '$role' doesn't exist.", -1 );               // Exception if role doesn't exist
+    }
+    
+    global $DB_PREFIX;                                                          // Moodle DB prefix. Ex. mdl_                           
+    $tablename = $DB_PREFIX . "talentospilos_roles";                            // Moodle tablename. Ex. mdl_talentospilos_user
+    $params = [ $db_role['id'] ];                                               // Params to query. [0] Role id.
+    
+    $manager = get_db_manager();                                                // Security core database manager.
+    return $manager(                                                            // Roles that inherit from role given.
+        "SELECT * FROM $tablename WHERE id_rol_padre = $1 AND eliminado = 0",    // DB query to get inherited roles.
+        $params                                                                 // Query params. $1 is assigned to $params[0]
+    );
+    
+}
+
+/**
+ * Function that return every assignation over a given role, even if was removed.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co> 
+ * @since 1.0.0
+ * 
+ * @param mixed $role Role ID or alias.
+ * 
+ * @return array|null List of assignations whit the given role. Null if empty.
+ */
+function _core_security_get_historical_role_assignation( $role ){
+    
+    $db_role = _core_security_get_role( $role );                                // Get role data.
+    if( is_null( $db_role ) ){                                                     // Throw new exception is the given role doesn't exist.
+        throw new Exception( "Role '$role' doesn't exist.", -1 );               // Exception if role doesn't exist
+    }
+    
+    return get_db_records(                                                      // Get every assignation, deleted records included.
+            "talentospilos_usuario_rol",                                        // Tablename without prefix.
+            [ 'id_rol' => $db_role['id'] ]                                      // Criteria
+    );          
+    
+}
+
+/**
+ * Function that return a role-action tuple.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see get_db_records( ... ) in query_manager.php
+ * 
+ * @param integer $role_id Role ID.
+ * @param integer $action_id Action ID.
+ * 
+ * @return NULL|array Array with role-action tuple data.
+ */
+function _core_security_get_action_role( int $role_id, int $action_id ){
+    $role_action = get_db_records(                                              // Get role-action tuple.
+        "talentospilos_roles_acciones",                                         // Tablename without prefix.
+        [ 'id_rol' => $role_id, 'id_accion' => $action_id, 'eliminado' => 0 ]   // Criteria
+    ); 
+    return ( is_null( $role_action ) ? NULL : $role_action[0] );                
+}
+
 ?>

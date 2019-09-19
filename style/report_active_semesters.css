@@ -59,3 +59,26 @@ td.active_semester {
 td.graduated_student {
     background-color: #26c6e9 !important;
 }
+
+th.nombre{
+    min-width: 300px;
+}
+
+.Semestre{
+    min-width: 50px;
+    max-width: 50px;
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+tr.total_nochange th{
+    font-weight: lighter !important;
+}
+
+tr.total_change th{
+    font-weight: lighter !important;
+}

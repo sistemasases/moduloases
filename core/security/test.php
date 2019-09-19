@@ -73,4 +73,23 @@ $singularizations = array(
         
 );*/
 
+/*print_r(
+    _core_security_check_subroles( "profesional_ps", 3 )
+);*/
+
+/*print_r(
+    secure_remove_role( "profesional_ps", 73380 )
+);*/
+
+
+//print_r( core_secure_create_call( "create_user", "back", $name = "Create a new user.", $description = "--", $log = 1 ) );
+
+//print_r( core_secure_assign_call_to_role( "create_user", "profesional_ps" ) );
+
+//print_r( core_secure_remove_call_role( "create_user", "profesional_ps", 73380 ) );
+
+//print_r(secure_update_role( "profesional_ps", 's', 'NULLs' ));
+
+//print_r( secure_update_action( "create_user", NULL, "", true ) );
+
 ?>

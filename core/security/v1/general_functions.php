@@ -211,4 +211,24 @@ function _core_security_create_rol_previous_system_role( $role_name ){
      
 }
 
+/**
+ * Throw exception whether a variable is NULL or empty.
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param array $var_list List of tuples (var name, var value ) to check.
+ * 
+ * @throws Exception if $var is NULL or empty.
+ * @return void 
+ */
+function is_empty_exception( array $var_list ): void
+{
+    foreach( $var_list as $var_name => $var_value ){
+        if( is_null( $var_value ) || $var_value === "" ){
+            throw new Exception( "Sorry, $var_name cannot be empty." ,-1 );
+        }
+    }
+    
+}
+
 ?>

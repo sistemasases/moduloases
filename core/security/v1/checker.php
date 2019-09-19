@@ -129,12 +129,66 @@ function _core_security_check_role( $user_id, $role_id, $time_context = null, $s
  * @see _core_security_get_previous_system_role( ... ) in gets.php
  * 
  * @param mixed $role Role alias.
+ * 
  * @return bool Indicates if the given role is an inherited role.
  * 
  */
-function _core_check_inherited_role( $role ){ 
+function _core_security_check_inherited_role( $role ){ 
     return ( ( _core_security_get_role( $role ) && _core_security_get_previous_system_role( $role ) ) ? true : false );
 }
 
+/**
+ * Function that check if exist inherited roles from a given role.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see _core_security_get_inherited_roles( ... ) in gets.php
+ * 
+ * @param mixed $role Role id or alias.
+ * 
+ * @return bool True if exist one or more inherited roles.
+ */
+function _core_security_check_inherited_roles( $role ): bool
+{
+    $inherited_roles = _core_security_get_inherited_roles( $role );             // Get inherited roles from a given role ID or alias.
+    return ( count( $inherited_roles ) > 1 ? true : false );                    // If exist one or more inherited roles then return true.
+    
+}
+
+/**
+ * Function that check if a role was used.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param mixed $role Role ID or alias.
+ * 
+ * @return bool If the given role never was used, return false.
+ */
+function _core_security_check_role_in_use( $role ): bool
+{
+    $assignations = _core_security_get_historical_role_assignation( $role );    // Historical of assignations.
+    return ( is_null($assignations) ? false : true );                           // If the role never was used, return false.
+}
+
+/**
+ * Function that return a role-action tuple exist.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see _core_security_get_action_role( ... ) in gets.php
+ * 
+ * @param integer $role_id Role ID.
+ * @param integer $action_id Action ID.
+ * 
+ * @return bool True if exist.
+ */
+function _core_security_check_action_role( int $role_id, int $action_id ):bool
+{
+    $role_action = _core_security_get_action_role($role_id, $action_id);
+    return ( is_null( $role_action ) ? false : true );                
+}
 
 ?>
