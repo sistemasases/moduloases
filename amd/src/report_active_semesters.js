@@ -59,9 +59,11 @@ define([
             var CODIGO_COLUMN = 'codigo';
             var NOMBRE_COLUMN= 'nombre';
             var NUM_DOC_COLUMN = 'num_doc';
+            var tfoot_total_nochange_title_prefix = 'Activos sin cambio de carrera';
+            var tfoot_total_change_title_prefix = 'Activos con cambio de carrera';
             var tfoot_total_active_title_prefix = 'Total activos';
-            var tfoot_total_inactive_title_prefix = 'Total inactivos';
-            var tfoot_total_graduated_students_prefix = 'Total Egresados';
+            var tfoot_total_inactive_title_prefix = 'inactivos';
+            var tfoot_total_graduated_students_prefix = 'Egresados';
             var tfoot_total_students_prefix = 'Total Estudiantes';
             var known_columns = [CODIGO_COLUMN, NOMBRE_COLUMN, NUM_DOC_COLUMN];
             /** go to ficha general on click **/
@@ -75,7 +77,8 @@ define([
                     var url = pagina + location.search + "&student_code=" + table.cell(table.row(this).index(), 0).data();
                     var win = window.open(url, '_blank');
                     win.focus();
-                }
+                }/*else if (colIndex > 4) {
+                    displayProgram();}*/
             });
 
             var semesters = []; /* Array of strings with the semesters names, ej. ['2015A', '2015B'...]*/
@@ -109,6 +112,19 @@ define([
                 return PercentageGradReport;
             }());
 
+            var PercentageActiveReport = (function () {
+                function PercentageActiveReport(resume_report /* instance of ResumeReport */, semesters /* Array of strings */) {
+                    var total_students = resume_report.total_students;
+                    semesters.forEach(semester => {
+                            var student_active = resume_report.semesters[semester][0];
+                            this[semester] = student_active * 100 / total_students;
+                        }
+
+                    );
+                };
+                return PercentageActiveReport;
+            }());
+
             var ResumeReport = (function () {
                 /**
                  * Constructor
@@ -121,14 +137,20 @@ define([
                    this.semesters = [];
                    var tam = semesters.length;
                    for(var i = 0; i < tam; i++){
-                       this.semesters[semesters[i]] = [0, 0];
+                       this.semesters[semesters[i]] = [0, 0, 0, 0];
                    }
                }
                //console.log(semesters);
                ResumeReport.prototype.init_from_data = function init_from_data(data /*DataTable.data*/, semesters) {
-
                    data.forEach( (item) => {
+                       var carrera = '';
                        semesters.forEach( semester => {
+                           if(!(item[semester].includes('NO') || item[semester].includes('EGRESADO'))){
+                               if(!item[semester].includes(carrera) && carrera !== ''){
+                                   this.semesters[semester][2]++;
+                               }
+                               carrera = item[semester];
+                           }
                            if(item[semester].includes('SI')) {
                                this.semesters[semester][0]++;
                            }else if (item[semester].includes('EGRESADO')){
@@ -136,6 +158,15 @@ define([
                            }
                        }) ;
                    });
+
+                   var cambios = 0;
+
+                   semesters.forEach(semester => {
+                           cambios = cambios + this.semesters[semester][2];
+                       this.semesters[semester][2] = cambios;
+                       }
+
+                   );
 /*
                     for(var item = 0; item < data.length; item++){
                         var tam = semesters.length;
@@ -167,6 +198,8 @@ define([
                 $('#tableActiveSemesters tfoot th').html('');
                 /* Add the first cell of tfoot title */
                 $('#tableActiveSemesters tfoot tr.total_students th')[1].textContent = tfoot_total_students_prefix + ' ' + cohort_id;
+                $('#tableActiveSemesters tfoot tr.total_nochange th')[1].textContent= tfoot_total_nochange_title_prefix + ' ' + cohort_id;
+                $('#tableActiveSemesters tfoot tr.total_change th')[1].textContent= tfoot_total_change_title_prefix + ' ' + cohort_id;
                 $('#tableActiveSemesters tfoot tr.total_active th')[1].textContent= tfoot_total_active_title_prefix + ' ' + cohort_id;
                 $('#tableActiveSemesters tfoot tr.total_inactive th')[1].textContent = tfoot_total_inactive_title_prefix + ' ' + cohort_id;
                 $('#tableActiveSemesters tfoot tr.total_grads th')[1].textContent = tfoot_total_graduated_students_prefix + ' ' + cohort_id;
@@ -175,6 +208,8 @@ define([
                     //console.log(resume_report.semesters[semester][1]);
                     //console.log(semester);
                     $('#tableActiveSemesters tfoot tr.total_students th.'+semester).html(resume_report.total_students); //graduated students
+                    $('#tableActiveSemesters tfoot tr.total_nochange th.'+semester).html(resume_report.semesters[semester][0]-resume_report.semesters[semester][2]); //active nochange
+                    $('#tableActiveSemesters tfoot tr.total_change th.'+semester).html(resume_report.semesters[semester][2]); //active change
                     $('#tableActiveSemesters tfoot tr.total_active th.'+semester).html(resume_report.semesters[semester][0]); //active students
                     $('#tableActiveSemesters tfoot tr.total_inactive th.'+semester).html(resume_report.total_students - (resume_report.semesters[semester][0] + resume_report.semesters[semester][1])); //inactive students
                     $('#tableActiveSemesters tfoot tr.total_grads th.'+semester).html(resume_report.semesters[semester][1]); //graduated students
@@ -183,6 +218,7 @@ define([
             var resume_report /* ResumeReport */ = null; // null initialized for now
             var percentage_resume_report /* PercentageResumeReport */ = null; // null initialized for now
             var percentage_grad_report /* PercentageGradReport */ = null; // null initialized for now
+            var percentage_active_report /* PercentageGradReport */ = null; // null initialized for now
 
             /**
              * Validate the given columns with a known columns
@@ -201,18 +237,27 @@ define([
                    $(this).attr('href', graph_image_url);
                 });
             }
-            function init_graph(semesters, percentage_resume_report, percentage_grad_report, callback /*PercentageResumeReport*/) {
+            function init_graph(semesters, percentage_resume_report, percentage_grad_report, percentage_active_report, callback /*PercentageResumeReport*/) {
                 var data = [];
                 var grads = [];
+                var active = [];
                 semesters.forEach(semester => {
                    data.push(percentage_resume_report[semester]);
                    grads.push(percentage_grad_report[semester]);
+                   active.push(percentage_active_report[semester]);
                 });
                 var config = {
                     type: 'line',
                     data: {
                         labels: semesters,
                         datasets: [{
+                            label: 'Porcentaje de estudiantes activos durante el periodo',
+                            backgroundColor: 'green',
+                            borderColor: 'green',
+                            data: active,
+                            fill: false,
+                        },
+                            {
                             label: 'Porcentaje de estudiantes inactivos durante el periodo',
                             backgroundColor: 'red',
                             borderColor: 'red',
@@ -300,9 +345,10 @@ define([
                         resume_report.init_from_data(dataTable.data, semesters);
                         percentage_resume_report = new PercentageResumeReport(resume_report, semesters);
                         percentage_grad_report = new PercentageGradReport(resume_report, semesters);
+                        percentage_active_report = new PercentageActiveReport(resume_report, semesters);
 
                         /*Init graph*/
-                        init_graph(semesters, percentage_resume_report, percentage_grad_report, init_download_percentage_desertion_element);
+                        init_graph(semesters, percentage_resume_report, percentage_grad_report, percentage_active_report, init_download_percentage_desertion_element);
                         /* Put a class to each cell than have the 'SI' value, see
                         * https://datatables.net/reference/option/rowCallback */
                         dataTable.rowCallback =  function(row, data, index) {
@@ -367,6 +413,12 @@ define([
                         );
                         /*Append a t foot with a clone of thead for the totals*/
                         $("#tableActiveSemesters").append(
+                            $('<tfoot/>').append( $("#tableActiveSemesters thead tr").clone().addClass('total_nochange') ) //total 1 career
+                        );
+                        $("#tableActiveSemesters").append(
+                            $('<tfoot/>').append( $("#tableActiveSemesters thead tr").clone().addClass('total_change') ) //total multiple career
+                        );
+                        $("#tableActiveSemesters").append(
                             $('<tfoot/>').append( $("#tableActiveSemesters thead tr").clone().addClass('total_active') ) //total active
                         );
                         $("#tableActiveSemesters").append(
@@ -408,5 +460,43 @@ define([
         },
 
     };
+
+    /**
+     * @method displayProgram
+     * @desc Displays the names of the programs from the selected cell
+     * @return {void}
+     */
+/*    function displayProgram() {
+        $.ajax({
+            type: "POST",
+            data: {
+                codigo: codigo,
+                programa: programa,
+                type: "check_loses",
+                semestre: semestre,
+            },
+            url: "../managers/historic_academic_reports/historic_academic_reports_processing.php",
+            success: function (msg) {
+                console.log(msg);
+                swal({
+                    title: "Materias Perdidas",
+                    type: "info",
+                    text: msg,
+                    html: true,
+                    showCancelButton: false,
+                    customClass: 'swal-wide',
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Cerrar",
+                    closeOnConfirm: true
+                });
+                $(".swal-wide").css({ 'width': '600px', 'margin-left': '-300px' });
+            },
+            dataType: "text",
+            cache: "false",
+            error: function (msg) {
+                console.log(msg);
+            },
+        });
+    }*/
 
 });
