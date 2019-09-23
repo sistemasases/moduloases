@@ -242,7 +242,6 @@
         </ul>
         <div class="tab-content clearfix ">
           {{#view_general_tab_sp}} {{> block_ases/view_general_tab_sp}} {{/view_general_tab_sp}}
-          {{#view_socioed_tab_sp}} {{> block_ases/view_socioed_tab_sp}} {{/view_socioed_tab_sp}}
           {{#view_others_tab_sp}} {{> block_ases/view_others_tab_sp}} {{/view_others_tab_sp}}
         </div>
       </div>
@@ -827,16 +826,19 @@
   </div>
 </div>
 <!-- End modal retiro-->
-<span style="display:none;" id="datos">{ "informacion":[ {"dimension":"individual", "datos":[ {{#datosSeguimientoEstudianteIndividual}}
-  {{#datos}} {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}", "end":"false"}, {{/datos}} {{/datosSeguimientoEstudianteIndividual}}
-  {"end":"true"} ]}, {"dimension":"familiar", "datos":[ {{#datosSeguimientoEstudianteFamiliar}} {{#datos}} {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}",
-  "end":"false"}, {{/datos}} {{/datosSeguimientoEstudianteFamiliar}} {"end":"true"} ]}, {"dimension":"academico", "datos":[
-  {{#datosSeguimientoEstudianteAcademico}} {{#datos}} {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}", "end":"false"},
-  {{/datos}} {{/datosSeguimientoEstudianteAcademico}} {"end":"true"} ]}, {"dimension":"economico", "datos":[ {{#datosSeguimientoEstudianteEconomico}}
-  {{#datos}} {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}", "end":"false"}, {{/datos}} {{/datosSeguimientoEstudianteEconomico}}
-  {"end":"true"} ]}, {"dimension":"vidaUniversitaria", "datos":[ {{#datosSeguimientoEstudianteVidaUniversitaria}} {{#datos}}
-  {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}", "end":"false"}, {{/datos}} {{/datosSeguimientoEstudianteVidaUniversitaria}}
-  {"end":"true"} ]} ] }
+<span style="display:none;" id="datos">
+    { "informacion": [
+        {"dimension":"individual",
+            "datos":[{{#datosSeguimientoEstudianteIndividual}} {{#datos}} {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}", "end":"false"}, {{/datos}} {{/datosSeguimientoEstudianteIndividual}}{"end":"true"} ]},
+        {"dimension":"familiar",
+            "datos":[{{#datosSeguimientoEstudianteFamiliar}} {{#datos}} {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}", "end":"false"}, {{/datos}} {{/datosSeguimientoEstudianteFamiliar}} {"end":"true"} ]},
+        {"dimension":"academico",
+            "datos":[{{#datosSeguimientoEstudianteAcademico}} {{#datos}} {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}", "end":"false"}, {{/datos}} {{/datosSeguimientoEstudianteAcademico}} {"end":"true"} ]},
+        {"dimension":"economico",
+            "datos":[ {{#datosSeguimientoEstudianteEconomico}} {{#datos}} {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}", "end":"false"}, {{/datos}} {{/datosSeguimientoEstudianteEconomico}} {"end":"true"} ]},
+        {"dimension":"vidaUniversitaria",
+            "datos":[ {{#datosSeguimientoEstudianteVidaUniversitaria}} {{#datos}} {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}", "end":"false"}, {{/datos}} {{/datosSeguimientoEstudianteVidaUniversitaria}} {"end":"true"} ]}
+    ] }
 </span>
 <script>
 

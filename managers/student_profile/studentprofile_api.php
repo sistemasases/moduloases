@@ -41,17 +41,19 @@ if(isset($input->func) && isset($input->params)) {
         /**
          * [0] => id_ases: string
          * [1] => tab_name: string
+         * [2] => id_block: string
          */
-        if(count($input->params) == 2) {
+        if(count($input->params) == 3) {
 
             $id_ases = $input->params[0];
             $tab_name = $input->params[1];
+            $id_block = $input->params[2];
 
-            if(is_string($id_ases)) {
+            if(is_string($id_ases) && is_string($tab_name) && is_int($id_block)) {
 
                 switch($tab_name){
                     case 'socioed':
-                        $result = student_profile_load_socioed_tab($id_ases);
+                        $result = student_profile_load_socioed_tab($id_ases, $id_block);
                         break;
                     case 'academic':
                         $result = student_profile_load_academic_tab($id_ases);
@@ -71,7 +73,7 @@ if(isset($input->func) && isset($input->params)) {
                     echo json_encode(
                         array(
                             "status_code" => 0,
-                            "message" => "Geographic information",
+                            "message" => $tab_name." information",
                             "data_response" => $result
                         )
                     );
@@ -79,7 +81,7 @@ if(isset($input->func) && isset($input->params)) {
                     return_with_code(-5);
                 }
             } else {
-                return_with_code(-2);
+                return_with_code(-2, $params);
             }
         } else {
             return_with_code(-6);
@@ -359,7 +361,7 @@ if(isset($input->func) && isset($input->params)) {
  * reserved codes: -1, -2, -3, -4, -5, -6, -7, -8, -9 -99.
  * @param $code
  */
-function return_with_code($code){
+function return_with_code($code, $params){
 
     switch( $code ){
 
@@ -378,7 +380,7 @@ function return_with_code($code){
                 array(
                     "status_code" => $code,
                     "error_message" => "Error in the scheme.",
-                    "data_response" => ""
+                    "data_response" => $params
                 )
             );
             break;

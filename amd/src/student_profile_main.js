@@ -53,7 +53,7 @@ define(['jquery',
             /**
              * Event that loads asynchronously the socio-educational tab
              */
-            //$("#socioed_li").on('click', {tab_name: 'socioed'}, load_tabs);
+            $("#socioed_li").on('click', {tab_name: 'socioed'}, load_tabs);
 
             /**
              * Event that loads asynchronously the academic tab
@@ -286,6 +286,7 @@ define(['jquery',
             });
 
             $('#view_graphic_risk_button').click(function () {
+
                 $('#modal_riesgos').fadeIn(200);
                 graficar();
             });
@@ -1113,6 +1114,7 @@ define(['jquery',
 
         var tab_name = event.data.tab_name;
         var id_ases = $('#id_ases').val();
+        var id_block = $('#dphpforms_block_instance').data('data-info');
 
         $(".active").removeClass("active");
         $("#"+tab_name+"_li").addClass("active");
@@ -1121,7 +1123,7 @@ define(['jquery',
             type: "POST",
             data: JSON.stringify({
                 "func": 'load_tabs',
-                "params": [id_ases, tab_name],
+                "params": [id_ases, tab_name, id_block],
             }),
             url: "../managers/student_profile/studentprofile_api.php",
             success: function(msg) {
@@ -1156,7 +1158,6 @@ define(['jquery',
                             console.log( "../templates/view_"+tab_name+"_tab_sp.mustache cannot be reached." );
                         }
                     });
-
                 } else {
                     console.log(msg);
                 }
@@ -2130,5 +2131,5 @@ define(['jquery',
                 }
             }
         });
-    };
+    }
 });

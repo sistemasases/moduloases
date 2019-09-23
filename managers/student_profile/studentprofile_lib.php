@@ -2138,14 +2138,425 @@ function save_profile($form, $option1, $option2, $live_with){
 }
 
 /**
+ * @see get_peer_tracking_v3
+ * @desc
+ * @param $id_ases --> ASES student id
+ * @return array
+ */
+function get_peer_tracking_v3($id_ases){
+
+    $new_forms_date =strtotime('2018-01-01 00:00:00');
+
+    $peer_tracking_v3 = [];
+    $periods = periods_management_get_all_semesters();
+    $special_date_interval = [
+        'start' => strtotime( "2019-01-01" ),
+        'end' => strtotime( "2019-04-30" )
+    ];
+
+    foreach( $periods as $key => $period ){
+
+        if( strtotime( $period->fecha_inicio ) >= $new_forms_date ){
+
+            $trackings = get_tracking_current_semesterV3('student', $id_ases, $period->id);
+            if( count( $trackings ) > 0 ){
+
+                $peer_tracking['period_name'] = $period->nombre;
+                $tracking_modified = [];
+                //Here can be added metadata.
+                foreach ($trackings as $key => $tracking) {
+
+                    $_fecha = null;
+
+                    if ( array_key_exists("fecha", $tracking) ) {
+                        $_fecha = strtotime( $tracking['fecha'] );
+                    }else{
+                        $_fecha = strtotime( $tracking['in_fecha'] );
+                    };
+
+                    if( ( $_fecha >= $special_date_interval['start'] ) && ( $_fecha <= $special_date_interval['end'] ) ){
+                        $tracking['custom_extra']['special_tracking'] = true;
+                    }
+
+                    $tracking['custom_extra'][$tracking['alias_form']] = true;
+                    $tracking['custom_extra']['rev_pro'] = false;
+                    $tracking['custom_extra']['rev_pract'] = false;
+
+                    if ( array_key_exists("revisado_profesional", $tracking) ) {
+                        if( $tracking['revisado_profesional'] === "0" ){
+                            $tracking['custom_extra']['rev_pro'] = true;
+                        }
+                    };
+                    if ( array_key_exists("revisado_practicante", $tracking) ) {
+                        if( $tracking['revisado_practicante'] === "0" ){
+                            $tracking['custom_extra']['rev_pract'] = true;
+                        }
+                    };
+                    if ( array_key_exists("in_revisado_profesional", $tracking) ) {
+                        if( $tracking['in_revisado_profesional'] === "0" ){
+                            $tracking['custom_extra']['rev_pro'] = true;
+                        }
+                    };
+                    if ( array_key_exists("in_revisado_practicante", $tracking) ) {
+                        if( $tracking['in_revisado_practicante'] === "0" ){
+                            $tracking['custom_extra']['rev_pract'] = true;
+                        }
+                    };
+
+                    //Using reference fail
+                    array_push( $tracking_modified, $tracking );
+                };
+
+                $peer_tracking['trackings'] = $tracking_modified;
+
+                array_push( $peer_tracking_v3, $peer_tracking );
+            }
+        }
+    }
+    return array_reverse($peer_tracking_v3);
+}
+
+/**
+ * @see get_html_tracking_peer($id_ases)
+ * @param $id_ases
+ * @return string
+ */
+function get_html_tracking_peer($id_ases, $id_block){
+
+    $enum_risk = array();
+    array_push($enum_risk, "");
+    array_push($enum_risk, "Bajo");
+    array_push($enum_risk, "Medio");
+    array_push($enum_risk, "Alto");
+
+
+    $html_tracking_peer = "";
+    $array_peer_trackings = get_tracking_group_by_semester($id_ases, 'PARES', null, $id_block);
+
+    if ($array_peer_trackings != null) {
+
+        $panel = "<div class='panel-group' id='accordion_semesters'>";
+
+        foreach ($array_peer_trackings->semesters_segumientos as $key_semester => $array_semester) {
+
+            if (strpos($array_semester->name_semester, '2018') !== false) {
+                continue;
+            }
+            ;
+
+            $panel .= "<div class='panel panel-default'>";
+            $panel .= "<a data-toggle='collapse' class='collapsed' data-parent='#accordion_semesters' style='text-decoration:none' href='#semester" . $array_semester->id_semester . "'>";
+            $panel .= "<div class='panel-heading heading_semester_tracking'>";
+            $panel .= "<h4 class='panel-title'>";
+            $panel .= "$array_semester->name_semester";
+            $panel .= "<span class='glyphicon glyphicon-chevron-left'></span>";
+            $panel .= "</h4>"; //End panel-title
+            $panel .= "</div>"; //End panel-heading
+            $panel .= "</a>";
+
+            $panel .= "<div id='semester$array_semester->id_semester' class='panel-collapse collapse in'>";
+            $panel .= "<div class='panel-body'>";
+
+            // $panel .= "<div class=\"container well col-md-12\">";
+            // $panel .= "<div class=\"container-fluid col-md-10\" name=\"info\">";
+            // $panel .= "<div class=\"row\">";
+
+            $panel .= "<div class='panel-group' id='accordion_trackings_semester'>";
+
+            foreach ($array_semester->result as $tracking) {
+
+                $monitor_object = get_moodle_user($tracking->id_monitor);
+
+                // Date format (Formato de fecha)
+                $date = date_parse_from_format('d-m-Y', $tracking->fecha);
+                $months = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+
+                $panel .= "<div class='panel panel-default'>";
+                $panel .= "<div class='panel-heading'>";
+                $panel .= "<h4 class='panel-title'>";
+
+                $panel .= "<a data-toggle='collapse' data-parent='#accordion_trackings_semester' href='#" . $tracking->id_seg . "'>";
+                $panel .= " Registro " . $months[(int) $date["month"] - 1] . "-" . $date["day"] . "-" . $date["year"] . "</a>";
+
+                $panel .= "</h4>"; // h4 div panel-title
+                $panel .= "</div>"; // End div panel-heading
+
+                $panel .= "<div id='$tracking->id_seg' class='panel-collapse collapse'>";
+                $panel .= "<div class='panel-body'>";
+
+                // Date, Place, time  (Fecha, lugar, hora)
+                $panel .= "<div class='panel panel-default'>";
+                $panel .= "<div class='panel-body'>";
+
+                $panel .= "<div class='col-sm-3'>";
+                $panel .= "<b>Fecha:</b>";
+                $panel .= "</div>";
+                $panel .= "<div class='col-sm-6'>";
+                $panel .= "<b>Lugar:</b>";
+                $panel .= "</div>";
+                $panel .= "<div class='col-sm-3'>";
+                $panel .= "<b>Hora:</b>";
+                $panel .= "</div>";
+
+                $panel .= "<div class='col-sm-3'>";
+                $panel .= "<span class='date_tracking_peer'>" . $date["month"] . "-" . $date["day"] . "-" . $date["year"] . "</span>";
+                $panel .= "</div>";
+                $panel .= "<div class='col-sm-6'>";
+                $panel .= "<span class='place_tracking_peer'>" . $tracking->lugar . "</span>";
+                $panel .= "</div>";
+                $panel .= "<div class='col-sm-3'>";
+                $panel .= "<span class='init_time_tracking_peer'>" . $tracking->hora_ini . "</span> - <span class='ending_time_tracking_peer'>" . $tracking->hora_fin . "</span>";
+                $panel .= "</div>";
+
+                $panel .= "</div>"; // End panel-body
+                $panel .= "</div>"; // End div panel panel-default
+
+                // Created by (Creado por)
+
+                $panel .= "<div class='panel panel-default'>";
+                $panel .= "<div class='panel-body'>";
+
+                $panel .= "<div class='col-sm-12'>";
+                $panel .= "<b>Creado por: </b>";
+                $panel .= $monitor_object->firstname . " " . $monitor_object->lastname;
+                $panel .= "</div>";
+
+                $panel .= "</div>"; // End panel-body
+                $panel .= "</div>"; // End div panel panel-default
+
+                // Subject (Tema)
+                $panel .= "<div class='panel panel-default'>";
+                $panel .= "<div class='panel-body'>";
+
+                $panel .= "<div class='col-sm-12'>";
+                $panel .= "<b>Tema:</b>";
+                $panel .= "</div>";
+
+                $panel .= "<div class='col-sm-12'>";
+                $panel .= "<span class='topic_tracking_peer'>" . $tracking->tema . "</span>";
+                $panel .= "</div>";
+
+                $panel .= "</div>"; // End panel-body
+                $panel .= "</div>"; // End div panel panel-default
+
+                // Objectives (Objetivos)
+                $panel .= "<div class='panel panel-default'>";
+                $panel .= "<div class='panel-body'>";
+
+                $panel .= "<div class='col-sm-12'>";
+                $panel .= "<b>Objetivos:</b>";
+                $panel .= "</div>";
+
+                $panel .= "<div class='col-sm-12'>";
+                $panel .= "<span class='objectives_tracking_peer'>" . $tracking->objetivos . "</span>";
+                $panel .= "</div>";
+
+                $panel .= "</div>"; // End panel-body
+                $panel .= "</div>"; // End div panel panel-default
+
+                if ($tracking->individual != "") {
+
+                    if ($tracking->individual_riesgo == '1') {
+                        $panel .= "<div class='panel panel-default riesgo_bajo'>";
+                    } else if ($tracking->individual_riesgo == '2') {
+                        $panel .= "<div class='panel panel-default riesgo_medio'>";
+                    } else if ($tracking->individual_riesgo == '3') {
+                        $panel .= "<div class='panel panel-default riesgo_alto'>";
+                    } else {
+                        $panel .= "<div class='panel panel-default'>";
+                    }
+
+                    $panel .= "<div class='panel-body'>";
+                    $panel .= "<div class='col-sm-12'>";
+                    $panel .= "<b>Individual:</b><br>";
+                    $panel .= "<span class='individual_tracking_peer'>$tracking->individual</span><br><br>";
+                    $panel .= "<b>Riesgo individual: </b>";
+                    $panel .= "<span class='ind_risk_tracking_peer'>" . $enum_risk[(int) $tracking->individual_riesgo] . "</span><br><br>";
+                    $panel .= "</div>"; // End div col-sm-12
+                    $panel .= "</div>"; // End panel-body
+                    $panel .= "</div>"; // End div panel panel-default
+                }
+
+                if ($tracking->familiar_desc != "") {
+
+                    if ($tracking->familiar_riesgo == '1') {
+                        $panel .= "<div class='panel panel-default riesgo_bajo'>";
+                    } else if ($tracking->familiar_riesgo == '2') {
+                        $panel .= "<div class='panel panel-default riesgo_medio'>";
+                    } else if ($tracking->familiar_riesgo == '3') {
+                        $panel .= "<div class='panel panel-default riesgo_alto'>";
+                    } else {
+                        $panel .= "<div class='panel panel-default'>";
+                    }
+
+                    $panel .= "<div class='panel-body'>";
+                    $panel .= "<div class='col-sm-12'>";
+                    $panel .= "<b>Familiar:</b><br>";
+                    $panel .= "<span class='familiar_tracking_peer'>$tracking->familiar_desc</span><br><br>";
+                    $panel .= "<b>Riesgo familiar: </b>";
+                    $panel .= "<span class='fam_risk_tracking_peer'>" . $enum_risk[(int) $tracking->familiar_riesgo] . "</span><br><br>";
+                    $panel .= "</div>"; // End div col-sm-12
+                    $panel .= "</div>"; // End panel-body
+                    $panel .= "</div>"; // End div panel panel-default
+                }
+
+                if ($tracking->academico != "") {
+
+                    if ($tracking->academico_riesgo == '1') {
+                        $panel .= "<div class='panel panel-default riesgo_bajo'>";
+                    } else if ($tracking->academico_riesgo == '2') {
+                        $panel .= "<div class='panel panel-default riesgo_medio'>";
+                    } else if ($tracking->academico_riesgo == '3') {
+                        $panel .= "<div class='panel panel-default riesgo_alto'>";
+                    } else {
+                        $panel .= "<div class='panel panel-default'>";
+                    }
+
+                    $panel .= "<div class='panel-body'>";
+                    $panel .= "<div class='col-sm-12'>";
+                    $panel .= "<b>Académico:</b><br>";
+                    $panel .= "<span class='academico_tracking_peer'>$tracking->academico</span><br><br>";
+                    $panel .= "<b>Riesgo académico: </b>";
+                    $panel .= "<span class='aca_risk_tracking_peer'>" . $enum_risk[(int) $tracking->academico_riesgo] . "</span><br><br>";
+                    $panel .= "</div>"; // End div col-sm-12
+                    $panel .= "</div>"; // End panel-body
+                    $panel .= "</div>"; // End div panel panel-default
+                }
+
+                if ($tracking->economico != "") {
+
+                    if ($tracking->economico_riesgo == '1') {
+                        $panel .= "<div class='panel panel-default riesgo_bajo'>";
+                    } else if ($tracking->economico_riesgo == '2') {
+                        $panel .= "<div class='panel panel-default riesgo_medio'>";
+                    } else if ($tracking->economico_riesgo == '3') {
+                        $panel .= "<div class='panel panel-default riesgo_alto'>";
+                    } else {
+                        $panel .= "<div class='panel panel-default'>";
+                    }
+
+                    $panel .= "<div class='panel-body'>";
+                    $panel .= "<div class='col-sm-12'>";
+                    $panel .= "<b>Económico:</b><br>";
+                    $panel .= "<span class='economico_tracking_peer'>$tracking->economico</span><br><br>";
+                    $panel .= "<b>Riesgo económico: </b>";
+                    $panel .= "<span class='econ_risk_tracking_peer'>" . $enum_risk[(int) $tracking->economico_riesgo] . "</span><br><br>";
+                    $panel .= "</div>"; // End div col-sm-12
+                    $panel .= "</div>"; // End panel-body
+                    $panel .= "</div>"; // End div panel panel-default
+                }
+
+                if ($tracking->vida_uni != "") {
+
+                    if ($tracking->vida_uni_riesgo == '1') {
+                        $panel .= "<div class='panel panel-default riesgo_bajo'>";
+                    } else if ($tracking->vida_uni_riesgo == '2') {
+                        $panel .= "<div class='panel panel-default riesgo_medio'>";
+                    } else if ($tracking->vida_uni_riesgo == '3') {
+                        $panel .= "<div class='panel panel-default riesgo_alto'>";
+                    } else {
+                        $panel .= "<div class='panel panel-default'>";
+                    }
+
+                    $panel .= "<div class='panel-body'>";
+                    $panel .= "<div class='col-sm-12'>";
+                    $panel .= "<b>Vida universitaria:</b><br>";
+                    $panel .= "<span class='lifeu_tracking_peer'>$tracking->vida_uni</span><br><br>";
+                    $panel .= "<b>Riesgo vida universitaria: </b>";
+                    $panel .= "<span class='lifeu_risk_tracking_peer'>" . $enum_risk[(int) $tracking->vida_uni_riesgo] . "</span><br><br>";
+                    $panel .= "</div>"; // End div col-sm-12
+                    $panel .= "</div>"; // End panel-body
+                    $panel .= "</div>"; // End div panel panel-default
+                }
+
+                // Observations (observaciones)
+                $panel .= "<div class='panel panel-default'>";
+                $panel .= "<div class='panel-body'>";
+
+                $panel .= "<div class='col-sm-12'>";
+                $panel .= "<b>Observaciones:</b>";
+                $panel .= "</div>";
+
+                $panel .= "<div class='col-sm-12'>";
+                $panel .= "<span class='observations_tracking_peer'>" . $tracking->observaciones . "</span>";
+                $panel .= "</div>";
+
+                $panel .= "</div>"; // End panel-body
+                $panel .= "</div>"; // End div panel panel-default
+
+                // Edit and delete buttons
+                $panel .= "<div class='row'>";
+                $panel .= "<div class='col-sm-4 row-buttons-tracking'>";
+                $panel .= "<button type='button' class='btn-primary edit_peer_tracking' id='edit_tracking_" . $tracking->id_seg . "'>Editar seguimiento</button>";
+                $panel .= "</div>";
+                $panel .= "<div class='col-sm-3 col-sm-offset-5 row-buttons-tracking'>";
+                $panel .= "<button type='button' class='btn-danger delete_peer_tracking col-sm-10' id='delete_tracking_peer_" . $tracking->id_seg . "'>";
+                $panel .= "Borrar <span class='glyphicon glyphicon-trash'></span>";
+                $panel .= "</button>";
+                $panel .= "</div>";
+                $panel .= "</div>";
+
+                $panel .= "</div>"; // End panel-body tracking
+                $panel .= "</div>"; // End div panel-collapse tracking
+                $panel .= "</div>"; // End div panel-default
+            }
+
+            $panel .= "</div>"; // End panel accordion_trackings_semester
+
+            $panel .= "</div>"; // End panel-body
+            $panel .= "</div>"; // End panel-collapse
+
+            $panel .= "</div>"; //End panel panel-default
+        }
+
+        $panel .= "</div>"; //End panel group accordion_semesters
+
+        $html_tracking_peer .= $panel;
+
+    } else {
+        $html_tracking_peer .= "<div class='col-sm-12'><center><h4>No registra seguimientos</h4></center></div>";
+    }
+
+    return $html_tracking_peer;
+}
+
+/**
+ * @see load_graphic_risk()
+ * @desc Loads the student's graphic risk modal
+ * @param
+ */
+function load_graphic_risk(){
+
+}
+
+/**
  * @see student_profile_load_socioed_tab($id_ases)
  * @desc Gets all the social-educative information of an student
  * @param $id_ases --> ASES student id
+ * @param $id_block --> Block id
  * @return Object
  */
-function student_profile_load_socioed_tab($id_ases){
+function student_profile_load_socioed_tab($id_ases, $id_block){
 
-    $record = new stdClass();
+    global $USER;
+
+    $id_user = $USER->id;
+
+    $actions = authenticate_user_view($id_user, $id_block);
+    $rol = lib_get_rol_name_ases($id_user, $id_block);
+
+    $record = $actions;
+
+    if ($rol == 'sistemas') {
+        $record->add_peer_tracking_lts = true;
+    }
+
+    $record->peer_tracking_v3 =  get_peer_tracking_v3($id_ases);
+    $record->peer_tracking = get_html_tracking_peer($id_ases, $id_block);
+
+    //*************************************/
+    // fx get_tracking_peer_student_current_semester('1522006', '23');
+    //*************************************/
 
     return $record;
 }
@@ -2260,127 +2671,4 @@ function student_profile_load_tracing_others_tab($id_ases){
     $record = new stdClass();
 
     return $record;
-}
-
-/**
- * DEPRECATED
- * This Function used to save the old forms of
- * tracking peer
- *
- * Saves and validated the form on database
- *
- * @see save_tracking_peer_proc()
- * @return string --> validation result
- */
-function save_tracking_peer_proc(){
-
-    global $USER;
-
-    $result_msg = new stdClass();
-    $is_valid = validate_form_tracking_peer();
-
-    if($is_valid == "success"){
-
-        $date = new DateTime();
-        $date->getTimestamp();
-
-        $tracking_object = new stdClass();
-        $tracking_object->id = (int)$_POST['id_tracking_peer'];
-        $tracking_object->id_monitor = $USER->id;
-        $tracking_object->created = time();
-        $tracking_object->fecha = strtotime($_POST['date']);
-        $tracking_object->lugar = $_POST['place'];
-        $tracking_object->hora_ini = $_POST['h_ini'].":".$_POST['m_ini'];
-        $tracking_object->hora_fin = $_POST['h_fin'].":".$_POST['m_fin'];
-        $tracking_object->tema = $_POST['tema'];
-        $tracking_object->objetivos = $_POST['objetivos'];
-        $tracking_object->tipo = "PARES";
-        $tracking_object->status = 1;
-        $tracking_object->individual = $_POST['individual'];
-        $tracking_object->individual_riesgo = $_POST['riesgo_ind'];
-        $tracking_object->familiar_desc = $_POST['familiar'];
-        $tracking_object->familiar_riesgo = $_POST['riesgo_familiar'];
-        $tracking_object->academico = $_POST['academico'];
-        $tracking_object->academico_riesgo = $_POST['riesgo_aca'];
-        $tracking_object->economico = $_POST['economico'];
-        $tracking_object->economico_riesgo = $_POST['riesgo_econom'];
-        $tracking_object->vida_uni = $_POST['vida_uni'];
-        $tracking_object->vida_uni_riesgo = $_POST['riesgo_uni'];
-        $tracking_object->id_estudiante_ases = $_POST['id_ases'];
-        $tracking_object->id_instancia = $_POST['id_instance'];
-        $tracking_object->revisado_profesional = 0;
-        $tracking_object->revisado_practicante = 0;
-        $tracking_object->observaciones = $_POST['observaciones'];
-
-        $result_saving = save_tracking_peer($tracking_object);
-
-        echo json_encode($result_saving);
-
-    }else{
-        $result_msg->title = "Error";
-        $result_msg->msg = $is_valid;
-        $result_msg->type = "error";
-
-        echo json_encode($result_msg);
-    }
-}
-
-/**
- * DEPRECATED
- * This Function used to validate the old forms
- * of tracking peer
- *
- * Validates if a form is totally complete
- *
- * @see validate_form_tracking_peer()
- * @return string --> validation result
- */
-function validate_form_tracking_peer(){
-    if(!isset($_POST['date'])){
-        return "El campo FECHA no llegó al servidor.";
-    }else if(!isset($_POST['place'])){
-        return "El campo LUGAR no llegó al servidor.";
-    }else if(!isset($_POST['h_ini'])){
-        return "El campo HORA INICIAL no llegó al servidor.";
-    }else if(!isset($_POST['m_ini'])){
-        return "El campo MINUTO INICIAL no llegó al servidor.";
-    }else if(!isset($_POST['h_fin'])){
-        return "El campo HORA FINALIZACIÓN no llegó al servidor.";
-    }else if(!isset($_POST['m_fin'])){
-        return "El campo MINUTO FINALIZACIÓN no llegó al servidor.";
-    }else if(!isset($_POST['tema'])){
-        return "El campo TEMA no llegó al servidor.";
-    }else if(!isset($_POST['objetivos'])){
-        return "El campo OBJETIVOS no llegó al servidor.";
-    }else if(!isset($_POST['individual'])){
-        return "El campo ACT. INDIVIDUAL no llegó al servidor.";
-    }else if(!isset($_POST['riesgo_ind'])){
-        return "El campo RIESGO INDIVIDUAL no llegó al servidor.";
-    }else if(!isset($_POST['familiar'])){
-        return "El campo ACT. FAMILIAR no llegó al servidor.";
-    }else if(!isset($_POST['riesgo_familiar'])){
-        return "El campo RIESGO FAMILIAR no llegó al servidor.";
-    }else if(!isset($_POST['academico'])){
-        return "El campo ACT. ACADÉMICO no llegó al servidor.";
-    }else if(!isset($_POST['riesgo_aca'])){
-        return "El campo RIESGO ACADÉMICO no llegó al servidor.";
-    }else if(!isset($_POST['economico'])){
-        return "El campo ACT. ECONÓMICO no llegó al servidor.";
-    }else if(!isset($_POST['riesgo_econom'])){
-        return "El campo RIESGO ECONÓMICO no llegó al servidor.";
-    }else if(!isset($_POST['vida_uni'])){
-        return "El campo ACT. VIDA UNIVERSITARIA Y CIUDAD no llegó al servidor.";
-    }else if(!isset($_POST['riesgo_uni'])){
-        return "El campo RIESGO VIDA UNIVERSITARIA Y CIUDAD no llegó al servidor.";
-    }else if(!isset($_POST['id_ases'])){
-        return "El campo ID ESTUDIANTE ASES no llegó al servidor.";
-    }else if(!isset($_POST['id_instance'])){
-        return "El campo ID INSTANCIA BLOQUE no llegó al servidor.";
-    }else if(!isset($_POST['observaciones'])){
-        return "El campo OBSERVACIONES no llegó al servidor.";
-    }else if(!isset($_POST['id_tracking_peer'])){
-        return "El campo ID SEGUIMIENTO no llegó al servidor.";
-    }else{
-        return "success";
-    }
 }
