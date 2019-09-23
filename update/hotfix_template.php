@@ -12,7 +12,7 @@ require_once(dirname(__FILE__). '/../../../config.php');                        
 module_loader("cache");                                                         // Load of core cache module
 module_loader("core_db");                                                       // Load of core_db module.
 
-const ISSUE_NUMNER = 1569;                                                      // Issue ID on GitHub.
+const ISSUE_NUMNER = 1569;                                                      // Issue ID on GitHub. Ex. 1569.
 const PASSWORD = NULL;                                                          // Null if you want a none secure execution.
 
 $script = function(){
@@ -21,6 +21,11 @@ $script = function(){
     // End of the HOTFIX code
     echo "HOTFIX APLICADO";
 };
+
+
+
+
+
 
 # Don't move the next code please.
 ################################################################################
