@@ -692,7 +692,7 @@
                     evt.preventDefault();
                     var is_seguimiento_geografico = $(this).attr('id').indexOf( 'seguimiento_geografico_' );
                     var is_seguimiento_grupal = $(this).attr('id').indexOf( 'seguimiento_grupal_' );
-
+                    
                     if( is_seguimiento_geografico != -1 ){
                         custom_actions( 'seguimiento_geografico_', 'insert' );
                     }
@@ -703,6 +703,7 @@
 
                     $('.seg_geo_origen').find('input').prop('disabled', false );
                     $( ':disabled' ).prop( 'disabled', false);
+                    
                     
                     var formData = new FormData(this);
                     
