@@ -953,11 +953,8 @@ function get_tracking_current_semesterV3($criterio,$student_id, $semester_id,$in
             $fecha[$key] =  strtotime( $tracking['fecha'] );
         }
         array_multisort($fecha, SORT_DESC, $all_trackings);
-
-    } 
-
+    }
     return $all_trackings;
-
 }
 
 function get_tracking_current_semesterV2($criterio,$student_id, $semester_id,$intervals=null){
@@ -2544,11 +2541,24 @@ function student_profile_load_socioed_tab($id_ases, $id_block){
     $id_user = $USER->id;
     $id_block = (int)$id_block;
 
+    $rol = lib_get_rol_name_ases($id_user, $id_block);
     $actions = authenticate_user_view($id_user, $id_block);
     $record = $actions;
 
     $record->peer_tracking_v3 = get_peer_tracking_v3($id_ases);
     $record->peer_tracking = get_html_tracking_peer($id_ases, $id_block);
+
+    $record->registro_primer_acercamient = null;
+    $record->editor_registro_primer_acercamiento = null;
+    $primer_acercamiento = json_decode( dphpforms_find_records('primer_acercamiento', 'primer_acercamiento_id_estudiante', $id_ases, 'DESC') )->results;
+
+    if($primer_acercamiento){
+        $record->actualizar_primer_acercamiento = true;
+        $record->id_primer_acercamiento = array_values( $primer_acercamiento )[0]->id_registro;
+        $record->editor_registro_primer_acercamiento = dphpforms_render_updater('primer_acercamiento', $rol, array_values( $primer_acercamiento )[0]->id_registro);
+    }else{
+        $record->registro_primer_acercamiento = true;
+    }
 
     return $record;
 }

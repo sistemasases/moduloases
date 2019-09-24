@@ -274,21 +274,6 @@
                     }
                 });
 
-                $('#button_add_v2_track').on('click', function() {
-                    
-                    $('div').removeClass('regla_incumplida');
-                    $('#modal_v2_peer_tracking').fadeIn(300);
-                    $('.id_estudiante').find('input').val( get_student_code() );
-                    var codigo_monitor = $('#current_user_id').val();
-                    $('.id_creado_por').find('input').val(codigo_monitor);
-                    $('.id_instancia').find('input').val( get_dphpforms_instance() );
-                    $('.id_monitor').find('input').val( $("#dphpforms_monitor_id").data("info") );
-                    $('.id_practicante').find('input').val( $("#dphpforms_practicing_id").data("info") );
-                    $('.id_profesional').find('input').val( $("#dphpforms_professional_id").data("info") );
-                    $('.username').find('input').val( $("#dphpforms_username").data("info") );
-                    
-                });
-
                 $('.btn-inasistencia').on('click', function() {
                     var data_info = $(this).attr('data-info');
                     if( data_info == 'inasistencia' ){
@@ -329,16 +314,6 @@
 
                 });
 
-                $('#button_primer_acercamiento').on('click', function() {
-                    $('div').removeClass('regla_incumplida');
-                    $('#modal_primer_acercamiento').fadeIn(300);
-                    
-                    $('.primer_acerca_id_estudiante_field').find('input').val( get_student_code() );
-                    var creado_por = $('#current_user_id').val();
-                    $('.primer_acerca_id_creado_por_field').find('input').val(creado_por);
-                    
-                });
-
                 $('#button_add_geographic_track').on('click', function() {
                     $('div').removeClass('regla_incumplida');
                     $('#modal_seguimiento_geografico').fadeIn(300);
@@ -352,7 +327,6 @@
                         $('.seg_geo_origen').find('input').prop('disabled', true );
                         $('.seg_geo_origen').find('input').prop('checked', false );
                     }
-                    
                 });
 
                 $('.mymodal-close').click(function(){

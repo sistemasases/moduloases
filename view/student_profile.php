@@ -810,8 +810,7 @@ if ($student_code != 0) {
         }
     }
 
-    $record->peer_tracking_v3 =  array_reverse( $peer_tracking_v3 );
-
+    $record->peer_tracking_v3 = array_reverse( $peer_tracking_v3 );
 
     // Loading desertion reasons or studies postponement
 

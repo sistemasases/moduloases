@@ -18,7 +18,8 @@ define(['jquery',
     'block_ases/Chart',
     'block_ases/mustache',
     'block_ases/academic_profile_main',
-    'block_ases/geographic_main'], function ($, bootstrap, d3, sweetalert, jqueryui, select2, Chart, mustache, academic, geographic) {
+    'block_ases/socioed_profile_main',
+    'block_ases/geographic_main'], function ($, bootstrap, d3, sweetalert, jqueryui, select2, Chart, mustache, academic, socioed, geographic) {
 
     return {
         init: function (data_init) {
@@ -1140,6 +1141,7 @@ define(['jquery',
 
                             switch(tab_name){
                                 case 'socioed':
+                                    socioed.init();
                                     break;
                                 case 'academic':
                                     academic.init();
