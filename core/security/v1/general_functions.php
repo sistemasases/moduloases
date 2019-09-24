@@ -252,4 +252,18 @@ function generate_random_string( int $length = 10 ):string
     return $random_string;
 }
 
+/**
+ * Function that return the factorial of a number.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param integer $number
+ * @return integer Result of Number!
+ */
+function factorial( int $number ): int
+{
+    return ( $number <= 1 ? 1 : $number * factorial($number - 1) );
+}
+
 ?>
