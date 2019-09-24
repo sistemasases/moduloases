@@ -1230,7 +1230,7 @@ function get_tracking_group_by_semester($id_ases = null, $tracking_type, $id_sem
         if($id_semester != null){
             $sql_query .= " WHERE id = ".$id_semester;
         }else{
-            $userid = $DB->get_record_sql("SELECT id_moodle_user AS userid FROM {talentospilos_user_extended} WHERE id_ases_user = $id_ases;");
+            $userid = $DB->get_record_sql("SELECT id_moodle_user AS userid FROM {talentospilos_user_extended} WHERE id_ases_user = $id_ases AND tracking_status=1");
             $firstsemester = get_id_first_semester($userid->userid);
             $lastsemestre = get_id_last_semester($userid->userid);
     
@@ -2547,8 +2547,7 @@ function student_profile_load_socioed_tab($id_ases, $id_block){
     $actions = authenticate_user_view($id_user, $id_block);
     $record = $actions;
 
-    $record->test = 21;
-    //$record->peer_tracking_v3 =  get_peer_tracking_v3($id_ases);
+    $record->peer_tracking_v3 = get_peer_tracking_v3($id_ases);
     $record->peer_tracking = get_html_tracking_peer($id_ases, $id_block);
 
     return $record;

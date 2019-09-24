@@ -110,8 +110,6 @@ if ($student_code != 0) {
     $record->birthdate = $ases_student->fecha_nac;
     $student_id = $ases_student->id;
 
-    print_r("IDDD ".$blockid."  Type ".gettype($blockid));
-
     // Student information to display on file header (ficha)
     $id_user_moodle = get_id_user_moodle($ases_student->id);
     $id_user_moodle_ = $id_user_moodle;
