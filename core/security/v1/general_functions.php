@@ -266,4 +266,20 @@ function factorial( int $number ): int
     return ( $number <= 1 ? 1 : $number * factorial($number - 1) );
 }
 
+/**
+ * Function that return the number of combinations possibles with repetition.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param integer $n Number of values.
+ * @param integer $r Subset.
+ * 
+ * @return integer nCr => $nC$r
+ */
+function combinations_with_repetition( int $n, int $r ):int 
+{
+    return factorial( $n + $r - 1 ) / ( factorial($r) * factorial($n - 1) );
+}
+
 ?>
