@@ -259,9 +259,9 @@ function generate_random_string( int $length = 10 ):string
  * @since 1.0.0
  * 
  * @param integer $number
- * @return integer Result of Number!
+ * @return mixed Result of Number!
  */
-function factorial( int $number ): int
+function factorial( int $number )
 {
     return ( $number <= 1 ? 1 : $number * factorial($number - 1) );
 }
@@ -277,9 +277,37 @@ function factorial( int $number ): int
  * 
  * @return integer nCr => $nC$r
  */
-function combinations_with_repetition( int $n, int $r ):int 
+function combinations_with_repetition( int $n, int $r ): float                  // For PHP, double, float or real are the same datatype.  
 {
     return factorial( $n + $r - 1 ) / ( factorial($r) * factorial($n - 1) );
+}
+
+/**
+ * Function that validate if a given string is a hex value.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param string $hexed_value Value to check.
+ * @return bool If true is a valid hex value.
+ */
+function valid_explicit_hex_value( string $hexed_value ){
+    
+    $valid_rule_characters = [                                                  // Valid characters for a hex value.
+        '0','1','2','3','4',
+        '5','6','7','8','9',
+        'a','b','c','d','f'
+    ];
+    
+    $array_value = str_split( strtolower( $hexed_value ) );                     // Input string to list of chars.
+    
+    foreach( $array_value as $value ){                                          // Iterarion over every character.
+        if( !in_array($value, $valid_rule_characters) ){                        // Check if the current character isn't a valid hex value.
+            return false;
+        }
+    }
+    
+    return true;
 }
 
 ?>
