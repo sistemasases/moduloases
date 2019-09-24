@@ -1114,7 +1114,7 @@ define(['jquery',
 
         var tab_name = event.data.tab_name;
         var id_ases = $('#id_ases').val();
-        var id_block = $('#dphpforms_block_instance').data('data-info');
+        var id_block = document.querySelector('#dphpforms_block_instance').dataset.info;
 
         $(".active").removeClass("active");
         $("#"+tab_name+"_li").addClass("active");
@@ -1134,6 +1134,7 @@ define(['jquery',
                         dataType: "text",
                         async: false,
                         success: function( template ){
+                            console.log(msg.data_response);
                             let tab_to_load = $(mustache.render( template, msg.data_response ));
                             $(".tab-content").append( tab_to_load );
 
@@ -1159,12 +1160,14 @@ define(['jquery',
                         }
                     });
                 } else {
+                    console.log("Debug_Inner");
                     console.log(msg);
                 }
             },
             dataType: "json",
             cache: "false",
             error: function(msg) {
+                console.log("Debug_Outer");
                 console.log(msg);
             }
         });

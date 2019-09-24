@@ -43,13 +43,14 @@ if(isset($input->func) && isset($input->params)) {
          * [1] => tab_name: string
          * [2] => id_block: string
          */
-        if(count($input->params) == 3) {
+        $params = $input->params;
+        if(count($params) == 3) {
 
-            $id_ases = $input->params[0];
-            $tab_name = $input->params[1];
-            $id_block = $input->params[2];
+            $id_ases = $params[0];
+            $tab_name = $params[1];
+            $id_block = $params[2];
 
-            if(is_string($id_ases) && is_string($tab_name) && is_int($id_block)) {
+            if(is_string($id_ases) && is_string($tab_name) && is_string($id_block)) {
 
                 switch($tab_name){
                     case 'socioed':
@@ -361,7 +362,7 @@ if(isset($input->func) && isset($input->params)) {
  * reserved codes: -1, -2, -3, -4, -5, -6, -7, -8, -9 -99.
  * @param $code
  */
-function return_with_code($code, $params){
+function return_with_code($code, $params = null){
 
     switch( $code ){
 
