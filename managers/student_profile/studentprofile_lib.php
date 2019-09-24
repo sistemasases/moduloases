@@ -2555,7 +2555,6 @@ function student_profile_load_socioed_tab($id_ases, $id_block){
     if($primer_acercamiento){
         $record->actualizar_primer_acercamiento = true;
         $record->id_primer_acercamiento = array_values( $primer_acercamiento )[0]->id_registro;
-        $record->editor_registro_primer_acercamiento = dphpforms_render_updater('primer_acercamiento', $rol, array_values( $primer_acercamiento )[0]->id_registro);
     }else{
         $record->registro_primer_acercamiento = true;
     }

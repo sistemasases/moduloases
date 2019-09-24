@@ -110,7 +110,6 @@
                             $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 - 30 ) + 'px'  } );
                         }
                     });
-                    
                 });
                 
 
