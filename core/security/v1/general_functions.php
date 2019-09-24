@@ -231,4 +231,25 @@ function is_empty_exception( array $var_list ): void
     
 }
 
+/**
+ * Function that generate a random string.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param integer $length Size of the random string.
+ * 
+ * @return string Random string.
+ */
+function generate_random_string( int $length = 10 ):string 
+{
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $characters_length = strlen( $characters );
+    $random_string = '';
+    for( $i = 0; $i < $length; $i++ ){
+        $random_string .= $characters[rand(0, $characters_length - 1)];
+    }
+    return $random_string;
+}
+
 ?>
