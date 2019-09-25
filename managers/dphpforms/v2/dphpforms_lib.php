@@ -1709,4 +1709,9 @@ function dphpformsV2_get_pretty_record_history( $record_id ){
     
 }
 
+function dphpformsV2_get_k( $record_id ) :int
+{
+    
+}
+
 ?>
