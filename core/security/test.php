@@ -92,7 +92,4 @@ $singularizations = array(
 
 //print_r( core_secure_update_action( "create_user", NULL, "", true ) );
 
-
-//print_r( core_secure_find_key( $explicit_hexed_rule = "99999" ) );
-
 ?>
