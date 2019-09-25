@@ -1128,4 +1128,8 @@ function monitor_assignments_get_current_practicant_by_monitor( $instance_id, $m
 
 }
 
+function monitor_assignments_get_empty_asignation_obj( string $asignation_type ){
+    $structure = new stdClass();
+}
+
 ?>
