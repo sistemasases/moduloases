@@ -76,6 +76,7 @@ $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert2.css', true);
 $PAGE->requires->css('/blocks/ases/style/round-about_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
+$PAGE->requires->css('/blocks/ases/style/historic_academic_reports.css', true);
 
 //Requires AMD modules
 $PAGE->requires->js_call_amd('block_ases/historic_academic_reports', 'init');
