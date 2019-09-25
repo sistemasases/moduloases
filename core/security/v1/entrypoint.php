@@ -1246,12 +1246,70 @@ function secure_update_action( $call, string $name = NULL, string $description =
             
     $query = "UPDATE $tablename " .                                             // Query to update a given action in the Database. See $param var.
         "SET nombre = $2, " .                                                   // New name.
-        "   descripcion = $3, ".                                                 // New description.
+        "   descripcion = $3, ".                                                // New description.
         "   registra_log = $4 ".                                                // New log configuration.
         "WHERE  ".
         "    id = $1 AND eliminado = 0";                                        // Criteria.
             
     return $manager( $query, $params );  
+    
+}
+
+/**
+ * Function that find one 'key' for sign a transaction.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param string $explicit_hexed_rule Hash rule in string.
+ * 
+ * @return string Key.
+ */
+function secure_find_key( string $explicit_hexed_rule = NULL ): string
+{
+    if( is_null($explicit_hexed_rule) ){
+        throw new Exception( "Rule cannot be empty", -1 );
+    }
+    if( $explicit_hexed_rule == "" ){
+        throw new Exception( "Rule cannot be empty", -1 );
+    }
+    if( !valid_explicit_hex_value( $explicit_hexed_rule ) ){
+        throw new Exception( "Sorry, the rule isn't a hex value.", -2 );
+    }
+    if( strlen($explicit_hexed_rule) > 5 ){
+        throw new Exception( "Security exception. Max. rule size is 5.", -3 );
+    }
+    
+    $rule_size = strlen( $explicit_hexed_rule );
+    $iteration_key_size_control = 1;                                            // Minimun characters size for a key.
+    $total_characters = 62;                                                     // 0-9a-zA-Z Number of valid characters for a key.
+    $max_iterations = combinations_with_repetition(                             // Key size optimizator
+        $total_characters, $iteration_key_size_control
+    );
+    
+    $iteration_counter = 0;
+    
+    while( true ){
+        
+        $tmp_key = generate_random_string( $iteration_key_size_control );       // Get candidate (random string) for key.
+        $hash = hash("sha512", $tmp_key);                                       // Hash of calculate.
+        
+        if( $explicit_hexed_rule == substr($hash, 0, $rule_size ) ){
+            return $tmp_key;
+        }else{
+            if( $iteration_counter > $max_iterations ){
+                
+                $iteration_key_size_control++;
+                $iteration_counter = 0;
+                $max_iterations = combinations_with_repetition(
+                    $total_characters, $iteration_key_size_control
+                );
+            }
+        }
+        
+        $iteration_counter++;
+        
+    }
     
 }
 

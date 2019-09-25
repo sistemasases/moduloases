@@ -231,4 +231,83 @@ function is_empty_exception( array $var_list ): void
     
 }
 
+/**
+ * Function that generate a random string.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param integer $length Size of the random string.
+ * 
+ * @return string Random string.
+ */
+function generate_random_string( int $length = 10 ):string 
+{
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $characters_length = strlen( $characters );
+    $random_string = '';
+    for( $i = 0; $i < $length; $i++ ){
+        $random_string .= $characters[rand(0, $characters_length - 1)];
+    }
+    return $random_string;
+}
+
+/**
+ * Function that return the factorial of a number.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param integer $number
+ * @return mixed Result of Number!
+ */
+function factorial( int $number )
+{
+    return ( $number <= 1 ? 1 : $number * factorial($number - 1) );
+}
+
+/**
+ * Function that return the number of combinations possibles with repetition.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param integer $n Number of values.
+ * @param integer $r Subset.
+ * 
+ * @return integer nCr => $nC$r
+ */
+function combinations_with_repetition( int $n, int $r ): float                  // For PHP, double, float or real are the same datatype.  
+{
+    return factorial( $n + $r - 1 ) / ( factorial($r) * factorial($n - 1) );
+}
+
+/**
+ * Function that validate if a given string is a hex value.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param string $hexed_value Value to check.
+ * @return bool If true is a valid hex value.
+ */
+function valid_explicit_hex_value( string $hexed_value ){
+    
+    $valid_rule_characters = [                                                  // Valid characters for a hex value.
+        '0','1','2','3','4',
+        '5','6','7','8','9',
+        'a','b','c','d','f'
+    ];
+    
+    $array_value = str_split( strtolower( $hexed_value ) );                     // Input string to list of chars.
+    
+    foreach( $array_value as $value ){                                          // Iterarion over every character.
+        if( !in_array($value, $valid_rule_characters) ){                        // Check if the current character isn't a valid hex value.
+            return false;
+        }
+    }
+    
+    return true;
+}
+
 ?>
