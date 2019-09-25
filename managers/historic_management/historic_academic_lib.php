@@ -104,6 +104,20 @@ function get_id_semester($name)
 }
 
 /**
+ * Gets last semestre in talentospilos_semestre
+ *
+ * @see get_id_semester($name)
+ * @return object
+ */
+function get_last_semester()
+{
+    global $DB;
+    $sql_query = "SELECT * from {talentospilos_semestre} ORDER BY id DESC limit 1;";
+    $semestre = $DB->get_record_sql($sql_query);
+    return $semestre;
+}
+
+/**
  * Creates an associative array given a header from a CSV file
  *
  * @see getAssociativeTitles ($titlesPos)
@@ -139,6 +153,23 @@ function validate_historic_register($id_student, $id_program, $id_semester)
     $sql_query = "SELECT id FROM {talentospilos_history_academ} WHERE id_estudiante = $id_student AND id_programa = $id_program AND id_semestre = $id_semester";
     return $DB->get_record_sql($sql_query);
 
+}
+
+/**
+ * validate a register in table talentospilos_user_extended and get its id
+ *
+ * @see validate_historic_register($id_student, $id_program, $id_semester)
+ * @param $id_student --> id from table talentospilos_usuario
+ * @param $id_program --> id from table talentospilos_semestre
+ * @return Object|boolean
+ */
+/*mdl_talentospilos_user_extended
+| id | id_moodle_user | id_ases_user | id_academic_program | tracking_status | program_status |*/
+function validate_user_extended($id_student, $id_program)
+{
+    global $DB;
+    $sql_query = "SELECT id FROM {talentospilos_user_extended} WHERE id_ases_user = $id_student AND id_academic_program = $id_program";
+    return $DB->get_record_sql($sql_query);
 }
 
 /**
@@ -206,6 +237,37 @@ function update_historic_academic($id_student, $id_program, $id_semester, $avera
 
     }
 
+}
+
+/**
+ * Update a register in table mdl_talentospilos_user_extended
+ *
+ * @see update_historic_academic($id_student, $id_program, $id_semester, $average, $overall_average)
+ * @param $id_student --> id from table talentospilos_usuario
+ * @param $id_program --> id from table talentospilos_semestre
+ * @param $id_semester --> id from
+ * @param $hasGraduated --> boolean from CSV
+ * @param $hasCancel --> Boolean from CSV
+ * @return bool
+ */
+/*mdl_talentospilos_user_extended
+| id | id_moodle_user | id_ases_user | id_academic_program | tracking_status | program_status |*/
+function update_student_status($id_student, $id_program, $id_semester, $hasGraduated, $hasCancel){
+    global $DB;
+    //validate existence
+    $student = validate_user_extended($id_student, $id_program);
+    $object_historic = new StdClass;
+    $object_historic->id = $student->id;
+    $object_historic->program_status = 4;
+    if ($hasGraduated){
+        $object_historic->program_status = 3;
+    }else if($id_semester === get_last_semester()->id){
+        if(!$hasCancel){
+            $object_historic->program_status = 1;
+        }
+    }
+    $update = $DB->update_record('talentospilos_user_extended', $object_historic);
+    return $update;
 }
 
 /**
