@@ -1281,13 +1281,14 @@ function secure_find_key( string $explicit_hexed_rule = NULL ): string
     }
     
     $rule_size = strlen( $explicit_hexed_rule );
-    $iteration_key_size_control = 6;                                            // Minimun characters size for a key.
+    $iteration_key_size_control = 1;                                            // Minimun characters size for a key.
     $total_characters = 62;                                                     // 0-9a-zA-Z Number of valid characters for a key.
     $max_iterations = combinations_with_repetition(                             // Key size optimizator
         $total_characters, $iteration_key_size_control
     );
     
     $iteration_counter = 0;
+    
     while( true ){
         
         $tmp_key = generate_random_string( $iteration_key_size_control );       // Get candidate (random string) for key.
@@ -1296,8 +1297,8 @@ function secure_find_key( string $explicit_hexed_rule = NULL ): string
         if( $explicit_hexed_rule == substr($hash, 0, $rule_size ) ){
             return $tmp_key;
         }else{
-            $iteration_counter++;
-            if( $iteration_counter === $max_iterations ){
+            if( $iteration_counter > $max_iterations ){
+                
                 $iteration_key_size_control++;
                 $iteration_counter = 0;
                 $max_iterations = combinations_with_repetition(
@@ -1305,6 +1306,8 @@ function secure_find_key( string $explicit_hexed_rule = NULL ): string
                 );
             }
         }
+        
+        $iteration_counter++;
         
     }
     
