@@ -353,7 +353,7 @@ if(isset($input->func) && isset($input->params)) {
 
         /**
          * [0] => id_ases: string
-         * [1] => peer_tracking: object | null
+         * [1] => peer_tracking: array | null
          */
         $params = $input->params;
 

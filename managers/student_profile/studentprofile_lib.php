@@ -39,6 +39,7 @@ require_once($CFG->dirroot.'/user/editlib.php');
 require_once($CFG->dirroot.'/user/profile/lib.php');
 require_once($CFG->dirroot.'/user/lib.php');
 
+require_once('student_graphic_dimension_risk.php');
 require_once('academic_lib.php');
 require_once('geographic_lib.php');
 require_once('others_tab_lib.php');
@@ -2599,6 +2600,8 @@ function student_profile_load_risk_info($id_ases, $peer_tracking){
     if($peer_tracking == null) {
         $peer_tracking = student_profile_get_peer_tracking($id_ases);
     }
+
+    print_r($peer_tracking);
 
     $periodoactual = getPeriodoActual();
 

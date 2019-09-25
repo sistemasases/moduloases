@@ -1135,6 +1135,7 @@ define(['jquery',
                         success: function( template ){
                             let tab_to_load = $(mustache.render( template, msg.data_response ));
                             $(".tab-content").append( tab_to_load );
+                            console.log(msg.data_response);
 
                             switch(tab_name){
                                 case 'socioed':
@@ -1194,7 +1195,7 @@ define(['jquery',
             success: function(msg) {
                 if(msg.status_code == 0) {
                     var values = msg.data_response;
-                    console.log("V: "+values);
+                    console.log(values);
 
                 } else {
                     console.log(msg);
