@@ -22,7 +22,10 @@
  * @copyright  2018 Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require_once(dirname(__FILE__). '/../../../../../config.php');
+require_once(dirname(__FILE__). '/../../../../../config.php');   
+require_once(dirname(__FILE__). '/../../../core/module_loader.php'); 
+
+module_loader("security");
 
 // -- Dev test block - This block cannot be considerated as documentation.
 /*header('Content-Type: application/json');
@@ -1709,8 +1712,49 @@ function dphpformsV2_get_pretty_record_history( $record_id ){
     
 }
 
-function dphpformsV2_get_k( $record_id ) :int
+/**
+ * Function that checks if the given record id exist in the database.
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param integer $record_id Record ID
+ * 
+ * @return bool True if exist a record with the given ID.
+ */
+function dphpformsV2_record_exist( int $record_id ):bool
 {
+    global $DB;                                                                 // Moodle DB manager.
+    
+    $query = "SELECT *                                                          
+    FROM {talentospilos_df_form_resp} 
+    WHERE id = '$record_id' AND estado = 1";
+    
+    $record = $DB->get_record_sql( $query );                                    
+    
+    return ( property_exists($record, "id") ? true : false );
+    
+}
+
+/**
+ * **
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ */
+function dphpformsV2_get_k( int $record_id ) :string
+{
+    /*if( dphp ){
+        
+    }*/
+    
+    
+    $hash_rule = NULL;
+    if( $record_id > 99999 ){
+        $hash_rule = substr( (string) $record_id , 0, 5);
+    }else{
+        $hash_rule = (string) $record_id;
+    }
+    
+    return core_secure_find_key($hash_rule);
     
 }
 
