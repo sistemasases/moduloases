@@ -3886,7 +3886,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         // Adding fields to table talentospilos_log_asignacion.
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
         $table->add_field('documento', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
-        $table->add_field('fecha_hora_asignacion', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, 'now()');
+        $table->add_field('fecha_hora_asignacion', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL, null, "now()");
 
         // Adding keys to table talentospilos_log_asignacion.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
