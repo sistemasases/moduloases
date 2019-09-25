@@ -1,36 +1,31 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
-//
-// Moodle is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// Moodle is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
+/**
+ * Created by PhpStorm.
+ * User: alejandro
+ * Date: 9/24/19
+ * Time: 11:04 AM
+ */
 /**
  * Ases block
  *
- * @author     Juan Pablo Moreno Muñoz
+ * @author     Alejandro Palacios Hurtado
  * @package    block_ases
- * @copyright  2018 Juan Pablo Moreno Muñoz <moreno.juan@correounivalle.edu.co>
+ * @copyright  2019 Alejandro Palacios Hurtado <palacios.alejandro@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+//This file is based on academic_processing.php
+
 require_once dirname(__FILE__) . '/../../../../config.php';
 require_once '../MyException.php';
 require_once '../mass_management/massmanagement_lib.php';
 require_once '../historic_management/historic_academic_lib.php';
-require_once '../historic_management/historic_icetex_lib.php';
 
+//Checks if a file was recieved
 if (isset($_FILES['file'])) {
 
     try {
+
         global $DB;
         $response = new stdClass();
 
@@ -39,8 +34,8 @@ if (isset($_FILES['file'])) {
         date_default_timezone_set("America/Bogota");
         $nombre = $archivo['name'];
 
-        $rootFolder = "../../view/archivos_subidos/historic/icetex_status/files/";
-        $zipFolder = "../../view/archivos_subidos/historic/icetex_status/comprimidos/";
+        $rootFolder = "../../view/archivos_subidos/historic/student_status/files/";
+        $zipFolder = "../../view/archivos_subidos/historic/student_status/comprimidos/";
 
         //validate and create folders
         if (!file_exists($rootFolder)) {
@@ -92,27 +87,46 @@ if (isset($_FILES['file'])) {
             $isValidRow = true;
             /* VALIDATIONS OF FIELDS */
 
-            
-            //validate cedula_estudiante
-            if (!is_null($associativeTitles['cedula_estudiante'])) {
+            //validate programa
+            if ($associativeTitles['codigo_programa'] != null) {
+                $codigo_programa = $data[$associativeTitles['codigo_programa']];
+                if ($codigo_programa != '') {
 
-                $cedula_estudiante = $data[$associativeTitles['cedula_estudiante']];
-
-                if ($cedula_estudiante != '') {
-
-                    $id_estudiante = get_student_id_by_identification($cedula_estudiante);
-                    if (!$id_estudiante) {
+                    $id_programa = get_id_program($codigo_programa);
+                    if (!$id_programa) {
                         $isValidRow = false;
-                        array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['cedula_estudiante'] + 1), 'cedula_estudiante', 'No existe un estudiante ases asociado a la cédula' . $data[$associativeTitles['cedula_estudiante']]]);
+                        array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['codigo_programa'] + 1), 'codigo_programa', 'No existe un programa asociado al codigo ' . $codigo_programa]);
                     }
 
                 } else {
                     $isValidRow = false;
-                    array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['cedula_estudiante'] + 1), 'cedula_estudiante', 'El campo cedula_estudiante es obligatorio y se encuentra vacio']);
+                    array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['codigo_programa'] + 1), 'codigo_programa', 'El campo codigo_programa es obligatorio y se encuentra vacio']);
                 }
 
             } else {
-                throw new MyException('La columna con el campo cedula_estudiante es obligatoria');
+                throw new MyException('La columna con el campo programa es obligatoria');
+            }
+
+            //validate codigo_estudiante
+            if (!is_null($associativeTitles['codigo_estudiante'])) {
+
+                $codigo_estudiante = $data[$associativeTitles['codigo_estudiante']].'-'.$codigo_programa;
+
+                if ($codigo_estudiante != '') {
+
+                    $id_estudiante = get_ases_id_by_code($codigo_estudiante);
+                    if (!$id_estudiante) {
+                        $isValidRow = false;
+                        array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['codigo_estudiante'] + 1), 'codigo_estudiante', 'No existe un estudiante ases asociado al codigo' . $data[$associativeTitles['codigo_estudiante']]]);
+                    }
+
+                } else {
+                    $isValidRow = false;
+                    array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['codigo_estudiante'] + 1), 'codigo_estudiante', 'El campo codigo_estudiante es obligatorio y se encuentra vacio']);
+                }
+
+            } else {
+                throw new MyException('La columna con el campo codigo_estudiante es obligatoria');
             }
 
             //validate semestre
@@ -123,7 +137,7 @@ if (isset($_FILES['file'])) {
                     $id_semestre = get_id_semester($semestre);
                     if (!$id_semestre) {
                         $isValidRow = false;
-                        array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['semestre'] + 1), 'semestre', 'No existe ningun semestre registrado el nombre' . $semestre]);
+                        array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['semestre'] + 1), 'semestre', 'No existe ningun semestre registrado al nombre' . $semestre]);
                     }
 
                 } else {
@@ -134,44 +148,40 @@ if (isset($_FILES['file'])) {
             } else {
                 throw new MyException('La columna con el campo semestre es obligatoria');
             }
-            
-            //validate estado icetex
-            if ($associativeTitles['estado_icetex'] != null) {
-                $estado_icetex = $data[$associativeTitles['estado_icetex']];
-                if ($semestre != '') {
 
-                    $id_estado_icetex = get_id_icetex_status($estado_icetex);
-                    if (!$id_estado_icetex) {
-                        $isValidRow = false;
-                        array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['estado_icetex'] + 1), 'estado_icetex', 'No existe ningun estado icetex registrado con el nombre' . $estado_icetex]);
-                    }
-
-                } else {
-                    $isValidRow = false;
-                    array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['estado_icetex'] + 1), 'estado_icetex', 'El campo estado_icetex es obligatorio y se encuentra vacio']);
+            //validate estado_grado
+            $graduado = false;
+            if ($associativeTitles['estado_grado'] != null){
+                $estado_grado = $data[$associativeTitles['estado_grado']];
+                if($estado_grado === 'SI'){
+                    $graduado = true;
                 }
-
-            } else {
-                throw new MyException('La columna con el campo estado_icetex es obligatoria');
             }
 
-            
+            $hasCancel = false;
+            //validate fecha_cancelacion
+            if ($associativeTitles['cancelo_semestre'] != null) {
+                $fecha_cancelacion = $data[$associativeTitles['cancelo_semestre']];
+                if ($fecha_cancelacion != "" and $fecha_cancelacion != 'undefined') {
+                    $hasCancel = true;
+                }
+            }
+
             //FINALIZACION DE VALIDACIONES. CARGA O ACTUALIZACIÓN
             if (!$isValidRow) {
                 $lc_wrongFile++;
                 array_push($wrong_rows, $data);
                 continue;
             } else {
-
                 //Actualizar o crear un registro
-                $result = update_historic_icetex_status($id_estudiante, $id_semestre, $id_estado_icetex);
+                $result = update_student_status($id_estudiante, $id_programa, $id_semestre, $graduado, $hasCancel);
 
                 if (!$result) {
                     array_push($detail_errors, [$line_count, $lc_wrongFile, 'Error al registrar historico', 'Error Servidor', 'Error del server registrando el historico']);
                     array_push($wrong_rows, $data);
                     $lc_wrongFile++;
-                } else {
-                    array_push($success_rows, $data);                    
+                }else {
+                    array_push($success_rows, $data);
                 }
             }
 
@@ -239,7 +249,7 @@ if (isset($_FILES['file'])) {
             echo json_encode($response);
         }
 
-    } catch (MyException $e) {
+    }catch (MyException $e) {
         $msj = new stdClass();
         $msj->error = $e->getMessage() . pg_last_error();
         echo json_encode($msj);
