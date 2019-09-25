@@ -1739,19 +1739,23 @@ function dphpformsV2_record_exist( int $record_id ):bool
  * **
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
+ * 
+ * @param integer $record_id Record ID.
+ * @throws Exception If the given record ID doesn't exist.
+ * 
+ * @return string K
  */
 function dphpformsV2_get_k( int $record_id ) :string
 {
-    /*if( dphp ){
-        
-    }*/
-    
+    if( !dphpformsV2_record_exist( $record_id ) ){
+        throw new Exception( "Invalid ID.", -1 );
+    }
     
     $hash_rule = NULL;
-    if( $record_id > 99999 ){
-        $hash_rule = substr( (string) $record_id , 0, 5);
+    if( $record_id > 99999 ){                                                   // Validation of size.
+        $hash_rule = substr( (string) $record_id , 0, 5);                       // Cut to a valid size.
     }else{
-        $hash_rule = (string) $record_id;
+        $hash_rule = (string) $record_id;                                       
     }
     
     return core_secure_find_key($hash_rule);
