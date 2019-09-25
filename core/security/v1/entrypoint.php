@@ -1299,6 +1299,7 @@ function secure_find_key( string $explicit_hexed_rule = NULL ): string
             $iteration_counter++;
             if( $iteration_counter === $max_iterations ){
                 $iteration_key_size_control++;
+                $iteration_counter = 0;
                 $max_iterations = combinations_with_repetition(
                     $total_characters, $iteration_key_size_control
                 );
