@@ -759,12 +759,11 @@
                                             dataType: 'json',
                                             async:false,
                                             success: function(data){
-                                                record_raw = data;
-                                                record = JSON.stringify(data);
+                                                k = data.data_response;
                                             }
                                         });
 
-                                        let filename = $("#dphpforms_fullname").data("info") + " - " + record_raw.record.alias + "-" + record_id + "-" + "k" + " - Fecha " + record_raw.record.fecha_hora_registro + ".json";
+                                        let filename = $("#dphpforms_fullname").data("info") + " - " + record_raw.record.alias + "-" + record_id + "-" + "k-" + k + " - Fecha " + record_raw.record.fecha_hora_registro + ".json";
 
                                         var file = new Blob([record], {type: ".json"});
                                         if (window.navigator.msSaveOrOpenBlob) // IE10+
