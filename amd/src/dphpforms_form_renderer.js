@@ -720,8 +720,23 @@
                                                 record = JSON.stringify(data);
                                             }
                                         });
+                                        
+                                        let k = null;
+                                        $.ajax({
+                                            url: "../managers/dphpforms/v2/dphpforms_api.php",
+                                            type: "POST",
+                                            data: JSON.stringify({
+                                                function: "get_k",
+                                                params: [ record_id ]
+                                            }),
+                                            dataType: 'json',
+                                            async:false,
+                                            success: function(data){
+                                                k = data.data_response;
+                                            }
+                                        });
 
-                                        let filename = $("#dphpforms_fullname").data("info") + " - " + record_raw.record.alias + " - Fecha " + record_raw.record.fecha_hora_registro + ".json";
+                                        let filename = $("#dphpforms_fullname").data("info") + " - " + record_raw.record.alias + "-" + record_id + "-" + "k-" + k + " - Fecha " + record_raw.record.fecha_hora_registro + ".json";
 
                                         var file = new Blob([record], {type: ".json"});
                                         if (window.navigator.msSaveOrOpenBlob) // IE10+

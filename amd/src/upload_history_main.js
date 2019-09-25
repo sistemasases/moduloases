@@ -60,7 +60,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($,
                         $('#response').html("<img src='../icon/facebook.gif' />");
                     },
                     success: function (msj) {
-                        console.log(msj);
                         swal({
                             title: "Exito",
                             text: "Archivo Cargado. Por favor consulte los detalles",
