@@ -1,5 +1,5 @@
 /**
- * Social-educative tackings
+ * Social-educative tracking
  * @module amd/src/academic_reports
  * @author Jorge Eduardo Mayor Fernández
  * @copyright 2019 Jorge Eduardo Mayor <mayor.jorge@correounivalle.edu.co>

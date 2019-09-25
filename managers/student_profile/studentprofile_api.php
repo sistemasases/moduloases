@@ -82,7 +82,7 @@ if(isset($input->func) && isset($input->params)) {
                     return_with_code(-5);
                 }
             } else {
-                return_with_code(-2, $params);
+                return_with_code(-2);
             }
         } else {
             return_with_code(-6);
@@ -343,6 +343,40 @@ if(isset($input->func) && isset($input->params)) {
                 update_user_image_profile($user->id, 0);
 
                 print_r($id_moodle);
+            } else {
+                return_with_code(-2);
+            }
+        } else {
+            return_with_code(-6);
+        }
+    } else if ($function == 'load_risk_info') {
+
+        /**
+         * [0] => id_ases: string
+         * [1] => peer_tracking: object | null
+         */
+        $params = $input->params;
+
+        if(count($params) == 2) {
+
+            $id_ases = $params[0];
+            $peer_tracking = $params[1];
+
+            if(is_string($id_ases)) {
+
+                $result = student_profile_load_risk_info($id_ases, $peer_tracking);
+
+                if($result != null){
+                    echo json_encode(
+                        array(
+                            "status_code" => 0,
+                            "message" => "Risk information",
+                            "data_response" => $result
+                        )
+                    );
+                } else {
+                    return_with_code(-5);
+                }
             } else {
                 return_with_code(-2);
             }

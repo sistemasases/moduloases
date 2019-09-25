@@ -54,17 +54,17 @@ define(['jquery',
             /**
              * Event that loads asynchronously the socio-educational tab
              */
-            $("#socioed_li").on('click', {tab_name: 'socioed'}, load_tabs);
+            $("#socioed_li").one('click', {tab_name: 'socioed'}, load_tabs);
 
             /**
              * Event that loads asynchronously the academic tab
              */
-            $("#academic_li").on('click', {tab_name: 'academic'}, load_tabs);
+            $("#academic_li").one('click', {tab_name: 'academic'}, load_tabs);
 
             /**
              * Event that loads asynchronously the geographic tab
              */
-            $("#geographic_li").on('click', {tab_name: 'geographic'}, load_tabs);
+            $("#geographic_li").one('click', {tab_name: 'geographic'}, load_tabs);
 
             /**
              * Event that moves the Google Maps map from
@@ -286,11 +286,9 @@ define(['jquery',
                 self.graph_radial();
             });
 
-            $('#view_graphic_risk_button').click(function () {
+            $('#view_graphic_risk_button').off('click', graph);
 
-                $('#modal_riesgos').fadeIn(200);
-                graficar();
-            });
+            $('#view_graphic_risk_button').one('click', load_risk_info);
 
             $('#mymodal-riesgo-close').click(function () {
                 $('#modal_riesgos').fadeOut(200);
@@ -1113,8 +1111,8 @@ define(['jquery',
      */
     function load_tabs(event) {
 
-        var tab_name = event.data.tab_name;
         var id_ases = $('#id_ases').val();
+        var tab_name = event.data.tab_name;
         var id_block = document.querySelector('#dphpforms_block_instance').dataset.info;
 
         $(".active").removeClass("active");
@@ -1135,7 +1133,6 @@ define(['jquery',
                         dataType: "text",
                         async: false,
                         success: function( template ){
-                            console.log(msg.data_response);
                             let tab_to_load = $(mustache.render( template, msg.data_response ));
                             $(".tab-content").append( tab_to_load );
 
@@ -1155,7 +1152,6 @@ define(['jquery',
                             }
 
                             $("#"+tab_name+"_tab").addClass("active");
-                            $("#"+tab_name+"_li").off('click', load_tabs);
                         },
                         error: function(){
                             console.log( "../templates/view_"+tab_name+"_tab_sp.mustache cannot be reached." );
@@ -1173,6 +1169,53 @@ define(['jquery',
                 console.log(msg);
             }
         });
+    }
+
+    /**
+     * @author Jorge Eduardo Mayor
+     * @see load_risk_info()
+     * @desc Gets the necessary information to load
+     * the risk graphic
+     */
+    function load_risk_info(){
+
+        var id_ases = $('#id_ases').val();
+        var peer_tracking_div = document.querySelector('#peer_tracking_info');
+        var peer_tracking_info = JSON.parse((peer_tracking_div)?peer_tracking_div.dataset.info:null);
+        console.log(peer_tracking_info);
+
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({
+                "func": 'load_risk_info',
+                "params": [id_ases, peer_tracking_info],
+            }),
+            url: "../managers/student_profile/studentprofile_api.php",
+            success: function(msg) {
+                if(msg.status_code == 0) {
+                    var values = msg.data_response;
+                    console.log("V: "+values);
+
+                } else {
+                    console.log(msg);
+                }
+            },
+            dataType: "json",
+            cache: "false",
+            error: function(msg) {
+                console.log(msg);
+            }
+        });
+
+        //$('#modal_riesgos').fadeIn(200);
+        //graficar();
+
+        $('#view_graphic_risk_button').on('click', graph);
+    }
+
+    function graph() {
+        $('#modal_riesgos').fadeIn(200);
+        graficar();
     }
 
     // Funciones para la validación de formularios
