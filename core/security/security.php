@@ -350,4 +350,20 @@ function core_secure_update_action( $call, string $name = NULL, string $descript
     return secure_update_action( $call, $name, $description, $log );
 }
 
+/**
+ * Interface to secure_find_key
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ *
+ * @see  secure_find_key( ... ) in entrypoint.php
+ * 
+ * @param string $explicit_hexed_rule Hash rule in string.
+ * 
+ * @return string Key.
+ */
+function core_secure_find_key( string $explicit_hexed_rule = NULL ){
+    return secure_find_key( $explicit_hexed_rule );
+}
+
 ?>
