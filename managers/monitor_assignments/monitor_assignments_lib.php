@@ -23,11 +23,15 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once(dirname(__FILE__). '/../../../../config.php');
+require_once(dirname(__FILE__). '/../../core/module_loader.php'); 
 require_once(dirname(__FILE__).'/../jquery_datatable/jquery_datatable_lib.php');
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/user_management/user_lib.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/user_management/user_management_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/ases_report/asesreport_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
+
+module_loader("periods");
 
 use jquery_datatable\Datatable;
 
@@ -1129,25 +1133,58 @@ function monitor_assignments_get_current_practicant_by_monitor( $instance_id, $m
 }
 
 /**
- * Function that return an empty assignation log object.
+ * Function that store the assignation history.
  * 
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
  * 
- * @return stdClass stdClass with empty properties.
+ * @param bool $is_monlog True if is a monitor-student assignation, False if is a user-extended assignation.
+ * @param integer $assig_id Assignation ID.
+ * 
+ * @throws Exception If the assignation doesn't exist.
+ * 
+ * @return mixed Moodle database manager return.
  */
-function monitor_assignments_get_empty_asignation_obj(): stdClass
+function monitor_assignments_assignation_log( bool $is_monlog, int $assig_id )
 {
-    $structure = new stdClass();
-    $structure->user_id = null;
-    $structure->user_rol = null;
-    $structure->assigned_to_id = null;
-    $structure->assigned_to_rol = null;
-    $structure->end_asignation_datetime = null;
-    $structure->id_semester = null;
-    $structure->instance_id = null;
+    global $DB;                                                                 // Moodle DB manager.
     
-    return $structure;
+    $tablename = (                                                              // Selection of assignation table
+        $is_monlog ? 
+        'talentospilos_monitor_estud' : 
+        'talentospilos_user_rol'
+    );
+        
+    $query = "SELECT * FROM {".$tablename."}  WHERE id = '$assig_id'";          // Query to get the assignation
+    $assig = $DB->get_record_sql( $query );                                     // Get the assignation
+    
+    if( !property_exists($assig, 'id') && $is_monlog ){                         // Check of the assignation exist in $ases_db_prefix_monitor_student
+        throw new Exception( 
+            "Assigment '$assig_id' does not exist as monitor-student relationship.", -1 
+        );
+    }else if( !property_exists($assig, 'id') && !$is_monlog ){                  // Check if the assignation exist in $ases_db_prefix_user_rol
+        throw new Exception( 
+            "Assigment '$assig_id' does not exist as user extended relationship.", -2 
+        );
+    }
+    
+    $doc = new stdClass();
+    $doc->user_id = ( $is_monlog ? $assig->id_monitor : $assig->id_jefe );
+    $doc->assignation_type = ( $is_monlog ? "monitor-student" : "user-boss" );
+    $doc->assigned_to_id = ( $is_monlog ? $assig->id_estudiante : $assig->id_usuario );
+    $doc->assignation_record = clone $assig;
+    // Solve FK block.
+    $assig->id_semestre = core_periods_get_period_by_id( $assig->id_semestre );
+    if( !$is_monlog ){
+        $assig->id_rol = user_management_get_role_by_id($assig->id_rol);
+    }
+    // End of Solve FK block.
+    $doc->assignation_record_full = $assig;
+    
+    $log_obj = new stdClass();
+    $log_obj->documento = json_encode($doc);
+    
+    return $DB->insert_record( 'talentospilos_log_asignacion', $log_obj );
     
 }
 
