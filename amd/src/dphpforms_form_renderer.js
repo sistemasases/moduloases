@@ -69,26 +69,23 @@ define([
                 }
             });
 
-            $('#button_update_geographic_track').click(function () {
+            $('#button_update_geographic_track').click(function(){
                 $('div').removeClass('regla_incumplida');
-                $.get("../managers/dphpforms/dphpforms_forms_core.php?form_id=seguimiento_geografico&record_id=" + $(this).attr('data-record-id'), function (data) {
+                $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id=seguimiento_geografico&record_id=" + $(this).attr('data-record-id'), function( data ) {
                     $("#seguimiento_geografico_form").html("");
-                    $('#seguimiento_geografico_form').append(data);
+                    $('#seguimiento_geografico_form').append( data );
                     $('#modal_seguimiento_geografico').fadeIn(300);
-
-                    if ($('.seg_geo_vive_zona_riesgo').find('label').find('input').prop('checked')) {
-                        $('.seg_geo_origen').find('input').prop('disabled', false);
-                    } else {
-                        $('.seg_geo_origen').find('input').prop('disabled', true);
-                        $('.seg_geo_origen').find('input').prop('checked', false);
+                    if($('.seg_geo_vive_zona_riesgo').find('label').find('input').prop('checked')) {
+                        $('.seg_geo_origen').find('input').prop('disabled', false );
+                    }else{
+                        $('.seg_geo_origen').find('input').prop('disabled', true );
+                        $('.seg_geo_origen').find('input').prop('checked', false );
                     }
-
                     var count_buttons_dphpforms = $('.dphpforms-record .btn-dphpforms-univalle').length;
-
-                    if (count_buttons_dphpforms == 2) {
-                        $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css({'margin-left': (($('.dphpforms-updater').width() / 2) - 72) + 'px'});
-                    } else if (count_buttons_dphpforms == 3) {
-                        $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css({'margin-left': (($('.dphpforms-updater').width() / 2) - 72 - 30) + 'px'});
+                    if( count_buttons_dphpforms == 2 ){
+                        $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 ) + 'px'  } );
+                    }if( count_buttons_dphpforms == 3 ){
+                        $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 - 30 ) + 'px'  } );
                     }
                 });
             });
