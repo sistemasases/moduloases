@@ -40,6 +40,31 @@ define(['jquery'], function($) {
                 $('.primer_acerca_id_estudiante_field').find('input').val(student_code);
                 $('.primer_acerca_id_creado_por_field').find('input').val(creado_por);
             });
+
+            $('#button_actualizar_primer_acercamiento').click(function(){
+                $('div').removeClass('regla_incumplida');
+                $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id=primer_acercamiento&record_id=" + $(this).attr('data-record-id'), function( data ) {
+                    $("#primer_acercamiento_form").html("");
+                    $('#primer_acercamiento_form').append( data );
+                    $('#modal_primer_acercamiento').fadeIn(300);
+
+                    var id_creado_por = $('#modal_primer_acercamiento').find('.pa_id_creado_por').find('input').val();
+
+                    $.get( "../managers/user_management/api_user.php?function=get_user_information&arg=" + id_creado_por, function( response ) {
+
+                        var registered_by = response.firstname + ' ' + response.lastname;
+
+                        $('#modal_primer_acercamiento').find('h1').after('<hr style="border-color:#444;"><h3>Registrado por: <strong>' + registered_by + '</strong></h3>');
+
+                        var count_buttons_dphpforms = $('.dphpforms-record .btn-dphpforms-univalle').length;
+                        if( count_buttons_dphpforms == 2 ){
+                            $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 ) + 'px'  } );
+                        }else if( count_buttons_dphpforms == 3 ){
+                            $('.dphpforms-record .btn-dphpforms-univalle:eq(0)').css( { 'margin-left' : ( ($('.dphpforms-updater').width()/2) - 72 - 30 ) + 'px'  } );
+                        }
+                    });
+                });
+            });
         }
     };
 });
