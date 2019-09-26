@@ -1,6 +1,6 @@
 /**
  * Social-educative tracking
- * @module amd/src/academic_reports
+ * @module amd/src/socioed_profile_main
  * @author Jorge Eduardo Mayor Fernández
  * @copyright 2019 Jorge Eduardo Mayor <mayor.jorge@correounivalle.edu.co>
  * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
