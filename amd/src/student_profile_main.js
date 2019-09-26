@@ -17,8 +17,10 @@ define(['jquery',
     'block_ases/select2',
     'block_ases/Chart',
     'block_ases/mustache',
+    'block_ases/loading_indicator',
     'block_ases/academic_profile_main',
-    'block_ases/geographic_main'], function ($, bootstrap, d3, sweetalert, jqueryui, select2, Chart, mustache, academic, geographic) {
+    'block_ases/socioed_profile_main',
+    'block_ases/geographic_main'], function ($, bootstrap, d3, sweetalert, jqueryui, select2, Chart, mustache, loading_indicator, academic, socioed, geographic) {
 
     return {
         init: function (data_init) {
@@ -53,17 +55,17 @@ define(['jquery',
             /**
              * Event that loads asynchronously the socio-educational tab
              */
-            //$("#socioed_li").on('click', {tab_name: 'socioed'}, load_tabs);
+            $("#socioed_li").one('click', {tab_name: 'socioed'}, load_tabs);
 
             /**
              * Event that loads asynchronously the academic tab
              */
-            $("#academic_li").on('click', {tab_name: 'academic'}, load_tabs);
+            $("#academic_li").one('click', {tab_name: 'academic'}, load_tabs);
 
             /**
              * Event that loads asynchronously the geographic tab
              */
-            $("#geographic_li").on('click', {tab_name: 'geographic'}, load_tabs);
+            $("#geographic_li").one('click', {tab_name: 'geographic'}, load_tabs);
 
             /**
              * Event that moves the Google Maps map from
@@ -205,6 +207,8 @@ define(['jquery',
             // Save image to backend
             $('#send-profile-image').on('click', function () {
 
+                loading_indicator.show();
+
                 var id_moodle = $('#id_moodle').val();
                 var image_file = document.getElementById('profile-image-input').files[0];
 
@@ -220,9 +224,11 @@ define(['jquery',
                     method: 'POST',
                     type: 'POST', // For jQuery < 1.9
                     success: function (data) {
+                        loading_indicator.hide();
                         alert(data);
                     },
                     error: function (data) {
+                        loading_indicator.hide();
                         console.log(data)
                     }
                 });
@@ -285,10 +291,9 @@ define(['jquery',
                 self.graph_radial();
             });
 
-            $('#view_graphic_risk_button').click(function () {
-                $('#modal_riesgos').fadeIn(200);
-                graficar();
-            });
+            $('#view_graphic_risk_button').off('click', graph);
+
+            $('#view_graphic_risk_button').one('click', load_risk_info);
 
             $('#mymodal-riesgo-close').click(function () {
                 $('#modal_riesgos').fadeOut(200);
@@ -337,6 +342,7 @@ define(['jquery',
             },
                 function (isConfirm) {
                     if (isConfirm) {
+                        loading_indicator.show();
                         $.ajax({
                             type: "POST",
                             data: JSON.stringify({
@@ -345,6 +351,7 @@ define(['jquery',
                             }),
                             url: "../managers/student_profile/studentprofile_api.php",
                             success: function (msg) {
+                                loading_indicator.hide();
                                 if(msg.status_code == 0) {
                                     if ($('#select-' + id_program).val() == "ACTIVO") {
                                         $('#tr-' + id_moodle).addClass('is-active');
@@ -363,6 +370,7 @@ define(['jquery',
                             dataType: "json",
                             cache: "false",
                             error: function (msg) {
+                                loading_indicator.hide();
                                 swal(
                                     msg.title,
                                     msg.msg,
@@ -420,6 +428,8 @@ define(['jquery',
                                 var id_reason_dropout = $('#reasons_select').val();
                                 var observation = $('#description_dropout').val();
 
+                                loading_indicator.show();
+
                                 $.ajax({
                                     type: "POST",
                                     data: JSON.stringify({
@@ -429,6 +439,8 @@ define(['jquery',
                                     }),
                                     url: "../managers/student_profile/studentprofile_api.php",
                                     success: function (msg) {
+
+                                        loading_indicator.hide();
 
                                         if(msg.status_code == 0) {
                                             $('#input_status_ases').val(new_status);
@@ -467,6 +479,7 @@ define(['jquery',
                                     dataType: "json",
                                     cache: "false",
                                     error: function (msg) {
+                                        loading_indicator.hide();
                                         modal_dropout.hide();
                                         swal(
                                             msg.title,
@@ -478,6 +491,8 @@ define(['jquery',
                             });
                         } else if (new_status == 'seguimiento') {
 
+                            loading_indicator.show();
+
                             $.ajax({
                                 type: "POST",
                                 data: JSON.stringify({
@@ -487,6 +502,8 @@ define(['jquery',
                                 }),
                                 url: "../managers/student_profile/studentprofile_api.php",
                                 success: function (msg) {
+
+                                    loading_indicator.hide();
 
                                     $('#input_status_ases').val(new_status);
 
@@ -509,6 +526,7 @@ define(['jquery',
                                 dataType: "json",
                                 cache: "false",
                                 error: function (msg) {
+                                    loading_indicator.hide();
                                     console.log(msg);
                                 },
                             }).then(function (msg) {
@@ -544,6 +562,8 @@ define(['jquery',
                     },
                         function (isConfirm) {
                             if (isConfirm) {
+
+                                loading_indicator.show();
                                 $('.input-tracking').prop('checked', false);
                                 element.prop('checked', true);
 
@@ -559,6 +579,7 @@ define(['jquery',
                                     }),
                                     url: "../managers/student_profile/studentprofile_api.php",
                                     success: function (msg) {
+                                        loading_indicator.hide();
                                         setTimeout(function () {
                                             if(msg.status_code == 0 || msg.status_code == -9) {
                                                 swal(
@@ -574,6 +595,7 @@ define(['jquery',
                                     dataType: "json",
                                     cache: "false",
                                     error: function (msg) {
+                                        loading_indicator.hide();
                                         setTimeout(function () {
                                             swal(
                                                 msg.title,
@@ -1038,6 +1060,8 @@ define(['jquery',
             return msg;
         }, save_form_edit_profile: function (form, object_function, control1, control2, json) {
 
+            loading_indicator.show();
+
             $.ajax({
                 type: "POST",
                 data: JSON.stringify({
@@ -1046,6 +1070,7 @@ define(['jquery',
                 }),
                 url: "../managers/student_profile/studentprofile_api.php",
                 success: function (msg) {
+                    loading_indicator.hide();
                     if(msg.status_code == 0) {
                         swal(
                             msg.title,
@@ -1057,6 +1082,7 @@ define(['jquery',
                 dataType: "json",
                 cache: "false",
                 error: function (msg) {
+                    loading_indicator.hide();
                     swal(
                         msg.title,
                         msg.msg,
@@ -1111,8 +1137,11 @@ define(['jquery',
      */
     function load_tabs(event) {
 
-        var tab_name = event.data.tab_name;
+        loading_indicator.show();
+
         var id_ases = $('#id_ases').val();
+        var tab_name = event.data.tab_name;
+        var id_block = document.querySelector('#dphpforms_block_instance').dataset.info;
 
         $(".active").removeClass("active");
         $("#"+tab_name+"_li").addClass("active");
@@ -1121,7 +1150,7 @@ define(['jquery',
             type: "POST",
             data: JSON.stringify({
                 "func": 'load_tabs',
-                "params": [id_ases, tab_name],
+                "params": [id_ases, tab_name, id_block],
             }),
             url: "../managers/student_profile/studentprofile_api.php",
             success: function(msg) {
@@ -1132,11 +1161,13 @@ define(['jquery',
                         dataType: "text",
                         async: false,
                         success: function( template ){
+                            loading_indicator.hide();
                             let tab_to_load = $(mustache.render( template, msg.data_response ));
                             $(".tab-content").append( tab_to_load );
 
                             switch(tab_name){
                                 case 'socioed':
+                                    socioed.init();
                                     break;
                                 case 'academic':
                                     academic.init();
@@ -1150,13 +1181,53 @@ define(['jquery',
                             }
 
                             $("#"+tab_name+"_tab").addClass("active");
-                            $("#"+tab_name+"_li").off('click', load_tabs);
                         },
                         error: function(){
+                            loading_indicator.hide();
                             console.log( "../templates/view_"+tab_name+"_tab_sp.mustache cannot be reached." );
                         }
                     });
+                } else {
+                    loading_indicator.hide();
+                    console.log(msg);
+                }
+            },
+            dataType: "json",
+            cache: "false",
+            error: function(msg) {
+                loading_indicator.hide();
+                console.log(msg);
+            }
+        });
+    }
 
+    /**
+     * @author Jorge Eduardo Mayor
+     * @see load_risk_info()
+     * @desc Gets the necessary information to load
+     * the risk graphic
+     */
+    function load_risk_info(){
+
+        loading_indicator.show();
+        var id_ases = $('#id_ases').val();
+        var peer_tracking_div = document.querySelector('#peer_tracking_info');
+        var peer_tracking_info = JSON.parse((peer_tracking_div)?peer_tracking_div.dataset.info:null);
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({
+                "func": 'load_risk_info',
+                "params": [id_ases, peer_tracking_info],
+            }),
+            url: "../managers/student_profile/studentprofile_api.php",
+            success: function(msg) {
+                loading_indicator.hide();
+                if(msg.status_code == 0) {
+                    var values = msg.data_response;
+                    procesar_datos_riesgo(values);
+                    $('#modal_riesgos').fadeIn(200);
+                    graficar();
+                    $('#view_graphic_risk_button').on('click', graph);
                 } else {
                     console.log(msg);
                 }
@@ -1164,9 +1235,15 @@ define(['jquery',
             dataType: "json",
             cache: "false",
             error: function(msg) {
+                loading_indicator.hide();
                 console.log(msg);
             }
         });
+    }
+
+    function graph() {
+        $('#modal_riesgos').fadeIn(200);
+        graficar();
     }
 
     // Funciones para la validación de formularios
@@ -1237,6 +1314,8 @@ define(['jquery',
 
     function save_icetex_status() {
 
+        loading_indicator.show();
+
         var id_ases = $('#id_ases').val();
         var id_new_status = $('#icetex_status').val();
 
@@ -1250,6 +1329,7 @@ define(['jquery',
             cache: "false",
             url: "../../ases/managers/student_profile/studentprofile_api.php",
             success: function (msg) {
+                loading_indicator.hide();
                 if(msg.status_code == 0)
                 {
                     swal({
@@ -1265,6 +1345,7 @@ define(['jquery',
                 //clean_modal_dropout();
             },
             error: function (msg) {
+                loading_indicator.hide();
                 swal(
                     'Error',
                     'No se puede contactar con el servidor.',
@@ -1311,7 +1392,6 @@ define(['jquery',
                         save_ases_status();
                     }
                 });
-
             } else if (newstatus == "NO REGISTRA") {
                 swal({
                     title: "Error",
@@ -1329,21 +1409,20 @@ define(['jquery',
                     cancelButtonText: "No",
                     closeOnConfirm: true,
                     allowEscapeKey: false
-                },
-                    function (isConfirm) {
-                        if (isConfirm) {
+                }, function (isConfirm) {
+                    if (isConfirm) {
 
-                            var result_status = save_ases_status();
+                        var result_status = save_ases_status();
 
-                            swal(
-                                result_status.title,
-                                result_status.msg,
-                                resul_status.status);
-                        }
-                        else {
-                            $('#estadoAses').val(previous);
-                        }
-                    });
+                        swal(
+                            result_status.title,
+                            result_status.msg,
+                            resul_status.status);
+                    }
+                    else {
+                        $('#estadoAses').val(previous);
+                    }
+                });
             }
         });
     }
@@ -1456,7 +1535,6 @@ define(['jquery',
                 $('h4>span', this).removeClass('glyphicon-chevron-down');
                 $('h4>span', this).addClass('glyphicon-chevron-left');
             }
-
         });
     }
 
@@ -2058,40 +2136,47 @@ define(['jquery',
         });
     }
 
-    function procesarJSON() {
+    function procesar_datos_riesgo(dimensiones) {
         // Asignación de gráficas y manejo del JSON para graficar
 
-        for (var i = 0; i < Object.keys(datos['informacion']).length; i++) {
-            var arregloDimensionTmp = [];
-            var nombreDimensionTmp;
-            var fechasTmp = [];
-            var colorTmp = [];
-            var riesgoTmp = [];
+        var graphical_data = [];
+        var NOMBRES_DIMENSIONES = ['individual', 'familiar', 'academico', 'economico', 'vida_universitaria'];
 
-            nombreDimensionTmp = datos['informacion'][i]['dimension'];
+        for(var i = 0; i < Object.keys(dimensiones).length; i++) {
+            var arreglo_dimension = [];
+            var fechas = [];
+            var color = [];
+            var riesgo = [];
+            var nombre_dimension = NOMBRES_DIMENSIONES[i];
+
+            var dato_actual = dimensiones[nombre_dimension][0]['datos'];
             var contador = 0;
-            while (datos['informacion'][i]['datos'][contador]['end'] == 'false') {
-                fechasTmp.push(datos['informacion'][i]['datos'][contador]['fecha']);
-                colorTmp.push(datos['informacion'][i]['datos'][contador]['color']);
-                riesgoTmp.push(datos['informacion'][i]['datos'][contador]['riesgo']);
-                contador = contador + 1;
+
+            while(dato_actual['end'] == 'false')
+            {
+                fechas.push(dato_actual['fecha']);
+                color.push(dato_actual['color']);
+                riesgo.push(dato_actual['riesgo']);
+                contador+=1;
+                dato_actual = dimensiones[nombre_dimension][contador]['datos'];
             }
-            arregloDimensionTmp.push(nombreDimensionTmp);
-            arregloDimensionTmp.push(fechasTmp);
-            arregloDimensionTmp.push(colorTmp);
-            arregloDimensionTmp.push(riesgoTmp);
-            datosGraficables.push(arregloDimensionTmp);
+
+            arreglo_dimension.push(nombre_dimension);
+            arreglo_dimension.push(fechas);
+            arreglo_dimension.push(color);
+            arreglo_dimension.push(riesgo);
+            graphical_data.push(arreglo_dimension);
         }
-        // Fin de asignación de gráficas
+        $('#risk_graphic_info').attr('data-info', JSON.stringify(graphical_data));
     }
 
     function graficar() {
-        procesarJSON();
-        var myChart_individual = generar(datosGraficables[0], ctx_individual);
-        var myChart_familiar = generar(datosGraficables[1], ctx_familiar);
-        var myChart_academico = generar(datosGraficables[2], ctx_academico);
-        var myChart_economico = generar(datosGraficables[3], ctx_economico);
-        var myChart_vida_universitaria = generar(datosGraficables[4], ctx_vida_universitaria);
+        var graphical_data = JSON.parse(document.querySelector('#risk_graphic_info').dataset.info);
+        var myChart_individual = generar(graphical_data[0], ctx_individual);
+        var myChart_familiar = generar(graphical_data[1], ctx_familiar);
+        var myChart_academico = generar(graphical_data[2], ctx_academico);
+        var myChart_economico = generar(graphical_data[3], ctx_economico);
+        var myChart_vida_universitaria = generar(graphical_data[4], ctx_vida_universitaria);
     }
 
     /*Generador de gráficas*/
@@ -2130,5 +2215,5 @@ define(['jquery',
                 }
             }
         });
-    };
+    }
 });

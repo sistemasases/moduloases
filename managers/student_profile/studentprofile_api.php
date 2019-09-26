@@ -41,17 +41,20 @@ if(isset($input->func) && isset($input->params)) {
         /**
          * [0] => id_ases: string
          * [1] => tab_name: string
+         * [2] => id_block: string
          */
-        if(count($input->params) == 2) {
+        $params = $input->params;
+        if(count($params) == 3) {
 
-            $id_ases = $input->params[0];
-            $tab_name = $input->params[1];
+            $id_ases = $params[0];
+            $tab_name = $params[1];
+            $id_block = $params[2];
 
-            if(is_string($id_ases)) {
+            if(is_string($id_ases) && is_string($tab_name) && is_string($id_block)) {
 
                 switch($tab_name){
                     case 'socioed':
-                        $result = student_profile_load_socioed_tab($id_ases);
+                        $result = student_profile_load_socioed_tab($id_ases, $id_block);
                         break;
                     case 'academic':
                         $result = student_profile_load_academic_tab($id_ases);
@@ -71,7 +74,7 @@ if(isset($input->func) && isset($input->params)) {
                     echo json_encode(
                         array(
                             "status_code" => 0,
-                            "message" => "Geographic information",
+                            "message" => $tab_name." information",
                             "data_response" => $result
                         )
                     );
@@ -326,7 +329,7 @@ if(isset($input->func) && isset($input->params)) {
 
         /**
          * [0] => id_moodle: string
-         * [1] => image_file:
+         * [1] => image_file
          */
         $params = $input->params;
 
@@ -340,6 +343,40 @@ if(isset($input->func) && isset($input->params)) {
                 update_user_image_profile($user->id, 0);
 
                 print_r($id_moodle);
+            } else {
+                return_with_code(-2);
+            }
+        } else {
+            return_with_code(-6);
+        }
+    } else if ($function == 'load_risk_info') {
+
+        /**
+         * [0] => id_ases: string
+         * [1] => peer_tracking: object | null
+         */
+        $params = $input->params;
+
+        if(count($params) == 2) {
+
+            $id_ases = $params[0];
+            $peer_tracking = $params[1];
+
+            if(is_string($id_ases)) {
+
+                $result = student_profile_load_risk_info($id_ases, $peer_tracking);
+
+                if($result != null){
+                    echo json_encode(
+                        array(
+                            "status_code" => 0,
+                            "message" => "Risk information",
+                            "data_response" => $result
+                        )
+                    );
+                } else {
+                    return_with_code(-5);
+                }
             } else {
                 return_with_code(-2);
             }
