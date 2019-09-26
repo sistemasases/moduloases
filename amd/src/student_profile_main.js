@@ -17,9 +17,10 @@ define(['jquery',
     'block_ases/select2',
     'block_ases/Chart',
     'block_ases/mustache',
+    'block_ases/loading_indicator',
     'block_ases/academic_profile_main',
     'block_ases/socioed_profile_main',
-    'block_ases/geographic_main'], function ($, bootstrap, d3, sweetalert, jqueryui, select2, Chart, mustache, academic, socioed, geographic) {
+    'block_ases/geographic_main'], function ($, bootstrap, d3, sweetalert, jqueryui, select2, Chart, mustache, loading_indicator, academic, socioed, geographic) {
 
     return {
         init: function (data_init) {
@@ -206,6 +207,8 @@ define(['jquery',
             // Save image to backend
             $('#send-profile-image').on('click', function () {
 
+                loading_indicator.show();
+
                 var id_moodle = $('#id_moodle').val();
                 var image_file = document.getElementById('profile-image-input').files[0];
 
@@ -221,9 +224,11 @@ define(['jquery',
                     method: 'POST',
                     type: 'POST', // For jQuery < 1.9
                     success: function (data) {
+                        loading_indicator.hide();
                         alert(data);
                     },
                     error: function (data) {
+                        loading_indicator.hide();
                         console.log(data)
                     }
                 });
@@ -337,6 +342,7 @@ define(['jquery',
             },
                 function (isConfirm) {
                     if (isConfirm) {
+                        loading_indicator.show();
                         $.ajax({
                             type: "POST",
                             data: JSON.stringify({
@@ -345,6 +351,7 @@ define(['jquery',
                             }),
                             url: "../managers/student_profile/studentprofile_api.php",
                             success: function (msg) {
+                                loading_indicator.hide();
                                 if(msg.status_code == 0) {
                                     if ($('#select-' + id_program).val() == "ACTIVO") {
                                         $('#tr-' + id_moodle).addClass('is-active');
@@ -363,6 +370,7 @@ define(['jquery',
                             dataType: "json",
                             cache: "false",
                             error: function (msg) {
+                                loading_indicator.hide();
                                 swal(
                                     msg.title,
                                     msg.msg,
@@ -420,6 +428,8 @@ define(['jquery',
                                 var id_reason_dropout = $('#reasons_select').val();
                                 var observation = $('#description_dropout').val();
 
+                                loading_indicator.show();
+
                                 $.ajax({
                                     type: "POST",
                                     data: JSON.stringify({
@@ -429,6 +439,8 @@ define(['jquery',
                                     }),
                                     url: "../managers/student_profile/studentprofile_api.php",
                                     success: function (msg) {
+
+                                        loading_indicator.hide();
 
                                         if(msg.status_code == 0) {
                                             $('#input_status_ases').val(new_status);
@@ -467,6 +479,7 @@ define(['jquery',
                                     dataType: "json",
                                     cache: "false",
                                     error: function (msg) {
+                                        loading_indicator.hide();
                                         modal_dropout.hide();
                                         swal(
                                             msg.title,
@@ -478,6 +491,8 @@ define(['jquery',
                             });
                         } else if (new_status == 'seguimiento') {
 
+                            loading_indicator.show();
+
                             $.ajax({
                                 type: "POST",
                                 data: JSON.stringify({
@@ -487,6 +502,8 @@ define(['jquery',
                                 }),
                                 url: "../managers/student_profile/studentprofile_api.php",
                                 success: function (msg) {
+
+                                    loading_indicator.hide();
 
                                     $('#input_status_ases').val(new_status);
 
@@ -509,6 +526,7 @@ define(['jquery',
                                 dataType: "json",
                                 cache: "false",
                                 error: function (msg) {
+                                    loading_indicator.hide();
                                     console.log(msg);
                                 },
                             }).then(function (msg) {
@@ -544,6 +562,8 @@ define(['jquery',
                     },
                         function (isConfirm) {
                             if (isConfirm) {
+
+                                loading_indicator.show();
                                 $('.input-tracking').prop('checked', false);
                                 element.prop('checked', true);
 
@@ -559,6 +579,7 @@ define(['jquery',
                                     }),
                                     url: "../managers/student_profile/studentprofile_api.php",
                                     success: function (msg) {
+                                        loading_indicator.hide();
                                         setTimeout(function () {
                                             if(msg.status_code == 0 || msg.status_code == -9) {
                                                 swal(
@@ -574,6 +595,7 @@ define(['jquery',
                                     dataType: "json",
                                     cache: "false",
                                     error: function (msg) {
+                                        loading_indicator.hide();
                                         setTimeout(function () {
                                             swal(
                                                 msg.title,
@@ -1038,6 +1060,8 @@ define(['jquery',
             return msg;
         }, save_form_edit_profile: function (form, object_function, control1, control2, json) {
 
+            loading_indicator.show();
+
             $.ajax({
                 type: "POST",
                 data: JSON.stringify({
@@ -1046,6 +1070,7 @@ define(['jquery',
                 }),
                 url: "../managers/student_profile/studentprofile_api.php",
                 success: function (msg) {
+                    loading_indicator.hide();
                     if(msg.status_code == 0) {
                         swal(
                             msg.title,
@@ -1057,6 +1082,7 @@ define(['jquery',
                 dataType: "json",
                 cache: "false",
                 error: function (msg) {
+                    loading_indicator.hide();
                     swal(
                         msg.title,
                         msg.msg,
@@ -1111,6 +1137,8 @@ define(['jquery',
      */
     function load_tabs(event) {
 
+        loading_indicator.show();
+
         var id_ases = $('#id_ases').val();
         var tab_name = event.data.tab_name;
         var id_block = document.querySelector('#dphpforms_block_instance').dataset.info;
@@ -1133,6 +1161,7 @@ define(['jquery',
                         dataType: "text",
                         async: false,
                         success: function( template ){
+                            loading_indicator.hide();
                             let tab_to_load = $(mustache.render( template, msg.data_response ));
                             $(".tab-content").append( tab_to_load );
 
@@ -1154,16 +1183,19 @@ define(['jquery',
                             $("#"+tab_name+"_tab").addClass("active");
                         },
                         error: function(){
+                            loading_indicator.hide();
                             console.log( "../templates/view_"+tab_name+"_tab_sp.mustache cannot be reached." );
                         }
                     });
                 } else {
+                    loading_indicator.hide();
                     console.log(msg);
                 }
             },
             dataType: "json",
             cache: "false",
             error: function(msg) {
+                loading_indicator.hide();
                 console.log(msg);
             }
         });
@@ -1177,10 +1209,10 @@ define(['jquery',
      */
     function load_risk_info(){
 
+        loading_indicator.show();
         var id_ases = $('#id_ases').val();
         var peer_tracking_div = document.querySelector('#peer_tracking_info');
         var peer_tracking_info = JSON.parse((peer_tracking_div)?peer_tracking_div.dataset.info:null);
-
         $.ajax({
             type: "POST",
             data: JSON.stringify({
@@ -1189,6 +1221,7 @@ define(['jquery',
             }),
             url: "../managers/student_profile/studentprofile_api.php",
             success: function(msg) {
+                loading_indicator.hide();
                 if(msg.status_code == 0) {
                     var values = msg.data_response;
                     procesar_datos_riesgo(values);
@@ -1202,6 +1235,7 @@ define(['jquery',
             dataType: "json",
             cache: "false",
             error: function(msg) {
+                loading_indicator.hide();
                 console.log(msg);
             }
         });
@@ -1280,6 +1314,8 @@ define(['jquery',
 
     function save_icetex_status() {
 
+        loading_indicator.show();
+
         var id_ases = $('#id_ases').val();
         var id_new_status = $('#icetex_status').val();
 
@@ -1293,6 +1329,7 @@ define(['jquery',
             cache: "false",
             url: "../../ases/managers/student_profile/studentprofile_api.php",
             success: function (msg) {
+                loading_indicator.hide();
                 if(msg.status_code == 0)
                 {
                     swal({
@@ -1308,6 +1345,7 @@ define(['jquery',
                 //clean_modal_dropout();
             },
             error: function (msg) {
+                loading_indicator.hide();
                 swal(
                     'Error',
                     'No se puede contactar con el servidor.',
