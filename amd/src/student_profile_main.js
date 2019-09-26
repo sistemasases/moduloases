@@ -1192,8 +1192,8 @@ define(['jquery',
                 if(msg.status_code == 0) {
                     var values = msg.data_response;
                     procesar_datos_riesgo(values);
-                    //$('#modal_riesgos').fadeIn(200);
-                    //graficar();
+                    $('#modal_riesgos').fadeIn(200);
+                    graficar();
                     $('#view_graphic_risk_button').on('click', graph);
                 } else {
                     console.log(msg);
@@ -2098,45 +2098,47 @@ define(['jquery',
         });
     }
 
-    function procesar_datos_riesgo(datos) {
+    function procesar_datos_riesgo(dimensiones) {
         // Asignación de gráficas y manejo del JSON para graficar
 
-        var graficable_data = [];
+        var graphical_data = [];
+        var NOMBRES_DIMENSIONES = ['individual', 'familiar', 'academico', 'economico', 'vida_universitaria'];
 
-        console.log(datos);
-        /*
-        for(var i = 0; i < Object.keys(datos['informacion']).length; i++) {
-            var arregloDimensionTmp = [];
-            var fechasTmp = [];
-            var colorTmp = [];
-            var riesgoTmp = [];
-            var nombreDimensionTmp = datos['informacion'][i]['dimension'];
-            var dato = datos['informacion'][i]['datos'][0];
+        for(var i = 0; i < Object.keys(dimensiones).length; i++) {
+            var arreglo_dimension = [];
+            var fechas = [];
+            var color = [];
+            var riesgo = [];
+            var nombre_dimension = NOMBRES_DIMENSIONES[i];
 
-            for(var j=1; final['end'] == 'false';j++)
+            var dato_actual = dimensiones[nombre_dimension][0]['datos'];
+            var contador = 0;
+
+            while(dato_actual['end'] == 'false')
             {
-                fechasTmp.push(dato['fecha']);
-                colorTmp.push(dato['color']);
-                riesgoTmp.push(dato['riesgo']);
-                dato = datos['informacion'][i]['datos'][j];
+                fechas.push(dato_actual['fecha']);
+                color.push(dato_actual['color']);
+                riesgo.push(dato_actual['riesgo']);
+                contador+=1;
+                dato_actual = dimensiones[nombre_dimension][contador]['datos'];
             }
 
-            arregloDimensionTmp.push(nombreDimensionTmp);
-            arregloDimensionTmp.push(fechasTmp);
-            arregloDimensionTmp.push(colorTmp);
-            arregloDimensionTmp.push(riesgoTmp);
-            graficable_data.push(arregloDimensionTmp);
-        }*/
-        $('#risk_graphic_info').attr('data-info', JSON.stringify(graficable_data));
+            arreglo_dimension.push(nombre_dimension);
+            arreglo_dimension.push(fechas);
+            arreglo_dimension.push(color);
+            arreglo_dimension.push(riesgo);
+            graphical_data.push(arreglo_dimension);
+        }
+        $('#risk_graphic_info').attr('data-info', JSON.stringify(graphical_data));
     }
 
     function graficar() {
-        var graficable_data = JSON.parse(document.querySelector('#risk_graphic_info').dataset.info);
-        var myChart_individual = generar(graficable_data[0], ctx_individual);
-        var myChart_familiar = generar(graficable_data[1], ctx_familiar);
-        var myChart_academico = generar(graficable_data[2], ctx_academico);
-        var myChart_economico = generar(graficable_data[3], ctx_economico);
-        var myChart_vida_universitaria = generar(graficable_data[4], ctx_vida_universitaria);
+        var graphical_data = JSON.parse(document.querySelector('#risk_graphic_info').dataset.info);
+        var myChart_individual = generar(graphical_data[0], ctx_individual);
+        var myChart_familiar = generar(graphical_data[1], ctx_familiar);
+        var myChart_academico = generar(graphical_data[2], ctx_academico);
+        var myChart_economico = generar(graphical_data[3], ctx_economico);
+        var myChart_vida_universitaria = generar(graphical_data[4], ctx_vida_universitaria);
     }
 
     /*Generador de gráficas*/

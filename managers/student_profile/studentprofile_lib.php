@@ -2551,7 +2551,7 @@ function student_profile_generate_risk_entries($risk_status){
                 "fecha" => "Inicial",
                 "color" => $get_risk_lvl_color( $risk_status["start_risk_lvl_fist_semester"][$dimension] ),
                 "riesgo" => $risk_value,
-                "end" => false
+                "end" => 'false'
             ]
         ];
     }
@@ -2573,7 +2573,7 @@ function student_profile_generate_risk_entries($risk_status){
                     "fecha" => $semester_risk["semester_info"]["name"],
                     "color" => $get_risk_lvl_color( $semester_risk[$dimension] ),
                     "riesgo" => $risk_value,
-                    "end" => false
+                    "end" => 'false'
                 ]
             ];
         }
@@ -2823,35 +2823,35 @@ function student_profile_load_risk_info($id_ases, $peer_tracking){
         };
     }
 
-    array_push( $risk_individual_dimension, array( 'end' => 'true' ) );
-    array_push( $risk_academic_dimension, array( 'end' => 'true' ) );
-    array_push( $risk_economic_dimension, array( 'end' => 'true' ) );
-    array_push( $risk_familiar_dimension, array( 'end' => 'true' ) );
-    array_push( $risk_uni_life_dimension, array( 'end' => 'true' ) );
+    array_push( $risk_individual_dimension, array('datos' => array( 'end' => 'true' ) ) );
+    array_push( $risk_academic_dimension, array('datos' => array( 'end' => 'true' ) ) );
+    array_push( $risk_economic_dimension, array('datos' => array( 'end' => 'true' ) ) );
+    array_push( $risk_familiar_dimension, array('datos' => array( 'end' => 'true' ) ) );
+    array_push( $risk_uni_life_dimension, array('datos' => array( 'end' => 'true' ) ) );
 
-    $record->datosSeguimientoEstudianteIndividual = $risk_individual_dimension;
-    $record->datosSeguimientoEstudianteFamiliar = $risk_familiar_dimension;
-    $record->datosSeguimientoEstudianteAcademico = $risk_academic_dimension;
-    $record->datosSeguimientoEstudianteEconomico = $risk_economic_dimension;
-    $record->datosSeguimientoEstudianteVidaUniversitaria = $risk_uni_life_dimension;
+    $record->individual = $risk_individual_dimension;
+    $record->familiar = $risk_familiar_dimension;
+    $record->academico = $risk_academic_dimension;
+    $record->economico = $risk_economic_dimension;
+    $record->vida_universitaria = $risk_uni_life_dimension;
 
     $historical_risk_lvl = student_lib_get_full_risk_status($id_ases);
     $risk_entries = student_profile_generate_risk_entries($historical_risk_lvl);
 
     foreach( $risk_entries["others"] as $key => $entry ){
 
-        array_unshift( $record->datosSeguimientoEstudianteIndividual, $entry["individual"] );
-        array_unshift( $record->datosSeguimientoEstudianteFamiliar, $entry["familiar"] );
-        array_unshift( $record->datosSeguimientoEstudianteAcademico, $entry["academico"] );
-        array_unshift( $record->datosSeguimientoEstudianteEconomico, $entry["economico"] );
-        array_unshift( $record->datosSeguimientoEstudianteVidaUniversitaria, $entry["vida_uni"] );
+        array_unshift( $record->individual, $entry["individual"] );
+        array_unshift( $record->familiar, $entry["familiar"] );
+        array_unshift( $record->academico, $entry["academico"] );
+        array_unshift( $record->economico, $entry["economico"] );
+        array_unshift( $record->vida_universitaria, $entry["vida_uni"] );
     }
 
-    array_unshift( $record->datosSeguimientoEstudianteIndividual, $risk_entries["first"]["individual"] );
-    array_unshift( $record->datosSeguimientoEstudianteFamiliar, $risk_entries["first"]["familiar"] );
-    array_unshift( $record->datosSeguimientoEstudianteAcademico, $risk_entries["first"]["academico"] );
-    array_unshift( $record->datosSeguimientoEstudianteEconomico, $risk_entries["first"]["economico"] );
-    array_unshift( $record->datosSeguimientoEstudianteVidaUniversitaria, $risk_entries["first"]["vida_uni"] );
+    array_unshift( $record->individual, $risk_entries["first"]["individual"] );
+    array_unshift( $record->familiar, $risk_entries["first"]["familiar"] );
+    array_unshift( $record->academico, $risk_entries["first"]["academico"] );
+    array_unshift( $record->economico, $risk_entries["first"]["economico"] );
+    array_unshift( $record->vida_universitaria, $risk_entries["first"]["vida_uni"] );
 
     return $record;
 }
