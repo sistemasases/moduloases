@@ -19,15 +19,19 @@
  *
  * @author     Jeison Cardona Gómez
  * @package    block_ases
- * @copyright  2018 Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+ * @copyright  2019 Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once(dirname(__FILE__). '/../../../../config.php');
+require_once(dirname(__FILE__). '/../../core/module_loader.php'); 
 require_once(dirname(__FILE__).'/../jquery_datatable/jquery_datatable_lib.php');
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/user_management/user_lib.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/user_management/user_management_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/ases_report/asesreport_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
+
+module_loader("periods");
 
 use jquery_datatable\Datatable;
 
@@ -494,7 +498,7 @@ function monitor_assignments_get_practicant_monitor_relationship_by_instance( $i
  * @return int id
  */
 
- function monitor_assignments_create_monitor_student_relationship( $instance_id, $monitor_id, $student_id ){
+function monitor_assignments_create_monitor_student_relationship( $instance_id, $monitor_id, $student_id ){
 
     global $DB;
 
@@ -552,6 +556,10 @@ function monitor_assignments_delete_monitor_student_relationship( $instance_id, 
     $record = $DB->get_record_sql( $sql );
 
     if( $record ){
+        
+        monitor_assignments_assignation_log( 
+            $is_monlog = true, $record->id, $type = 'remove' 
+        );
 
         $conditions = array(
             'id_monitor' => $monitor_id,
@@ -639,7 +647,10 @@ function monitor_assignments_delete_practicant_monitor_relationship( $instance_i
     $record = $DB->get_record_sql( $sql );
 
     if( $record ){
-
+        
+        monitor_assignments_assignation_log( 
+            $is_monlog = false, $record->id, $type = 'remove' 
+        );
         $record->id_jefe = null;
 
         return $DB->update_record('talentospilos_user_rol', $record, $bulk=false);
@@ -674,7 +685,10 @@ function monitor_assignments_transfer( $instance_id, $old_monitor_id, $new_monit
     if( $asignations ){
 
         foreach($asignations as &$asignation){
-
+            
+            monitor_assignments_assignation_log( 
+                $is_monlog = true, $asignation->id, $type = 'transfer' 
+            );
             $asignation->id_monitor = $new_monitor_id;
             $DB->update_record('talentospilos_monitor_estud', $asignation, $bulk=false);
 
@@ -843,6 +857,87 @@ SQL;
 }
 
 /**
+ * Return monitor join practicante join estudiante_monitor
+ *
+ * @param $instance_id  string|number Instance id @see talentospilos_instancia.id_instancia
+ * @author Luis Gerardo Manrqiue Cardona <luis.manrique@corereounivalle.edu.co>
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @param $semester_name string Semester name, examples: [2018B, 2019A]
+ * @return array Items are described by MonitorAndStudentAndPracticant
+ * @throws dml_exception
+ */
+function monitor_assignments_get_practicants_monitors_and_studentsV2($instance_id, $semester_name ) {
+    global $DB;
+    $sql = <<<SQL
+select distinct
+                row_number() over() as index  ,
+                mdl_user_profesional.id as moodle_id_profesional,
+                concat_ws(' ', mdl_user_profesional.firstname , mdl_user_profesional.lastname)  as nombre_profesional,
+                mdl_user_practicante.id as moodle_id_practicante,
+                concat_ws(' ', mdl_user_practicante.firstname , mdl_user_practicante.lastname)  as nombre_practicante,
+                mdl_user_monitor.id as moodle_id_monitor,
+                concat_ws(' ', mdl_user_monitor.firstname , mdl_user_monitor.lastname) as nombre_monitor ,
+                mdl_user_estudiante.username as codigo_estudiante,
+                concat_ws(' ', mdl_user_estudiante.firstname , mdl_user_estudiante.lastname)  as nombre_estudiante,
+                mdl_talentospilos_user_extended_estudiante.id_ases_user as codigo_ases
+
+from mdl_user as mdl_user_monitor
+       inner join mdl_talentospilos_user_rol as mdl_talentospilos_user_rol_monitor
+         on mdl_talentospilos_user_rol_monitor.id_usuario  = mdl_user_monitor.id
+       inner join mdl_talentospilos_rol as mdl_talentospilos_rol_monitor
+         on mdl_talentospilos_rol_monitor.id = mdl_talentospilos_user_rol_monitor.id_rol
+       inner join mdl_talentospilos_semestre
+         on mdl_talentospilos_semestre.id  = mdl_talentospilos_user_rol_monitor.id_semestre
+       inner join mdl_talentospilos_instancia
+         on mdl_talentospilos_instancia.id_instancia = mdl_talentospilos_user_rol_monitor.id_instancia
+       inner join mdl_user as mdl_user_practicante
+         on mdl_talentospilos_user_rol_monitor.id_jefe = mdl_user_practicante.id
+       inner join mdl_talentospilos_user_rol as mdl_talentospilos_user_rol_practicante
+              on mdl_talentospilos_user_rol_practicante.id_usuario = mdl_user_practicante.id
+                     and mdl_talentospilos_user_rol_practicante.id_semestre = mdl_talentospilos_semestre.id
+                     and mdl_talentospilos_user_rol_practicante.id_instancia = mdl_talentospilos_instancia.id_instancia
+                     and mdl_talentospilos_user_rol_practicante.id_rol = (select id
+                                                                          from mdl_talentospilos_rol as mdl_talentos_pilos_rol_practicante
+                                                                          where mdl_talentos_pilos_rol_practicante.nombre_rol = 'practicante_ps')
+
+       inner join mdl_user as mdl_user_profesional
+              on mdl_talentospilos_user_rol_practicante.id_jefe = mdl_user_profesional.id
+       inner join mdl_talentospilos_user_rol as mdl_talentospilos_user_rol_profesional
+         on mdl_talentospilos_user_rol_profesional.id_usuario = mdl_user_profesional.id
+                   and mdl_talentospilos_user_rol_profesional.id_semestre = mdl_talentospilos_semestre.id
+                     and mdl_talentospilos_user_rol_profesional.id_instancia = mdl_talentospilos_instancia.id_instancia
+                     and mdl_talentospilos_user_rol_profesional.id_rol = (select id
+                                                                          from mdl_talentospilos_rol as mdl_talentos_pilos_rol_profesional
+                                                                             where mdl_talentos_pilos_rol_profesional.nombre_rol = 'profesional_ps')
+       inner join mdl_talentospilos_monitor_estud
+              on mdl_user_monitor.id = mdl_talentospilos_monitor_estud.id_monitor
+                     and mdl_talentospilos_monitor_estud.id_semestre = mdl_talentospilos_semestre.id
+                     and mdl_talentospilos_monitor_estud.id_instancia = mdl_talentospilos_instancia.id_instancia
+       inner join mdl_talentospilos_usuario as mdl_talentospilos_usuario_estudiante
+         on mdl_talentospilos_usuario_estudiante.id = mdl_talentospilos_monitor_estud.id_estudiante
+       inner join mdl_talentospilos_user_extended as mdl_talentospilos_user_extended_estudiante
+         on mdl_talentospilos_user_extended_estudiante.id_ases_user = mdl_talentospilos_usuario_estudiante.id
+              and mdl_talentospilos_user_extended_estudiante.tracking_status = 1
+       inner join mdl_talentospilos_programa as mdl_talentospilos_programa_estudiante
+         on mdl_talentospilos_programa_estudiante.id = mdl_talentospilos_user_extended_estudiante.id_academic_program
+       inner join mdl_user as mdl_user_estudiante
+         on mdl_talentospilos_user_extended_estudiante.id_moodle_user = mdl_user_estudiante.id
+        
+where
+        mdl_talentospilos_rol_monitor.nombre_rol = 'monitor_ps'
+    and mdl_talentospilos_instancia.id_instancia = :instance_id
+    and mdl_talentospilos_semestre.nombre = :semester_name;
+SQL;
+    $monitores_estudiates_y_practicantes = $DB->get_records_sql($sql, array(
+        'instance_id' =>  $instance_id,
+        'semester_name' => $semester_name));
+    return array_values(
+        $monitores_estudiates_y_practicantes
+    );
+
+}
+
+/**
  * Function that returns a list of practicants assigned to a specific professional.
  * @param int instance_id
  * @param int professional_id
@@ -958,5 +1053,150 @@ function monitor_assignments_get_last_student_assignment( $id_ases, $instance_id
 
 }
 
+/**
+* Function that given an ASES student id, instance id and semester id, return the monitor assigned.
+* @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+* @param integer $instance_id 
+* @param integer $student_id ASES id.
+* @param integer $semester_id
+* @param integer | NULL
+*/
+function monitor_assignments_get_monitor_by_student( $instance_id, $student_id, $semester_id ){
+    global $DB;
+
+    $sql = "SELECT id_monitor AS id
+    FROM {talentospilos_monitor_estud} 
+    WHERE id_semestre = '$semester_id' AND id_instancia = '$instance_id' AND id_estudiante = '$student_id'";
+
+    $monitor = $DB->get_record_sql( $sql );
+    
+    return ( property_exists($monitor, "id") ? $monitor->id : null );
+}
+
+/**
+* Function that given an ASES student id and instance id, return the current monitor assigned.
+* @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+* @see monitor_assignments_get_monitor_by_student(...) in this file.
+* @see periods_get_current_semester(...) in periods_lib.php
+* @param integer $instance_id 
+* @param integer $student_id ASES id.
+* @param integer | NULL
+*/
+function monitor_assignments_get_current_monitor_by_student( $instance_id, $student_id ){
+    
+    $current_semester = periods_get_current_semester();
+    return monitor_assignments_get_monitor_by_student( $instance_id, $student_id, $current_semester->id );
+    
+}
+
+/**
+* Function that given an monitor id, instance id and semester id, return the practicant assigned.
+* @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+* @param integer $instance_id 
+* @param integer $monitor_id Moodle id.
+* @param integer $semester_id
+* @param integer | NULL
+*/
+function monitor_assignments_get_practicant_by_monitor( $instance_id, $monitor_id, $semester_id ){
+
+    global $DB;
+
+    $sql = "SELECT user_rol_1.id, user_rol_1.id_jefe AS id
+      FROM {talentospilos_user_rol} AS user_rol_1
+      INNER JOIN (
+
+        SELECT id_usuario
+            FROM {talentospilos_user_rol} AS user_rol_0
+        WHERE id_rol = ( 
+            SELECT id 
+            FROM {talentospilos_rol} 
+            WHERE nombre_rol = 'practicante_ps'
+        )
+        AND id_instancia = $instance_id 
+        AND id_semestre = '$semester_id'
+        AND estado = 1
+    ) AS practicantes_0
+    ON practicantes_0.id_usuario = id_jefe
+    WHERE user_rol_1.id_semestre = '$semester_id'
+    AND user_rol_1.id_usuario = '$monitor_id'";
+
+    $practicant = $DB->get_record_sql( $sql );
+
+    return ( property_exists($practicant, "id") ? $practicant->id : NULL );
+
+}
+
+/**
+* Function that given an monitor id and instance id, return the current practicant assigned.
+* @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+* @see monitor_assignments_get_practicant_by_monitor(...) in this file.
+* @see periods_get_current_semester(...) in periods_lib.php
+* @param integer $instance_id 
+* @param integer $monitor_id Moodle id.
+* @param integer | NULL
+*/
+function monitor_assignments_get_current_practicant_by_monitor( $instance_id, $monitor_id ){
+
+    $current_semester = periods_get_current_semester();
+    return monitor_assignments_get_practicant_by_monitor( $instance_id, $monitor_id, $current_semester->id );
+
+}
+
+/**
+ * Function that store the assignation history.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param bool $is_monlog True if is a monitor-student assignation, False if is a user-extended assignation.
+ * @param integer $assig_id Assignation ID.
+ * 
+ * @throws Exception If the assignation doesn't exist.
+ * 
+ * @return mixed Moodle database manager return.
+ */
+function monitor_assignments_assignation_log( bool $is_monlog, int $assig_id, string $type = NULL )
+{
+    global $DB;                                                                 // Moodle DB manager.
+    
+    $tablename = (                                                              // Selection of assignation table
+        $is_monlog ? 
+        'talentospilos_monitor_estud' : 
+        'talentospilos_user_rol'
+    );
+        
+    $query = "SELECT * FROM {".$tablename."}  WHERE id = '$assig_id'";          // Query to get the assignation
+    $assig = $DB->get_record_sql( $query );                                     // Get the assignation
+    
+    if( !property_exists($assig, 'id') && $is_monlog ){                         // Check of the assignation exist in $ases_db_prefix_monitor_student
+        throw new Exception( 
+            "Assigment '$assig_id' does not exist as monitor-student relationship.", -1 
+        );
+    }else if( !property_exists($assig, 'id') && !$is_monlog ){                  // Check if the assignation exist in $ases_db_prefix_user_rol
+        throw new Exception( 
+            "Assigment '$assig_id' does not exist as user extended relationship.", -2 
+        );
+    }
+    
+    $doc = new stdClass();
+    $doc->user_id = ( $is_monlog ? $assig->id_monitor : $assig->id_jefe );
+    $doc->assignation_type = ( $is_monlog ? "monitor-student" : "user-boss" );
+    $doc->assigned_to_id = ( $is_monlog ? $assig->id_estudiante : $assig->id_usuario );
+    $doc->assignation_record = clone $assig;
+    // Solve FK block.
+    $assig->id_semestre = core_periods_get_period_by_id( $assig->id_semestre );
+    if( !$is_monlog ){
+        $assig->id_rol = user_management_get_role_by_id($assig->id_rol);
+    }
+    // End of Solve FK block.
+    $doc->assignation_record_full = $assig;
+    $doc->type = $type;
+    
+    $log_obj = new stdClass();
+    $log_obj->documento = json_encode($doc);
+    
+    return $DB->insert_record( 'talentospilos_log_asignacion', $log_obj );
+    
+}
 
 ?>

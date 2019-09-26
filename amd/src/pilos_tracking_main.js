@@ -29,6 +29,16 @@ define(
             var email = "";
             var namerol = "";
             var current_semester = parseInt($("#current_ases_semester").data("info"));
+            
+            $("#msg-cache").click(function(){
+                
+                swal({
+                    title: "¡Información!",
+                    text: "Está observando una versión reciente del conteo, más no una versión en vivo. El conteo se actualizará en un intervalo de tiempo no mayor a 30 minutos.",
+                    type: 'info'
+                });                
+                
+            });
 
 
              /**
@@ -193,6 +203,8 @@ define(
             }
 
             $(document).ready(function() {
+                
+                //$(".loader").html("Cargando conteo...");
 
                 ///////////////////////////////////////////////////////////7
 
@@ -238,7 +250,7 @@ define(
                 usuario["id"] = id;
                 usuario["name"] = name;
                 usuario["namerol"] = namerol;
-
+                
                 create_specific_counting( usuario );
 
                 // when user is 'practicante' then has permissions

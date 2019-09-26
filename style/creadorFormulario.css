@@ -181,7 +181,15 @@ pre, code {
 }
 
 .peer_trackings_v2{
-    margin-bottom: 10px;
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-width: 0;
+}
+
+#accordion_v2:last-child .card .card-header_v2 h5 {
+    margin-bottom: 5px;
 }
 
 .ajuste_limpiar{
@@ -242,7 +250,35 @@ pre, code {
     margin-top: 10px;
 }
 
+.dphpforms-response > .ajuste_acciones > .checkbox:nth-child(2){
+    margin-top: 10px;
+}
+
+.dphpforms-response > .ajuste_acciones > .checkbox:nth-child(3){
+    margin-top: 10px;
+}
+
+.dphpforms-response > .ajuste_acciones > .checkbox:nth-child(4){
+    margin-top: 10px;
+}
+
+.dphpforms-updater > .ajuste_acciones > .checkbox:nth-child(3){
+    margin-top: 10px;
+}
+
+.dphpforms-updater > .ajuste_acciones > .checkbox:nth-child(4){
+    margin-top: 10px;
+}
+
+.dphpforms-updater > .ajuste_acciones > .checkbox:nth-child(5){
+    margin-top: 10px;
+}
+
 .ajuste_tematicas > label{
+    width: 100%;
+}
+
+.ajuste_acciones > label{
     width: 100%;
 }
 

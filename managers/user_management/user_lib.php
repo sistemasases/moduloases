@@ -29,6 +29,8 @@ require_once(dirname(__FILE__) . '/../../../../config.php');
 require_once(dirname(__FILE__) . '/../periods_management/periods_lib.php');
 require_once(dirname(__FILE__) . '/../lib/student_lib.php');
 require_once(dirname(__FILE__) . '/../role_management/role_management_lib.php');
+require_once(dirname(__FILE__) . '/user_management_lib.php');
+require_once(dirname(__FILE__) . '/../monitor_assignments/monitor_assignments_lib.php');
 
 /**
  * Function that verifies if an user has a role assigned
@@ -374,6 +376,8 @@ function get_users_role($idinstancia)
 
 /**
  * Function used to delete the monitor-estudiante relation from database
+ * @deprecated since version buuuuu!
+ * 
  * @see  drop_student_of_monitor($monitor,$student)
  * @param $monitor [string] monitor's username in moodle
  * @param $student [string] student's username in moodle
@@ -398,7 +402,8 @@ function drop_student_of_monitor($monitor, $student)
     
     //where clause
     $whereclause = "id_monitor = " . $idmonitor->id . " AND id_estudiante =" . $studentid->id;
-    return $DB->delete_records_select('talentospilos_monitor_estud', $whereclause);
+    
+    return -1; // $DB->delete_records_select('talentospilos_monitor_estud', $whereclause);
     
 }
 
@@ -430,6 +435,12 @@ function dropStudentofMonitor($monitor, $student)
     if ($studentid) {
         //where clause
         $whereclause = "id_monitor = " . $idmonitor->id . " AND id_estudiante =" . $studentid->id . " AND id_semestre=" . $semestre_act->max;
+        $asignation = $DB->get_record_sql( 
+            "SELECT id FROM {talentospilos_monitor_estud} WHERE " . $whereclause
+        );
+        monitor_assignments_assignation_log( 
+            $is_monlog = true, $asignation->id, $type = 'remove' 
+        );
         return $DB->delete_records_select('talentospilos_monitor_estud', $whereclause);
     }
 }
@@ -445,7 +456,6 @@ function changeMonitor($oldMonitor, $newMonitor)
 {
     global $DB;
     
-    
     try {
         $lastsemester = get_current_semester();
         
@@ -453,6 +463,9 @@ function changeMonitor($oldMonitor, $newMonitor)
         $result    = $DB->get_records_sql($sql_query);
         
         foreach ($result as $row) {
+            monitor_assignments_assignation_log( 
+                $is_monlog = true, $row->id, $type = 'transfer' 
+            );
             $newObject             = new stdClass();
             $newObject->id         = $row->id;
             $newObject->id_monitor = $newMonitor;
@@ -481,8 +494,6 @@ function actualiza_rol_practicante($username, $role, $idinstancia, $state = 1, $
     
     global $DB;
 
-
-    
     $sql_query      = "SELECT id FROM {user} WHERE username='$username'";
     $id_user_moodle = $DB->get_record_sql($sql_query);
     
@@ -492,20 +503,17 @@ function actualiza_rol_practicante($username, $role, $idinstancia, $state = 1, $
     $sql_query   = "select max(id) as id from {talentospilos_semestre};";
     $id_semester = $DB->get_record_sql($sql_query);
 
-
-
-    
     $array = new stdClass;
-    
     $array->id_rol       = $id_role->id;
     $array->id_usuario   = $id_user_moodle->id;
     $array->estado       = $state;
     $array->id_semestre  = $id_semester->id;
     if($id_boss =='ninguno'){
-     $id_boss=null;
-     $array->id_jefe = null;
+        $id_boss=null;
+        $array->id_jefe = null;
     }else{
-    $array->id_jefe      = (int) $id_boss;}
+        $array->id_jefe      = (int) $id_boss;
+    }
     $array->id_instancia = $idinstancia;
     
     $result = 0;

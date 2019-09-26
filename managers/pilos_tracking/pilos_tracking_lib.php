@@ -339,7 +339,7 @@ function updateRisks($segObject, $idStudent){
 
 /**
  * Returns user role  to show the correct interface in 'seguimiento_pilos'
- * 
+ * @deprecated 2019-01-08 See get_id_rol_v2(...) in this file.
  * @see get_id_rol_($userid,$instanceid)
  * @param $userid --> user id
  * @param $instanceid instance id
@@ -358,6 +358,32 @@ function get_id_rol_($userid,$instanceid)
         $idretornar=$tomarId->id_rol;
     }
     return $idretornar;
+}
+
+
+/**
+ * Function that given an user id, instance id and period id, return 
+ * the current user role.
+ * @param integer $user_id
+ * @param integer $instance_id
+ * @param integer $period_id
+ * @return integer | null
+ */
+function get_id_rol_v2($user_id ,$instance_id, $period_id){
+    
+    global $DB;
+    
+    $sql_query = ""
+            . "SELECT id_rol "
+            . "FROM {talentospilos_user_rol} "
+            . "WHERE "
+            . "     id_usuario = '$user_id'  AND "
+            . "     id_instancia ='$instance_id' AND "
+            . "     id_semestre = '$period_id'";
+    
+    
+    $role = $DB->get_record_sql($sql_query);
+    return ( property_exists($role, "id_rol") ? $role->id_rol : null );
 }
 
 /**

@@ -37,6 +37,10 @@ require_once($CFG->dirroot.'/user/editlib.php');
 require_once($CFG->dirroot.'/user/profile/lib.php');
 require_once($CFG->dirroot.'/user/lib.php');
 
+require_once('academic_lib.php');
+require_once('geographic_lib.php');
+require_once('others_tab_lib.php');
+
 /**
  * Gets all reasons a student quit or delay studies
  *
@@ -53,14 +57,13 @@ require_once($CFG->dirroot.'/user/lib.php');
      
      return $reasons_array;
  }
- 
- /**
+
+/**
  * Get id switch event name 
  *
  * @see  getIdEventLogs()
  * @return int id event
  */
-
  function getIdEventLogs($eventname){
 
     global $DB;
@@ -68,10 +71,6 @@ require_once($CFG->dirroot.'/user/lib.php');
     return $DB->get_record_sql($sql_query);
 
  }
- 
-
-
-
 
 /**
  * Update the user image profile from php file by user id
@@ -114,7 +113,8 @@ function update_user_image_profile($mdl_user_id, $php_file) {
 
     print_r($userform->get_data());
 }
- /**
+
+/**
  * Gets a set of ASES status
  *
  * @see get_status_ases()
@@ -131,7 +131,7 @@ function update_user_image_profile($mdl_user_id, $php_file) {
      return $status_ases_array;
  }
 
-  /**
+/**
  * Gets true or false if register economics_data exist
  *
  * @see get_exist_economics_data()
@@ -145,7 +145,7 @@ function get_exist_economics_data($id_ases_user){
     return $DB->record_exists('talentospilos_economics_data',array('id_ases_user'=> $id_ases_user));
 }
 
-  /**
+/**
  * Gets record with student economics_data information
  *
  * @see get_economics_data($id_ases)
@@ -166,7 +166,7 @@ function get_economics_data($id_ases){
     
 }
 
-  /**
+/**
  * Gets record with student academics_data information
  *
  * @see get_academics_data($id_ases)
@@ -186,7 +186,7 @@ function get_academics_data($id_ases){
 }
 
 
-   /**
+/**
  * Gets true or false if register academics_data exist
  *
  * @see get_exist_academics_data()
@@ -200,7 +200,7 @@ function get_exist_academics_data($id_ases_user){
     return $DB->record_exists('talentospilos_academics_data',array('id_ases_user'=> $id_ases_user));
 }
 
-   /**
+/**
  * Gets true or false if register health_data exist
  *
  * @see get_exist_health_data()
@@ -214,7 +214,7 @@ function get_exist_health_data($id_ases_user){
     return $DB->record_exists('talentospilos_health_data',array('id_ases_user'=> $id_ases_user));
 }
 
-  /**
+/**
  * Gets record with student health_data information
  *
  * @see get_health_data($id_ases)
@@ -234,8 +234,6 @@ function get_health_data($id_ases){
     
 }
 
-
-
 /**
  * Return a moodle url for student profile given a student code by input
  * @param $courseid
@@ -253,15 +251,13 @@ function get_student_profile_url($courseid, $instanceid, $student_code): moodle_
 }
 
 
- /**
+/**
  * Get Condición de excepción registradas
  *
  * @see get_cond_excepcion()
  * @return object --> with CONDICIÓN DE EXCEPCIÓN information
  */
-
-
-function  get_cond_excepcion()
+function get_cond_excepcion()
 {
     global $DB; 
    $sql_query = "SELECT * FROM {talentospilos_cond_excepcion}";
@@ -269,47 +265,44 @@ function  get_cond_excepcion()
 }
 
 
- /**
+/**
  * Get Condición de excepción segun id
  *
  * @see get_cond()
  * @return object --> with CONDICIÓN DE EXCEPCIÓN information
  */
-
-function  get_cond($id)
+function get_cond($id)
 {
     global $DB; 
    $sql_query = "SELECT * FROM {talentospilos_cond_excepcion} WHERE id=$id";
    return $DB->get_record_sql($sql_query);
 }
 
- /**
+/**
  * Get estados civiles registrados
  *
  * @see get_estados_civiles($id_cond)
  * @return object --> with ESTADO CIVIL information
  */
-
-function  get_estados_civiles()
+function get_estados_civiles()
 {
-    global $DB; 
-   $sql_query = "SELECT * FROM {talentospilos_estado_civil}";
-   return $DB->get_records_sql($sql_query);
+    global $DB;
+    $sql_query = "SELECT * FROM {talentospilos_estado_civil}";
+    return $DB->get_records_sql($sql_query);
 }
+
 /**
  * Get paises registrados
  *
  * @see get_paises()
  * @return object --> with PAIS information
  */
-
-function  get_paises()
+function get_paises()
 {
-    global $DB; 
-   $sql_query = "SELECT * FROM {talentospilos_pais}";
-   return $DB->get_records_sql($sql_query);
+    global $DB;
+    $sql_query = "SELECT * FROM {talentospilos_pais}";
+    return $DB->get_records_sql($sql_query);
 }
-
 
 /**
  * Get ocupaciones registradas
@@ -317,39 +310,12 @@ function  get_paises()
  * @see get_ocupaciones()
  * @return object --> with OCUPACION information
  */
-
-function  get_ocupaciones()
+function get_ocupaciones()
 {
-    global $DB; 
-   $sql_query = "SELECT * FROM {talentospilos_ocupaciones}";
-   return $DB->get_records_sql($sql_query);
+    global $DB;
+    $sql_query = "SELECT * FROM {talentospilos_ocupaciones}";
+    return $DB->get_records_sql($sql_query);
 }
-
-
-
-/**
- * Get municipios registrados
- *
- * @see get_municipios()
- * @return object --> with MUNICIPIOS information
- */
-
-function  get_municipios()
-{
-    global $DB; 
-    $array_departamentos = array ();
-    $sql_query_dpto = "SELECT id, nombre FROM {talentospilos_departamento}";
-    $departamentos  = $DB->get_records_sql($sql_query_dpto);
-    foreach($departamentos as $departamento){
-        $sql_query = "SELECT  id, nombre   FROM {talentospilos_municipio} WHERE cod_depto = $departamento->id";
-        $municipios = $DB->get_records_sql($sql_query);
-        $array_departamentos[$departamento->nombre] =  $municipios;
-    }
-   
-       
-   return $array_departamentos;
-}
-
 
 /**
  * Update genero
@@ -475,6 +441,23 @@ function  get_generos()
    return $DB->get_records_sql($sql_query);
 }
 
+
+/**
+ * Get opciones de sexo registradas en base de datos
+ * 
+ * @author Juan Pablo Castro
+ * @see get_sex_options()
+ * @return array --> con opciones sexo
+ */
+
+function  get_sex_options()
+{
+    global $DB; 
+   $sql_query = "SELECT * FROM {talentospilos_sexo}";
+   return $DB->get_records_sql($sql_query);
+}
+
+
 /**
  * Get etnias registrados
  *
@@ -541,6 +524,59 @@ function  get_act_simultaneas()
 
     return $icetex_status_student;
  }
+
+   
+ /**
+ * Update moodle user 
+ *
+ * @see studentprofile_update_email_moodle
+ * @param $obj_updatable_moodle
+ * @return bool is update?
+ */
+
+ function  studentprofile_update_email_moodle($obj_updatable_moodle){
+
+    global $DB;
+
+    preg_match("/((?:[a-z]+\.)*[a-z]+(?:@correounivalle\.edu\.co))/",$obj_updatable_moodle->email  , $array_match);
+
+
+    if (!empty($array_match)) {
+
+        if (strcmp($array_match[0],$obj_updatable_moodle->email) !== 0) {
+   
+            $result_cv_update = false;
+        } else{
+   
+            $result_cv_update = $DB->update_record('user', $obj_updatable_moodle);
+        }
+    }else {
+   
+        $result_cv_update = false;
+    }
+
+    return  $result_cv_update;
+
+ }
+
+
+  
+ /**
+ * Get moodle user from talentospilos_user_extended
+ *
+ * @see get_moodle_user
+ * @param $ases_id
+ * @return int id_moodle_user
+ */
+ function get_moodle_id($ases_id){
+
+ global $DB;
+
+ $sql_query = "SELECT id_moodle_user FROM {talentospilos_user_extended} WHERE id_ases_user = $ases_id AND tracking_status = 1";
+ $status = $DB->get_record_sql($sql_query)->id_moodle_user;
+ return $status;
+
+}
  
  /**
  * Gets the ASES status for a student
@@ -610,6 +646,72 @@ function verify_ases_status($id_ases_student){
 }
 
 /**
+ * Returns result of query at table 'talentospilos_retiros'
+ *
+ * @author  Juan Pablo Castro. GitHub: jpcv222
+ * @see save_reason_dropout_student()
+ * @param $code_student
+ * @return string
+ */
+
+function getReasonDropoutStudent($code_student){
+
+    global $DB;
+
+    $result = "";
+    $sql_query = "SELECT detalle, id_motivo FROM {talentospilos_retiros}  WHERE id_usuario=$code_student";
+    $tmp_result = $DB->get_record_sql($sql_query);
+    if(!empty($tmp_result)){
+        $sql_query ="SELECT descripcion FROM {talentospilos_motivos} WHERE id = $tmp_result->id_motivo";
+        $motivo =  $DB->get_record_sql($sql_query)->descripcion;
+        $result = "Motivo retiro: " . $motivo . "\nDetalle: ".$tmp_result->detalle;
+    }
+    return $result;
+}
+
+
+/**
+ * Returns result of the transaction at database: table 'talentospilos_retiros'
+ *
+ * @author  Juan Pablo Castro. GitHub: jpcv222
+ *
+ * @see save_reason_dropout_student()
+ * @param $code_student
+ * @param $reason
+ * @param $observation
+ * @return integer
+ */
+
+function save_reason_dropout_ases($code_student, $reason, $observation){
+        global $DB;
+        $id_ases_student = get_ases_user_by_code($code_student)->id;
+
+        $record = new stdClass();
+        $record->id_usuario = $id_ases_student;
+        $record->id_motivo = $reason;
+        $record->detalle = $observation;
+
+
+        $sql_query = "SELECT id FROM {talentospilos_retiros} WHERE id_usuario= '$id_ases_student'";
+        $exists = $DB->get_record_sql($sql_query);
+
+        if($exists) {
+            $record->id = $exists->id;
+            $result = $DB->update_record('talentospilos_retiros', $record);
+        }
+        else {
+            $result = $DB->insert_record('talentospilos_retiros', $record, false);
+        }
+
+        if($result) {
+            return 1;
+        } else {
+            return 0;
+        }
+}
+
+
+/**
  * Update the ASES status for a student
  *
  * @see update_status_ases
@@ -617,7 +719,7 @@ function verify_ases_status($id_ases_student){
  * @param $new_status
  * @param $instance_id
  * @param $code_student
- * @return int
+ * @return integer
  */
 function update_status_ases($current_status, $new_status, $instance_id, $code_student, $reason=null, $observation=null){
 
@@ -676,7 +778,7 @@ function update_status_ases($current_status, $new_status, $instance_id, $code_st
         }
     }
 
-    return $result;
+    return ($result)?1:0;
 }
  
 
@@ -794,6 +896,9 @@ function get_tracking_current_semesterV3($criterio,$student_id, $semester_id,$in
         $in_trackings = dphpformsV2_find_records( $xQuery );
         
         $all_trackings = array_merge( $trackings, $in_trackings );
+        
+        $trackings = NULL;
+        $in_trackings = NULL;
 
         $fecha = array();
         foreach ($all_trackings as $key => $tracking){
@@ -837,6 +942,9 @@ function get_tracking_current_semesterV3($criterio,$student_id, $semester_id,$in
         $in_trackings = dphpformsV2_find_records( $xQuery );
 
         $all_trackings = array_merge( $trackings, $in_trackings );
+        
+        $trackings = NULL;
+        $in_trackings = NULL;
 
         $fecha = array();
         foreach ($all_trackings as $key => $tracking){
@@ -1124,7 +1232,7 @@ function get_tracking_group_by_semester($id_ases = null, $tracking_type, $id_sem
             $firstsemester = get_id_first_semester($userid->userid);
             $lastsemestre = get_id_last_semester($userid->userid);
     
-            $sql_query .= " WHERE id >=".$firstsemester;
+            $sql_query .= " WHERE id >=".$firstsemester . " AND fecha_inicio < '2017-12-31 00:00:00'";
             
         }
         $sql_query.=" order by fecha_inicio DESC";
@@ -1171,7 +1279,7 @@ function get_tracking_group_by_semester($id_ases = null, $tracking_type, $id_sem
                 }
             }
             
-        }
+        }        
         
         $object_seguimientos =  new stdClass();
         
@@ -1524,20 +1632,20 @@ function delete_tracking_peer($id_tracking){
  * @param $id_student --> ASES student id
  * @param $id_status --> status id that'll be saved
  * @param $id_reason --> In case the status is retired, this is de id reason. null by default
- * @param $observations --> Observaton of change
+ * @param $observations --> Observation of change
  * @return object --> object representing the database operation result
  */
 
 function save_status_icetex($id_status, $id_student, $id_reason=null, $observations=null){
 
     global $DB;
+
     $msg_result = new stdClass();
+    $object_status = new stdClass();
 
     date_default_timezone_set('America/Bogota');
 
     $today_timestamp = time();
-
-    $object_status = new stdClass();
 
     $object_status->fecha = $today_timestamp;
     $object_status->id_estado_icetex = $id_status;
@@ -1599,7 +1707,6 @@ function validate_student($code_student){
         return "0";
     }
 }
-
 
 /**
  * Gets name of student by username
@@ -1812,4 +1919,468 @@ function update_tracking_status($id_ases_user, $id_academic_program){
     $result = $DB->update_record('talentospilos_user_extended', $record);
 
     return $result;
+}
+
+/**
+ * Updates every field on {talentospilos_usuario} table
+ *
+ *
+ * @see save_profile($form)
+ * @param $form --> Array containing the fields to update
+ * @param $option1 --> string
+ * @param $option2 --> string
+ * @param $live_with --> Json containing the information of
+ *                      the people that lives with the student
+ * @return object in a json format
+ */
+function save_profile($form, $option1, $option2, $live_with){
+
+    global $DB;
+
+    try{
+        $id_ases = $form[0]->value;
+        $msg = new stdClass();
+
+        //Info to update will be added here
+        $obj_updatable = array();
+
+        // Required fields are inserted
+        for($i = 0; $i < count($form); $i++){
+
+            $name = $form[$i]->name;
+            $value = $form[$i]->value;
+
+            switch($name){
+                case 'tipo_doc':
+                case 'tipo_doc_ini':
+                    $sql_query = "SELECT id FROM {talentospilos_tipo_documento} WHERE nombre = '".$value."'";
+                    $id_doc_type = $DB->get_record_sql($sql_query)->id;
+                    $obj_updatable[$name] = $id_doc_type;
+                    break;
+
+                case 'pais':
+                    $obj_updatable[$name] = $value;
+                    $pais = $value;
+                    break;
+
+                case 'genero':
+                    $obj_updatable[$name] = $value;
+                    $genero = $value;
+                    break;
+
+                case 'etnia':
+                    $obj_updatable[$name] = $value;
+                    $etnia = $value;
+                    break;
+
+                case 'otro_genero':
+                    $obj_updatable[$name] = $value;
+                    $otro = $value;
+                    break;
+
+                case 'estado_civil':
+                    $obj_updatable[$name] = $value;
+                    $estado_civil = $value;
+                    break;
+
+                case 'ingreso':
+                    $obj_updatable[$name] = $value;
+                    $anio_ingreso = $value;
+                    break;
+
+                case 'puntaje_icfes':
+                    $obj_updatable[$name] = $value;
+                    $puntaje_icfes = $value;
+                    break;
+
+                case 'estrato':
+                    $obj_updatable[$name] = $value;
+                    $estrato = $value;
+                    break;
+
+                case 'act_simultanea':
+                    $obj_updatable[$name] = $value;
+                    $act_sim = $value;
+                    break;
+
+                case 'otro_act_simultanea':
+                    $obj_updatable[$name] = $value;
+                    $otro_act_sim = $value;
+                    break;
+
+                case 'email':
+                    $obj_updatable[$name] = $value;
+                    $email = $value;
+                    break;
+
+                case 'sexo':
+                    $obj_updatable[$name] = $value;
+                    $sexo = $value;
+                    break;
+
+                case 'fecha_nac':
+                    $obj_updatable[$name] = $value;
+                    $fecha_nac = $value;
+                    break;
+
+                default:
+                    $obj_updatable[$name] = $value;
+                    break;
+            }
+        }
+
+        $obj_updatable = (object) $obj_updatable;
+        //an id is assigned to update
+        $obj_updatable->id = $id_ases;
+
+        $sql_query = "SELECT observacion FROM {talentospilos_usuario} WHERE id = $id_ases";
+
+        $observations = $DB->get_record_sql($sql_query)->observacion;
+
+        //Agregar campos nuevos
+
+        if($act_sim == 0){
+
+            if($option2 == ""){
+                //Agregar otra actividad a la base de datos de act_simultanea (si no existe), y guardar en usuario
+                add_record_act($otro_act_sim);
+            } else {
+                //Actualizar actividad en base de datos y guardar en usuario
+                $id_otro_act = get_id_act($option2);
+                $act = new stdClass();
+                $act->id = $id_otro_act;
+                $act->actividad = $otro_act_sim;
+                $act->opcion_general = 0;
+                update_record_act($act);
+            }
+            $id_otro_act= get_id_act($otro_act_sim);
+
+            $obj_updatable->id_act_simultanea = $id_otro_act;
+        } else {
+            //Guardar con género existente en opciones generales
+            $obj_updatable->id_act_simultanea = $act_sim;
+        }
+
+        if($genero == 0){
+            if($option1 == ""){
+                //Agregar otro género a la base de datos de generos (si no existe), y guardar en usuario
+                add_record_genero($otro);
+            } else {
+                //Actualizar género en base de datos y guardar en usuario
+                $id_otro_genero = get_id_genero($option1);
+                $gen = new stdClass();
+                $gen->id = $id_otro_genero;
+                $gen->genero = $otro;
+                $gen->opcion_general = 0;
+                update_record_genero($gen);
+            }
+            $id_otro_genero = get_id_genero($otro);
+
+            $obj_updatable->id_identidad_gen = $id_otro_genero;
+        } else {
+            //Guardar con género existente en opciones generales
+            $obj_updatable->id_identidad_gen = $genero;
+        }
+
+        $obj_updatable->vive_con = $live_with;
+        $obj_updatable->id_estado_civil = $estado_civil;
+        $obj_updatable->id_pais = $pais;
+        $obj_updatable->id_etnia = $etnia;
+        $obj_updatable->estrato = $estrato;
+        $obj_updatable->anio_ingreso = $anio_ingreso;
+        $obj_updatable->puntaje_icfes = $puntaje_icfes;
+        $obj_updatable->sexo = $sexo;
+        $obj_updatable->fecha_nac = $fecha_nac;
+
+        //____________________________________________
+        $conc_observations = $obj_updatable->observacion."\n".$observations;
+
+        $obj_updatable->observacion = $conc_observations;
+
+        //----------------------------------------------
+        //Data object to update record in mdl_user
+        //----------------------------------------------
+
+        $obj_updatable_moodle = new stdClass();
+        $obj_updatable_moodle->id = get_moodle_id($id_ases);
+
+        //Test: email validation
+        //$email = "insert email test";
+
+        $obj_updatable_moodle->email = $email;
+
+        $result = $DB->update_record('talentospilos_usuario', $obj_updatable);
+
+        $result_cv_update = studentprofile_update_email_moodle($obj_updatable_moodle);
+
+        if($result && $result_cv_update){
+            $msg->title = "Éxito";
+            $msg->status = "success";
+            $msg->msg = "Se ha actualizado toda la información.";
+        }
+        else{
+            $msg->title = "Error";
+            $msg->status = "error";
+            $msg->msg = "Error al guardar la información en el servidor.";
+        }
+
+        return $msg;
+
+    }catch(Exception $e){
+
+        $msg->title = $e->getMessage();
+        $msg->status = "error";
+        $msg->msg = "Error al guardar la información. 
+                        Contacte al componente de sistemas.";
+
+        return $msg;
+    }
+}
+
+/**
+ * @see student_profile_load_socioed_tab($id_ases)
+ * @desc Gets all the social-educative information of an student
+ * @param $id_ases --> ASES student id
+ * @return Object
+ */
+function student_profile_load_socioed_tab($id_ases){
+
+    $record = new stdClass();
+
+    return $record;
+}
+
+/**
+ * @see student_profile_load_academic_tab($id_ases)
+ * @desc Gets all the academic information of an student
+ * @param $id_ases --> ASES student id
+ * @return Object
+ */
+function student_profile_load_academic_tab($id_ases){
+
+    $record = new stdClass();
+
+    $academic_programs = get_status_program_for_profile_aditional($id_ases);
+    $id_user_moodle = get_id_user_moodle($id_ases);
+
+    foreach ($academic_programs as $program) {
+        if($program->tracking_status == 1){
+            $academic_program_id = $program->academic_program_id;
+            break;
+        }
+    }
+
+    //Current data
+    //weighted average
+    $promedio = get_promedio_ponderado($id_ases, $academic_program_id);
+    $record->promedio = $promedio;
+
+    //num bajos
+    $bajos = get_bajos_rendimientos($id_ases, $academic_program_id);
+    $record->bajos = $bajos;
+
+    //num estimulos
+    $estimulos = get_estimulos($id_ases, $academic_program_id);
+    $record->estimulos = $estimulos;
+
+    //Current semester
+    $html_academic_table = get_grades_courses_student_last_semester($id_user_moodle);
+    $record->academic_semester_act = $html_academic_table;
+
+    //historic academic
+    $html_historic_academic = get_historic_academic_by_student($id_ases);
+    $record->historic_academic = $html_historic_academic;
+
+    return $record;
+}
+
+/**
+ * @see student_profile_load_geographic_tab($id_ases)
+ * @desc Gets all the geographic information of an student
+ * @param $id_ases --> ASES student id
+ * @return Object
+ */
+function student_profile_load_geographic_tab($id_ases){
+
+    $record = new stdClass();
+
+    $geographic_object = get_geographic_info($id_ases);
+
+    $student_city = $geographic_object->id_city;
+    $student_neighborhood = $geographic_object->neighborhood;
+
+    $record->options_municipio_act = student_profile_get_options_municipios($student_city);
+    $record->select_neighborhoods = student_profile_get_options_neighborhoods($student_neighborhood);
+
+    $native = $geographic_object->native;
+    $live_far_away = $geographic_object->live_far_away;
+    $live_risk_zone = $geographic_object->live_risk_zone;
+    $geographic_risk_level = $geographic_object->risk_level;
+
+    $record->live_far_away = ($live_far_away)?true:false;
+    $record->live_risk_zone = ($live_risk_zone)?true:false;
+    $record->observations = $geographic_object->observations;
+    $record->res_address = $geographic_object->res_address;
+    $record->geographic_risk_level  = $geographic_risk_level;
+
+    if($live_risk_zone && $native == 1)
+        $record->native_origin = true;
+
+    switch ($geographic_risk_level) {
+        case 1:
+            $record->low_level = true;
+            $record->mid_level = $record->high_level = false;
+            break;
+        case 2:
+            $record->mid_level = true;
+            $record->low_level = $record->high_level = false;
+            break;
+        case 3:
+            $record->high_level = true;
+            $record->low_level = $record->mid_level = false;
+            break;
+        default:
+            $record->low_level = $record->mid_level = $record->high_level = false;
+            break;
+    }
+
+    $record->obj = $geographic_object;
+
+    return $record;
+}
+
+/**
+ * @see student_profile_load_others_tab($id_ases)
+ * @desc Gets all the additional information of an student
+ * @param $id_ases --> ASES student id
+ * @return Object
+ */
+function student_profile_load_tracing_others_tab($id_ases){
+
+    $record = new stdClass();
+
+    return $record;
+}
+
+/**
+ * DEPRECATED
+ * This Function used to save the old forms of
+ * tracking peer
+ *
+ * Saves and validated the form on database
+ *
+ * @see save_tracking_peer_proc()
+ * @return string --> validation result
+ */
+function save_tracking_peer_proc(){
+
+    global $USER;
+
+    $result_msg = new stdClass();
+    $is_valid = validate_form_tracking_peer();
+
+    if($is_valid == "success"){
+
+        $date = new DateTime();
+        $date->getTimestamp();
+
+        $tracking_object = new stdClass();
+        $tracking_object->id = (int)$_POST['id_tracking_peer'];
+        $tracking_object->id_monitor = $USER->id;
+        $tracking_object->created = time();
+        $tracking_object->fecha = strtotime($_POST['date']);
+        $tracking_object->lugar = $_POST['place'];
+        $tracking_object->hora_ini = $_POST['h_ini'].":".$_POST['m_ini'];
+        $tracking_object->hora_fin = $_POST['h_fin'].":".$_POST['m_fin'];
+        $tracking_object->tema = $_POST['tema'];
+        $tracking_object->objetivos = $_POST['objetivos'];
+        $tracking_object->tipo = "PARES";
+        $tracking_object->status = 1;
+        $tracking_object->individual = $_POST['individual'];
+        $tracking_object->individual_riesgo = $_POST['riesgo_ind'];
+        $tracking_object->familiar_desc = $_POST['familiar'];
+        $tracking_object->familiar_riesgo = $_POST['riesgo_familiar'];
+        $tracking_object->academico = $_POST['academico'];
+        $tracking_object->academico_riesgo = $_POST['riesgo_aca'];
+        $tracking_object->economico = $_POST['economico'];
+        $tracking_object->economico_riesgo = $_POST['riesgo_econom'];
+        $tracking_object->vida_uni = $_POST['vida_uni'];
+        $tracking_object->vida_uni_riesgo = $_POST['riesgo_uni'];
+        $tracking_object->id_estudiante_ases = $_POST['id_ases'];
+        $tracking_object->id_instancia = $_POST['id_instance'];
+        $tracking_object->revisado_profesional = 0;
+        $tracking_object->revisado_practicante = 0;
+        $tracking_object->observaciones = $_POST['observaciones'];
+
+        $result_saving = save_tracking_peer($tracking_object);
+
+        echo json_encode($result_saving);
+
+    }else{
+        $result_msg->title = "Error";
+        $result_msg->msg = $is_valid;
+        $result_msg->type = "error";
+
+        echo json_encode($result_msg);
+    }
+}
+
+/**
+ * DEPRECATED
+ * This Function used to validate the old forms
+ * of tracking peer
+ *
+ * Validates if a form is totally complete
+ *
+ * @see validate_form_tracking_peer()
+ * @return string --> validation result
+ */
+function validate_form_tracking_peer(){
+    if(!isset($_POST['date'])){
+        return "El campo FECHA no llegó al servidor.";
+    }else if(!isset($_POST['place'])){
+        return "El campo LUGAR no llegó al servidor.";
+    }else if(!isset($_POST['h_ini'])){
+        return "El campo HORA INICIAL no llegó al servidor.";
+    }else if(!isset($_POST['m_ini'])){
+        return "El campo MINUTO INICIAL no llegó al servidor.";
+    }else if(!isset($_POST['h_fin'])){
+        return "El campo HORA FINALIZACIÓN no llegó al servidor.";
+    }else if(!isset($_POST['m_fin'])){
+        return "El campo MINUTO FINALIZACIÓN no llegó al servidor.";
+    }else if(!isset($_POST['tema'])){
+        return "El campo TEMA no llegó al servidor.";
+    }else if(!isset($_POST['objetivos'])){
+        return "El campo OBJETIVOS no llegó al servidor.";
+    }else if(!isset($_POST['individual'])){
+        return "El campo ACT. INDIVIDUAL no llegó al servidor.";
+    }else if(!isset($_POST['riesgo_ind'])){
+        return "El campo RIESGO INDIVIDUAL no llegó al servidor.";
+    }else if(!isset($_POST['familiar'])){
+        return "El campo ACT. FAMILIAR no llegó al servidor.";
+    }else if(!isset($_POST['riesgo_familiar'])){
+        return "El campo RIESGO FAMILIAR no llegó al servidor.";
+    }else if(!isset($_POST['academico'])){
+        return "El campo ACT. ACADÉMICO no llegó al servidor.";
+    }else if(!isset($_POST['riesgo_aca'])){
+        return "El campo RIESGO ACADÉMICO no llegó al servidor.";
+    }else if(!isset($_POST['economico'])){
+        return "El campo ACT. ECONÓMICO no llegó al servidor.";
+    }else if(!isset($_POST['riesgo_econom'])){
+        return "El campo RIESGO ECONÓMICO no llegó al servidor.";
+    }else if(!isset($_POST['vida_uni'])){
+        return "El campo ACT. VIDA UNIVERSITARIA Y CIUDAD no llegó al servidor.";
+    }else if(!isset($_POST['riesgo_uni'])){
+        return "El campo RIESGO VIDA UNIVERSITARIA Y CIUDAD no llegó al servidor.";
+    }else if(!isset($_POST['id_ases'])){
+        return "El campo ID ESTUDIANTE ASES no llegó al servidor.";
+    }else if(!isset($_POST['id_instance'])){
+        return "El campo ID INSTANCIA BLOQUE no llegó al servidor.";
+    }else if(!isset($_POST['observaciones'])){
+        return "El campo OBSERVACIONES no llegó al servidor.";
+    }else if(!isset($_POST['id_tracking_peer'])){
+        return "El campo ID SEGUIMIENTO no llegó al servidor.";
+    }else{
+        return "success";
+    }
 }

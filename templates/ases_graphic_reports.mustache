@@ -8,15 +8,15 @@
     <div class="row">
         <div class="col-sm-8">
             <h2>REPORTE GENERAL GRÁFICO DE ESTUDIANTES</h2>
-            <h5>Por favor seleccione los campos a incluir en el reporte</h5>
+            <h5 hidden>Por favor seleccione los campos a incluir en el reporte</h5>
         </div>
         <div class="col-sm-4" id="div_cohorts">
             <label for="">Cohorte:  </label>
                 {{{cohorts_checks}}}
         </div>  
-        <div class="top_options">      
+        <div class="top_options">
             <div class="col-sm-12 col-md-12">
-                <fieldset id="status_fields" style="top_options">
+                <fieldset id="status_fields">
                     <div class="checkbox">
                         <input type="checkbox" name="fields[]" value="ases_status" id="ases_status"> ASES                                
                     </div>
@@ -31,38 +31,201 @@
         </div>
         <hr class="col-sm-12" />   
     </div>    
-    <div class="panel-group">
+    <div class="panel-group" id="accordion">
         {{#program_report_agr}}              
         <div class="panel panel-default">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h4 class="panel-title" id="list-students-status-panel">
-                        <a data-toggle="collapse" href="#collapse1">Reporte de Programa</a>
+                    <h4 class="panel-title" id="list-students-programa-panel">
+                        <a data-toggle="collapse" data-parent="accordion" href="#programa">Reporte de Programa</a>
                     </h4>                    
-                    <div id="collapse1" class="panel-collapse collapse">
+                    <div id="programa" class="panel-collapse collapse">
                         <div class="panel-body">
                             <h2>Reporte de Programa</h2>                                       
                             <hr class="col-sm-12" />
-                            <div class="col-sm-12" id="div_table">
-                                <table id="table_programs" class="table" cellspacing="0" width="100%"><thead> </thead></table>
+                            <div class="col-sm-12" id="div_table_programa">                               
                             </div>
                             <hr class="col-sm-12" />
-                            <div class="row">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="chart-container">
-                                        <canvas id="grafica_tipos" ></canvas>
-                                    </div>                            
-                                </div>                
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <div class="horizontal-bar-chart-container">
+                                            <canvas id="grafica_programa" ></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="col-sm-12" />
+                                <div class="row div_btn_guardar">
+                                    <a id="download_programa" hidden>Guardar</a>
+                                    <button id="save_btn_programa" class="button dt-button">Guardar Gráfico</button>
+                                </div>
                             </div>
-                        {{! <div class="row">
-                            <button id="save-btn">Guardar Gráfico</button>
-                            </div>  }}
                         </div>
                     </div>            
                 </div>
             </div>    
         </div>        
         {{/program_report_agr}}
+        {{#faculty_report_agr}}              
+        <div class="panel panel-default">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title" id="list-students-facultad-panel">
+                        <a data-toggle="collapse" data-parent="accordion" href="#facultad">Reporte de Facultad</a>
+                    </h4>                    
+                    <div id="facultad" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <h2>Reporte de Facultad</h2>                                       
+                            <hr class="col-sm-12" />
+                            <div class="col-sm-12" id="div_table_facultad">
+                            </div>
+                            <hr class="col-sm-12" />
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="chart-container">
+                                        <canvas id="grafica_facultad" ></canvas>
+                                    </div>                            
+                                </div>                
+                            </div>
+                            <hr class="col-sm-12" />
+                            <div class="row div_btn_guardar">
+                                <a id="download_facultad" hidden>Guardar</a>
+                                <button id="save_btn_facultad" class="button dt-button">Guardar Gráfico</button>
+                            </div>
+                        </div>
+                    </div>            
+                </div>
+            </div>    
+        </div>        
+        {{/faculty_report_agr}}
+        {{#sex_report_agr}}              
+        <div class="panel panel-default">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title" id="list-students-sexo-panel">
+                        <a data-toggle="collapse" data-parent="accordion" href="#sexo">Reporte de Estudiantes por Sexo</a>
+                    </h4>                    
+                    <div id="sexo" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <h2>Reporte de Estudiantes por Sexo</h2>                                       
+                            <hr class="col-sm-12" />
+                            <div class="col-sm-12" id="div_table_sexo">
+                            </div>
+                            <hr class="col-sm-12" />
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="chart-container">
+                                        <canvas id="grafica_sexo" ></canvas>
+                                    </div>                            
+                                </div>                
+                            </div>
+                            <hr class="col-sm-12" />
+                            <div class="row div_btn_guardar">
+                                <a id="download_sexo" hidden>Guardar</a>
+                                <button id="save_btn_sexo" class="button dt-button">Guardar Gráfico</button>
+                            </div>
+                        </div>
+                    </div>            
+                </div>
+            </div>    
+        </div>        
+        {{/sex_report_agr}}
+        {{#age_report_agr}}              
+        <div class="panel panel-default">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title" id="list-students-edad-panel">
+                        <a data-toggle="collapse" data-parent="accordion" href="#edad">Reporte de Estudiantes por Edad</a>
+                    </h4>                    
+                    <div id="edad" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <h2>Reporte de Estudiantes por Edad</h2>                                       
+                            <hr class="col-sm-12" />
+                            <div class="col-sm-12" id="div_table_edad">
+                            </div>
+                            <hr class="col-sm-12" />
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="bar-chart-container">
+                                        <canvas id="grafica_edad" ></canvas>
+                                    </div>                            
+                                </div>                
+                            </div>
+                            <hr class="col-sm-12" />
+                            <div class="row div_btn_guardar">
+                                <a id="download_edad" hidden>Guardar</a>
+                                <button id="save_btn_edad" class="button dt-button">Guardar Gráfico</button>
+                            </div>
+                        </div>
+                    </div>            
+                </div>
+            </div>    
+        </div>        
+        {{/age_report_agr}}
+        {{#cond_excepcion_report_agr}}              
+        <div class="panel panel-default">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title" id="list-students-condExcepcion-panel">
+                        <a data-toggle="collapse" data-parent="accordion" href="#condExcepcion">Reporte de Condiciones de Excepción</a>
+                    </h4>                    
+                    <div id="condExcepcion" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <h2>Reporte de Condiciones de Excepción</h2>                                       
+                            <hr class="col-sm-12" />
+                            <div class="col-sm-12" id="div_table_condExcepcion">
+                            </div>
+                            <hr class="col-sm-12" />
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="chart-container">
+                                        <canvas id="grafica_condExcepcion" ></canvas>
+                                    </div>                            
+                                </div>                
+                            </div>
+                            <hr class="col-sm-12" />
+                            <div class="row div_btn_guardar">
+                                <a id="download_condExcepcion" hidden>Guardar</a>
+                                <button id="save_btn_condExcepcion" class="button dt-button">Guardar Gráfico</button>
+                            </div>
+                        </div>
+                    </div>            
+                </div>
+            </div>    
+        </div>        
+        {{/cond_excepcion_report_agr}}
+        {{#risks_report_agr}}              
+        <div class="panel panel-default">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title" id="list-students-riesgos-panel">
+                        <a data-toggle="collapse" data-parent="accordion" href="#riesgos">Reporte de Riesgos</a>
+                    </h4>                    
+                    <div id="riesgos" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <h2>Reporte de Riesgos</h2>                                       
+                            <hr class="col-sm-12" />
+                            <div class="col-sm-12" id="div_table_riesgos">
+                            </div>
+                            <hr class="col-sm-12" />
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="risk-chart-container">
+                                        <canvas id="grafica_riesgos" height="150" ></canvas>
+                                    </div>                            
+                                </div>                
+                            </div>
+                            <hr class="col-sm-12" />
+                            <div class="row div_btn_guardar">
+                                <a id="download_riesgos" hidden>Guardar</a>
+                                <button id="save_btn_riesgos" class="button dt-button">Guardar Gráfico</button>
+                            </div>
+                        </div>
+                    </div>            
+                </div>
+            </div>    
+        </div>        
+        {{/risks_report_agr}}
     </div>    
   <div>  
     

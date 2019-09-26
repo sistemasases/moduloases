@@ -315,6 +315,8 @@ function user_management_get_crea_stud_mon_prac_prof( $ases_id, $created_by_id, 
 
 /**
  * Function that sets sistemas role to an instance.
+ * Errata in function name, assing must be assign.
+ * 
  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @param integer $semester_id 
  * @param integer $instance_id
@@ -366,6 +368,7 @@ function user_management_assing_sistemas_role( $semester_id, $instance_id, $user
 
 /**
  * Function that sets sistemas role in all instances
+ * Errata in function name, assing must be assign.
  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @param integer $semester_id
  * @param string $username
@@ -380,6 +383,32 @@ function user_management_assing_sistemas_role_all( $semester_id, $username = "si
         user_management_assing_sistemas_role( $semester_id, $instance->id_instancia, $username );
     }
 
+}
+
+/**
+ * Function that given an role id, return the role object. This method will be 
+ * deprecated in short, please see core/security/security.php
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param integer $id Role ID.
+ * 
+ * @return stdClass Role object.
+ */
+function user_management_get_role_by_id( int $id ):stdClass
+{
+    global $DB; 
+    
+    $role_obj = $DB->get_record_sql( 
+        "SELECT * FROM {talentospilos_rol} WHERE id = '$id'" 
+    );
+    
+    if( !property_exists($role_obj, 'id') ){
+        throw new Exception( "Role with the ID '$id' does not exist.", -1 );
+    }else{
+        return $role_obj;
+    }
 }
 
 ?>

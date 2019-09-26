@@ -149,6 +149,60 @@
                 return_with_code( -2 );
             }
 
+        }else if( $input->function == "get_current_monitor_by_student" ){
+
+            if( count( $input->params ) == 2 ){
+
+                // Order of params
+                /**
+                 * The instance value only can be a number.
+                 * The student value only can be a number.
+                 */
+                
+                if( is_numeric( $input->params[0] ) && is_numeric( $input->params[1] ) ){
+                    
+                    echo json_encode( 
+                        array(
+                            "status_code" => 0,
+                            "error_message" => "",
+                            "data_response" => monitor_assignments_get_current_monitor_by_student( $input->params[0], $input->params[1] )
+                        )
+                    );
+                    
+                }else{
+                    return_with_code( -2 );
+                }
+            }else{
+                return_with_code( -2 );
+            }
+
+        }else if( $input->function == "get_current_practicant_by_monitor" ){
+
+            if( count( $input->params ) == 2 ){
+
+                // Order of params
+                /**
+                 * The instance value only can be a number.
+                 * The monitor id value only can be a number.
+                 */
+                
+                if( is_numeric( $input->params[0] ) && is_numeric( $input->params[1] ) ){
+                    
+                    echo json_encode( 
+                        array(
+                            "status_code" => 0,
+                            "error_message" => "",
+                            "data_response" => monitor_assignments_get_current_practicant_by_monitor( $input->params[0], $input->params[1] )
+                        )
+                    );
+                    
+                }else{
+                    return_with_code( -2 );
+                }
+            }else{
+                return_with_code( -2 );
+            }
+
         }else if( $input->function == "delete_monitor_student_relationship" ){
 
             if( count( $input->params ) == 3 ){
@@ -328,6 +382,33 @@
                             "status_code" => 0,
                             "error_message" => "",
                             "data_response" =>  monitor_assignments_get_last_student_assignment( $input->params[0], $input->params[1] )
+                        )
+                    );
+                    
+                }else{
+                    return_with_code( -2 );
+                }
+            }else{
+                return_with_code( -2 );
+            }
+
+        }else if( $input->function == "get_practicants_monitors_and_students" ){
+
+            if( count( $input->params ) == 2 ){
+
+                // Order of params
+                /**
+                 * The id_instance value only can be a number.
+                 * The semester_id value only can be a number.
+                 */
+                
+                if( is_numeric( $input->params[0] ) && is_string( $input->params[1] ) ){
+                    
+                    echo json_encode( 
+                        array(
+                            "status_code" => 0,
+                            "error_message" => "",
+                            "data_response" =>  monitor_assignments_get_practicants_monitors_and_students($input->params[0], $input->params[1])
                         )
                     );
                     

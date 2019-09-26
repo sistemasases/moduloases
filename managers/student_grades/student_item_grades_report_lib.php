@@ -63,15 +63,7 @@ function get_losed_and_aproved_item_grades($id_instancia, $semestre = null) {
     global $DB;
 
     if(!$semestre) {
-        $semestre_object = get_current_semester();
-        $sem = $semestre_object->nombre;
-        $anio = substr($sem,0,4);
-
-        if(substr($sem,4,1) == 'A'){
-            $semestre = $anio.'02';
-        }else if(substr($sem,4,1) == 'B'){
-            $semestre = $anio.'08';
-        }
+        $semestre = get_current_semester_processed();
     }
 
     $sql = <<<SQL

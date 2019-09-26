@@ -17,9 +17,9 @@ const MANAGER_ALIAS_CORE_DB = "core_db";
 const MANAGER_ALIAS_MOODLE = "moodle";
 const MANAGER_ALIAS_POSTGRES = "postgres";
 const AVAILABLE_MANAGERS = [ 
-	MANAGER_ALIAS_CORE_DB, 
-	MANAGER_ALIAS_MOODLE, 
-	MANAGER_ALIAS_POSTGRES 
+    MANAGER_ALIAS_CORE_DB, 
+    MANAGER_ALIAS_MOODLE, 
+    MANAGER_ALIAS_POSTGRES 
 ];
 
 /**
@@ -69,8 +69,7 @@ function get_db_manager( $selector = null ) {
 	 * Automatic and specific manager selection.
 	*/
 	
-	if(	in_array( FLAG_CORE_DB, get_defined_functions()['user']) && $selector_filter[ MANAGER_ALIAS_CORE_DB ] ){
-
+	if( in_array( FLAG_CORE_DB, get_defined_functions()['user']) && $selector_filter[ MANAGER_ALIAS_CORE_DB ] ){
 		return function( $query, $params = null, $extra = null ){
 			$select_filter = _is_select( $query );
 			if( is_null( $select_filter ) ){
@@ -85,7 +84,6 @@ function get_db_manager( $selector = null ) {
 		};
 
 	}else if( array_key_exists( FLAG_MOODLE, $GLOBALS ) && $selector_filter[ MANAGER_ALIAS_MOODLE ] ){
-
 		return function( $query, $params = null, $extra = null ){
 			$select_filter = _is_select( $query );
 			if( is_null( $select_filter ) ){
@@ -136,4 +134,238 @@ function get_db_manager( $selector = null ) {
 
 	}
 
+}
+
+/**
+ * Function that return a list of records, given a criteria.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see get_db_manager( ... ) in query_manager.php
+ * @see is_empty_exception( ... ) in general_functions.php
+ * 
+ * @param string $tablename
+ * @param array $criteria Filter to query, [ 'db_col_name' => 'value' ]
+ * 
+ * @return Null|array List of records.
+ */
+function get_db_records( string $tablename, array $criteria = [] )
+{
+    global $DB_PREFIX;                                                          // Moodle db prefix, Ex. mdl
+
+    $table = $DB_PREFIX . $tablename;                                           // Ex. mdl_ . talentospilos_user
+    $manager = get_db_manager();                                                // Database security core manager.
+    $criteria_size = count($criteria);
+    
+    $where = ( $criteria_size > 0 ? "WHERE" : "" );                           // WHERE is added if a criteria was defined. Ex. [ 'user_id' => 15, 'removed' => 0  ]
+    
+    foreach ($criteria as $col_name => $col_value){
+        
+        is_empty_exception(['col_name' => $col_name,'col_value' => $col_value]);// Check if col and value are valid, that means different to NULL or empty.
+        $where .=
+                " $col_name = '$col_value'" .                                   // Ex: ... AND user_id = 15
+                ( $criteria_size > 1  ? " AND" : "" );                            // Next criteria
+        $criteria_size--;
+    }
+    
+    $result = $manager( "SELECT * FROM $table $where" );                        // Result of execute the sentence
+    
+    return ( count( $result ) > 0 ? $result : null );
+    
+}
+
+/**
+ * Function that given a table name, return a description.
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see get_db_manager( ... ) in this file
+ * 
+ * @param string $tablename Table name
+ * 
+ * @return array|null Return an array if table exist
+ */
+function get_table_structure( $tablename ){
+    
+    $manager = get_db_manager();
+    
+    $query = "
+        SELECT
+            ROW_NUMBER() OVER (), * 
+        FROM
+            information_schema.COLUMNS
+        WHERE
+            TABLE_NAME = '$tablename'";
+    
+    $result = $manager( $query, $params = null, $extra = null );
+
+    return ( count( $result ) > 0 ? $result : null );
+    
+}
+
+/**
+ * Function that given a table name and schema name, return a list of constrains.
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see get_db_manager( ... ) in this file
+ * 
+ * @param string $tablename Table name
+ * @param string $schema Schema name
+ * 
+ * @return array|null Return an array if exist at least one constraint
+ */
+function get_table_constrains( $tablename, $schema = 'public' ){
+    
+    $manager = get_db_manager();
+    
+    $query = "
+        SELECT 
+            ROW_NUMBER() OVER (), con.*
+        FROM 
+            pg_catalog.pg_constraint con
+        INNER JOIN 
+            pg_catalog.pg_class rel 
+        ON 
+            rel.oid = con.conrelid
+        INNER JOIN 
+            pg_catalog.pg_namespace nsp 
+        ON 
+            nsp.oid = connamespace
+        WHERE 
+            nsp.nspname = '$schema'
+                AND rel.relname = '$tablename'";
+    
+    $result = $manager( $query, $params = null, $extra = null );
+    
+    return ( count( $result ) > 0 ? $result : null );
+}
+
+/**
+ * Function that given a transformation variable, list of parameters and
+ * an optional additional filter, return an list of object with the 
+ * transformation variable structure.
+ * 
+ * Structure of a translation variable.
+ * 
+ * $CORE_SPECIAL_VAR = [
+ *   'core_special_var_table_name' => $DB_PREFIX . "talentospilos_user_rol",
+ *   'core_special_var_filters' => [ "current_field_name" ],
+ *   // 'current_field_name' must be exist at the table defined at core_special_var_table_name
+ *   'new_field_name' => "current_field_name", 
+ *   'new_field_name_2'=> "current_field_name_2",
+ *   'referenced_field' => [
+ *       // Must be exist at the table defined at core_special_var_table_name
+ *       'core_special_var_col_name' => 'filed_name', 
+ *       'core_special_var_ref_table_name' => 'tablename',
+ *       // Must be exist at the table defined at core_special_var_ref_table_name
+ *       'core_special_var_ref_col_value' => 'field_name' 
+ *   ]
+ *];
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see _build_response( ... ) in this file
+ * 
+ * @param array $query_variable 
+ * @param array $query_params
+ * @param array|null $additional_filter
+ * 
+ * @return array With a transformed result
+ */
+
+function solve_query_variable( $query_variable, $query_params, $additional_filter = [] ){
+    
+    $manager = get_db_manager();
+    
+    $ref_table_name = $query_variable[ 'core_special_var_table_name' ];
+    $ref_table_filters = $query_variable[ 'core_special_var_filters' ];
+    unset( $query_variable[ 'core_special_var_table_name' ] );
+    unset( $query_variable[ 'core_special_var_filters' ] );
+    
+    $criteria = "";
+    
+    foreach( $ref_table_filters as &$filter ){
+        $criteria .= 
+            $filter . " = '" . $query_params[ $filter ] ."'" . 
+            ( next( $ref_table_filters ) ? " AND " : null );
+    }
+    
+    ( count( $additional_filter ) > 0 ? $criteria .= " AND " : null );
+    
+    foreach( $additional_filter as $key => $filter ){
+        $criteria .= 
+            $key . " = '" . $filter . "'" .
+            ( next( $additional_filter ) ? " AND " : null );
+    }
+    
+    $query = "SELECT * FROM $ref_table_name WHERE $criteria";
+    $records = $manager( $query, $param = null, $extra = null );
+    
+    return _build_response($records, $query_variable);
+    
+}
+
+/**
+ * Function that given a list of records and a transformation variable return 
+ * a transformed list of records.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param array $records
+ * @param array $query_variable
+ * 
+ * @return array a transformed list of records
+ */
+function _build_response( $records, $query_variable ){
+    
+    $to_return = [];
+    
+    foreach( $records as $key => $record ){
+        $solved_object = [];
+        foreach( $query_variable as $key => $data ){
+            if( gettype( $data ) == "array"  ){
+                $manager = get_db_manager();
+                $query = "SELECT ".$data[ 'core_special_var_ref_col_value' ]." FROM ".$data[ 'core_special_var_ref_table_name' ]." WHERE id = $1";
+                $result =  $manager( $query, $param = [ $record[ $data[ 'core_special_var_col_name' ] ] ], $extra = null );
+                $solved_object[$key] = $result[0][ $data[ 'core_special_var_ref_col_value' ] ];
+            }else{
+                $solved_object[$key] = $record[$data];
+            }
+        }
+        array_push($to_return, $solved_object);
+    }
+    
+    return $to_return;
+}
+
+/**
+ * Function that checks if exist records, given a criteria.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see get_db_records( ... ) in query_manager.php
+ * 
+ * @param string $tablename
+ * @param array $criteria Filter to query, [ 'db_col_name' => 'value' ]
+ * 
+ * @return bool True if exist.
+ */
+function check_db_records( string $tablename, array $criteria = [] ): bool
+{
+    
+    $records = get_db_records($tablename, $criteria);
+    
+    if( is_null( $records ) ){                                                    
+        return false;
+    }else if ( count( $records ) > 0 ) {
+        return true;
+    }else{
+        return false;
+    }
+        
 }

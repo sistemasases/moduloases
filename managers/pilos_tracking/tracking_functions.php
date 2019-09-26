@@ -27,10 +27,12 @@
 require_once( 'pilos_tracking_lib.php' );
 require_once( dirname(__FILE__) . '/../lib/student_lib.php' );
 require_once( dirname(__FILE__) . '/../dphpforms/dphpforms_get_record.php' );
+require_once( dirname(__FILE__) . '/../../core/cache/cache.php' );
 require_once( dirname(__FILE__) . '/../student_profile/studentprofile_lib.php' );
 require_once( dirname(__FILE__) . '/../seguimiento_grupal/seguimientogrupal_lib.php' );
 require_once( dirname(__FILE__) . '/../dphpforms/v2/dphpforms_lib.php' );
 require_once( dirname(__FILE__) . '/../monitor_assignments/monitor_assignments_lib.php' );
+require_once( dirname(__FILE__) . '/../pilos_tracking/v2/pilos_tracking_lib.php' );
 
 
 /**
@@ -190,34 +192,45 @@ function render_professional_new_form($practicant_of_prof, $instance, $period = 
     $practicant_counting = [];
     $current_semester = get_current_semester();
     foreach($practicant_of_prof as $practicant) {
+        
         $panel.= "<div class='panel panel-default'>";
         $practicant_id = $practicant->id_usuario;
         $monitors_of_pract = get_monitors_of_pract($practicant_id, $instance);
 
         // If the professional has associate practitioners with monitors that show
 
-        $panel.= "<a data-toggle='collapse' data-container='practicant$practicant->username' data-username='$practicant->username' class='practicant collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_practicant' style='text-decoration:none' href='#practicant" . $practicant->username . "'>";
-        $panel.= "<div class='panel-heading heading_practicant_tracking'>";
-        $panel.= "<div class='row'><div class='col-xs-10 col-sm-10 col-md-5 col-lg-5'>";
-        $panel.= "<h4 class='panel-title'>";
-        $panel.= "$practicant->firstname $practicant->lastname";
-        $panel.= "</h4></div>"; //End panel-title
-        $panel.= "<div class='col-xs-2 col-sm-2 col-md-1 col-lg-1'>";
-        $panel.= "<span class='protected glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : " . count(get_monitors_of_pract($practicant_id, $instance));
-        $panel.= "<br /><span class='protected glyphicon glyphicon-education subpanel' style='font-size: 20px;'></span> : " . get_quantity_students_by_pract($practicant_id, $instance);
-        $panel.= "</div>";
-        $panel.= "<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4' id='counting_" . $practicant->username . "'>";
-        $panel.= '<div class="loader">Cargando conteo...</div>';
-        $panel.= "</div>";
-        $panel.= "<div class='col-xs-12 col-sm-12 col-md-1 col-lg-1 col-lg-offset-1'><span class='open-close-icon glyphicon glyphicon-chevron-left'></span></div>";
-        $panel.= "</div>";
-        $panel.= "</div>"; //End panel-heading
-        $panel.= "</a>";
-        $panel.= "<div id='practicant$practicant->username'  class='show collapse_v2 collapse border_rt' role='tabpanel' aria-labelledby='heading_practicant_tracking$practicant->username' aria-expanded='true'>";
-        $panel.= "<div class='panel-body'>";
-        $panel.= "</div>"; // End panel-body
-        $panel.= "</div>"; // End collapse
-        $panel.= "</div>"; // End panel-collapse
+        $panel.= 
+                "<a data-toggle='collapse' data-container='practicant$practicant->username' data-username='$practicant->username' class='practicant collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_practicant' style='text-decoration:none' href='#practicant" . $practicant->username . "'>
+                    <div class='panel-heading heading_practicant_tracking'>
+
+                        <div class='row'>
+                            <div class='col-xs-10 col-sm-10 col-md-5 col-lg-5'>
+                                <h4 class='panel-title'>
+                                    $practicant->firstname $practicant->lastname
+                                </h4>
+                            </div>
+
+                            <div class='col-xs-2 col-sm-2 col-md-1 col-lg-1'>
+                                <span class='protected glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : " . count(get_monitors_of_pract($practicant_id, $instance)) . 
+                                "<br />
+                                <span class='protected glyphicon glyphicon-education subpanel' style='font-size: 20px;'></span> : " . get_quantity_students_by_pract($practicant_id, $instance) .
+                            "</div>
+
+                            <div class='col-xs-12 col-sm-12 col-md-5 col-lg-4' id='counting_" . $practicant->username . "'>
+                                <div class='loader'>Cargando conteo...</div>
+                            </div>
+                            
+                            <div class='col-xs-12 col-sm-12 col-md-1 col-lg-1 col-lg-offset-1'><span class='open-close-icon glyphicon glyphicon-chevron-left'></span></div>
+                            
+                        </div>
+
+                    </div>
+                </a>
+                <div id='practicant$practicant->username'  class='show collapse_v2 collapse border_rt' role='tabpanel' aria-labelledby='heading_practicant_tracking$practicant->username' aria-expanded='true'>
+                        <div class='panel-body'></div>
+                    </div>
+                </div>";
+        
     }
 
     return $panel;
@@ -349,6 +362,8 @@ function render_student_trackingsV2($peer_tracking_v2){
 
         }
     }
+    
+    $peer_tracking_v2 = NULL;
 
     return $form_rendered;
 }
@@ -403,7 +418,6 @@ function filter_trackings_by_review($peer_tracking_v2)
  * @return Array
  *
  */
-
 function auxiliary_specific_counting($user_kind, $user_id, $semester, $instance){
     $array_final = array();
     if ($user_kind == 'profesional_ps') {
@@ -432,6 +446,66 @@ function auxiliary_specific_counting($user_kind, $user_id, $semester, $instance)
 }
 
 function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instance){
+        
+    //I_ID_ = Instance id
+    //M_ID_ = Moodle id
+    //A_ID_ = ASES id
+    $cache_prefix = "TRACKING_COUNT_I_ID_".$instance."_M_ID_" ;
+    
+    if( core_cache_is_supported() ){
+        
+        try {
+            
+            $value = json_decode(core_cache_get_value( $cache_prefix . $user_id ));
+            
+            $count['revisado_profesional'] = $value->revisado_profesional;
+            $count['not_revisado_profesional'] = $value->not_revisado_profesional;
+            $count['total_profesional'] = $value->total_profesional;
+            $count['revisado_practicante'] = $value->revisado_practicante;
+            $count['not_revisado_practicante'] = $value->not_revisado_practicante;
+            $count['total_practicante'] = $value->total_practicante;
+
+            $count['in_revisado_profesional'] = $value->in_revisado_profesional;
+            $count['in_not_revisado_profesional'] = $value->in_not_revisado_profesional;
+            $count['in_total_profesional'] = $value->in_total_profesional;
+            $count['in_revisado_practicante'] = $value->in_revisado_practicante;
+            $count['in_not_revisado_practicante'] = $value->in_not_revisado_practicante;
+            $count['in_total_practicante'] = $value->in_total_practicante;
+            
+            return $count;
+            
+        } catch (Exception $exc) {
+            
+            try{
+                
+                cache_generator( $semester->max, $instance  );
+            
+                $value = json_decode(core_cache_get_value( $cache_prefix . $user_id ));
+
+                $count['revisado_profesional'] = $value->revisado_profesional;
+                $count['not_revisado_profesional'] = $value->not_revisado_profesional;
+                $count['total_profesional'] = $value->total_profesional;
+                $count['revisado_practicante'] = $value->revisado_practicante;
+                $count['not_revisado_practicante'] = $value->not_revisado_practicante;
+                $count['total_practicante'] = $value->total_practicante;
+
+                $count['in_revisado_profesional'] = $value->in_revisado_profesional;
+                $count['in_not_revisado_profesional'] = $value->in_not_revisado_profesional;
+                $count['in_total_profesional'] = $value->in_total_profesional;
+                $count['in_revisado_practicante'] = $value->in_revisado_practicante;
+                $count['in_not_revisado_practicante'] = $value->in_not_revisado_practicante;
+                $count['in_total_practicante'] = $value->in_total_practicante;
+
+                return $count;
+                
+                
+            }catch(Exception $ex){
+                
+            }
+            
+        }
+            
+    }
 
     $fecha_inicio = null;
     $fecha_fin = null;
@@ -463,7 +537,6 @@ function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instanc
 
     $fecha_fin_str = $fecha_fin["year"]."-".$mon_tmp."-".$day_tmp;
 
-    $array_final = array();
     if ($user_kind == 'profesional_ps') {
 
 
@@ -575,7 +648,7 @@ function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instanc
         $count['in_not_revisado_practicante'] = $in_not_rev_prac;
         $count['in_total_practicante'] = $in_rev_prac + $in_not_rev_prac;
 
-        return $count;
+        
 
     }else if ($user_kind == 'practicante_ps') {
 
@@ -682,7 +755,7 @@ function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instanc
         $count['in_not_revisado_practicante'] = $in_not_rev_prac;
         $count['in_total_practicante'] = $in_rev_prac + $in_not_rev_prac;
 
-        return $count;
+        
     }else if ($user_kind == 'monitor_ps') {
 
         //Get assignments
@@ -783,10 +856,20 @@ function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instanc
         $count['in_revisado_practicante'] = $in_rev_prac;
         $count['in_not_revisado_practicante'] = $in_not_rev_prac;
         $count['in_total_practicante'] = $in_rev_prac + $in_not_rev_prac;
-
-        return $count;
+                
     }
-    return $array_final;
+    
+    if( core_cache_is_supported() ){
+        
+        try {
+            
+            cache_generator( $semester_id, $instance  );
+            
+        } catch (Exception $exc) {}
+            
+    }
+    
+    return $count;
 }
 
 /**

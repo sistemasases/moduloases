@@ -1007,6 +1007,10 @@ tr.shown td.details-control {
 #peer_trackings{
   padding-left: 0;
   padding-right: 0;
+  padding-top: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-top-width: 0;
 }
 
 a.panel_heading.heading_semester_tracking{
@@ -1020,8 +1024,8 @@ a.collapsed .hading_semester_tracking{
 }
 
 a .heading_semester_tracking{
-  background-color: #D51B23;
-  color: white;
+  background-color: #E5E5E5;
+  color: black;
 
 }
 
@@ -1029,6 +1033,12 @@ a .heading_semester_tracking:hover{
   background-color: #D51B23;
   color: white;
   text-decoration:none;
+}
+
+a .heading_semester_tracking:focus{
+    background-color: #D51B23;
+    color: white;
+    text-decoration:none;
 }
 
 .reporte-seguimiento .hacer-scroll

@@ -1,0 +1,14 @@
+#tableResultStudent td:nth-child(2),
+#tableResultStudent td:nth-child(3),
+#tableResultStudent td:nth-child(4),
+#tableResultStudent td:nth-child(5){
+    text-decoration: underline;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#tableResultStudent td:nth-child(8),
+#tableResultStudent td:nth-child(14){
+    text-decoration: underline;
+    cursor: pointer;
+}

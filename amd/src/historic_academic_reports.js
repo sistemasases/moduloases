@@ -51,7 +51,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                             var semestre = table.cell(table.row(this).index(), 5).data();
                             checkLoses(codigo, programa, semestre);
                         }
-                    } else if (colIndex == 2) {
+                    } else if (colIndex >= 1 || colIndex <=4) {
                         location.href = "student_profile.php" + location.search + "&student_code=" + table.cell(table.row(this).index(), 2).data() + "-";
                     }
 
@@ -66,6 +66,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                 ' cellspacing="0" width="100%"><thead> </thead></table>');
 
             $("#tableResultStudent").DataTable(data);
+            console.log(data);
 
         },
         load_total_table: function (data) {
@@ -75,6 +76,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                 ' cellspacing="0" width="100%"><thead> </thead></table>');
 
             $("#tableResultTotal").DataTable(data);
+            console.log(data);
         }
     };
 

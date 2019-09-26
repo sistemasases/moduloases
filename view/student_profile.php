@@ -61,8 +61,10 @@ global $USER;
 include "../classes/output/student_profile_page.php";
 include "../classes/output/renderer.php";
 
+
 $new_forms_date =strtotime('2018-01-01 00:00:00');
 
+//$initial_date = date('H:i:s.u');
 // Set up the page.
 $title = "Ficha estudiante";
 $pagetitle = $title;
@@ -105,21 +107,18 @@ $ases_student = null;
 if ($student_code != 0) {
     
     $ases_student = get_ases_user_by_code($student_code);
-
+    $record->birthdate = $ases_student->fecha_nac;
     $student_id = $ases_student->id;
-    //echo $student_id ;
-    //die;
+
     // Student information to display on file header (ficha)
     $id_user_moodle = get_id_user_moodle($ases_student->id);
     $id_user_moodle_ = $id_user_moodle;
 
-
     $user_moodle = get_moodle_user($id_user_moodle);
-    
     
     $html_profile_image = AsesUser::get_HTML_img_profile_image($contextblock->id, $ases_student->id);
     //$academic_programs = get_status_program_for_profile($student_id);
-    $academic_programs   = get_status_program_for_profile_aditional($student_id);
+    $academic_programs = get_status_program_for_profile_aditional($student_id);
     $student_cohorts = get_cohorts_by_student($id_user_moodle);
     $status_ases_array = get_ases_status($ases_student->id, $blockid);
 
@@ -155,20 +154,18 @@ if ($student_code != 0) {
 
     $body_table_others_institutions = '';
   
-      //Extraer json y decodificar datos de otras instituciones del estudiante
-      $objeto_json_institutions = json_decode($aditional_academics_data->otras_instituciones);
+    //Extraer json y decodificar datos de otras instituciones del estudiante
+    $objeto_json_institutions = json_decode($aditional_academics_data->otras_instituciones);
 
-      //Recorrer el objeto json (array) y contruir los tr y td de la tabla
-      foreach($objeto_json_institutions as $objeto){ 
+    //Recorrer el objeto json (array) y contruir los tr y td de la tabla
+    foreach($objeto_json_institutions as $objeto){ 
 
-        $body_table_others_institutions .= "<tr><td> <input name='name_institucion' class='input_fields_general_tab'  type='text' value='$objeto->name_institution'/></td>
-        <td> <input name='nivel_academico_institucion' class='input_fields_general_tab'  type='text' value='$objeto->academic_level'/></td>
-        <td> <input name='apoyos_institucion' class='input_fields_general_tab'  type='text' value='$objeto->supports'/></td>
-        <td> <button type ='button' id='bt_delete_institucion' title='Eliminar institución' name='btn_delete_institucion' style='visibility:visible;'> </button></td> </tr>";
-    
-      }
+    $body_table_others_institutions .= "<tr><td> <input name='name_institucion' class='input_fields_general_tab'  type='text' value='$objeto->name_institution'/></td>
+    <td> <input name='nivel_academico_institucion' class='input_fields_general_tab'  type='text' value='$objeto->academic_level'/></td>
+    <td> <input name='apoyos_institucion' class='input_fields_general_tab'  type='text' value='$objeto->supports'/></td>
+    <td> <button type ='button' id='bt_delete_institucion' title='Eliminar institución' name='btn_delete_institucion' style='visibility:visible;'> </button></td> </tr>";
 
-
+    }
 
     $record->current_resolution         =$aditional_academics_data->resolucion_programa;
     $record->total_time                 =$aditional_academics_data->creditos_totales;
@@ -236,10 +233,10 @@ if ($student_code != 0) {
  
 
     // General file (ficha general) information
-    $record->puntaje_icfes       = $ases_student->puntaje_icfes;
-    $record->ingreso       = $ases_student->anio_ingreso;
-    $record->estrato       = $ases_student->estrato;
-    $record->res_address = $ases_student->direccion_res;
+    $record->puntaje_icfes = $ases_student->puntaje_icfes;
+    $record->ingreso = $ases_student->anio_ingreso;
+    $record->estrato = $ases_student->estrato;
+
     $record->init_tel = $ases_student->tel_ini;
     $record->res_tel = $ases_student->tel_res;
     $record->cell_phone = $ases_student->celular;
@@ -251,36 +248,36 @@ if ($student_code != 0) {
     
   
     
-      $personas = '';
-      $pos = 1;
+    $personas = '';
+    $pos = 1;
     
-        //Extraer json y decodificar datos de personas con quien vive
-        $objeto_json = json_decode($ases_student->vive_con);
-        //Recorrer el objeto json (array) y contruir los tr y td de la tabla
-        foreach($objeto_json as $objeto){ 
-           $personas  .= "<tr> <td>  <input   name = 'name_person'class= 'input_fields_general_tab' readonly type='text' value='$objeto->name' /></td>
-           <td><input name = 'parentesco_person'  class= 'input_fields_general_tab' readonly type='text' value='$objeto->parentesco' /></td> <td>
-           <button type = 'button' class='bt_delete_person' title='Eliminar persona' name  = 'btn_delete_person' style= 'visibility:hidden;' value='$pos'></button></td></tr>";
-            $pos ++;
-        }
+    //Extraer json y decodificar datos de personas con quien vive
+    $objeto_json = json_decode($ases_student->vive_con);
+    //Recorrer el objeto json (array) y contruir los tr y td de la tabla
+    foreach($objeto_json as $objeto){
+       $personas  .= "<tr> <td>  <input   name = 'name_person'class= 'input_fields_general_tab' readonly type='text' value='$objeto->name' /></td>
+       <td><input name = 'parentesco_person'  class= 'input_fields_general_tab' readonly type='text' value='$objeto->parentesco' /></td> <td>
+       <button type = 'button' class='bt_delete_person' title='Eliminar persona' name  = 'btn_delete_person' style= 'visibility:hidden;' value='$pos'></button></td></tr>";
+        $pos ++;
+    }
 
    
-   $record->personas_con_quien_vive = $personas;
+    $record->personas_con_quien_vive = $personas;
     //TRAE ESTADOS CIVILES
-     $estados= get_estados_civiles();
+    $estados= get_estados_civiles();
     $options_estado_civil = '';
 
     $estado_student->id_estado_civil = $ases_student->id_estado_civil;
-     //Buscar la posición del estado civil soltero, colocar al inicio del select
+    //Buscar la posición del estado civil soltero, colocar al inicio del select
 
-     $i = 0;
+    $i = 0;
     foreach($estados as $estado){
         if($estado->estado_civil=='Soltero(a)'){
-            $options_estado_civil .= "<option value='$estado->id'>$estado->estado_civil</option>";   
+            $options_estado_civil .= "<option value='$estado->id'>$estado->estado_civil</option>";
             $pose = $i;
             break;
-        } 
-    $i++;
+        }
+        $i++;
     }
     //Eliminar estado civil agregado al inicio del select del array
     array_splice($estados,$pose,1);
@@ -298,21 +295,19 @@ if ($student_code != 0) {
 
 
 
-     //TRAE OCUPACIONES
+    //TRAE OCUPACIONES
     $ocupaciones= get_ocupaciones();
     $options_ocupaciones= '';
 
     $i=0;
 
-            $options_ocupaciones .= "<option selected= 'selected' value='option_ninguna' title='NINGUNA DE LAS ANTERIORES'>NINGUNA DE LAS ANTERIORES</option>";
+    $options_ocupaciones .= "<option selected= 'selected' value='option_ninguna' title='NINGUNA DE LAS ANTERIORES'>NINGUNA DE LAS ANTERIORES</option>";
+
     foreach($ocupaciones as $ocupacion){
             $options_ocupaciones .= "<option value='$ocupacion->value' title='$ocupacion->ocupacion'>$ocupacion->alias...</option>";
     }
 
     $record->ocupaciones = $options_ocupaciones;
-
-
-
 
     //TRAE PAISES
     $paises= get_paises();
@@ -329,6 +324,10 @@ if ($student_code != 0) {
         $i++;
     }
 
+    $coordenates = student_profile_get_coordenates($student_id);
+    $record->latitude = $coordenates->latitude;
+    $record->longitude = $coordenates->longitude;
+
     //Eliminar país Colombia puesto al inicio
     array_splice($paises,$posp,1);
    
@@ -344,64 +343,12 @@ if ($student_code != 0) {
 
     $record->options_pais = $options_pais;
 
+    $record->municipio_act = student_profile_get_ciudad_res($student_id);
+    $record->res_address = student_profile_get_res_address($student_id);
 
-     //TRAE MUNICIPIOS
-    $municipios= get_municipios();
-    $municipio_student = $ases_student->id_ciudad_res;
-
-    $options_municipios = '';
-
-    $options_municipios .= "<optgroup label='Populares'> <option value='1'>NO DEFINIDO</option> </optgroup>" ;   
-
-    foreach($municipios as $municipio){
-        $key = key($municipios);
-        $options_municipios .= "<optgroup label = '$key'>";
-
-        foreach($municipio as $mun){
-            if($municipio_student == $mun->id){
-                $options_municipios .= "<option value='$mun->id' selected='selected'>$mun->nombre</option>";
-            }else{
-                $options_municipios .= "<option value='$mun->id'>$mun->nombre</option>";
-            }
-        }
-
-        next($municipios);
-
-        $options_municipios .= "</optgroup>";   
-    }
-    //  $options_municipios = '';
- 
-    //  $municipio_student = $ases_student->id_ciudad_res;
-    //  //Buscar la posición del municipio CALI
-    //  $i=0;
-    //  foreach($municipios as $mun){
-    //      if($mun->nombre=="CALI"){
-    //      $posp=$i;
-    //      $options_municipios .= "<optgroup label='Populares'> <option value='$mun->id'>$mun->nombre</option> </optgroup>" ;   
-    //      break; }
-    //      $i++;
-    //  }
- 
-     //Eliminar municipio CALI puesto al inicio
-    //  array_splice($municipios,$posp,1);
-    
-    //  $options_municipios .= "<optgroup label = 'Otros'>";
-    //  foreach($municipios as $mun){
-    //      if($municipio_student == $mun->id){
-    //          $options_municipios .= "<option value='$mun->id' selected='selected'>$mun->nombre</option>";
-    //      }else{
-    //          $options_municipios .= "<option value='$mun->id'>$mun->nombre</option>";
-    //      }
-    //  }
-    //  $options_municipios .= "</optgroup>";   
- 
-     $record->options_municipio_act = $options_municipios;
-
-
-         //TRAE ETNIAS
+    //TRAE ETNIAS
     $etnias= get_etnias();
     $options_etnia = '';
-    
 
     $etnia_student = $ases_student->id_etnia;
 
@@ -434,21 +381,31 @@ if ($student_code != 0) {
         }
     }
 
-        
-    
-
-
     $record->options_etnia = $options_etnia;
-
     
     //TRAE GENEROS
     $generos= get_generos();
     $options_generos = '';
 
     $genero_student->id_identidad_gen = $ases_student->id_identidad_gen;
-  
-   $otro ="";
-   $control = true;
+
+    //Buscar la posición de la actividad Ninguna
+    $i=0;
+    foreach($generos as $genero){
+        if($genero->genero=="NO DEFINIDO"){
+        $posa=$i;
+        $options_generos .= "<option value='$genero->id'>$genero->genero</option>" ;   
+        break; }
+        $i++;
+    }
+
+    //Eliminar genero 'NO DEFINIDO' puesto al inicio
+    array_splice($generos,$posa,1);
+    
+    $otro ="";
+    $control = true;
+
+    //$options_generos .= "<option selected='selected' disabled='disabled'>NO DEFINIDO</option>";
     foreach($generos as $genero){
         if($genero_student->id_identidad_gen == $genero->id){
             if($genero->opcion_general == 1){
@@ -461,67 +418,93 @@ if ($student_code != 0) {
             }
         }else{
             if($genero->opcion_general == 1){
-            $options_generos .= "<option value='$genero->id'>$genero->genero</option>";}
-
+                $options_generos .= "<option value='$genero->id'>$genero->genero</option>";
+            }
         }
     }
 
-    
-           if($control){$options_generos .= "<option value='0'>Otro</option>"; } 
-        
-    
-
+    if($control){$options_generos .= "<option value='0'>Otro</option>"; }
 
     $record->options_genero = $options_generos;
     $record->otro = $otro;
 
-      //TRAE ACTIVIDADES SIMULTANEAS
-      $act_simultaneas= get_act_simultaneas();
-      $options_act_simultaneas = '';
+    //TRAE OPCIONES DE SEXO
+    
+    $options_sex= get_sex_options();
+    $sex_options = '';
+
+    $option_sex_student = $ases_student->sexo;
+    //Buscar la posición del sexo NO REGISTRA
+    $i=0;
+    foreach($options_sex as $option){
+        if($option->sexo=="NO REGISTRA"){
+        $posa=$i;
+        $sex_options .= "<option value='$option->id'>$option->sexo</option>" ;   
+        break; }
+        $i++;
+    }
+
+    //Eliminar sexo NO REGISTRA puesta al inicio
+    array_splice($options_sex,$posa,1);
+    
+    foreach($options_sex as $option){
+         if($option_sex_student == $option->id){
+
+            $sex_options .= "<option value='$option->id' selected='selected'>$option->sexo</option>"; 
+
+        }else{
+
+            $sex_options .= "<option value='$option->id'>$option->sexo</option>";
+
+        }
+    }
+
+    $record->sex_options = $sex_options;
+
+    //TRAE ACTIVIDADES SIMULTANEAS
+    $act_simultaneas= get_act_simultaneas();
+    $options_act_simultaneas = '';
   
-      $act_simultanea_student->id_act_simultanea= $ases_student->id_act_simultanea;
-     //Buscar la posición de la actividad Ninguna
-     $i=0;
-     foreach($act_simultaneas as $act){
-         if($act->actividad=="Ninguna"){
-         $posa=$i;
-         $options_act_simultaneas .= "<option value='$act->id'>$act->actividad</option>" ;   
-         break; }
-         $i++;
-     }
+    $act_simultanea_student->id_act_simultanea= $ases_student->id_act_simultanea;
+    //Buscar la posición de la actividad Ninguna
+    $i=0;
+    foreach($act_simultaneas as $act){
+        if($act->actividad=="Ninguna"){
+        $posa=$i;
+        $options_act_simultaneas .= "<option value='$act->id'>$act->actividad</option>" ;   
+        break; }
+        $i++;
+    }
  
-     //Eliminar actividad Ninguna puesta al inicio
-     array_splice($act_simultaneas,$posa,1);
-     $control = true;
-     $otro="";
-      foreach($act_simultaneas as $act){
-          if($act_simultanea_student->id_act_simultanea == $act->id){
-              if($act->opcion_general == 1){
-              $options_act_simultaneas .= "<option value='$act->id' selected='selected'>$act->actividad</option>";}
-              else {
-              //Seleccionar otro y mostrar en textfield cual 
-              $otro = $act->actividad;   
-              $options_act_simultaneas .= "<option selected='selected' value='0'>Otro</option>"; 
-              $control = false;
-              }
-          }else{
-              if($act->opcion_general == 1){
-              $options_act_simultaneas .= "<option value='$act->id'>$act->actividad</option>";}
-  
-          }
-      }
+    //Eliminar actividad Ninguna puesta al inicio
+    array_splice($act_simultaneas,$posa,1);
+    $control = true;
+    $otro="";
+    foreach($act_simultaneas as $act){
+        if($act_simultanea_student->id_act_simultanea == $act->id){
+            if($act->opcion_general == 1){
+            $options_act_simultaneas .= "<option value='$act->id' selected='selected'>$act->actividad</option>";}
+            else {
+            //Seleccionar otro y mostrar en textfield cual 
+            $otro = $act->actividad;   
+            $options_act_simultaneas .= "<option selected='selected' value='0'>Otro</option>"; 
+            $control = false;
+            }
+        }else{
+            if($act->opcion_general == 1){
+                $options_act_simultaneas .= "<option value='$act->id'>$act->actividad</option>";
+            }
+        }
+    }
   
       
-             if($control){$options_act_simultaneas .= "<option value='0'>Otro</option>"; } 
-          
-      
-  
-  
-      $record->options_act_simultanea = $options_act_simultaneas;
-      $record->otro_act = $otro;
+    if($control){$options_act_simultaneas .= "<option value='0'>Otro</option>"; }
+
+    $record->options_act_simultanea = $options_act_simultaneas;
+    $record->otro_act = $otro;
 
     //Código temporal vive_con
-      if($ases_student->vive_con == null){
+    if($ases_student->vive_con == null){
         $record->vive_con = "NO DEFINIDO";
     }else{
         $record->vive_con = $ases_student->vive_con;}
@@ -533,11 +516,11 @@ if ($student_code != 0) {
         $record->sons = 0;
     }else{
         $record->sons = $ases_student->hijos;
-        
-        }
+    }
 
 
-    $record->observations = $ases_student->observacion;
+    $reasons_dropout_observations = getReasonDropoutStudent ($ases_student->id);
+    $record->observations = $reasons_dropout_observations."\n".$ases_student->observacion;
 
     // Estado ASES
     if($status_ases_array){
@@ -616,60 +599,36 @@ if ($student_code != 0) {
 
     // Geographic information
 
-    $geographic_object = load_geographic_info($student_id);
-
-    $neighborhoods_array = get_neighborhoods();
-
-    $neighborhoods = "<option>No registra</option>";
-
-    for ($i = 1; $i <= count($neighborhoods_array); $i++) {
-        if(isset($geographic_object->barrio)){
-            if ($neighborhoods_array[$i]->id == (int) $geographic_object->barrio) {
-                $neighborhoods .= "<option value='" . $neighborhoods_array[$i]->id . "' selected>" . $neighborhoods_array[$i]->nombre . "</option>";
-            } else {
-                $neighborhoods .= "<option value='" . $neighborhoods_array[$i]->id . "'>" . $neighborhoods_array[$i]->nombre . "</option>";
-            }
-        }else{
-            $neighborhoods .= "<option value='" . $neighborhoods_array[$i]->id . "'>" . $neighborhoods_array[$i]->nombre . "</option>";
-        }
-        
-    }
-
-    $level_risk_array = array('Bajo', 'Medio', 'Alto');
-
-    $select_geographic_risk = "<option>No registra</option>";
-    for ($i = 0; $i < 3; $i++) {
-        $value = $i + 1;
-        if ($i + 1 == (int) $geographic_object->risk) {
-            $select_geographic_risk .= "<option value='$value' selected>" . $level_risk_array[$i] . "</option>";
-        } else {
-            $select_geographic_risk .= "<option value='$value'>" . $level_risk_array[$i] . "</option>";
-        }
-    }
-
-    $record->select_geographic_risk = $select_geographic_risk;
-
-    $record->select_neighborhoods = $neighborhoods;
+    $geographic_object = student_profile_load_geographic_info($student_id);
 
     $geographic_object = get_geographic_info($student_id);
 
-    $record->latitude = $geographic_object->latitude;
-    $record->longitude = $geographic_object->longitude;
+    $geographic_risk_level = $geographic_object->risk_level;
 
-    switch ($geographic_object->risk) {
+    $record->geographic_risk_level  = $geographic_risk_level;
+
+    switch ($geographic_risk_level) {
         case 1:
+            $record->low_level = true;
+            $record->mid_level = $record->high_level = false;
             $record->geographic_class = 'div_low_risk';
             break;
         case 2:
+            $record->mid_level = true;
+            $record->low_level = $record->high_level = false;
             $record->geographic_class = 'div_medium_risk';
             break;
         case 3:
+            $record->high_level = true;
+            $record->low_level = $record->mid_level = false;
             $record->geographic_class = 'div_high_risk';
             break;
         default:
+            $record->low_level = $record->mid_level = $record->high_level = false;
             $record->geographic_class = 'div_no_risk';
             break;
     }
+
 
     // Students risks
 
@@ -775,35 +734,6 @@ if ($student_code != 0) {
     $select = make_select_ficha($USER->id, $rol, $student_code, $blockid, $actions);
     $record->code = $select;
 
-    // Loading academic information
-
-    foreach ($academic_programs as $program) {
-        if($program->tracking_status == 1){
-            
-            $academic_program_id = $program->academic_program_id;
-            break;
-        }
-    }
-    //Current data
-    //weighted average
-    $promedio = get_promedio_ponderado($student_id, $academic_program_id);
-    $record->promedio = $promedio;
-
-    // //num bajos
-    $bajos = get_bajos_rendimientos($student_id, $academic_program_id);
-    $record->bajos = $bajos;
-
-    // // //num estimulos
-    $estimulos = get_estimulos($student_id, $academic_program_id);
-    $record->estimulos = $estimulos;
-
-    // //Current semester
-    $html_academic_table = get_grades_courses_student_last_semester($id_user_moodle);
-    $record->academic_semester_act = $html_academic_table;
-
-    // //historic academic
-    $html_historic_academic = get_historic_academic_by_student($student_id);
-    $record->historic_academic = $html_historic_academic;
 
     // Student trackings (Seguimientos)
 
@@ -817,6 +747,7 @@ if ($student_code != 0) {
         'start' => strtotime( "2019-01-01" ),
         'end' => strtotime( "2019-04-30" )
     ];
+
     foreach( $periods as $key => $period ){
 
         if( strtotime( $period->fecha_inicio ) >= $new_forms_date ){
@@ -876,9 +807,7 @@ if ($student_code != 0) {
 
                 array_push( $peer_tracking_v3, $peer_tracking );
             }
-
         }
-
     }
 
     $record->peer_tracking_v3 =  array_reverse( $peer_tracking_v3 );
@@ -1650,7 +1579,7 @@ if( $dphpforms_ases_user ){
         $record->last_assignment_practicant = $last_assignment['pract_obj']->firstname . " " . $last_assignment['pract_obj']->lastname;
         $record->last_assignment_professional = $last_assignment['prof_obj']->firstname . " " . $last_assignment['prof_obj']->lastname;
     }
-}   
+}
 
 //Menu items are created
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
@@ -1689,8 +1618,6 @@ $PAGE->requires->css('/blocks/ases/style/creadorFormulario.css', true);
 $PAGE->requires->js_call_amd('block_ases/ases_incident_system', 'init');
 $PAGE->requires->js_call_amd('block_ases/student_profile_main', 'init', $data_init);
 $PAGE->requires->js_call_amd('block_ases/student_profile_main', 'equalize');
-
-$PAGE->requires->js_call_amd('block_ases/geographic_main', 'init');
 $PAGE->requires->js_call_amd('block_ases/dphpforms_form_renderer', 'init');
 $PAGE->requires->js_call_amd('block_ases/dphpforms_form_discapacity', 'init');
 $PAGE->requires->js_call_amd('block_ases/students_profile_others_tab_sp', 'init');
@@ -1702,4 +1629,3 @@ echo $output->header();
 $student_profile_page = new \block_ases\output\student_profile_page($record);
 echo $output->render($student_profile_page);
 echo $output->footer();
-

@@ -1,5 +1,5 @@
 <?php
-
+/*
 require_once(dirname(__FILE__). '/../../../config.php');
 global $DB;
 
@@ -38,3 +38,4 @@ foreach ($instances as $instance) {
 }
 
 echo "Éxito";
+*/

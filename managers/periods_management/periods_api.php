@@ -136,7 +136,6 @@
                     )
                 );
                 break;
-            
             case -5:
                 echo json_encode(
                     array(
@@ -156,10 +155,7 @@
                     )
                 );
                 break;
-
         }
-
         die();
     }
-
 ?>

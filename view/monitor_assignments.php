@@ -69,6 +69,7 @@ if ($rol == 'sistemas') {
     $_user = new stdClass();
     $_user->id = $USER->id;
     $_user->fullname = $USER->firstname . " " . $USER->lastname;
+    $_user->username = $USER->username;
     $record->user_logged = $_user;
 }
 $record->user_id = $USER->id;

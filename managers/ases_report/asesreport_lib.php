@@ -4,8 +4,7 @@ require_once(dirname(__FILE__).'/../instance_management/instance_lib.php');
 require_once(dirname(__FILE__).'/../lib/lib.php');
 require_once(dirname(__FILE__).'/../lib/student_lib.php');
 require_once(dirname(__FILE__).'/../user_management/user_lib.php');
-
-//echo json_encode(getGraficPrograma("TODOS", "1"));
+require_once(dirname(__FILE__).'/../cohort/cohort_lib.php');
 
 /**
  * Función que recupera riesgos 
@@ -39,34 +38,165 @@ function get_cohorts_by_idnumber($id_number){
     return $result;
 }
 
+
+/**
+ * Función que retorna un string, concatenando subconsultas sql dependiendo de los parámetros:
+ * @param integer $ases_status
+ * @param integer $icetex_status
+ * @param string $instance_id
+ * @return String
+ * 
+ */
+
+ function subconsultaGraficReport($ases_status, $icetex_status, $instance_id){
+    $sub_query = "";
+
+    //Se filtra a los estudiantes activos en ASES    
+    if($ases_status == 1){
+        // echo "Entra
+        // ";
+        $sub_query .= " INNER JOIN (SELECT current_ases_status.id_ases_student AS id_ases_student
+                        FROM (SELECT student_ases_status.id_estudiante AS id_ases_student,
+                                     MAX(student_ases_status.fecha)    AS fecha
+                              FROM mdl_talentospilos_est_estadoases AS student_ases_status
+                              WHERE id_instancia = $instance_id
+                              GROUP BY student_ases_status.id_estudiante) AS current_ases_status
+                               INNER JOIN (SELECT student_ases_status.id_estudiante,
+                                                  student_ases_status.fecha,
+                                                  ases_statuses.nombre
+                                           FROM mdl_talentospilos_est_estadoases AS student_ases_status
+                                                  INNER JOIN mdl_talentospilos_estados_ases AS ases_statuses
+                                                             ON ases_statuses.id = student_ases_status.id_estado_ases) AS historic_ases_statuses
+                                          ON (historic_ases_statuses.id_estudiante =
+                                              current_ases_status.id_ases_student AND
+                                              historic_ases_statuses.fecha = current_ases_status.fecha)
+                        WHERE historic_ases_statuses.nombre = 'seguimiento') AS ases_status
+                       ON ases_status.id_ases_student = ases_students.student_id                     
+                        
+                       ";
+    }
+
+    //Se filtra a los estudiantes activos ICETEX
+    if($icetex_status == 1){
+
+        $sub_query .= " INNER JOIN (SELECT current_icetex_status.id_ases_student      AS id_ases_student
+                        FROM (SELECT student_icetex_status.id_estudiante AS id_ases_student,
+                                     MAX(student_icetex_status.fecha)    AS fecha
+                              FROM mdl_talentospilos_est_est_icetex AS student_icetex_status
+                              GROUP BY student_icetex_status.id_estudiante) AS current_icetex_status
+                               INNER JOIN (SELECT student_icetex_status.id_estudiante,
+                                                  student_icetex_status.fecha,
+                                                  icetex_statuses.id,
+                                                  icetex_statuses.nombre
+                                           FROM mdl_talentospilos_est_est_icetex AS student_icetex_status INNER JOIN mdl_talentospilos_estados_icetex AS icetex_statuses
+                                                                                                                     ON icetex_statuses.id = student_icetex_status.id_estado_icetex) AS historic_icetex_statuses
+                                          ON (historic_icetex_statuses.id_estudiante =
+                                              current_icetex_status.id_ases_student AND
+                                              historic_icetex_statuses.fecha = current_icetex_status.fecha)
+                        WHERE historic_icetex_statuses.id NOT IN (1, 2, 7)) AS icetex_status
+                       ON icetex_status.id_ases_student = ases_students.student_id
+                    
+                    ";
+    }
+
+    return $sub_query;
+ }
+
+
+/**
+ * Función general que retorna un string relacionado a la condicion WHERE de los reportes graficos dependiendo de los
+ * parametros:
+ * @param String $cohorte
+ * @param String $instance_id
+ * @param integer $program_status
+ * @return String
+ *
+ */
+
+ function condicionCohorte($cohorte, $instance_id, $program_status){
+
+     $sql_where = "";
+
+     if ($cohorte == 'TODOS-OTROS') {
+         $sql_where .= " WHERE instance_cohort.id_instancia = $instance_id AND user_extended.tracking_status = 1
+                         AND cohort.idnumber NOT LIKE 'SPP%'
+                         AND cohort.idnumber NOT LIKE 'SPE%'
+                         AND cohort.idnumber NOT LIKE 'SPT%'
+                         AND cohort.idnumber NOT LIKE '3740%'  ";
+     } else if ($cohorte == 'TODOS') {
+         $sql_where .= " WHERE instance_cohort.id_instancia = $instance_id AND user_extended.tracking_status = 1 ";
+     } else if (substr($cohorte, 0, 5) == 'TODOS') {
+
+         $idnumber_cohort = substr($cohorte, 6);
+
+         $sql_where .= " WHERE instance_cohort.id_instancia = $instance_id AND user_extended.tracking_status = 1
+                                  AND cohort.idnumber LIKE '$idnumber_cohort%' ";
+     } else {
+         $sql_where .= " WHERE instance_cohort.id_instancia = $instance_id AND user_extended.tracking_status = 1
+                                  AND cohort.idnumber = '$cohorte' ";
+     }
+
+     if ($program_status){
+         $sql_where .= " AND program_statuses.nombre = 'ACTIVO' ";
+     }
+
+     return $sql_where;
+ }
+
+
 /**
  * Funcion recupera la informacion necesaria para la grafica de sexo de acuerdo a la cohorte seleccionado
  * 
  * @param $cohorte
  * @return Array 
  */
-function getGraficSex($cohorte){
+function getGraficSex($cohorte, $ases_status, $icetex_status, $program_status, $instance_id){
     global $DB;
-    $query = "SELECT subconsulta.sexo, COUNT(subconsulta.userid)
-        FROM (SELECT data.userid, usuarios_tal.sexo
-              FROM {talentospilos_usuario} as usuarios_tal 
-                         INNER JOIN {user_info_data} as data ON (cast(usuarios_tal.id AS varchar) = data.data) 
-              WHERE data.fieldid = 2) as subconsulta 
-              INNER JOIN {cohort_members} as cohorts ON subconsulta.userid = cohorts.userid
-              INNER JOIN {cohort} as cohorte ON cohorts.cohortid = cohorte.id
-        WHERE cohorte.name = '$cohorte'
-        GROUP BY sexo";
-    
-    $sql_query = "SELECT  sexo, COUNT(id) FROM {talentospilos_usuario} GROUP BY sexo";
-    
-    //se verifica el cohorte ingresado, de acuerdo al caso se invoca el metodo de moodle con una de las dos
-    //consultar armadas anteriormente
-    if($cohorte == "TODOS"){
-        $result = $DB->get_records_sql($sql_query);
-    } else {
-        $result = $DB->get_records_sql($query);
+
+    $sql_where = condicionCohorte($cohorte, $instance_id, $program_status);
+    $subconsulta_filtros = subconsultaGraficReport($ases_status, $icetex_status, $instance_id);
+
+    $sql_query = "SELECT sexo AS nombre, COUNT(*) AS cantidad FROM
+                        
+                    (SELECT DISTINCT 
+                         ases_students.username, 
+                         ases_students.student_id,
+                         ases_students.sexo
+                        FROM
+                        (SELECT 
+                            moodle_user.username,
+                            ases_user.id AS student_id,
+                            program_statuses.nombre AS program_status,
+                            CASE WHEN ases_user.sexo = '1' THEN 'Masculino'
+                              WHEN ases_user.sexo = '2' THEN 'Femenino'
+					          WHEN ases_user.sexo = '3' THEN 'Intersexual' 
+                              ELSE 'N.R'
+                            END AS sexo 
+                            FROM {cohort} AS cohort
+                            INNER JOIN {talentospilos_inst_cohorte} AS instance_cohort ON cohort.id = instance_cohort.id_cohorte
+                            INNER JOIN {cohort_members} AS cohort_member ON cohort_member.cohortid = cohort.id
+                            INNER JOIN {user} AS moodle_user ON moodle_user.id = cohort_member.userid
+                            INNER JOIN {talentospilos_user_extended} AS user_extended ON user_extended.id_moodle_user = moodle_user.id
+                            INNER JOIN {talentospilos_usuario} AS ases_user ON ases_user.id = user_extended.id_ases_user
+                            INNER JOIN {talentospilos_estad_programa} AS program_statuses ON program_statuses.id = user_extended.program_status 
+                            $sql_where
+                            GROUP BY moodle_user.username, student_id, ases_user.sexo, program_statuses.nombre) AS ases_students $subconsulta_filtros) AS subquery
+                    GROUP BY nombre
+                    ORDER BY cantidad DESC               
+                ";
+
+
+    $result_query = $DB->get_records_sql($sql_query);
+
+    $result_to_return = array();
+
+    foreach($result_query as $result){
+
+        array_push($result_to_return, $result);
     }
-    return $result;
+
+    return $result_to_return;
+
 }
 
 /**
@@ -75,39 +205,47 @@ function getGraficSex($cohorte){
  * @param $cohorte
  * @return Array 
  */
-function getGraficAge($cohorte){
+function getGraficAge($cohorte, $ases_status, $icetex_status, $program_status, $instance_id){
     global $DB;
-    $arrayRetornar=array();
-    
-    $query = "
-        SELECT subconsulta.userid, (now() - subconsulta.fecha_nac)/365 AS age
-            FROM (SELECT data.userid, usuarios_tal.fecha_nac
-                  FROM {talentospilos_usuario} as usuarios_tal 
-                             INNER JOIN {user_info_data} as data ON (cast(usuarios_tal.id AS varchar) = data.data) 
-                  WHERE data.fieldid = 2) as subconsulta 
-                  INNER JOIN {cohort_members} as cohorts ON subconsulta.userid = cohorts.userid
-                  INNER JOIN {cohort} as cohorte ON cohorts.cohortid = cohorte.id
-            WHERE cohorte.name = '$cohorte'";
-    
-    $sql_query = "SELECT id,(now() - fecha_nac)/365 AS age FROM {talentospilos_usuario}";
-    
-    //se verifica el cohorte ingresado, de acuerdo al caso se invoca el metodo de moodle con una de las dos
-    //consultar armadas anteriormente
-    if($cohorte == "TODOS"){
-        $result = $DB->get_records_sql($sql_query);
-    } else {
-        $result = $DB->get_records_sql($query);
+
+    $sql_where = condicionCohorte($cohorte, $instance_id, $program_status);
+    $subconsulta_filtros = subconsultaGraficReport($ases_status, $icetex_status, $instance_id);
+
+    $sql_query = "SELECT edad AS nombre, COUNT(*) AS cantidad FROM
+                                                 
+                      (SELECT DISTINCT 
+                         ases_students.username, 
+                         ases_students.student_id,
+                         ases_students.edad 
+                        FROM
+                        (SELECT 
+                            moodle_user.username,
+                            ases_user.id AS student_id,
+                            EXTRACT(YEAR FROM age(ases_user.fecha_nac)) AS edad,
+                            program_statuses.nombre AS program_status
+                            FROM {cohort} AS cohort
+                            INNER JOIN {talentospilos_inst_cohorte} AS instance_cohort ON cohort.id = instance_cohort.id_cohorte
+                            INNER JOIN {cohort_members} AS cohort_member ON cohort_member.cohortid = cohort.id
+                            INNER JOIN {user} AS moodle_user ON moodle_user.id = cohort_member.userid
+                            INNER JOIN {talentospilos_user_extended} AS user_extended ON user_extended.id_moodle_user = moodle_user.id
+                            INNER JOIN {talentospilos_usuario} AS ases_user ON ases_user.id = user_extended.id_ases_user
+                            INNER JOIN {talentospilos_estad_programa} AS program_statuses ON program_statuses.id = user_extended.program_status 
+                            $sql_where
+                            AND EXTRACT(YEAR FROM age(ases_user.fecha_nac)) > 10
+                            AND EXTRACT(YEAR FROM age(ases_user.fecha_nac)) < 70
+                            GROUP BY moodle_user.username, student_id, edad, program_statuses.nombre) AS ases_students  $subconsulta_filtros) AS subquery
+                    GROUP BY nombre
+                    ORDER BY cantidad DESC";
+
+    $result_query = $DB->get_records_sql($sql_query);
+    $result_to_return = array();
+
+    foreach($result_query as $result){
+
+        array_push($result_to_return, $result);
     }
     
-    //ya que el dato recibido es un dato calculado se sabe que la edad son los dos primeros digitos de dicho campo
-    //razon por la cual se accede a cada valor, se extraen los primeros valores y se retorna el arreglo
-    foreach($result as $datoEdad){
-         $años=substr($datoEdad->age,0,2);
-         
-         array_push($arrayRetornar,$años);
-    }
-    
-    return array_count_values($arrayRetornar);
+    return $result_to_return;    
     
 }
 
@@ -119,90 +257,48 @@ function getGraficAge($cohorte){
  */
 function getGraficPrograma($cohorte, $ases_status, $icetex_status, $program_status, $instance_id){
     global $DB;
+
+    $sql_where = condicionCohorte($cohorte, $instance_id, $program_status);
+    $subconsulta_filtros = subconsultaGraficReport($ases_status, $icetex_status, $instance_id);
+
     
-    $sql_query = "SELECT programa.nombre, COUNT(usuario.id)
-                    FROM {talentospilos_user_extended} AS usuario
-                    INNER JOIN {talentospilos_programa} AS programa 
-                    ON usuario.id_academic_program = programa.id 
-                    ";
-    
-    //Se filtra a los estudiantes activos en ASES    
-    if($ases_status == 1){
-        // echo "Entra
-        // ";
-        $sql_query .= "INNER JOIN
-                        (SELECT student_ases_status.id_estudiante AS id_ases_student, student_ases_status.id_estado_ases,
-                                MAX(student_ases_status.fecha) AS fecha
-                        FROM {talentospilos_est_estadoases} AS student_ases_status
-                        WHERE id_instancia = $instance_id
-                        AND student_ases_status.id_estado_ases = 1
-                        GROUP BY student_ases_status.id_estudiante, student_ases_status.id_estado_ases) AS current_ases_status
-                        ON current_ases_status.id_ases_student = usuario.id_ases_user                       
-                        
-                        ";
+    $sql_query = " SELECT nombre_programa AS nombre, COUNT(*) AS cantidad FROM
+
+                    (SELECT DISTINCT 
+                         ases_students.username, 
+                         ases_students.student_id,
+                         academic_program.nombre AS nombre_programa 
+                        FROM
+                        (SELECT 
+                            moodle_user.username,
+                            ases_user.id AS student_id,
+                            user_extended.id_academic_program,
+                            program_statuses.nombre AS program_status
+                            FROM {cohort} AS cohort
+                            INNER JOIN {talentospilos_inst_cohorte} AS instance_cohort ON cohort.id = instance_cohort.id_cohorte
+                            INNER JOIN {cohort_members} AS cohort_member ON cohort_member.cohortid = cohort.id
+                            INNER JOIN {user} AS moodle_user ON moodle_user.id = cohort_member.userid
+                            INNER JOIN {talentospilos_user_extended} AS user_extended ON user_extended.id_moodle_user = moodle_user.id
+                            INNER JOIN {talentospilos_usuario} AS ases_user ON ases_user.id = user_extended.id_ases_user
+                            INNER JOIN {talentospilos_estad_programa} AS program_statuses ON program_statuses.id = user_extended.program_status 
+                            $sql_where
+                            GROUP BY moodle_user.username, student_id, user_extended.id_academic_program, program_statuses.nombre) AS ases_students
+                        INNER JOIN {talentospilos_programa} AS academic_program ON academic_program.id = ases_students.id_academic_program
+                        $subconsulta_filtros ) AS subquery
+                    GROUP BY nombre
+                    ORDER BY cantidad DESC";
+
+
+    $result_query = $DB->get_records_sql($sql_query);
+
+    $result_to_return = array();
+
+    foreach($result_query as $result){
+
+        array_push($result_to_return, $result);
     }
 
-    //Se filtra a los estudiantes activos ICETEX
-    if($icetex_status == 1){
-
-        $sql_query .= "INNER JOIN
-                    (SELECT student_icetex_status.id_estudiante AS id_ases_student, student_icetex_status.id_estado_icetex,
-                            MAX(student_icetex_status.fecha) AS fecha
-                    FROM {talentospilos_est_est_icetex} AS student_icetex_status
-                    WHERE student_icetex_status.id_estado_icetex <> 1 AND
-                        student_icetex_status.id_estado_icetex <> 2 AND
-                        student_icetex_status.id_estado_icetex <> 7
-                    GROUP BY student_icetex_status.id_estudiante, student_icetex_status.id_estado_icetex) AS current_icetex_status
-                    ON current_icetex_status.id_ases_student = usuario.id_ases_user
-                    
-                    ";
-    }
-    
-    //Se filtra a los estudiantes activos en su respectivo programa
-    if($program_status == 1){
-
-        $sql_query .= "INNER JOIN
-                    (SELECT DISTINCT id_ases_user
-                    FROM {cohort_members} membprog
-                    INNER JOIN {talentospilos_user_extended} extprog
-                        ON membprog.userid = extprog.id_moodle_user
-                    WHERE extprog.program_status = '1') AS current_program_status
-                    ON current_program_status.id_ases_user = usuario.id_ases_user
-                    ";
-
-    }
-
-    //Si se seleccionó una cohorte específica, se añade el filtro de cohorte a la consulta SQL
-    if($cohorte != "TODOS"){
-
-        $condition = "cohorte.idnumber = '$cohorte'";
-
-        if($cohorte == "TODOS-SPP"){
-            $condition = "cohorte.idnumber LIKE 'SPP%'";
-        }
-        else if ($cohorte == "TODOS-SPE"){
-            $condition = "cohorte.idnumber LIKE 'SPE%'";
-        }
-
-        $sql_query .= "INNER JOIN
-                        (SELECT DISTINCT id_ases_user
-                        FROM {cohort_members} membprog
-                        INNER JOIN {talentospilos_user_extended} extprog
-                            ON membprog.userid = extprog.id_moodle_user
-                        INNER JOIN {cohort} cohorte 
-                            ON membprog.cohortid = cohorte.id
-                        WHERE $condition) AS selected_cohort
-                        ON selected_cohort.id_ases_user = usuario.id_ases_user
-
-                        ";
-
-    }
-       
-    $sql_query .= "GROUP BY programa.nombre";
-        
-    $result = $DB->get_records_sql($sql_query);
-
-    return $result;
+    return $result_to_return;
 }
 
 /**
@@ -211,79 +307,221 @@ function getGraficPrograma($cohorte, $ases_status, $icetex_status, $program_stat
  * @param $cohorte
  * @return Array 
  */
-function getGraficFacultad($cohorte){
+function getGraficFacultad($cohorte, $ases_status, $icetex_status, $program_status, $instance_id){
     global $DB;
-    
-    $sql_query = "SELECT facultad.nombre,COUNT(facultad.nombre) FROM 
-                    (SELECT nombre,programa.id_facultad FROM 
-                        (SELECT DISTINCT  data.userid AS userid,data.data AS codcarrera FROM {talentospilos_usuario} AS usuarios_talentos 
-                         INNER JOIN {user_info_data} AS data ON (cast (usuarios_talentos.id as varchar) = data.data) where data.fieldid=3) 
-                     AS sub INNER JOIN {talentospilos_programa} AS programa ON (CAST(programa.id AS text) = sub.codcarrera)) 
-                  AS subconsulta INNER JOIN {talentospilos_facultad} AS facultad ON (subconsulta.id_facultad=facultad.id) 
-                  GROUP BY facultad.nombre";  
-    // consulta con la parte de los cohortes
-    $query = "SELECT facultad.nombre,COUNT(facultad.nombre) FROM 
-                    (SELECT nombre,programa.id_facultad FROM 
-                        (SELECT DISTINCT data.userid AS userid,data.data AS codcarrera,miembros.cohortid,cohort.name FROM {talentospilos_usuario} AS usuarios_talentos           
-                  INNER JOIN {user_info_data} AS data ON (CAST (usuarios_talentos.id AS varchar) = data.data) INNER JOIN {cohort_members} AS miembros ON
-                  (data.userid=miembros.userid) INNER JOIN {cohort} AS cohort ON (cohort.id=miembros.cohortid) WHERE data.fieldid = 3 AND cohort.name='$cohorte') 
-                     AS sub INNER JOIN {talentospilos_programa} AS programa ON (CAST(programa.id AS text) = sub.codcarrera)) 
-                  AS subconsulta INNER JOIN {talentospilos_facultad} AS facultad ON (subconsulta.id_facultad=facultad.id) 
-                  GROUP BY facultad.nombre";
-    //se verifica el cohorte ingresado, de acuerdo al caso se invoca el metodo de moodle con una de las dos
-    //consultar armadas anteriormente
-    if($cohorte == "TODOS"){
-        $result = $DB->get_records_sql($sql_query);
-    } else {
-        $result = $DB->get_records_sql($query);
+
+    $sql_where = condicionCohorte($cohorte, $instance_id, $program_status);
+    $subconsulta_filtros = subconsultaGraficReport($ases_status, $icetex_status, $instance_id);
+
+    $sql_query = "SELECT nombre_facultad AS nombre, COUNT(*) AS cantidad FROM
+
+                    (SELECT DISTINCT 
+                         ases_students.username,
+                         ases_students.student_id,
+                         academic_faculty.nombre AS nombre_facultad 
+                        FROM
+                        (SELECT 
+                                moodle_user.username,
+                                ases_user.id AS student_id,
+                                user_extended.id_academic_program,
+                                program_statuses.nombre AS program_status
+                                FROM {cohort} AS cohort
+                                INNER JOIN {talentospilos_inst_cohorte} AS instance_cohort ON cohort.id = instance_cohort.id_cohorte
+                                INNER JOIN {cohort_members} AS cohort_member ON cohort_member.cohortid = cohort.id
+                                INNER JOIN {user} AS moodle_user ON moodle_user.id = cohort_member.userid
+                                INNER JOIN {talentospilos_user_extended} AS user_extended ON user_extended.id_moodle_user = moodle_user.id
+                                INNER JOIN {talentospilos_usuario} AS ases_user ON ases_user.id = user_extended.id_ases_user
+                                INNER JOIN {talentospilos_estad_programa} AS program_statuses ON program_statuses.id = user_extended.program_status 
+                                $sql_where
+                                GROUP BY moodle_user.username, student_id, user_extended.id_academic_program, program_statuses.nombre) AS ases_students
+                        INNER JOIN {talentospilos_programa} AS academic_program ON academic_program.id = ases_students.id_academic_program
+                        INNER JOIN {talentospilos_facultad} AS academic_faculty ON academic_faculty.id = academic_program.id_facultad 
+                        $subconsulta_filtros ) AS subquery
+                    GROUP BY nombre
+                    ORDER BY cantidad DESC";
+
+    $result_query = $DB->get_records_sql($sql_query);
+
+    $result_to_return = array();
+
+    foreach($result_query as $result){
+
+        array_push($result_to_return, $result);
     }
-    return $result;
+
+    return $result_to_return;
     
 }
 
+
 /**
- * Funcion recupera la informacion necesaria para la grafica de estado de acuerdo al cohorte seleccionado
+ * Funcion recupera la informacion necesaria para la grafica de condiciones de excepción de acuerdo al cohorte seleccionado
  * 
  * @param $cohorte
  * @return Array 
  */
-function getGraficEstado($cohorte){
+function getGraficCondExcepcion($cohorte, $ases_status, $icetex_status, $program_status, $instance_id){
     global $DB;
-    
-    $sql_query = "SELECT data, COUNT(userid)
-        FROM(SELECT subconsulta.userid, dato.data 
-             FROM    (SELECT DISTINCT data.userid AS userid
-                    FROM {talentospilos_usuario} AS usuarios_tal 
-                         INNER JOIN {user_info_data} AS data ON (cast(usuarios_tal.id AS varchar) = data.data) 
-                    WHERE data.fieldid = 2) AS subconsulta 
-                    INNER JOIN {user_info_data} AS dato ON (subconsulta.userid = dato.userid)
-             WHERE dato.fieldid = 4 ) AS cont
-        GROUP BY data";
-        
-    //consulta con la parte de los cohortes
-    $query = "
-        SELECT data, COUNT(userid)
-        FROM(SELECT subconsulta.userid, dato.data 
-             FROM    (SELECT DISTINCT data.userid AS userid,data.data AS codcarrera,miembros.cohortid,cohort.name 
-                      FROM {talentospilos_usuario} AS usuarios_tal INNER JOIN {user_info_data} AS data ON
-                      (cast(usuarios_tal.id AS varchar) = data.data) INNER JOIN {cohort_members} AS miembros ON 
-                      (data.userid=miembros.userid) INNER JOIN {cohort} AS cohort ON (cohort.id=miembros.cohortid) 
-                        WHERE data.fieldid = 2 AND cohort.name='$cohorte') AS subconsulta 
-                    INNER JOIN {user_info_data} AS dato ON (subconsulta.userid = dato.userid)
-             WHERE dato.fieldid = 4 ) AS cont
-        GROUP BY data";
-        
-    
-    //se verifica el cohorte ingresado, de acuerdo al caso se invoca el metodo de moodle con una de las dos
-    //consultar armadas anteriormente
-    if($cohorte == "TODOS"){
-        $result = $DB->get_records_sql($sql_query);
-    } else {
-        $result = $DB->get_records_sql($query);
+
+    $sql_where = condicionCohorte($cohorte, $instance_id, $program_status);
+    $subconsulta_filtros = subconsultaGraficReport($ases_status, $icetex_status, $instance_id);
+
+    $sql_query = "SELECT COUNT(*) AS cantidad, nombre, alias FROM
+
+                    (SELECT DISTINCT 
+                         ases_students.username,
+                         ases_students.student_id,
+                         cond_excepcion.condicion_excepcion AS nombre,
+                         CASE WHEN cond_excepcion.alias = 'N.A' THEN 'N.A.'
+                              ELSE cond_excepcion.alias
+                         END AS alias
+                        FROM
+                        (SELECT 
+                                moodle_user.username,
+                                ases_user.id AS student_id,
+                                ases_user.id_cond_excepcion,
+                                program_statuses.nombre AS program_status
+                                FROM {cohort} AS cohort
+                                INNER JOIN {talentospilos_inst_cohorte} AS instance_cohort ON cohort.id = instance_cohort.id_cohorte
+                                INNER JOIN {cohort_members} AS cohort_member ON cohort_member.cohortid = cohort.id
+                                INNER JOIN {user} AS moodle_user ON moodle_user.id = cohort_member.userid
+                                INNER JOIN {talentospilos_user_extended} AS user_extended ON user_extended.id_moodle_user = moodle_user.id
+                                INNER JOIN {talentospilos_usuario} AS ases_user ON ases_user.id = user_extended.id_ases_user
+                                INNER JOIN {talentospilos_estad_programa} AS program_statuses ON program_statuses.id = user_extended.program_status 
+                                $sql_where
+                                GROUP BY moodle_user.username, student_id, ases_user.id_cond_excepcion, program_statuses.nombre) AS ases_students
+                        INNER JOIN {talentospilos_cond_excepcion} AS cond_excepcion ON ases_students.id_cond_excepcion = cond_excepcion.id 
+                        $subconsulta_filtros) AS subquery
+                    GROUP BY nombre, alias
+                    ORDER BY cantidad DESC";
+
+
+    $result_query = $DB->get_records_sql($sql_query);
+
+    $result_to_return = array();
+
+    foreach($result_query as $result){
+
+        array_push($result_to_return, $result);
     }
-    return $result;
+    
+    return $result_to_return;    
     
 }
+
+
+
+/**
+ * Funcion recupera la informacion necesaria para la grafica de riesgos de acuerdo al cohorte seleccionado
+ * 
+ * @param $cohorte
+ * @return Array 
+ */
+function getGraficRiesgos($cohorte, $ases_status, $icetex_status, $program_status, $instance_id){
+    global $DB;
+
+    $sql_where = condicionCohorte($cohorte, $instance_id, $program_status);
+    $subconsulta_filtros = subconsultaGraficReport($ases_status, $icetex_status, $instance_id);
+
+    $sql_query = "                    
+                  SELECT COUNT(DISTINCT student_id) AS cantidad, nombre_riesgo, calificacion_riesgo, calificacion, id_riesgo FROM 
+
+                  (SELECT ases_students.username, ases_students.student_id, ases_students.nombre_riesgo, ases_students.calificacion_riesgo AS calificacion, ases_students.id_riesgo,
+                   CASE WHEN ases_students.calificacion_riesgo = 1 THEN 'Bajo'
+                        WHEN ases_students.calificacion_riesgo = 2  THEN 'Medio'
+                        WHEN ases_students.calificacion_riesgo = 3  THEN 'Alto'
+                        WHEN ases_students.calificacion_riesgo = 0  THEN 'N.R.'
+                        ELSE 'N.R.'
+                     END AS calificacion_riesgo
+                   FROM  
+                    (SELECT 
+                          moodle_user.username,
+                          ases_user.id AS student_id,
+                          riesg_usuario.calificacion_riesgo,
+                          riesgo.nombre AS nombre_riesgo,
+                          riesgo.id AS id_riesgo
+                          FROM {cohort} AS cohort
+                          INNER JOIN {talentospilos_inst_cohorte} AS instance_cohort ON cohort.id = instance_cohort.id_cohorte
+                          INNER JOIN {cohort_members} AS cohort_member ON cohort_member.cohortid = cohort.id
+                          INNER JOIN {user} AS moodle_user ON moodle_user.id = cohort_member.userid
+                          INNER JOIN {talentospilos_user_extended} AS user_extended ON user_extended.id_moodle_user = moodle_user.id
+                          INNER JOIN {talentospilos_usuario} AS ases_user ON ases_user.id = user_extended.id_ases_user
+                          INNER JOIN {talentospilos_estad_programa} AS program_statuses ON program_statuses.id = user_extended.program_status
+                          INNER JOIN {talentospilos_riesg_usuario} AS riesg_usuario ON riesg_usuario.id_usuario = user_extended.id_ases_user
+                          INNER JOIN {talentospilos_riesgos_ases} AS riesgo ON riesgo.id = riesg_usuario.id_riesgo
+                          $sql_where 
+                ";
+
+    $ending_query = "  )  AS ases_students
+                          $subconsulta_filtros ) AS subquery ";
+    
+    $sub_query_nr = $sql_query."AND riesg_usuario.calificacion_riesgo = 0
+                                    ".$ending_query;
+    $sub_query_bajos = $sql_query."AND riesg_usuario.calificacion_riesgo = 1
+                                    ".$ending_query;
+    $sub_query_medios = $sql_query."AND riesg_usuario.calificacion_riesgo = 2
+                                    ".$ending_query;
+    $sub_query_altos = $sql_query."AND riesg_usuario.calificacion_riesgo = 3    
+                                    ".$ending_query;
+       
+    $option_group = "GROUP BY nombre_riesgo, id_riesgo, calificacion, calificacion_riesgo
+                    ORDER BY id_riesgo";
+
+    $sub_query_nr .= $option_group;
+    $sub_query_bajos .= $option_group;
+    $sub_query_medios .= $option_group;
+    $sub_query_altos .= $option_group;
+    
+    $result_query_nr = $DB->get_records_sql($sub_query_nr);
+    $result_query_bajos = $DB->get_records_sql($sub_query_bajos);
+    $result_query_medios = $DB->get_records_sql($sub_query_medios);    
+    $result_query_altos = $DB->get_records_sql($sub_query_altos);
+    
+    $result_to_return = array();
+    $no_registra = array();
+    $bajos = array();
+    $medios = array();
+    $altos = array();
+    
+    foreach ($result_query_nr as $result){
+        array_push($no_registra, $result);
+    }
+
+    foreach($result_query_bajos as $result){
+        array_push($bajos, $result);
+    }
+
+    foreach($result_query_medios as $result){
+        array_push($medios, $result);
+    }
+
+    foreach($result_query_altos as $result){
+        array_push($altos, $result);
+    }
+
+    for($i = 0; $i < count($bajos); ++$i) {
+        $riesgo = $bajos[$i]->nombre_riesgo;
+        $riesgo = str_replace("_", " ", $riesgo);
+        $riesgo = ucwords($riesgo);
+
+        if($riesgo === "Academico"){
+            $riesgo = "Académico";
+        }else if($riesgo === "Geografico"){
+            $riesgo = "Geográfico";
+        } else if($riesgo === "Economico"){
+            $riesgo = "Económico";
+        }
+
+        $cantidad_nr = $no_registra[$i]->cantidad;
+        $cantidad_bajo = $bajos[$i]->cantidad;        
+        $cantidad_medio = $medios[$i]->cantidad;        
+        $cantidad_alto = $altos[$i]->cantidad;
+        array_push($result_to_return, (object) array('riesgo' => $riesgo, 'bajo' => $cantidad_bajo, 'medio' => $cantidad_medio, 'alto' => $cantidad_alto, "no_registra" => $cantidad_nr));
+    }  
+    
+    return $result_to_return;  
+}
+
 
 /**
  * Función que recupera datos para la tabla de ases_report, dado el estado, la cohorte y un conjunto de campos a extraer.
@@ -508,8 +746,9 @@ function get_ases_report($general_fields=null,
         }
     }
 
-    // Subconsulta relacionados con los campos por defecto
-    if($conditions[0] == 'TODOS'){
+    if($conditions[0] == "TODOS-OTROS"){
+
+
         $subquery_cohort = "(SELECT moodle_user.username, 
                                 moodle_user.firstname,  
                                 moodle_user.lastname,
@@ -529,6 +768,44 @@ function get_ases_report($general_fields=null,
                             INNER JOIN {talentospilos_usuario} AS ases_user ON ases_user.id = user_extended.id_ases_user
                             INNER JOIN {talentospilos_estad_programa} AS program_statuses ON program_statuses.id = user_extended.program_status
                             WHERE instance_cohort.id_instancia = $instance_id AND user_extended.tracking_status = 1
+                                AND cohort.idnumber NOT LIKE 'SPP%'
+                                AND cohort.idnumber NOT LIKE 'SPE%'                                
+                                AND cohort.idnumber NOT LIKE 'SPT%'
+                                AND cohort.idnumber NOT LIKE '3740%'
+                            GROUP BY moodle_user.username, 
+                                     moodle_user.firstname, 
+                                     moodle_user.lastname, 
+                                     student_id,
+                                     moodle_user.email,
+                                     ases_user.celular,
+                                     ases_user.direccion_res,
+                                     ases_user.num_doc, 
+                                     program_statuses.nombre, 
+                                     user_extended.id_academic_program) AS ases_students";
+    }
+
+
+    // Subconsulta relacionados con los campos por defecto
+    else if($conditions[0] == 'TODOS'){
+        $subquery_cohort = "(SELECT moodle_user.username, 
+                                moodle_user.firstname,  
+                                moodle_user.lastname,
+                                ases_user.num_doc,
+                                ases_user.id AS student_id,
+                                moodle_user.email,
+                                ases_user.celular,
+                                ases_user.direccion_res,
+                                STRING_AGG(cohort.idnumber, ', ') AS cohorts_student,
+                                program_statuses.nombre AS program_status,
+                                user_extended.id_academic_program	     
+                            FROM {cohort} AS cohort 
+                            INNER JOIN {talentospilos_inst_cohorte} AS instance_cohort ON cohort.id = instance_cohort.id_cohorte
+                            INNER JOIN {cohort_members} AS cohort_member ON cohort_member.cohortid = cohort.id
+                            INNER JOIN {user} AS moodle_user ON moodle_user.id = cohort_member.userid
+                            INNER JOIN {talentospilos_user_extended} AS user_extended ON user_extended.id_moodle_user = moodle_user.id
+                            INNER JOIN {talentospilos_usuario} AS ases_user ON ases_user.id = user_extended.id_ases_user
+                            INNER JOIN {talentospilos_estad_programa} AS program_statuses ON program_statuses.id = user_extended.program_status
+                            WHERE instance_cohort.id_instancia = $instance_id AND user_extended.tracking_status = 1                                
                             GROUP BY moodle_user.username, 
                                      moodle_user.firstname, 
                                      moodle_user.lastname, 
@@ -1371,4 +1648,68 @@ function get_icetex_states(){
 
 //     return $result;
 // }
+
+/**
+ * Función que retorna las propiedades de una tabla para la sección de reportes grágicos
+ * @return Array
+ * 
+ */
+
+ function get_general_table_graphic($columns, $data){
+    $data = array(
+        "bsort" => false,
+        "columns" => $columns,
+        "data" => $data,
+        "language" => 
+         array(
+            "search"=> "Buscar:",
+            "oPaginate" => array(
+                "sFirst"=>    "Primero",
+                "sLast"=>     "Último",
+                "sNext"=>     "Siguiente",
+                "sPrevious"=> "Anterior"
+                ),
+            "sProcessing"=>     "Procesando...",
+            "sLengthMenu"=>     "Mostrar _MENU_ registros",
+            "sZeroRecords"=>    "No se encontraron resultados",
+            "sEmptyTable"=>     "Ningún dato disponible en esta tabla",
+            "sInfo"=>           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty"=>      "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered"=>   "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix"=>    "",
+            "sSearch"=>         "Buscar:",
+            "sUrl"=>            "",
+            "sInfoThousands"=>  ",",
+            "sLoadingRecords"=> "Cargando...",
+         ),
+        "order"=> array(0, "asc"),
+        "dom"=>'lifrtpB',
+
+        "buttons"=>array(
+            array(
+                "extend"=>'print',
+                "text"=>'Imprimir'
+            ),
+            array(
+                "extend"=>'csvHtml5',
+                "text"=>'CSV'
+            ),
+            array(
+                "extend" => "excel",
+                "text" => 'Excel',
+                "className" => 'buttons-excel',
+                "filename" => 'Export excel',
+                "extension" => '.xls'
+            )
+        )
+
+    );
+
+    return $data;
+
+ }
+
+
+
+
 

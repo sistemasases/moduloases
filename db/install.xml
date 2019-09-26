@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="blocks/ases/db" VERSION="20190510" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
+<XMLDB PATH="blocks/ases/db" VERSION="20190925" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -557,6 +557,12 @@
         <FIELD NAME="latitud" TYPE="number" LENGTH="20" NOTNULL="true" SEQUENCE="false" DECIMALS="10"/>
         <FIELD NAME="longitud" TYPE="number" LENGTH="20" NOTNULL="true" SEQUENCE="false" DECIMALS="10"/>
         <FIELD NAME="barrio" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="id_ciudad" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="1" SEQUENCE="false"/>
+        <FIELD NAME="vive_lejos" TYPE="binary" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="vive_zona_riesgo" TYPE="binary" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="nativo" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="nivel_riesgo" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="observaciones" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -1166,6 +1172,33 @@
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
         <KEY NAME="fk_usuario_rol_user" TYPE="foreign" FIELDS="id_usuario" REFTABLE="user" REFFIELDS="id"/>
         <KEY NAME="fk_usuario_rol_roles" TYPE="foreign" FIELDS="id_rol" REFTABLE="talentospilos_roles" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="talentospilos_cache" COMMENT="Tabla auxiliar tipo cache donde se almacenan tuplas clave-valor que funcionan como soporte no indispensable del plugin.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="clave" TYPE="char" LENGTH="250" NOTNULL="true" SEQUENCE="false" COMMENT="Clave que se asociará al valor"/>
+        <FIELD NAME="valor" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Valor asociado a una key"/>
+        <FIELD NAME="descripcion" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="fecha_hora_actualizado" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="fecha_hora_registro" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="fecha_hora_expiracion" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="talentospilos_cache_clave_index" UNIQUE="true" FIELDS="clave"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="talentospilos_log_asignacion" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="documento" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="JSON del log de asignacion"/>
+        <FIELD NAME="fecha_hora_asignacion" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="now()" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
   </TABLES>
