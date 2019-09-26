@@ -329,7 +329,7 @@ if(isset($input->func) && isset($input->params)) {
 
         /**
          * [0] => id_moodle: string
-         * [1] => image_file:
+         * [1] => image_file
          */
         $params = $input->params;
 
@@ -353,7 +353,7 @@ if(isset($input->func) && isset($input->params)) {
 
         /**
          * [0] => id_ases: string
-         * [1] => peer_tracking: array | null
+         * [1] => peer_tracking: object | null
          */
         $params = $input->params;
 

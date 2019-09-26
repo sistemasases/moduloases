@@ -2139,8 +2139,9 @@ function save_profile($form, $option1, $option2, $live_with){
 
 /**
  * @see get_peer_tracking_v3
- * @desc
- * @param $id_ases --> ASES student id
+ * @desc Constructs the peer tracking of an student.
+ *          This is the latest version.
+ * @param $id_ases string -> ASES student id
  * @return array
  */
 function student_profile_get_peer_tracking($id_ases){
@@ -2218,7 +2219,9 @@ function student_profile_get_peer_tracking($id_ases){
 
 /**
  * @see get_html_tracking_peer($id_ases)
- * @param $id_ases
+ * @desc Constructs the peer tracking by the old form
+ * @param $id_ases string -> ASES student id
+ * @param $id_block string -> Block id
  * @return string
  */
 function student_profile_get_html_peer_tracking($id_ases, $id_block){
@@ -2859,8 +2862,8 @@ function student_profile_load_risk_info($id_ases, $peer_tracking){
 /**
  * @see student_profile_load_socioed_tab($id_ases)
  * @desc Gets all the social-educative information of an student
- * @param $id_ases ASES student id
- * @param $id_block Block id
+ * @param $id_ases string -> ASES student id
+ * @param $id_block string -> Block id
  * @return Object
  */
 function student_profile_load_socioed_tab($id_ases, $id_block){
@@ -2893,7 +2896,7 @@ function student_profile_load_socioed_tab($id_ases, $id_block){
 /**
  * @see student_profile_load_academic_tab($id_ases)
  * @desc Gets all the academic information of an student
- * @param $id_ases ASES student id
+ * @param $id_ases string -> ASES student id
  * @return Object
  */
 function student_profile_load_academic_tab($id_ases){
@@ -2937,7 +2940,7 @@ function student_profile_load_academic_tab($id_ases){
 /**
  * @see student_profile_load_geographic_tab($id_ases)
  * @desc Gets all the geographic information of an student
- * @param $id_ases ASES student id
+ * @param $id_ases string -> ASES student id
  * @return Object
  */
 function student_profile_load_geographic_tab($id_ases){
@@ -2992,7 +2995,7 @@ function student_profile_load_geographic_tab($id_ases){
 /**
  * @see student_profile_load_others_tab($id_ases)
  * @desc Gets all the additional information of an student
- * @param $id_ases ASES student id
+ * @param $id_ases string -> ASES student id
  * @return Object
  */
 function student_profile_load_tracing_others_tab($id_ases){
