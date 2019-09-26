@@ -1135,7 +1135,6 @@ define(['jquery',
                         success: function( template ){
                             let tab_to_load = $(mustache.render( template, msg.data_response ));
                             $(".tab-content").append( tab_to_load );
-                            console.log(msg.data_response);
 
                             switch(tab_name){
                                 case 'socioed':
@@ -1159,14 +1158,12 @@ define(['jquery',
                         }
                     });
                 } else {
-                    console.log("Debug_Inner");
                     console.log(msg);
                 }
             },
             dataType: "json",
             cache: "false",
             error: function(msg) {
-                console.log("Debug_Outer");
                 console.log(msg);
             }
         });
