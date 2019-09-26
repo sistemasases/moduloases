@@ -212,8 +212,6 @@ define(['jquery',
                 var id_moodle = $('#id_moodle').val();
                 var image_file = document.getElementById('profile-image-input').files[0];
 
-                console.log(image_file);
-
                 $.ajax({
                     url: '../managers/student_profile/studentprofile_api.php',
                     data: JSON.stringify({
