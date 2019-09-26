@@ -1128,8 +1128,27 @@ function monitor_assignments_get_current_practicant_by_monitor( $instance_id, $m
 
 }
 
-function monitor_assignments_get_empty_asignation_obj( string $asignation_type ){
+/**
+ * Function that return an empty assignation log object.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @return stdClass stdClass with empty properties.
+ */
+function monitor_assignments_get_empty_asignation_obj(): stdClass
+{
     $structure = new stdClass();
+    $structure->user_id = null;
+    $structure->user_rol = null;
+    $structure->assigned_to_id = null;
+    $structure->assigned_to_rol = null;
+    $structure->end_asignation_datetime = null;
+    $structure->id_semester = null;
+    $structure->instance_id = null;
+    
+    return $structure;
+    
 }
 
 ?>
