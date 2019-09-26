@@ -2127,11 +2127,11 @@ define(['jquery',
             arregloDimensionTmp.push(riesgoTmp);
             graficable_data.push(arregloDimensionTmp);
         }*/
-        $('#peer_tracking_info').attr('data-info', JSON.stringify(graficable_data));
+        $('#risk_graphic_info').attr('data-info', JSON.stringify(graficable_data));
     }
 
     function graficar() {
-        var graficable_data = JSON.parse(document.querySelector('#peer_tracking_info').dataset.info);
+        var graficable_data = JSON.parse(document.querySelector('#risk_graphic_info').dataset.info);
         var myChart_individual = generar(graficable_data[0], ctx_individual);
         var myChart_familiar = generar(graficable_data[1], ctx_familiar);
         var myChart_academico = generar(graficable_data[2], ctx_academico);
