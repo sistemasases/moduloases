@@ -81,6 +81,78 @@ function plugin_status_get_users_data_by_instance( $instanceid ){
 
 }
 
+
+function plugin_status_remove_enrolled_users( $instanceid, $userids ){
+
+	global $DB;
+
+	if( plugin_status_check_enrolled_users( $instanceid, $userids  ) ){
+		$curseid = plugin_status_get_courseid_by_block_instance( $instanceid );
+		$enrolid = plugin_status_get_manual_enrol_by_courseid( $curseid );
+		foreach ($userids as $key => $uid) {
+
+			$user = user_management_get_full_moodle_user($uid);
+
+			if( !_plugin_status_is_sistemas1008( $user ) ){
+				$sql_query = "DELETE FROM {user_enrolments} WHERE enrolid = '$enrolid->id' AND userid = '$uid'";
+    			$DB->execute($sql_query);
+			}
+
+		}
+
+		return true;
+
+	}else{
+		return null;
+	}
+
+}
+
+function plugin_status_check_enrolled_users( $instanceid, $userids ){
+
+	global $DB;
+
+	if( !is_numeric( $instanceid ) ){
+		throw new Exception( $instanceid . " must be an integer", -1 );
+	}
+
+	if( !is_array( $userids ) ){
+		throw new Exception( $uid . " must be an array", -2 );
+	}
+
+	$curseid = plugin_status_get_courseid_by_block_instance( $instanceid );
+	if( $curseid ){
+
+		$enrolid = plugin_status_get_manual_enrol_by_courseid( $curseid );
+		if( $enrolid ){
+
+			foreach ($userids as $key => $uid) {
+
+				if( !is_numeric($uid) ){
+					throw new Exception( $uid . " must be an integer", -5 );
+				}
+
+				$sql = "SELECT * 
+				FROM {user_enrolments}
+				WHERE enrolid = '$enrolid->id' AND userid = '$uid'
+				ORDER BY timecreated ASC";
+
+				$uenrol = $DB->get_records_sql( $sql );
+				if( !$uenrol ){
+					throw new Exception( $uid . " is not enrolled.", -6 );
+				}
+			}
+			return true;
+
+		}else{
+			throw new Exception( "The course is not associated with a manual enrol id.", -4 );
+		}
+
+	}else{
+		throw new Exception( "Instance " . $instanceid . " is not associated with any course.", -3 );
+	}
+}
+
 function plugin_status_get_ases_instances(){
 
 	global $DB;
@@ -114,7 +186,7 @@ function plugin_status_get_manual_enrol_by_courseid( $courseid ){
 
 	global $DB;
 
-	$sql = "SELECT id 
+	$sql = "SELECT * 
 	FROM {enrol} 
 	WHERE courseid = '$courseid' AND enrol = 'manual'";
 
