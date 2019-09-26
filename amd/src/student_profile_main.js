@@ -1180,7 +1180,6 @@ define(['jquery',
         var id_ases = $('#id_ases').val();
         var peer_tracking_div = document.querySelector('#peer_tracking_info');
         var peer_tracking_info = JSON.parse((peer_tracking_div)?peer_tracking_div.dataset.info:null);
-        console.log(peer_tracking_info);
 
         $.ajax({
             type: "POST",
@@ -1192,8 +1191,10 @@ define(['jquery',
             success: function(msg) {
                 if(msg.status_code == 0) {
                     var values = msg.data_response;
-                    console.log(values);
-
+                    procesar_datos_riesgo(values);
+                    //$('#modal_riesgos').fadeIn(200);
+                    //graficar();
+                    $('#view_graphic_risk_button').on('click', graph);
                 } else {
                     console.log(msg);
                 }
@@ -1204,11 +1205,6 @@ define(['jquery',
                 console.log(msg);
             }
         });
-
-        //$('#modal_riesgos').fadeIn(200);
-        //graficar();
-
-        $('#view_graphic_risk_button').on('click', graph);
     }
 
     function graph() {
@@ -1358,7 +1354,6 @@ define(['jquery',
                         save_ases_status();
                     }
                 });
-
             } else if (newstatus == "NO REGISTRA") {
                 swal({
                     title: "Error",
@@ -1376,21 +1371,20 @@ define(['jquery',
                     cancelButtonText: "No",
                     closeOnConfirm: true,
                     allowEscapeKey: false
-                },
-                    function (isConfirm) {
-                        if (isConfirm) {
+                }, function (isConfirm) {
+                    if (isConfirm) {
 
-                            var result_status = save_ases_status();
+                        var result_status = save_ases_status();
 
-                            swal(
-                                result_status.title,
-                                result_status.msg,
-                                resul_status.status);
-                        }
-                        else {
-                            $('#estadoAses').val(previous);
-                        }
-                    });
+                        swal(
+                            result_status.title,
+                            result_status.msg,
+                            resul_status.status);
+                    }
+                    else {
+                        $('#estadoAses').val(previous);
+                    }
+                });
             }
         });
     }
@@ -1503,7 +1497,6 @@ define(['jquery',
                 $('h4>span', this).removeClass('glyphicon-chevron-down');
                 $('h4>span', this).addClass('glyphicon-chevron-left');
             }
-
         });
     }
 
@@ -2105,40 +2098,45 @@ define(['jquery',
         });
     }
 
-    function procesarJSON() {
+    function procesar_datos_riesgo(datos) {
         // Asignación de gráficas y manejo del JSON para graficar
 
-        for (var i = 0; i < Object.keys(datos['informacion']).length; i++) {
+        var graficable_data = [];
+
+        console.log(datos);
+        /*
+        for(var i = 0; i < Object.keys(datos['informacion']).length; i++) {
             var arregloDimensionTmp = [];
-            var nombreDimensionTmp;
             var fechasTmp = [];
             var colorTmp = [];
             var riesgoTmp = [];
+            var nombreDimensionTmp = datos['informacion'][i]['dimension'];
+            var dato = datos['informacion'][i]['datos'][0];
 
-            nombreDimensionTmp = datos['informacion'][i]['dimension'];
-            var contador = 0;
-            while (datos['informacion'][i]['datos'][contador]['end'] == 'false') {
-                fechasTmp.push(datos['informacion'][i]['datos'][contador]['fecha']);
-                colorTmp.push(datos['informacion'][i]['datos'][contador]['color']);
-                riesgoTmp.push(datos['informacion'][i]['datos'][contador]['riesgo']);
-                contador = contador + 1;
+            for(var j=1; final['end'] == 'false';j++)
+            {
+                fechasTmp.push(dato['fecha']);
+                colorTmp.push(dato['color']);
+                riesgoTmp.push(dato['riesgo']);
+                dato = datos['informacion'][i]['datos'][j];
             }
+
             arregloDimensionTmp.push(nombreDimensionTmp);
             arregloDimensionTmp.push(fechasTmp);
             arregloDimensionTmp.push(colorTmp);
             arregloDimensionTmp.push(riesgoTmp);
-            datosGraficables.push(arregloDimensionTmp);
-        }
-        // Fin de asignación de gráficas
+            graficable_data.push(arregloDimensionTmp);
+        }*/
+        $('#peer_tracking_info').attr('data-info', JSON.stringify(graficable_data));
     }
 
     function graficar() {
-        procesarJSON();
-        var myChart_individual = generar(datosGraficables[0], ctx_individual);
-        var myChart_familiar = generar(datosGraficables[1], ctx_familiar);
-        var myChart_academico = generar(datosGraficables[2], ctx_academico);
-        var myChart_economico = generar(datosGraficables[3], ctx_economico);
-        var myChart_vida_universitaria = generar(datosGraficables[4], ctx_vida_universitaria);
+        var graficable_data = JSON.parse(document.querySelector('#peer_tracking_info').dataset.info);
+        var myChart_individual = generar(graficable_data[0], ctx_individual);
+        var myChart_familiar = generar(graficable_data[1], ctx_familiar);
+        var myChart_academico = generar(graficable_data[2], ctx_academico);
+        var myChart_economico = generar(graficable_data[3], ctx_economico);
+        var myChart_vida_universitaria = generar(graficable_data[4], ctx_vida_universitaria);
     }
 
     /*Generador de gráficas*/

@@ -2599,16 +2599,17 @@ function student_profile_load_risk_info($id_ases, $peer_tracking){
 
     if($peer_tracking == null) {
         $peer_tracking = student_profile_get_peer_tracking($id_ases);
+    } else {
+        $peer_tracking = json_decode(json_encode($peer_tracking), true);
     }
 
-    print_r($peer_tracking);
-
-    $periodoactual = getPeriodoActual();
+    $periodo_actual = getPeriodoActual();
+    $nombre_periodo = $periodo_actual['nombre_periodo'];
 
     $datos_seguimientos_periodo_actual = null;
 
     foreach ($peer_tracking as $key => $trackings_by_periods) {
-        if( $trackings_by_periods['period_name'] ==  $periodoactual['nombre_periodo'] ){
+        if( $trackings_by_periods['period_name'] ==  $nombre_periodo ){
             $datos_seguimientos_periodo_actual = $trackings_by_periods;
             break;
         }
@@ -2828,7 +2829,6 @@ function student_profile_load_risk_info($id_ases, $peer_tracking){
     array_push( $risk_familiar_dimension, array( 'end' => 'true' ) );
     array_push( $risk_uni_life_dimension, array( 'end' => 'true' ) );
 
-    $record->nombrePeriodoSeguimiento = $periodoactual['nombre_periodo'];
     $record->datosSeguimientoEstudianteIndividual = $risk_individual_dimension;
     $record->datosSeguimientoEstudianteFamiliar = $risk_familiar_dimension;
     $record->datosSeguimientoEstudianteAcademico = $risk_academic_dimension;

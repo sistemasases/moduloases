@@ -12,6 +12,7 @@
   <div id="dphpforms_professional_id" data-info="{{professional_id}}" style="display:none;"></div>
   <div id="dphpforms_username" data-info="{{student_username}}" style="display:none;"></div>
   <div id="dphpforms_fullname" data-info="{{student_fullname}}" style="display:none;"></div>
+  <div id="risk_graphic_info" data-info="" style="display:none;"></div>
   <input type="text" class="hide" id="current_user_id" value="{{id_dphpforms_creado_por}}" />
 
   <form id="ficha_estudiante">
@@ -847,7 +848,5 @@
   var ctx_academico = document.getElementById("myChart_academico").getContext('2d');
   var ctx_economico = document.getElementById("myChart_economico").getContext('2d');
   var ctx_vida_universitaria = document.getElementById("myChart_vida_universitaria").getContext('2d');
-  var datos = JSON.parse(document.getElementById("datos").innerText);
-  var datosGraficables = [];
 
 </script> {{/data}}
