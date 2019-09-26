@@ -1,8 +1,8 @@
 <?php 
 /**
- * @package	    block_ases
+ * @package	block_ases
  * @subpackage	core.periods
- * @author 	    Jeison Cardona Gómez
+ * @author 	Jeison Cardona Gómez
  * @copyright 	(C) 2019 Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @license   	http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -31,6 +31,39 @@ function periods_get_current_period(){
     $result = $DB->get_record_sql( $query );
     return ( isset($result->id) ? $result : null );
 
+}
+
+/**
+ * Function that return a period by ID.
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param integer $period_id Period ID.
+ * 
+ * @throws Exception If doesn't exist a period with the given ID.
+ * 
+ * @return stdClass Period object
+ */
+function periods_get_period_by_id( int $period_id ):stdClass
+{
+    global $DB;
+    global $PERIODS_TABLENAME;
+    
+    $query = "
+        SELECT * 
+        FROM $PERIODS_TABLENAME
+        WHERE id = '$period_id'";
+    
+    $result = $DB->get_record_sql( $query );
+    if( !property_exists( $result, 'id' ) ){
+        throw new Exception( 
+            "Period with ID '$period_id' does not exist.", -1 
+        );
+    }else{
+        return $result;
+    }
+    
+    
 }
 
 ?>

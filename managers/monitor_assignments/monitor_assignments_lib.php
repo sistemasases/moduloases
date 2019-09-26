@@ -19,15 +19,19 @@
  *
  * @author     Jeison Cardona Gómez
  * @package    block_ases
- * @copyright  2018 Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+ * @copyright  2019 Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once(dirname(__FILE__). '/../../../../config.php');
+require_once(dirname(__FILE__). '/../../core/module_loader.php'); 
 require_once(dirname(__FILE__).'/../jquery_datatable/jquery_datatable_lib.php');
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/user_management/user_lib.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/user_management/user_management_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/ases_report/asesreport_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
+
+module_loader("periods");
 
 use jquery_datatable\Datatable;
 
@@ -552,6 +556,10 @@ function monitor_assignments_delete_monitor_student_relationship( $instance_id, 
     $record = $DB->get_record_sql( $sql );
 
     if( $record ){
+        
+        monitor_assignments_assignation_log( 
+            $is_monlog = true, $record->id, $type = 'remove' 
+        );
 
         $conditions = array(
             'id_monitor' => $monitor_id,
@@ -639,7 +647,10 @@ function monitor_assignments_delete_practicant_monitor_relationship( $instance_i
     $record = $DB->get_record_sql( $sql );
 
     if( $record ){
-
+        
+        monitor_assignments_assignation_log( 
+            $is_monlog = false, $record->id, $type = 'remove' 
+        );
         $record->id_jefe = null;
 
         return $DB->update_record('talentospilos_user_rol', $record, $bulk=false);
@@ -674,7 +685,10 @@ function monitor_assignments_transfer( $instance_id, $old_monitor_id, $new_monit
     if( $asignations ){
 
         foreach($asignations as &$asignation){
-
+            
+            monitor_assignments_assignation_log( 
+                $is_monlog = true, $asignation->id, $type = 'transfer' 
+            );
             $asignation->id_monitor = $new_monitor_id;
             $DB->update_record('talentospilos_monitor_estud', $asignation, $bulk=false);
 
@@ -1072,7 +1086,7 @@ function monitor_assignments_get_current_monitor_by_student( $instance_id, $stud
     
     $current_semester = periods_get_current_semester();
     return monitor_assignments_get_monitor_by_student( $instance_id, $student_id, $current_semester->id );
-
+    
 }
 
 /**
@@ -1126,6 +1140,63 @@ function monitor_assignments_get_current_practicant_by_monitor( $instance_id, $m
     $current_semester = periods_get_current_semester();
     return monitor_assignments_get_practicant_by_monitor( $instance_id, $monitor_id, $current_semester->id );
 
+}
+
+/**
+ * Function that store the assignation history.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param bool $is_monlog True if is a monitor-student assignation, False if is a user-extended assignation.
+ * @param integer $assig_id Assignation ID.
+ * 
+ * @throws Exception If the assignation doesn't exist.
+ * 
+ * @return mixed Moodle database manager return.
+ */
+function monitor_assignments_assignation_log( bool $is_monlog, int $assig_id, string $type = NULL )
+{
+    global $DB;                                                                 // Moodle DB manager.
+    
+    $tablename = (                                                              // Selection of assignation table
+        $is_monlog ? 
+        'talentospilos_monitor_estud' : 
+        'talentospilos_user_rol'
+    );
+        
+    $query = "SELECT * FROM {".$tablename."}  WHERE id = '$assig_id'";          // Query to get the assignation
+    $assig = $DB->get_record_sql( $query );                                     // Get the assignation
+    
+    if( !property_exists($assig, 'id') && $is_monlog ){                         // Check of the assignation exist in $ases_db_prefix_monitor_student
+        throw new Exception( 
+            "Assigment '$assig_id' does not exist as monitor-student relationship.", -1 
+        );
+    }else if( !property_exists($assig, 'id') && !$is_monlog ){                  // Check if the assignation exist in $ases_db_prefix_user_rol
+        throw new Exception( 
+            "Assigment '$assig_id' does not exist as user extended relationship.", -2 
+        );
+    }
+    
+    $doc = new stdClass();
+    $doc->user_id = ( $is_monlog ? $assig->id_monitor : $assig->id_jefe );
+    $doc->assignation_type = ( $is_monlog ? "monitor-student" : "user-boss" );
+    $doc->assigned_to_id = ( $is_monlog ? $assig->id_estudiante : $assig->id_usuario );
+    $doc->assignation_record = clone $assig;
+    // Solve FK block.
+    $assig->id_semestre = core_periods_get_period_by_id( $assig->id_semestre );
+    if( !$is_monlog ){
+        $assig->id_rol = user_management_get_role_by_id($assig->id_rol);
+    }
+    // End of Solve FK block.
+    $doc->assignation_record_full = $assig;
+    $doc->type = $type;
+    
+    $log_obj = new stdClass();
+    $log_obj->documento = json_encode($doc);
+    
+    return $DB->insert_record( 'talentospilos_log_asignacion', $log_obj );
+    
 }
 
 ?>
