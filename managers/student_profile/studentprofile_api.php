@@ -396,7 +396,7 @@ if(isset($input->func) && isset($input->params)) {
  * reserved codes: -1, -2, -3, -4, -5, -6, -7, -8, -9 -99.
  * @param $code
  */
-function return_with_code($code, $params = null){
+function return_with_code($code){
 
     switch( $code ){
 
@@ -415,7 +415,7 @@ function return_with_code($code, $params = null){
                 array(
                     "status_code" => $code,
                     "error_message" => "Error in the scheme.",
-                    "data_response" => $params
+                    "data_response" => ""
                 )
             );
             break;
