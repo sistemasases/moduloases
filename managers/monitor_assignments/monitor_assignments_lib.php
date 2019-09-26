@@ -556,6 +556,10 @@ function monitor_assignments_delete_monitor_student_relationship( $instance_id, 
     $record = $DB->get_record_sql( $sql );
 
     if( $record ){
+        
+        monitor_assignments_assignation_log( 
+            $is_monlog = true, $record->id, $type = 'remove' 
+        );
 
         $conditions = array(
             'id_monitor' => $monitor_id,
@@ -643,7 +647,10 @@ function monitor_assignments_delete_practicant_monitor_relationship( $instance_i
     $record = $DB->get_record_sql( $sql );
 
     if( $record ){
-
+        
+        monitor_assignments_assignation_log( 
+            $is_monlog = false, $record->id, $type = 'remove' 
+        );
         $record->id_jefe = null;
 
         return $DB->update_record('talentospilos_user_rol', $record, $bulk=false);
@@ -678,7 +685,10 @@ function monitor_assignments_transfer( $instance_id, $old_monitor_id, $new_monit
     if( $asignations ){
 
         foreach($asignations as &$asignation){
-
+            
+            monitor_assignments_assignation_log( 
+                $is_monlog = true, $asignation->id, $type = 'transfer' 
+            );
             $asignation->id_monitor = $new_monitor_id;
             $DB->update_record('talentospilos_monitor_estud', $asignation, $bulk=false);
 
@@ -1145,7 +1155,7 @@ function monitor_assignments_get_current_practicant_by_monitor( $instance_id, $m
  * 
  * @return mixed Moodle database manager return.
  */
-function monitor_assignments_assignation_log( bool $is_monlog, int $assig_id )
+function monitor_assignments_assignation_log( bool $is_monlog, int $assig_id, string $type = NULL )
 {
     global $DB;                                                                 // Moodle DB manager.
     
@@ -1180,6 +1190,7 @@ function monitor_assignments_assignation_log( bool $is_monlog, int $assig_id )
     }
     // End of Solve FK block.
     $doc->assignation_record_full = $assig;
+    $doc->type = $type;
     
     $log_obj = new stdClass();
     $log_obj->documento = json_encode($doc);
