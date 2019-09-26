@@ -24,7 +24,10 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables','block_
             var idnumber = $('#input_idnumber').val();
             var description = $('#input_description').val();
             
-            $('span.unassigned_cohort').on('click', {object_function: self}, self.unassign_cohort);
+            //$('span.unassigned_cohort').on('click', {object_function: self}, self.unassign_cohort);
+            
+            $(document).on("click", "span.unassigned_cohort", self.unassign_cohort );
+            
             $('#button_assign_cohort').on('click', {object_function: self}, self.assign_cohort_instance);
             $('#button_update_instance').on('click', function(){
                 var idnumber = $('#input_idnumber').val();
@@ -126,9 +129,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables','block_
             });
         },
         unassign_cohort: function(obj){
-
+            
             var idnumber_cohort = $(this).parent().siblings()[0].innerHTML;
-            var instance_id = obj.data.object_function.get_id_instance();
+            var instance_id = $("#instance-id").data("instance-id");
 
             $.ajax({
                 type: "POST",
@@ -163,9 +166,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables','block_
                 cache: false,
                 async: false
             });
-            obj.data.object_function.get_cohorts_without_assignment();
+            /*obj.data.object_function.get_cohorts_without_assignment();
             obj.data.object_function.load_cohorts_assigned();
-            $('span.unassigned_cohort').on('click', {object_function: obj.data.object_function}, obj.data.object_function.unassign_cohort);
+            $('span.unassigned_cohort').on('click', {object_function: obj.data.object_function}, obj.data.object_function.unassign_cohort);*/
         },
         get_id_instance: function(){
             var urlParameters = location.search.split('&');
