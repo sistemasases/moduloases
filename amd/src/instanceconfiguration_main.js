@@ -144,7 +144,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables','block_
                     if(msg.status == 1){
                         swal(
                             'Éxito',
-                            msg.msg,
+                            msg.msg + " La lista de cohortes se actualizarán en la siguiente recarga del sitio.",
                             'success'
                         );
                     }else{
