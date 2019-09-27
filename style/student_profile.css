@@ -542,6 +542,10 @@
     #geographic_direccion{
         height: 34px;
     }
+    
+    #button_add_v2_track{
+        margin-bottom: 15px;
+    }
 }
 
 @media print {
