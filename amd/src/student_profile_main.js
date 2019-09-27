@@ -24,25 +24,14 @@ define(['jquery',
 
     return {
         init: function (data_init) {
+
             var self = this;
-
-            //Validar si en las cohortes hay una condición de excepción
-            $("#cohorts_table tbody").find("td").each(function () {
-                if ($(this).text().indexOf("Condición de Excepción") != -1) {
-                    var alias = $("#cond_excepcion_alias").text().trim();
-                    var proptitle = $("#cond_excepcion_name").text().trim();
-                    $(this).append("-");
-                    $(this).append(alias);
-                    $(this).attr("title", proptitle);
-                }
-            });
-
-            // Agrega iframe para Google Maps
 
             var ciudad_est = $('#municipio_act').val();
             var latitude = $('#latitude').val();
             var longitude = $('#longitude').val();
 
+            // Agrega iframe para Google Maps
             if (ciudad_est == 'CALI') {
 
                 document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=transit'></iframe>";
@@ -51,6 +40,8 @@ define(['jquery',
 
                 document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=driving'></iframe>";
             }
+
+
 
             /**
              * Event that loads asynchronously the socio-educational tab
@@ -91,6 +82,17 @@ define(['jquery',
                 $(this).parent().parent().remove();
             });
 
+            //Validar si en las cohortes hay una condición de excepción
+            $("#cohorts_table tbody").find("td").each(function () {
+                if ($(this).text().indexOf("Condición de Excepción") != -1) {
+                    var alias = $("#cond_excepcion_alias").text().trim();
+                    var proptitle = $("#cond_excepcion_name").text().trim();
+                    $(this).append("-");
+                    $(this).append(alias);
+                    $(this).attr("title", proptitle);
+                }
+            });
+
             /**
              * Funcion para añadir una nueva fila en la tabla
              */
@@ -104,11 +106,10 @@ define(['jquery',
 
             });
 
-
             $('[data-toggle="tooltip"]').tooltip();
 
             var parameters = get_url_parameters(document.location.search);
-            var panel_collapse = $('.panel-collapse.collapse.in');
+            var panel_collapse = $('.panel-collapse.collapse.in'); //TODO
 
             // Select search
             $("#asignados").select2({
@@ -166,8 +167,8 @@ define(['jquery',
             $('#icetex_status').on('click',{ previous_status: $('#icetex_status option:selected').text() }, manage_icetex_status);
 
             $('#icon-tracking').on('click', function () {
-                var current_status = $('#input_status_ases').val();
-                if(current_status == "seguimiento")
+                var status_ases = $('#input_status_ases').val();
+                if(status_ases == "seguimiento")
                     self.update_status_ases(parameters);
             });
 
@@ -388,9 +389,6 @@ define(['jquery',
                 });
         }, update_status_ases: function (parameters_url) {
 
-            var current_status = $('#input_status_ases').val();
-            var new_status;
-
             swal({
                 title: "Advertencia",
                 text: "¿Está seguro de que desea cambiar el estado de seguimiento del estudiante en esta instancia? El estado pasará de 'seguimiento' a 'sin seguimiento'",
@@ -407,15 +405,15 @@ define(['jquery',
                     $('#save_changes_dropout').on('click', function () {
 
                         loading_indicator.show();
-
+                        var id_ases= $('#id_ases').val();
                         var id_reason_dropout = $('#reasons_select').val();
                         var observation = $('#description_dropout').val();
 
                         $.ajax({
                             type: "POST",
                             data: JSON.stringify({
-                                "func": 'update_ases_status_without_traking',
-                                "params": [current_status, new_status, parameters_url.instanceid,
+                                "func": 'update_ases_status',
+                                "params": [id_ases, id_monitor, parameters_url.instanceid,
                                     parameters_url.student_code, id_reason_dropout, observation]
                             }),
                             url: "../managers/student_profile/studentprofile_api.php",
@@ -424,10 +422,10 @@ define(['jquery',
                                 loading_indicator.hide();
 
                                 if(msg.status_code == 0) {
-                                    $('#input_status_ases').val(new_status);
+                                    $('#input_status_ases').val('sinseguimiento');
                                     $('#tip_ases_status').html('No se realiza seguimiento en esta instancia');
                                     $('#icon-tracking').removeClass('i-tracking-t');
-                                    $('#icon-tracking').addClass('i-tracking-n');
+                                    $('#icon-tracking').addClass('i-tracking');
 
                                     modal_dropout.hide();
 

@@ -526,12 +526,10 @@ function monitor_assignments_create_monitor_student_relationship( $instance_id, 
     }else{
 
         return null;
-
     }
-
  }
 
- /**
+/**
  * Función que elimina la asignación de un monitor a un estudiante en determinada instancia, en el semestre actual.
  * @author Jeison Cardona Gómez. <jeison.cardona@correounivalle.edu.co>
  * @param int $instance_id Instance id.
@@ -539,7 +537,6 @@ function monitor_assignments_create_monitor_student_relationship( $instance_id, 
  * @param int $student_id Student Ases id.
  * @return int
  */
-
 function monitor_assignments_delete_monitor_student_relationship( $instance_id, $monitor_id, $student_id ){
 
     global $DB;
@@ -573,10 +570,18 @@ function monitor_assignments_delete_monitor_student_relationship( $instance_id, 
     }else{
         return null;
     }
-
  }
 
- /**
+/**
+ *
+ */
+function monitor_assignments_delete_last_monitor_student_relationship( $instance_id, $student_id ) {
+
+
+    return monitor_assignments_delete_monitor_student_relationship( $instance_id, $monitor_id, $student_id );
+}
+
+/**
  * Función que asigna un monitor a un practicante en determinada instancia, en el semestre actual.
  * @author Jeison Cardona Gómez. <jeison.cardona@correounivalle.edu.co>
  * @param int $instance_id Instance id.
@@ -615,13 +620,11 @@ function monitor_assignments_create_practicant_monitor_relationship( $instance_i
     }else{
 
         return null;
-
     }
-    
  }
 
 
- /**
+/**
  * Función que elimina la asignación de un practicante a un monitor en determinada instancia, en el semestre actual.
  * @author Jeison Cardona Gómez. <jeison.cardona@correounivalle.edu.co>
  * @param int $instance_id Instance id.
@@ -629,7 +632,6 @@ function monitor_assignments_create_practicant_monitor_relationship( $instance_i
  * @param int $monitor_id Monitor id.
  * @return int
  */
-
 function monitor_assignments_delete_practicant_monitor_relationship( $instance_id, $practicant_id, $monitor_id ){
 
     global $DB;
@@ -726,7 +728,6 @@ function monitor_assignments_get_students_from_monitor( $instance_id, $monitor_i
  * @param int semester_id
  * @return array
  */
-
 function monitor_assignments_get_monitors_from_practicant( $instance_id, $practicant_id, $semester_id ){
     global $DB;
 
@@ -972,7 +973,31 @@ function monitor_assignments_get_practicants_from_professional( $instance_id, $p
 }
 
 /**
- * 
+ * Function that gets the last monitor assignment of an student
+ * @param $id_ases
+ * @param $instance_id
+ * @return mixed
+ */
+function monitor_assignments_get_last_monitor_student_assignment($id_ases, $instance_id) {
+
+    global $DB;
+
+    $sql_relationship = "SELECT id, id_monitor, id_estudiante, id_instancia, id_semestre 
+    FROM {talentospilos_monitor_estud} 
+    WHERE id_estudiante = '$id_ases'
+    AND id_instancia = '$instance_id'
+    ORDER BY id_semestre DESC
+    LIMIT 1";
+
+    $mon_est_relationship = $DB->get_record_sql( $sql_relationship );
+
+    return $mon_est_relationship;
+}
+
+/**
+ * @param $id_ases
+ * @param $instance_id
+ * @return array
  */
 function monitor_assignments_get_last_student_assignment( $id_ases, $instance_id ){
 
@@ -983,14 +1008,7 @@ function monitor_assignments_get_last_student_assignment( $id_ases, $instance_id
         "prof_obj" => null
     ];
 
-    $sql_relationship = "SELECT id, id_monitor, id_estudiante, id_instancia, id_semestre 
-    FROM {talentospilos_monitor_estud} 
-    WHERE id_estudiante = '$id_ases'
-    AND id_instancia = '$instance_id'
-    ORDER BY id_semestre DESC
-    LIMIT 1";
-
-    $mon_est_relationship = $DB->get_record_sql( $sql_relationship );
+    $mon_est_relationship = monitor_assignments_get_last_monitor_student_assignment($id_ases, $instance_id);
 
     if( $mon_est_relationship ){
 
@@ -1043,14 +1061,10 @@ function monitor_assignments_get_last_student_assignment( $id_ases, $instance_id
                 $to_return['prof_obj'] =  $prof_obj;
 
             }
-
         }
-
-        
     }
 
     return $to_return;
-
 }
 
 /**

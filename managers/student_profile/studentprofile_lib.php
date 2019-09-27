@@ -32,6 +32,7 @@ require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/dphpforms_get_record
 require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/validate_profile_action.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/user_management/user_lib.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/monitor_assignments/monitor_assignments_lib.php';
 
 require_once("$CFG->libdir/formslib.php");
 require_once($CFG->dirroot.'/user/edit_form.php');
@@ -527,7 +528,6 @@ function  get_act_simultaneas()
 
     return $icetex_status_student;
  }
-
    
  /**
  * Update moodle user 
@@ -561,8 +561,6 @@ function  get_act_simultaneas()
     return  $result_cv_update;
 
  }
-
-
   
  /**
  * Get moodle user from talentospilos_user_extended
@@ -581,14 +579,14 @@ function  get_act_simultaneas()
 
 }
  
- /**
+/**
  * Gets the ASES status for a student
  *
  * @see get_ases_status
  * @param $ases_id
  * @return array ASES status in instances
  */
- function get_ases_status($ases_id){
+function get_ases_status($ases_id){
 
     global $DB;
 
@@ -599,7 +597,7 @@ function  get_act_simultaneas()
                   FROM {cohort_members} AS cohorts
                   INNER JOIN {talentospilos_inst_cohorte} AS inst_cohorts ON inst_cohorts.id_cohorte = cohorts.cohortid
                   WHERE userid = $id_moodle_user";
-    
+
     $array_instances = $DB->get_records_sql($sql_query);
     $array_instances_status = array();
 
@@ -623,9 +621,9 @@ function  get_act_simultaneas()
 
         $array_instances_status[$instance->id_instancia] = $instance;
     }
-    
+
     return $array_instances_status;
- }
+}
 
  /**
  * Verify ASES status
@@ -686,33 +684,32 @@ function getReasonDropoutStudent($code_student){
  */
 
 function save_reason_dropout_ases($code_student, $reason, $observation){
-        global $DB;
-        $id_ases_student = get_ases_user_by_code($code_student)->id;
+    global $DB;
+    $id_ases_student = get_ases_user_by_code($code_student)->id;
 
-        $record = new stdClass();
-        $record->id_usuario = $id_ases_student;
-        $record->id_motivo = $reason;
-        $record->detalle = $observation;
+    $record = new stdClass();
+    $record->id_usuario = $id_ases_student;
+    $record->id_motivo = $reason;
+    $record->detalle = $observation;
 
 
-        $sql_query = "SELECT id FROM {talentospilos_retiros} WHERE id_usuario= '$id_ases_student'";
-        $exists = $DB->get_record_sql($sql_query);
+    $sql_query = "SELECT id FROM {talentospilos_retiros} WHERE id_usuario= '$id_ases_student'";
+    $exists = $DB->get_record_sql($sql_query);
 
-        if($exists) {
-            $record->id = $exists->id;
-            $result = $DB->update_record('talentospilos_retiros', $record);
-        }
-        else {
-            $result = $DB->insert_record('talentospilos_retiros', $record, false);
-        }
+    if($exists) {
+        $record->id = $exists->id;
+        $result = $DB->update_record('talentospilos_retiros', $record);
+    }
+    else {
+        $result = $DB->insert_record('talentospilos_retiros', $record, false);
+    }
 
-        if($result) {
-            return 1;
-        } else {
-            return 0;
-        }
+    if($result) {
+        return 1;
+    } else {
+        return 0;
+    }
 }
-
 
 /**
  * Update the ASES status for a student
@@ -730,16 +727,8 @@ function update_status_ases($current_status, $new_status, $instance_id, $code_st
 
     date_default_timezone_set('America/Bogota');
 
-    if($current_status == "noasignado"){
-        $id_current_status = 0;
-    }else{
-        $sql_query = "SELECT id FROM {talentospilos_estados_ases} WHERE nombre = '$current_status'";
-        $id_current_status = $DB->get_record_sql($sql_query)->id;
-    }    
-
     $sql_query = "SELECT id FROM {talentospilos_estados_ases} WHERE nombre = '$new_status'";
     $id_new_status = $DB->get_record_sql($sql_query)->id;
-
 
     $id_ases_student = get_ases_user_by_code($code_student)->id;
 
