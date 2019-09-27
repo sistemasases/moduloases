@@ -165,7 +165,11 @@ define(['jquery',
 
             $('#icetex_status').on('click',{ previous_status: $('#icetex_status option:selected').text() }, manage_icetex_status);
 
-            $('#icon-tracking').on('click', function () { self.update_status_ases(parameters); });
+            $('#icon-tracking').on('click', function () {
+                var current_status = $('#input_status_ases').val();
+                if(current_status == "seguimiento")
+                    self.update_status_ases(parameters);
+            });
 
             switch (parameters.tab) {
                 case "socioed_tab":
@@ -387,159 +391,76 @@ define(['jquery',
             var current_status = $('#input_status_ases').val();
             var new_status;
 
-            // Se configura el nuevo estado a partir del estado actual
-            switch (current_status) {
-                case 'seguimiento':
-                    new_status = 'sinseguimiento'
-                    break;
-                case 'sinseguimiento':
-                    new_status = 'seguimiento';
-                    break;
-                case 'noasignado':
-                    new_status = 'seguimiento';
-                    break;
-                default:
-            }
+            swal({
+                title: "Advertencia",
+                text: "¿Está seguro de que desea cambiar el estado de seguimiento del estudiante en esta instancia? El estado pasará de 'seguimiento' a 'sin seguimiento'",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+            }, function (isConfirm) {
+                if (isConfirm) {
+                    modal_dropout = $('#modal_dropout');
+                    modal_dropout.show();
 
-            if (current_status == 'sinseguimiento') {
-                swal(
-                    'Advertencia',
-                    'No es posible realizar esta acción. Al estudiante se le realiza seguimiento desde otra instancia.',
-                    'warning'
-                );
-            } else {
-                swal({
-                    title: "Advertencia",
-                    text: "¿Está seguro que desea cambiar el estado de seguimiento del estudiante en esta instancia? El estado pasará de '" + current_status + "' a '" + new_status + "'",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonClass: "btn-danger",
-                    confirmButtonText: "Si",
-                    cancelButtonText: "No",
-                }, function (isConfirm) {
-                    if (isConfirm) {
-                        if (new_status == 'sinseguimiento') {
+                    $('#save_changes_dropout').on('click', function () {
 
-                            modal_dropout = $('#modal_dropout');
-                            modal_dropout.show();
+                        loading_indicator.show();
 
-                            $('#save_changes_dropout').on('click', function () {
+                        var id_reason_dropout = $('#reasons_select').val();
+                        var observation = $('#description_dropout').val();
 
-                                var id_reason_dropout = $('#reasons_select').val();
-                                var observation = $('#description_dropout').val();
+                        $.ajax({
+                            type: "POST",
+                            data: JSON.stringify({
+                                "func": 'update_ases_status_without_traking',
+                                "params": [current_status, new_status, parameters_url.instanceid,
+                                    parameters_url.student_code, id_reason_dropout, observation]
+                            }),
+                            url: "../managers/student_profile/studentprofile_api.php",
+                            success: function (msg) {
 
-                                loading_indicator.show();
+                                loading_indicator.hide();
 
-                                $.ajax({
-                                    type: "POST",
-                                    data: JSON.stringify({
-                                        "func": 'update_ases_status_without_traking',
-                                        "params": [current_status, new_status, parameters_url.instanceid,
-                                            parameters_url.student_code, id_reason_dropout, observation]
-                                    }),
-                                    url: "../managers/student_profile/studentprofile_api.php",
-                                    success: function (msg) {
-
-                                        loading_indicator.hide();
-
-                                        if(msg.status_code == 0) {
-                                            $('#input_status_ases').val(new_status);
-
-                                            if (current_status == 'seguimiento') {
-                                                $('#icon-tracking').removeClass('i-tracking-t');
-                                                $('#icon-tracking').addClass('i-tracking-n');
-                                                $('#tip_ases_status').html('Se realiza seguimiento en otra instancia');
-                                            } else if (current_status == 'sinseguimiento') {
-                                                $('#icon-tracking').removeClass('i-tracking-f');
-                                                $('#icon-tracking').addClass('i-tracking-t');
-                                                $('#tip_ases_status').html('Se realiza seguimiento en esta instancia');
-                                            } else if (current_status == '') {
-                                                $('#icon-tracking').removeClass('i-tracking-n');
-                                                $('#icon-tracking').addClass('i-tracking-t');
-                                                $('#tip_ases_status').html('No se realiza seguimiento');
-                                            }
-
-                                            modal_dropout.hide();
-
-                                            swal(
-                                                msg.title,
-                                                msg.message,
-                                                msg.type
-                                            );
-                                        } else if(msg.status_code == -7 || msg.status_code == -8){
-                                            swal(
-                                                msg.title,
-                                                msg.error_message,
-                                                msg.type
-                                            );
-                                        } else {
-                                            console.log(msg);
-                                        }
-                                    },
-                                    dataType: "json",
-                                    cache: "false",
-                                    error: function (msg) {
-                                        loading_indicator.hide();
-                                        modal_dropout.hide();
-                                        swal(
-                                            msg.title,
-                                            msg.message,
-                                            msg.type
-                                        );
-                                    },
-                                });
-                            });
-                        } else if (new_status == 'seguimiento') {
-
-                            loading_indicator.show();
-
-                            $.ajax({
-                                type: "POST",
-                                data: JSON.stringify({
-                                    "func": 'update_ases_status_on_traking',
-                                    "params": [current_status, new_status,
-                                        parameters_url.instanceid, parameters_url.student_code]
-                                }),
-                                url: "../managers/student_profile/studentprofile_api.php",
-                                success: function (msg) {
-
-                                    loading_indicator.hide();
-
+                                if(msg.status_code == 0) {
                                     $('#input_status_ases').val(new_status);
+                                    $('#tip_ases_status').html('No se realiza seguimiento en esta instancia');
+                                    $('#icon-tracking').removeClass('i-tracking-t');
+                                    $('#icon-tracking').addClass('i-tracking-n');
 
-                                    if(msg.status_code == 0) {
-                                        if (current_status == 'seguimiento') {
-                                            $('#icon-tracking').removeClass('i-tracking-t');
-                                            $('#icon-tracking').addClass('i-tracking-n');
-                                            $('#tip_ases_status').html('Se realiza seguimiento en otra instancia');
-                                        } else if (current_status == 'sinseguimiento') {
-                                            $('#icon-tracking').removeClass('i-tracking-f');
-                                            $('#icon-tracking').addClass('i-tracking-t');
-                                            $('#tip_ases_status').html('Se realiza seguimiento en esta instancia');
-                                        } else if (current_status == '') {
-                                            $('#icon-tracking').removeClass('i-tracking-n');
-                                            $('#icon-tracking').addClass('i-tracking-t');
-                                            $('#tip_ases_status').html('Se realiza seguimiento en esta instancia');
-                                        }
-                                    }
-                                },
-                                dataType: "json",
-                                cache: "false",
-                                error: function (msg) {
-                                    loading_indicator.hide();
+                                    modal_dropout.hide();
+
+                                    swal(
+                                        msg.title,
+                                        msg.message,
+                                        msg.type
+                                    );
+                                } else if(msg.status_code == -7 || msg.status_code == -8){
+                                    swal(
+                                        msg.title,
+                                        msg.error_message,
+                                        msg.type
+                                    );
+                                } else {
                                     console.log(msg);
-                                },
-                            }).then(function (msg) {
+                                }
+                            },
+                            dataType: "json",
+                            cache: "false",
+                            error: function (msg) {
+                                loading_indicator.hide();
+                                modal_dropout.hide();
                                 swal(
                                     msg.title,
                                     msg.message,
                                     msg.type
                                 );
-                            });
-                        }
-                    }
-                });
-            }
+                            },
+                        });
+                    });
+                }
+            });
         }, update_tracking_status: function (current_status, element, data_init, object_function) {
 
             has_tracking_status = false;
