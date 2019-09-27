@@ -2256,7 +2256,7 @@ function student_profile_get_html_peer_tracking($id_ases, $id_block){
             $panel .= "</div>"; //End panel-heading
             $panel .= "</a>";
 
-            $panel .= "<div id='semester$array_semester->id_semester' class='panel-collapse collapse in'>";
+            $panel .= "<div id='semester$array_semester->id_semester' class='panel-collapse collapse'>";
             $panel .= "<div class='panel-body'>";
 
             // $panel .= "<div class=\"container well col-md-12\">";
