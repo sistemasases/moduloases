@@ -540,9 +540,6 @@ if ($student_code != 0) {
         }
     }
 
-    print_r("IDI: ".$id_instance_last_assigment." IDCS: ".$id_current_semester." IDSL: ".$id_semester_last_assignment);
-
-
     /*@deprecated
     if($status_ases_array){
         if($status_ases_array[$blockid]->nombre == "seguimiento"){
