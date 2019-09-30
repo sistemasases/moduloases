@@ -12,6 +12,7 @@
   <div id="dphpforms_professional_id" data-info="{{professional_id}}" style="display:none;"></div>
   <div id="dphpforms_username" data-info="{{student_username}}" style="display:none;"></div>
   <div id="dphpforms_fullname" data-info="{{student_fullname}}" style="display:none;"></div>
+  <div id="risk_graphic_info" data-info="" style="display:none;"></div>
   <input type="text" class="hide" id="current_user_id" value="{{id_dphpforms_creado_por}}" />
 
   <form id="ficha_estudiante">
@@ -30,14 +31,12 @@
           </div>
 
           <div class="col-sm-1" id="div-instance-icon">
-            <span class="glyphicon glyphicon-ok {{#ases_status_t}}i-tracking-t{{/ases_status_t}}{{#ases_status_f}}i-tracking-f{{/ases_status_f}}{{#ases_status_n}}i-tracking-n{{/ases_status_n}} tooltip-v1 col-sm-6"
+            <span class="glyphicon glyphicon-ok i-tracking{{#ases_status_on_tracking}}-t{{/ases_status_on_tracking}} tooltip-v1 col-sm-6"
               {{#update_ases_status_sp}} id="icon-tracking" {{/update_ases_status_sp}} data-toggle="tooltip" data-placement="top"
               title="{{ases_status_description}}"></span>
-            <input type="hidden" id="input_status_ases" value="{{ases_status_t}}{{ases_status_f}}{{ases_status_n}}">
+            <input type="hidden" id="input_status_ases" value="{{ases_status}}">
             <span>ASES</span>
           </div>
-
-
         </div>
         <!-- End select student -->
 
@@ -242,7 +241,6 @@
         </ul>
         <div class="tab-content clearfix ">
           {{#view_general_tab_sp}} {{> block_ases/view_general_tab_sp}} {{/view_general_tab_sp}}
-          {{#view_socioed_tab_sp}} {{> block_ases/view_socioed_tab_sp}} {{/view_socioed_tab_sp}}
           {{#view_others_tab_sp}} {{> block_ases/view_others_tab_sp}} {{/view_others_tab_sp}}
         </div>
       </div>
@@ -827,17 +825,6 @@
   </div>
 </div>
 <!-- End modal retiro-->
-<span style="display:none;" id="datos">{ "informacion":[ {"dimension":"individual", "datos":[ {{#datosSeguimientoEstudianteIndividual}}
-  {{#datos}} {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}", "end":"false"}, {{/datos}} {{/datosSeguimientoEstudianteIndividual}}
-  {"end":"true"} ]}, {"dimension":"familiar", "datos":[ {{#datosSeguimientoEstudianteFamiliar}} {{#datos}} {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}",
-  "end":"false"}, {{/datos}} {{/datosSeguimientoEstudianteFamiliar}} {"end":"true"} ]}, {"dimension":"academico", "datos":[
-  {{#datosSeguimientoEstudianteAcademico}} {{#datos}} {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}", "end":"false"},
-  {{/datos}} {{/datosSeguimientoEstudianteAcademico}} {"end":"true"} ]}, {"dimension":"economico", "datos":[ {{#datosSeguimientoEstudianteEconomico}}
-  {{#datos}} {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}", "end":"false"}, {{/datos}} {{/datosSeguimientoEstudianteEconomico}}
-  {"end":"true"} ]}, {"dimension":"vidaUniversitaria", "datos":[ {{#datosSeguimientoEstudianteVidaUniversitaria}} {{#datos}}
-  {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}", "end":"false"}, {{/datos}} {{/datosSeguimientoEstudianteVidaUniversitaria}}
-  {"end":"true"} ]} ] }
-</span>
 <script>
 
   var ctx_individual = document.getElementById("myChart_individual").getContext('2d');
@@ -845,7 +832,5 @@
   var ctx_academico = document.getElementById("myChart_academico").getContext('2d');
   var ctx_economico = document.getElementById("myChart_economico").getContext('2d');
   var ctx_vida_universitaria = document.getElementById("myChart_vida_universitaria").getContext('2d');
-  var datos = JSON.parse(document.getElementById("datos").innerText);
-  var datosGraficables = [];
 
 </script> {{/data}}

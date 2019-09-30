@@ -46,6 +46,25 @@
                         }
                     } 
                 );
+
+                //Funciona
+                /*$.ajax({
+                    type: "POST",
+                    data: JSON.stringify( { function:"remove_enrolled_users", params:[ 450299, uenroll_id ] } ),
+                    url: "../managers/plugin_status/plugin_status_api.php",
+                    dataType: "json",
+                    cache: "false",
+                    success: function( data ) {
+                        loading_indicator.hide();
+                        alert( "Eliminado" );
+                    },
+                    error: function( data ) {
+                        loading_indicator.hide();
+                        console.log( data );
+                    },
+                });*/
+
+
             }
         );
 

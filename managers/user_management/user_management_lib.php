@@ -385,4 +385,30 @@ function user_management_assing_sistemas_role_all( $semester_id, $username = "si
 
 }
 
+/**
+ * Function that given an role id, return the role object. This method will be 
+ * deprecated in short, please see core/security/security.php
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param integer $id Role ID.
+ * 
+ * @return stdClass Role object.
+ */
+function user_management_get_role_by_id( int $id ):stdClass
+{
+    global $DB; 
+    
+    $role_obj = $DB->get_record_sql( 
+        "SELECT * FROM {talentospilos_rol} WHERE id = '$id'" 
+    );
+    
+    if( !property_exists($role_obj, 'id') ){
+        throw new Exception( "Role with the ID '$id' does not exist.", -1 );
+    }else{
+        return $role_obj;
+    }
+}
+
 ?>

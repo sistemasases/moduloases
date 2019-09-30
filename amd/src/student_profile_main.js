@@ -17,30 +17,21 @@ define(['jquery',
     'block_ases/select2',
     'block_ases/Chart',
     'block_ases/mustache',
+    'block_ases/loading_indicator',
     'block_ases/academic_profile_main',
-    'block_ases/geographic_main'], function ($, bootstrap, d3, sweetalert, jqueryui, select2, Chart, mustache, academic, geographic) {
+    'block_ases/socioed_profile_main',
+    'block_ases/geographic_main'], function ($, bootstrap, d3, sweetalert, jqueryui, select2, Chart, mustache, loading_indicator, academic, socioed, geographic) {
 
     return {
         init: function (data_init) {
+
             var self = this;
-
-            //Validar si en las cohortes hay una condición de excepción
-            $("#cohorts_table tbody").find("td").each(function () {
-                if ($(this).text().indexOf("Condición de Excepción") != -1) {
-                    var alias = $("#cond_excepcion_alias").text().trim();
-                    var proptitle = $("#cond_excepcion_name").text().trim();
-                    $(this).append("-");
-                    $(this).append(alias);
-                    $(this).attr("title", proptitle);
-                }
-            });
-
-            // Agrega iframe para Google Maps
 
             var ciudad_est = $('#municipio_act').val();
             var latitude = $('#latitude').val();
             var longitude = $('#longitude').val();
 
+            // Agrega iframe para Google Maps
             if (ciudad_est == 'CALI') {
 
                 document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=transit'></iframe>";
@@ -50,20 +41,22 @@ define(['jquery',
                 document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=driving'></iframe>";
             }
 
+
+
             /**
              * Event that loads asynchronously the socio-educational tab
              */
-            //$("#socioed_li").on('click', {tab_name: 'socioed'}, load_tabs);
+            $("#socioed_li").one('click', {tab_name: 'socioed'}, load_tabs);
 
             /**
              * Event that loads asynchronously the academic tab
              */
-            $("#academic_li").on('click', {tab_name: 'academic'}, load_tabs);
+            $("#academic_li").one('click', {tab_name: 'academic'}, load_tabs);
 
             /**
              * Event that loads asynchronously the geographic tab
              */
-            $("#geographic_li").on('click', {tab_name: 'geographic'}, load_tabs);
+            $("#geographic_li").one('click', {tab_name: 'geographic'}, load_tabs);
 
             /**
              * Event that moves the Google Maps map from
@@ -89,6 +82,17 @@ define(['jquery',
                 $(this).parent().parent().remove();
             });
 
+            //Validar si en las cohortes hay una condición de excepción
+            $("#cohorts_table tbody").find("td").each(function () {
+                if ($(this).text().indexOf("Condición de Excepción") != -1) {
+                    var alias = $("#cond_excepcion_alias").text().trim();
+                    var proptitle = $("#cond_excepcion_name").text().trim();
+                    $(this).append("-");
+                    $(this).append(alias);
+                    $(this).attr("title", proptitle);
+                }
+            });
+
             /**
              * Funcion para añadir una nueva fila en la tabla
              */
@@ -102,11 +106,10 @@ define(['jquery',
 
             });
 
-
             $('[data-toggle="tooltip"]').tooltip();
 
             var parameters = get_url_parameters(document.location.search);
-            var panel_collapse = $('.panel-collapse.collapse.in');
+            var panel_collapse = $('.panel-collapse.collapse.in'); //TODO
 
             // Select search
             $("#asignados").select2({
@@ -163,7 +166,11 @@ define(['jquery',
 
             $('#icetex_status').on('click',{ previous_status: $('#icetex_status option:selected').text() }, manage_icetex_status);
 
-            $('#icon-tracking').on('click', function () { self.update_status_ases(parameters); });
+            $('#icon-tracking').on('click', function () {
+                var status_ases = $('#input_status_ases').val();
+                if(status_ases == "seguimiento")
+                    self.update_status_ases(parameters);
+            });
 
             switch (parameters.tab) {
                 case "socioed_tab":
@@ -205,6 +212,8 @@ define(['jquery',
             // Save image to backend
             $('#send-profile-image').on('click', function () {
 
+                loading_indicator.show();
+
                 var id_moodle = $('#id_moodle').val();
                 var image_file = document.getElementById('profile-image-input').files[0];
 
@@ -220,9 +229,11 @@ define(['jquery',
                     method: 'POST',
                     type: 'POST', // For jQuery < 1.9
                     success: function (data) {
+                        loading_indicator.hide();
                         alert(data);
                     },
                     error: function (data) {
+                        loading_indicator.hide();
                         console.log(data)
                     }
                 });
@@ -285,10 +296,9 @@ define(['jquery',
                 self.graph_radial();
             });
 
-            $('#view_graphic_risk_button').click(function () {
-                $('#modal_riesgos').fadeIn(200);
-                graficar();
-            });
+            $('#view_graphic_risk_button').off('click', graph);
+
+            $('#view_graphic_risk_button').one('click', load_risk_info);
 
             $('#mymodal-riesgo-close').click(function () {
                 $('#modal_riesgos').fadeOut(200);
@@ -337,6 +347,7 @@ define(['jquery',
             },
                 function (isConfirm) {
                     if (isConfirm) {
+                        loading_indicator.show();
                         $.ajax({
                             type: "POST",
                             data: JSON.stringify({
@@ -345,6 +356,7 @@ define(['jquery',
                             }),
                             url: "../managers/student_profile/studentprofile_api.php",
                             success: function (msg) {
+                                loading_indicator.hide();
                                 if(msg.status_code == 0) {
                                     if ($('#select-' + id_program).val() == "ACTIVO") {
                                         $('#tr-' + id_moodle).addClass('is-active');
@@ -363,6 +375,7 @@ define(['jquery',
                             dataType: "json",
                             cache: "false",
                             error: function (msg) {
+                                loading_indicator.hide();
                                 swal(
                                     msg.title,
                                     msg.msg,
@@ -376,152 +389,76 @@ define(['jquery',
                 });
         }, update_status_ases: function (parameters_url) {
 
-            var current_status = $('#input_status_ases').val();
-            var new_status;
+            swal({
+                title: "Advertencia",
+                text: "¿Está seguro de que desea cambiar el estado de seguimiento del estudiante en esta instancia? El estado pasará de 'seguimiento' a 'sin seguimiento'",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+            }, function (isConfirm) {
+                if (isConfirm) {
+                    modal_dropout = $('#modal_dropout');
+                    modal_dropout.show();
 
-            // Se configura el nuevo estado a partir del estado actual
-            switch (current_status) {
-                case 'seguimiento':
-                    new_status = 'sinseguimiento'
-                    break;
-                case 'sinseguimiento':
-                    new_status = 'seguimiento';
-                    break;
-                case 'noasignado':
-                    new_status = 'seguimiento';
-                    break;
-                default:
-            }
+                    $('#save_changes_dropout').on('click', function () {
 
-            if (current_status == 'sinseguimiento') {
-                swal(
-                    'Advertencia',
-                    'No es posible realizar esta acción. Al estudiante se le realiza seguimiento desde otra instancia.',
-                    'warning'
-                );
-            } else {
-                swal({
-                    title: "Advertencia",
-                    text: "¿Está seguro que desea cambiar el estado de seguimiento del estudiante en esta instancia? El estado pasará de '" + current_status + "' a '" + new_status + "'",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonClass: "btn-danger",
-                    confirmButtonText: "Si",
-                    cancelButtonText: "No",
-                }, function (isConfirm) {
-                    if (isConfirm) {
-                        if (new_status == 'sinseguimiento') {
+                        loading_indicator.show();
+                        var id_ases= $('#id_ases').val();
+                        var id_reason_dropout = $('#reasons_select').val();
+                        var observation = $('#description_dropout').val();
 
-                            modal_dropout = $('#modal_dropout');
-                            modal_dropout.show();
+                        $.ajax({
+                            type: "POST",
+                            data: JSON.stringify({
+                                "func": 'update_ases_status',
+                                "params": [id_ases, parameters_url.instanceid, parameters_url.student_code,
+                                    id_reason_dropout, observation]
+                            }),
+                            url: "../managers/student_profile/studentprofile_api.php",
+                            success: function (msg) {
 
-                            $('#save_changes_dropout').on('click', function () {
+                                loading_indicator.hide();
 
-                                var id_reason_dropout = $('#reasons_select').val();
-                                var observation = $('#description_dropout').val();
+                                if(msg.status_code == 0) {
+                                    $('#input_status_ases').val('sinseguimiento');
+                                    $('#tip_ases_status').html('No se realiza seguimiento en esta instancia');
+                                    $('#icon-tracking').removeClass('i-tracking-t');
+                                    $('#icon-tracking').addClass('i-tracking');
 
-                                $.ajax({
-                                    type: "POST",
-                                    data: JSON.stringify({
-                                        "func": 'update_ases_status_without_traking',
-                                        "params": [current_status, new_status, parameters_url.instanceid,
-                                            parameters_url.student_code, id_reason_dropout, observation]
-                                    }),
-                                    url: "../managers/student_profile/studentprofile_api.php",
-                                    success: function (msg) {
+                                    modal_dropout.hide();
 
-                                        if(msg.status_code == 0) {
-                                            $('#input_status_ases').val(new_status);
-
-                                            if (current_status == 'seguimiento') {
-                                                $('#icon-tracking').removeClass('i-tracking-t');
-                                                $('#icon-tracking').addClass('i-tracking-n');
-                                                $('#tip_ases_status').html('Se realiza seguimiento en otra instancia');
-                                            } else if (current_status == 'sinseguimiento') {
-                                                $('#icon-tracking').removeClass('i-tracking-f');
-                                                $('#icon-tracking').addClass('i-tracking-t');
-                                                $('#tip_ases_status').html('Se realiza seguimiento en esta instancia');
-                                            } else if (current_status == '') {
-                                                $('#icon-tracking').removeClass('i-tracking-n');
-                                                $('#icon-tracking').addClass('i-tracking-t');
-                                                $('#tip_ases_status').html('No se realiza seguimiento');
-                                            }
-
-                                            modal_dropout.hide();
-
-                                            swal(
-                                                msg.title,
-                                                msg.message,
-                                                msg.type
-                                            );
-                                        } else if(msg.status_code == -7 || msg.status_code == -8){
-                                            swal(
-                                                msg.title,
-                                                msg.error_message,
-                                                msg.type
-                                            );
-                                        } else {
-                                            console.log(msg);
-                                        }
-                                    },
-                                    dataType: "json",
-                                    cache: "false",
-                                    error: function (msg) {
-                                        modal_dropout.hide();
-                                        swal(
-                                            msg.title,
-                                            msg.message,
-                                            msg.type
-                                        );
-                                    },
-                                });
-                            });
-                        } else if (new_status == 'seguimiento') {
-
-                            $.ajax({
-                                type: "POST",
-                                data: JSON.stringify({
-                                    "func": 'update_ases_status_on_traking',
-                                    "params": [current_status, new_status,
-                                        parameters_url.instanceid, parameters_url.student_code]
-                                }),
-                                url: "../managers/student_profile/studentprofile_api.php",
-                                success: function (msg) {
-
-                                    $('#input_status_ases').val(new_status);
-
-                                    if(msg.status_code == 0) {
-                                        if (current_status == 'seguimiento') {
-                                            $('#icon-tracking').removeClass('i-tracking-t');
-                                            $('#icon-tracking').addClass('i-tracking-n');
-                                            $('#tip_ases_status').html('Se realiza seguimiento en otra instancia');
-                                        } else if (current_status == 'sinseguimiento') {
-                                            $('#icon-tracking').removeClass('i-tracking-f');
-                                            $('#icon-tracking').addClass('i-tracking-t');
-                                            $('#tip_ases_status').html('Se realiza seguimiento en esta instancia');
-                                        } else if (current_status == '') {
-                                            $('#icon-tracking').removeClass('i-tracking-n');
-                                            $('#icon-tracking').addClass('i-tracking-t');
-                                            $('#tip_ases_status').html('Se realiza seguimiento en esta instancia');
-                                        }
-                                    }
-                                },
-                                dataType: "json",
-                                cache: "false",
-                                error: function (msg) {
+                                    swal(
+                                        msg.title,
+                                        msg.message,
+                                        msg.type
+                                    );
+                                } else if(msg.status_code == -7 || msg.status_code == -8){
+                                    swal(
+                                        msg.title,
+                                        msg.error_message,
+                                        msg.type
+                                    );
+                                } else {
                                     console.log(msg);
-                                },
-                            }).then(function (msg) {
+                                }
+                            },
+                            dataType: "json",
+                            cache: "false",
+                            error: function (msg) {
+                                loading_indicator.hide();
+                                modal_dropout.hide();
                                 swal(
                                     msg.title,
                                     msg.message,
                                     msg.type
                                 );
-                            });
-                        }
-                    }
-                });
-            }
+                            },
+                        });
+                    });
+                }
+            });
         }, update_tracking_status: function (current_status, element, data_init, object_function) {
 
             has_tracking_status = false;
@@ -544,6 +481,8 @@ define(['jquery',
                     },
                         function (isConfirm) {
                             if (isConfirm) {
+
+                                loading_indicator.show();
                                 $('.input-tracking').prop('checked', false);
                                 element.prop('checked', true);
 
@@ -559,6 +498,7 @@ define(['jquery',
                                     }),
                                     url: "../managers/student_profile/studentprofile_api.php",
                                     success: function (msg) {
+                                        loading_indicator.hide();
                                         setTimeout(function () {
                                             if(msg.status_code == 0 || msg.status_code == -9) {
                                                 swal(
@@ -574,6 +514,7 @@ define(['jquery',
                                     dataType: "json",
                                     cache: "false",
                                     error: function (msg) {
+                                        loading_indicator.hide();
                                         setTimeout(function () {
                                             swal(
                                                 msg.title,
@@ -1038,6 +979,8 @@ define(['jquery',
             return msg;
         }, save_form_edit_profile: function (form, object_function, control1, control2, json) {
 
+            loading_indicator.show();
+
             $.ajax({
                 type: "POST",
                 data: JSON.stringify({
@@ -1046,6 +989,7 @@ define(['jquery',
                 }),
                 url: "../managers/student_profile/studentprofile_api.php",
                 success: function (msg) {
+                    loading_indicator.hide();
                     if(msg.status_code == 0) {
                         swal(
                             msg.title,
@@ -1057,6 +1001,7 @@ define(['jquery',
                 dataType: "json",
                 cache: "false",
                 error: function (msg) {
+                    loading_indicator.hide();
                     swal(
                         msg.title,
                         msg.msg,
@@ -1111,8 +1056,11 @@ define(['jquery',
      */
     function load_tabs(event) {
 
-        var tab_name = event.data.tab_name;
+        loading_indicator.show();
+
         var id_ases = $('#id_ases').val();
+        var tab_name = event.data.tab_name;
+        var id_block = document.querySelector('#dphpforms_block_instance').dataset.info;
 
         $(".active").removeClass("active");
         $("#"+tab_name+"_li").addClass("active");
@@ -1121,7 +1069,7 @@ define(['jquery',
             type: "POST",
             data: JSON.stringify({
                 "func": 'load_tabs',
-                "params": [id_ases, tab_name],
+                "params": [id_ases, tab_name, id_block],
             }),
             url: "../managers/student_profile/studentprofile_api.php",
             success: function(msg) {
@@ -1132,11 +1080,13 @@ define(['jquery',
                         dataType: "text",
                         async: false,
                         success: function( template ){
+                            loading_indicator.hide();
                             let tab_to_load = $(mustache.render( template, msg.data_response ));
                             $(".tab-content").append( tab_to_load );
 
                             switch(tab_name){
                                 case 'socioed':
+                                    socioed.init();
                                     break;
                                 case 'academic':
                                     academic.init();
@@ -1150,13 +1100,53 @@ define(['jquery',
                             }
 
                             $("#"+tab_name+"_tab").addClass("active");
-                            $("#"+tab_name+"_li").off('click', load_tabs);
                         },
                         error: function(){
+                            loading_indicator.hide();
                             console.log( "../templates/view_"+tab_name+"_tab_sp.mustache cannot be reached." );
                         }
                     });
+                } else {
+                    loading_indicator.hide();
+                    console.log(msg);
+                }
+            },
+            dataType: "json",
+            cache: "false",
+            error: function(msg) {
+                loading_indicator.hide();
+                console.log(msg);
+            }
+        });
+    }
 
+    /**
+     * @author Jorge Eduardo Mayor
+     * @see load_risk_info()
+     * @desc Gets the necessary information to load
+     * the risk graphic
+     */
+    function load_risk_info(){
+
+        loading_indicator.show();
+        var id_ases = $('#id_ases').val();
+        var peer_tracking_div = document.querySelector('#peer_tracking_info');
+        var peer_tracking_info = JSON.parse((peer_tracking_div)?peer_tracking_div.dataset.info:null);
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({
+                "func": 'load_risk_info',
+                "params": [id_ases, peer_tracking_info],
+            }),
+            url: "../managers/student_profile/studentprofile_api.php",
+            success: function(msg) {
+                loading_indicator.hide();
+                if(msg.status_code == 0) {
+                    var values = msg.data_response;
+                    procesar_datos_riesgo(values);
+                    $('#modal_riesgos').fadeIn(200);
+                    graficar();
+                    $('#view_graphic_risk_button').on('click', graph);
                 } else {
                     console.log(msg);
                 }
@@ -1164,9 +1154,15 @@ define(['jquery',
             dataType: "json",
             cache: "false",
             error: function(msg) {
+                loading_indicator.hide();
                 console.log(msg);
             }
         });
+    }
+
+    function graph() {
+        $('#modal_riesgos').fadeIn(200);
+        graficar();
     }
 
     // Funciones para la validación de formularios
@@ -1237,6 +1233,8 @@ define(['jquery',
 
     function save_icetex_status() {
 
+        loading_indicator.show();
+
         var id_ases = $('#id_ases').val();
         var id_new_status = $('#icetex_status').val();
 
@@ -1250,6 +1248,7 @@ define(['jquery',
             cache: "false",
             url: "../../ases/managers/student_profile/studentprofile_api.php",
             success: function (msg) {
+                loading_indicator.hide();
                 if(msg.status_code == 0)
                 {
                     swal({
@@ -1265,6 +1264,7 @@ define(['jquery',
                 //clean_modal_dropout();
             },
             error: function (msg) {
+                loading_indicator.hide();
                 swal(
                     'Error',
                     'No se puede contactar con el servidor.',
@@ -1311,7 +1311,6 @@ define(['jquery',
                         save_ases_status();
                     }
                 });
-
             } else if (newstatus == "NO REGISTRA") {
                 swal({
                     title: "Error",
@@ -1329,21 +1328,20 @@ define(['jquery',
                     cancelButtonText: "No",
                     closeOnConfirm: true,
                     allowEscapeKey: false
-                },
-                    function (isConfirm) {
-                        if (isConfirm) {
+                }, function (isConfirm) {
+                    if (isConfirm) {
 
-                            var result_status = save_ases_status();
+                        var result_status = save_ases_status();
 
-                            swal(
-                                result_status.title,
-                                result_status.msg,
-                                resul_status.status);
-                        }
-                        else {
-                            $('#estadoAses').val(previous);
-                        }
-                    });
+                        swal(
+                            result_status.title,
+                            result_status.msg,
+                            resul_status.status);
+                    }
+                    else {
+                        $('#estadoAses').val(previous);
+                    }
+                });
             }
         });
     }
@@ -1456,7 +1454,6 @@ define(['jquery',
                 $('h4>span', this).removeClass('glyphicon-chevron-down');
                 $('h4>span', this).addClass('glyphicon-chevron-left');
             }
-
         });
     }
 
@@ -2058,40 +2055,47 @@ define(['jquery',
         });
     }
 
-    function procesarJSON() {
+    function procesar_datos_riesgo(dimensiones) {
         // Asignación de gráficas y manejo del JSON para graficar
 
-        for (var i = 0; i < Object.keys(datos['informacion']).length; i++) {
-            var arregloDimensionTmp = [];
-            var nombreDimensionTmp;
-            var fechasTmp = [];
-            var colorTmp = [];
-            var riesgoTmp = [];
+        var graphical_data = [];
+        var NOMBRES_DIMENSIONES = ['individual', 'familiar', 'academico', 'economico', 'vida_universitaria'];
 
-            nombreDimensionTmp = datos['informacion'][i]['dimension'];
+        for(var i = 0; i < Object.keys(dimensiones).length; i++) {
+            var arreglo_dimension = [];
+            var fechas = [];
+            var color = [];
+            var riesgo = [];
+            var nombre_dimension = NOMBRES_DIMENSIONES[i];
+
+            var dato_actual = dimensiones[nombre_dimension][0]['datos'];
             var contador = 0;
-            while (datos['informacion'][i]['datos'][contador]['end'] == 'false') {
-                fechasTmp.push(datos['informacion'][i]['datos'][contador]['fecha']);
-                colorTmp.push(datos['informacion'][i]['datos'][contador]['color']);
-                riesgoTmp.push(datos['informacion'][i]['datos'][contador]['riesgo']);
-                contador = contador + 1;
+
+            while(dato_actual['end'] == 'false')
+            {
+                fechas.push(dato_actual['fecha']);
+                color.push(dato_actual['color']);
+                riesgo.push(dato_actual['riesgo']);
+                contador+=1;
+                dato_actual = dimensiones[nombre_dimension][contador]['datos'];
             }
-            arregloDimensionTmp.push(nombreDimensionTmp);
-            arregloDimensionTmp.push(fechasTmp);
-            arregloDimensionTmp.push(colorTmp);
-            arregloDimensionTmp.push(riesgoTmp);
-            datosGraficables.push(arregloDimensionTmp);
+
+            arreglo_dimension.push(nombre_dimension);
+            arreglo_dimension.push(fechas);
+            arreglo_dimension.push(color);
+            arreglo_dimension.push(riesgo);
+            graphical_data.push(arreglo_dimension);
         }
-        // Fin de asignación de gráficas
+        $('#risk_graphic_info').attr('data-info', JSON.stringify(graphical_data));
     }
 
     function graficar() {
-        procesarJSON();
-        var myChart_individual = generar(datosGraficables[0], ctx_individual);
-        var myChart_familiar = generar(datosGraficables[1], ctx_familiar);
-        var myChart_academico = generar(datosGraficables[2], ctx_academico);
-        var myChart_economico = generar(datosGraficables[3], ctx_economico);
-        var myChart_vida_universitaria = generar(datosGraficables[4], ctx_vida_universitaria);
+        var graphical_data = JSON.parse(document.querySelector('#risk_graphic_info').dataset.info);
+        var myChart_individual = generar(graphical_data[0], ctx_individual);
+        var myChart_familiar = generar(graphical_data[1], ctx_familiar);
+        var myChart_academico = generar(graphical_data[2], ctx_academico);
+        var myChart_economico = generar(graphical_data[3], ctx_economico);
+        var myChart_vida_universitaria = generar(graphical_data[4], ctx_vida_universitaria);
     }
 
     /*Generador de gráficas*/
@@ -2130,5 +2134,5 @@ define(['jquery',
                 }
             }
         });
-    };
+    }
 });
