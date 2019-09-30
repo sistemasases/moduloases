@@ -178,36 +178,36 @@ if(isset($input->func) && isset($input->params)) {
         } else {
             return_with_code(-6);
         }
-    } else if($function == 'update_ases_status_without_traking'){
+    } else if($function == 'update_ases_status'){
 
         /**
-         * [0] => current_status: string
-         * [1] => new_status: string
-         * [2] => instance_id: string
+         * [0] => id_ases: string
+         * [2] => id_instance: string
          * [3] => student_code: string
          * [4] => id_reason_dropout: string
          * [5] => observation: string
          */
         $params = $input->params;
 
-        if(count($params) == 6){
+        if(count($params) == 5){
 
-            $current_status = $params[0];
-            $new_status = $params[1];
-            $instance_id = $params[2];
-            $student_code = $params[3];
-            $id_reason_dropout = $params[4];
-            $observation = $params[5];
+            $id_ases = $params[0];
+            $id_instance = $params[1];
+            $student_code = $params[2];
+            $id_reason_dropout = $params[3];
+            $observation = $params[4];
 
-            if(is_string($current_status) && is_string($new_status) && is_string($instance_id) &&
-                is_string($student_code) && is_string($id_reason_dropout) && is_string($observation)) {
+            if(is_string($id_ases) && is_string($id_instance) && is_string($student_code) &&
+                is_string($id_reason_dropout) && is_string($observation)) {
 
                 if (trim($id_reason_dropout) != "" && trim($observation) != "") {
 
                     $result_save_dropout = save_reason_dropout_ases($student_code, $id_reason_dropout, $observation);
-                    $result = update_status_ases($current_status, $new_status, $instance_id, $student_code, $id_reason_dropout);
+                    $result = update_status_ases("seguimiento", "sinseguimiento", $id_instance, $student_code, $id_reason_dropout);
 
-                    if ($result && $result_save_dropout) {
+                    $result_delete_monitor = monitor_assignments_delete_last_monitor_student_relationship( $id_instance, $id_ases );
+
+                    if ($result && $result_save_dropout && $result_delete_monitor) {
                         echo json_encode(
                             Array (
                                 "status_code" => 0,
@@ -221,46 +221,6 @@ if(isset($input->func) && isset($input->params)) {
                     }
                 } else {
                     return_with_code(-8);
-                }
-            } else {
-                return_with_code(-2);
-            }
-        } else {
-            return_with_code(-6);
-        }
-    } else if($function == 'update_ases_status_on_traking') {
-
-        /**
-         * [0] => current_status: string
-         * [1] => new_status: string
-         * [2] => instance_id: string
-         * [3] => student_code: string
-         */
-        $params = $input->params;
-
-        if(count($params) == 4){
-
-            $current_status = $params[0];
-            $new_status = $params[1];
-            $instance_id = $params[2];
-            $student_code = $params[3];
-
-            if(is_string($current_status) && is_string($new_status) && is_string($instance_id) &&
-                is_string($student_code)) {
-
-                $result = update_status_ases($current_status, $new_status, $instance_id, $student_code);
-
-                if ($result) {
-                    echo json_encode(
-                        Array (
-                            "status_code" => 0,
-                            "title" => 'Éxito',
-                            "message" => 'Estado actualizado con éxito.',
-                            "type" => 'success'
-                        )
-                    );
-                } else {
-                    return_with_code(-7);
                 }
             } else {
                 return_with_code(-2);
