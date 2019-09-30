@@ -413,8 +413,8 @@ define(['jquery',
                             type: "POST",
                             data: JSON.stringify({
                                 "func": 'update_ases_status',
-                                "params": [id_ases, id_monitor, parameters_url.instanceid,
-                                    parameters_url.student_code, id_reason_dropout, observation]
+                                "params": [id_ases, parameters_url.instanceid, parameters_url.student_code,
+                                    id_reason_dropout, observation]
                             }),
                             url: "../managers/student_profile/studentprofile_api.php",
                             success: function (msg) {

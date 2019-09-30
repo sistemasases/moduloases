@@ -573,11 +573,16 @@ function monitor_assignments_delete_monitor_student_relationship( $instance_id, 
  }
 
 /**
- *
+ * Función que elimina la última asignación de un monitor a un estudiante en
+ * determinada instancia, en el semestre actual.
+ * @param int $instance_id Instance id.
+ * @param int $student_id Student Ases id.
+ * @return integer
  */
 function monitor_assignments_delete_last_monitor_student_relationship( $instance_id, $student_id ) {
 
-
+    $last_monitor_assignment = monitor_assignments_get_last_monitor_student_assignment($student_id, $instance_id);
+    $monitor_id = $last_monitor_assignment->id_monitor;
     return monitor_assignments_delete_monitor_student_relationship( $instance_id, $monitor_id, $student_id );
 }
 

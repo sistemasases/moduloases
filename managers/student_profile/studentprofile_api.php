@@ -182,7 +182,6 @@ if(isset($input->func) && isset($input->params)) {
 
         /**
          * [0] => id_ases: string
-         * [1] => id_monitor: string
          * [2] => id_instance: string
          * [3] => student_code: string
          * [4] => id_reason_dropout: string
@@ -190,24 +189,23 @@ if(isset($input->func) && isset($input->params)) {
          */
         $params = $input->params;
 
-        if(count($params) == 6){
+        if(count($params) == 5){
 
             $id_ases = $params[0];
-            $id_monitor = $params[1];
-            $id_instance = $params[2];
-            $student_code = $params[3];
-            $id_reason_dropout = $params[4];
-            $observation = $params[5];
+            $id_instance = $params[1];
+            $student_code = $params[2];
+            $id_reason_dropout = $params[3];
+            $observation = $params[4];
 
-            if(is_string($id_ases) && is_string($id_monitor) && is_string($id_instance) &&
-                is_string($student_code) && is_string($id_reason_dropout) && is_string($observation)) {
+            if(is_string($id_ases) && is_string($id_instance) && is_string($student_code) &&
+                is_string($id_reason_dropout) && is_string($observation)) {
 
                 if (trim($id_reason_dropout) != "" && trim($observation) != "") {
 
                     $result_save_dropout = save_reason_dropout_ases($student_code, $id_reason_dropout, $observation);
                     $result = update_status_ases("seguimiento", "sinseguimiento", $id_instance, $student_code, $id_reason_dropout);
 
-                    $result_delete_monitor = monitor_assignments_delete_last_monitor_student_relationship( $id_instance, $id_monitor, $id_ases );
+                    $result_delete_monitor = monitor_assignments_delete_last_monitor_student_relationship( $id_instance, $id_ases );
 
                     if ($result && $result_save_dropout && $result_delete_monitor) {
                         echo json_encode(
