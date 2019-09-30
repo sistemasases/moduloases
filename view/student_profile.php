@@ -596,8 +596,6 @@ if ($student_code != 0) {
     $trainee_object = get_assigned_pract($student_id);
     $professional_object = get_assigned_professional($student_id);
 
-    print_r($monitor_object);
-
     $flag_with_assignation = false;
 
     if ($monitor_object) {
