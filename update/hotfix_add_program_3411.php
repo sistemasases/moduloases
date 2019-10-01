@@ -18,8 +18,8 @@ require_once(__DIR__ . '/../classes/Jornada.php');
 module_loader("cache");                                                         // Load of core cache module
 module_loader("core_db");                                                       // Load of core_db module.
 
-const ISSUE_NUMNER = 1768;                                                      // Issue ID on GitHub. Ex. 1569.
-const PASSWORD = 1768;                                                          // Null if you want a none secure execution.
+const ISSUE_NUMNER = 1770;                                                      // Issue ID on GitHub. Ex. 1569.
+const PASSWORD = 1770;                                                          // Null if you want a none secure execution.
 
 $script = function(){
     // Your code here
