@@ -4,6 +4,26 @@
 
 .steps-progressbar li{}
 
+.collapse-btn{
+    width: 100%;
+    background-color: #e1e1e1;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+.collapse-btn:hover{
+    background-color: #C1C1C1;
+}
+
+.collapse-container{
+    padding:1.5em;
+    border: 1px solid #e1e1e1;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
 .user_enrolled .ucontainer{
   padding: 0.7em;
   margin-top: 1em;
