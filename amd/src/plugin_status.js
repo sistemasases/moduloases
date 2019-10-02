@@ -163,7 +163,12 @@ define(
                     "plugin_status", "get_all_periods", [],
                     async = true, use_loading_indicator = true, ok_callback = _load_periods
                     );
-
+            
+            let initialization_available = ases_api.post(
+                    "plugin_status", "initialization_available", [],
+                    async = false, use_loading_indicator = true
+                    );
+            
             return {
                 init: function () {
 
