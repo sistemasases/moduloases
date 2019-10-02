@@ -140,11 +140,29 @@ define(
                 );
                 $("#step_0_selector").append('<div class="mfilter filter-selected" data-filter="all">Todos (Con varios grupos)</div>');
             };
-            
+
+            let _load_periods = (data) => {
+                data.data_response.forEach(
+                        function (elem) {
+                            let groups = [];
+                            let template = $($("#period-template").html());
+                            template.find(".p-name").text(elem.nombre);
+                            template.find(".start-d").text(elem.fecha_inicio);
+                            template.find(".end-d").text(elem.fecha_fin);
+                            template.appendTo("#list-of-periods");
+                        }
+                );
+            };
+
             ases_api.post(
-                "plugin_status", "get_users_data_by_instance",  [450299], 
-                async = true, use_loading_indicator = true,  ok_callback = _load_users 
-            );
+                    "plugin_status", "get_users_data_by_instance", [450299],
+                    async = true, use_loading_indicator = true, ok_callback = _load_users
+                    );
+
+            ases_api.post(
+                    "plugin_status", "get_all_periods", [],
+                    async = true, use_loading_indicator = true, ok_callback = _load_periods
+                    );
 
             return {
                 init: function () {
