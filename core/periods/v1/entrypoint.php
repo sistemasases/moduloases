@@ -69,8 +69,6 @@ function periods_get_period_by_id( int $period_id ):stdClass
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
  * 
- * @see periods_get_all_periods(...) in entrypoint.php
- * 
  * @return array List of periods.
  */
 function periods_get_all_periods():array
@@ -83,6 +81,26 @@ function periods_get_all_periods():array
         ORDER BY fecha_fin DESC";
     
     return $DB->get_records_sql( $query );
+}
+
+/**
+ * Function that return the last period in the database.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @return stdClass Last period. 
+ */
+function periods_get_last_period():stdClass
+{
+    global $DB;
+    global $PERIODS_TABLENAME;
+    
+    $query = "SELECT * 
+        FROM $PERIODS_TABLENAME
+        ORDER BY fecha_fin DESC LIMIT 1";
+    
+    return $DB->get_record_sql( $query );
 }
 
 ?>
