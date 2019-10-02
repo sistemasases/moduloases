@@ -164,6 +164,36 @@
                 return_with_code( -2 );
             }
 
+        }else if( $input->function == "initialization_available" ){
+
+            /* In this request is only valid pass like param(Parameters) the instance identificatior, 
+             * for this reason, the input param only can be equal in quantity to one.
+             * */
+            
+            if( count( $input->params ) == 0 ){
+
+                // Order of params
+                /**
+                 * No params
+                 */
+                
+                if( true ){
+
+                    echo json_encode( 
+                        array(
+                            "status_code" => 0,
+                            "error_message" => "",
+                            "data_response" => plugin_status_initialization_available()
+                        )
+                    );
+                    
+                }else{
+                    return_with_code( -2 );
+                }
+            }else{
+                return_with_code( -2 );
+            }
+
         }else{
             // Function not defined
             return_with_code( -4 );
