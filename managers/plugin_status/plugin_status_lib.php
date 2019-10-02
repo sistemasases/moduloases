@@ -23,9 +23,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once( dirname(__FILE__). '/../../../../config.php' );
+require_once(dirname(__FILE__). '/../../core/module_loader.php'); 
 require_once( $CFG->dirroot.'/blocks/ases/managers/lib/lib.php' );
 require_once( $CFG->dirroot.'/blocks/ases/managers/user_management/user_management_lib.php' );
 
+module_loader("periods");
+module_loader("cache");
 
 //Eliminar usuarios y desmatricular.
 function plugin_status_get_users_data_by_instance( $instanceid ){
@@ -241,5 +244,15 @@ function plugin_status_get_groups_from_user_by_course( $userid, $courseid ){
 
 }
 
+
+function plugin_status_get_all_periods(){
+    return array_values( core_periods_get_all_periods() );
+}
+
+
+function plugin_status_initialization_available(){
+    $last_period = core_periods_get_last_period();  
+    return ( time() > strtotime( $last_period->fecha_fin ) ? true : false );
+}
 
 ?>
