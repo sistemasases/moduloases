@@ -523,6 +523,24 @@ if ($student_code != 0) {
     $record->observations = $reasons_dropout_observations."\n".$ases_student->observacion;
 
     // Estado ASES
+
+    $id_current_semester = core_periods_get_current_period()->id;
+    $last_monitor_assignment = monitor_assignments_get_last_monitor_student_assignment($student_id, $blockid);
+    $id_instance_last_assignment = $last_monitor_assignment->id_instancia;
+    $id_semester_last_assignment = $last_monitor_assignment->id_semestre;
+
+    $record->ases_status = "sinseguimiento";
+    $record->ases_status_description = "No se realiza seguimiento en esta instancia";
+
+    if($id_current_semester == $id_semester_last_assignment) {
+        if($id_instance_last_assignment == $blockid) {
+            $record->ases_status = "seguimiento";
+            $record->ases_status_on_tracking = 'true';
+            $record->ases_status_description = "Se realiza seguimiento en esta instancia";
+        }
+    }
+
+    /*@deprecated
     if($status_ases_array){
         if($status_ases_array[$blockid]->nombre == "seguimiento"){
             $record->ases_status_t = "seguimiento";
@@ -545,7 +563,7 @@ if ($student_code != 0) {
     }else{
         $record->ases_status_n = "noasignado";
         $record->ases_status_description = "No se realiza seguimiento";
-    }
+    }*/
 
     // Estado ICETEX
     $icetex_statuses = get_icetex_statuses();
@@ -628,7 +646,6 @@ if ($student_code != 0) {
             $record->geographic_class = 'div_no_risk';
             break;
     }
-
 
     // Students risks
 

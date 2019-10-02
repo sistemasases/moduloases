@@ -24,25 +24,14 @@ define(['jquery',
 
     return {
         init: function (data_init) {
+
             var self = this;
-
-            //Validar si en las cohortes hay una condición de excepción
-            $("#cohorts_table tbody").find("td").each(function () {
-                if ($(this).text().indexOf("Condición de Excepción") != -1) {
-                    var alias = $("#cond_excepcion_alias").text().trim();
-                    var proptitle = $("#cond_excepcion_name").text().trim();
-                    $(this).append("-");
-                    $(this).append(alias);
-                    $(this).attr("title", proptitle);
-                }
-            });
-
-            // Agrega iframe para Google Maps
 
             var ciudad_est = $('#municipio_act').val();
             var latitude = $('#latitude').val();
             var longitude = $('#longitude').val();
 
+            // Agrega iframe para Google Maps
             if (ciudad_est == 'CALI') {
 
                 document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=transit'></iframe>";
@@ -51,6 +40,8 @@ define(['jquery',
 
                 document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=driving'></iframe>";
             }
+
+
 
             /**
              * Event that loads asynchronously the socio-educational tab
@@ -91,6 +82,17 @@ define(['jquery',
                 $(this).parent().parent().remove();
             });
 
+            //Validar si en las cohortes hay una condición de excepción
+            $("#cohorts_table tbody").find("td").each(function () {
+                if ($(this).text().indexOf("Condición de Excepción") != -1) {
+                    var alias = $("#cond_excepcion_alias").text().trim();
+                    var proptitle = $("#cond_excepcion_name").text().trim();
+                    $(this).append("-");
+                    $(this).append(alias);
+                    $(this).attr("title", proptitle);
+                }
+            });
+
             /**
              * Funcion para añadir una nueva fila en la tabla
              */
@@ -104,11 +106,10 @@ define(['jquery',
 
             });
 
-
             $('[data-toggle="tooltip"]').tooltip();
 
             var parameters = get_url_parameters(document.location.search);
-            var panel_collapse = $('.panel-collapse.collapse.in');
+            var panel_collapse = $('.panel-collapse.collapse.in'); //TODO
 
             // Select search
             $("#asignados").select2({
@@ -165,7 +166,11 @@ define(['jquery',
 
             $('#icetex_status').on('click',{ previous_status: $('#icetex_status option:selected').text() }, manage_icetex_status);
 
-            $('#icon-tracking').on('click', function () { self.update_status_ases(parameters); });
+            $('#icon-tracking').on('click', function () {
+                var status_ases = $('#input_status_ases').val();
+                if(status_ases == "seguimiento")
+                    self.update_status_ases(parameters);
+            });
 
             switch (parameters.tab) {
                 case "socioed_tab":
@@ -384,162 +389,76 @@ define(['jquery',
                 });
         }, update_status_ases: function (parameters_url) {
 
-            var current_status = $('#input_status_ases').val();
-            var new_status;
+            swal({
+                title: "Advertencia",
+                text: "¿Está seguro de que desea cambiar el estado de seguimiento del estudiante en esta instancia? El estado pasará de 'seguimiento' a 'sin seguimiento'",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+            }, function (isConfirm) {
+                if (isConfirm) {
+                    modal_dropout = $('#modal_dropout');
+                    modal_dropout.show();
 
-            // Se configura el nuevo estado a partir del estado actual
-            switch (current_status) {
-                case 'seguimiento':
-                    new_status = 'sinseguimiento'
-                    break;
-                case 'sinseguimiento':
-                    new_status = 'seguimiento';
-                    break;
-                case 'noasignado':
-                    new_status = 'seguimiento';
-                    break;
-                default:
-            }
+                    $('#save_changes_dropout').on('click', function () {
 
-            if (current_status == 'sinseguimiento') {
-                swal(
-                    'Advertencia',
-                    'No es posible realizar esta acción. Al estudiante se le realiza seguimiento desde otra instancia.',
-                    'warning'
-                );
-            } else {
-                swal({
-                    title: "Advertencia",
-                    text: "¿Está seguro que desea cambiar el estado de seguimiento del estudiante en esta instancia? El estado pasará de '" + current_status + "' a '" + new_status + "'",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonClass: "btn-danger",
-                    confirmButtonText: "Si",
-                    cancelButtonText: "No",
-                }, function (isConfirm) {
-                    if (isConfirm) {
-                        if (new_status == 'sinseguimiento') {
+                        loading_indicator.show();
+                        var id_ases= $('#id_ases').val();
+                        var id_reason_dropout = $('#reasons_select').val();
+                        var observation = $('#description_dropout').val();
 
-                            modal_dropout = $('#modal_dropout');
-                            modal_dropout.show();
+                        $.ajax({
+                            type: "POST",
+                            data: JSON.stringify({
+                                "func": 'update_ases_status',
+                                "params": [id_ases, parameters_url.instanceid, parameters_url.student_code,
+                                    id_reason_dropout, observation]
+                            }),
+                            url: "../managers/student_profile/studentprofile_api.php",
+                            success: function (msg) {
 
-                            $('#save_changes_dropout').on('click', function () {
+                                loading_indicator.hide();
 
-                                var id_reason_dropout = $('#reasons_select').val();
-                                var observation = $('#description_dropout').val();
+                                if(msg.status_code == 0) {
+                                    $('#input_status_ases').val('sinseguimiento');
+                                    $('#tip_ases_status').html('No se realiza seguimiento en esta instancia');
+                                    $('#icon-tracking').removeClass('i-tracking-t');
+                                    $('#icon-tracking').addClass('i-tracking');
 
-                                loading_indicator.show();
+                                    modal_dropout.hide();
 
-                                $.ajax({
-                                    type: "POST",
-                                    data: JSON.stringify({
-                                        "func": 'update_ases_status_without_traking',
-                                        "params": [current_status, new_status, parameters_url.instanceid,
-                                            parameters_url.student_code, id_reason_dropout, observation]
-                                    }),
-                                    url: "../managers/student_profile/studentprofile_api.php",
-                                    success: function (msg) {
-
-                                        loading_indicator.hide();
-
-                                        if(msg.status_code == 0) {
-                                            $('#input_status_ases').val(new_status);
-
-                                            if (current_status == 'seguimiento') {
-                                                $('#icon-tracking').removeClass('i-tracking-t');
-                                                $('#icon-tracking').addClass('i-tracking-n');
-                                                $('#tip_ases_status').html('Se realiza seguimiento en otra instancia');
-                                            } else if (current_status == 'sinseguimiento') {
-                                                $('#icon-tracking').removeClass('i-tracking-f');
-                                                $('#icon-tracking').addClass('i-tracking-t');
-                                                $('#tip_ases_status').html('Se realiza seguimiento en esta instancia');
-                                            } else if (current_status == '') {
-                                                $('#icon-tracking').removeClass('i-tracking-n');
-                                                $('#icon-tracking').addClass('i-tracking-t');
-                                                $('#tip_ases_status').html('No se realiza seguimiento');
-                                            }
-
-                                            modal_dropout.hide();
-
-                                            swal(
-                                                msg.title,
-                                                msg.message,
-                                                msg.type
-                                            );
-                                        } else if(msg.status_code == -7 || msg.status_code == -8){
-                                            swal(
-                                                msg.title,
-                                                msg.error_message,
-                                                msg.type
-                                            );
-                                        } else {
-                                            console.log(msg);
-                                        }
-                                    },
-                                    dataType: "json",
-                                    cache: "false",
-                                    error: function (msg) {
-                                        loading_indicator.hide();
-                                        modal_dropout.hide();
-                                        swal(
-                                            msg.title,
-                                            msg.message,
-                                            msg.type
-                                        );
-                                    },
-                                });
-                            });
-                        } else if (new_status == 'seguimiento') {
-
-                            loading_indicator.show();
-
-                            $.ajax({
-                                type: "POST",
-                                data: JSON.stringify({
-                                    "func": 'update_ases_status_on_traking',
-                                    "params": [current_status, new_status,
-                                        parameters_url.instanceid, parameters_url.student_code]
-                                }),
-                                url: "../managers/student_profile/studentprofile_api.php",
-                                success: function (msg) {
-
-                                    loading_indicator.hide();
-
-                                    $('#input_status_ases').val(new_status);
-
-                                    if(msg.status_code == 0) {
-                                        if (current_status == 'seguimiento') {
-                                            $('#icon-tracking').removeClass('i-tracking-t');
-                                            $('#icon-tracking').addClass('i-tracking-n');
-                                            $('#tip_ases_status').html('Se realiza seguimiento en otra instancia');
-                                        } else if (current_status == 'sinseguimiento') {
-                                            $('#icon-tracking').removeClass('i-tracking-f');
-                                            $('#icon-tracking').addClass('i-tracking-t');
-                                            $('#tip_ases_status').html('Se realiza seguimiento en esta instancia');
-                                        } else if (current_status == '') {
-                                            $('#icon-tracking').removeClass('i-tracking-n');
-                                            $('#icon-tracking').addClass('i-tracking-t');
-                                            $('#tip_ases_status').html('Se realiza seguimiento en esta instancia');
-                                        }
-                                    }
-                                },
-                                dataType: "json",
-                                cache: "false",
-                                error: function (msg) {
-                                    loading_indicator.hide();
+                                    swal(
+                                        msg.title,
+                                        msg.message,
+                                        msg.type
+                                    );
+                                } else if(msg.status_code == -7 || msg.status_code == -8){
+                                    swal(
+                                        msg.title,
+                                        msg.error_message,
+                                        msg.type
+                                    );
+                                } else {
                                     console.log(msg);
-                                },
-                            }).then(function (msg) {
+                                }
+                            },
+                            dataType: "json",
+                            cache: "false",
+                            error: function (msg) {
+                                loading_indicator.hide();
+                                modal_dropout.hide();
                                 swal(
                                     msg.title,
                                     msg.message,
                                     msg.type
                                 );
-                            });
-                        }
-                    }
-                });
-            }
+                            },
+                        });
+                    });
+                }
+            });
         }, update_tracking_status: function (current_status, element, data_init, object_function) {
 
             has_tracking_status = false;

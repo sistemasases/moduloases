@@ -320,7 +320,7 @@
         transition:all .5s ease-in-out;
     }
 
-    .i-tracking-n{
+    .i-tracking{
         color: gray !important;
         font-size: 12px;
         position: relative;
@@ -541,6 +541,10 @@
 
     #geographic_direccion{
         height: 34px;
+    }
+    
+    #button_add_v2_track{
+        margin-bottom: 15px;
     }
 }
 
