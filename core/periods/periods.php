@@ -61,4 +61,18 @@ function core_periods_get_all_periods(){
     return periods_get_all_periods();
 }
 
+/**
+ * Interface to periods_get_last_period
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see periods_get_last_period(...) in entrypoint.php
+ * 
+ * @return stdClass Last period.
+ */
+function core_periods_get_last_period(){
+    return periods_get_last_period();
+}
+
 ?>
