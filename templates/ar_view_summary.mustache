@@ -2,7 +2,7 @@
     {{#summary_spp_cohorts}}
         <div class="ases-col-sm-6 ases-col-lg-6" id="div-summary-spp">
             <div class="panel panel-success no-border-radius">
-                <div class="ases-col-sm-12 ases-col-lg-12 no-padding-col panel-heading panel-heading-summary" data-target="#panel-body-spp">
+                <div class="panel-heading ases-col-sm-12 ases-col-lg-12 no-padding-col panel-heading-summary" data-target="#panel-body-spp">
                     <div class="ases-col-sm-1 ases-col-lg-1 div-icon-group-cohort"><span class="glyphicon glyphicon-chevron-right icon-group-cohort"></span></div>
                     <div class="ases-col-sm-4 ases-col-lg-4"><b>Ser Pilo Paga</b></div>
                     <div class="ases-col-sm-3 ases-col-lg-3"><b>Seguimiento:</b> {{total_tracking}}</div>
@@ -12,7 +12,7 @@
 
                 <div class="panel-body" id="panel-body-spp" hidden>
                     {{#cohorts}}
-                        <div class="ases-col-sm-12 ases-col-lg-12 summary-title no-padding-col" data-target="#info-spp-{{id}}" data-icon="#icon-spp-{{id}}">
+                        <div class="summary-title ases-col-sm-12 ases-col-lg-12 no-padding-col" data-target="#info-spp-{{id}}" data-icon="#icon-spp-{{id}}">
                             <div class="ases-col-sm-1 ases-col-lg-1 div-icon-group-cohort"><span class="glyphicon glyphicon-chevron-right" id="icon-spp-{{id}}"></span></div>
                             <div class="ases-col-sm-4 ases-col-lg-4"><b>{{name}}</b></div>
                             <div class="ases-col-sm-3 ases-col-lg-3"><b>Seguimiento:</b> {{total_ases}}</div>
@@ -20,7 +20,7 @@
                             <div class="ases-col-sm-2 ases-col-lg-2"><b>Total:</b> {{total_gen}}</div>
                         </div>
 
-                        <div class="ases-col-sm-12 ases-col-lg-12 summary-content no-padding-col" id="info-spp-{{id}}" hidden>
+                        <div class="summary-content ases-col-sm-12 ases-col-lg-12 no-padding-col" id="info-spp-{{id}}" hidden>
                             <hr class="no-padding hr-summary">
                             <div class="ases-col-sm-6 ases-col-lg-6 no-padding-col">
                                 {{#summary_sra}}
@@ -49,7 +49,7 @@
     {{#summary_spe_cohorts}}
         <div class="ases-col-sm-6 ases-col-lg-6" id="div-summary-spe">
             <div class="panel panel-success no-border-radius">
-                <div class="ases-col-sm-12 ases-col-lg-12 panel-heading no-padding-col panel-heading-summary" data-target="#panel-body-spe">
+                <div class="panel-heading ases-col-sm-12 ases-col-lg-12 no-padding-col panel-heading-summary" data-target="#panel-body-spe">
                     <div class="ases-col-sm-1 ases-col-lg-1 div-icon-group-cohort"><span class="glyphicon glyphicon-chevron-right icon-group-cohort"></span></div>
                     <div class="ases-col-sm-4 ases-col-lg-4"><b>Condición de excepción</b></div>
                     <div class="ases-col-sm-3 ases-col-lg-3"><b>Seguimiento:</b> {{total_tracking}}</div>
@@ -59,7 +59,7 @@
 
                 <div class="panel-body" id="panel-body-spe" hidden>
                     {{#cohorts}}
-                        <div class="ases-col-sm-12 ases-col-lg-12 summary-title no-padding-col" data-target="#info-spp-{{id}}" data-icon="#icon-spp-{{id}}">
+                        <div class="summary-title ases-col-sm-12 ases-col-lg-12 no-padding-col" data-target="#info-spp-{{id}}" data-icon="#icon-spp-{{id}}">
                             <div class="ases-col-sm-1 ases-col-lg-1 div-icon-group-cohort"><span class="glyphicon glyphicon-chevron-right" id="icon-spp-{{id}}"></span></div>
                             <div class="ases-col-sm-4 ases-col-lg-4"><b>{{name}}</b></div>
                             <div class="ases-col-sm-3 ases-col-lg-3"><b>Seguimiento:</b> {{total_ases}}</div>
@@ -67,7 +67,7 @@
                             <div class="ases-col-sm-2 ases-col-lg-2"><b>Total:</b> {{total_gen}}</div>
                         </div>
 
-                        <div class="ases-col-sm-12 ases-col-lg-12 summary-content no-padding-col" id="info-spp-{{id}}" hidden>
+                        <div class="summary-content ases-col-sm-12 ases-col-lg-12 no-padding-col" id="info-spp-{{id}}" hidden>
                             <hr class="no-padding hr-summary">
                             <div class="ases-col-sm-6 ases-col-lg-6 no-padding-col">
                                 {{#summary_sra}}
@@ -94,11 +94,10 @@
 </div>
 
 <div class="ases-row">
-
     {{#summary_3740_cohorts}}
         <div class="ases-col-sm-6 ases-col-lg-6" id="div-summary-3740">
             <div class="panel panel-success no-border-radius">
-                <div class="ases-col-sm-12 ases-col-lg-12 panel-heading no-padding-col panel-heading-summary" data-target="#panel-body-3740">
+                <div class="no-padding-col ases-col-sm-12 ases-col-lg-12 panel-heading panel-heading-summary" data-target="#panel-body-3740">
                     <div class="ases-col-sm-1 ases-col-lg-1 div-icon-group-cohort"><span class="glyphicon glyphicon-chevron-right icon-group-cohort"></span></div>
                     <div class="ases-col-sm-4 ases-col-lg-4"><b>Ingeniería topográfica</b></div>
                     <div class="ases-col-sm-3 ases-col-lg-3"><b>Seguimiento:</b> {{total_tracking}}</div>
@@ -146,7 +145,7 @@
     {{#summary_oa_cohorts}}
         <div class="ases-col-sm-6 ases-col-lg-6" id="div-summary-oa">
             <div class="panel panel-success no-border-radius">
-                <div class="ases-col-sm-12 ases-col-lg-12 panel-heading no-padding-col panel-heading-summary" data-target="#panel-body-oa">
+                <div class="no-padding-col ases-col-sm-12 ases-col-lg-12 panel-heading panel-heading-summary" data-target="#panel-body-oa">
                     <div class="ases-col-sm-1 ases-col-lg-1 div-icon-group-cohort"><span class="glyphicon glyphicon-chevron-right icon-group-cohort"></span></div>
                     <div class="ases-col-sm-4 ases-col-lg-4 no-padding"><b>Otros ASES</b></div>
                     <div class="ases-col-sm-3 ases-col-lg-3"><b>Seguimiento:</b> {{total_tracking}}</div>

@@ -21,7 +21,10 @@
     width: 100%;
 }
 
-.no-padding-col [class*="col-"] {
+.checkbox_general_reports{
+}
+
+.no-padding-col [class*="ases-col-"] {
     padding: 0;
 }
 

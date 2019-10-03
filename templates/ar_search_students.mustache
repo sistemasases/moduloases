@@ -5,7 +5,7 @@
             <h5>Por favor seleccione los campos a incluir en el reporte</h5>
         </div>
         <div class="ases-col-sm-4 ases-col-lg-4" id="div_cohorts">
-            <label for="">Cohorte:  </label>
+            <label for="">Cohorte:</label>
             {{{cohorts_checks}}}
         </div>
         <hr class="ases-col-sm-12 ases-col-lg-12"/>
@@ -17,45 +17,53 @@
             <fieldset id="base_fields">
                 <legend>Campos base</legend>
                 <div class="checkbox">
-                    <input type="checkbox" name="fields[]" value="student_code" onchange="check(this)" onclick="check(this)" checked="checked"> Código
+                    <input type="checkbox" name="fields[]" value="student_code" onchange="check(this)" onclick="check(this)" checked="checked">
+                    Código
                 </div>
 
-                <div class="checkbox">
-                    <input type="checkbox" name="fields[]" value="firstname" onchange="check(this)" onclick="check(this)" checked="checked">Nombres
+                <div class="checkbox checkbox_general_reports">
+                    <input type="checkbox" name="fields[]" value="firstname" onchange="check(this)" onclick="check(this)" checked="checked">
+                    Nombres
                 </div>
 
-                <div class="checkbox">
-                    <input type="checkbox" name="fields[]" value="lastname" onchange="check(this)" onclick="check(this)" checked="checked">Apellidos
+                <div class="checkbox checkbox_general_reports">
+                    <input type="checkbox" name="fields[]" value="lastname" onchange="check(this)" onclick="check(this)" checked="checked">
+                    Apellidos
                 </div>
 
-                <div class="checkbox">
-                    <input type="checkbox" name="fields[]" value="document_id" onchange="check(this)" onclick="check(this)" checked="checked">Documento
+                <div class="checkbox checkbox_general_reports">
+                    <input type="checkbox" name="fields[]" value="document_id" onchange="check(this)" onclick="check(this)" checked="checked">
+                    Documento
                 </div>
 
-                <div class="checkbox">
-                    <input type="checkbox" name="fields[]" value="cohort" id="cohort_check" onchange="check(this)" onclick="check(this)" checked="checked">Cohorte
+                <div class="checkbox checkbox_general_reports">
+                    <input type="checkbox" name="fields[]" value="cohort" id="cohort_check" onchange="check(this)" onclick="check(this)" checked="checked">
+                    Cohorte
                 </div>
             </fieldset>
         </div>
 
         <!-- Columna de contacto -->
         <div class="ases-col-sm-2 ases-col-md-2 ases-col-lg-2">
-            <fieldset id="contact_fields">
+            <fieldset id="contact_fields" class="ases-col-lg-12">
                 <legend>
                     <input type="checkbox" id="contact_fields_check">
                     Contacto
                 </legend>
 
-                <div class="checkbox">
-                    <input type="checkbox" name="fields[]" value="email"> Correo electrónico
+                <div class="checkbox checkbox_general_reports">
+                    <input type="checkbox" name="fields[]" value="email">
+                    Correo electrónico
                 </div>
 
-                <div class="checkbox">
-                    <input type="checkbox" name="fields[]" value="cellphone"> Celular
+                <div class="checkbox checkbox_general_reports">
+                    <input type="checkbox" name="fields[]" value="cellphone">
+                    Celular
                 </div>
 
-                <div class="checkbox">
-                    <input type="checkbox" name="fields[]" value="address"> Dirección
+                <div class="checkbox checkbox_general_reports">
+                    <input type="checkbox" name="fields[]" value="address">
+                    Dirección
                 </div>
             </fieldset>
         </div>
@@ -68,16 +76,19 @@
                     Estados
                 </legend>
 
-                <div class="checkbox">
-                    <input type="checkbox" name="status_fields[]" value="ases_status"> ASES
+                <div class="checkbox checkbox_general_reports">
+                    <input type="checkbox" name="status_fields[]" value="ases_status">
+                    ASES
                 </div>
 
-                <div class="checkbox">
-                    <input type="checkbox" name="status_fields[]" value="icetex_status"> ICETEX
+                <div class="checkbox checkbox_general_reports">
+                    <input type="checkbox" name="status_fields[]" value="icetex_status">
+                    ICETEX
                 </div>
 
-                <div class="checkbox">
-                    <input type="checkbox" name="status_fields[]" value="academic_program_status"> Registro académico
+                <div class="checkbox checkbox_general_reports">
+                    <input type="checkbox" name="status_fields[]" value="academic_program_status">
+                    Registro académico
                 </div>
             </fieldset>
         </div>
@@ -90,28 +101,34 @@
                     Académico
                 </legend>
 
-                <div class="checkbox">
-                    <input type="checkbox" name="academic_fields[]" value="program_code"> Código programa académico
+                <div class="checkbox checkbox_general_reports">
+                    <input type="checkbox" name="academic_fields[]" value="program_code">
+                    Código programa académico
                 </div>
 
-                <div class="checkbox">
-                    <input type="checkbox" name="academic_fields[]" value="name_program"> Programa académico
+                <div class="checkbox checkbox_general_reports">
+                    <input type="checkbox" name="academic_fields[]" value="name_program">
+                    Programa académico
                 </div>
 
-                <div class="checkbox">
-                    <input type="checkbox" name="academic_fields[]" value="faculty"> Facultad
+                <div class="checkbox checkbox_general_reports">
+                    <input type="checkbox" name="academic_fields[]" value="faculty">
+                    Facultad
                 </div>
 
-                <div class="checkbox">
-                    <input type="checkbox" name="academic_fields[]" value="average"> Promedio acumulado
+                <div class="checkbox checkbox_general_reports">
+                    <input type="checkbox" name="academic_fields[]" value="average">
+                    Promedio acumulado
                 </div>
 
-                <div class="checkbox">
-                    <input type="checkbox" name="academic_fields[]" value="academic_stimuli"> Estimulos
+                <div class="checkbox checkbox_general_reports">
+                    <input type="checkbox" name="academic_fields[]" value="academic_stimuli">
+                    Estimulos
                 </div>
 
-                <div class="checkbox">
-                    <input type="checkbox" name="academic_fields[]" value="low_academic_performance"> Bajos rendimiento
+                <div class="checkbox checkbox_general_reports">
+                    <input type="checkbox" name="academic_fields[]" value="low_academic_performance">
+                    Bajos rendimiento
                 </div>
             </fieldset>
         </div>
@@ -124,16 +141,19 @@
                     Asignaciones
                 </legend>
 
-                <div class="checkbox">
-                    <input type="checkbox" name="assignment_fields[]" value="professional"> Profesional
+                <div class="checkbox checkbox_general_reports">
+                    <input type="checkbox" name="assignment_fields[]" value="professional">
+                    Profesional
                 </div>
 
-                <div class="checkbox">
-                    <input type="checkbox" name="assignment_fields[]" value="training"> Practicante
+                <div class="checkbox checkbox_general_reports">
+                    <input type="checkbox" name="assignment_fields[]" value="training">
+                    Practicante
                 </div>
 
-                <div class="checkbox">
-                    <input type="checkbox" name="assignment_fields[]" value="monitor"> Monitor
+                <div class="checkbox checkbox_general_reports">
+                    <input type="checkbox" name="assignment_fields[]" value="monitor">
+                    Monitor
                 </div>
             </fieldset>
         </div>
@@ -154,6 +174,3 @@
 <hr class="ases-col-sm-12 ases-col-md-12 ases-col-lg-12"/>
 <div id="div_table" class="ases-col-sm-12 ases-col-md-12 ases-col-lg-12">
 </div>
-
-
-
