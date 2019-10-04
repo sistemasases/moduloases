@@ -102,9 +102,10 @@ define(
 
             let _load_users = (data) => {
                 let global_filter = [];
-
-                data.data_response.forEach(
-                        function (elem) {
+                let groups_abbreviations = [];
+                groups_abbreviations["S"] = "Sin grupo";
+                data.data_response.forEach( (elem) => {
+                            
                             let groups = [];
                             let template = $($("#user_enrolled_template").html());
                             template.find(".ucontainer").find(".fname").text(elem.user.firstname);
@@ -114,17 +115,44 @@ define(
                             template.find(".ucontainer").attr("data-groups-number", elem.groups.length);
 
                             for (let i = 0; i < elem.groups.length; i++) {
+                                
                                 let group_name = elem.groups[i].name;
+                                let short_group_name = "";
+                                if( !( group_name[0] in groups_abbreviations ) ){
+                                    groups_abbreviations[ group_name[0] ] = group_name;
+                                    short_group_name = group_name[0];
+                                }else{
+                                    let char_control = 1;
+                                    let auxiliar_salt = "";
+                                    while( true ){
+                                        let _group_name = elem.groups[i].name + auxiliar_salt;
+                                        if( _group_name.substring(0, char_control) in groups_abbreviations ){
+                                            if( groups_abbreviations[ _group_name.substring(0, char_control) ] === _group_name ){
+                                                short_group_name = _group_name.substring(0, char_control);
+                                                break;
+                                            }
+                                        }else{
+                                            groups_abbreviations[ _group_name.substring(0, char_control) ] = _group_name;
+                                            short_group_name = _group_name.substring(0, char_control);
+                                            break;
+                                        }
+                                        char_control++;
+                                        if( char_control > elem.groups[i].name.length ){
+                                            auxiliar_salt += "1";
+                                        }
+                                    }
+                                }
+                                
                                 groups.push(group_name);
                                 if (!global_filter.includes(group_name)) {
                                     global_filter.push(group_name);
                                 }
-                                template.find(".ucontainer").find(".groups_container").append('<span class="enrolled_group">' + elem.groups[i].name + '</span>');
+                                template.find(".ucontainer").find(".groups_container").append('<span class="enrolled_group" title="'+ group_name +'">' + short_group_name + '</span>');
                             }
 
                             if (elem.groups.length === 0) {
                                 groups.push("Sin grupo");
-                                template.find(".ucontainer").find(".groups_container").append('<span class="enrolled_group">Sin grupo</span>');
+                                template.find(".ucontainer").find(".groups_container").append('<span class="enrolled_group" title="Sin grupo">S</span>');
                             }
 
                             template.find(".ucontainer").attr("data-glist", groups);
@@ -132,11 +160,11 @@ define(
 
                         }
                 );
+                console.log( groups_abbreviations );
                 global_filter.push("Sin grupo");
-                global_filter.forEach(
-                        function (element) {
-                            $("#step_0_selector").append('<div class="mfilter" data-filter="' + element + '">' + element + '</div>');
-                        }
+                global_filter.forEach( (element) => {
+                        $("#step_0_selector").append('<div class="mfilter" data-filter="' + element + '">' + element + '</div>');
+                    }
                 );
                 $("#step_0_selector").append('<div class="mfilter filter-selected" data-filter="all">Todos (Con varios grupos)</div>');
             };
