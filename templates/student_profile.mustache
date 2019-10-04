@@ -20,13 +20,13 @@
             <input type="text" class="hide" id="id_ases" name="id_ases" value="{{id_ases}}"/>
             <input type="text" class="hide" id="id_moodle" name="id_moodle" value="{{id_moodle}}"/>
 
-            <div class="row" id="div-header-profile">
-                <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 " id="div-header-info">
+            <div class="ases-row" id="div-header-profile">
+                <div class="ases-col-xs-10 ases-col-sm-10 ases-col-md-10 ases-col-lg-10 " id="div-header-info">
                     <!-- Select student -->
-                    <div class="row" id="div-code-student">
-                        <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11" id="div_select_student">{{{code}}}</div>
-                        <div class="col-sm-1" id="div-instance-icon">
-                            <span class="glyphicon glyphicon-ok i-tracking{{#ases_status_on_tracking}}-t{{/ases_status_on_tracking}} tooltip-v1 col-sm-6"
+                    <div class="ases-row" id="div-code-student">
+                        <div class="ases-col-xs-11 ases-col-sm-11 ases-col-md-11 ases-col-lg-11" id="div_select_student">{{{code}}}</div>
+                        <div class="ases-col-sm-1 ases-col-lg-1" id="div-instance-icon">
+                            <span class="ases-glyphicon glyphicon-ok i-tracking{{#ases_status_on_tracking}}-t{{/ases_status_on_tracking}} tooltip-v1 ases-col-sm-6 ases-col-lg-6"
                                 {{#update_ases_status_sp}}id="icon-tracking" {{/update_ases_status_sp}} data-toggle="tooltip" data-placement="top" title="{{ases_status_description}}">
                             </span>
                             <input type="hidden" id="input_status_ases" value="{{ases_status}}">
@@ -35,8 +35,8 @@
                     </div>
                     <!-- End select student -->
 
-                    <div class="row" id="row-general-fields">
-                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 div_general_fields" id="div_doc_type">
+                    <div class="ases-row" id="row-general-fields">
+                        <div class="ases-col-xs-1 ases-col-sm-1 ases-col-md-1 ases-col-lg-1 div_general_fields" id="div_doc_type">
                             <select name="tipo_doc" class="form-control" id="tipo_doc" name="tipo_doc" disabled>
                                 {{#document_type}}
                                     <option value="{{nombre}}" {{selected}}>{{nombre}}</option>
@@ -44,51 +44,48 @@
                             </select>
                         </div>
 
-                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 div_general_fields" id="div_input_cc">
+                        <div class="ases-col-xs-1 ases-col-sm-1 ases-col-md-1 ases-col-lg-1 div_general_fields" id="div_input_cc">
                             <input type="text" class="form-control" name="num_doc" id="num_doc" value="{{num_doc}}" maxlength="12" readonly>
                         </div>
 
-                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 div-general-fields" id="div_age">
+                        <div class="ases-col-xs-1 ases-col-sm-1 ases-col-md-1 ases-col-lg-1 div-general-fields" id="div_age">
                             <span id="age">{{age}} años</span>
                             <input type="text" id="birthdate" name="fecha_nac" class="brithdate_picker" maxlength="10" value="{{birthdate}}"/>
                         </div>
 
-                        <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5 div-general-fields" id="div_email_moodle">
+                        <div class="ases-col-xs-5 ases-col-sm-5 ases-col-md-5 ases-col-lg-5 div-general-fields" id="div_email_moodle">
                             <input type="email" class="form-control" name="email" id="email" value="{{email_moodle}}" readonly>
                         </div>
 
-                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 div-general-fields">
+                        <div class="ases-col-xs-1 ases-col-sm-1 ases-col-md-1 ases-col-lg-1 div-general-fields">
                             <span id="span-icetex-status">ICETEX</span>
                         </div>
 
-                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 div-general-fields" id="div_icetex_status">
+                        <div class="ases-col-xs-2 ases-col-sm-2 ases-col-md-2 ases-col-lg-2 div-general-fields" id="div_icetex_status">
                             {{#update_icetex_status_sp}}
                                 <select id="icetex_status" class="form-control" disabled>
                                     {{{options_status_icetex}}}
                                 </select>
                             {{/update_icetex_status_sp}} {{^update_icetex_status_sp}}
-                            <span class="col-sm-2 tooltip-v1" id="span-icetex-name" ; data-toggle="tooltip"
-                                  data-placement="top" title="{{icetex_status_name}}">
+                            <span class="ases-col-sm-2 ases-col-lg-2 tooltip-v1" id="span-icetex-name" ; data-toggle="tooltip" data-placement="top" title="{{icetex_status_name}}">
                                 {{icetex_status_description}}
                             </span>
                         {{/update_icetex_status_sp}}
                         </div>
                     </div>
 
-                    <div class="row" id="div-hr">
-                        <hr class="hr-general-fields">
-                    </div>
+                    <div class="ases-row" id="div-hr"><hr class="hr-general-fields"></div>
 
-                    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8" id="div_academic_programs">
+                    <div class="ases-col-xs-12 ases-col-sm-8 ases-col-md-8 ases-col-lg-8" id="div_academic_programs">
                         <h4>Programas académicos</h4>
                         <table class="table table-hover borderless">
                             <tbody>
                             {{#academic_programs}}
                                 <tr id="tr-{{id_moodle_user}}">
-                                    <td class="col-sm-8 td-middle" id="{{academic_program_id}}">
+                                    <td class="ases-col-sm-8 ases-col-lg-8 td-middle" id="{{academic_program_id}}">
                                         {{{cod_univalle}}} - {{{nombre_programa}}} - {{{nombre_sede}}}
                                     </td>
-                                    <td class="col-sm-3">
+                                    <td class="ases-col-sm-3 ases-col-lg-3">
                                         {{#update_program_status_sp}}
                                             <select class="select_statuses_program" id="select-{{academic_program_id}}"></select>
                                         {{/update_program_status_sp}} {{^update_program_status_sp}}
@@ -99,7 +96,7 @@
                                         </select>
                                     {{/update_program_status_sp}}
                                     </td>
-                                    <td class="col-sm-1 td-middle">
+                                    <td class="ases-col-sm-1 ases-col-lg-1 td-middle">
                                         {{#update_tracking_status_sp}}
                                             <label class="switch">
                                                 <input class="input-tracking" type="checkbox" id="div_flags_{{academic_program_id}}" disabled>
@@ -114,13 +111,13 @@
                         {{^academic_programs}} No registra programas académicos. {{/academic_programs}}
                     </div>
 
-                    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3" id="div_cohorts">
+                    <div class="ases-col-xs-12 ases-col-sm-3 ases-col-md-3 ases-col-lg-3" id="div_cohorts">
                         <h4>Cohortes</h4>
                         <table class="table table-sm table-hover borderless" id="cohorts_table">
                             <tbody>
                                 {{#student_cohorts}}
                                     <tr>
-                                        <td class="col-xs-12 col-sm-12 td-middle">
+                                        <td class="ases-col-xs-12 ases-col-sm-12 ases-col-lg-12 td-middle">
                                             {{name}}
                                         </td>
                                     </tr>
@@ -137,15 +134,15 @@
                         {{^student_cohorts}} No registra cohortes asociadas. {{/student_cohorts}}
                     </div>
                     {{#update_general_tab_sp}}
-                        <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1" id="div-icon-edit">
-                            <span class="col-sm-12 tooltip-v1" id="span-icon-edit" data-toggle="tooltip" data-placement="top" title="Editar ficha"></span>
-                            <span class="col-sm-6 tooltip-v1" id="span-icon-save-profile" data-toggle="tooltip" data-placement="top" title="Guardar cambios" hidden></span>
-                            <span class="col-sm-6 tooltip-v1" id="span-icon-cancel-edit" data-toggle="tooltip" data-placement="top" title="Cancelar edición" hidden></span>
+                        <div class="ases-col-xs-1 ases-col-sm-1 ases-col-md-1 ases-col-lg-1" id="div-icon-edit">
+                            <span class="ases-col-sm-12 ases-col-lg-12 tooltip-v1" id="span-icon-edit" data-toggle="tooltip" data-placement="top" title="Editar ficha"></span>
+                            <span class="ases-col-sm-6 ases-col-lg-6 tooltip-v1" id="span-icon-save-profile" data-toggle="tooltip" data-placement="top" title="Guardar cambios" hidden></span>
+                            <span class="ases-col-sm-6 ases-col-lg-6 tooltip-v1" id="span-icon-cancel-edit" data-toggle="tooltip" data-placement="top" title="Cancelar edición" hidden></span>
                         </div>
                     {{/update_general_tab_sp}}
                 </div>
                 <!-- Profile image html, see $OUTPUT->user_picture -->
-                <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2  {{#show_html_elements_update_user_profile_image}}profile-image-can-update{{/show_html_elements_update_user_profile_image}} profile-image">
+                <div class="ases-col-xs-2 ases-col-sm-2 ases-col-md-2 ases-col-lg-2  {{#show_html_elements_update_user_profile_image}}profile-image-can-update{{/show_html_elements_update_user_profile_image}} profile-image">
                     {{{html_profile_image}}}
                     {{#show_html_elements_update_user_profile_image}}
                         <div class="open-profile-image">
@@ -156,57 +153,57 @@
             </div>
 
             <!-- Semaforo de riesgos -->
-            <div class="row div_risk">
-                <div class="col-sm-1 no-padding-left">
+            <div class="ases-row div_risk">
+                <div class="ases-col-sm-1 ases-col-lg-1 no-padding-left">
                     <div id="div_title_risk">
                         <b>RIESGOS:</b>
                     </div>
                 </div>
 
-                <div class="col-sm-9 no-padding-left" id="div_bar_risks">
-                    <div class="{{individual_class}} col-sm-2" data-risk-level="{{level_individual}}" id="individual_risk">
+                <div class="ases-col-sm-9 ases-col-lg-9 no-padding-left" id="div_bar_risks">
+                    <div class="{{individual_class}} ases-col-sm-2 ases-col-lg-2" data-risk-level="{{level_individual}}" id="individual_risk">
                         <span><b>INDIVIDUAL</b></span>
                     </div>
                     <div hidden>{{individual_risk}}</div>
 
-                    <div class="{{familiar_class}} col-sm-2" data-risk-level="{{level_familiar}}" id="familiar_risk">
+                    <div class="{{familiar_class}} ases-col-sm-2 ases-col-lg-2" data-risk-level="{{level_familiar}}" id="familiar_risk">
                         <b> <span>FAMILIAR</span></b>
                     </div>
                     <div hidden>{{familiar_risk}}</div>
 
-                    <div class="{{academic_class}} col-sm-2" data-risk-level="{{level_academic}}" id="academic_risk">
+                    <div class="{{academic_class}} ases-col-sm-2 ases-col-lg-2" data-risk-level="{{level_academic}}" id="academic_risk">
                         <b><span>ACADÉMICO</span></b>
                     </div>
                     <div hidden>{{academic_risk}}</div>
 
-                    <div class="{{economic_class}} col-sm-2" data-risk-level="{{level_economic}}" id="economic_risk">
+                    <div class="{{economic_class}} ases-col-sm-2 ases-col-lg-2" data-risk-level="{{level_economic}}" id="economic_risk">
                         <b><span>ECONÓMICO</span></b>
                     </div>
                     <div hidden>{{economic_risk}}</div>
 
-                    <div class="{{life_class}} col-sm-2" data-risk-level="{{level_life}}" id="life_risk">
+                    <div class="{{life_class}} ases-col-sm-2 ases-col-lg-2" data-risk-level="{{level_life}}" id="life_risk">
                         <b>VIDA UNIV.</b>
                     </div>
                     <div hidden>{{life_risk}}</div>
 
-                    <div class="{{geographic_class}} col-sm-2" data-risk-level="{{geographic_risk_level}}" id="geo_risk">
+                    <div class="{{geographic_class}} ases-col-sm-2 ases-col-lg-2" data-risk-level="{{geographic_risk_level}}" id="geo_risk">
                         <b><span>GEOGRÁFICO</span></b>
                     </div>
                     <div hidden>{{geographic_risk_level}}</div>
                 </div>
 
-                <div class="col-sm-2" id="div_buttons_risk">
-                    <button class="risk_graph_button col-sm-6" type="button" id="view_graph_radial_button">Radial</button>
-                    <button class="risk_graph_button col-sm-6" type="button" id="view_graphic_risk_button">Trayectoria</button>
+                <div class="ases-col-sm-2 ases-col-lg-2" id="div_buttons_risk">
+                    <button class="risk_graph_button ases-col-sm-6 ases-col-lg-6" type="button" id="view_graph_radial_button">Radial</button>
+                    <button class="risk_graph_button ases-col-sm-6 ases-col-lg-6" type="button" id="view_graphic_risk_button">Trayectoria</button>
                 </div>
             </div>
 
-            <div class="row cabecera" id="container_profile">
+            <div class="ases-row cabecera" id="container_profile">
                 <!-- Pestañas ficha -->
-                <div id="exTab1" class="col-sm-12">
-                    <ul class="nav nav-tabs" id="nav-linea">
+                <div id="exTab1" class="ases-col-sm-12 ases-col-lg-12">
+                    <ul class="ases-nav nav-tabs" id="nav-linea">
                         {{#view_general_tab_sp}}
-                            <li id="general_li" class="active">
+                            <li id="general_li" class="ases-active">
                                 <a href="#general_tab" data-toggle="tab">GENERAL</a>
                             </li>
                         {{/view_general_tab_sp}}
@@ -235,7 +232,7 @@
                             </li>
                         {{/view_others_tab_sp}}
                     </ul>
-                    <div class="tab-content clearfix ">
+                    <div class="ases-tab-content clearfix">
                         {{#view_general_tab_sp}} {{> block_ases/view_general_tab_sp}} {{/view_general_tab_sp}}
                         {{#view_others_tab_sp}} {{> block_ases/view_others_tab_sp}} {{/view_others_tab_sp}}
                     </div>

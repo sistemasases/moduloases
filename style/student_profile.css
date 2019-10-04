@@ -462,7 +462,6 @@
     cursor: pointer;
     }
 
-
     /* Profile image */
 
     .profile-image > img {
@@ -717,7 +716,7 @@
     }
 
 
-    ul.nav.nav-tabs>li{
+    ul.ases-nav.nav-tabs>li{
         display: none;
     }
 
