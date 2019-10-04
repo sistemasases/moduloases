@@ -1,8 +1,20 @@
-.steps-container{}
+.ases-active{
+    border-color: #d51b23;
+}
+
+.steps-container{
+    margin-top: 1em;
+}
 
 .steps-container ul{}
 
-.steps-progressbar li{}
+.steps-progressbar li{
+    border-left-width: 0px;
+    border-top-width: 0px;
+    border-right-width: 0px;
+    border-radius: 0px;
+    border-bottom-width: 3px;
+}
 
 .collapse-btn{
     width: 100%;
@@ -61,8 +73,6 @@
   font-size: 0.9em;
 }
 
-
-
 .user_enrolled .ucontainer .groups_container .enrolled_group{
   font-size: 0.8em;
   padding: 4px;
@@ -70,6 +80,13 @@
   border-radius: 3px;
   margin-right: 3px;
   margin-top: 3px;
+}
+
+.groups_container{
+    float: right;
+    margin-right: 1em;
+    padding-right: 1em;
+    border-right: 1px solid #e1e1e1;
 }
 
 .mfilter{
