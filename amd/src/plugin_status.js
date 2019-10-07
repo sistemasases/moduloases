@@ -196,9 +196,7 @@ define(
                     "plugin_status", "initialization_available", [],
                     async = false, use_loading_indicator = true
                     ).data_response;
-            
-            
-            
+                        
             return {
                 init: function () {
 
