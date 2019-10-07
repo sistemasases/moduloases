@@ -3914,7 +3914,6 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
         // Adding indexes to table talentospilos_plugin_status.
         $table->add_index('id_semestre_unique_id', XMLDB_INDEX_UNIQUE, array('id_semestre'));
-        $table->add_index('changeme', XMLDB_INDEX_NOTUNIQUE, null);
 
         // Conditionally launch create table for talentospilos_plugin_status.
         if (!$dbman->table_exists($table)) {
