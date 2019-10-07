@@ -5,50 +5,51 @@
    <hr/>
    {{{message}}}
    <input type="text" class="hide" id="current_user_id" value="{{id_dphpforms_creado_por}}" />
-</div>
-<form>
-   {{#view_groupal_trackings_gt}}
-   <div class="row">
-      <label class="col-md-offset-3" >Lista de Estudiantes a Cargo</label>
-   </div>
-   <div class="row">
-      <div data-spy="scroll" data-target=".navbar" data-offset="50" class="well col-md-7 col-md-offset-3" id="list_grupal_seg" name="list_grupal_seg">
-         <table id="mytable" class="table table-striped">
-            <thead>
-               <tr>
-                  <th>Código</th>
-                  <th>Nombre</th>
-                  <th>Apellido</th>
-               </tr>
-            </thead>
-            <tbody></tbody>
-         </table>
-      </div>
-   </div>
-   <div class="row">
-      <label class="col-md-offset-3">Lista de seguimientos</label>
-   </div>
-   <div class="row">
-      <div class="ScrollStyle well col-md-7 col-md-offset-3" id="list_grupal" name="list_grupal">
-         {{{seguimiento_grupal}}}
-      </div>
-   </div>                           
-   <hr>
-   {{/view_groupal_trackings_gt}}
-   <!-- Button trigger modal -->
-   <div class="row">
-      {{#add_groupal_tracking_gt}}
-      <span class="btn btn-info col-md-offset-3" id="go_back">Regresar</span>
-      <button type="button" id="button_add_groupal_track" class="btn-primary">
-         Nuevo seguimiento
-      </button>
-      <span class="btn btn-danger oculto" id="socioedu_add_grupal" data-toggle="modal" data-target="#myModal">
-         Adicionar nuevo
-      </span>
-      {{/add_groupal_tracking_gt}}
-   </div>
+    <form>
+        {{#view_groupal_trackings_gt}}
+            <div class="ases-row">
+                <label>Lista de Estudiantes a Cargo</label>
+            </div>
+            <div class="ases-row">
+                <div data-spy="scroll" data-target=".navbar" data-offset="50" class="well ases-col-md-12 ases-col-lg-12" id="list_grupal_seg" name="list_grupal_seg">
+                    <table id="mytable" class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                        </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="ases-row">
+                <label>Lista de seguimientos</label>
+            </div>
+            <div class="ases-row">
+                <div class="ScrollStyle well ases-col-md-12 ases-col-lg-12" id="list_grupal" name="list_grupal">
+                    {{{seguimiento_grupal}}}
+                </div>
+            </div>
 
-</form>
+        {{/view_groupal_trackings_gt}}
+        <!-- Button trigger modal -->
+        <div class="ases-row">
+            <div class="ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12">
+                <hr>
+            </div>
+            {{#add_groupal_tracking_gt}}
+                <div class="ases-btn ases-btn-default">
+                    <button type="button" id="button_add_groupal_track" class="ases-btn-md">
+                        Nuevo seguimiento
+                    </button>
+                </div>
+            {{/add_groupal_tracking_gt}}
+        </div>
+    </form>
+</div>
+
 
 
 <!-- MODALES DE SEGUIMIENTO GRUPAL NUEVO -->
