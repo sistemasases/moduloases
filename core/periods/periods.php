@@ -75,4 +75,20 @@ function core_periods_get_last_period(){
     return periods_get_last_period();
 }
 
+
+/**
+ * Interface to periods_check_if_exist
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see periods_check_if_exist(...) in entrypoint.php
+ * 
+ * @param integer $period_id Period ID.
+ * 
+ * @return bool True if exist.
+ */
+function core_periods_check_if_exist( int $period_id ){
+    return periods_check_if_exist( $period_id );
+}
 ?>
