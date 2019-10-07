@@ -1212,7 +1212,6 @@
       </KEYS>
       <INDEXES>
         <INDEX NAME="id_semestre_unique_id" UNIQUE="true" FIELDS="id_semestre"/>
-        <INDEX NAME="changeme" UNIQUE="false" FIELDS=""/>
       </INDEXES>
     </TABLE>
   </TABLES>
