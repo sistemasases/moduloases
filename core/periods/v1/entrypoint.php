@@ -103,4 +103,25 @@ function periods_get_last_period():stdClass
     return $DB->get_record_sql( $query );
 }
 
+/**
+ * Function that check if exist a period given an ID.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param integer $period_id Period ID.
+ * 
+ * @return bool True if exist.
+ */
+function periods_check_if_exist( int $period_id ): bool
+{
+    try {
+        periods_get_period_by_id( $period_id );
+        return true;
+    } catch (Exception $exc) {
+        return false;
+    }
+    
+}
+
 ?>
