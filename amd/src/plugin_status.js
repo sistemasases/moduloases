@@ -72,7 +72,7 @@ define(
             $(document).on("click", ".ucontainer", function () {
                 let ucontainer = $(this);
                 let ucontainer_checkbox = $(this).find(".remove_check");
-                if (ucontainer_checkbox.prop("checked") == true) {
+                if (ucontainer_checkbox.prop("checked") === true) {
                     ucontainer_checkbox.attr("checked", false);
                     ucontainer.removeClass("user-selected");
                 } else {
@@ -166,7 +166,7 @@ define(
                         $("#step_0_selector").append('<div class="mfilter" data-filter="' + element + '">' + element + '</div>');
                     }
                 );
-                $("#step_0_selector").append('<div class="mfilter filter-selected" data-filter="all">Todos (Con varios grupos)</div>');
+                $("#step_0_selector").append('<div class="mfilter filter-selected" data-filter="all">Sin filtro</div>');
             };
 
             let _load_periods = (data) => {
