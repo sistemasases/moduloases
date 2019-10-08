@@ -16,6 +16,11 @@
     border-bottom-width: 3px;
 }
 
+.steps-progressbar li a{
+    text-decoration: none;
+    background-color: white;
+}
+
 .collapse-btn{
     width: 100%;
     background-color: #e1e1e1;

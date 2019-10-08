@@ -13,32 +13,29 @@
 define(
         [
             'jquery',
-            'block_ases/_ases_api'
+            'block_ases/_ases_api',
+            'block_ases/aaspect'
         ],
-        ($, ases_api) => {
+        ($, ases_api, aaspect) => {
 
     console.log("Plugin status initialised");
 
-    $(document).on("click", "#select-visibles",
-            (event) => {
+    $(document).on("click", "#select-visibles", (event) => {
         event.preventDefault();
         $(".user_enrolled[data-visible='true']").find(".remove_check").attr("checked", true);
         $(".user_enrolled[data-visible='true']").find(".ucontainer").addClass("user-selected");
-    }
-    );
+    });
 
-    $(document).on("click", "#clear-selection",
-            (event) => {
+    $(document).on("click", "#clear-selection", (event) => {
         event.preventDefault();
         $(".user_enrolled").find(".remove_check").attr("checked", false);
         $(".user_enrolled").find(".ucontainer").removeClass("user-selected");
-    }
-    );
+    });
 
     $(document).on("click", "#remove-selected", (event) => {
-
         event.preventDefault();
         let uenroll_id = [];
+        
         $(".user_enrolled[data-visible='true']").find(".ucontainer").each(() => {
             if ($(this).find(".remove_check").prop("checked") === true) {
                 uenroll_id.push($(this).data("id"));
@@ -47,11 +44,8 @@ define(
 
         let response = ases_api.post(
                 "plugin_status", "remove_enrolled_users", [450299, uenroll_id],
-                async = false, use_loading_indicator = true, ok_callback = () => {
-            alert("Eliminado(s)");
-        }
-        );
-
+                async = false, use_loading_indicator = true, ok_callback = () => { alert("Eliminado(s)");
+        });
     });
 
     $(document).on("click", ".ucontainer", () => {
@@ -63,8 +57,7 @@ define(
         } else {
             ucontainer_checkbox.attr("checked", true);
             ucontainer.addClass("user-selected");
-        }
-        ;
+        };
     });
 
     $(document).on("click", ".mfilter", () => {
@@ -152,16 +145,14 @@ define(
     };
 
     let _load_periods = (data) => {
-        data.data_response.forEach(
-                (elem) => {
+        data.data_response.forEach( (elem) => {
             let groups = [];
             let template = $($("#period-template").html());
             template.find(".p-name").text(elem.nombre);
             template.find(".start-d").text(elem.fecha_inicio);
             template.find(".end-d").text(elem.fecha_fin);
             template.appendTo("#list-of-periods");
-        }
-        );
+        });
     };
 
     ases_api.post(
@@ -181,7 +172,6 @@ define(
 
     return {
         init: () => {
-
             $(document).on('click', '[data-toggle="ases-pill"]', (e) => {
                 var pill = $(this);
                 var pills = pill.parent();
@@ -199,5 +189,5 @@ define(
             });
         }
     };
-}
-);
+    
+});
