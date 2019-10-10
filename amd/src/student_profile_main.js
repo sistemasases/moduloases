@@ -34,14 +34,12 @@ define(['jquery',
             // Agrega iframe para Google Maps
             if (ciudad_est == 'CALI') {
 
-                document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=transit'></iframe>";
+                document.getElementById('mapa').innerHTML = "<iframe class='ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=transit'></iframe>";
 
             } else {
 
-                document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=driving'></iframe>";
+                document.getElementById('mapa').innerHTML = "<iframe class='ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=driving'></iframe>";
             }
-
-
 
             /**
              * Event that loads asynchronously the socio-educational tab
@@ -174,15 +172,15 @@ define(['jquery',
 
             switch (parameters.tab) {
                 case "socioed_tab":
-                    $('#general_li').removeClass('active');
-                    $('#socioed_li').addClass('active');
-                    $('#general_tab').removeClass('active');
-                    $('#socioed_tab').addClass('active');
-                    panel_collapse.removeClass('in');
-                    $('#collapseOne').addClass('in');
+                    $('#general_li').removeClass('ases-active');
+                    $('#socioed_li').addClass('ases-active');
+                    $('#general_tab').removeClass('ases-active');
+                    $('#socioed_tab').addClass('ases-active');
+                    panel_collapse.removeClass('ases-in');
+                    $('#collapseOne').addClass('ases-in');
                     break;
                 default:
-                    panel_collapse.removeClass('in');
+                    panel_collapse.removeClass('ases-in');
                     break;
             }
 
@@ -650,9 +648,9 @@ define(['jquery',
             $('#span-icon-edit').on('click', function () {
                 $(this).hide();
                 $('#tip-edit').hide();
-                $('#span-icon-save-profile').show();
+                $('#span-icon-save-profile').prop('hidden', false);
                 $('#tip-save').show();
-                $('#span-icon-cancel-edit').show();
+                $('#span-icon-cancel-edit').prop('hidden', false);
                 $('#tip-cancel').show();
                 $('#tipo_doc').prop('disabled', false);
                 $('#num_doc').prop('readonly', false);
@@ -748,7 +746,6 @@ define(['jquery',
                         if ($(this).attr('name') == "parentesco_person") {
                             parentesco_persons.push($(this).val());
                         }
-
                     });
                     for (var i = 0; i < name_persons.length; i++) {
                         objeto = { name: name_persons[i], parentesco: parentesco_persons[i] };
@@ -1015,12 +1012,12 @@ define(['jquery',
 
             // Deshabilitar campos para el ingreso de datos
 
-            $('#span-icon-cancel-edit').hide();
             $('#tip-cancel').hide();
-            $('#span-icon-save-profile').hide();
             $('#tip-save').hide();
             $('#span-icon-edit').show();
             $('#tip-edit').show();
+            $('#span-icon-cancel-edit').prop('hidden', true);
+            $('#span-icon-save-profile').prop('hidden', true);
             $('#tipo_doc').prop('disabled', true);
             $('#num_doc').prop('readonly', true);
             $('#email').prop('readonly', true);
@@ -1062,8 +1059,8 @@ define(['jquery',
         var tab_name = event.data.tab_name;
         var id_block = document.querySelector('#dphpforms_block_instance').dataset.info;
 
-        $(".active").removeClass("active");
-        $("#"+tab_name+"_li").addClass("active");
+        $(".ases-active").removeClass("ases-active");
+        $("#"+tab_name+"_li").addClass("ases-active");
 
         $.ajax({
             type: "POST",
@@ -1099,7 +1096,7 @@ define(['jquery',
                                     break;
                             }
 
-                            $("#"+tab_name+"_tab").addClass("active");
+                            $("#"+tab_name+"_tab").addClass("ases-active");
                         },
                         error: function(){
                             loading_indicator.hide();
@@ -1443,8 +1440,6 @@ define(['jquery',
         });
 
         var panel_heading = $('.panel-heading.heading_semester_tracking');
-
-
 
         panel_heading.on('click', function () {
             if ($(this).parent().attr('class') == 'collapsed') {

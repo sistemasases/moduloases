@@ -20,14 +20,14 @@
             <input type="text" class="hide" id="id_ases" name="id_ases" value="{{id_ases}}"/>
             <input type="text" class="hide" id="id_moodle" name="id_moodle" value="{{id_moodle}}"/>
 
-            <div class="ases-row" id="div-header-profile">
-                <div class="ases-col-xs-10 ases-col-sm-10 ases-col-md-10 ases-col-lg-10 " id="div-header-info">
+            <div id="div-header-profile" class="ases-row">
+                <div id="div-header-info" class="ases-col-xs-10 ases-col-sm-10 ases-col-md-10 ases-col-lg-10">
                     <!-- Select student -->
-                    <div class="ases-row" id="div-code-student">
-                        <div class="ases-col-xs-11 ases-col-sm-11 ases-col-md-11 ases-col-lg-11" id="div_select_student">{{{code}}}</div>
-                        <div class="ases-col-sm-1 ases-col-lg-1" id="div-instance-icon">
-                            <span class="ases-glyphicon glyphicon-ok i-tracking{{#ases_status_on_tracking}}-t{{/ases_status_on_tracking}} tooltip-v1 ases-col-sm-6 ases-col-lg-6"
-                                {{#update_ases_status_sp}}id="icon-tracking" {{/update_ases_status_sp}} data-toggle="tooltip" data-placement="top" title="{{ases_status_description}}">
+                    <div id="div-code-student" class="ases-row">
+                        <div id="div_select_student" class="ases-col-xs-11 ases-col-sm-11 ases-col-md-11 ases-col-lg-11">{{{code}}}</div>
+                        <div id="div-instance-icon" class="ases-col-sm-1 ases-col-lg-1">
+                            <span {{#update_ases_status_sp}}id="icon-tracking" {{/update_ases_status_sp}} class="ases-glyphicon ases-glyphicon-ok i-tracking{{#ases_status_on_tracking}}-t{{/ases_status_on_tracking}}
+                                tooltip-v1 ases-col-sm-6 ases-col-lg-6" data-toggle="tooltip" data-placement="top" title="{{ases_status_description}}">
                             </span>
                             <input type="hidden" id="input_status_ases" value="{{ases_status}}">
                             <span>ASES</span>
@@ -35,39 +35,39 @@
                     </div>
                     <!-- End select student -->
 
-                    <div class="ases-row" id="row-general-fields">
-                        <div class="ases-col-xs-1 ases-col-sm-1 ases-col-md-1 ases-col-lg-1 div_general_fields" id="div_doc_type">
-                            <select name="tipo_doc" class="form-control" id="tipo_doc" name="tipo_doc" disabled>
+                    <div id="row-general-fields" class="ases-row">
+                        <div id="div_doc_type" class="ases-col-xs-1 ases-col-sm-1 ases-col-md-1 ases-col-lg-1 div_general_fields">
+                            <select  id="tipo_doc" class="ases-form-control" name="tipo_doc" disabled>
                                 {{#document_type}}
                                     <option value="{{nombre}}" {{selected}}>{{nombre}}</option>
                                 {{/document_type}}
                             </select>
                         </div>
 
-                        <div class="ases-col-xs-1 ases-col-sm-1 ases-col-md-1 ases-col-lg-1 div_general_fields" id="div_input_cc">
-                            <input type="text" class="form-control" name="num_doc" id="num_doc" value="{{num_doc}}" maxlength="12" readonly>
+                        <div id="div_input_cc" class="ases-col-xs-1 ases-col-sm-1 ases-col-md-1 ases-col-lg-1 div_general_fields">
+                            <input type="text" class="ases-form-control" name="num_doc" id="num_doc" value="{{num_doc}}" maxlength="12" readonly>
                         </div>
 
-                        <div class="ases-col-xs-1 ases-col-sm-1 ases-col-md-1 ases-col-lg-1 div-general-fields" id="div_age">
+                        <div id="div_age" class="ases-col-xs-1 ases-col-sm-1 ases-col-md-1 ases-col-lg-1 div-general-fields">
                             <span id="age">{{age}} años</span>
-                            <input type="text" id="birthdate" name="fecha_nac" class="brithdate_picker" maxlength="10" value="{{birthdate}}"/>
+                            <input type="text" id="birthdate" class="brithdate_picker ases-form-control" name="fecha_nac" maxlength="10" value="{{birthdate}}"/>
                         </div>
 
-                        <div class="ases-col-xs-5 ases-col-sm-5 ases-col-md-5 ases-col-lg-5 div-general-fields" id="div_email_moodle">
-                            <input type="email" class="form-control" name="email" id="email" value="{{email_moodle}}" readonly>
+                        <div id="div_email_moodle" class="ases-col-xs-5 ases-col-sm-5 ases-col-md-5 ases-col-lg-5 div-general-fields">
+                            <input type="email" id="email" class="ases-form-control" name="email" value="{{email_moodle}}" readonly>
                         </div>
 
-                        <div class="ases-col-xs-1 ases-col-sm-1 ases-col-md-1 ases-col-lg-1 div-general-fields">
+                        <div id="div_span_icetex_status" class="ases-col-xs-1 ases-col-sm-1 ases-col-md-1 ases-col-lg-1 div-general-fields">
                             <span id="span-icetex-status">ICETEX</span>
                         </div>
 
-                        <div class="ases-col-xs-2 ases-col-sm-2 ases-col-md-2 ases-col-lg-2 div-general-fields" id="div_icetex_status">
+                        <div id="div_icetex_status" class="ases-col-xs-2 ases-col-sm-2 ases-col-md-2 ases-col-lg-2 div-general-fields">
                             {{#update_icetex_status_sp}}
-                                <select id="icetex_status" class="form-control" disabled>
+                                <select id="icetex_status" class="ases-form-control" disabled>
                                     {{{options_status_icetex}}}
                                 </select>
                             {{/update_icetex_status_sp}} {{^update_icetex_status_sp}}
-                            <span class="ases-col-sm-2 ases-col-lg-2 tooltip-v1" id="span-icetex-name" ; data-toggle="tooltip" data-placement="top" title="{{icetex_status_name}}">
+                            <span id="span-icetex-name" class="ases-col-sm-2 ases-col-lg-2 tooltip-v1" data-toggle="tooltip" data-placement="top" title="{{icetex_status_name}}">
                                 {{icetex_status_description}}
                             </span>
                         {{/update_icetex_status_sp}}
@@ -80,32 +80,35 @@
                         <h4>Programas académicos</h4>
                         <table class="table table-hover borderless">
                             <tbody>
-                            {{#academic_programs}}
-                                <tr id="tr-{{id_moodle_user}}">
-                                    <td class="ases-col-sm-8 ases-col-lg-8 td-middle" id="{{academic_program_id}}">
-                                        {{{cod_univalle}}} - {{{nombre_programa}}} - {{{nombre_sede}}}
-                                    </td>
-                                    <td class="ases-col-sm-3 ases-col-lg-3">
-                                        {{#update_program_status_sp}}
-                                            <select class="select_statuses_program" id="select-{{academic_program_id}}"></select>
-                                        {{/update_program_status_sp}} {{^update_program_status_sp}}
-                                        <select class="select_statuses_program" id="select-{{academic_program_id}}" disabled>
-                                            {{#statuses}}
-                                                <option value={{id}} {{selected}}>{{nombre}}</option>
-                                            {{/statuses}}
-                                        </select>
-                                    {{/update_program_status_sp}}
-                                    </td>
-                                    <td class="ases-col-sm-1 ases-col-lg-1 td-middle">
-                                        {{#update_tracking_status_sp}}
-                                            <label class="switch">
-                                                <input class="input-tracking" type="checkbox" id="div_flags_{{academic_program_id}}" disabled>
-                                                <div class="slider round"></div>
-                                            </label>
-                                        {{/update_tracking_status_sp}}
-                                    </td>
-                                </tr>
-                            {{/academic_programs}}
+                                {{#academic_programs}}
+                                    <tr id="tr-{{id_moodle_user}}">
+                                        <td class="ases-col-sm-8 ases-col-lg-8 td-middle" id="{{academic_program_id}}">
+                                            {{{cod_univalle}}} - {{{nombre_programa}}} - {{{nombre_sede}}}
+                                        </td>
+
+                                        <td class="ases-col-sm-3 ases-col-lg-3">
+                                            {{#update_program_status_sp}}
+                                                <select class="select_statuses_program" id="select-{{academic_program_id}}"></select>
+                                            {{/update_program_status_sp}}
+
+                                            {{^update_program_status_sp}}
+                                                <select class="select_statuses_program" id="select-{{academic_program_id}}" disabled>
+                                                    {{#statuses}}
+                                                        <option value={{id}} {{selected}}>{{nombre}}</option>
+                                                    {{/statuses}}
+                                                </select>
+                                            {{/update_program_status_sp}}
+                                        </td>
+                                        <td class="ases-col-sm-1 ases-col-lg-1 td-middle">
+                                            {{#update_tracking_status_sp}}
+                                                <label class="switch">
+                                                    <input class="input-tracking" type="checkbox" id="div_flags_{{academic_program_id}}" disabled>
+                                                    <div class="slider round"></div>
+                                                </label>
+                                            {{/update_tracking_status_sp}}
+                                        </td>
+                                    </tr>
+                                {{/academic_programs}}
                             </tbody>
                         </table>
                         {{^academic_programs}} No registra programas académicos. {{/academic_programs}}

@@ -10,6 +10,10 @@
     border-radius: 0;
 }
 
+.fieldset_general_report{
+    width: -moz-max-content;
+}
+
 .summary-title{
     cursor: pointer;
     padding: 10px 0px 0px 0px;
@@ -19,6 +23,10 @@
     position: relative;
     padding: 0px 0px 0px 0px;
     width: 100%;
+}
+
+.panel_general_reports, .summary_general_reports{
+    display: none;
 }
 
 .checkbox_general_reports{

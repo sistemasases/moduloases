@@ -110,19 +110,33 @@
     #div_age{
         padding-left: 4px;
         width: 8.5%;
+        height: 100%;
+    }
+
+    #age{
+        padding-top: 5px;
+        padding-left: 14px;
     }
 
     #birthdate{
-        width: 152%;
+        width: 176%;
         display: none;
+        height: 100%;
+        padding: 6px 6px 6px 6px;
     }
 
     #div_email_moodle{
-        padding-left: 20px;
+        padding-left: 34px;
+    }
+
+    #email{
+        width: 108%;
+        padding: 6px 6px 6px 6px;
     }
 
     #div_doc_type{
         padding-right: 4px;
+        height: 100%;
     }
 
     #tipo_doc{
@@ -172,18 +186,26 @@
         position: relative;
         height: 100%;
         width: 100%;
-        padding: 6px 0px 0px 5px;
-        border-radius: 0 0 0px 0px;
+        padding: 6px 6px 6px 6px;
     }
 
     #div_icetex_status{
         padding-left: 0px;
         padding-right: 15px;
+        height: 100%;
+        width: 22%;
     }
 
     #row-general-fields{
         height: 30px;
         margin-top: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #div_span_icetex_status{
+        padding-bottom: 2%;
     }
 
     #div-select-student{
@@ -366,13 +388,6 @@
 
     .select_statuses_program{
         border-radius: 0px;
-    }
-
-    #age,
-    #email,
-    #span-icetex-status,
-    #span-icetex-name{
-        padding-top: 7px;
     }
 
     .borderless td, .borderless th {
