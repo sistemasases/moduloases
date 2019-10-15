@@ -2,19 +2,19 @@
     <div class="ases-container-fluid">
         {{> block_ases/_view.component}}
         <div class="ases-row">
+            <!--
+                0:Limpieza
+                1:Inicialización
+                2:Carga Estudiantes
+                3:Otros - { ICETEX, ACADEMICO }
+            -->    
             <div class="ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12 steps-col">
-                    <!--
-                        0:Limpieza
-                        1:Inicialización
-                        2:Carga Estudiantes
-                        3:Otros
-                    -->
                 <div class="steps-container">
-                    <ul class="steps-progressbar">
-                        <li data-toggle="ases-pill" data-tab="#home" class="active">Limpieza</li>
-                        <li data-toggle="ases-pill" data-tab="#menu1" class="">Inicialización</li>
-                        <li data-toggle="ases-pill" data-tab="#menu2" class="">Carga de estudiantes</li>
-                        <li data-toggle="ases-pill" data-tab="#menu3" class="">Otros</li>
+                    <ul class="steps-progressbar ases-nav ases-nav-pills">
+                        <li data-toggle="ases-pill" data-tab="#home" class="ases-btn ases-btn-default ases-btn-sm ases-active"> 0 - Limpieza</li>
+                        <li data-toggle="ases-pill" data-tab="#menu1" class="ases-btn ases-btn-default ases-btn-sm"> 1 - Inicialización</li>
+                        <li data-toggle="ases-pill" data-tab="#menu2" class="ases-btn ases-btn-default ases-btn-sm"> 2 - Carga de estudiantes</li>
+                        <li data-toggle="ases-pill" data-tab="#menu3" class="ases-btn ases-btn-default ases-btn-sm"> 3 - Otros</li>
                     </ul>
                 </div>
             </div>
@@ -22,41 +22,81 @@
                 <hr>
                 <div class="ases-tab-content">
                     <div id="home" class="ases-tab-pane ases-fade ases-in ases-tab-active">
-                        <div id="plugin_members_filter" class="ases-row">
-                            <div class="ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12">
-                                <h3>Filtrar por:</h3>
-                                <div id="step_0_selector" >
-                                    
-                                </div>
-                            </div>
-                        </div>
-                        <hr>
-                        <div id="plugin_members_actions" class="ases-row">
-                            <div class="ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12">
-                                <h3>Acciones:</h3>
-                                <a id="select-visibles" href="javascript:void(0)" class="ases-btn ases-btn-default ases-btn-sm">Seleccionar visibles</a>
-                                <a id="clear-selection" href="javascript:void(0)" class="ases-btn ases-btn-default ases-btn-sm">Limpiar selección</a>
-                                <a id="remove-selected" href="javascript:void(0)" class="ases-btn ases-btn-default ases-btn-sm ases-danger">Eliminar seleccionados</a>
-                            </div>
-                        </div>
-                        <hr>
-                        <div id="plugin_members_container" class="ases-row">
-                            <template id="group_name_template">
-                                <span class="gname">Group Name</span>
-                            </template>
-                            <template id="user_enrolled_template">
-                                <div class="user_enrolled ases-col-xs-12 ases-col-sm-6 ases-col-md-6 ases-col-lg-4" data-visible="true">
-                                    <div class="ucontainer" data-groups="">
-                                        <span class="fname">First Name</span>
-                                        <span class="lname">Last Name</span>
-                                        <input class="remove_check" type="checkbox" name="">
-                                        <hr class="ehr">
-                                        <div class="groups_container">
-                                            
+                        <div class="collapse-btn" data-toggle="collapse" data-target="#demo">Crear periodo</div>
+                        <div id="demo" class="collapse">
+                            <div class="collapse-container">
+                                <div class="row">
+                                    <form class="ases-col-xs-12 ases-col-sm-12 ases-col-md-6 ases-col-lg-4 ases-col-lg-offset-1">
+                                        <div class="ases-form-group">
+                                            <label>Nombre del periodo:</label>
+                                            <input type="text" class="ases-form-control" placeholder="Nombre del periodo." required>
+                                        </div>
+                                        <div class="ases-form-group">
+                                            <label>Fecha de inicio del periodo:</label>
+                                            <input type="date" class="ases-form-control" required>
+                                        </div>
+                                        <div class="ases-form-group">
+                                            <label>Fecha de finalizaci&oacute;n del periodo:</label>
+                                            <input type="date" class="ases-form-control" required>
+                                        </div>
+                                        <button type="submit" class="ases-btn ases-btn-default ases-btn-sm">Registrar nuevo periodo</button>
+                                    </form>
+                                    <div class="ases-col-xs-12 ases-col-sm-12 ases-col-md-6 ases-col-lg-6 ases-col-lg-offset-1">
+                                        <div id="list-of-periods">
+                                            <div class="ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12">
+                                                <div class="ases-col-lg-2"><b>Nombre</b></div>
+                                                <div class="ases-col-lg-5"><b>Inicio</b></div>
+                                                <div class="ases-col-lg-5"><b>Finalizaci&oacute;n</b></div>
+                                            </div>
+                                            <template id="period-template">
+                                                <div class="ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12 period-container">
+                                                    <div class="p-name ases-col-lg-2"></div>
+                                                    <div class="start-d ases-col-lg-5"></div>
+                                                    <div class="end-d ases-col-lg-5"></div>
+                                                </div>
+                                            </template>
                                         </div>
                                     </div>
                                 </div>
-                            </template>
+                            </div>
+                        </div>
+                        <div class="collapse-btn" data-toggle="collapse" data-target="#plugin_members">Gestionar accesos al curso</div>
+                        <div id="plugin_members" class="collapse">
+                            <div class="collapse-container">
+                                <div id="plugin_members_filter" class="ases-row">
+                                    <div class="ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12">
+                                        <h3>Filtrar por:</h3>
+                                        <div id="step_0_selector" >
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div id="plugin_members_actions" class="ases-row">
+                                    <div class="ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12">
+                                        <h3>Acciones:</h3>
+                                        <a id="select-visibles" href="javascript:void(0)" class="ases-btn ases-btn-default ases-btn-sm">Seleccionar visibles</a>
+                                        <a id="clear-selection" href="javascript:void(0)" class="ases-btn ases-btn-default ases-btn-sm">Limpiar selección</a>
+                                        <a id="remove-selected" href="javascript:void(0)" class="ases-btn ases-btn-default ases-btn-sm ases-danger">Eliminar seleccionados</a>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div id="plugin_members_container" class="ases-row">
+                                    <template id="group_name_template">
+                                        <span class="gname">Group Name</span>
+                                    </template>
+                                    <template id="user_enrolled_template">
+                                        <div class="user_enrolled ases-col-xs-12 ases-col-sm-6 ases-col-md-6 ases-col-lg-4" data-visible="true">
+                                            <div class="ucontainer" data-groups="">
+                                                <span class="fname">First Name</span>
+                                                <span class="lname">Last Name</span>
+                                                <input class="remove_check" type="checkbox">
+                                                <div class="groups_container"></div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div id="menu1" class="ases-tab-pane ases-fade">

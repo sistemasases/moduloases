@@ -1,95 +1,56 @@
-.steps-container{
-  margin-top: 1.5em;
-  width: 100%;
-  position: absolute;
-  z-index: 1;
+.ases-active{
+    border-color: #d51b23;
 }
 
-.steps-container ul{
-  list-style-type: none;
+.steps-container{
+    margin-top: 1em;
 }
+
+.steps-container ul{}
 
 .steps-progressbar li{
-  float: left;
-  width: calc(100% / 4);
-  position: relative;
-  text-align: center;
+    border-left-width: 0px;
+    border-top-width: 0px;
+    border-right-width: 0px;
+    border-radius: 0px;
+    border-bottom-width: 3px;
 }
 
-.steps-progressbar li:before{
-  content:"1";
-  width: 30px;
-  height: 30px;
-  cursor: pointer;
+.collapse-btn{
+    width: 100%;
+    background-color: #e1e1e1;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 0.5em;
+    margin-bottom: 0.5em;
 }
 
-.steps-progressbar li:before{
-  content:"1";
-  width: 30px;
-  height: 30px;
-  border: 2px solid #bebebe;
-  display: block;
-  margin: 0 auto 10px auto;
-  border-radius: 50%;
-  line-height: 27px;
-  background: white;
-  color: #bebebe;
-  text-align: center;
-  font-weight: bold;
+.collapse-btn:hover{
+    background-color: #C1C1C1;
 }
 
-.steps-progressbar{
-  counter-reset: step;
+.collapse-container{
+    padding:1.5em;
+    border: 1px solid #e1e1e1;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    border-radius: 5px;
 }
 
-.steps-progressbar li:before{
-  content:counter(step);
-  counter-increment: step;
-  width: 30px;
-  height: 30px;
-  border: 2px solid #bebebe;
-  display: block;
-  margin: 0 auto 10px auto;
-  border-radius: 50%;
-  line-height: 27px;
-  background: white;
-  color: #bebebe;
-  text-align: center;
-  font-weight: bold;
+.period-container:nth-child(3){
+    border-top: 1px solid gray;
+    padding-top: 0.5em;
 }
 
-.steps-progressbar li:after{
-  content: '';
-  position: absolute;
-  width:100%;
-  height: 3px;
-  background: #979797;
-  top: 15px;
-  left: -50%;
-  z-index: -1;
+.period-container{
+    border-bottom: 1px solid #e1e1e1;
+    margin-bottom: 0.5em;
+    padding-bottom: 0.5em;
 }
 
-.steps-progressbar li:first-child:after{
-  content: none;
+.period-container:nth-last-child(1){
+    border-bottom: 1px solid gray;
 }
-
-
-.steps-progressbar li.active::after{
-  background: #3aac5d;
-}
-
-.steps-progressbar li.active::before{
-  border-color: #3aac5d;
-  background: #3aac5d;
-  color: white
-}
-
-.steps-col{
-
-  min-height: 90px !important;
-  
-}
-
 
 .user_enrolled .ucontainer{
   padding: 0.7em;
@@ -101,6 +62,7 @@
 
 .user_enrolled .ucontainer .remove_check{
   float: right;
+  display: none;
 }
 
 .user_enrolled .ucontainer .ehr{
@@ -112,22 +74,25 @@
   font-size: 0.9em;
 }
 
-
-
 .user_enrolled .ucontainer .groups_container .enrolled_group{
   font-size: 0.8em;
   padding: 4px;
-  background: #cececece;
+  background: #cecece;
   border-radius: 3px;
   margin-right: 3px;
   margin-top: 3px;
 }
 
+.groups_container{
+    float: right;
+    margin-right: 0.5em;
+}
+
 .mfilter{
   cursor:pointer;
   padding: 4px;
-  background: #cececece;
-  border: 1px solid #cececece;
+  background: #cecece;
+  border: 1px solid #cecece;
   border-radius: 0px;
   margin-right: 0.5em;
   margin-top: 3px;
@@ -137,7 +102,7 @@
 .filter-selected{
   border: 1px solid black;
   background: #7F7F7F;
-  border: 1px solid #cececece;
+  border: 1px solid #cecece;
 }
 
 .user-selected{
