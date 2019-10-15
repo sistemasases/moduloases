@@ -1,108 +1,89 @@
 {{!-- General tab --}}
-
-<div class="tab-pane active p-t-100" id="general_tab">
-
+<div class="ases-tab-pane ases-tab-active ases-fade ases-in p-t-100" id="general_tab">
     <div hidden>
         <input type="number" class="form-control" id="latitude" name="latitude" value="{{latitude}}" placeholder="Digite latitud" disabled>
         <input type="number" class="form-control" id="longitude" name="longitude" value="{{longitude}}" placeholder="Digite longitud" disabled>
     </div>
 
-    <div class="row">
-        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-
+    <div class="ases-row">
+        <div class="ases-col-xs-12 ases-col-sm-6 ases-col-md-6 ases-col-lg-6">
             <div id="student_info">
-
                 <h3 class="h-sections-general-tab" id="h-student-info">INFORMACIÓN DEL ESTUDIANTE</h3>
                 <hr class="hr-general-tab-fields">
-                <div class="row">
-                    <label for="input-puntaje_icfes" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Puntaje
-                        Icfes</label>
+                <div class="ases-row">
+                    <label for="input-puntaje_icfes" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Puntaje Icfes</label>
                     <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 div_fields_general_tab" id="div-input-puntaje_icfes">
-                        <input type="number" class="input_fields_general_tab" name="puntaje_icfes" id="puntaje_icfes"
-                            value="{{puntaje_icfes}}" max="500" min="0" readonly>
+                        <input type="number" class="input_fields_general_tab" name="puntaje_icfes" id="puntaje_icfes" value="{{puntaje_icfes}}" max="500" min="0" readonly>
                     </div>
-                    <label for="input-ingreso" class="col-xs-4 col-sm-4 col-md-4 col-lg-4 label_fields_general_tab">Año
-                        ingreso Univalle</label>
+
+                    <label for="input-ingreso" class="col-xs-4 col-sm-4 col-md-4 col-lg-4 label_fields_general_tab">Año ingreso Univalle</label>
                     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 div_fields_general_tab" id="div-input-ingreso">
-                        <input type="number" class="input_fields_general_tab" name="ingreso" id="ingreso" min="0" value="{{ingreso}}"
-                            readonly>
-                    </div>
-
-                </div>
-
-                <div class="row" id="div_estrato">
-
-                    <label for="input-estrato" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Estrato</label>
-                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 div_fields_general_tab" id="div-input-estrato">
-                        <input type="number" class="input_fields_general_tab" name="estrato" id="estrato" value="{{estrato}}"
-                            max="6" min="0" readonly>
+                        <input type="number" class="input_fields_general_tab" name="ingreso" id="ingreso" min="0" value="{{ingreso}}" readonly>
                     </div>
                 </div>
 
-                <div class="row">
-                    <label for="tel_res" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Teléfono
-                        residencia</label>
-                    <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab" id="div-input-tel-res">
-                        <input type="tel" class="input_fields_general_tab" name="tel_res" id="tel_res" readonly value="{{res_tel}}"
-                            maxlength="15">
+                <div class="ases-row" id="div_estrato">
+                    <label for="input-estrato" class="ases-col-xs-3 ases-col-sm-3 ases-col-md-3 ases-col-lg-3 label_fields_general_tab">Estrato</label>
+                    <div class="ases-col-xs-3 ases-col-sm-3 ases-col-md-3 ases-col-lg-3 div_fields_general_tab" id="div-input-estrato">
+                        <input type="number" class="input_fields_general_tab" name="estrato" id="estrato" value="{{estrato}}" max="6" min="0" readonly>
                     </div>
                 </div>
 
-                <div class="row">
-                    <label for="tel3" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Celular</label>
-                    <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab" id="div-input-cellphone">
-                        <input type="tel" class="input_fields_general_tab" name="celular" id="celular" readonly value="{{cell_phone}}"
-                            maxlength="15">
+                <div class="ases-row">
+                    <label for="tel_res" class="ases-col-xs-3 ases-col-sm-3 ases-col-md-3 ases-col-lg-3 label_fields_general_tab">Teléfono residencia</label>
+                    <div class="ases-col-xs-9 ases-col-sm-9 ases-col-md-9 ases-col-lg-9 div_fields_general_tab" id="div-input-tel-res">
+                        <input type="tel" class="input_fields_general_tab" name="tel_res" id="tel_res" readonly value="{{res_tel}}" maxlength="15">
                     </div>
                 </div>
 
-                <div class="row">
-                    <label for="email_alt" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Email
-                        alternativo</label>
-                    <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab" id="div-input-email-alt">
-                        <input type="email" class="input_fields_general_tab" name="emailpilos" id="emailpilos" readonly
-                            value="{{emailpilos}}" maxlength="100" required />
+                <div class="ases-row">
+                    <label for="tel3" class="ases-col-xs-3 ases-col-sm-3 ases-col-md-3 ases-col-lg-3 label_fields_general_tab">Celular</label>
+                    <div class="ases-col-xs-9 ases-col-sm-9 ases-col-md-9 ases-col-lg-9 div_fields_general_tab" id="div-input-cellphone">
+                        <input type="tel" class="input_fields_general_tab" name="celular" id="celular" readonly value="{{cell_phone}}" maxlength="15">
                     </div>
                 </div>
 
-                <div class="row" style="padding-top: 10px;">
-                    <label for="input-dir-res" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Dirección
-                        residencia</label>
-                    <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab" id="div-input-dir-res">
+                <div class="ases-row">
+                    <label for="email_alt" class="ases-col-xs-3 ases-col-sm-3 ases-col-md-3 ases-col-lg-3 label_fields_general_tab">Email alternativo</label>
+                    <div class="ases-col-xs-9 ases-col-sm-9 ases-col-md-9 ases-col-lg-9 div_fields_general_tab" id="div-input-email-alt">
+                        <input type="email" class="input_fields_general_tab" name="emailpilos" id="emailpilos" readonly value="{{emailpilos}}" maxlength="100" required />
+                    </div>
+                </div>
+
+                <div class="ases-row" style="padding-top: 10px;">
+                    <label for="input-dir-res" class="ases-col-xs-3 ases-col-sm-3 ases-col-md-3 ases-col-lg-3 label_fields_general_tab">Dirección residencia</label>
+                    <div class="ases-col-xs-9 ases-col-sm-9 ases-col-md-9 ases-col-lg-9 div_fields_general_tab" id="div-input-dir-res">
                         <input class="" name="direccion_res" id="direccion_res" value="{{res_address}}" maxlength="100" readonly>
                     </div>
                 </div>
 
-                <div class="row">
-                    <label for="input-municipio_act" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Municipio
-                        actual</label>
-                    <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab" id="div-input-municipio_act">
+                <div class="ases-row">
+                    <label for="input-municipio_act" class="ases-col-xs-3 ases-col-sm-3 ases-col-md-3 ases-col-lg-3 label_fields_general_tab">Municipio actual</label>
+                    <div class="ases-col-xs-9 ases-col-sm-9 ases-col-md-9 ases-col-lg-9 div_fields_general_tab" id="div-input-municipio_act">
                         <input id="municipio_act" name="municipio_act" style="width: 70%;" value="{{municipio_act}}" readonly>
                     </div>
                 </div>
 
-                <div class="row">
-                    <label for="pais" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">País de
+                <div class="ases-row">
+                    <label for="pais" class="ases-col-xs-3 ases-col-sm-3 ases-col-md-3 ases-col-lg-3 label_fields_general_tab">País de
                         origen </label>
-                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 div_select" id="div_pais">
+                    <div class="ases-col-xs-6 ases-col-sm-6 ases-col-md-6 ases-col-lg-6 div_select" id="div_pais">
                         <select id="pais" name="pais"  style="width: 105%;" disabled>
                             {{{options_pais}}}
                         </select>
                     </div>
                 </div>
 
-                <div class="row">
-                    <label for="etnia" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Grupo
-                        étnico</label>
-                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 div_select" id="div_etnia">
+                <div class="ases-row">
+                    <label for="etnia" class="ases-col-xs-3 ases-col-sm-3 ases-col-md-3 ases-col-lg-3 label_fields_general_tab">Grupo étnico</label>
+                    <div class="ases-col-xs-4 ases-col-sm-4 ases-col-md-4 ases-col-lg-4 div_select" id="div_etnia">
                         <select id="etnia" name="etnia"  style="width: 157%;" disabled>
                             {{{options_etnia}}}
                         </select>
                     </div>
-
                 </div>
 
-                <div class="row">
+                <div class="ases-row">
                     <label for="act_simultanea" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Actividad
                         simultánea </label>
                     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 div_select" id="div_act_simultanea">
@@ -110,6 +91,7 @@
                             {{{options_act_simultanea}}}
                         </select>
                     </div>
+
                     <label id="lb_otro_act" style="padding: 5px 0px 0px 0px" class="col-xs-1 col-sm-1 col-md-1 col-lg-1 label_fields_general_tab"
                         hidden>¿Cuál?</label>
                     <div id="div_otro_act" class="col-lg-4 col-md-4 col-sm-4 col-xs-4 div_otro_gen" hidden>
@@ -118,7 +100,7 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="ases-row">
                     <label for="genero" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Identidad
                         de género </label>
                     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 div_select" id="div_genero">
@@ -126,6 +108,7 @@
                             {{{options_genero}}}
                         </select>
                     </div>
+
                     <label id="lb_otro" style="padding: 5px 0px 0px 0px" class="col-xs-1 col-sm-1 col-md-1 col-lg-1 label_fields_general_tab"
                         hidden>¿Cuál?</label>
                     <div id="div_otro_genero" class="col-lg-4 col-md-4 col-sm-4 col-xs-4 div_otro_gen" hidden>
@@ -134,7 +117,7 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="ases-row">
                     <label for="lb_sexo" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Sexo</label>
                     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 div_select" id="div_sexo">
                         <select id="sexo" name="sexo"  style="width: 157%;" disabled>
@@ -143,7 +126,7 @@
                     </div>
                 </div>
 
-                <div class="row ">
+                <div class="ases-row">
                     <label for="estado_civil" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Estado
                         civil </label>
                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 div_cond" id="div_estado_civil">
@@ -154,7 +137,7 @@
                 </div>
 
 
-                <div class="row">
+                <div class="ases-row">
                     <label for="hijos" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Cantidad
                         hijo/s </label>
                     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 div_fields_general_tab" id="div-input-tiene_hijo">
@@ -163,13 +146,12 @@
                     </div>
                 </div>
             </div>
+
             <div id="other_info">
-
-
                 <h3 class="h-sections-general-tab">INFORMACIÓN DEL ACUDIENTE</h3>
                 <hr class="hr-general-tab-fields">
 
-                <div class="row">
+                <div class="ases-row">
                     <label for="nombre_acudiente" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Nombre
                         completo</label>
                     <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab" id="div-input-email-alt">
@@ -177,7 +159,8 @@
                             maxlength="100" readonly />
                     </div>
                 </div>
-                <div class="row">
+
+                <div class="ases-row">
                     <label for="tel4" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Teléfono</label>
                     <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab">
                         <input type="tel" class="input_fields_general_tab" name="tel_acudiente" id="tel_acudiente"
@@ -190,19 +173,19 @@
                 <h3 class="h-sections-general-tab">INFORMACIÓN PROFESIONAL, PRACTICANTE Y MONITOR</h3>
                 <hr class="hr-general-tab-fields"> 
 
-                <div class="row">
+                <div class="ases-row">
                     <label for="profesional_ps" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Profesional</label>
                     <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab">
                         <span class="span-staff-ps">{{professional_fullname}}</span>
                     </div>
                 </div>
-                <div class="row">
+                <div class="ases-row">
                     <label for="practicante_ps" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Practicante</label>
                     <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab">
                         <span class="span-staff-ps">{{trainee_fullname}}</span>
                     </div>
                 </div>
-                <div class="row">
+                <div class="ases-row">
                     <label for="monitor_ps" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Monitor</label>
                     <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab">
                         <span class="span-staff-ps">{{monitor_fullname}}</span>
@@ -210,45 +193,45 @@
                 </div>
 
                 {{/flag_with_assignation}}
-                {{^flag_with_assignation}}
-                <h3 class="h-sections-general-tab">INFORMACIÓN DEL <strong>ÚLTIMO</strong> PROFESIONAL, PRACTICANTE Y MONITOR</h3>
-                <hr class="hr-general-tab-fields"> 
+                    {{^flag_with_assignation}}
 
-                <div class="row">
-                    <label for="profesional_ps" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Profesional</label>
-                    <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab">
-                        <span class="span-staff-ps">{{last_assignment_professional}}</span>
+                    <h3 class="h-sections-general-tab">INFORMACIÓN DEL <strong>ÚLTIMO</strong> PROFESIONAL, PRACTICANTE Y MONITOR</h3>
+                    <hr class="hr-general-tab-fields">
+
+                    <div class="ases-row">
+                        <label for="profesional_ps" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Profesional</label>
+                        <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab">
+                            <span class="span-staff-ps">{{last_assignment_professional}}</span>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <label for="practicante_ps" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Practicante</label>
-                    <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab">
-                        <span class="span-staff-ps">{{last_assignment_practicant}}</span>
+
+                    <div class="ases-row">
+                        <label for="practicante_ps" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Practicante</label>
+                        <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab">
+                            <span class="span-staff-ps">{{last_assignment_practicant}}</span>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <label for="monitor_ps" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Monitor</label>
-                    <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab">
-                        <span class="span-staff-ps">{{last_assignment_monitor}}</span>
+
+                    <div class="ases-row">
+                        <label for="monitor_ps" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Monitor</label>
+                        <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab">
+                            <span class="span-staff-ps">{{last_assignment_monitor}}</span>
+                        </div>
                     </div>
-                </div>
                 {{/flag_with_assignation}}
-
             </div>
-
         </div>
-        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" id="second_column_general_tab">
+
+        <div class="ases-col-xs-12 ases-col-sm-6 ases-col-md-6 ases-col-lg-6" id="second_column_general_tab">
             <div id="movableMap">
-                <div class="row" id="mapa">
-                </div>
+                <div class="ases-row" id="mapa"></div>
             </div>
 
             <h3 class="h-sections-general-tab2">PERSONAS CON QUIEN VIVE</h3>
             <hr class="hr-general-tab-fields">
-            <div class="row">
 
-                <table class="table table-hover table_vive_con" id="table_vive_con"
-                    name="table_vive_con">
+            <div class="ases-row">
+                <table class="table table-hover table_vive_con" id="table_vive_con" name="table_vive_con">
                     <thead>
                         <tr>
                             <th>Nombre completo</th>
@@ -260,23 +243,22 @@
                         {{{personas_con_quien_vive}}}
                     </tbody>
                 </table>
-
             </div>
-            <div class=" row " name="div_add_persona_vive" id="div_add_persona_vive" hidden>
-                <input class="btn btn-block" type="button" id="input_button_add_person" name="input_button_add_person"
+
+            <div class="ases-row" name="div_add_persona_vive" id="div_add_persona_vive" hidden>
+                <input class="ases-btn btn-block" type="button" id="input_button_add_person" name="input_button_add_person"
                     value="Agregar persona" />
             </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <label for="observaciones" class="col-md-12">Observaciones</label>
-                    <textarea name="observacion" id="observacion" class="col-sm-12" readonly></textarea>
-                    <textarea name="" id="observaciones_anteriores" class="col-md-12" readonly>{{observations}}</textarea>
+
+            <div class="ases-row">
+                <div class="ases-col-sm-12 ases-col-lg-12">
+                    <label for="observaciones" class="ases-col-md-12 ases-col-lg-12">Observaciones</label>
+                    <textarea name="observacion" id="observacion" class="ases-col-sm-12 ases-col-lg-12" readonly></textarea>
+                    <textarea name="" id="observaciones_anteriores" class="ases-col-md-12 ases-col-lg-12" readonly>{{observations}}</textarea>
                 </div>
             </div>
-
         </div>
     </div>
-
 </div>
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&libraries=places" async defer></script>
