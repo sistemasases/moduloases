@@ -231,16 +231,16 @@ function plugin_status_get_course_groups( $courseid ){
  */
 function plugin_status_get_groups_from_user_by_course( $userid, $courseid ){
 
-	global $DB;
+    global $DB;
 
-	$sql = "SELECT * 
-	FROM {groups} AS G0
-	INNER JOIN {groups_members} GM0
-	ON G0.id = GM0.groupid
-	WHERE 
-		G0.courseid = '$courseid' AND GM0.userid = '$userid'";
+    $sql = "SELECT * 
+    FROM {groups} AS G0
+    INNER JOIN {groups_members} GM0
+    ON G0.id = GM0.groupid
+    WHERE 
+        G0.courseid = '$courseid' AND GM0.userid = '$userid'";
 
-	return $DB->get_records_sql( $sql );
+    return $DB->get_records_sql( $sql );
 
 }
 
@@ -253,6 +253,37 @@ function plugin_status_get_all_periods(){
 function plugin_status_initialization_available(){
     $last_period = core_periods_get_last_period();  
     return ( time() > strtotime( $last_period->fecha_fin ) ? true : false );
+}
+
+/**
+ * Function that return the document associated to a plugin initialization.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param integer $period_id Period id.
+ * 
+ * @throws Exception If the period doesn't exist.
+ * 
+ * @return stdClass|NULL Plugin initialization record object.
+ */
+function plugin_status_get_initialization_doc( $period_id ){
+    
+    if( !core_periods_check_if_exist($period_id) ){
+        throw new Exception( "The period '$period_id' doesn't exist.", -1 );
+    }
+    
+    global $DB;
+    
+    $query = " 
+        SELECT * 
+        FROM {talentospilos_plugin_status}
+        WHERE id_semestre = '$period_id'";
+    
+    $result = $DB->get_record_sql( $query );
+    
+    return ( property_exists($result, 'id') ? $result : NULL );
+    
 }
 
 ?>

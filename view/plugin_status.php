@@ -60,6 +60,8 @@ $menu_option = create_menu_options($USER->id, $instanceid, $courseid);
 $record->view_menu = $menu_option;
 $record->view_title = "Estado";
 
+$record->instance_id = $instanceid;
+
 $PAGE->set_context($contextcourse);
 $PAGE->set_context($contextblock);
 $PAGE->set_url($url);

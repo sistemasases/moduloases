@@ -1,3 +1,8 @@
+.ases-active a{
+    background-color: inherit !important;
+    color: #000000 !important;
+}
+
 .ases-active{
     border-color: #d51b23;
 }
@@ -14,6 +19,16 @@
     border-right-width: 0px;
     border-radius: 0px;
     border-bottom-width: 3px;
+}
+
+.steps-progressbar li a{
+    text-decoration: none;
+    background-color: white;
+    color: #000000;
+}
+
+.steps-progressbar li a:hover{
+     background-color: inherit !important;
 }
 
 .collapse-btn{
