@@ -1,4 +1,4 @@
-define(['jquery'], function($, config) {
+define(['jquery'], ( $ ) => {
 
 /*!
  * AAspect
