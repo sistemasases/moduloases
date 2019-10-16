@@ -31,6 +31,10 @@ require_once $CFG->libdir . '/adminlib.php';
 require_once('../managers/lib/lib.php');
 require_once('../managers/menu_options.php');
 require_once('../managers/instance_management/instance_lib.php');
+require_once (__DIR__ . '/../classes/output/massive_upload_component.php');
+require_once (__DIR__ . '/../managers/menu_options.php');
+require_once (__DIR__ . '/../managers/cohort/cohort_lib.php');
+require_once (__DIR__ . '/../managers/mass_management/endpoints.php');
 include('../lib.php');
 
 global $PAGE;
@@ -77,10 +81,25 @@ $PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
 $PAGE->requires->css('/blocks/ases/style/aaspect.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/_view.component.css', true);
 $PAGE->requires->css('/blocks/ases/style/plugin_status.css', true);
+$PAGE->requires->css('/blocks/ases/style/jquery.dataTables.min.css', true);
+$PAGE->requires->css('/blocks/ases/style/buttons.dataTables.min.css', true);
+$PAGE->requires->css('/blocks/ases/style/massive_upload.css');
 $PAGE->requires->js_call_amd('block_ases/plugin_status', "init");
+
+$data_for_amd = array();
+$data_for_amd['instance_id'] = $blockid;
+
+$PAGE->requires->js_call_amd('block_ases/massive_upload', 'init', array('data'=>$data_for_amd));
+
 
 $output = $PAGE->get_renderer('block_ases');
 
+echo $output->header();
+\core\notification::info('Tip: pase con el mouse sobre los campos que tengan error para ver el detalle');
+\core\notification::info('Tip: Si el archivo tiene errores, puede corregirlos y resubir el archivo, podra enviarlo de nuevo');
+
+$record->cohorts_select = \cohort_lib\get_html_cohorts_select($blockid, false, 'cohorts', 'cohorts');
+$record->endpoints = \mass_management\endpoints\get_options();
 
 $plugin_status_page = new \block_ases\output\plugin_status_page($record);
 
