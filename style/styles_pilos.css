@@ -149,9 +149,15 @@ header ul li{
     border-top-color: transparent;
     margin-bottom: 0;
 }
-#ficha_estudiante .nav-tabs > li.ases-active > a{
+#ficha_estudiante .ases-nav-pills > li.ases-active > a{
     background-color: #E9E9E9;
+    color: #555;
     font-weight: bold;
+    border: 1px solid #ddd;
+    border-bottom-color: transparent;
+    margin-right: 2px;
+    line-height: 1.42857143;
+    border-radius: 4px 4px 0 0;
 }
 
 #ficha_estudiante #cancel{ display: none; }

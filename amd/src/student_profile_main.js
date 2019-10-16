@@ -20,7 +20,8 @@ define(['jquery',
     'block_ases/loading_indicator',
     'block_ases/academic_profile_main',
     'block_ases/socioed_profile_main',
-    'block_ases/geographic_main'], function ($, bootstrap, d3, sweetalert, jqueryui, select2, Chart, mustache, loading_indicator, academic, socioed, geographic) {
+    'block_ases/geographic_main',
+    'block_ases/aaspect'], function ($, bootstrap, d3, sweetalert, jqueryui, select2, Chart, mustache, loading_indicator, academic, socioed, geographic, aaspect) {
 
     return {
         init: function (data_init) {
@@ -1079,7 +1080,7 @@ define(['jquery',
                         success: function( template ){
                             loading_indicator.hide();
                             let tab_to_load = $(mustache.render( template, msg.data_response ));
-                            $(".tab-content").append( tab_to_load );
+                            $(".ases-tab-content").append( tab_to_load );
 
                             switch(tab_name){
                                 case 'socioed':
