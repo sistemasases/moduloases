@@ -175,8 +175,8 @@ define(['jquery',
                 case "socioed_tab":
                     $('#general_li').removeClass('ases-active');
                     $('#socioed_li').addClass('ases-active');
-                    $('#general_tab').removeClass('ases-active');
-                    $('#socioed_tab').addClass('ases-active');
+                    $('#general_tab').removeClass('ases-tab-active');
+                    $('#socioed_tab').addClass('ases-tab-active');
                     panel_collapse.removeClass('ases-in');
                     $('#collapseOne').addClass('ases-in');
                     break;
@@ -1061,6 +1061,7 @@ define(['jquery',
         var id_block = document.querySelector('#dphpforms_block_instance').dataset.info;
 
         $(".ases-active").removeClass("ases-active");
+        $(".ases-tab-active").removeClass("ases-tab-active");
         $("#"+tab_name+"_li").addClass("ases-active");
 
         $.ajax({
@@ -1097,7 +1098,7 @@ define(['jquery',
                                     break;
                             }
 
-                            $("#"+tab_name+"_tab").addClass("ases-active");
+                            $("#"+tab_name+"_tab").addClass("ases-tab-active");
                         },
                         error: function(){
                             loading_indicator.hide();

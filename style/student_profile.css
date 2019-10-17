@@ -126,14 +126,14 @@
     }
 
     #birthdate{
-        width: 162%;
+        width: 155%;
         display: none;
         height: 100%;
         padding: 6px 6px 6px 6px;
     }
 
     #div_email_moodle{
-        padding-left: 28px;
+        padding-left: 24px;
     }
 
     #email{
@@ -400,7 +400,6 @@
         background-color: #93B793;
     }
 
-
     /*Tool tip*/
 
     .tooltip-v1 + .tooltip > .tooltip-inner {
@@ -541,9 +540,14 @@
         margin-top: 25px !important;
     }
 
-    .center_vertically{
+    #label_first_year{
+        width: 35%;
+    }
+
+    .label_geographic_tab{
         vertical-align: middle;
         margin-top: 1%;
+        font-weight: normal;
     }
 
     .center_items{

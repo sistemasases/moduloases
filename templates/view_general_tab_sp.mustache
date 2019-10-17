@@ -7,7 +7,7 @@
 
     <div class="ases-row">
         <div class="ases-col-xs-12 ases-col-sm-6 ases-col-md-6 ases-col-lg-6">
-            <div id="student_info">
+            <div id="student_info" class="ases-col-lg-12">
                 <h3 class="h-sections-general-tab" id="h-student-info">INFORMACIÓN DEL ESTUDIANTE</h3>
                 <hr class="hr-general-tab-fields">
 
@@ -17,8 +17,8 @@
                         <input type="number" class="input_fields_general_tab" name="puntaje_icfes" id="puntaje_icfes" value="{{puntaje_icfes}}" max="500" min="0" readonly>
                     </div>
 
-                    <label for="input-ingreso" class="ases-col-xs-4 ases-col-sm-4 ases-col-md-4 ases-col-lg-4 label_fields_general_tab">Año ingreso Univalle</label>
-                    <div class="ases-col-xs-3 ases-col-sm-3 ases-col-md-3 ases-col-lg-3 div_fields_general_tab" id="div-input-ingreso">
+                    <label id="label_first_year" for="input-ingreso" class="ases-col-xs-5 ases-col-sm-5 ases-col-md-5 ases-col-lg-5 label_fields_general_tab">Año ingreso Univalle</label>
+                    <div class="ases-col-xs-2 ases-col-sm-2 ases-col-md-2 ases-col-lg-2 div_fields_general_tab" id="div-input-ingreso">
                         <input type="number" class="input_fields_general_tab" name="ingreso" id="ingreso" min="0" value="{{ingreso}}" readonly>
                     </div>
                 </div>
@@ -51,10 +51,10 @@
                     </div>
                 </div>
 
-                <div class="ases-row" style="padding-top: 10px;">
+                <div class="ases-row">
                     <label for="input-dir-res" class="ases-col-xs-3 ases-col-sm-3 ases-col-md-3 ases-col-lg-3 label_fields_general_tab">Dirección residencia</label>
                     <div class="ases-col-xs-9 ases-col-sm-9 ases-col-md-9 ases-col-lg-9 div_fields_general_tab" id="div-input-dir-res">
-                        <input class="" name="direccion_res" id="direccion_res" value="{{res_address}}" maxlength="100" readonly>
+                        <input class="center_vertically" name="direccion_res" id="direccion_res" value="{{res_address}}" maxlength="100" readonly>
                     </div>
                 </div>
 
@@ -141,9 +141,13 @@
                 </div>
             </div>
 
-            <div id="other_info">
-                <h3 class="h-sections-general-tab">INFORMACIÓN DEL ACUDIENTE</h3>
-                <hr class="hr-general-tab-fields">
+            <div id="other_info" class="ases-col-lg-12">
+                <div class="ases-row">
+                    <div class="ases-col-lg-12">
+                        <h3 class="h-sections-general-tab">INFORMACIÓN DEL ACUDIENTE</h3>
+                        <hr class="hr-general-tab-fields">
+                    </div>
+                </div>
 
                 <div class="ases-row">
                     <label for="nombre_acudiente" class="ases-col-xs-3 ases-col-sm-3 ases-col-md-3 ases-col-lg-3 label_fields_general_tab">Nombre completo</label>
@@ -161,8 +165,12 @@
 
                 {{#flag_with_assignation}}
 
-                <h3 class="h-sections-general-tab">INFORMACIÓN PROFESIONAL, PRACTICANTE Y MONITOR</h3>
-                <hr class="hr-general-tab-fields"> 
+                <div class="ases-row">
+                    <div class="ases-col-lg-12">
+                        <h3 class="h-sections-general-tab">INFORMACIÓN PROFESIONAL, PRACTICANTE Y MONITOR</h3>
+                        <hr class="hr-general-tab-fields">
+                    </div>
+                </div>
 
                 <div class="ases-row">
                     <label for="profesional_ps" class="ases-col-xs-3 ases-col-sm-3 ases-col-md-3 ases-col-lg-3 label_fields_general_tab">Profesional</label>

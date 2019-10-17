@@ -1,26 +1,29 @@
-<div class="ases-tab-pane" id="academic_tab">
+<div id="academic_tab" class="ases-tab-pane">
     <div class="accordion" role="tablist" aria-multiselectable="true">
-        <div class="row" style="padding: 0px 10px 15px ">
-            <div class="col-md-3">Promedio Ponderado:
+        <div class="ases-row" style="padding: 0px 10px 15px ">
+            <div class="ases-col-md-3 ases-col-lg-3">Promedio Ponderado:
                 <p class="prom" style="display: inline">
                     <b>{{promedio}}</b>
                 </p>
             </div>
-            <div class="col-md-3">Estimulos academicos:
+
+            <div class="ases-col-md-3 ases-col-lg-3">Estimulos academicos:
                 <p class="est" style="display: inline">
                     <b>{{estimulos}}</b>
                 </p>
             </div>
-            <div class="col-md-3">Bajos rendimientos:
+
+            <div class="ases-col-md-3 ases-col-lg-3">Bajos rendimientos:
                 <p class="baj" style="display: inline">
                     <b>{{bajos}}</b>
                 </p>
             </div>
         </div>
-        <div class="panel panel-default" id="panelActual">
-            <div class="academic panel-heading" role="tab" id="headingOne">
+
+        <div id="panelActual" class="panel panel-default">
+            <div id="headingOne" class="academic panel-heading" role="tab">
                 <h4 class="panel-title">
-                    <a id="sem_act_title" class="" data-toggle="collapse" data-parent="#accordion" href="#collapseAct" aria-expanded="true" aria-controls="collapseAct">
+                    <a id="sem_act_title" data-toggle="collapse" data-parent="#accordion" href="#collapseAct" aria-expanded="true" aria-controls="collapseAct">
                         Semestre Actual
                     </a>
                 </h4>
