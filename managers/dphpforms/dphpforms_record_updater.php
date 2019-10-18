@@ -131,7 +131,7 @@
         $form_name_formatted = $form_name_formatted . "_" . $row->{'mod_id_formulario'};
 
 
-        $html = $html .  '<form id="'. $form_name_formatted .'" method="'. $row->{'method'} .'" action="'. $row->{'action'} .'" class="dphpforms dphpforms-record dphpforms-updater col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-bottom:0.7em">' ;
+        $html = $html .  '<form id="'. $form_name_formatted .'" method="'. $row->{'method'} .'" action="'. $row->{'action'} .'" class="dphpforms dphpforms-record dphpforms-updater ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12" style="margin-bottom:0.7em">' ;
         $html = $html .  '<h1>'.$form_name.'</h1><hr style="border-color:red;">';
         $html = $html .  '<input name="id" value="'.$row->{'mod_id_formulario'}.'" style="display:none;">';
         $html = $html .  '<input name="id_monitor_x_obsolete" value="" style="display:none;">';//Pendientes para eliminación
@@ -260,25 +260,25 @@
 
                         if($campo == 'TEXTAREA'){
                             $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' . $enunciado . ':<br>';
-                            $html = $html .  ' <textarea id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control ' . $field_attr_inputclass . '" name="'. $row->{'mod_id_formulario_pregunta'} .'" '.$enabled.' maxlength="'.$field_attr_maxlength.'" '.$field_attr_required.'>'.$valor.'</textarea><br>' . "\n";
+                            $html = $html .  ' <textarea id="'.$row->{'mod_id_formulario_pregunta'}.'" class="ases-form-control ' . $field_attr_inputclass . '" name="'. $row->{'mod_id_formulario_pregunta'} .'" '.$enabled.' maxlength="'.$field_attr_maxlength.'" '.$field_attr_required.'>'.$valor.'</textarea><br>' . "\n";
                             $html = $html .  '</div>';
                         }
 
                         if($campo == 'DATE'){
                             $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' . $enunciado . ':<br>';
-                            $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control ' . $field_attr_inputclass . '" type="date" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor.'" '.$enabled.' '.$field_attr_required.'><br>' . "\n";
+                            $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="ases-form-control ' . $field_attr_inputclass . '" type="date" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor.'" '.$enabled.' '.$field_attr_required.'><br>' . "\n";
                             $html = $html .  '</div>';
                         }
                         
                         if($campo == 'DATETIME'){
                             $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' . $enunciado . ':<br>';
-                            $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control ' . $field_attr_inputclass . '" type="datetime-local" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor.'" '.$enabled.' '.$field_attr_required.'><br>' . "\n";
+                            $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="ases-form-control ' . $field_attr_inputclass . '" type="datetime-local" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor.'" '.$enabled.' '.$field_attr_required.'><br>' . "\n";
                             $html = $html .  '</div>';
                         }
 
                         if($campo == 'TIME'){
                             $html = $html .  '<div class="div-'.$row->{'mod_id_formulario_pregunta'}.' '.$field_attr_class.' '.$field_attr_local_alias.'" >' . $enunciado . ':<br>';
-                            $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="form-control ' . $field_attr_inputclass . '" type="time" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor.'" '.$enabled.' '.$field_attr_required.'><br>' . "\n";
+                            $html = $html .  ' <input id="'.$row->{'mod_id_formulario_pregunta'}.'" class="ases-form-control ' . $field_attr_inputclass . '" type="time" name="'.$row->{'mod_id_formulario_pregunta'}.'" value="'.$valor.'" '.$enabled.' '.$field_attr_required.'><br>' . "\n";
                             $html = $html .  '</div>';
                         }
 
@@ -445,17 +445,17 @@
             }
 
         }
-        $html = $html .  '  <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding:0px;"> 
+        $html = $html .  '  <div class="ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12" style="padding:0px;"> 
                                 <hr style="border-color:red">
                             </div>
-                            <div class="dphpforms_response_recorder_buttons">
-                                <button type="submit" class="btn btn-sm btn-danger btn-dphpforms-univalle btn-dphpforms-update">
+                            <div class="dphpforms_response_recorder_buttons ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12">
+                                <button type="submit" class="ases-btn ases-btn-sm ases-danger btn-dphpforms-univalle btn-dphpforms-update">
                                     Actualizar
                                 </button> 
-                                <a href="javascript:void(0);" data-record-id="'.$RECORD_ID.'" class="btn btn-sm btn-danger btn-dphpforms-univalle btn-dphpforms-delete-record">
+                                <a href="javascript:void(0);" data-record-id="'.$RECORD_ID.'" class="ases-btn ases-btn-sm ases-danger btn-dphpforms-univalle btn-dphpforms-delete-record">
                                     Eliminar
                                 </a> 
-                                <a href="javascript:void(0);" class="btn btn-sm btn-danger btn-dphpforms-univalle btn-dphpforms-close">
+                                <a href="javascript:void(0);" class="ases-btn ases-btn-sm ases-danger btn-dphpforms-univalle btn-dphpforms-close">
                                     Cerrar
                                 </a>
                             </div>' . "\n";

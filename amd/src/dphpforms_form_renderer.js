@@ -459,7 +459,7 @@ define([
 
                         if (current_view == "report_trackings") {
                             if ((role_support == "sistemas") || (role_support == "profesional_ps") || (role_support == "practicante_ps")) {
-                                $(".dphpforms.dphpforms-record.dphpforms-updater").append('<br><br><div class="div-observation col-xs-12 col-sm-12 col-md-12 col-lg-12 comentarios_vida_uni">Observaciones de Practicante/profesional:<br> <textarea id="observation_text" class="form-control " name="observation_text" maxlength="5000"></textarea><br><a id="send_observation" class="btn btn-sm btn-danger btn-dphpforms-univalle btn-dphpforms-send-observation">Enviar observación</a></div>');
+                                $(".dphpforms.dphpforms-record.dphpforms-updater").append('<br><br><div class="div-observation ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12 comentarios_vida_uni">Observaciones de Practicante/profesional:<br> <textarea id="observation_text" class="ases-form-control " name="observation_text" maxlength="5000"></textarea><br><a id="send_observation" class="ases-btn ases-btn-sm ases-danger btn-dphpforms-univalle btn-dphpforms-send-observation">Enviar observación</a></div>');
                             }
                         }
 
@@ -514,7 +514,7 @@ define([
                         }
                     }
 
-                    let separator = '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"> \
+                    let separator = '<div class="ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12"> \
                     <hr style="border-color:#424242;margin-bottom:3px;">\
                 </div>';
 
@@ -533,20 +533,20 @@ define([
                         success: function (data) {
                             let history = JSON.parse(data.data_response);
 
-                            let element_date = '<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="font-size:0.9em;"><strong style="color:#424242;">Fecha y hora</strong></div>';
-                            let element_name = '<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="font-size:0.9em;"><strong style="color:#424242;">Usuario que realiza la acci&oacute;n</strong></div>';
-                            let element_action = '<div class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="font-size:0.9em;"><strong style="color:#424242;">Acci&oacute;n</strong></div>';
-                            let element_status = '<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="font-size:0.9em;"><strong style="color:#424242;">Estado</strong></div>';
-                            let tseparator = '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"> \
+                            let element_date = '<div class="ases-col-xs-3 ases-col-sm-3 ases-col-md-3 ases-col-lg-3" style="font-size:0.9em;"><strong style="color:#424242;">Fecha y hora</strong></div>';
+                            let element_name = '<div class="ases-col-xs-4 ases-col-sm-4 ases-col-md-4 ases-col-lg-4" style="font-size:0.9em;"><strong style="color:#424242;">Usuario que realiza la acci&oacute;n</strong></div>';
+                            let element_action = '<div class="ases-col-xs-2 ases-col-sm-2 ases-col-md-2 ases-col-lg-2" style="font-size:0.9em;"><strong style="color:#424242;">Acci&oacute;n</strong></div>';
+                            let element_status = '<div class="ases-col-xs-3 ases-col-sm-3 ases-col-md-3 ases-col-lg-3" style="font-size:0.9em;"><strong style="color:#424242;">Estado</strong></div>';
+                            let tseparator = '<div class="ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12"> \
                             <hr style="border-color:#424242; margin-top:0px; margin-bottom:10px;">\
                         </div>';
                             $('#dphpforms_record_id[value=' + record_id + ']').parent().parent().append(element_date + element_name + element_action + element_status + tseparator);
 
                             history.forEach((item) => {
-                                let element_date = '<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">'
+                                let element_date = '<div class="ases-col-xs-3 ases-col-sm-3 ases-col-md-3 ases-col-lg-3">'
                                     + item.fecha_hora_registro +
                                     '</div>';
-                                let element_name = '<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">'
+                                let element_name = '<div class="ases-col-xs-4 ases-col-sm-4 ases-col-md-4 ases-col-lg-4">'
                                     + item.usuario_moodle +
                                     '</div>';
 
@@ -567,15 +567,14 @@ define([
                                         break;
                                 }
 
-                                let element_action = '<div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">'
+                                let element_action = '<div class="ases-col-xs-2 ases-col-sm-2 ases-col-md-2 ases-col-lg-2">'
                                     + action +
                                     '</div>';
-                                let element_status = '<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">'
+                                let element_status = '<div class="ases-col-xs-3 ases-col-sm-3 ases-col-md-3 ases-col-lg-3">'
                                     + (item.cod_retorno !== "0" ? "( No completado )" : "( Completado )") +
                                     '</div>';
-                                $('#dphpforms_record_id[value=' + record_id + ']').parent().parent().append('<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"  style="padding:0px;font-size:0.9em;">' + element_date + element_name + element_action + element_status + '</div>');
+                                $('#dphpforms_record_id[value=' + record_id + ']').parent().parent().append('<div class="ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12"  style="padding:0px;font-size:0.9em;">' + element_date + element_name + element_action + element_status + '</div>');
                             });
-
                         },
                         error: function (data) {
                             console.log(data);
@@ -1027,7 +1026,6 @@ define([
                             $('#modal_v2_edit_groupal_tracking').find('#students').remove();
                             $('#modal_v2_edit_groupal_tracking').find('form').find('h1').after(table);
                         }
-
                     },
                     dataType: "text",
                     cache: "false",
