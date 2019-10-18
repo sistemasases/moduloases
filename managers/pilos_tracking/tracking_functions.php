@@ -54,22 +54,22 @@ function render_monitor_new_form($students_by_monitor, $period = null)
         $current_semester = get_current_semester();
         $fullname = $student_code->firstname . " " .  $student_code->lastname;
 
-        $panel.= "<a data-toggle='collapse' data-container='student$ases_student_code' data-username='$ases_student_code' data-asesid='$ases_student_code' class='student collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#student$ases_student_code'>
+        $panel.= "<a data-toggle='collapse' data-container='student$ases_student_code' data-username='$ases_student_code' data-asesid='$ases_student_code' class='student collapsed ases-btn ases-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#student$ases_student_code'>
                     <div class='panel-heading heading_students_tracking'>
-                        <div class='row'>
-                            <div class='col-xs-12 col-sm-12 col-md-6 col-lg-6'>
+                        <div class='ases-row'>
+                            <div class='ases-col-xs-12 ases-col-sm-12 ases-col-md-6 ases-col-lg-6'>
                                 <h4 class='panel-title'>
                                     $fullname
                                 </h4>
                             </div>
-                            <div class='col-xs-12 col-sm-12 col-md-5 col-lg-5' id='counting_$ases_student_code'>
+                            <div class='ases-col-xs-12 ases-col-sm-12 ases-col-md-5 ases-col-lg-5' id='counting_$ases_student_code'>
                                 <div class='loader'>Cargando conteo...</div>
                             </div>
-                            <div class='col-xs-12 col-sm-12 col-md-1 col-lg-1'><span class='open-close-icon glyphicon glyphicon-chevron-left'></span></div>
+                            <div class='ases-col-xs-12 ases-col-sm-12 ases-col-md-1 ases-col-lg-1'><span class='open-close-icon ases-glyphicon ases-glyphicon-chevron-left'></span></div>
                         </div>
                     </div>
                  </a>
-                 <div id='student$ases_student_code' data-username='$ases_student_code' data-asesid='$ases_student_code'  class='show collapse_v2 collapse border_rt' role='tabpanel' aria-labelledby='headingstudent$ases_student_code' aria-expanded='true'>
+                 <div id='student$ases_student_code' data-username='$ases_student_code' data-asesid='$ases_student_code' class='show collapse_v2 collapse border_rt' role='tabpanel' aria-labelledby='headingstudent$ases_student_code' aria-expanded='true'>
                     <div class='panel-body'> </div>
                  </div>";
     }
@@ -94,7 +94,7 @@ function aux_create_groupal_toggle($monitor_id)
     $panel.= "<div class='panel-heading heading_students_tracking'>";
     $panel.= "<h4 class='panel-title'>";
     $panel.= "SEGUIMIENTOS GRUPALES";
-    $panel.= "<span class='open-close-icon glyphicon glyphicon-chevron-left'></span>";
+    $panel.= "<span class='open-close-icon ases-glyphicon ases-glyphicon-chevron-left'></span>";
     $panel.= "</h4>"; //End panel-title
     $panel.= "</div>"; //End panel-heading
     $panel.= "</a>";

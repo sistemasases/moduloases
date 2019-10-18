@@ -1108,8 +1108,9 @@ define(
 
                     } else {
                         
-                        $(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").show();
+                        $(".well.ases-col-md-10.ases-col-md-offset-1.reporte-seguimiento.oculto").show();
 
+                        console.log("It's here");
                         $(".se-pre-con").show();
                         $("#reemplazarToogle").hide();
 
@@ -1144,7 +1145,7 @@ define(
                                 monitor_load();
                                 professional_load();
                                 groupal_tracking_load();
-                                $(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").slideDown("slow");
+                                $(".well.ases-col-md-10.ases-col-md-offset-1.reporte-seguimiento.oculto").slideDown("slow");
                                 put_tracking_count( username, id_semestre, parseInt( get_instance() ), false );
                                 
                             },
