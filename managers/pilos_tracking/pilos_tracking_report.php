@@ -158,8 +158,8 @@ if (isset($_POST['type']) && $_POST['type'] == "update_people" && isset($_POST['
     echo $table;
     }
 
-if (isset($_POST['type']) && $_POST['type'] == "consulta_sistemas" && isset($_POST['id_persona']) && isset($_POST['id_semestre']) && isset($_POST['instance']))
-    {
+if (isset($_POST['type']) && $_POST['type'] == "consulta_sistemas" && isset($_POST['id_persona']) && isset($_POST['id_semestre']) && isset($_POST['instance'])) {
+
     $globalArregloPares = [];
     $globalArregloGrupal = [];
     $fechas = [];
@@ -171,49 +171,45 @@ if (isset($_POST['type']) && $_POST['type'] == "consulta_sistemas" && isset($_PO
     $choosen_date = strtotime($fechas[0]);
     $new_forms_date = strtotime('2018-01-01 00:00:00');
     $retorno = get_users_rols($_POST['id_persona'], $_POST['id_semestre'], $_POST['instance']);
-    if ($choosen_date >= $new_forms_date)
-        {
-        if (empty($retorno))
-            {
+
+    if($choosen_date >= $new_forms_date) {
+        if(empty($retorno)) {
+
             $html = "No tiene registros en ese periodo";
-            }
-          else
-            {
+
+        } else {
+
             $usernamerole = get_name_rol($retorno->id_rol);
             $id_person = $_POST['id_persona'];
             $id_instance = $_POST['instance'];
-            if ($usernamerole == 'monitor_ps')
-                {
+            if($usernamerole == 'monitor_ps') {
+
                 $students_by_monitor = get_students_of_monitor($id_person, $id_instance);
                 $html = render_monitor_new_form($students_by_monitor, $intervalos->id);
                 $array_groupal_trackings_dphpforms = get_tracking_grupal_monitor_current_semester($id_person, $intervalos->id);
                 $html.= render_groupal_tracks_monitor_new_form($array_groupal_trackings_dphpforms, $id_person);
-                }
-              else
-            if ($usernamerole == 'practicante_ps')
-                {
+
+            } else if($usernamerole == 'practicante_ps') {
+
                 $monitors_of_pract = get_monitors_of_pract($id_person, $id_instance);
                 $html = render_practicant_new_form($monitors_of_pract, $id_instance, $intervalos->id);
-                }
-              else
-            if ($usernamerole == 'profesional_ps')
-                {
+
+            } else if($usernamerole == 'profesional_ps') {
                 $practicant_of_prof = get_pract_of_prof($id_person, $id_instance);
                 $html = render_professional_new_form($practicant_of_prof, $id_instance, $intervalos->id);
-                }
+            }
 
             $actions = authenticate_user_view($USER->id, $_POST['instance'], 'report_trackings');
             $html = show_according_permissions($html, $actions);
             echo $html;
-            }
         }
     }
+}
 
 if(isset($_POST['monitor'])&&isset($_POST['type'])&&$_POST['type']=='redirect_tracking_time_control'){
     $username_monitor = $_POST['monitor'];
    echo  get_user_by_username($username_monitor)->id;
-}    
-
+}
 
 // param $_POST['date'] is obsolete.
 if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_POST['message_to_send']) && isset($_POST['tracking_type']) && isset($_POST['monitor_code']) && isset($_POST['date']) )

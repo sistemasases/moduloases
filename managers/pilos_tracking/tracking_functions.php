@@ -152,19 +152,19 @@ function render_practicant_new_form($monitors_of_pract, $instance, $period = nul
 
         // If the practicant has monitors with students that show
 
-        $panel.= "<a data-toggle='collapse' data-container='monitor$monitor->username' data-username='$monitor->username' class='monitor collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_monitors' style='text-decoration:none' href='#monitor" . $monitor->username . "'>";
+        $panel.= "<a data-toggle='collapse' data-container='monitor$monitor->username' data-username='$monitor->username' class='monitor collapsed ases-btn ases-danger btn-univalle btn-card collapsed' data-parent='#accordion_monitors' style='text-decoration:none' href='#monitor" . $monitor->username . "'>";
         $panel.= "<div class='panel-heading heading_monitors_tracking'>";
-        $panel.= "<div class='row'><div class='col-xs-10 col-sm-10 col-md-5 col-lg-5'>";
+        $panel.= "<div class='ases-row'><div class='ases-col-xs-10 ases-col-sm-10 ases-col-md-5 ases-col-lg-5'>";
         $panel.= "<h4 class='panel-title'>";
         $panel.= "$monitor->firstname $monitor->lastname";
         $panel.= "</h4></div>"; //End panel-title
-        $panel.= "<div class='col-xs-2 col-sm-2 col-md-1 col-lg-1'>";
-        $panel.= "<span class='protected glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : " . count(get_students_of_monitor($monitor_id, $instance));
+        $panel.= "<div class='ases-col-xs-2 ases-col-sm-2 ases-col-md-1 ases-col-lg-1'>";
+        $panel.= "<span class='protected ases-glyphicon ases-glyphicon-user subpanel' style='font-size: 20px;'></span> : " . count(get_students_of_monitor($monitor_id, $instance));
         $panel.= "</div>";
-        $panel.= "<div class='col-xs-12 col-sm-12 col-md-5 col-lg-4' id='counting_" . $monitor->username . "'>";
+        $panel.= "<div class='ases-col-xs-12 ases-col-sm-12 ases-col-md-5 ases-col-lg-4' id='counting_" . $monitor->username . "'>";
         $panel.= '<div class="loader">Cargando conteo...</div>';
         $panel.= "</div>";
-        $panel.= "<div class='col-xs-12 col-sm-12 col-md-1 col-lg-1 col-lg-offset-1'><span class='open-close-icon glyphicon glyphicon-chevron-left'></span></div>";
+        $panel.= "<div class='ases-col-xs-12 ases-col-sm-12 ases-col-md-1 ases-col-lg-1 ases-col-lg-offset-1'><span class='open-close-icon ases-glyphicon ases-glyphicon-chevron-left'></span></div>";
         $panel.= "</div>";
         $panel.= "</div>"; //End panel-heading
         $panel.= "</a>";
@@ -200,27 +200,27 @@ function render_professional_new_form($practicant_of_prof, $instance, $period = 
         // If the professional has associate practitioners with monitors that show
 
         $panel.= 
-                "<a data-toggle='collapse' data-container='practicant$practicant->username' data-username='$practicant->username' class='practicant collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_practicant' style='text-decoration:none' href='#practicant" . $practicant->username . "'>
+                "<a data-toggle='collapse' data-container='practicant$practicant->username' data-username='$practicant->username' class='practicant collapsed ases-btn ases-danger btn-univalle btn-card collapsed' data-parent='#accordion_practicant' style='text-decoration:none' href='#practicant" . $practicant->username . "'>
                     <div class='panel-heading heading_practicant_tracking'>
 
-                        <div class='row'>
-                            <div class='col-xs-10 col-sm-10 col-md-5 col-lg-5'>
+                        <div class='ases-row'>
+                            <div class='ases-col-xs-10 ases-col-sm-10 ases-col-md-5 ases-col-lg-5'>
                                 <h4 class='panel-title'>
                                     $practicant->firstname $practicant->lastname
                                 </h4>
                             </div>
 
-                            <div class='col-xs-2 col-sm-2 col-md-1 col-lg-1'>
-                                <span class='protected glyphicon glyphicon-user subpanel' style='font-size: 20px;'></span> : " . count(get_monitors_of_pract($practicant_id, $instance)) . 
+                            <div class='ases-col-xs-2 ases-col-sm-2 ases-col-md-1 ases-col-lg-1'>
+                                <span class='protected ases-glyphicon ases-glyphicon-user subpanel' style='font-size: 20px;'></span> : " . count(get_monitors_of_pract($practicant_id, $instance)) .
                                 "<br />
-                                <span class='protected glyphicon glyphicon-education subpanel' style='font-size: 20px;'></span> : " . get_quantity_students_by_pract($practicant_id, $instance) .
+                                <span class='protected ases-glyphicon ases-glyphicon-education subpanel' style='font-size: 20px;'></span> : " . get_quantity_students_by_pract($practicant_id, $instance) .
                             "</div>
 
-                            <div class='col-xs-12 col-sm-12 col-md-5 col-lg-4' id='counting_" . $practicant->username . "'>
+                            <div class='ases-col-xs-12 ases-col-sm-12 ases-col-md-5 ases-col-lg-4' id='counting_" . $practicant->username . "'>
                                 <div class='loader'>Cargando conteo...</div>
                             </div>
                             
-                            <div class='col-xs-12 col-sm-12 col-md-1 col-lg-1 col-lg-offset-1'><span class='open-close-icon glyphicon glyphicon-chevron-left'></span></div>
+                            <div class='ases-col-xs-12 ases-col-sm-12 ases-col-md-1 ases-col-lg-1 ases-col-lg-offset-1'><span class='open-close-icon ases-glyphicon ases-glyphicon-chevron-left'></span></div>
                             
                         </div>
 
@@ -1125,27 +1125,27 @@ function show_according_permissions(&$table, $actions)
     $replace_with = "";
     $tabla_format = "";
     if (isset($actions->update_assigned_tracking_rt) == 0) {
-        $start = '<div class="col-sm-8" id="editar_registro">';
+        $start = '<div class="ases-col-sm-8 ases-col-lg-8" id="editar_registro">';
         $table = replace_content_inside_delimiters($start, $end, $replace_with, $table);
     }
 
     if (isset($actions->delete_assigned_tracking_rt) == 0) {
-        $start = '<div class="col-sm-2" id="borrar_registro">';
+        $start = '<div class="ases-col-sm-2 ases-col-lg-2" id="borrar_registro">';
         $table = replace_content_inside_delimiters($start, $end, $replace_with, $table);
     }
 
     if (isset($actions->send_observations_rt) == 0) {
-        $start = '<div class="col-sm-12" id="enviar_correo">';
+        $start = '<div class="ases-col-sm-12 ases-col-lg-12" id="enviar_correo">';
         $table = replace_content_inside_delimiters($start, $end, $replace_with, $table);
     }
 
     if (isset($actions->check_tracking_professional_rt) == 0) {
-        $start = '<div class="col-sm-6" id="check_profesional">';
+        $start = '<div class="ases-col-sm-6 ases-col-lg-6" id="check_profesional">';
         $table = replace_content_inside_delimiters($start, $end, $replace_with, $table);
     }
 
     if (isset($actions->check_tracking_intern_rt) == 0) {
-        $start = '<div class="col-sm-6" id="check_practicante">';
+        $start = '<div class="ases-col-sm-6 ases-col-lg-6" id="check_practicante">';
         $table = replace_content_inside_delimiters($start, $end, $replace_with, $table);
     }
 
