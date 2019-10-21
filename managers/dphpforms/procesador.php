@@ -1123,10 +1123,13 @@ function dphpforms_reglas_validator($respuestas, $reglas){
 
 function dphpforms_is_field_empty( $response ){
     return ( 
-            !is_null($response->{'valor'}) )          ||   /* Isn't NULL. */
-            ( $response->{'valor'} !== "-#$%-" )      ||   /* Isn't NULL chain. */ 
-            ( $response->{'valor'} !== "" ?                /* Isn't Empty. */
-            true : false );
+            
+        !is_null($response->{'valor'})            ||                        /* Isn't NULL.       */
+        ( $response->{'valor'} !== "-#$%-" )      ||                        /* Isn't NULL chain. */ 
+        ( $response->{'valor'} !== "" )                                     /* Isn't Empty.      */
+        ?  true : false 
+                
+    );
 }
 
 function dphpforms_get_respuestas_form_completed($idFormularioDiligenciado){
