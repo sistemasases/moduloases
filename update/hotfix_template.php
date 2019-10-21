@@ -12,7 +12,7 @@ require_once(dirname(__FILE__). '/../../../config.php');                        
 module_loader("cache");                                                         // Load of core cache module
 module_loader("core_db");                                                       // Load of core_db module.
 
-const ISSUE_NUMNER = 999999999;                                                 // ID for p.semester
+const ISSUE_NUMNER = 1234;                                                      // Example ID.
 const PASSWORD = NULL;                                                          // Null if you want a none secure execution.
 
 $script = function(){
