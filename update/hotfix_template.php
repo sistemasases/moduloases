@@ -17,9 +17,9 @@ const PASSWORD = NULL;                                                          
 
 $script = function(){
     // Your code here
-    
-    // End of the HOTFIX code
     echo "HOTFIX APLICADO";
+    // End of the HOTFIX code
+    return 1;
 };
 
 
