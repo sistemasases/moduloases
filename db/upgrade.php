@@ -725,6 +725,8 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     //         $regla_depende->regla      = 'DEPENDS';
     //         $regla_enlazado = new stdClass();
     //         $regla_enlazado->regla     = 'BOUND';
+    //         $regla_excluye = new stdClass();
+    //         $regla_excluye->regla      = 'EXCLUDE';
     //         $records = array();
     //         array_push($records, $regla_mayor_que);
     //         array_push($records, $regla_menor_que);
@@ -732,6 +734,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     //         array_push($records, $regla_diferente);
     //         array_push($records, $regla_depende);
     //         array_push($records, $regla_enlazado);
+    //         array_push($records, $regla_excluye);
     //         $DB->insert_records('talentospilos_df_reglas', $records);
     //     }
     //     $sql_intel = "DELETE FROM {talentospilos_df_reglas} WHERE id <> 1 and id <> 2 and id <> 3 and id <> 4 and id <> 5 and id <> 6";
