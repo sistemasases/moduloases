@@ -1069,64 +1069,48 @@ function dphpforms_reglas_validator($respuestas, $reglas){
                 $satisfied_reglas = true;
                 //echo "REGLA " . $regla . " CUMPLIDA\n";
             }
-        }elseif($regla == 'DEPENDS'){
+        }elseif( $regla == 'DEPENDS' ){
             /*
                 BOUND replaces DEPENDS
             */
-        }elseif(($regla == 'BOUND')||($regla == 'DEPENDS')){
-            /*
-                    Se usa -#$%- para enviar cuando el RadioButton está vacío, esto con el fin
-                    de asignarle un valor nulo diferente a 0, con el fin de no entrar en conflicto
-                    con lo enviado por un CheckBox
-                */
-
+        }elseif( ($regla == 'BOUND') || ($regla == 'DEPENDS') ){
+            /**
+             *  Se usa -#$%- para enviar cuando el RadioButton está vacío, esto con el fin
+             *  de asignarle un valor nulo diferente a 0, con el fin de no entrar en conflicto
+             *  con lo enviado por un CheckBox
+            */
             
-
-            /*if(!is_null($respuesta_a->{'valor'})){
-                if(trim($respuesta_a->{'valor'}) == ''){
-                    $respuesta_tmp = clone $respuesta_a;
-                    $respuesta_a = new stdClass();
-                    $respuesta_a->id = $respuesta_tmp->{'id'};
-                    $respuesta_a->valor = null;
-                }
-            }
-
-            if(!is_null($respuesta_b->{'valor'})){
-                if(trim($respuesta_b->{'valor'}) == ''){
-                    $respuesta_tmp = clone $respuesta_b;
-                    $respuesta_b = new stdClass();
-                    $respuesta_b->id = $respuesta_tmp->{'id'};
-                    $respuesta_b->valor = null;
-                }
-            }*/
-            
-            if((( !is_null($respuesta_a->{'valor'}) ) && ($respuesta_a->{'valor'} !== "-#$%-") && ($respuesta_a->{'valor'} !== "") ) && (( is_null($respuesta_b->{'valor'}) )||($respuesta_b->{'valor'} === "-#$%-")||($respuesta_b->{'valor'} === "") )){
+            if(
+                (( !is_null($respuesta_a->{'valor'}) ) && ($respuesta_a->{'valor'} !== "-#$%-") && ($respuesta_a->{'valor'} !== "") ) && 
+                (( is_null($respuesta_b->{'valor'}) )||($respuesta_b->{'valor'} === "-#$%-")||($respuesta_b->{'valor'} === "") )
+            ){
                 $satisfied_reglas = false;
-                /*echo "REGLA " . $regla . " NO CUMPLIDA\n";
-                print_r($respuesta_a);
-                print_r($respuesta_b);
-                echo 'VALOR A' . $respuesta_a->{'valor'} . ' VALOR B' . $respuesta_a->{'valor'};*/
                 break;
-            }elseif(((  is_null($respuesta_a->{'valor'})  ) || ($respuesta_a->{'valor'} === "-#$%-" ) || ($respuesta_a->{'valor'} === "" )) && (( !is_null($respuesta_b->{'valor'}) ) && ($respuesta_b->{'valor'} !== "-#$%-") && ($respuesta_b->{'valor'} !== "") )){
+            }elseif(
+                ((  is_null($respuesta_a->{'valor'})  ) || ($respuesta_a->{'valor'} === "-#$%-" ) || ($respuesta_a->{'valor'} === "" )) && 
+                (( !is_null($respuesta_b->{'valor'}) ) && ($respuesta_b->{'valor'} !== "-#$%-") && ($respuesta_b->{'valor'} !== "") )
+            ){
                 $satisfied_reglas = false;
-                /*echo "REGLA " . $regla . " NO CUMPLIDA\n";
-                print_r($respuesta_a);
-                print_r($respuesta_b);
-                echo 'VALOR A' . $respuesta_a->{'valor'} . ' VALOR B' . $respuesta_a->{'valor'};*/
                 break;
             }else{
                 $satisfied_reglas = true;
-                //echo "REGLA " . $regla . " CUMPLIDA\n";
             }
-
-            /*print_r($respuesta_a);
-            if($satisfied_reglas){
-                echo 'SATISFECHA';
+        }elseif( $regla == 'EXCLUDE' ){
+            if(
+                (
+                    (( !is_null($respuesta_a->{'valor'}) )   &&   ( $respuesta_a->{'valor'} !== "-#$%-" )    &&    ( $respuesta_a->{'valor'} !== "" )) && 
+                    (( !is_null($respuesta_b->{'valor'}) )   ||   ( $respuesta_b->{'valor'} !== "-#$%-" )    ||    ( $respuesta_b->{'valor'} !== "" ))  
+                ) || 
+                (
+                    (( !is_null($respuesta_b->{'valor'}) )   &&   ( $respuesta_b->{'valor'} !== "-#$%-" )    &&    ( $respuesta_b->{'valor'} !== "" )) && 
+                    (( !is_null($respuesta_a->{'valor'}) )   ||   ( $respuesta_a->{'valor'} !== "-#$%-" )    ||    ( $respuesta_a->{'valor'} !== "" ))         
+                )
+            ){
+                $satisfied_reglas = false;
+                break;
             }else{
-                echo 'NO SATISFECHA';
+                $satisfied_reglas = true;
             }
-            print_r($respuesta_b);
-            echo '=====================' . "\n";*/
         }
     }
     return array(

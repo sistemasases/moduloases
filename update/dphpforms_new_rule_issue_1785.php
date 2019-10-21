@@ -4,52 +4,40 @@
  * Template to HOTFIX-scripts.
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @copyright (c) Copyleft 2019, Jeison Cardona Gomez.
- * @author Juan Pablo Castro <juan.castro.vasquez@correounivalle.edu.co>
- * @copyright (c) Copyleft 2019, Juan Pablo Castro.
  */
 
 require_once(dirname(__FILE__). '/../core/module_loader.php');                  // Please don't remove
 require_once(dirname(__FILE__). '/../../../config.php');                        // Please don't remove
-require_once(__DIR__ . '/../classes/Programa.php');
-require_once(__DIR__ . '/../classes/Facultad.php');
-require_once(__DIR__ . '/../classes/Sede.php');
-require_once(__DIR__ . '/../classes/Jornada.php');
 
 module_loader("cache");                                                         // Load of core cache module
 module_loader("core_db");                                                       // Load of core_db module.
 
-const ISSUE_NUMNER = 1768;                                                      // Issue ID on GitHub. Ex. 1569.
-const PASSWORD = 1768;                                                          // Null if you want a none secure execution.
+const ISSUE_NUMNER = 1785;                                                      // Issue ID on GitHub. Ex. 1569.
+const PASSWORD = "dphpforms_update";                                            // Null if you want a none secure execution.
 
 $script = function(){
     // Your code here
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
+    global $DB;
     
-    $programa = new Programa();
-    $nombre_sede ='CALI';
-    $nombre_facultad = 'CIENCIAS NATURALES Y EXACTAS';
-    $programa->nombre = 'MAESTRÍA EN CIENCIAS - MATEMÁTICAS';
-    //@var Sede $sede
-    $sede = Sede::get_one_by(array(Sede::NOMBRE=>$nombre_sede));
-    //@var Facultad $facultad
-    $facultad = Facultad::get_one_by(array(Facultad::NOMBRE=>$nombre_facultad));
-    if(!$sede) die("No existe la sede con nombre $nombre_sede");
-    if(!$facultad) die("No existe la facultad con nombre $nombre_facultad");
-    $programa->id_sede = $sede->id;
-    $programa->jornada = Jornada::DIURNA;
-    $programa->id_facultad = $facultad->id;
-    $programa->cod_univalle = 7179;
-    $programa->codigosnies = 673;
-    if($programa->save()) {
-        echo "El programa $programa->nombre se ha guardado";
-    } else {
-        echo "No se ha podido guardar el programa $programa->nombre";
+    $new_rule_name = "EXCLUDE";
+    
+    $rule = $DB->get_record_sql( "
+        SELECT * 
+        FROM {talentospilos_df_reglas} 
+        WHERE regla = '$new_rule_name'"
+    );
+    
+    if( !isset( $rule->id ) ){
+        $new_rule = new stdClass();
+        $new_rule->regla = $new_rule_name;
+        return $DB->insert_record( 'talentospilos_df_reglas', $new_rule );
     }
-
+    
+    return 1;
     // End of the HOTFIX code
-    echo "HOTFIX APLICADO";
 };
+
+
 
 
 
