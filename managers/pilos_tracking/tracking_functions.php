@@ -90,7 +90,7 @@ function render_monitor_new_form($students_by_monitor, $period = null)
 function aux_create_groupal_toggle($monitor_id)
 {
     $panel = "";
-    $panel.= "<a data-toggle='collapse' data-container='groupal$monitor_id' class='groupal collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#groupal" . $monitor_id . "'>";
+    $panel.= "<a data-toggle='collapse' data-container='groupal$monitor_id' class='groupal collapsed ases-btn ases-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#groupal" . $monitor_id . "'>";
     $panel.= "<div class='panel-heading heading_students_tracking'>";
     $panel.= "<h4 class='panel-title'>";
     $panel.= "SEGUIMIENTOS GRUPALES";
@@ -415,7 +415,7 @@ function filter_trackings_by_review($peer_tracking_v2)
  * @param $user_id --> id of user
  * @param $semester
  * @param $instance --> id of instance
- * @return Array
+ * @return array
  *
  */
 function auxiliary_specific_counting($user_kind, $user_id, $semester, $instance){
@@ -1167,12 +1167,12 @@ function get_period_select($periods, $rol = null){
     $table = "";
 
     if($rol !== "sistemas"){
-        $extra .= "col-xs-offset-6 col-sm-offset-6 col-md-offset-7 col-lg-offset-7";
+        $extra .= "ases-col-xs-offset-6 ases-col-sm-offset-6 ases-col-md-offset-7 ases-col-lg-offset-7";
     }
 
-    $table.= '<div id="consulta_periodo" class="form-group col-xs-6 col-sm-6 col-md-5 col-lg-5 '.$extra.'">';
+    $table.= '<div id="consulta_periodo" class="form-group ases-col-xs-6 ases-col-sm-6 ases-col-md-5 ases-col-lg-5 '.$extra.'">';
     $table.= '<label for="periodos">Periodo:&nbsp;</label>';
-    $table .= '<select style="width:80%" class="form-control" id="periodos">';
+    $table .= '<select style="width:80%" class="ases-form-control" id="periodos">';
 
     foreach($periods as $period) {
         $table.= '<option value="' . $period->id . '">' . $period->nombre . '</option>';
@@ -1193,17 +1193,17 @@ function get_period_select($periods, $rol = null){
 
 function get_people_select($people){
     
-    $table = '<div id="consulta_personas" class="form-group col-xs-6 col-sm-6 col-md-5 col-lg-5">';
+    $table = '<div id="consulta_personas" class="form-group ases-col-xs-6 ases-col-sm-6 ases-col-md-5 ases-col-lg-5">';
     $table.= '<label for="persona" >Persona:&nbsp;</label>';
-    $table.= '<select style="width:80%" class="form-control" id="personas">';
+    $table.= '<select style="width:80%" class="ases-form-control" id="personas">';
     foreach($people as $person) {
         $table.= '<option data-username="' . $person->username . '" value="' . $person->id_usuario . '">' . $person->username . " - " . $person->firstname . " " . $person->lastname . '</option>';
     }
     $table.= '</select>';
     $table.= '</div>';
 
-    $table.= '<div id="container-consulta-btn" class="col-xs-12 col-sm-12 col-md-2 col-lg-2">';
-    $table.= '  <span class="btn btn-info" id="consultar_persona" type="button">Consultar</span>';
+    $table.= '<div id="container-consulta-btn" class="ases-col-xs-12 ases-col-sm-12 ases-col-md-2 ases-col-lg-2">';
+    $table.= '  <span class="ases-btn ases-info" id="consultar_persona" type="button">Consultar</span>';
     $table.= '</div>';
 
     return $table;
