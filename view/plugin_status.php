@@ -92,14 +92,13 @@ $data_for_amd['instance_id'] = $blockid;
 $PAGE->requires->js_call_amd('block_ases/massive_upload', 'init', array('data'=>$data_for_amd));
 
 
-$output = $PAGE->get_renderer('block_ases');
-
-echo $output->header();
 \core\notification::info('Tip: pase con el mouse sobre los campos que tengan error para ver el detalle');
 \core\notification::info('Tip: Si el archivo tiene errores, puede corregirlos y resubir el archivo, podra enviarlo de nuevo');
 
-$record->cohorts_select = \cohort_lib\get_html_cohorts_select($blockid, false, 'cohorts', 'cohorts');
+$record->cohorts_select = \cohort_lib\get_html_cohorts_select($instanceid, false, 'cohorts', 'cohorts');
 $record->endpoints = \mass_management\endpoints\get_options();
+
+$output = $PAGE->get_renderer('block_ases');
 
 $plugin_status_page = new \block_ases\output\plugin_status_page($record);
 
