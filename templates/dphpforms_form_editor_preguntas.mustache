@@ -65,7 +65,7 @@
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <h2>Gestión de preguntas</h2>
                 <hr>
-                <div class="peer_trackings_v2" id="peer_trackings_v2" name="peer_trackings_v2">
+                <div class="peer_trackings_v2">
                     <div id="accordion_v2">
                         <div class="card card_v2">
                             <div class="card-header card-header_v2" role="tab" id="headingOnePregunta">
@@ -122,7 +122,7 @@
 
                 <hr>
 
-                <div class="peer_trackings_v2" id="peer_trackings_v2" name="peer_trackings_v2">
+                <div class="peer_trackings_v2">
                     <div id="accordion_v2">
                         <div class="card card_v2">
                             <div class="card-header card-header_v2" role="tab" id="headingOnePermiso">
@@ -167,6 +167,80 @@
                                     <hr>
                                 </div>
                                 {{/last}} {{/preguntas_permissions}}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="peer_trackings_v2">
+                    <div id="accordion_v3">
+                        <div class="card card_v2">
+                            <div class="card-header card-header_v2" role="tab" id="headingOneRules">
+                                <h5 class="mb-0">
+                                    <a data-toggle="collapse" class="btn btn-danger btn-univalle btn-card" data-container="collapseOneRules" data-parent="#accordion_v3"
+                                        href="#collapseOneRules" aria-expanded="true" aria-controls="collapseOne">
+                                        Reglas del formulario
+                                        <span class="glyphicon glyphicon-chevron-left"></span>
+                                    </a>
+                                </h5>
+                            </div>
+
+                            <div id="collapseOneRules" class="collapse show collapse_v2" role="tabpanel" aria-labelledby="headingOneRules">
+                                <br>
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" >
+                                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" >
+                                        <input type="number" style="height: 34px;" class="form-control" id="preg_a_id" placeholder="ID pregunta A" name="">
+                                    </div>
+                                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" >
+                                        <input type="number" style="height: 34px;" class="form-control" id="rule_id" placeholder="ID regla" name="">
+                                    </div>
+                                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" >
+                                        <input type="number" style="height: 34px;" class="form-control" id="preg_b_id" placeholder="ID pregunta B" name="">
+                                    </div>
+                                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" >
+                                        <a id="add_rule" href="javascript:void(0);" class="btn btn-default btn-univalle">Registrar</a>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                    <hr>
+                                </div>
+                                <br>
+                                <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                                    <strong>#ID</strong>
+                                </div>
+                                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                    <strong>Pregunta A</strong>
+                                </div>
+                                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                    <strong>Regla</strong>
+                                </div>
+                                <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                    <strong>Pregunta B</strong>
+                                </div>
+                                <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                    <hr>
+                                </div>
+                
+                                {{#rules}}
+                
+                                <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">{{id}}</div>
+                                <div class="col-xs-5 col-sm-5 col-md-5 col-lg-3">{{id_form_pregunta_a}}</div>
+                                <div class="col-xs-5 col-sm-5 col-md-5 col-lg-3">{{regla}}</div>
+                                <div class="col-xs-5 col-sm-5 col-md-5 col-lg-3">{{id_form_pregunta_b}}</div>
+                                <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                                    <span data-permiso-id="{{id_permiso}}" class="btn-editor-permiso btn btn-default btn-xs glyphicon glyphicon-pencil"></span>
+                                    <!--<span data-permiso-id="{{id_permiso}}" class="btn-remove-permiso btn btn-danger btn-xs glyphicon glyphicon-remove"></span>-->
+                                </div>
+                                {{^last}}
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                    <hr>
+                                </div>
+                                {{/last}} {{/rules}}
 
                             </div>
                         </div>

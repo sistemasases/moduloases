@@ -1784,4 +1784,18 @@ function dphpformsV2_get_form_rules( $form_id ){
 
 }
 
+function dphpformsV2_add_new_form_rule( $form_id, $preg_a_id, $rule_id, $preg_b_id ){
+
+    global $DB;
+
+    $new_form_rule = new stdClass();
+    $new_form_rule->id_formulario = $form_id;
+    $new_form_rule->id_regla = $rule_id;
+    $new_form_rule->id_form_pregunta_a = $preg_a_id;
+    $new_form_rule->id_form_pregunta_b = $preg_b_id;
+
+    return $DB->insert_record( 'talentospilos_df_reg_form_pr', $sql );
+
+}
+
 ?>
