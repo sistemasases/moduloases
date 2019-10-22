@@ -1093,8 +1093,7 @@ function dphpforms_reglas_validator($respuestas, $reglas){
                 $satisfied_reglas = true;
             }
         }elseif( $regla == 'EXCLUDE' ){
-            print_r($respuesta_a);
-            print_r($respuesta_b);
+
             if( dphpforms_is_field_empty($respuesta_a) === dphpforms_is_field_empty($respuesta_b) ){
                 $satisfied_reglas = false;
                 break;
@@ -1102,16 +1101,6 @@ function dphpforms_reglas_validator($respuestas, $reglas){
                 $satisfied_reglas = true;
             }
             
-            /*if(
-                // if A has values and B has values
-                (( !is_null($respuesta_a->{'valor'}) )   ||   ( $respuesta_a->{'valor'} !== "-#$%-" )    ||    ( $respuesta_a->{'valor'} !== "" )) && 
-                (( !is_null($respuesta_b->{'valor'}) )   ||   ( $respuesta_b->{'valor'} !== "-#$%-" )    ||    ( $respuesta_b->{'valor'} !== "" ))  
-            ){
-                $satisfied_reglas = false;
-                break;
-            }else{
-                $satisfied_reglas = true;
-            }*/
         }
     }
     return array(
@@ -1122,11 +1111,53 @@ function dphpforms_reglas_validator($respuestas, $reglas){
 }
 
 function dphpforms_is_field_empty( $response ){
+
+    // Check for simple checkbox. A simple checkbox is a checkbox with one value
+    
+    $field = dphpforms_get_pregunta( $response->id );
+
+
+    if( $field->campo === "CHECKBOX" ){
+        $options = json_decode( $field->opciones_campo );
+        if( count( $options ) === 1 ){
+            return ( 
+            
+                is_null($response->{'valor'})             ||                        /* Isn't NULL.       */
+                ( $response->{'valor'} === "-#$%-" )      ||                        /* Isn't NULL chain. */ 
+                ( $response->{'valor'} === "" )           ||                        /* Isn't Empty.      */
+                ( $response->{'valor'} === "-1" )                                   /* Is empty */
+                ?  true : false 
+                        
+            );
+        }
+    }
+
     return ( 
-            !is_null($response->{'valor'}) )          ||   /* Isn't NULL. */
-            ( $response->{'valor'} !== "-#$%-" )      ||   /* Isn't NULL chain. */ 
-            ( $response->{'valor'} !== "" ?                /* Isn't Empty. */
-            true : false );
+            
+        is_null($response->{'valor'})             ||                        /* Isn't NULL.       */
+        ( $response->{'valor'} === "-#$%-" )      ||                        /* Isn't NULL chain. */ 
+        ( $response->{'valor'} === "" )                                     /* Isn't Empty.      */
+        ?  true : false 
+                
+    );
+}
+
+function dphpforms_get_pregunta( $id ){
+
+    global $DB;
+
+    $sql = "
+        SELECT * 
+        FROM 
+            {talentospilos_df_preguntas} AS P,
+            {talentospilos_df_tipo_campo} as T
+        WHERE 
+            P.tipo_campo = T.id AND 
+            P.id = '$id'";
+
+    $field = $DB->get_record_sql( $sql );
+    
+    return ( isset( $field->id ) ? $field : NULL );
 }
 
 function dphpforms_get_respuestas_form_completed($idFormularioDiligenciado){
