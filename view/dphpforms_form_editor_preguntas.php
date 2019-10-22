@@ -74,6 +74,7 @@ $record->preguntas_permissions = array_values(get_permisos_form($form_id));
 $record->form_id = $form_id;
 $record->form_info = $form_info;
 $record->json_ordenamiento = get_json_ordenamiento($form_id);
+$record->rules = array_values( $dphpformsV2_get_form_rules( $form_id ) );
 
 $PAGE->set_context($contextcourse);
 $PAGE->set_context($contextblock);
