@@ -198,6 +198,31 @@
                 return_with_code( -2 );
             }
 
+        }else if( $input->function === "add_new_form_rule" ){
+
+            /* [0] => record_id (int)
+             * */
+            
+            if( count( $input->params ) == 4 ){
+ 
+                // Validation                
+                if( is_numeric( $input->params[0] ) && is_numeric( $input->params[1] ) && is_numeric( $input->params[2] ) && is_numeric( $input->params[3] ) ){
+                    
+                    echo json_encode( 
+                        array(
+                            "status_code" => 0,
+                            "error_message" => "",
+                            "data_response" => dphpformsV2_add_new_form_rule( $input->params[0], $input->params[1], $input->params[2], $input->params[3]  )
+                        )
+                    );
+                    
+                }else{
+                    return_with_code( -2 );
+                }
+            }else{
+                return_with_code( -2 );
+            }
+
         }else if( $input->function === "get_k" ){
 
             /* [0] => record_id (int)
