@@ -1780,7 +1780,7 @@ function dphpformsV2_get_form_rules( $form_id ){
             id_formulario = '$form_id'
     ";
 
-    return $DB->get_records_sql();
+    return $DB->get_records_sql( $sql );
 
 }
 
