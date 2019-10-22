@@ -1762,4 +1762,40 @@ function dphpformsV2_get_k( int $record_id ) :string
     
 }
 
+function dphpformsV2_get_form_rules( $form_id ){
+
+    global $DB;
+
+    $sql = "
+        SELECT 
+            RFP.id, RFP.id_formulario, RFP.id_regla, R.regla, 
+            RFP.id_form_pregunta_a , RFP.id_form_pregunta_b
+        FROM 
+            {talentospilos_df_reg_form_pr} AS RFP
+        INNER JOIN
+            {talentospilos_df_reglas} AS R 
+        ON 
+            RFP.id_regla = R.id
+        WHERE 
+            id_formulario = '$form_id'
+    ";
+
+    return $DB->get_records_sql( $sql );
+
+}
+
+function dphpformsV2_add_new_form_rule( $form_id, $preg_a_id, $rule_id, $preg_b_id ){
+
+    global $DB;
+
+    $new_form_rule = new stdClass();
+    $new_form_rule->id_formulario = $form_id;
+    $new_form_rule->id_regla = $rule_id;
+    $new_form_rule->id_form_pregunta_a = $preg_a_id;
+    $new_form_rule->id_form_pregunta_b = $preg_b_id;
+
+    return $DB->insert_record( 'talentospilos_df_reg_form_pr', $new_form_rule );
+
+}
+
 ?>
