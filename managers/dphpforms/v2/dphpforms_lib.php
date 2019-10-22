@@ -1794,7 +1794,7 @@ function dphpformsV2_add_new_form_rule( $form_id, $preg_a_id, $rule_id, $preg_b_
     $new_form_rule->id_form_pregunta_a = $preg_a_id;
     $new_form_rule->id_form_pregunta_b = $preg_b_id;
 
-    return $DB->insert_record( 'talentospilos_df_reg_form_pr', $sql );
+    return $DB->insert_record( 'talentospilos_df_reg_form_pr', $new_form_rule );
 
 }
 
