@@ -14,11 +14,11 @@
         <div id="dphpforms_username" data-info="{{student_username}}" style="display:none;"></div>
         <div id="dphpforms_fullname" data-info="{{student_fullname}}" style="display:none;"></div>
         <div id="risk_graphic_info" data-info="" style="display:none;"></div>
-        <input type="text" class="hide" id="current_user_id" value="{{id_dphpforms_creado_por}}"/>
+        <input type="text" class="hidden" id="current_user_id" value="{{id_dphpforms_creado_por}}"/>
 
         <form id="ficha_estudiante">
-            <input type="text" class="hide" id="id_ases" name="id_ases" value="{{id_ases}}"/>
-            <input type="text" class="hide" id="id_moodle" name="id_moodle" value="{{id_moodle}}"/>
+            <input type="text" class="hidden" id="id_ases" name="id_ases" value="{{id_ases}}"/>
+            <input type="text" class="hidden" id="id_moodle" name="id_moodle" value="{{id_moodle}}"/>
 
             <div id="div-header-profile" class="ases-row">
                 <div id="div-header-info" class="ases-col-xs-10 ases-col-sm-10 ases-col-md-10 ases-col-lg-10">
@@ -139,8 +139,8 @@
                     {{#update_general_tab_sp}}
                         <div class="ases-col-xs-1 ases-col-sm-1 ases-col-md-1 ases-col-lg-1" id="div-icon-edit">
                             <span class="ases-col-sm-12 ases-col-lg-12 tooltip-v1" id="span-icon-edit" data-toggle="tooltip" data-placement="top" title="Editar ficha"></span>
-                            <span class="ases-col-sm-6 ases-col-lg-6 tooltip-v1" id="span-icon-save-profile" data-toggle="tooltip" data-placement="top" title="Guardar cambios" hidden></span>
-                            <span class="ases-col-sm-6 ases-col-lg-6 tooltip-v1" id="span-icon-cancel-edit" data-toggle="tooltip" data-placement="top" title="Cancelar edición" hidden></span>
+                            <span class="ases-col-sm-6 ases-col-lg-6 tooltip-v1 hidden" id="span-icon-save-profile" data-toggle="tooltip" data-placement="top" title="Guardar cambios"></span>
+                            <span class="ases-col-sm-6 ases-col-lg-6 tooltip-v1 hidden" id="span-icon-cancel-edit" data-toggle="tooltip" data-placement="top" title="Cancelar edición"></span>
                         </div>
                     {{/update_general_tab_sp}}
                 </div>
