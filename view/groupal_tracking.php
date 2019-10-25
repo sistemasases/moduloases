@@ -108,7 +108,7 @@ $PAGE->set_heading($title);
 
 $PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
-//@DEPRECATED
+//@deprecated
 //$PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.css', true);
 //$PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/aaspect.min.css', true);
