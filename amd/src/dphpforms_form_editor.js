@@ -9,7 +9,13 @@
   * @module block_ases/dphpforms_form_editor
   */
 
-  define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/jqueryui','block_ases/select2'], function($, bootstrap, sweetalert, jqueryui, select2) {
+  define([
+      'jquery', 
+      'block_ases/bootstrap', 
+      'block_ases/sweetalert', 
+      'block_ases/jqueryui',
+      'block_ases/select2'
+      ], function($, bootstrap, sweetalert, jqueryui, select2) {
     
     return {
         init: function() {
@@ -501,6 +507,30 @@
                         $("#aplicar-accion").hide();
                     };
                  });
+
+                $('#add_rule').click(function(){
+
+                    let preg_a_id = parseInt($('#preg_a_id').val());
+                    let rule_id = parseInt($('#rule_id').val());
+                    let preg_b_id = parseInt($('#preg_b_id').val());
+                    let form_id = parseInt($("#form-info").data("id"));
+                    console.log("entra");
+                    $.ajax({
+                        method: "POST",
+                        url: "../managers/dphpforms/v2/dphpforms_api.php",
+                        contentType: "application/json",
+                        dataType: "json",
+                        data: JSON.stringify({"function":"add_new_form_rule", "params":[ form_id, preg_a_id, rule_id, preg_b_id ]}) ,
+                        success: function( msg ){
+                            alert('Registrada');
+                        },
+                        error: function( XMLHttpRequest, textStatus, errorThrown ) {
+                            alert('Error registrando');
+                            console.log( "some error " + textStatus + " " + errorThrown );
+                            console.log( XMLHttpRequest );
+                        }
+                    });
+                });
                     
             }
     };

@@ -68,23 +68,23 @@ $script = function(){
 ################################################################################
 ################################################################################
 
-run_script();
+run_script( $script );
 
-function run_script():void
+function run_script( $script ):void
 {
     echo '<center><br><br><br><br>';
     echo '(GitHub) issue - <a href="https://github.com/sistemasases/moduloases/issues/'.ISSUE_NUMNER.'" target="_blank">#'.ISSUE_NUMNER.'</a><br><br>';
     
     if( !core_cache_is_supported() ){
         if( check_password() ){
-            call_user_func("script", []);
+            $script();
         }
     }else{
         if(core_cache_key_exist( "HOTFIX_ISSUE_" . ISSUE_NUMNER )){
             $obj_cache = core_cache_get_obj( "HOTFIX_ISSUE_" . ISSUE_NUMNER );
             echo "Este HOTFIX ya fue aplicado en la fecha: " . $obj_cache->fecha_hora_registro . "<br><br>";
             if( check_password() ){
-                echo "<br>Salida de aplicar el HOTFIX => " . is_null(call_user_func("script", [])); 
+                print_r( "<br>Salida de aplicar el HOTFIX => " . $script() );
                 core_cache_delete( "HOTFIX_ISSUE_" . ISSUE_NUMNER );
                 core_cache_put_value( 
                     $key = "HOTFIX_ISSUE_" . ISSUE_NUMNER , 
@@ -94,7 +94,7 @@ function run_script():void
             }
         }else{
             if( check_password() ){
-                echo "<br>Salida de aplicar el HOTFIX => " . is_null(call_user_func("script", [])); 
+                print_r( "<br>Salida de aplicar el HOTFIX => " .  $script() ); 
                 core_cache_put_value( 
                     $key = "HOTFIX_ISSUE_" . ISSUE_NUMNER , 
                     $value = "OK", 
