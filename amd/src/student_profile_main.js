@@ -10,7 +10,6 @@
  */
 
 define(['jquery',
-    'block_ases/bootstrap',
     'block_ases/d3',
     'block_ases/sweetalert',
     'block_ases/jqueryui',
@@ -21,7 +20,7 @@ define(['jquery',
     'block_ases/academic_profile_main',
     'block_ases/socioed_profile_main',
     'block_ases/geographic_main',
-    'block_ases/aaspect'], function ($, bootstrap, d3, sweetalert, jqueryui, select2, Chart, mustache, loading_indicator, academic, socioed, geographic, aaspect) {
+    'block_ases/aaspect'], function ($, d3, sweetalert, jqueryui, select2, Chart, mustache, loading_indicator, academic, socioed, geographic, aaspect) {
 
     return {
         init: function (data_init) {
@@ -177,11 +176,11 @@ define(['jquery',
                     $('#socioed_li').addClass('ases-active');
                     $('#general_tab').removeClass('ases-tab-active');
                     $('#socioed_tab').addClass('ases-tab-active');
-                    panel_collapse.removeClass('ases-in');
-                    $('#collapseOne').addClass('ases-in');
+                    //panel_collapse.removeClass('in');
+                    //$('#collapseOne').addClass('in');
                     break;
                 default:
-                    panel_collapse.removeClass('ases-in');
+                    //panel_collapse.removeClass('in');
                     break;
             }
 
@@ -649,9 +648,9 @@ define(['jquery',
             $('#span-icon-edit').on('click', function () {
                 $(this).hide();
                 $('#tip-edit').hide();
-                $('#span-icon-save-profile').prop('hidden', false);
+                $('#span-icon-save-profile').show();
                 $('#tip-save').show();
-                $('#span-icon-cancel-edit').prop('hidden', false);
+                $('#span-icon-cancel-edit').show();
                 $('#tip-cancel').show();
                 $('#tipo_doc').prop('disabled', false);
                 $('#num_doc').prop('readonly', false);
@@ -1013,12 +1012,12 @@ define(['jquery',
 
             // Deshabilitar campos para el ingreso de datos
 
+            $('#span-icon-cancel-edit').hide();
             $('#tip-cancel').hide();
+            $('#span-icon-save-profile').hide();
             $('#tip-save').hide();
             $('#span-icon-edit').show();
             $('#tip-edit').show();
-            $('#span-icon-cancel-edit').prop('hidden', true);
-            $('#span-icon-save-profile').prop('hidden', true);
             $('#tipo_doc').prop('disabled', true);
             $('#num_doc').prop('readonly', true);
             $('#email').prop('readonly', true);
