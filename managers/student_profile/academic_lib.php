@@ -78,21 +78,21 @@ function make_html_courses($courses)
 
     foreach ($courses as $course) {
 
-        $html .= "<div class='panel panel-default'>
-                    <div class='panel-heading' id = 'academic'>
-                        <h4 class='panel-title'>
-                        <a id = 'academic_link' data-toggle='collapse' data-parent='#accordion_academic' href='#course_$course->id_course' aria-expanded='false' aria-controls='$course->id_course'>
-                            $course->fullname
-                        </a>
+        $html .= "<div class='card'>
+                    <div class='card-heading' id = 'academic'>
+                        <h4 class='card-title'>
+                            <a id = 'academic_link' data-toggle='collapse' data-parent='#accordion_academic' href='#course_$course->id_course' aria-expanded='false' aria-controls='$course->id_course'>
+                                $course->fullname
+                            </a>
                         </h4>
                     </div>
                     <div id = 'course_$course->id_course' class='panel-collapse collapse'>
-                        <div class = 'panel-body'>
+                        <div class = 'card-body'>
                             $course->descriptions
                         </div>
                     </div>
-                  </div>";
-
+                  </div>"
+        ;
     }
 
     return $html;
@@ -268,7 +268,7 @@ function make_html_semesters($semesters)
                 $promedio_acumulado = "NO REGISTRA";
             }
             
-            $descriptions .= "<div id = 'panel_academic' class = 'panel panel-default'><div id = 'info_course' class = 'ases-row'>
+            $descriptions .= "<div id = 'panel_academic' class = 'card'><div id = 'info_course' class = 'ases-row'>
                                 <div class = 'ases-col-md-4 ases-col-lg-4'>Programa: <b>$registro->program_name</b></div>
                                 <div class = 'ases-col-md-4 ases-col-lg-4'>Promedio Semestre: $promedio_semestre</div>
                                 <div class = 'ases-col-md-4 ases-col-lg-4'>Promedio Acumulado: $promedio_acumulado</div>
@@ -342,32 +342,32 @@ function make_html_semesters($semesters)
             $descriptions .= "</div>";
 
             if($first){
-                $html .= "  <div class='panel panel-default'>
-                      <div class='panel-heading' id = 'academic'>
-                          <h4 class='panel-title'>
+                $html .= "  <div class='card'>
+                      <div class='card-heading' id = 'academic'>
+                          <h4 class='card-title'>
                           <a id = 'academic_link' data-toggle='collapse' data-parent='#accordion_academic_historic' href='#register_$semester_name' aria-expanded='false' aria-controls='$semester_name'>
                               Semestre $semester_name
                           </a>
                           </h4>
                       </div>
                       <div id = 'register_$semester_name' class='panel-collapse collapse'>
-                          <div class = 'panel-body'>
+                          <div class = 'card-body'>
                               $descriptions
                           </div>
                       </div>
                     </div>  ";
             } else{
 
-                $html .= "  <div class='panel panel-default'>
-                      <div class='panel-heading' id = 'academic'>
-                          <h4 class='panel-title saltopagina'>
+                $html .= "  <div class='card'>
+                      <div class='card-heading' id = 'academic'>
+                          <h4 class='card-title saltopagina'>
                           <a id = 'academic_link' data-toggle='collapse' data-parent='#accordion_academic_historic' href='#register_$semester_name' aria-expanded='false' aria-controls='$semester_name'>
                               Semestre $semester_name
                           </a>
                           </h4>
                       </div>
                       <div id = 'register_$semester_name' class='panel-collapse collapse'>
-                          <div class = 'panel-body'>
+                          <div class = 'card-body'>
                               $descriptions
                           </div>
                       </div>
