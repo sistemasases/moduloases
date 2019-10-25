@@ -2227,7 +2227,7 @@ function student_profile_get_html_peer_tracking($id_ases, $id_block){
 
     if ($array_peer_trackings != null) {
 
-        $panel = "<div class='panel-group' id='accordion_semesters'>";
+        $panel = "<div class='' id='accordion_semesters'>";
 
         foreach ($array_peer_trackings->semesters_segumientos as $key_semester => $array_semester) {
 
@@ -2235,24 +2235,24 @@ function student_profile_get_html_peer_tracking($id_ases, $id_block){
                 continue;
             }
 
-            $panel .= "<div class='panel panel-default'>";
+            $panel .= "<div class='card'>";
             $panel .= "<a data-toggle='collapse' class='collapsed' data-parent='#accordion_semesters' style='text-decoration:none' href='#semester" . $array_semester->id_semester . "'>";
-            $panel .= "<div class='panel-heading heading_semester_tracking'>";
-            $panel .= "<h4 class='panel-title'>";
+            $panel .= "<div class='card-header heading_semester_tracking'>";
+            $panel .= "<h4 class='card-title'>";
             $panel .= "$array_semester->name_semester";
-            $panel .= "<span class='glyphicon glyphicon-chevron-left'></span>";
+            $panel .= "<span class='ases-glyphicon ases-glyphicon-chevron-left'></span>";
             $panel .= "</h4>"; //End panel-title
             $panel .= "</div>"; //End panel-heading
             $panel .= "</a>";
 
             $panel .= "<div id='semester$array_semester->id_semester' class='panel-collapse collapse'>";
-            $panel .= "<div class='panel-body'>";
+            $panel .= "<div class='card-body'>";
 
             // $panel .= "<div class=\"container well col-md-12\">";
             // $panel .= "<div class=\"container-fluid col-md-10\" name=\"info\">";
             // $panel .= "<div class=\"row\">";
 
-            $panel .= "<div class='panel-group' id='accordion_trackings_semester'>";
+            $panel .= "<div class='' id='accordion_trackings_semester'>";
 
             foreach ($array_semester->result as $tracking) {
 
@@ -2262,250 +2262,250 @@ function student_profile_get_html_peer_tracking($id_ases, $id_block){
                 $date = date_parse_from_format('d-m-Y', $tracking->fecha);
                 $months = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
 
-                $panel .= "<div class='panel panel-default'>";
-                $panel .= "<div class='panel-heading'>";
-                $panel .= "<h4 class='panel-title'>";
+                $panel .= "<div class='card'>";
+                $panel .= "<div class='card-header'>";
+                $panel .= "<h4 class='card-title'>";
 
                 $panel .= "<a data-toggle='collapse' data-parent='#accordion_trackings_semester' href='#" . $tracking->id_seg . "'>";
                 $panel .= " Registro " . $months[(int) $date["month"] - 1] . "-" . $date["day"] . "-" . $date["year"] . "</a>";
 
-                $panel .= "</h4>"; // h4 div panel-title
-                $panel .= "</div>"; // End div panel-heading
+                $panel .= "</h4>"; // h4 div card-title
+                $panel .= "</div>"; // End div card-header
 
                 $panel .= "<div id='$tracking->id_seg' class='panel-collapse collapse'>";
-                $panel .= "<div class='panel-body'>";
+                $panel .= "<div class='card-body'>";
 
                 // Date, Place, time  (Fecha, lugar, hora)
-                $panel .= "<div class='panel panel-default'>";
-                $panel .= "<div class='panel-body'>";
+                $panel .= "<div class='card'>";
+                $panel .= "<div class='card-body'>";
 
-                $panel .= "<div class='col-sm-3'>";
+                $panel .= "<div class='ases-col-sm-3 ases-col-lg-3'>";
                 $panel .= "<b>Fecha:</b>";
                 $panel .= "</div>";
-                $panel .= "<div class='col-sm-6'>";
+                $panel .= "<div class='ases-col-sm-3 ases-col-lg-3'>";
                 $panel .= "<b>Lugar:</b>";
                 $panel .= "</div>";
-                $panel .= "<div class='col-sm-3'>";
+                $panel .= "<div class='ases-col-sm-3 ases-col-lg-3'>";
                 $panel .= "<b>Hora:</b>";
                 $panel .= "</div>";
 
-                $panel .= "<div class='col-sm-3'>";
+                $panel .= "<div class='ases-col-sm-3 ases-col-lg-3'>";
                 $panel .= "<span class='date_tracking_peer'>" . $date["month"] . "-" . $date["day"] . "-" . $date["year"] . "</span>";
                 $panel .= "</div>";
-                $panel .= "<div class='col-sm-6'>";
+                $panel .= "<div class='ases-col-sm-6 ases-col-lg-6'>";
                 $panel .= "<span class='place_tracking_peer'>" . $tracking->lugar . "</span>";
                 $panel .= "</div>";
-                $panel .= "<div class='col-sm-3'>";
+                $panel .= "<div class='ases-col-sm-3 ases-col-lg-3'>";
                 $panel .= "<span class='init_time_tracking_peer'>" . $tracking->hora_ini . "</span> - <span class='ending_time_tracking_peer'>" . $tracking->hora_fin . "</span>";
                 $panel .= "</div>";
 
-                $panel .= "</div>"; // End panel-body
-                $panel .= "</div>"; // End div panel panel-default
+                $panel .= "</div>"; // End card-body
+                $panel .= "</div>"; // End div card
 
                 // Created by (Creado por)
 
-                $panel .= "<div class='panel panel-default'>";
-                $panel .= "<div class='panel-body'>";
+                $panel .= "<div class='card'>";
+                $panel .= "<div class='card-body'>";
 
-                $panel .= "<div class='col-sm-12'>";
+                $panel .= "<div class='ases-col-sm-12 ases-col-lg-12'>";
                 $panel .= "<b>Creado por: </b>";
                 $panel .= $monitor_object->firstname . " " . $monitor_object->lastname;
                 $panel .= "</div>";
 
-                $panel .= "</div>"; // End panel-body
-                $panel .= "</div>"; // End div panel panel-default
+                $panel .= "</div>"; // End card-body
+                $panel .= "</div>"; // End div card
 
                 // Subject (Tema)
-                $panel .= "<div class='panel panel-default'>";
-                $panel .= "<div class='panel-body'>";
+                $panel .= "<div class='card'>";
+                $panel .= "<div class='card-body'>";
 
-                $panel .= "<div class='col-sm-12'>";
+                $panel .= "<div class='ases-col-sm-12 ases-col-lg-12'>";
                 $panel .= "<b>Tema:</b>";
                 $panel .= "</div>";
 
-                $panel .= "<div class='col-sm-12'>";
+                $panel .= "<div class='ases-col-sm-12 ases-col-lg-12'>";
                 $panel .= "<span class='topic_tracking_peer'>" . $tracking->tema . "</span>";
                 $panel .= "</div>";
 
-                $panel .= "</div>"; // End panel-body
-                $panel .= "</div>"; // End div panel panel-default
+                $panel .= "</div>"; // End card-body
+                $panel .= "</div>"; // End div card
 
                 // Objectives (Objetivos)
-                $panel .= "<div class='panel panel-default'>";
-                $panel .= "<div class='panel-body'>";
+                $panel .= "<div class='card'>";
+                $panel .= "<div class='card-body'>";
 
-                $panel .= "<div class='col-sm-12'>";
+                $panel .= "<div class='ases-col-sm-12 ases-col-lg-12'>";
                 $panel .= "<b>Objetivos:</b>";
                 $panel .= "</div>";
 
-                $panel .= "<div class='col-sm-12'>";
+                $panel .= "<div class='ases-col-sm-12 ases-col-lg-12'>";
                 $panel .= "<span class='objectives_tracking_peer'>" . $tracking->objetivos . "</span>";
                 $panel .= "</div>";
 
-                $panel .= "</div>"; // End panel-body
-                $panel .= "</div>"; // End div panel panel-default
+                $panel .= "</div>"; // End card-body
+                $panel .= "</div>"; // End div card
 
                 if ($tracking->individual != "") {
 
                     if ($tracking->individual_riesgo == '1') {
-                        $panel .= "<div class='panel panel-default riesgo_bajo'>";
+                        $panel .= "<div class='card riesgo_bajo'>";
                     } else if ($tracking->individual_riesgo == '2') {
-                        $panel .= "<div class='panel panel-default riesgo_medio'>";
+                        $panel .= "<div class='card riesgo_medio'>";
                     } else if ($tracking->individual_riesgo == '3') {
-                        $panel .= "<div class='panel panel-default riesgo_alto'>";
+                        $panel .= "<div class='card riesgo_alto'>";
                     } else {
-                        $panel .= "<div class='panel panel-default'>";
+                        $panel .= "<div class='card'>";
                     }
 
-                    $panel .= "<div class='panel-body'>";
-                    $panel .= "<div class='col-sm-12'>";
+                    $panel .= "<div class='card-body'>";
+                    $panel .= "<div class='ases-col-sm-12 ases-col-lg-12'>";
                     $panel .= "<b>Individual:</b><br>";
                     $panel .= "<span class='individual_tracking_peer'>$tracking->individual</span><br><br>";
                     $panel .= "<b>Riesgo individual: </b>";
                     $panel .= "<span class='ind_risk_tracking_peer'>" . $enum_risk[(int) $tracking->individual_riesgo] . "</span><br><br>";
-                    $panel .= "</div>"; // End div col-sm-12
-                    $panel .= "</div>"; // End panel-body
-                    $panel .= "</div>"; // End div panel panel-default
+                    $panel .= "</div>"; // End div ases-col-sm-12 ases-col-lg-12
+                    $panel .= "</div>"; // End card-body
+                    $panel .= "</div>"; // End div card
                 }
 
                 if ($tracking->familiar_desc != "") {
 
                     if ($tracking->familiar_riesgo == '1') {
-                        $panel .= "<div class='panel panel-default riesgo_bajo'>";
+                        $panel .= "<div class='card riesgo_bajo'>";
                     } else if ($tracking->familiar_riesgo == '2') {
-                        $panel .= "<div class='panel panel-default riesgo_medio'>";
+                        $panel .= "<div class='card riesgo_medio'>";
                     } else if ($tracking->familiar_riesgo == '3') {
-                        $panel .= "<div class='panel panel-default riesgo_alto'>";
+                        $panel .= "<div class='card riesgo_alto'>";
                     } else {
-                        $panel .= "<div class='panel panel-default'>";
+                        $panel .= "<div class='card'>";
                     }
 
-                    $panel .= "<div class='panel-body'>";
-                    $panel .= "<div class='col-sm-12'>";
+                    $panel .= "<div class='card-body'>";
+                    $panel .= "<div class='ases-col-sm-12 ases-col-lg-12'>";
                     $panel .= "<b>Familiar:</b><br>";
                     $panel .= "<span class='familiar_tracking_peer'>$tracking->familiar_desc</span><br><br>";
                     $panel .= "<b>Riesgo familiar: </b>";
                     $panel .= "<span class='fam_risk_tracking_peer'>" . $enum_risk[(int) $tracking->familiar_riesgo] . "</span><br><br>";
-                    $panel .= "</div>"; // End div col-sm-12
-                    $panel .= "</div>"; // End panel-body
-                    $panel .= "</div>"; // End div panel panel-default
+                    $panel .= "</div>"; // End div ases-col-sm-12 ases-col-lg-12
+                    $panel .= "</div>"; // End card-body
+                    $panel .= "</div>"; // End div card
                 }
 
                 if ($tracking->academico != "") {
 
                     if ($tracking->academico_riesgo == '1') {
-                        $panel .= "<div class='panel panel-default riesgo_bajo'>";
+                        $panel .= "<div class='card riesgo_bajo'>";
                     } else if ($tracking->academico_riesgo == '2') {
-                        $panel .= "<div class='panel panel-default riesgo_medio'>";
+                        $panel .= "<div class='card riesgo_medio'>";
                     } else if ($tracking->academico_riesgo == '3') {
-                        $panel .= "<div class='panel panel-default riesgo_alto'>";
+                        $panel .= "<div class='card riesgo_alto'>";
                     } else {
-                        $panel .= "<div class='panel panel-default'>";
+                        $panel .= "<div class='card'>";
                     }
 
-                    $panel .= "<div class='panel-body'>";
-                    $panel .= "<div class='col-sm-12'>";
+                    $panel .= "<div class='card-body'>";
+                    $panel .= "<div class='ases-col-sm-12 ases-col-lg-12'>";
                     $panel .= "<b>Académico:</b><br>";
                     $panel .= "<span class='academico_tracking_peer'>$tracking->academico</span><br><br>";
                     $panel .= "<b>Riesgo académico: </b>";
                     $panel .= "<span class='aca_risk_tracking_peer'>" . $enum_risk[(int) $tracking->academico_riesgo] . "</span><br><br>";
-                    $panel .= "</div>"; // End div col-sm-12
-                    $panel .= "</div>"; // End panel-body
-                    $panel .= "</div>"; // End div panel panel-default
+                    $panel .= "</div>"; // End div ases-col-sm-12 ases-col-lg-12
+                    $panel .= "</div>"; // End card-body
+                    $panel .= "</div>"; // End div card
                 }
 
                 if ($tracking->economico != "") {
 
                     if ($tracking->economico_riesgo == '1') {
-                        $panel .= "<div class='panel panel-default riesgo_bajo'>";
+                        $panel .= "<div class='card riesgo_bajo'>";
                     } else if ($tracking->economico_riesgo == '2') {
-                        $panel .= "<div class='panel panel-default riesgo_medio'>";
+                        $panel .= "<div class='card riesgo_medio'>";
                     } else if ($tracking->economico_riesgo == '3') {
-                        $panel .= "<div class='panel panel-default riesgo_alto'>";
+                        $panel .= "<div class='card riesgo_alto'>";
                     } else {
-                        $panel .= "<div class='panel panel-default'>";
+                        $panel .= "<div class='card'>";
                     }
 
-                    $panel .= "<div class='panel-body'>";
-                    $panel .= "<div class='col-sm-12'>";
+                    $panel .= "<div class='card-body'>";
+                    $panel .= "<div class='ases-col-sm-12 ases-col-lg-12'>";
                     $panel .= "<b>Económico:</b><br>";
                     $panel .= "<span class='economico_tracking_peer'>$tracking->economico</span><br><br>";
                     $panel .= "<b>Riesgo económico: </b>";
                     $panel .= "<span class='econ_risk_tracking_peer'>" . $enum_risk[(int) $tracking->economico_riesgo] . "</span><br><br>";
-                    $panel .= "</div>"; // End div col-sm-12
-                    $panel .= "</div>"; // End panel-body
-                    $panel .= "</div>"; // End div panel panel-default
+                    $panel .= "</div>"; // End div ases-col-sm-12 ases-col-lg-12
+                    $panel .= "</div>"; // End card-body
+                    $panel .= "</div>"; // End div card
                 }
 
                 if ($tracking->vida_uni != "") {
 
                     if ($tracking->vida_uni_riesgo == '1') {
-                        $panel .= "<div class='panel panel-default riesgo_bajo'>";
+                        $panel .= "<div class='card riesgo_bajo'>";
                     } else if ($tracking->vida_uni_riesgo == '2') {
-                        $panel .= "<div class='panel panel-default riesgo_medio'>";
+                        $panel .= "<div class='card riesgo_medio'>";
                     } else if ($tracking->vida_uni_riesgo == '3') {
-                        $panel .= "<div class='panel panel-default riesgo_alto'>";
+                        $panel .= "<div class='card riesgo_alto'>";
                     } else {
-                        $panel .= "<div class='panel panel-default'>";
+                        $panel .= "<div class='card'>";
                     }
 
-                    $panel .= "<div class='panel-body'>";
-                    $panel .= "<div class='col-sm-12'>";
+                    $panel .= "<div class='card-body'>";
+                    $panel .= "<div class='ases-col-sm-12 ases-col-lg-12'>";
                     $panel .= "<b>Vida universitaria:</b><br>";
                     $panel .= "<span class='lifeu_tracking_peer'>$tracking->vida_uni</span><br><br>";
                     $panel .= "<b>Riesgo vida universitaria: </b>";
                     $panel .= "<span class='lifeu_risk_tracking_peer'>" . $enum_risk[(int) $tracking->vida_uni_riesgo] . "</span><br><br>";
-                    $panel .= "</div>"; // End div col-sm-12
-                    $panel .= "</div>"; // End panel-body
-                    $panel .= "</div>"; // End div panel panel-default
+                    $panel .= "</div>"; // End div ases-col-sm-12 ases-col-lg-12
+                    $panel .= "</div>"; // End card-body
+                    $panel .= "</div>"; // End div card
                 }
 
                 // Observations (observaciones)
-                $panel .= "<div class='panel panel-default'>";
-                $panel .= "<div class='panel-body'>";
+                $panel .= "<div class='card'>";
+                $panel .= "<div class='card-body'>";
 
-                $panel .= "<div class='col-sm-12'>";
+                $panel .= "<div class='ases-col-sm-12 ases-col-lg-12'>";
                 $panel .= "<b>Observaciones:</b>";
                 $panel .= "</div>";
 
-                $panel .= "<div class='col-sm-12'>";
+                $panel .= "<div class='ases-col-sm-12 ases-col-lg-12'>";
                 $panel .= "<span class='observations_tracking_peer'>" . $tracking->observaciones . "</span>";
                 $panel .= "</div>";
 
-                $panel .= "</div>"; // End panel-body
-                $panel .= "</div>"; // End div panel panel-default
+                $panel .= "</div>"; // End card-body
+                $panel .= "</div>"; // End div card
 
                 // Edit and delete buttons
-                $panel .= "<div class='row'>";
-                $panel .= "<div class='col-sm-4 row-buttons-tracking'>";
-                $panel .= "<button type='button' class='btn-primary edit_peer_tracking' id='edit_tracking_" . $tracking->id_seg . "'>Editar seguimiento</button>";
+                $panel .= "<div class='ases-row'>";
+                $panel .= "<div class='ases-col-sm-4 ases-col-lg-4 row-buttons-tracking'>";
+                $panel .= "<button type='button' class='ases-primary edit_peer_tracking' id='edit_tracking_" . $tracking->id_seg . "'>Editar seguimiento</button>";
                 $panel .= "</div>";
-                $panel .= "<div class='col-sm-3 col-sm-offset-5 row-buttons-tracking'>";
-                $panel .= "<button type='button' class='btn-danger delete_peer_tracking col-sm-10' id='delete_tracking_peer_" . $tracking->id_seg . "'>";
-                $panel .= "Borrar <span class='glyphicon glyphicon-trash'></span>";
+                $panel .= "<div class='ases-col-sm-3 ases-col-lg-3 ases-col-sm-offset-5 ases-col-lg-offset-5 row-buttons-tracking'>";
+                $panel .= "<button type='button' class='ases-danger delete_peer_tracking ases-col-sm-10 ases-col-lg-10' id='delete_tracking_peer_" . $tracking->id_seg . "'>";
+                $panel .= "Borrar <span class='ases-glyphicon ases-glyphicon-trash'></span>";
                 $panel .= "</button>";
                 $panel .= "</div>";
                 $panel .= "</div>";
 
-                $panel .= "</div>"; // End panel-body tracking
+                $panel .= "</div>"; // End card-body tracking
                 $panel .= "</div>"; // End div panel-collapse tracking
-                $panel .= "</div>"; // End div panel-default
+                $panel .= "</div>"; // End div card
             }
 
-            $panel .= "</div>"; // End panel accordion_trackings_semester
+            $panel .= "</div>"; // End accordion_trackings_semester
 
-            $panel .= "</div>"; // End panel-body
+            $panel .= "</div>"; // End card-body
             $panel .= "</div>"; // End panel-collapse
 
-            $panel .= "</div>"; //End panel panel-default
+            $panel .= "</div>"; //End card
         }
 
-        $panel .= "</div>"; //End panel group accordion_semesters
+        $panel .= "</div>"; //End accordion_semesters
 
         $html_tracking_peer .= $panel;
 
     } else {
-        $html_tracking_peer .= "<div class='col-sm-12'><center><h4>No registra seguimientos</h4></center></div>";
+        $html_tracking_peer .= "<div class='ases-col-sm-12 ases-col-lg-12'><center><h4>No registra seguimientos</h4></center></div>";
     }
 
     return $html_tracking_peer;

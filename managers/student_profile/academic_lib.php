@@ -79,7 +79,7 @@ function make_html_courses($courses)
     foreach ($courses as $course) {
 
         $html .= "<div class='card'>
-                    <div class='card-heading' id = 'academic'>
+                    <div class='card-header' id = 'academic'>
                         <h4 class='card-title'>
                             <a id = 'academic_link' data-toggle='collapse' data-parent='#accordion_academic' href='#course_$course->id_course' aria-expanded='false' aria-controls='$course->id_course'>
                                 $course->fullname
@@ -343,7 +343,7 @@ function make_html_semesters($semesters)
 
             if($first){
                 $html .= "  <div class='card'>
-                      <div class='card-heading' id = 'academic'>
+                      <div class='card-header' id = 'academic'>
                           <h4 class='card-title'>
                           <a id = 'academic_link' data-toggle='collapse' data-parent='#accordion_academic_historic' href='#register_$semester_name' aria-expanded='false' aria-controls='$semester_name'>
                               Semestre $semester_name
@@ -359,7 +359,7 @@ function make_html_semesters($semesters)
             } else{
 
                 $html .= "  <div class='card'>
-                      <div class='card-heading' id = 'academic'>
+                      <div class='card-header' id = 'academic'>
                           <h4 class='card-title saltopagina'>
                           <a id = 'academic_link' data-toggle='collapse' data-parent='#accordion_academic_historic' href='#register_$semester_name' aria-expanded='false' aria-controls='$semester_name'>
                               Semestre $semester_name
