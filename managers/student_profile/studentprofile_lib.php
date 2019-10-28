@@ -23,7 +23,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(dirname(__FILE__). '/../../../../config.php');
+require_once( dirname(__FILE__). '/../../../../config.php' );
+require_once( dirname(__FILE__). '/../../core/module_loader.php' ); 
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/dphpforms_forms_core.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/v2/dphpforms_lib.php';
@@ -44,6 +45,8 @@ require_once('student_graphic_dimension_risk.php');
 require_once('academic_lib.php');
 require_once('geographic_lib.php');
 require_once('others_tab_lib.php');
+
+module_loader("periods");
 
 /**
  * Gets all reasons a student quit or delay studies
@@ -2138,7 +2141,7 @@ function student_profile_get_peer_tracking($id_ases){
     $new_forms_date =strtotime('2018-01-01 00:00:00');
 
     $peer_tracking_v3 = [];
-    $periods = periods_management_get_all_semesters();
+    $periods = core_periods_get_all_periods();
     $special_date_interval = [
         'start' => strtotime( "2019-01-01" ),
         'end' => strtotime( "2019-04-30" )
