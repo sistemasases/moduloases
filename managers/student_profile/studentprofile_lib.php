@@ -2138,14 +2138,15 @@ function save_profile($form, $option1, $option2, $live_with){
  */
 function student_profile_get_peer_tracking($id_ases){
 
-    $new_forms_date =strtotime('2018-01-01 00:00:00');
-
     $peer_tracking_v3 = [];
-    $periods = core_periods_get_all_periods();
+    $new_forms_date =strtotime('2018-01-01 00:00:00');
     $special_date_interval = [
         'start' => strtotime( "2019-01-01" ),
         'end' => strtotime( "2019-04-30" )
     ];
+    
+    $periods = core_periods_get_all_periods();
+    
 
     foreach( $periods as $key => $period ){
 
@@ -2165,7 +2166,7 @@ function student_profile_get_peer_tracking($id_ases){
                         $_fecha = strtotime( $tracking['fecha'] );
                     }else{
                         $_fecha = strtotime( $tracking['in_fecha'] );
-                    };
+                    }
 
                     if( ( $_fecha >= $special_date_interval['start'] ) && ( $_fecha <= $special_date_interval['end'] ) ){
                         $tracking['custom_extra']['special_tracking'] = true;
@@ -2179,26 +2180,26 @@ function student_profile_get_peer_tracking($id_ases){
                         if( $tracking['revisado_profesional'] === "0" ){
                             $tracking['custom_extra']['rev_pro'] = true;
                         }
-                    };
+                    }
                     if ( array_key_exists("revisado_practicante", $tracking) ) {
                         if( $tracking['revisado_practicante'] === "0" ){
                             $tracking['custom_extra']['rev_pract'] = true;
                         }
-                    };
+                    }
                     if ( array_key_exists("in_revisado_profesional", $tracking) ) {
                         if( $tracking['in_revisado_profesional'] === "0" ){
                             $tracking['custom_extra']['rev_pro'] = true;
                         }
-                    };
+                    }
                     if ( array_key_exists("in_revisado_practicante", $tracking) ) {
                         if( $tracking['in_revisado_practicante'] === "0" ){
                             $tracking['custom_extra']['rev_pract'] = true;
                         }
-                    };
+                    }
 
                     //Using reference fail
                     array_push( $tracking_modified, $tracking );
-                };
+                }
 
                 $peer_tracking['trackings'] = $tracking_modified;
 
@@ -2206,7 +2207,7 @@ function student_profile_get_peer_tracking($id_ases){
             }
         }
     }
-    return array_reverse($peer_tracking_v3);
+    return $peer_tracking_v3;
 }
 
 /**
