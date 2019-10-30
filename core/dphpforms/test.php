@@ -1,19 +1,8 @@
 <?php
-
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 require_once( __DIR__ . "/../module_loader.php");
-require_once( __DIR__ . "/v1/DOMTools.php");
-
-$attributes = new DOMAttributeList( ["a"=>1,"b"=>2] );
-$dom = new DOMDocument();
-$test = $dom->createElement( "test" );
-
-dom_add_attributte( $test, $attributes );
-
-
-die();
 module_loader("dphpforms");
 
 $initial_config = '{
@@ -43,4 +32,6 @@ $initial_config = '{
     ]
 }';
 $initial_config = json_decode( $initial_config );
+
+
 echo dphpformsV2_generate_html_recorder( 'seguimiento_pares', "sistemas", $initial_config  );

@@ -9,7 +9,7 @@
 
 
 require_once(dirname(__FILE__). '/../../../core/module_loader.php'); 
-
+require_once( __DIR__ . "/DOMTools.php");
 module_loader("security");
 
 // -- Dev test block - This block cannot be considerated as documentation.
@@ -974,21 +974,23 @@ function dphpformsV2_generate_TEXTAREA( $id_formulario_pregunta, $context, $stat
     $field_enabled = $context[ 'enabled' ];
     $field_attr_required = $context[ 'attr_required' ];*/
     
-    $div_attr = [
-        'class' =>  [ "div-$id_formulario_pregunta", $context[ 'attr_class' ] ,$context[ 'attr_local_alias' ] ]
-    ];
+    $div_attr = new DOMAttributeList( [
+        'class' =>  "div-$id_formulario_pregunta", $context[ 'attr_class' ] ,$context[ 'attr_local_alias' ],
+        'data-uid' => uniqid( $prefix_uniqid, true )
+    ] );
     
-    $inner_element_attr = [
-        'id' => [ $id_formulario_pregunta ],
-        'class' =>  [ "form-control", $context[ 'attr_inputclass' ] ,$context[ 'attr_local_alias' ] ],
-        'name' =>  $id_formulario_pregunta,
+    $inner_element_attr = new DOMAttributeList( [
+        'id' => $id_formulario_pregunta,
+        'class' =>  [ "form-control", $context[ 'attr_inputclass' ], $context[ 'attr_local_alias' ] ],
+        'name' => $id_formulario_pregunta,
         'placeholder' => $context[ 'attr_placeholder' ],
         'maxlength' => $context[ 'attr_maxlength' ],
-        'disable' =>  $context[ 'enabled' ],
-        'required' => $context[ 'attr_required' ],
-        '$defaultValue' => $context[ 'default_value' ]
-    ];
+        'disabled' => $context[ 'enabled' ],
+        'required' => $context[ 'attr_required' ]
+    ] );
     
+    $default_value = $context[ 'default_value' ];
+
     /*$html = '
     <div class="div-'.$id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" data-uid="'. uniqid($prefix_uniqid,true) .'" >' 
         . $statement . ':<br>
@@ -1002,17 +1004,11 @@ function dphpformsV2_generate_TEXTAREA( $id_formulario_pregunta, $context, $stat
     $dom->formatOutput = true;
     
     $div = $dom->createElement( "div" );
-    $div->setAttribute("class", "div-$id_formulario_pregunta $field_attr_class $field_attr_local_alias" );
-    $div->setAttribute("data-uid", uniqid( $prefix_uniqid, true ) );
-        
+    _core_dphpforms_dom_add_attributtes( $div, $div_attr );
     
-    
-    $textarea = $dom->createElement('textarea');
-    $textarea->nodeValue = '';
-    $textarea->setAttribute("class", "form-control $field_attr_inputclass");
-    $textarea->setAttribute("name", $id_formulario_pregunta);
-    $textarea->setAttribute("placeholder", $field_attr_placeholder);
-    $textarea->setAttribute("placeholder", $field_attr_maxlength);
+    $textarea = $dom->createElement('textarea');    
+    _core_dphpforms_dom_add_attributtes( $textarea, $inner_element_attr );
+    $textarea->nodeValue = $default_value;
     
     $label = $dom->createElement('label');
     $label->nodeValue = $statement;
@@ -1025,10 +1021,8 @@ function dphpformsV2_generate_TEXTAREA( $id_formulario_pregunta, $context, $stat
     
     $dom->appendChild($div);
     
-    echo $dom->saveXml();
-    die();
     
-    return $html;
+    return $dom->saveHTML();
     
 }
 
