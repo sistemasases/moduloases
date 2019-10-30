@@ -67,10 +67,10 @@ class DOMAttributeList extends AbstractDOMAttributeList {
 
         foreach ($list as &$val) {
 
-            if ($this->value_is_supported($val)) {
-                array_push($vals, $val);
+            if ($this->basic_value_is_supported($val)) {
+                array_push($vals, (string) $val);
             } else {
-                $this->throw_unsupported_exeption($val);
+                $this->throw_basic_unsupported_exeption($val);
             }
         }
 
@@ -81,7 +81,7 @@ class DOMAttributeList extends AbstractDOMAttributeList {
         return $this->attributes;
     }
 
-    private function value_is_supported($val): bool {
+    private function basic_value_is_supported($val): bool {
         switch (gettype($val)) {
             case gettype(false):
                 return true;
@@ -91,15 +91,17 @@ class DOMAttributeList extends AbstractDOMAttributeList {
                 return true;
             case gettype("0"):
                 return true;
-            case gettype(array()):
-                return true;
             default:
                 return false;
         }
     }
 
     private function throw_unsupported_exeption($val) {
-        throw new Exception("'" . gettype($val) . "' is not supported.");
+        throw new Exception("'" . gettype($val) . "' is not supported.", -1);
+    }
+    
+    private function throw_basic_unsupported_exeption($val) {
+        throw new Exception("'" . gettype($val) . "' is not supported as basic value.", -2);
     }
 
 }
