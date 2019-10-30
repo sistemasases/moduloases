@@ -15,30 +15,25 @@ abstract class AbstractDOMAttributeList {
 
 class DOMAttributeList extends AbstractDOMAttributeList {
 
-    private $attributes;
+    private $attributes = array();
 
     public function __construct(array $attr_list) {
-        $this->attributes = array();
 
         foreach ($attr_list as $attr => $val) {
-            switch (gettype($val)) {
-                case gettype(false):
-                    $this->addBoolAttribute((string) $attr, $val);
-                    break;
-                case gettype(0):
-                    $this->addIntAttribute((string) $attr, $val);
-                    break;
-                case gettype(0.0):
-                    $this->addFloatAttribute((string) $attr, $val);
-                    break;
-                case gettype("0"):
-                    $this->addStrAttribute((string) $attr, $val);
-                    break;
-                case gettype( array() ):
-                    $this->addArrAttribute((string) $attr, $val);
-                    break;
-                default:
-                    throw new Exception("'" . gettype($val) . "' is not supported.");
+            $val_type = gettype($val);
+            $str_attr = (string) $attr;
+            if ($val_type == gettype(false)) {
+                $this->addBoolAttribute($str_attr, $val);
+            } elseif ($val_type == gettype(0)) {
+                $this->addIntAttribute($str_attr, $val);
+            } elseif ($val_type == gettype(0.0)) {
+                $this->addFloatAttribute($str_attr, $val);
+            } elseif ($val_type == gettype("0")) {
+                $this->addStrAttribute($str_attr, $val);
+            } elseif ($val_type == gettype(array())) {
+                $this->addArrAttribute($str_attr, $val);
+            } else {
+                throw_unsupported_exeption($val);
             }
         }
     }
@@ -46,7 +41,7 @@ class DOMAttributeList extends AbstractDOMAttributeList {
     private function addAtttribute(string $attr, $val) {
         array_push(
                 $this->attributes,
-                array($attr, $val)
+                array($attr => $val)
         );
     }
 
@@ -67,19 +62,18 @@ class DOMAttributeList extends AbstractDOMAttributeList {
     }
 
     public function addArrAttribute(string $attr, array $list): void {
-        
+
         $vals = array();
 
         foreach ($list as &$val) {
-            
-            if( $this->value_is_supported($val) ){
-                array_push( $vals, (string) $val );
-            }else{
-                 $this->throw_unsupported_exeption($val);
+
+            if ($this->value_is_supported($val)) {
+                array_push($vals, $val);
+            } else {
+                $this->throw_unsupported_exeption($val);
             }
-            
         }
-        
+
         $this->addAtttribute($attr, $vals);
     }
 
@@ -97,14 +91,14 @@ class DOMAttributeList extends AbstractDOMAttributeList {
                 return true;
             case gettype("0"):
                 return true;
-            case gettype( [] ):
+            case gettype(array()):
                 return true;
             default:
                 return false;
         }
     }
-    
-    private function throw_unsupported_exeption( $val ){
+
+    private function throw_unsupported_exeption($val) {
         throw new Exception("'" . gettype($val) . "' is not supported.");
     }
 
