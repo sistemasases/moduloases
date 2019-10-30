@@ -91,6 +91,8 @@ class DOMAttributeList extends AbstractDOMAttributeList {
                 return true;
             case gettype("0"):
                 return true;
+            case gettype(NULL):
+                return true;
             default:
                 return false;
         }
