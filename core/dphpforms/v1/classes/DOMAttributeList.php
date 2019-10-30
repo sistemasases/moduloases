@@ -39,9 +39,9 @@ class DOMAttributeList extends AbstractDOMAttributeList {
     }
 
     private function addAtttribute(string $attr, $val) {
-        array_push(
-                $this->attributes,
-                array($attr => $val)
+        $this->attributes = array_merge(
+            $this->attributes,
+            array($attr => $val)
         );
     }
 
