@@ -964,15 +964,6 @@ function dphpformsV2_generate_TEXTFIELD( $id_formulario_pregunta, $context, $sta
 }
 
 function dphpformsV2_generate_TEXTAREA( $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
-
-    /*$field_attr_class = $context[ 'attr_class' ];
-    $field_attr_local_alias = $context[ 'attr_local_alias' ];
-    $field_attr_inputclass = $context[ 'attr_inputclass' ];
-    $field_attr_placeholder = $context[ 'attr_placeholder' ];
-    $field_default_value = $context[ 'default_value' ];
-    $field_attr_maxlength = $context[ 'attr_maxlength' ];
-    $field_enabled = $context[ 'enabled' ];
-    $field_attr_required = $context[ 'attr_required' ];*/
     
     $div_attr = new DOMAttributeList( [
         'class' =>  [ "div-$id_formulario_pregunta", $context[ 'attr_class' ] ,$context[ 'attr_local_alias' ] ],
@@ -999,7 +990,7 @@ function dphpformsV2_generate_TEXTAREA( $id_formulario_pregunta, $context, $stat
     $div = $dom->createElement( "div" );
     _core_dphpforms_dom_add_attributtes( $div, $div_attr );
     
-    $textarea = $dom->createElement('textarea');    
+    $textarea = $dom->createElement('textarea');
     _core_dphpforms_dom_add_attributtes( $textarea, $inner_element_attr );
     $textarea->nodeValue = $default_value;
     
@@ -1013,7 +1004,6 @@ function dphpformsV2_generate_TEXTAREA( $id_formulario_pregunta, $context, $stat
     $div->appendChild($textarea);
     
     $dom->appendChild($div);
-    
     
     return $dom->saveHTML();
     
