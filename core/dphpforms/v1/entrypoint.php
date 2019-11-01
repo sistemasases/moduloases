@@ -975,7 +975,7 @@ function dphpformsV2_generate_TEXTAREA( $id_formulario_pregunta, $context, $stat
     $field_attr_required = $context[ 'attr_required' ];*/
     
     $div_attr = new DOMAttributeList( [
-        'class' =>  "div-$id_formulario_pregunta", $context[ 'attr_class' ] ,$context[ 'attr_local_alias' ],
+        'class' =>  [ "div-$id_formulario_pregunta", $context[ 'attr_class' ] ,$context[ 'attr_local_alias' ] ],
         'data-uid' => uniqid( $prefix_uniqid, true )
     ] );
     
@@ -989,14 +989,7 @@ function dphpformsV2_generate_TEXTAREA( $id_formulario_pregunta, $context, $stat
         'required' => $context[ 'attr_required' ]
     ] );
     
-    $default_value = $context[ 'default_value' ];
-
-    /*$html = '
-    <div class="div-'.$id_formulario_pregunta.' '.$field_attr_class.' '.$field_attr_local_alias.'" data-uid="'. uniqid($prefix_uniqid,true) .'" >' 
-        . $statement . ':<br>
-        <textarea id="'.$id_formulario_pregunta.'" class="form-control ' . $field_attr_inputclass . '" name="'. $id_formulario_pregunta .'" placeholder="'.$field_attr_placeholder.'" maxlength="'.$field_attr_maxlength.'" '.$field_enabled.' '.$field_attr_required.'>'.$field_default_value.'</textarea>
-    </div>';*/
-    
+    $default_value = $context[ 'default_value' ];    
     
     $dom = new DOMDocument;
    
