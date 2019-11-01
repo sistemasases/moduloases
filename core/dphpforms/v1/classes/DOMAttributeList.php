@@ -18,7 +18,7 @@ class DOMAttributeList extends AbstractDOMAttributeList {
     private $attributes = array();
 
     public function __construct(array $attr_list) {
-
+        
         foreach ($attr_list as $attr => $val) {
             $val_type = gettype($val);
             $str_attr = (string) $attr;
@@ -38,6 +38,7 @@ class DOMAttributeList extends AbstractDOMAttributeList {
                 $this->throw_unsupported_exeption($val);
             }
         }
+        
     }
 
     private function addAtttribute(string $attr, $val) {
@@ -69,8 +70,13 @@ class DOMAttributeList extends AbstractDOMAttributeList {
 
         foreach ($list as &$val) {
 
-            if ($this->basic_value_is_supported($val)) {
-                array_push($vals, (string) $val);
+            if ( $this->basic_value_is_supported($val) ) {
+                if( !is_null( $val ) && ($val !== "") ){
+                    array_push($vals, (string) $val);
+                }else{
+                    continue;
+                }
+               
             } else {
                 $this->throw_basic_unsupported_exeption($val);
             }
