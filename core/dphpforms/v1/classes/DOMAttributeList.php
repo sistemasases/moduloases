@@ -32,8 +32,10 @@ class DOMAttributeList extends AbstractDOMAttributeList {
                 $this->addStrAttribute($str_attr, $val);
             } elseif ($val_type == gettype(array())) {
                 $this->addArrAttribute($str_attr, $val);
-            } else {
-                throw_unsupported_exeption($val);
+            } elseif ($val_type == gettype(NULL)) {
+                continue;
+            }else {
+                $this->throw_unsupported_exeption($val);
             }
         }
     }
