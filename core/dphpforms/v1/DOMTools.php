@@ -14,11 +14,25 @@ function _core_dphpforms_dom_add_attributtes( DOMElement &$tag, DOMAttributeList
             
         }else if( ( ( $attr == "disabled" ) || ( $attr == "required" ) ) && $val[0] ){
             
-            $val = "";
+            $tag->setAttribute( $attr, '' );
+            
+            continue;
             
         }
         
-        $tag->setAttribute( $attr, ($is_array ? implode( " " , array_filter($val)) : $val) );
+        $attr_value = "";
+        
+        if( $is_array ){
+            $attr_value = implode( " " , array_filter($val));
+        }else{
+            $attr_value = $val;
+        }
+        
+        if( $attr_value !== "" ){
+            
+            $tag->setAttribute( $attr, $attr_value );
+            
+        }
         
     }
 }
