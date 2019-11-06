@@ -5,7 +5,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $dbman = $DB->get_manager();
     $result = true;
 
-    if ($oldversion < 2019080109210 ) {
+    if ($oldversion < 2019100716060 ) {
       
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
@@ -725,6 +725,8 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     //         $regla_depende->regla      = 'DEPENDS';
     //         $regla_enlazado = new stdClass();
     //         $regla_enlazado->regla     = 'BOUND';
+    //         $regla_excluye = new stdClass();
+    //         $regla_excluye->regla      = 'EXCLUDE';
     //         $records = array();
     //         array_push($records, $regla_mayor_que);
     //         array_push($records, $regla_menor_que);
@@ -732,6 +734,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     //         array_push($records, $regla_diferente);
     //         array_push($records, $regla_depende);
     //         array_push($records, $regla_enlazado);
+    //         array_push($records, $regla_excluye);
     //         $DB->insert_records('talentospilos_df_reglas', $records);
     //     }
     //     $sql_intel = "DELETE FROM {talentospilos_df_reglas} WHERE id <> 1 and id <> 2 and id <> 3 and id <> 4 and id <> 5 and id <> 6";
@@ -3874,8 +3877,53 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
+        
+        //*****************************************************************************************//
+        // Creación de tablas: Se crea tabla para guardar el log de las asignaciones.              //
+        // Versión: 2019092518030                                                                  //
+        //*****************************************************************************************//
+        
+        // Define table talentospilos_log_asignacion to be created.
+        $table = new xmldb_table('talentospilos_log_asignacion');
 
-        upgrade_block_savepoint(true, 2019080109210, 'ases');
+        // Adding fields to table talentospilos_log_asignacion.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('documento', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
+        $table->add_field('fecha_hora_asignacion', XMLDB_TYPE_DATETIME, null, null, XMLDB_NOTNULL, null, "now()");
+
+        // Adding keys to table talentospilos_log_asignacion.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Conditionally launch create table for talentospilos_log_asignacion.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+        
+        //*****************************************************************************************//
+        // Creación de tablas: Se crea tabla para gestionar el estado del plugin.                  //
+        // Versión: 2019100716060                                                                  //
+        //*****************************************************************************************//
+        
+        // Define table talentospilos_plugin_status to be created.
+        $table = new xmldb_table('talentospilos_plugin_status');
+
+        // Adding fields to table talentospilos_plugin_status.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('id_semestre', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('documento', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table talentospilos_plugin_status.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Adding indexes to table talentospilos_plugin_status.
+        $table->add_index('id_semestre_unique_id', XMLDB_INDEX_UNIQUE, array('id_semestre'));
+
+        // Conditionally launch create table for talentospilos_plugin_status.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        upgrade_block_savepoint(true, 2019100716060, 'ases');
         return $result;
 
     }

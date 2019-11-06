@@ -1069,64 +1069,38 @@ function dphpforms_reglas_validator($respuestas, $reglas){
                 $satisfied_reglas = true;
                 //echo "REGLA " . $regla . " CUMPLIDA\n";
             }
-        }elseif($regla == 'DEPENDS'){
-            /*
-                BOUND replaces DEPENDS
+        }/* @deprecated elseif( $regla == 'DEPENDS' ){ } */
+        elseif( ($regla == 'BOUND') || ($regla == 'DEPENDS') ){
+            /**
+             *  Se usa -#$%- para enviar cuando el RadioButton está vacío, esto con el fin
+             *  de asignarle un valor nulo diferente a 0, con el fin de no entrar en conflicto
+             *  con lo enviado por un CheckBox
             */
-        }elseif(($regla == 'BOUND')||($regla == 'DEPENDS')){
-            /*
-                    Se usa -#$%- para enviar cuando el RadioButton está vacío, esto con el fin
-                    de asignarle un valor nulo diferente a 0, con el fin de no entrar en conflicto
-                    con lo enviado por un CheckBox
-                */
-
             
-
-            /*if(!is_null($respuesta_a->{'valor'})){
-                if(trim($respuesta_a->{'valor'}) == ''){
-                    $respuesta_tmp = clone $respuesta_a;
-                    $respuesta_a = new stdClass();
-                    $respuesta_a->id = $respuesta_tmp->{'id'};
-                    $respuesta_a->valor = null;
-                }
-            }
-
-            if(!is_null($respuesta_b->{'valor'})){
-                if(trim($respuesta_b->{'valor'}) == ''){
-                    $respuesta_tmp = clone $respuesta_b;
-                    $respuesta_b = new stdClass();
-                    $respuesta_b->id = $respuesta_tmp->{'id'};
-                    $respuesta_b->valor = null;
-                }
-            }*/
-            
-            if((( !is_null($respuesta_a->{'valor'}) ) && ($respuesta_a->{'valor'} !== "-#$%-") && ($respuesta_a->{'valor'} !== "") ) && (( is_null($respuesta_b->{'valor'}) )||($respuesta_b->{'valor'} === "-#$%-")||($respuesta_b->{'valor'} === "") )){
+            if(
+                (( !is_null($respuesta_a->{'valor'}) ) && ($respuesta_a->{'valor'} !== "-#$%-") && ($respuesta_a->{'valor'} !== "") ) && 
+                (( is_null($respuesta_b->{'valor'}) )||($respuesta_b->{'valor'} === "-#$%-")||($respuesta_b->{'valor'} === "") )
+            ){
                 $satisfied_reglas = false;
-                /*echo "REGLA " . $regla . " NO CUMPLIDA\n";
-                print_r($respuesta_a);
-                print_r($respuesta_b);
-                echo 'VALOR A' . $respuesta_a->{'valor'} . ' VALOR B' . $respuesta_a->{'valor'};*/
                 break;
-            }elseif(((  is_null($respuesta_a->{'valor'})  ) || ($respuesta_a->{'valor'} === "-#$%-" ) || ($respuesta_a->{'valor'} === "" )) && (( !is_null($respuesta_b->{'valor'}) ) && ($respuesta_b->{'valor'} !== "-#$%-") && ($respuesta_b->{'valor'} !== "") )){
+            }elseif(
+                ((  is_null($respuesta_a->{'valor'})  ) || ($respuesta_a->{'valor'} === "-#$%-" ) || ($respuesta_a->{'valor'} === "" )) && 
+                (( !is_null($respuesta_b->{'valor'}) ) && ($respuesta_b->{'valor'} !== "-#$%-") && ($respuesta_b->{'valor'} !== "") )
+            ){
                 $satisfied_reglas = false;
-                /*echo "REGLA " . $regla . " NO CUMPLIDA\n";
-                print_r($respuesta_a);
-                print_r($respuesta_b);
-                echo 'VALOR A' . $respuesta_a->{'valor'} . ' VALOR B' . $respuesta_a->{'valor'};*/
                 break;
             }else{
                 $satisfied_reglas = true;
-                //echo "REGLA " . $regla . " CUMPLIDA\n";
             }
+        }elseif( $regla == 'EXCLUDE' ){
 
-            /*print_r($respuesta_a);
-            if($satisfied_reglas){
-                echo 'SATISFECHA';
+            if( dphpforms_is_field_empty($respuesta_a) === dphpforms_is_field_empty($respuesta_b) ){
+                $satisfied_reglas = false;
+                break;
             }else{
-                echo 'NO SATISFECHA';
+                $satisfied_reglas = true;
             }
-            print_r($respuesta_b);
-            echo '=====================' . "\n";*/
+            
         }
     }
     return array(
@@ -1134,6 +1108,59 @@ function dphpforms_reglas_validator($respuestas, $reglas){
         'unfulfilled_ruler' => $id_regla
     );
     //return $satisfied_reglas;
+}
+
+/**
+ * 
+ */
+function dphpforms_is_field_empty( $response ){
+
+    // Check for simple checkbox. A simple checkbox is a checkbox with one value
+    
+    $field = dphpforms_get_pregunta( $response->id );
+
+
+    if( $field->campo === "CHECKBOX" ){
+        $options = json_decode( $field->opciones_campo );
+        if( count( $options ) === 1 ){
+            return ( 
+            
+                is_null($response->{'valor'})             ||                        /* Isn't NULL.       */
+                ( $response->{'valor'} === "-#$%-" )      ||                        /* Isn't NULL chain. */ 
+                ( $response->{'valor'} === "" )           ||                        /* Isn't Empty.      */
+                ( $response->{'valor'} === "-1" )                                   /* Is empty */
+                ?  true : false 
+                        
+            );
+        }
+    }
+
+    return ( 
+            
+        is_null($response->{'valor'})             ||                        /* Isn't NULL.       */
+        ( $response->{'valor'} === "-#$%-" )      ||                        /* Isn't NULL chain. */ 
+        ( $response->{'valor'} === "" )                                     /* Isn't Empty.      */
+        ?  true : false 
+                
+    );
+}
+
+function dphpforms_get_pregunta( $id ){
+
+    global $DB;
+
+    $sql = "
+        SELECT * 
+        FROM 
+            {talentospilos_df_preguntas} AS P,
+            {talentospilos_df_tipo_campo} as T
+        WHERE 
+            P.tipo_campo = T.id AND 
+            P.id = '$id'";
+
+    $field = $DB->get_record_sql( $sql );
+    
+    return ( isset( $field->id ) ? $field : NULL );
 }
 
 function dphpforms_get_respuestas_form_completed($idFormularioDiligenciado){

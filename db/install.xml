@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="blocks/ases/db" VERSION="20190716" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
+<XMLDB PATH="blocks/ases/db" VERSION="20191007" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -1189,6 +1189,29 @@
       </KEYS>
       <INDEXES>
         <INDEX NAME="talentospilos_cache_clave_index" UNIQUE="true" FIELDS="clave"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="talentospilos_log_asignacion" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="documento" TYPE="text" NOTNULL="true" SEQUENCE="false" COMMENT="JSON del log de asignacion"/>
+        <FIELD NAME="fecha_hora_asignacion" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="now()" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="talentospilos_plugin_status" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="id_semestre" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="documento" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="id_semestre_unique_id" UNIQUE="true" FIELDS="id_semestre"/>
       </INDEXES>
     </TABLE>
   </TABLES>

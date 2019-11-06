@@ -22,7 +22,10 @@
  * @copyright  2018 Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require_once(dirname(__FILE__). '/../../../../../config.php');
+require_once(dirname(__FILE__). '/../../../../../config.php');   
+require_once(dirname(__FILE__). '/../../../core/module_loader.php'); 
+
+module_loader("security");
 
 // -- Dev test block - This block cannot be considerated as documentation.
 /*header('Content-Type: application/json');
@@ -1707,6 +1710,92 @@ function dphpformsV2_get_pretty_record_history( $record_id ){
         
     }, $history)));
     
+}
+
+/**
+ * Function that checks if the given record id exist in the database.
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param integer $record_id Record ID
+ * 
+ * @return bool True if exist a record with the given ID.
+ */
+function dphpformsV2_record_exist( int $record_id ):bool
+{
+    global $DB;                                                                 // Moodle DB manager.
+    
+    $query = "SELECT *                                                          
+    FROM {talentospilos_df_form_resp} 
+    WHERE id = '$record_id' AND estado = 1";
+    
+    $record = $DB->get_record_sql( $query );                                    
+    
+    return ( property_exists($record, "id") ? true : false );
+    
+}
+
+/**
+ * **
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param integer $record_id Record ID.
+ * @throws Exception If the given record ID doesn't exist.
+ * 
+ * @return string K
+ */
+function dphpformsV2_get_k( int $record_id ) :string
+{
+    if( !dphpformsV2_record_exist( $record_id ) ){
+        throw new Exception( "Invalid ID.", -1 );
+    }
+    
+    $hash_rule = NULL;
+    if( $record_id > 99999 ){                                                   // Validation of size.
+        $hash_rule = substr( (string) $record_id , 0, 5);                       // Cut to a valid size.
+    }else{
+        $hash_rule = (string) $record_id;                                       
+    }
+    
+    return core_secure_find_key($hash_rule);
+    
+}
+
+function dphpformsV2_get_form_rules( $form_id ){
+
+    global $DB;
+
+    $sql = "
+        SELECT 
+            RFP.id, RFP.id_formulario, RFP.id_regla, R.regla, 
+            RFP.id_form_pregunta_a , RFP.id_form_pregunta_b
+        FROM 
+            {talentospilos_df_reg_form_pr} AS RFP
+        INNER JOIN
+            {talentospilos_df_reglas} AS R 
+        ON 
+            RFP.id_regla = R.id
+        WHERE 
+            id_formulario = '$form_id'
+    ";
+
+    return $DB->get_records_sql( $sql );
+
+}
+
+function dphpformsV2_add_new_form_rule( $form_id, $preg_a_id, $rule_id, $preg_b_id ){
+
+    global $DB;
+
+    $new_form_rule = new stdClass();
+    $new_form_rule->id_formulario = $form_id;
+    $new_form_rule->id_regla = $rule_id;
+    $new_form_rule->id_form_pregunta_a = $preg_a_id;
+    $new_form_rule->id_form_pregunta_b = $preg_b_id;
+
+    return $DB->insert_record( 'talentospilos_df_reg_form_pr', $new_form_rule );
+
 }
 
 ?>

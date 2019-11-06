@@ -1,141 +1,134 @@
-{{!-- Socioed tab --}}
 <div class="tab-pane" id="socioed_tab">
-   <div id="accordion" role="tablist" aria-multiselectable="true">
-     {{#view_peer_trackings_sp}}
-      <div class="panel panel-default" id="panelPares">
-         <div class="panel-heading" role="tab" id="headingOne">
-            <h4 class="panel-title">
-               <a id="seg_pares_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-               Seguimiento de Pares
-               </a>
-            </h4>
-         </div>
-         <div id="collapseOne" class="panel-collapse collapse in form-pilos" role="tabpanel" aria-labelledby="headingOne">
+    <div id="peer_tracking_info" data-info="{{peer_tracking_v3_string}}" style="display:none;"></div>
+    <div id="accordion" role="tablist" aria-multiselectable="true">
+        {{#view_peer_trackings_sp}}
+            <div class="panel panel-default" id="panelPares">
+                <div class="panel-heading" role="tab" id="headingOne">
+                    <h4 class="panel-title">
+                        <a id="seg_pares_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                            Seguimiento de Pares
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseOne" class="panel-collapse collapse in form-pilos" role="tabpanel" aria-labelledby="headingOne">
+                    {{#add_peer_tracking_sp}}
+                        {{#add_peer_tracking_lts}}
+                            <!--<button type="button" id="button_add_track" class="btn-primary">
+                             Nuevo seguimiento (2017)
+                             </button>-->
+                        {{/add_peer_tracking_lts}}
+                        <button type="button" id="button_add_v2_track" class="btn-primary">Nuevo seguimiento</button>
+                    {{/add_peer_tracking_sp}}
+                    <div class="peer_trackings_v2 well well_v2" id="peer_trackings_v2" name="peer_trackings_v2">
+                        {{#peer_tracking_v3}}
+                            <div id="accordion_v2">
+                                <div class="card card_v2">
+                                    <div class="card-header card-header_v2" role="tab" id="headingOne{{period_name}}">
+                                        <h5 class="mb-0">
+                                            <a data-toggle="collapse" class="btn btn-danger btn-univalle btn-card" data-container="collapseOne{{period_name}}" data-parent="#accordion_v2" href="#collapseOne{{period_name}}" aria-expanded="true" aria-controls="collapseOne">
+                                                {{period_name}}
+                                                <span class="glyphicon glyphicon-chevron-left"></span>
+                                            </a>
+                                        </h5>
+                                    </div>
+                                    <div id="collapseOne{{period_name}}" class="collapse show collapse_v2" role="tabpanel" aria-labelledby="headingOne{{period_name}}">
+                                        {{#trackings}}
+                                            <div id="dphpforms-peer-record-{{id_registro}}" class="card-block dphpforms-peer-record peer-tracking-record class-{{alias_form}} {{#custom_extra}} {{#rev_pro}} peer-tracking-record-review {{/rev_pro}} {{/custom_extra}} {{#custom_extra}} {{#special_tracking}} special_tracking {{/special_tracking}} {{/custom_extra}}" data-record-id="{{id_registro}}">
+                                                {{#custom_extra}} {{#seguimiento_pares}}
+                                                    <strong><i class="fas fa-calendar-o"></i></strong>
+                                                {{/seguimiento_pares}} {{/custom_extra}}
 
-            {{#add_peer_tracking_sp}}
+                                                {{#custom_extra}} {{#inasistencia}}
+                                                    <strong><i class="far fa-calendar-times"></i></strong>
+                                                {{/inasistencia}} {{/custom_extra}}
 
-            {{#add_peer_tracking_lts}}
-            <!--<button type="button" id="button_add_track" class="btn-primary">
-            Nuevo seguimiento (2017)
-            </button>-->
-            {{/add_peer_tracking_lts}}
-            <button type="button" id="button_add_v2_track" class="btn-primary">
-            Nuevo seguimiento
-            </button>
-            {{/add_peer_tracking_sp}}
+                                                Registro: {{fecha}}
 
-
-            <hr>
-            <div class="peer_trackings_v2 well well_v2" id="peer_trackings_v2" name="peer_trackings_v2">
-
-                {{#peer_tracking_v3}}
-                <div id="accordion_v2">
-                    <div class="card card_v2">
-                        <div class="card-header card-header_v2" role="tab" id="headingOne{{period_name}}">
-                            <h5 class="mb-0">
-                                <a data-toggle="collapse" class="btn btn-danger btn-univalle btn-card" data-container="collapseOne{{period_name}}" data-parent="#accordion_v2" href="#collapseOne{{period_name}}" aria-expanded="true" aria-controls="collapseOne">
-                                    {{period_name}}<span class="glyphicon glyphicon-chevron-left"></span>
-                                </a>
-                            </h5>
-                        </div>
-
-                        <div id="collapseOne{{period_name}}" class="collapse show collapse_v2" role="tabpanel" aria-labelledby="headingOne{{period_name}}">
-                            {{#trackings}}
-                            <div id="dphpforms-peer-record-{{id_registro}}" class="card-block dphpforms-peer-record peer-tracking-record class-{{alias_form}} {{#custom_extra}} {{#rev_pro}} peer-tracking-record-review {{/rev_pro}} {{/custom_extra}} {{#custom_extra}} {{#special_tracking}} special_tracking {{/special_tracking}} {{/custom_extra}}" data-record-id="{{id_registro}}">
-                                {{#custom_extra}} {{#seguimiento_pares}}<strong><i class="fas fa-calendar-o"></i> </strong>{{/seguimiento_pares}} {{/custom_extra}}
-                                {{#custom_extra}} {{#inasistencia}}<strong><i class="far fa-calendar-times"></i></strong>{{/inasistencia}} {{/custom_extra}}
-                                Registro: {{fecha}}
-                                {{#custom_extra}} {{#rev_pract}}<i title="Revisado practicante" style="float:right" class="fas fa-check"></i>{{/rev_pract}} {{/custom_extra}}
+                                                {{#custom_extra}} {{#rev_pract}}
+                                                    <i title="Revisado practicante" style="float:right" class="fas fa-check"></i>
+                                                {{/rev_pract}} {{/custom_extra}}
+                                            </div>
+                                        {{/trackings}}
+                                    </div>
+                                </div>
                             </div>
-                            {{/trackings}}
-                        </div>
+                        {{/peer_tracking_v3}}
+                    </div>
+                    <div class="well" id="peer_trackings" name="peer_trackings">
+                        <!-- Button trigger modal -->
+                        {{{peer_tracking}}}
                     </div>
                 </div>
-                {{/peer_tracking_v3}}
+            </div>
+        {{/view_peer_trackings_sp}}
 
+        {{#view_groupal_trackings_sp}}
+            <div class="panel panel-default" id="panelGrupal">
+                <div class="panel-heading" role="tab" id="headingTwo">
+                    <h4 class="panel-title">
+                        <a id="seg_grupal_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Seguimiento Grupal
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                    <div class="ScrollStyle" id="list_grupal" name="list_grupal"></div>
+                </div>
             </div>
-            <div class="well" id="peer_trackings" name="peer_trackings">
-               {{{peer_tracking}}}
+        {{/view_groupal_trackings_sp}}
+
+        {{#first_contact_sp}}
+            <div class="panel panel-default" id="panelPrimerAcerca">
+                <div class="panel-heading" role="tab" id="headingThree">
+                    <h4 class="panel-title">
+                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            Primer Acercamiento Profesional
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                    {{#registro_primer_acercamiento}}
+                        <button type="button" id="button_primer_acercamiento" class="btn-primary">Registrar acercamiento</button>
+                    {{/registro_primer_acercamiento}}
+                    {{#actualizar_primer_acercamiento}}
+                        <button type="button" id="button_actualizar_primer_acercamiento" data-record-id="{{id_primer_acercamiento}}" class="btn-primary">Ver/Actualizar acercamiento</button>
+                    {{/actualizar_primer_acercamiento}}
+                </div>
             </div>
-            <!-- Button trigger modal -->
-         </div>
-      </div>
-      {{/view_peer_trackings_sp}}
-      {{#view_groupal_trackings_sp}}
-      <div class="panel panel-default" id="panelGrupal">
-         <div class="panel-heading" role="tab" id="headingTwo">
-            <h4 class="panel-title">
-               <a id="seg_grupal_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-               Seguimiento Grupal
-               </a>
-            </h4>
-         </div>
-         <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-            <div class="ScrollStyle" id="list_grupal" name="list_grupal"></div>
-         </div>
-      </div>
-      {{/view_groupal_trackings_sp}}
-      {{#first_contact_sp}}
-      <div class="panel panel-default" id="panelPrimerAcerca">
-         <div class="panel-heading" role="tab" id="headingThree">
-            <h4 class="panel-title">
-               <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-               Primer Acercamiento Profesional
-               </a>
-            </h4>
-         </div>
-         <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-            {{#registro_primer_acercamiento}}
-            <button type="button" id="button_primer_acercamiento" class="btn-primary">
-                Registrar acercamiento
-            </button>
-            {{/registro_primer_acercamiento}}
-            {{#actualizar_primer_acercamiento}}
-            <button type="button" id="button_actualizar_primer_acercamiento" data-record-id="{{id_primer_acercamiento}}" class="btn-primary">
-                Ver/Actualizar acercamiento
-            </button>
-            {{/actualizar_primer_acercamiento}}
-         </div>
-      </div>
-      {{/first_contact_sp}}
-      {{#socioeducational_accompaniment_sp}}
-      <div class="panel panel-default" id="panelAcompSocio">
-         <div class="panel-heading" role="tab" id="headingFour">
-            <h4 class="panel-title">
-               <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-               Acompañamiento SocioEducativo
-               </a>
-            </h4>
-         </div>
-         <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
-            <div class="ScrollStyle well" id="list_AcompaSocio" name="list_AcompaSocio"></div>
-            <hr>
-            <!-- Button trigger modal -->
-            <button type="submit" id="socioedu_add_AcompaSocio" class="submit hide" data-toggle="modal" data-target="#myModalAcompaSocio">
-            Adicionar nuevo
-            </button>
-         </div>
-      </div>
-      {{/socioeducational_accompaniment_sp}}
-      {{#socioeducational_trackings_sp}}
-      <div class="panel panel-default" id="panelSegSocio">
-         <div class="panel-heading" role="tab" id="headingFive">
-            <h4 class="panel-title">
-               <a id="seg_socio_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-               Seguimiento SocioEducativo
-               </a>
-            </h4>
-         </div>
-         <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
-            <div class="ScrollStyle well" id="list_SegSocio" name="list_SegSocio"></div>
-            <hr>
-            <!-- Button trigger modal -->
-            <button type="submit" id="socioedu_add_segsocio" class="submit hide" data-toggle="modal" data-target="#myModalSegSocio">
-            Adicionar nuevo
-            </button>
-         </div>
-      </div>
-      {{/socioeducational_trackings_sp}}
-   </div>
+        {{/first_contact_sp}}
+
+        {{#socioeducational_accompaniment_sp}}
+            <div class="panel panel-default" id="panelAcompSocio">
+                <div class="panel-heading" role="tab" id="headingFour">
+                    <h4 class="panel-title">
+                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                            Acompañamiento SocioEducativo
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+                    <div class="ScrollStyle well" id="list_AcompaSocio" name="list_AcompaSocio"></div>
+                    <!-- Button trigger modal -->
+                    <button type="submit" id="socioedu_add_AcompaSocio" class="submit hide" data-toggle="modal" data-target="#myModalAcompaSocio">Adicionar nuevo</button>
+                </div>
+            </div>
+        {{/socioeducational_accompaniment_sp}}
+
+        {{#socioeducational_trackings_sp}}
+            <div class="panel panel-default" id="panelSegSocio">
+                <div class="panel-heading" role="tab" id="headingFive">
+                    <h4 class="panel-title">
+                        <a id="seg_socio_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                            Seguimiento SocioEducativo
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
+                    <div class="ScrollStyle well" id="list_SegSocio" name="list_SegSocio"></div>
+                    <!-- Button trigger modal -->
+                    <button type="submit" id="socioedu_add_segsocio" class="submit hide" data-toggle="modal" data-target="#myModalSegSocio">Adicionar nuevo</button>
+                </div>
+            </div>
+        {{/socioeducational_trackings_sp}}
+    </div>
 </div>
-{{!-- End socied tab --}}

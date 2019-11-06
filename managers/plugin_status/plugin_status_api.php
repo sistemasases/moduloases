@@ -35,9 +35,9 @@
     $raw_data = file_get_contents("php://input");
     
     // Validation if the user is logged. 
-    if( $USER->id == 0 ){
+    /*if( $USER->id == 0 ){
        return_with_code( -1 );
-    }
+    }*/
 
     $input = json_decode( $raw_data );
 
@@ -50,7 +50,7 @@
     */
 
     // Example of valid input. params = Parameters
-    // { "function":"user_management_get_stud_mon_prac_prof", "params":[ ases_student_code ] }
+    // { "function":"get_***", "params":[ ases_student_code ] }
 
     if( isset($input->function) && isset($input->params) ){
 
@@ -77,6 +77,113 @@
                             "status_code" => 0,
                             "error_message" => "",
                             "data_response" => plugin_status_get_users_data_by_instance( $input->params[0] )
+                        )
+                    );
+                    
+                }else{
+                    return_with_code( -2 );
+                }
+            }else{
+                return_with_code( -2 );
+            }
+
+        }else if( $input->function == "remove_enrolled_users" ){
+
+            /* In this request is only valid pass like param(Parameters) the instance identificatior, 
+             * for this reason, the input param only can be equal in quantity to one.
+             * */
+            
+            if( count( $input->params ) == 2 ){
+
+                // Order of params
+                /**
+                 * The instance_id value only can be a number.
+                 * The userids value only can be an array
+                 */
+                
+                if( is_numeric( $input->params[0] ) && is_array( $input->params[1] ) ){
+
+                    $status_code = NULL;
+                    $error_message = NULL;
+
+                    try {
+
+                        plugin_status_remove_enrolled_users( $input->params[0], $input->params[1] );
+                        $status_code = 0;
+                        $error_message = "";
+
+                    } catch (Exception $error) {
+
+                        $status_code = -1;
+                        $error_message = $error->getMessage();
+
+                    }
+                    
+                    echo json_encode( 
+                        array(
+                            "status_code" => $status_code,
+                            "error_message" => $error_message,
+                            "data_response" => null
+                        )
+                    );
+                    
+                }else{
+                    return_with_code( -2 );
+                }
+            }else{
+                return_with_code( -2 );
+            }
+
+        }else if( $input->function == "get_all_periods" ){
+
+            /* In this request is only valid pass like param(Parameters) the instance identificatior, 
+             * for this reason, the input param only can be equal in quantity to one.
+             * */
+            
+            if( count( $input->params ) == 0 ){
+
+                // Order of params
+                /**
+                 * No params
+                 */
+                
+                if( true ){
+
+                    echo json_encode( 
+                        array(
+                            "status_code" => 0,
+                            "error_message" => "",
+                            "data_response" => plugin_status_get_all_periods()
+                        )
+                    );
+                    
+                }else{
+                    return_with_code( -2 );
+                }
+            }else{
+                return_with_code( -2 );
+            }
+
+        }else if( $input->function == "initialization_available" ){
+
+            /* In this request is only valid pass like param(Parameters) the instance identificatior, 
+             * for this reason, the input param only can be equal in quantity to one.
+             * */
+            
+            if( count( $input->params ) == 0 ){
+
+                // Order of params
+                /**
+                 * No params
+                 */
+                
+                if( true ){
+
+                    echo json_encode( 
+                        array(
+                            "status_code" => 0,
+                            "error_message" => "",
+                            "data_response" => plugin_status_initialization_available()
                         )
                     );
                     

@@ -29,4 +29,70 @@ $singularizations = array(
 
 //print_r(_core_security_check_role( 73380, 4, $time_context = null, $singularizations = null ));
 
+//print_r( core_secure_call_checker( __DIR__ . "/../../managers" ) );
+
+//print_r( core_secure_create_call( "test_aliasxy", "back", $name = NULL, $description = NULL, $log = 0 ) );
+
+//print_r( _core_security_get_actions( "back" ) );
+
+//print_r(secure_remove_call( "say_hello", 107089 ) );
+
+//print_r( core_secure_create_call( "say_hello", "back", $name = NULL, $description = NULL, $log = 0 ) );
+
+
+//print_r(core_secure_create_role("rootx", -1, "Super user", "Super usuario") );
+
+//print_r( get_table_structure("mdl_talentospilos_rol") );
+//print_r( get_table_constrains("mdl_talentospilos_rol") );
+
+//print_r( secure_assign_role_to_user( 15, "root" ) );
+
+
+//print_r( core_secure_assign_role_to_user( 73380, "monitor_ps", strtotime("2019-09-27 15:00:00"), strtotime("2019-09-27 15:00:01") ) );
+
+//print_r( core_secure_assign_role_to_user( 73380, 'profesional_ps', strtotime("2019-09-27 15:00:00"), strtotime("2019-09-27 15:00:01"), [ "id_instancia" => 450299, "id_semestre" => 8 ] ));
+//print_r( core_secure_assign_role_to_user( 73380, 'profesional_ps', strtotime("2019-09-27 15:00:00"), strtotime("2019-09-27 15:00:01"), [ "id_instancia" => 450299 ] ));
+//print_r( core_secure_assign_role_to_user( 73380, 'root', strtotime("2019-09-27 15:00:00"), strtotime("2019-09-27 15:00:01"), [ "id_instancia" => 450299, "id_semestre" => 99, 999 => 999 ] ));
+
+//print_r(_core_security_get_user_rol( 73380,  strtotime("2019-09-27 15:00:00"), [ "id_instancia" => 450299, "id_semestre" => 99, 999 => 999 ] ) );
+//print_r(secure_remove_role_to_user( 73380, "root",  strtotime("2019-09-27 15:00:00"), [ "id_instancia" => 450299, "id_semestre" => 99, 999 => 999 ] ));
+//print_r(_core_security_get_user_rol( 73380,  strtotime("2019-09-27 15:00:00"), [ "id_instancia" => 450299, "id_semestre" => 99, 999 => 999 ] ) );
+
+//print_r(_core_security_get_user_rol( 73380,  strtotime("2019-09-27 15:00:00"), [ "id_instancia" => 450299, "id_semestre" => 8 ] ) );
+//print_r(secure_remove_role_to_user( 73380, "profesional_ps",  strtotime("2019-09-27 15:00:00"), [ "id_instancia" => 450299, "id_semestre" => 8 ] ));
+//print_r(_core_security_get_user_rol( 73380,  strtotime("2019-09-27 15:00:00"), [ "id_instancia" => 450299, "id_semestre" => 8 ] ) );
+
+//print_r(secure_remove_role_to_user( 73380, "profesional_ps",  strtotime("2019-09-27 15:00:00"), [ "id_instancia" => 450299, "id_semestre" => 9 ] ));
+
+/*print_r(
+        
+    core_secure_update_role_to_user( 73380, "root", 1,
+        strtotime("2019-09-27 15:00:00"), [ "id_instancia" => 450299, "id_semestre" => 99, 999 => 999 ],
+        $start_datetime = strtotime("2019-09-27 15:00:00"), $end_datetime = strtotime("2019-12-27 15:00:00"), $singularizer = [ "id_instancia" => 450299, "id_semestre" => 99, 999 => 9991 ], $use_alternative_interval = false, $alternative_interval = NULL 
+    )
+        
+);*/
+
+/*print_r(
+    _core_security_check_subroles( "profesional_ps", 3 )
+);*/
+
+/*print_r(
+    secure_remove_role( "profesional_ps", 73380 )
+);*/
+
+
+//print_r( core_secure_create_call( "create_user", "back", $name = "Create a new user.", $description = "--", $log = 1 ) );
+
+//print_r( core_secure_assign_call_to_role( "create_user", "profesional_ps" ) );
+
+//print_r( core_secure_remove_call_role( "create_user", "profesional_ps", 73380 ) );
+
+//print_r( core_secure_update_role( "profesional_ps", 's', 'NULLs' ) );
+
+//print_r( core_secure_update_action( "create_user", NULL, "", true ) );
+
+
+//print_r( core_secure_find_key( $explicit_hexed_rule = "99999" ) );
+
 ?>

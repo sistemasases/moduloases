@@ -108,6 +108,7 @@ if(!isset($object_to_render->status)){
 
     $object_to_render->select_cohorts = $cohorts_options;
 }
+$object_to_render->instance_id = $blockid;
 
 $PAGE->set_url($url);
 $PAGE->set_title($title);

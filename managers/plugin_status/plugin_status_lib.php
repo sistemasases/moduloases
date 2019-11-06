@@ -23,9 +23,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once( dirname(__FILE__). '/../../../../config.php' );
+require_once(dirname(__FILE__). '/../../core/module_loader.php'); 
 require_once( $CFG->dirroot.'/blocks/ases/managers/lib/lib.php' );
 require_once( $CFG->dirroot.'/blocks/ases/managers/user_management/user_management_lib.php' );
 
+module_loader("periods");
+module_loader("cache");
 
 //Eliminar usuarios y desmatricular.
 function plugin_status_get_users_data_by_instance( $instanceid ){
@@ -81,6 +84,78 @@ function plugin_status_get_users_data_by_instance( $instanceid ){
 
 }
 
+
+function plugin_status_remove_enrolled_users( $instanceid, $userids ){
+
+	global $DB;
+
+	if( plugin_status_check_enrolled_users( $instanceid, $userids  ) ){
+		$curseid = plugin_status_get_courseid_by_block_instance( $instanceid );
+		$enrolid = plugin_status_get_manual_enrol_by_courseid( $curseid );
+		foreach ($userids as $key => $uid) {
+
+			$user = user_management_get_full_moodle_user($uid);
+
+			if( !_plugin_status_is_sistemas1008( $user ) ){
+				$sql_query = "DELETE FROM {user_enrolments} WHERE enrolid = '$enrolid->id' AND userid = '$uid'";
+    			$DB->execute($sql_query);
+			}
+
+		}
+
+		return true;
+
+	}else{
+		return null;
+	}
+
+}
+
+function plugin_status_check_enrolled_users( $instanceid, $userids ){
+
+	global $DB;
+
+	if( !is_numeric( $instanceid ) ){
+		throw new Exception( $instanceid . " must be an integer", -1 );
+	}
+
+	if( !is_array( $userids ) ){
+		throw new Exception( $uid . " must be an array", -2 );
+	}
+
+	$curseid = plugin_status_get_courseid_by_block_instance( $instanceid );
+	if( $curseid ){
+
+		$enrolid = plugin_status_get_manual_enrol_by_courseid( $curseid );
+		if( $enrolid ){
+
+			foreach ($userids as $key => $uid) {
+
+				if( !is_numeric($uid) ){
+					throw new Exception( $uid . " must be an integer", -5 );
+				}
+
+				$sql = "SELECT * 
+				FROM {user_enrolments}
+				WHERE enrolid = '$enrolid->id' AND userid = '$uid'
+				ORDER BY timecreated ASC";
+
+				$uenrol = $DB->get_records_sql( $sql );
+				if( !$uenrol ){
+					throw new Exception( $uid . " is not enrolled.", -6 );
+				}
+			}
+			return true;
+
+		}else{
+			throw new Exception( "The course is not associated with a manual enrol id.", -4 );
+		}
+
+	}else{
+		throw new Exception( "Instance " . $instanceid . " is not associated with any course.", -3 );
+	}
+}
+
 function plugin_status_get_ases_instances(){
 
 	global $DB;
@@ -114,7 +189,7 @@ function plugin_status_get_manual_enrol_by_courseid( $courseid ){
 
 	global $DB;
 
-	$sql = "SELECT id 
+	$sql = "SELECT * 
 	FROM {enrol} 
 	WHERE courseid = '$courseid' AND enrol = 'manual'";
 
@@ -156,18 +231,59 @@ function plugin_status_get_course_groups( $courseid ){
  */
 function plugin_status_get_groups_from_user_by_course( $userid, $courseid ){
 
-	global $DB;
+    global $DB;
 
-	$sql = "SELECT * 
-	FROM {groups} AS G0
-	INNER JOIN {groups_members} GM0
-	ON G0.id = GM0.groupid
-	WHERE 
-		G0.courseid = '$courseid' AND GM0.userid = '$userid'";
+    $sql = "SELECT * 
+    FROM {groups} AS G0
+    INNER JOIN {groups_members} GM0
+    ON G0.id = GM0.groupid
+    WHERE 
+        G0.courseid = '$courseid' AND GM0.userid = '$userid'";
 
-	return $DB->get_records_sql( $sql );
+    return $DB->get_records_sql( $sql );
 
 }
 
+
+function plugin_status_get_all_periods(){
+    return array_values( core_periods_get_all_periods() );
+}
+
+
+function plugin_status_initialization_available(){
+    $last_period = core_periods_get_last_period();  
+    return ( time() > strtotime( $last_period->fecha_fin ) ? true : false );
+}
+
+/**
+ * Function that return the document associated to a plugin initialization.
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @param integer $period_id Period id.
+ * 
+ * @throws Exception If the period doesn't exist.
+ * 
+ * @return stdClass|NULL Plugin initialization record object.
+ */
+function plugin_status_get_initialization_doc( $period_id ){
+    
+    if( !core_periods_check_if_exist($period_id) ){
+        throw new Exception( "The period '$period_id' doesn't exist.", -1 );
+    }
+    
+    global $DB;
+    
+    $query = " 
+        SELECT * 
+        FROM {talentospilos_plugin_status}
+        WHERE id_semestre = '$period_id'";
+    
+    $result = $DB->get_record_sql( $query );
+    
+    return ( property_exists($result, 'id') ? $result : NULL );
+    
+}
 
 ?>

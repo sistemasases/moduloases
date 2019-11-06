@@ -95,6 +95,8 @@ Usamos la siguiente estructura para el versionado:
 * **Camilo José Cruz Rivera** - [cjcruzrivera](https://github.com/cjcruzrivera)
 * **Isabella Serna Ramírez** - [isabella317](https://github.com/isabella317)
 * **Juan Pablo Castro** - [jpcv222](https://github.com/jpcv222)
+* **Jorge Eduardo Mayor Fernández** - [Jorgemayor](https://github.com/Jorgemayor)
+* **Alejandro Palacios Hurtado** - [alexoph](https://github.com/alexoph)
 * **Joan Manuel Tovar Guzmán** - [joanmtg](https://github.com/joanmtg)
 * **ASES Dev** - [sistemasases](https://github.com/sistemasases)
 * **Fabio Andres Castañeda Duarte** - [fabioacd](https://github.com/fabioacd)

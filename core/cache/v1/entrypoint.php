@@ -63,8 +63,8 @@ function cache_key_exist( $key ){
         $tablename = $DB_PREFIX . "talentospilos_cache";
            
         $data_cache = $DB->get_record_sql( "SELECT id, fecha_hora_expiracion, now() AS current_time FROM $tablename WHERE clave = '$key'" );
-            
-        if( property_exists($data_cache, "id") ){
+                    
+        if( isset($data_cache->id) ){
                 
             $current_db_time = strtotime($data_cache->current_time);
             $expiration_time = strtotime($data_cache->fecha_hora_expiracion);

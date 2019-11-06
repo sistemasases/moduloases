@@ -12,6 +12,7 @@
   <div id="dphpforms_professional_id" data-info="{{professional_id}}" style="display:none;"></div>
   <div id="dphpforms_username" data-info="{{student_username}}" style="display:none;"></div>
   <div id="dphpforms_fullname" data-info="{{student_fullname}}" style="display:none;"></div>
+  <div id="risk_graphic_info" data-info="" style="display:none;"></div>
   <input type="text" class="hide" id="current_user_id" value="{{id_dphpforms_creado_por}}" />
 
   <form id="ficha_estudiante">
@@ -30,14 +31,12 @@
           </div>
 
           <div class="col-sm-1" id="div-instance-icon">
-            <span class="glyphicon glyphicon-ok {{#ases_status_t}}i-tracking-t{{/ases_status_t}}{{#ases_status_f}}i-tracking-f{{/ases_status_f}}{{#ases_status_n}}i-tracking-n{{/ases_status_n}} tooltip-v1 col-sm-6"
+            <span class="glyphicon glyphicon-ok i-tracking{{#ases_status_on_tracking}}-t{{/ases_status_on_tracking}} tooltip-v1 col-sm-6"
               {{#update_ases_status_sp}} id="icon-tracking" {{/update_ases_status_sp}} data-toggle="tooltip" data-placement="top"
               title="{{ases_status_description}}"></span>
-            <input type="hidden" id="input_status_ases" value="{{ases_status_t}}{{ases_status_f}}{{ases_status_n}}">
+            <input type="hidden" id="input_status_ases" value="{{ases_status}}">
             <span>ASES</span>
           </div>
-
-
         </div>
         <!-- End select student -->
 
@@ -241,57 +240,12 @@
           </li>{{/view_others_tab_sp}}
         </ul>
         <div class="tab-content clearfix ">
-          {{#view_general_tab_sp}} {{> block_ases/view_general_tab_sp}} {{/view_general_tab_sp}} {{#view_socioed_tab_sp}} {{> block_ases/view_socioed_tab_sp}}
-          {{/view_socioed_tab_sp}} {{#view_academic_tab_sp}}
-          <!--academic tab-->
-          <div class="tab-pane" id="academic_tab">
-
-            <div class="accordion" role="tablist" aria-multiselectable="true">
-              <div class="row" style="padding: 0px 10px 15px ">
-                <div class="col-md-3">Promedio Ponderado:
-                  <p class="prom" style="display: inline">
-                    <b>{{promedio}}</b>
-                  </p>
-                </div>
-                <div class="col-md-3">Estimulos academicos:
-                  <p class="est" style="display: inline">
-                    <b>{{estimulos}}</b>
-                  </p>
-                </div>
-                <div class="col-md-3">Bajos rendimientos:
-                  <p class="baj" style="display: inline">
-                    <b>{{bajos}}</b>
-                  </p>
-                </div>
-              </div>
-              <div class="panel panel-default" id="panelActual">
-                <div class="academic panel-heading" role="tab" id="headingOne">
-                  <h4 class="panel-title">
-                    <a id="sem_act_title" class="" data-toggle="collapse" data-parent="#accordion" href="#collapseAct" aria-expanded="true" aria-controls="collapseAct">
-                      Semestre Actual
-                    </a>
-                  </h4>
-                </div>
-                <div id="collapseAct" class="panel-collapse form-pilos in" role="tabpanel" aria-labelledby="headingOne">
-                  <div class="panel-group" id="accordion_academic">
-                    {{{academic_semester_act}}}
-                  </div>
-                </div>
-              </div>
-              {{{historic_academic}}}
-            </div>
-          </div>
-          {{/view_academic_tab_sp}}
-
-          <!-- End academic tab -->
-
-          
+          {{#view_general_tab_sp}} {{> block_ases/view_general_tab_sp}} {{/view_general_tab_sp}}
           {{#view_others_tab_sp}} {{> block_ases/view_others_tab_sp}} {{/view_others_tab_sp}}
         </div>
       </div>
-
+    </div>
   </form>
-  </div>
 
   <!-- MODALES DE SEGUIMIENTO -->
   <div class="mymodal" id="modal_v2_peer_tracking" name="modal_v2_pares">
@@ -797,7 +751,7 @@
   <div class="mymodal-content">
     <div class="mymodal-header col-sm-12">
       <div class="col-sm-11">
-        <h4 class="" id="myModalLabel">Motivo del retiro</h4>
+        <h4 class="" id="myModalLabel">Motivo del retiro *</h4>
       </div>
       <div class="col-sm-1">
         <span class="mymodal-close" aria-hidden="true">&times;</span>
@@ -806,7 +760,7 @@
     <div class="mymodal-body col-sm-12">
       <form class="form-horizontal" id="retiroForm" role="form">
         <div class="form-group">
-          <label for="motivo" class="col-sm-2">Motivo</label>
+          <label for="motivo" class="col-sm-2">Motivo *</label>
           <div class="col-sm-10">
             <select name="reasons_select" id="reasons_select">
               {{{reasons_options}}}
@@ -814,7 +768,7 @@
           </div>
         </div>
         <div class="form-group">
-          <label for="description_dropout" class="col-sm-2">Observación</label>
+          <label for="description_dropout" class="col-sm-2">Observación *</label>
           <div class="col-sm-10">
             <textarea class="form-control medium-inline" id="description_dropout" name="detalle" maxlength="1000"></textarea>
           </div>
@@ -871,17 +825,6 @@
   </div>
 </div>
 <!-- End modal retiro-->
-<span style="display:none;" id="datos">{ "informacion":[ {"dimension":"individual", "datos":[ {{#datosSeguimientoEstudianteIndividual}}
-  {{#datos}} {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}", "end":"false"}, {{/datos}} {{/datosSeguimientoEstudianteIndividual}}
-  {"end":"true"} ]}, {"dimension":"familiar", "datos":[ {{#datosSeguimientoEstudianteFamiliar}} {{#datos}} {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}",
-  "end":"false"}, {{/datos}} {{/datosSeguimientoEstudianteFamiliar}} {"end":"true"} ]}, {"dimension":"academico", "datos":[
-  {{#datosSeguimientoEstudianteAcademico}} {{#datos}} {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}", "end":"false"},
-  {{/datos}} {{/datosSeguimientoEstudianteAcademico}} {"end":"true"} ]}, {"dimension":"economico", "datos":[ {{#datosSeguimientoEstudianteEconomico}}
-  {{#datos}} {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}", "end":"false"}, {{/datos}} {{/datosSeguimientoEstudianteEconomico}}
-  {"end":"true"} ]}, {"dimension":"vidaUniversitaria", "datos":[ {{#datosSeguimientoEstudianteVidaUniversitaria}} {{#datos}}
-  {"fecha":"{{fecha}}","color":"{{color}}","riesgo":"{{riesgo}}", "end":"false"}, {{/datos}} {{/datosSeguimientoEstudianteVidaUniversitaria}}
-  {"end":"true"} ]} ] }
-</span>
 <script>
 
   var ctx_individual = document.getElementById("myChart_individual").getContext('2d');
@@ -889,7 +832,5 @@
   var ctx_academico = document.getElementById("myChart_academico").getContext('2d');
   var ctx_economico = document.getElementById("myChart_economico").getContext('2d');
   var ctx_vida_universitaria = document.getElementById("myChart_vida_universitaria").getContext('2d');
-  var datos = JSON.parse(document.getElementById("datos").innerText);
-  var datosGraficables = [];
 
 </script> {{/data}}
