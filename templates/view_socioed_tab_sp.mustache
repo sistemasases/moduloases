@@ -2,10 +2,10 @@
     <div id="peer_tracking_info" data-info="{{peer_tracking_v3_string}}" style="display:none;"></div>
     <div id="accordion" role="tablist" aria-multiselectable="true">
         {{#view_peer_trackings_sp}}
-            <div class="card" id="panelPares">
-                <div class="card-header" role="tab" id="headingOne">
+            <div class="card card_student_profile" id="panelPares">
+                <div class="card-header socioed_tab_header" role="tab" id="headingOne">
                     <h4 class="card-title">
-                        <a id="seg_pares_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                        <a id="seg_pares_title" class="collapsed socioed_title" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                             Seguimiento de Pares
                         </a>
                     </h4>
@@ -25,7 +25,7 @@
                         {{#peer_tracking_v3}}
                             <div id="accordion_v2">
                                 <div class="card card_v2">
-                                    <div class="card-header card-header_v2" role="tab" id="headingOne{{period_name}}">
+                                    <div class="card-header card-header_v2 socioed_tab_header" role="tab" id="headingOne{{period_name}}">
                                         <h5 class="mb-0">
                                             <a data-toggle="collapse" class="ases-btn ases-danger btn-univalle btn-card" data-container="collapseOne{{period_name}}" data-parent="#accordion_v2" href="#collapseOne{{period_name}}" aria-expanded="true" aria-controls="collapseOne">
                                                 {{period_name}}
@@ -67,10 +67,10 @@
         {{/view_peer_trackings_sp}}
 
         {{#view_groupal_trackings_sp}}
-            <div class="card" id="panelGrupal">
-                <div class="card-header" role="tab" id="headingTwo">
+            <div class="card card_student_profile" id="panelGrupal">
+                <div class="card-header socioed_tab_header" role="tab" id="headingTwo">
                     <h4 class="card-title">
-                        <a id="seg_grupal_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        <a id="seg_grupal_title" class="collapsed socioed_title" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                             Seguimiento Grupal
                         </a>
                     </h4>
@@ -83,10 +83,10 @@
         {{/view_groupal_trackings_sp}}
 
         {{#first_contact_sp}}
-            <div class="card" id="panelPrimerAcerca">
-                <div class="card-header" role="tab" id="headingThree">
+            <div class="card card_student_profile" id="panelPrimerAcerca">
+                <div class="card-header socioed_tab_header" role="tab" id="headingThree">
                     <h4 class="card-title">
-                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        <a id="primer_acerca_title" class="collapsed socioed_title" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
                             Primer Acercamiento Profesional
                         </a>
                     </h4>
@@ -104,10 +104,10 @@
         {{/first_contact_sp}}
 
         {{#socioeducational_accompaniment_sp}}
-            <div class="card" id="panelAcompSocio">
-                <div class="card-header" role="tab" id="headingFour">
+            <div class="card card_student_profile" id="panelAcompSocio">
+                <div class="card-header socioed_tab_header" role="tab" id="headingFour">
                     <h4 class="card-title">
-                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                        <a id="acomp_socio_title" class="collapsed socioed_title" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
                             Acompañamiento SocioEducativo
                         </a>
                     </h4>
@@ -122,10 +122,10 @@
         {{/socioeducational_accompaniment_sp}}
 
         {{#socioeducational_trackings_sp}}
-            <div class="card" id="panelSegSocio">
-                <div class="card-header" role="tab" id="headingFive">
+            <div class="card card_student_profile" id="panelSegSocio">
+                <div class="card-header socioed_tab_header" role="tab" id="headingFive">
                     <h4 class="card-title">
-                        <a id="seg_socio_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                        <a id="seg_socio_title" class="collapsed socioed_title" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
                             Seguimiento SocioEducativo
                         </a>
                     </h4>
