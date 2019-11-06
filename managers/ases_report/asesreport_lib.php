@@ -1076,14 +1076,20 @@ function get_ases_report($general_fields=null,
 
         $user_role = $DB->get_record_sql($sql_query);
 
+
+
         switch($user_role->nombre_rol){
             case 'director_prog':
 
                 $conditions_query_directors = " ases_students.id_academic_program = $user_role->id_programa";
+                $conditions_query_assigned = " AND ases_students.student_id IN (SELECT id_estudiante AS student_id
+                                  FROM {talentospilos_monitor_estud} 
+                            WHERE id_semestre = ". get_current_semester()->max ." AND id_instancia = $instance_id)";
 
-                $where_clause .= $conditions_query_directors;
+                $where_clause .= $conditions_query_directors.$conditions_query_assigned;
 
-                $sql_query = $select_clause.$from_clause.$subquery_cohort.$sub_query_status.$sub_query_icetex_status.$sub_query_academic.$sub_query_assignment_fields.$where_clause;
+                $sql_query = $select_clause.$from_clause.$subquery_cohort.$sub_query_status.$sub_query_academic.$sub_query_assignment_fields.$where_clause;
+
                 $result_query = $DB->get_records_sql($sql_query);
 
                 break;
