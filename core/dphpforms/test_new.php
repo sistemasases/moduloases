@@ -6,10 +6,11 @@ require_once( __DIR__ . "/../module_loader.php");
 module_loader("dphpforms");
 
 $initial_config = '{
-    "allow_register":false,
+    "allow_register":true,
     "allow_update":true,
     "allow_delete":true,
-    "aditional_form_classes" : ["col-xs-12", "col-sm-12", "dphpforms"],
+    "allow_reset":true,
+    "aditional_form_classes" : ["ases-col-xs-12", "ases-col-sm-12", "dphpforms"],
     "initial_values" : [
         {
             "alias" : "lugar",
@@ -34,4 +35,4 @@ $initial_config = '{
 
 $initial_config = json_decode( $initial_config );
 
-echo dphpformsV2_generate_html_recorder( 'seguimiento_pares', "sistemas"  );
+echo dphpformsV2_generate_html_recorder( 'seguimiento_pares', "sistemas", $initial_config, true  );
