@@ -17,7 +17,7 @@ class DOMAttributeList extends AbstractDOMAttributeList {
 
     private $attributes = array();
 
-    public function __construct(array $attr_list) {
+    public function __construct(array $attr_list = []) {
         
         foreach ($attr_list as $attr => $val) {
             $val_type = gettype($val);
