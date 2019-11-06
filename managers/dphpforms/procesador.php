@@ -1110,6 +1110,9 @@ function dphpforms_reglas_validator($respuestas, $reglas){
     //return $satisfied_reglas;
 }
 
+/**
+ * 
+ */
 function dphpforms_is_field_empty( $response ){
 
     // Check for simple checkbox. A simple checkbox is a checkbox with one value

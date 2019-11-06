@@ -1,0 +1,56 @@
+<body name="hola">
+<!-- Testing -->
+{{#data}}
+    {{> block_ases/side_menu}}
+    <div class="container">
+    {{{message}}}
+    {{! <form role="form" id="form_general_report"> }}
+        <div class="row">
+            <div class="col-sm-8">
+                <h2>REPORTE GEOGRÁFICO DE ESTUDIANTES</h2>
+            </div>
+            <div class="col-sm-4" id="div_cohorts">
+                <label for="">Cohorte:  </label>
+                {{{cohorts_checks}}}
+            </div>
+            <div class="top_options">
+                <div class="col-sm-12 col-md-12">
+                    <fieldset id="maps_fields">
+                        <div class="checkbox">
+                                <input type="checkbox" name="fields[]" value="markers_map" id="markers_map" checked="true"> Mapa de marcadores
+                        </div>
+                        <div class="checkbox">
+                            <input type="checkbox" name="fields[]" value="heat_map" id="heat_map" checked="true"> Mapa de calor
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <hr class="col-sm-12" />
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <div id="conventions-container" class="col-sm-12 col-md-12 col-lg-12">
+                    <div class="convention"> <img src="https://raw.githubusercontent.com/Concept211/Google-Maps-Markers/master/images/marker_blue.png"> SPP</div>
+                    <div class="convention"> <img src="https://raw.githubusercontent.com/Concept211/Google-Maps-Markers/master/images/marker_green.png"> SPE</div>
+                    <div class="convention"> <img src="https://raw.githubusercontent.com/Concept211/Google-Maps-Markers/master/images/marker_red.png"> SPT</div>
+                    <div class="convention"> <img src="https://raw.githubusercontent.com/Concept211/Google-Maps-Markers/master/images/marker_purple.png"> 3740</div>
+                    <div class="convention"> <img src="https://raw.githubusercontent.com/Concept211/Google-Maps-Markers/master/images/marker_orange.png"> Otros</div>
+                </div>
+            </div>
+            <hr class="col-sm-12" />
+        </div>
+        {{#report_geo_map}}
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <div id="map-container" style="">
+                    <div id="map-canvas"></div>
+                </div>
+            </div>
+        </div>
+        {{/report_geo_map}}
+    </div>
+{{/data}}
+</body>
+<script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&libraries=visualization">
+</script>
+
+
