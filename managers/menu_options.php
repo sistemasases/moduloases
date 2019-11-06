@@ -407,7 +407,7 @@ function create_menu_options($userid, $blockid, $courseid)
 
 
 
-            }
+
 
         }
 
