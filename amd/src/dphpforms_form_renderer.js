@@ -11,13 +11,12 @@
 
 define([
     'jquery',
-    'block_ases/bootstrap',
     'block_ases/sweetalert',
     'block_ases/jqueryui',
     'block_ases/select2',
     'block_ases/loading_indicator',
     'block_ases/jquery.scrollTo'
-], function ($, bootstrap, sweetalert, jqueryui, select2, loading_indicator, JQS) {
+], function ($, sweetalert, jqueryui, select2, loading_indicator, JQS) {
 
     return {
         init: function () {
