@@ -2,6 +2,7 @@
 /*
  * @package    block_ases
  * @copyright  ASES
+ * @author     Joan Manuel Tovar Guzman
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 /**
@@ -18,6 +19,7 @@ define(['jquery',
                 window.JSZip = jszip;
                 getDataMap();
 
+                //Evento para controlar el checkbox de mapa de calor
                 $('#heat_map').on('change', function () {
 
                     if (window.heatmap){
@@ -27,6 +29,7 @@ define(['jquery',
                     }
                 });
 
+                //Evento para controlar el checkbox de mapa de marcadores
                 $('#markers_map').on('change', function () {
 
                     if (window.markers){
@@ -39,18 +42,19 @@ define(['jquery',
 
                 });
 
-                var options = $('#conditions option');
-
-                var values = $.map(options ,function(option) {
-                    console.log( option.value);
-                });
-
+                //Evento para actualizar el mapa cuando cambie la seleccion de cohorte
                 $('#conditions').on('change', function () {
                     getDataMap();
                 });
             }
         }
 
+
+        /**
+         * Funcion getDataMap
+         *
+         * Funcion que se encarga de hacer el llamado para obtener los datos de las coordenadas en la base de datos
+         */
 
         function getDataMap(){
 
@@ -70,8 +74,17 @@ define(['jquery',
             });
         }
 
+        /**
+         * Funcion crearActualizarMapa
+         *
+         * Funcion que recibe la informacion de las coordenadas y se encarga de crear o actualizar el mapa, segun corresponda
+         *
+         * @param data
+         */
+
         function crearActualizarMapa(data) {
 
+            //Si no existe el mapa, se crea desde cero
             if(!window.map){
                 var latLng_Cali = new google.maps.LatLng(3.4247198, -76.5259052);
 
@@ -80,6 +93,8 @@ define(['jquery',
                     zoom: 12
                 });
             }
+
+            //Se prepara la informacion de las coordenadas
 
             var puntosMapa = [], cohortes = [];
             var latitud, longitud;
@@ -91,6 +106,8 @@ define(['jquery',
                 cohortes.push(data[x].cohorte);
             };
 
+            //Se asignan los atributos pertenecientes al mapa
+
             window.puntosMapa = puntosMapa;
             window.cohortes = cohortes;
 
@@ -99,6 +116,13 @@ define(['jquery',
 
         };
 
+
+        /**
+         * Funcion mapaCalor
+         *
+         * Funcion que se encarga de superponer el mapa de calor sobre el mapa existente
+         *
+         */
 
         function mapaCalor(){
 
@@ -117,6 +141,13 @@ define(['jquery',
             }
 
         };
+
+        /**
+         * Funcion marcadoresMapa
+         *
+         * Funcion que se encarga de dibujar los marcadores en el mapa existente segun las coordenadas
+         */
+
 
         function marcadoresMapa(){
 
@@ -169,7 +200,12 @@ define(['jquery',
 
         };
 
-
+        /**
+         * Funcion getIdInstancia
+         *
+         * Funcion que retorna la instancia actual
+         * @returns {*}
+         */
 
         function getIdinstancia() {
             var urlParameters = location.search.split('&');
