@@ -132,20 +132,29 @@
         padding: 6px 6px 6px 6px;
     }
 
-    .socioed_tab_header, .caract_tab_header {
+    .socioed_tab_header, .caract_tab_header, .academic_tab_header {
         padding-bottom: 4px;
+    }
+
+    .socioed_title, .caract_tab_title, .academic_tab_title{
+        color: inherit;
+    }
+
+    #tracing_others_tab {
+        padding-top: 10px !important;
     }
 
     .card_student_profile {
         margin-bottom: 15px;
     }
 
-    .socioed_title, .caract_tab_title{
-        color: inherit;
-    }
-
     #div_email_moodle{
         padding-left: 24px;
+    }
+
+    #sem_act_title_card{
+        padding-left: 20px;
+        padding-top: 20px;
     }
 
     #email{

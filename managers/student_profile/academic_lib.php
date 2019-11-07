@@ -78,15 +78,15 @@ function make_html_courses($courses)
 
     foreach ($courses as $course) {
 
-        $html .= "<div class='card'>
-                    <div class='card-header' id = 'academic'>
+        $html .= "<div class='card card_student_profile'>
+                    <div class='card-header academic_tab_header' id='academic'>
                         <h4 class='card-title'>
-                            <a id = 'academic_link' data-toggle='collapse' data-parent='#accordion_academic' href='#course_$course->id_course' aria-expanded='false' aria-controls='$course->id_course'>
+                            <a id='academic_link' class='academic_tab_title' data-toggle='collapse' data-parent='#accordion_academic' href='#course_$course->id_course' aria-expanded='false' aria-controls='$course->id_course'>
                                 $course->fullname
                             </a>
                         </h4>
                     </div>
-                    <div id = 'course_$course->id_course' class='panel-collapse collapse'>
+                    <div id='course_$course->id_course' class='panel-collapse collapse'>
                         <div class = 'card-body'>
                             $course->descriptions
                         </div>
