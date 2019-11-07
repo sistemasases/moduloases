@@ -16,9 +16,8 @@ define(['jquery',
     'block_ases/buttons.html5',
     'block_ases/buttons.flash',
     'block_ases/buttons.print',
-    'block_ases/bootstrap',
     'block_ases/sweetalert2'
-], function ($, jszip, pdfmake, dataTables, autoFill, buttons, html5, flash, print, bootstrap, sweetalert) {
+], function ($, jszip, pdfmake, dataTables, autoFill, buttons, html5, flash, print, sweetalert) {
     return {
         init: function () {
             window.JSZip = jszip;

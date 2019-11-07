@@ -7,7 +7,7 @@
 /**
  * @module block_ases/groupal_tracking
  */
-define(['jquery', 'block_ases/bootstrap', 'block_ases/validator', 'block_ases/sweetalert'], function($, bootstrap, validator, sweetalert) {
+define(['jquery', 'block_ases/validator', 'block_ases/sweetalert'], function($, validator, sweetalert) {
 
 
     return {

@@ -23,7 +23,7 @@
  */
 
 
-  define(['jquery','block_ases/bootstrap'], function($, bootstrap) {
+  define(['jquery'], function($) {
     
         return {
     

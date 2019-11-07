@@ -9,12 +9,11 @@
 define(
     ['jquery',
     'block_ases/Modernizr-v282' ,
-    'block_ases/bootstrap', 
     'block_ases/jquery.dataTables',  
     'block_ases/sweetalert', 
     'block_ases/select2',
     'block_ases/loading_indicator'
-], function($,Modernizr,bootstrap, datatables, sweetalert, select2, loading_indicator) {
+], function($,Modernizr, datatables, sweetalert, select2, loading_indicator) {
 
     return {
         init: function() {
@@ -1082,7 +1081,6 @@ define(
                         
                         $(".well.ases-col-md-10.ases-col-md-offset-1.reporte-seguimiento.oculto").show();
 
-                        console.log("It's here");
                         $(".se-pre-con").show();
                         $("#reemplazarToogle").hide();
 
