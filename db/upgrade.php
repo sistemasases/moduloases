@@ -3922,6 +3922,28 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
+        
+        
+        
+        //--------------
+        //Registro de los tipos de campos  
+        $field_name = "TEXTFIELD_LIST";
+        $exist = $DB->get_record_sql("SELECT * FROM {talentospilos_df_tipo_campo} WHERE campo = '$field_name'");
+        if( !isset( $exist->id ) ){
+            $field = new stdClass();
+            $field->campo                = $field_name;
+            $field->fecha_hora_registro  = 'now()';
+            $DB->insert_record('talentospilos_df_tipo_campo', $field);
+        }
+        
+        $field_name = "FILE";
+        $exist = $DB->get_record_sql("SELECT * FROM {talentospilos_df_tipo_campo} WHERE campo = '$field_name'");
+        if( !isset( $exist->id ) ){
+            $field = new stdClass();
+            $field->campo                = $field_name;
+            $field->fecha_hora_registro  = 'now()';
+            $DB->insert_record('talentospilos_df_tipo_campo', $field);
+        }
 
         upgrade_block_savepoint(true, 2019100716060, 'ases');
         return $result;

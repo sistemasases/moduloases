@@ -918,8 +918,10 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
     </form>';
     
     
-    $html = $dom->saveHTML();
     
+    $html = $dom->saveHTML();
+    $dom = $dom->loadHTML($dom->saveHTML());
+    print_r( $dom->getElementById("id_7") );die();
     return  ( $minify ?  dphpformsV2_html_minifier( $html ) :  $html );
 
 }

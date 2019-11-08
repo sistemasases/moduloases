@@ -5,6 +5,18 @@ ini_set('display_errors', 1);
 require_once( __DIR__ . "/../module_loader.php");
 module_loader("dphpforms");
 
+/*global $DB;
+
+$query = "CREATE TABLE abd(
+            ID serial NOT NULL PRIMARY KEY,
+            info json NOT NULL
+        )";
+
+$DB->execute($query);
+
+
+die();*/
+
 $initial_config = '{
     "allow_register":true,
     "allow_update":true,
@@ -35,4 +47,4 @@ $initial_config = '{
 
 $initial_config = json_decode( $initial_config );
 
-echo dphpformsV2_generate_html_recorder( 'seguimiento_pares', "sistemas", $initial_config, true  );
+echo dphpformsV2_generate_html_recorder( 'seguimiento_pares', "sistemas", $initial_config, false  );
