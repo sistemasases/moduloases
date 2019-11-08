@@ -1164,23 +1164,22 @@ input.no-borde-fondo.tema
 
 /*Talentos profile*/
 #container_profile{
-  padding-left: 0px;
-  padding-right: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
 }
 
 #hr_header{
-  margin-bottom: 0px;
+    margin-bottom: 0px;
 }
 
-
-
 #div_buttons_risk{
-  padding-left: 0px !important;
-  padding-right: 0px !important;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+    padding-top: 6px;
 }
 
 #buttons_edit_div{
-  margin-bottom: 8px;
+    margin-bottom: 8px;
 }
 
 /* Rules for modals */

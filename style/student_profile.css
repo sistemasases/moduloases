@@ -467,7 +467,6 @@
 
     .risk_graph_button,
     .risk_graph_button:active{
-    width: 45% !important;
     background-color: #337ab7;
     border-bottom: 1px solid #337ab7;
     border-radius: 0;
