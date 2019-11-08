@@ -421,7 +421,7 @@
                 </div>
             </div>
             
-            <div class="ases-row ficha_discapacity form-group" id="form_ficha_inicial" hidden>
+            <div class="ases-row ficha_discapacity form-group hidden" id="form_ficha_inicial">
                 <div class="ases-row row_discapacity2">
                     <div class="ases-col-xs-12 ases-col-sm-12 ases-col-md-6 ases-col-lg-6 " id="panel1">
                         <div class="ases-row row_discapacity" id="div_percepcion_estudiante">
@@ -457,7 +457,7 @@
                             </select>
                         </div>
 
-                        <div class="ases-row row_discapacity" id="div_otro_cond_adq" hidden>
+                        <div class="ases-row row_discapacity hidden" id="div_otro_cond_adq">
                             <label for="lb_otro_cond_adq" class="ases-col-xs-4 ases-col-sm-4 ases-col-md-3 ases-col-lg-3 label_fields_discapacity_tab">¿Cuál condición? *</label>
                             <input class=" ases-col-xs-8 ases-col-sm-8 ases-col-md-9 ases-col-lg-9 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Escriba otra condición de adquisición"
                                    id="otro_cond_adquisicion" />
@@ -471,7 +471,7 @@
                             <input class="ases-col-xs-1 ases-col-sm-1 ases-col-md-1 ases-col-lg-1" type="checkbox" title="¿Cuenta con diagnóstico de su discapacidad?" id="check_diagnostico">
                         </div>
 
-                        <div class="ases-row row_discapacity" id="div_descripcion_diagnostico" hidden>
+                        <div class="ases-row row_discapacity hidden" id="div_descripcion_diagnostico">
                             <label for="lb_otro_cond_adq" class="ases-col-xs-4 ases-col-sm-4 ases-col-md-3 ases-col-lg-3 label_fields_discapacity_tab">Descripción *</label>
                             <textarea rows="20" cols="40" class="ases-col-xs-8 ases-col-sm-8 ases-col-md-9 ases-col-lg-9" id="textarea_diagnostico" placeholder="Describa el diagnóstico de su discapacidad"></textarea>
                             <div id="descrip_diagnostico" class="ases-col-xs-8 ases-col-sm-8 ases-col-md-9 ases-col-lg-9"></div>
@@ -489,9 +489,9 @@
                             </select>
                         </div>
 
-                        <div class="ases-row row_discapacity" id="div_otra_discapacidad" hidden>
+                        <div class="ases-row row_discapacity hidden" id="div_otra_discapacidad">
                             <label for="lb_otra_disc" class="ases-col-xs-4 ases-col-sm-4 ases-col-md-3 ases-col-lg-3 label_fields_discapacity_tab">¿Cuál tipo? * </label>
-                            <input class="ases-col-xs-8 ases-col-sm-8 ases-col-md-9 ases-col-lg-9 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Escriba otro tipo de discapacidad" id="otra_discapacidad" />
+                            <input class="ases-col-xs-8 ases-col-sm-8 ases-col-md-9 ases-col-lg-9 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Escriba otro tipo de discapacidad" id="otra_discapacidad"/>
                         </div>
 
                         <div class="ases-row row_discapacity" id="div_certificado_invalidez">
@@ -503,9 +503,9 @@
                             <input class="ases-col-xs-1 ases-col-sm-1 ases-col-md-1 ases-col-lg-1" type="checkbox" title="¿Cuenta con certificado de invalidez?" id="check_certificado_invalidez">
                         </div>
 
-                        <div class="ases-row row_discapacity" id="div_porcentaje_inv" hidden>
+                        <div class="ases-row row_discapacity hidden" id="div_porcentaje_inv">
                             <label for="lb_otro_cond_adq" class="ases-col-xs-4 ases-col-sm-4 ases-col-md-3 ases-col-lg-3 label_fields_discapacity_tab">Porcentaje</label>
-                            <input type="number" min="0" max="100" id="input_porcentaje_inv" class="ases-col-xs-2 ases-col-sm-2 ases-col-md-2 ases-col-lg-2 input_fields_discapacity_tab" placeholder="%" />
+                            <input type="number" min="0" max="100" id="input_porcentaje_inv" class="ases-col-xs-2 ases-col-sm-2 ases-col-md-2 ases-col-lg-2 input_fields_discapacity_tab" placeholder="%"/>
                         </div>
 
                         <div class="ases-row row_discapacity" id="div_documentos_soporte">
@@ -786,7 +786,7 @@
                                 <label for="lb_factor2" class="ases-col-xs-5 ases-col-sm-5 ases-col-md-5 ases-col-lg-5 label_fields_discapacity_tab2">Características del contexto universitario.</label>
                             </div>
 
-                            <div hidden class="ases-row row_discapacity" id="div_factor_contexto" title="Características del contexto universitario ">
+                            <div class="ases-row row_discapacity hidden" id="div_factor_contexto" title="Características del contexto universitario ">
                                 <h3 class="h-sections-discapacity-tab">
                                     <strong>- Características del contexto universitario. indique cuál(s) de los siguientes factores le genera(n) mayor dificultad</strong>
                                 </h3>
@@ -1096,7 +1096,7 @@
                                 <input class="ases-col-xs-1 ases-col-sm-1 ases-col-md-1 ases-col-lg-1" type="checkbox" title="Otro, ¿cuál?" id="check_otra_posibilidad" />
                             </div>
 
-                            <div hidden class="ases-row row_discapacity" id="div_otra_actividad">
+                            <div class="ases-row row_discapacity hidden" id="div_otra_actividad">
                                 <input required class="ases-col-xs-3 ases-col-sm-3 ases-col-md-3 ases-col-lg-3 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Indique otra actividad" title="Otra actividad" id="input_otro1"/>
                                 <div>
                                     <input disabled required class="ases-col-xs-2 ases-col-sm-2 ases-col-md-2 ases-col-lg-2 range_input" title="Posibilidades con las que cuenta, deslice para editar" type="range" id="clasificacion_otro" min="1" max="3" />
@@ -1134,7 +1134,7 @@
                                 <label class="ases-col-xs-1 ases-col-sm-1 ases-col-md-1 ases-col-lg-1 label_fields_discapacity_tab3">Otro</label>
                             </div>
 
-                            <div hidden class="ases-row row_discapacity" id="div_otro_apoyo_principal">
+                            <div class="ases-row row_discapacity hidden" id="div_otro_apoyo_principal">
                                 <label class="ases-col-xs-2 ases-col-sm-2 ases-col-md-2 ases-col-lg-2 label_fields_discapacity_tab2">¿Cuál?</label>
                                 <input required class="ases-col-xs-9 ases-col-sm-9 ases-col-md-9 ases-col-lg-9 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Escriba el apoyo principal" id="input_otro_apoyo">
                             </div>
@@ -1159,7 +1159,7 @@
                                 <label class="ases-col-xs-1 ases-col-sm-1 ases-col-md-1 ases-col-lg-1 label_fields_discapacity_tab3">Otro</label>
                             </div>
 
-                            <div hidden class="ases-row row_discapacity" id="div_otro_transporte">
+                            <div class="ases-row row_discapacity hidden" id="div_otro_transporte">
                                 <label class="ases-col-xs-2 ases-col-sm-2 ases-col-md-2 ases-col-lg-2 label_fields_discapacity_tab2">¿Cuál?</label>
                                 <input required class="ases-col-xs-9 ases-col-sm-9 ases-col-md-9 ases-col-lg-9 input_fields_discapacity_tab input-discapacity" type="text" placeholder="Escriba el transporte" id="input_otro_transporte">
                             </div>
@@ -1174,7 +1174,7 @@
                             <input class="ases-col-xs-1 ases-col-sm-1 ases-col-md-1 ases-col-lg-1" type="checkbox" title="¿Participa?" id="check_org">
                         </div>
 
-                        <div class="ases-row row_discapacity" id="div_organizacion_asociacion" hidden>
+                        <div class="ases-row row_discapacity hidden" id="div_organizacion_asociacion">
                             <label for="lb_otro_org" class="ases-col-xs-2 ases-col-sm-2 ases-col-md-2 ases-col-lg-2  label_fields_discapacity_tab">¿Cuál?</label>
                             <input type="text" id="input_org" class="ases-col-xs-9 ases-col-sm-9 ases-col-md-9 ases-col-lg-9 input_fields_discapacity_tab" placeholder="Escriba la organización o asociación"/>
                         </div>
@@ -1187,7 +1187,7 @@
                             <input class="ases-col-xs-1 ases-col-sm-1 ases-col-md-1 ases-col-lg-1" type="checkbox" title="¿Realiza?" id="check_actividades_otros">
                         </div>
 
-                        <div class="ases-row row_discapacity" id="div_actividades_otros_desc" hidden>
+                        <div class="ases-row row_discapacity hidden" id="div_actividades_otros_desc">
                             <label for="lb_actividades_otros_desc" class="ases-col-xs-2 ases-col-sm-2 ases-col-md-2 ases-col-lg-2 label_fields_discapacity_tab">¿Cuáles?</label>
                             <input type="text" id="input_actividades_otros" class="ases-col-xs-9 ases-col-sm-9 ases-col-md-9 ases-col-lg-9 input_fields_discapacity_tab" placeholder="Escriba las actividades"/>
                         </div>
@@ -1200,7 +1200,7 @@
                             <input class="ases-col-xs-1 ases-col-sm-1 ases-col-md-1 ases-col-lg-1" type="checkbox" title="¿Realiza?" id="check_apoyo_institu">
                         </div>
 
-                        <div class="ases-row row_discapacity" id="div_institucion_apoyo" hidden>
+                        <div class="ases-row row_discapacity hidden" id="div_institucion_apoyo">
                             <div class="ases-row row_discapacity">
                                 <label for="lb_cual_institucion" class="ases-col-xs-2 ases-col-sm-2 ases-col-md-2 ases-col-lg-2 label_fields_discapacity_tab">¿Cuál?</label>
                                 <input type="text" id="input_institucion" class="ases-col-xs-9 ases-col-sm-9 ases-col-md-9 ases-col-lg-9 input_fields_discapacity_tab" placeholder="Escriba la institución"/>
@@ -1211,7 +1211,7 @@
                             </div>
                         </div>
 
-                        <div hidden>
+                        <div class="hidden">
                             <input disabled class="input_fields_discapacity_tab" type="text" id="input_json_saved" value="{{json_detalle_discapacity}}" />
                         </div>
                     </div>
@@ -1220,7 +1220,7 @@
                     <button type="button" class="ases-btn ases-danger ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12" id="save_ficha_discapacity">Guardar</button>
                 </div>
 
-                <div class="ases-row" hidden>
+                <div class="ases-row hidden">
                     <button type="button" class="ases-btn ases-danger ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12" id="cancel_ficha_discapacity">Revertir cambios</button>
                 </div>
             </div>
@@ -1264,7 +1264,7 @@
                         <label class="ases-col-xs-3 ases-col-sm-3 ases-col-md-3 ases-col-lg-3 label_fields_discapacity_tab3">Otra</label>
                     </div>
                     
-                    <div hidden>
+                    <div class="hidden">
                         <label for="lb_servicios" class="ases-col-xs-3 ases-col-sm-3 ases-col-md-3 ases-col-lg-3 label_fields_discapacity_tab">Escriba aquí: </label>
                         <input class=" ases-col-xs-9 ases-col-sm-9 ases-col-md-9 ases-col-lg-9 input_fields_discapacity_tab input-discapacity" type="text" id="input_detalle_servicio"/>
                     </div>
@@ -1316,27 +1316,27 @@
                         <input class="ases-col-xs-1 ases-col-sm-1 ases-col-md-1 ases-col-lg-1" type="checkbox" title="¿Es usuario de Otro servicio?" id="check_servicio_otro"/>
                         <label for="lb_servicios" class="ases-col-xs-11 ases-col-sm-6 ases-col-md-3 ases-col-lg-3 label_fields_discapacity_tab">Otro servicio</label>
 
-                        <div hidden>
+                        <div class="hidden">
                             <input class="ases-col-xs-12 ases-col-sm-6 ases-col-md-4 ases-col-lg-4 input_fields_discapacity_tab input-discapacity" type="text" title="¿Cuál servicio?" placeholder="Escriba el servicio" id="servicio_otro_cual" />
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div hidden>
+            <div class="hidden">
                 <input disabled class="input_fields_discapacity_tab" type="text" id="input_health_saved" value="{{health_data}}"/>
             </div>
 
-            <div hidden>
+            <div class="hidden">
                 <input disabled class="input_fields_discapacity_tab" type="text" id="input_json_health_saved" value="{{health_data_json}}"/>
             </div>
 
             {{#edit_and_save_salud_tab_sp}}
-                <div class="ases-row row_buttons" hidden>
+                <div class="ases-row row_buttons hidden">
                     <button type="button" class="ases-btn ases-danger ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12" id="save_health_data">Guardar</button>
                 </div>
             
-                <div class="ases-row row_buttons" hidden>
+                <div class="ases-row row_buttons hidden">
                     <button type="button" class="ases-btn ases-danger ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12" id="edit_health_data">Editar</button>
                 </div>
             {{/edit_and_save_salud_tab_sp}}
