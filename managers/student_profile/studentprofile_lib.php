@@ -2144,9 +2144,19 @@ function student_profile_get_peer_tracking($id_ases){
         'start' => strtotime( "2019-01-01" ),
         'end' => strtotime( "2019-04-30" )
     ];
-    
+
+    $filename = "test.txt";
+    $text = "Outer\ntime: ".date("H:i:s", time())."\n\n";
+    file_put_contents($filename, $text, FILE_APPEND);
+
+    $date_interval = [
+        'start' => strtotime( "1972-01-01" ),
+        'end' => date("Y-m-d", time())
+    ];
+
+    //file_put_contents($filename, json_encode($date_interval), FILE_APPEND);
+
     $periods = core_periods_get_all_periods();
-    
 
     foreach( $periods as $key => $period ){
 
