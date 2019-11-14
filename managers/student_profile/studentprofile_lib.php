@@ -2239,17 +2239,20 @@ function save_profile($form, $option1, $option2, $live_with){
 function student_profile_get_peer_tracking($id_ases){
 
     $peer_tracking_v3 = [];
-    $new_forms_date =strtotime('2018-01-01 00:00:00');
     $special_date_interval = [
         'start' => strtotime( "2019-01-01" ),
         'end' => strtotime( "2019-04-30" )
     ];
 
-    $date_interval = [
-        'start' => strtotime( "2018-01-01" ),
-        'end' => date("Y-m-d", time())
-    ];
+    $peer_tracking_v3['prueba']=1;
+    $periods = core_periods_get_all_periods();
+    $current_period = 0;
 
+    $filename = "test.txt";
+    $text = "\n\n".json_encode($periods[8]);
+    file_put_contents($filename, $text, FILE_APPEND);
+
+/*
     $trackings = get_tracking_current_semesterV4('student', $id_ases);
     if( count( $trackings ) > 0 ){
 
@@ -2304,7 +2307,7 @@ function student_profile_get_peer_tracking($id_ases){
         $peer_tracking['trackings'] = $tracking_modified;
 
         array_push( $peer_tracking_v3, $peer_tracking );
-    }
+    }*/
     return $peer_tracking_v3;
 }
 
