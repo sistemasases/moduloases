@@ -372,7 +372,7 @@ function dphpformsV2_get_fields_form( $form_id, $status = 1 ){
  }
 
  
-  function dphpformsV2_reverse_new_field_update( $form_id_alias, $id_pregunta, $default_value ){
+function dphpformsV2_reverse_new_field_update( $form_id_alias, $id_pregunta, $default_value ){
 
     global $DB;
 
@@ -411,9 +411,9 @@ function dphpformsV2_get_fields_form( $form_id, $status = 1 ){
 
     return $to_return;
 
-  }
+}
 
-  function dphpformsV2_get_records_reverse_new_field_update( $id_respuesta, $form_id_alias ){
+function dphpformsV2_get_records_reverse_new_field_update( $id_respuesta, $form_id_alias ){
 
     global $DB;
 
@@ -433,7 +433,7 @@ function dphpformsV2_get_fields_form( $form_id, $status = 1 ){
 
     return $DB->get_records_sql( $records_to_update );
 
-  }
+}
 
 function dphpformsv2_store_reverse_rield( $form_response_id, $id_pregunta, $value ){
 
@@ -917,11 +917,10 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
         </div>
     </form>';
     
-    
-    
     $html = $dom->saveHTML();
+    
     $dom = $dom->loadHTML($dom->saveHTML());
-    print_r( $dom->getElementById("id_7") );die();
+   
     return  ( $minify ?  dphpformsV2_html_minifier( $html ) :  $html );
 
 }
