@@ -128,7 +128,21 @@ if(isset($_POST['type'])&&$_POST['type']=="riesgos"&&isset($_POST['cohort'])&&is
     $data = get_general_table_graphic($columns, $result);
 
     echo json_encode($data);    
-} 
+}
+
+
+if(isset($_POST['type'])&&$_POST['type']=="mapa"&&isset($_POST['cohort'])&isset($_POST['instance_id'])){
+
+
+    $cohorte =  $_POST['cohort'];
+    $instance_id = $_POST['instance_id'];
+
+    $result = getGeographicReport($cohorte, $instance_id);
+
+    echo json_encode($result);
+
+}
+
 
 
 if(isset($_POST['type'])&&$_POST['type']=="estado"&&isset($_POST['cohort'])){
