@@ -5,7 +5,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $dbman = $DB->get_manager();
     $result = true;
 
-    if ($oldversion < 2019100716060 ) {
+    if ($oldversion < 2019111510130 ) {
       
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
@@ -3923,9 +3923,11 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->create_table($table);
         }
         
+        //*****************************************************************************************//
+        // Creación de tablas: Se adicionan los campos TEXTFIELD_LIST, FILE y SELECT.              //
+        // Versión: 2019100716060                                                                  //
+        //*****************************************************************************************//
         
-        
-        //--------------
         //Registro de los tipos de campos  
         $field_name = "TEXTFIELD_LIST";
         $exist = $DB->get_record_sql("SELECT * FROM {talentospilos_df_tipo_campo} WHERE campo = '$field_name'");
@@ -3944,8 +3946,17 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $field->fecha_hora_registro  = 'now()';
             $DB->insert_record('talentospilos_df_tipo_campo', $field);
         }
+        
+        $field_name = "SELECT";
+        $exist = $DB->get_record_sql("SELECT * FROM {talentospilos_df_tipo_campo} WHERE campo = '$field_name'");
+        if( !isset( $exist->id ) ){
+            $field = new stdClass();
+            $field->campo                = $field_name;
+            $field->fecha_hora_registro  = 'now()';
+            $DB->insert_record('talentospilos_df_tipo_campo', $field);
+        }
 
-        upgrade_block_savepoint(true, 2019100716060, 'ases');
+        upgrade_block_savepoint(true, 2019111510130, 'ases');
         return $result;
 
     }
