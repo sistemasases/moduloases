@@ -7,7 +7,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $dbman = $DB->get_manager();
     $result = true;
 
-    if ($oldversion < 2019111511000 ) {
+    if ($oldversion < 2019111514080 ) {
       
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
@@ -3925,11 +3925,11 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->create_table($table);
         }
         
-        //*****************************************************************************************//
-        // Creación de tablas: Se crea la tabla talentospilos_df_recursos y Se adicionan           //
-        // los campos TEXTFIELD_LIST, FILE y SELECT a la tabla de tipos de campos.                 //
-        // Versión: 2019111511000                                                                  //
-        //*****************************************************************************************//
+        //*******************************************************************************************//
+        // Creación de tablas: Se crea la tabla talentospilos_df_recursos, se adicionan las columnas //
+        // y los campos TEXTFIELD_LIST, FILE y SELECT a la tabla de tipos de campos.                 //
+        // Versión: 2019111514080                                                                    //
+        //*******************************************************************************************//
         
         //Registro de los tipos de campos  
         $field_name = "TEXTFIELD_LIST";
@@ -3964,19 +3964,15 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         $tablename = $CFG->prefix . "talentospilos_df_recursos";
         
         $query = "
-            SELECT EXISTS
-            (
-                SELECT * 
-                FROM information_schema.tables 
-                WHERE 
-                  table_schema = 'public' AND 
-                  table_name = '$tablename'
-            )
-        ";
+            SELECT * 
+            FROM information_schema.tables 
+            WHERE 
+                table_schema    = 'public' AND 
+                table_name      = '$tablename'";
         
         $response = $DB->get_record_sql( $query );
-        
-        if( !$response->exist ){
+  
+        if( !isset( $response->table_name ) ){
             
             $query_table = "
                 CREATE TABLE $tablename (
@@ -3991,7 +3987,49 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             
         }
         
-        upgrade_block_savepoint(true, 2019111511000, 'ases');
+        $tablename = $CFG->prefix . "talentospilos_df_tipo_campo";
+        
+        // Col: talentospilos_df_tipo_campo.esquema
+        
+        $colname = "esquema";
+        
+        $query = "
+            SELECT *
+            FROM information_schema.columns 
+            WHERE 
+                table_schema    = 'public'      AND 
+                table_name      = '$tablename'  AND 
+                column_name     = '$colname'";
+        
+        $response = $DB->get_record_sql( $query );
+        
+        if( !isset( $response->column_name ) ){
+            
+            $DB->execute( "ALTER TABLE " . $tablename . " ADD COLUMN $colname JSON" );
+            
+        }
+        
+        // Col: talentospilos_df_tipo_campo.plantilla
+        
+        $colname = "plantilla";
+        
+        $query = "
+            SELECT *
+            FROM information_schema.columns 
+            WHERE 
+                table_schema    = 'public'      AND 
+                table_name      = '$tablename'  AND 
+                column_name     = '$colname'";
+        
+        $response = $DB->get_record_sql( $query );
+        
+        if( !isset( $response->column_name ) ){
+            
+            $DB->execute( "ALTER TABLE " . $tablename . " ADD COLUMN $colname JSON" );
+            
+        }
+        
+        upgrade_block_savepoint(true, 2019111514080, 'ases');
         return $result;
 
     }
