@@ -1,11 +1,13 @@
 <?php 
 require_once(dirname(__FILE__).'/../../../config.php');
 function xmldb_block_ases_upgrade($oldversion = 0) {
+    
     global $DB;
+    global $CFG;
     $dbman = $DB->get_manager();
     $result = true;
 
-    if ($oldversion < 2019100716060 ) {
+    if ($oldversion < 2019111511000 ) {
       
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
@@ -3922,10 +3924,75 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
-
-        upgrade_block_savepoint(true, 2019100716060, 'ases');
+        
+        //*****************************************************************************************//
+        // Creación de tablas: Se crea la tabla talentospilos_df_recursos y Se adicionan           //
+        // los campos TEXTFIELD_LIST, FILE y SELECT a la tabla de tipos de campos.                 //
+        // Versión: 2019111511000                                                                  //
+        //*****************************************************************************************//
+        
+        //Registro de los tipos de campos  
+        $field_name = "TEXTFIELD_LIST";
+        $exist = $DB->get_record_sql("SELECT * FROM {talentospilos_df_tipo_campo} WHERE campo = '$field_name'");
+        if( !isset( $exist->id ) ){
+            $field = new stdClass();
+            $field->campo                = $field_name;
+            $field->fecha_hora_registro  = 'now()';
+            $DB->insert_record('talentospilos_df_tipo_campo', $field);
+        }
+        
+        $field_name = "FILE";
+        $exist = $DB->get_record_sql("SELECT * FROM {talentospilos_df_tipo_campo} WHERE campo = '$field_name'");
+        if( !isset( $exist->id ) ){
+            $field = new stdClass();
+            $field->campo                = $field_name;
+            $field->fecha_hora_registro  = 'now()';
+            $DB->insert_record('talentospilos_df_tipo_campo', $field);
+        }
+        
+        $field_name = "SELECT";
+        $exist = $DB->get_record_sql("SELECT * FROM {talentospilos_df_tipo_campo} WHERE campo = '$field_name'");
+        if( !isset( $exist->id ) ){
+            $field = new stdClass();
+            $field->campo                = $field_name;
+            $field->fecha_hora_registro  = 'now()';
+            $DB->insert_record('talentospilos_df_tipo_campo', $field);
+        }
+     
+        //----------------------------------------------------------------------
+        
+        $tablename = $CFG->prefix . "talentospilos_df_recursos";
+        
+        $query = "
+            SELECT EXISTS
+            (
+                SELECT * 
+                FROM information_schema.tables 
+                WHERE 
+                  table_schema = 'public' AND 
+                  table_name = '$tablename'
+            )
+        ";
+        
+        $response = $DB->get_record_sql( $query );
+        
+        if( !$response->exist ){
+            
+            $query_table = "
+                CREATE TABLE $tablename (
+                    id                  SERIAL PRIMARY KEY,
+                    metadatos           JSON NOT NULL,
+                    file_data           BYTEA NOT NULL,
+                    fecha_hora_registro TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+                )
+            ";
+            
+            $DB->execute( $query_table );
+            
+        }
+        
+        upgrade_block_savepoint(true, 2019111511000, 'ases');
         return $result;
 
     }
 }
-?>
