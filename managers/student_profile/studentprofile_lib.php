@@ -837,8 +837,6 @@ function get_tracking_current_semesterV4($student_id) {
         [ [ function( $_this ){ return strtotime($_this['fecha']); } ] , 'fecha_timestamp' ] ];
 
     $trackings = dphpformsV2_find_records( $xQuery );
-    file_put_contents("test.txt", "                  ".json_encode($trackings), FILE_APPEND);
-    die();
 
     $xQuery = new stdClass();
     $xQuery->form = "inasistencia";
