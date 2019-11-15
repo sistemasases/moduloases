@@ -803,6 +803,9 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
                         case "TEXTFIELD":
                             $field = dphpformsV2_generate_TEXTFIELD( $dom, $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
                             break;
+                        case "TEXTFIELD_LIST":
+                            $field = dphpformsV2_generate_TEXTFIELD_LIST( $dom, $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
+                            break;
                         case "TEXTAREA":
                             $field = dphpformsV2_generate_TEXTAREA( $dom, $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
                             break;
@@ -815,11 +818,17 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
                         case "TIME":
                             $field = dphpformsV2_generate_TIME( $dom, $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
                             break;
+                        case "FILE":
+                            $field = dphpformsV2_generate_FILE( $dom, $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
+                            break;
                         case "RADIOBUTTON":
                             $field = dphpformsV2_generate_RADIOBUTTON( $dom, $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
                             break;
                         case "CHECKBOX":
                             $field = dphpformsV2_generate_CHECKBOX( $dom, $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
+                            break;
+                        case "SELECT":
+                            $field = dphpformsV2_generate_SELECT( $dom, $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
                             break;
                     }
                     
@@ -909,19 +918,49 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
         }
     }
     
-    $html = $html .  ' 
+    /*$html = $html .  ' 
         <hr class="footer-hr-dphpforms">
         <div class="dphpforms_response_recorder_buttons">
             '.$register_button.'
             '.$html_aditional_buttons.'
         </div>
-    </form>';
+    </form>';*/
+    
+    $final_hr = _core_dphpforms_build_tag( $dom, "hr", new DOMAttributeList([
+        "class" => ["footer-hr-dphpforms"]
+    ]) );
+    $form->appendChild( $final_hr );
+    
     
     $html = $dom->saveHTML();
     
     $dom = $dom->loadHTML($dom->saveHTML());
    
     return  ( $minify ?  dphpformsV2_html_minifier( $html ) :  $html );
+
+}
+
+function dphpformsV2_generate_TEXTFIELD_LIST( &$dom, $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
+            
+    $div = _core_dphpforms_build_tag( $dom, "div", new DOMAttributeList() );
+    
+    return $div;
+
+}
+
+function dphpformsV2_generate_FILE( &$dom, $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
+            
+    $div = _core_dphpforms_build_tag( $dom, "div", new DOMAttributeList() );
+    
+    return $div;
+
+}
+
+function dphpformsV2_generate_SELECT( &$dom, $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
+            
+    $div = _core_dphpforms_build_tag( $dom, "div", new DOMAttributeList() );
+    
+    return $div;
 
 }
 
