@@ -813,6 +813,13 @@ function get_trackings_student($id_ases, $tracking_type, $id_instance){
     return $tracking_array;
 }
 
+/**
+ * Latest version
+ *
+ * @see dphpformsV2_find_records, dphpformsV2_find_records
+ * @param $student_id string -> ASES student id
+ * @return array of trackings
+ */
 function get_tracking_current_semesterV4($student_id) {
 
     $all_trackings = null;
@@ -2164,6 +2171,14 @@ function save_profile($form, $option1, $option2, $live_with){
     }
 }
 
+/**
+ * @desc Process a given tracking and pushed it into the array that follows
+ *       the pointer.
+ * @param $array_of_trackings array -> Pointer to the array on which will
+ *                                     be stored the tracking
+ * @param $tracking array -> tracking to push
+ * @return void
+ */
 function student_profile_process_tracking(&$array_of_trackings, $tracking) {
 
     $special_date_interval = [
@@ -2259,12 +2274,13 @@ function student_profile_get_peer_tracking($id_ases){
                 array_push( $peer_tracking_v3, $peer_tracking );
             } elseif($id_period == 1 || $trackings[$id_tracking]['fecha_timestamp'] > strtotime($periods[$id_period-1]->fecha_fin)) {
 
-                student_profile_process_tracking( $trackings_out_of_range, $trackings[$id_tracking] );
+                //student_profile_process_tracking( $trackings_out_of_range, $trackings[$id_tracking] );
                 $id_tracking++;
                 $id_period++;
             }
         }
     }
+
     if(count($trackings_out_of_range) > 0) {
         $peer_tracking = [];
         $peer_tracking['period_name'] = 'Seguimientos fuera de rango';
