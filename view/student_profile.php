@@ -30,6 +30,7 @@
 
 // Standard GPL and phpdocs
 require_once __DIR__ . '/../../../config.php';
+require_once __DIR__. '/../core/module_loader.php'; 
 require_once $CFG->libdir . '/adminlib.php';
 require_once("$CFG->libdir/formslib.php");
 
@@ -60,6 +61,8 @@ global $USER;
 
 include "../classes/output/student_profile_page.php";
 include "../classes/output/renderer.php";
+
+module_loader("dphpforms");
 
 
 $new_forms_date =strtotime('2018-01-01 00:00:00');
@@ -769,7 +772,8 @@ if ($student_code != 0) {
 
     $record->form_seguimientos = null;
     $record->primer_acercamiento = null;
-    $record->form_seguimientos = dphpforms_render_recorder('seguimiento_pares', $rol);
+    //$record->form_seguimientos = dphpforms_render_recorder('seguimiento_pares', $rol);
+    $record->form_seguimientos = _dphpforms_generate_html_recorder('seguimiento_pares', $rol);
     $record->form_inasistencia = dphpforms_render_recorder('inasistencia', $rol);
 
     if ($record->form_seguimientos == '') {
