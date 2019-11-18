@@ -1,0 +1,33 @@
+{
+    "id_temporal": "cmp_xx",
+    "enunciado" : "Lista ABC",
+    "tipo_campo" : "TEXTFIELD_LIST",
+    "opciones_campo" : {
+        "list_type" : "dynamic",
+        "initial_list" : [
+            {
+                "statement" : "First element",
+                "value" : "Value #1"
+            },
+            {
+                "statement" : "Second element",
+                "value" : "Value #2"
+            }
+        ]
+    },
+    "atributos_campo": {
+        "class" : "",
+        "name" : "list_abc",
+        "required": "false",
+        "local_alias": "list_abc"
+    },
+    "permisos_campo": [
+        {
+            "rol" : "sistemas",
+            "permisos" : [
+                "lectura",
+                "escritura"
+            ]
+        }
+    ]
+}
