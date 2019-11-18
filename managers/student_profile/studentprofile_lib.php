@@ -2164,11 +2164,56 @@ function save_profile($form, $option1, $option2, $live_with){
     }
 }
 
-//function student_profile_process_tracking(&$trackings_out_of_range, $tracking) {}
+function student_profile_process_tracking(&$array_of_trackings, $tracking) {
+
+    $special_date_interval = [
+        'start' => strtotime( "2019-01-01" ),
+        'end' => strtotime( "2019-04-30" )
+    ];
+
+    $_fecha = null;
+    if( array_key_exists("fecha", $tracking) ) {
+        $_fecha = strtotime( $tracking['fecha'] );
+    }else{
+        $_fecha = strtotime( $tracking['in_fecha'] );
+    }
+
+    if( ( $_fecha >= $special_date_interval['start'] ) && ( $_fecha <= $special_date_interval['end'] ) ){
+        $tracking['custom_extra']['special_tracking'] = true;
+    }
+
+    $tracking['custom_extra'][$tracking['alias_form']] = true;
+    $tracking['custom_extra']['rev_pro'] = false;
+    $tracking['custom_extra']['rev_pract'] = false;
+
+    if( array_key_exists("revisado_profesional", $tracking) ) {
+        if( $tracking['revisado_profesional'] === "0" ){
+            $tracking['custom_extra']['rev_pro'] = true;
+        }
+    }
+    if( array_key_exists("revisado_practicante", $tracking) ) {
+        if( $tracking['revisado_practicante'] === "0" ){
+            $tracking['custom_extra']['rev_pract'] = true;
+        }
+    }
+    if( array_key_exists("in_revisado_profesional", $tracking) ) {
+        if( $tracking['in_revisado_profesional'] === "0" ){
+            $tracking['custom_extra']['rev_pro'] = true;
+        }
+    }
+    if( array_key_exists("in_revisado_practicante", $tracking) ) {
+        if( $tracking['in_revisado_practicante'] === "0" ){
+            $tracking['custom_extra']['rev_pract'] = true;
+        }
+    }
+
+    array_push( $array_of_trackings, $tracking );
+}
 
 /**
- * @see get_peer_tracking_v4
- * @desc Constructs the peer tracking of an student.
+ * @see get_tracking_current_semesterV4, student_profile_process_tracking
+ * @desc Constructs the peer tracking of an student. Set the trackings that
+ * are not in between a beggining and an ending of a semester.
  *          This is the latest version.
  * @param $id_ases string -> ASES student id
  * @return array
@@ -2176,30 +2221,26 @@ function save_profile($form, $option1, $option2, $live_with){
 function student_profile_get_peer_tracking($id_ases){
 
     $peer_tracking_v3 = [];
-    $special_date_interval = [
-        'start' => strtotime( "2019-01-01" ),
-        'end' => strtotime( "2019-04-30" )
-    ];
+    $trackings_out_of_range = [];
 
     $periods = core_periods_get_all_periods();
+    $number_of_periods = count($periods);
+    $id_period = $number_of_periods;
+
     $trackings = get_tracking_current_semesterV4($id_ases);
-    $trackings_out_of_range = [];
+    $number_of_trackings = count($trackings);
+    $id_tracking = 0;
 
     file_put_contents("test.txt", "");
     file_put_contents("test.txt", "********************\n", FILE_APPEND);
     file_put_contents("test.txt", "**********".json_encode($trackings)."**********\n", FILE_APPEND);
     file_put_contents("test.txt", "********************\n", FILE_APPEND);
 
-    $number_of_trackings = count($trackings);
-    $number_of_periods = count($periods);
-    $id_tracking = 0;
-    $id_period = $number_of_periods;
-
     for(;$id_period>0;$id_period--) {
 
         $period = $periods[$id_period];
 
-        if( ($number_of_trackings - $id_tracking) > 0  ) {
+        if( ($number_of_trackings - $id_tracking) > 0 ) {
 
             $fecha_inicio_periodo = strtotime($period->fecha_inicio);
             $fecha_fin_periodo = strtotime($period->fecha_fin);
@@ -2215,7 +2256,7 @@ function student_profile_get_peer_tracking($id_ases){
 
                 $peer_tracking['period_name'] = $period->nombre;
                 $tracking_modified = [];
-                //Here can be added metadata.
+
                 for(;$id_tracking<$number_of_trackings;$id_tracking++) {
 
                     $tracking = $trackings[$id_tracking];
@@ -2226,55 +2267,25 @@ function student_profile_get_peer_tracking($id_ases){
                     if($timestamp_tracking < $fecha_inicio_periodo || $timestamp_tracking > $fecha_fin_periodo ) {
                         break;
                     }
-
-                    $_fecha = null;
-                    if( array_key_exists("fecha", $tracking) ) {
-                        $_fecha = strtotime( $tracking['fecha'] );
-                    }else{
-                        $_fecha = strtotime( $tracking['in_fecha'] );
-                    }
-
-                    if( ( $_fecha >= $special_date_interval['start'] ) && ( $_fecha <= $special_date_interval['end'] ) ){
-                        $tracking['custom_extra']['special_tracking'] = true;
-                    }
-
-                    $tracking['custom_extra'][$tracking['alias_form']] = true;
-                    $tracking['custom_extra']['rev_pro'] = false;
-                    $tracking['custom_extra']['rev_pract'] = false;
-
-                    if( array_key_exists("revisado_profesional", $tracking) ) {
-                        if( $tracking['revisado_profesional'] === "0" ){
-                            $tracking['custom_extra']['rev_pro'] = true;
-                        }
-                    }
-                    if( array_key_exists("revisado_practicante", $tracking) ) {
-                        if( $tracking['revisado_practicante'] === "0" ){
-                            $tracking['custom_extra']['rev_pract'] = true;
-                        }
-                    }
-                    if( array_key_exists("in_revisado_profesional", $tracking) ) {
-                        if( $tracking['in_revisado_profesional'] === "0" ){
-                            $tracking['custom_extra']['rev_pro'] = true;
-                        }
-                    }
-                    if( array_key_exists("in_revisado_practicante", $tracking) ) {
-                        if( $tracking['in_revisado_practicante'] === "0" ){
-                            $tracking['custom_extra']['rev_pract'] = true;
-                        }
-                    }
-                    //Using reference fail
-                    array_push( $tracking_modified, $tracking );
+                    student_profile_process_tracking( $tracking_modified, $tracking );
                 }
                 $peer_tracking['trackings'] = $tracking_modified;
                 array_push( $peer_tracking_v3, $peer_tracking );
             } elseif($id_period == 1 || $trackings[$id_tracking]['fecha_timestamp'] > strtotime($periods[$id_period-1]->fecha_fin)) {
-                //student_profile_process_tracking( $trackings_out_of_range, $trackings[$id_tracking] );
+
+                student_profile_process_tracking( $trackings_out_of_range, $trackings[$id_tracking] );
                 $id_tracking++;
                 $id_period++;
             }
         }
     }
-    file_put_contents("test.txt", "\n\nTrackings fuera de rango: ".json_encode($trackings_out_of_range), FILE_APPEND);
+    if(count($trackings_out_of_range) > 0) {
+        $peer_tracking = [];
+        $peer_tracking['period_name'] = 'Seguimientos fuera de rango';
+        $peer_tracking['trackings'] = $trackings_out_of_range;
+        array_push( $peer_tracking_v3, $peer_tracking );
+    }
+    file_put_contents("test.txt", "\n\nTrackings fuera de rango: ".json_encode($peer_tracking_v3), FILE_APPEND);
     return $peer_tracking_v3;
 }
 
