@@ -632,6 +632,7 @@ function _dphpforms_generate_html_recorder( $id_form, $rol_, $initial_config = n
     $form = _core_dphpforms_build_tag($dom, "form", new DOMAttributeList([
         'id' => $form_name_formatted,
         'data-uid' => $form_uniqid,
+        'data-dphpforms' => "dphpforms",
         'method' => $form_info->method,
         'action' => $form_action,
         'class' => array_merge( [ 'dphpforms', 'dphpforms-response' ], $aditional_form_classes )
