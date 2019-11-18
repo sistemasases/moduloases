@@ -578,13 +578,24 @@ function _dphpforms_generate_html_recorder( $id_form, $rol_, $initial_config = n
     }
 
     $form_name_formatted = $form_info->alias . "_" . $form_info->id;
+    
     $register_button = '<button data-form-id="'.$form_name_formatted.'" type="submit" class="btn-dphpforms btn-dphpforms-sendform">Registrar</button>';
+    $register_button = _core_dphpforms_build_tag( $dom, "button", new DOMAttributeList([
+        "data-form-id" => $form_name_formatted,
+        'type' => "submit",
+        'class' => [
+            "btn-dphpforms",
+            "btn-dphpforms-sendform"
+        ]
+    ]) );
+    $register_button->nodeValue = "Registrar";
+    
     $form_action = $form_info->action;
     
     if( $initial_config ){
         if( property_exists($initial_config, 'allow_register') ){
             if( !$initial_config->allow_register ){
-                $register_button = '';
+                $register_button = NULL;
                 $form_action = uniqid();
             }
         }
@@ -850,6 +861,10 @@ function _dphpforms_generate_html_recorder( $id_form, $rol_, $initial_config = n
         "class" => ["footer-hr-dphpforms"]
     ]) );
     $form->appendChild( $final_hr );
+    
+    if( !is_null( $register_button ) ){
+        $form->appendChild( $register_button );
+    }
 
     if( $initial_config ){
 
@@ -927,8 +942,6 @@ function _dphpforms_generate_html_recorder( $id_form, $rol_, $initial_config = n
             '.$html_aditional_buttons.'
         </div>
     </form>';*/
-    
-    
     
     
     $html = $dom->saveHTML();
