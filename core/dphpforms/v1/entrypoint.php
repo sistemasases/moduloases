@@ -845,9 +845,11 @@ function _dphpforms_generate_html_recorder( $id_form, $rol_, $initial_config = n
         }
 
     }
-
     
-    $html_aditional_buttons = "";
+    $final_hr = _core_dphpforms_build_tag( $dom, "hr", new DOMAttributeList([
+        "class" => ["footer-hr-dphpforms"]
+    ]) );
+    $form->appendChild( $final_hr );
 
     if( $initial_config ){
 
@@ -902,13 +904,13 @@ function _dphpforms_generate_html_recorder( $id_form, $rol_, $initial_config = n
                         }
                     }
                    
-                    $html_button = _dphpforms_generate_html_button( $button->alias, $button->text, $button->classes, false );
-
+                    $html_button = _dphpforms_generate_html_button( $dom, $button->alias, $button->text, $button->classes, false );
+                    
                     //If return is null means that was defined an invalid alias or was tried to define and reserved alias without flag.
                     if( !$html_button ){
                         return _dphpforms_build_exception_message( "<strong>" . $button->alias . "</strong> is an reserved alias and its not allowed for recorder" );
                     }else{
-                        $html_aditional_buttons .= $html_button;
+                        $form->appendChild( $html_button );
                     }
 
                 }else{
@@ -926,10 +928,7 @@ function _dphpforms_generate_html_recorder( $id_form, $rol_, $initial_config = n
         </div>
     </form>';*/
     
-    $final_hr = _core_dphpforms_build_tag( $dom, "hr", new DOMAttributeList([
-        "class" => ["footer-hr-dphpforms"]
-    ]) );
-    $form->appendChild( $final_hr );
+    
     
     
     $html = $dom->saveHTML();
@@ -1418,7 +1417,7 @@ function _dphpforms_generate_CHECKBOX( &$dom, $id_formulario_pregunta, $context,
  * @return String HTML with the buttons tags.
  */
 
-function _dphpforms_generate_html_button( $alias, $text, $classes, $allow_reserved_alias = false ){
+function _dphpforms_generate_html_button( &$dom, $alias, $text, $classes, $allow_reserved_alias = false ){
     
     $reserved_aliases = [
         "update",
@@ -1454,9 +1453,21 @@ function _dphpforms_generate_html_button( $alias, $text, $classes, $allow_reserv
         );
         $aditional_classes = join( $classes, " " );
     }
+    
+    $btn_input = _core_dphpforms_build_tag(
+            $dom, "input", new DOMAttributeList([
+                'class' => array_merge(
+                        ["button", "btn-dphpforms", "btn-dphpforms-" . $alias,],
+                        $classes
+                ),
+                'type' => "button",
+                'value' => $text
+             ])
+    );
 
-
-    return '<input type="button" class="button btn-dphpforms btn-dphpforms-'. $alias .' '. $aditional_classes .'" value="'.$text.'" >';
+    return $btn_input;
+    
+    //return '<input type="button" class="button btn-dphpforms btn-dphpforms-'. $alias .' '. $aditional_classes .'" value="'.$text.'" >';
 }
 
 /**
