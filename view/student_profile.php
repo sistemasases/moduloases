@@ -922,6 +922,7 @@ $PAGE->requires->js_call_amd('block_ases/dphpforms_form_renderer', 'init');
 $PAGE->requires->js_call_amd('block_ases/dphpforms_form_discapacity', 'init');
 $PAGE->requires->js_call_amd('block_ases/students_profile_others_tab_sp', 'init');
 $PAGE->requires->js_call_amd('block_ases/academic_profile_main', 'init');
+$PAGE->requires->js_call_amd('block_ases/dphpforms', 'init');
 
 $output = $PAGE->get_renderer('block_ases');
 
