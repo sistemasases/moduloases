@@ -373,17 +373,13 @@ function create_menu_options($userid, $blockid, $courseid)
 
             }
             
-
-
-
-
             if ($function == 'ases_graphic_reports') {
                 $url = new moodle_url("/blocks/ases/view/ases_graphic_reports.php", array(
                     'courseid' => $courseid,
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li id="menu_ases_graphic_reports"><a class="menu_a" href= "' . $url . '">Reportes gráficos ASES</a><li>';
+                $menu_options = '<a id="menu_ases_graphic_reports" class="menu_a" href= "' . $url . '">Reportes gráficos ASES</a>';
 
                 $indexed['Reportes gráficos ASES'] = $menu_options;
                 $soc_ed_options['Reportes Gráficos'] = $menu_options;
@@ -395,7 +391,7 @@ function create_menu_options($userid, $blockid, $courseid)
                     'instanceid' => $blockid,
                 ));
 
-                $menu_options = '<li id="menu_ases_geographic_reports"><a class="menu_a" href= "' . $url . '">Reporte geográfico ASES</a><li>';
+                $menu_options = '<a id="menu_ases_geographic_reports" class="menu_a" href= "' . $url . '">Reporte geográfico ASES</a>';
 
                 $indexed['Reporte geográfico ASES'] = $menu_options;
                 $soc_ed_options['Reporte Geográfico'] = $menu_options;
