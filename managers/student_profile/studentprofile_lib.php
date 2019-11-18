@@ -2212,8 +2212,7 @@ function student_profile_process_tracking(&$array_of_trackings, $tracking) {
 
 /**
  * @see get_tracking_current_semesterV4, student_profile_process_tracking
- * @desc Constructs the peer tracking of an student. Set the trackings that
- * are not in between a beggining and an ending of a semester.
+ * @desc Constructs the peer tracking of an student.
  *          This is the latest version.
  * @param $id_ases string -> ASES student id
  * @return array
@@ -2231,11 +2230,6 @@ function student_profile_get_peer_tracking($id_ases){
     $number_of_trackings = count($trackings);
     $id_tracking = 0;
 
-    file_put_contents("test.txt", "");
-    file_put_contents("test.txt", "********************\n", FILE_APPEND);
-    file_put_contents("test.txt", "**********".json_encode($trackings)."**********\n", FILE_APPEND);
-    file_put_contents("test.txt", "********************\n", FILE_APPEND);
-
     for(;$id_period>0;$id_period--) {
 
         $period = $periods[$id_period];
@@ -2244,12 +2238,6 @@ function student_profile_get_peer_tracking($id_ases){
 
             $fecha_inicio_periodo = strtotime($period->fecha_inicio);
             $fecha_fin_periodo = strtotime($period->fecha_fin);
-
-            file_put_contents("test.txt", "\n  ".json_encode($period)."\n\n\n", FILE_APPEND);
-            file_put_contents("test.txt", "**********".strtotime($period->nombre)."**********\n", FILE_APPEND);
-            file_put_contents("test.txt", "Fecha inicio periodo: ".$fecha_inicio_periodo."\n", FILE_APPEND);
-            file_put_contents("test.txt", "Fecha fin periodo: ".$fecha_fin_periodo."\n\n", FILE_APPEND);
-            file_put_contents("test.txt", "Fecha seguimiento: ".$trackings[$id_tracking]['fecha_timestamp']."\n\n", FILE_APPEND);
 
             if( $trackings[$id_tracking]['fecha_timestamp'] >= $fecha_inicio_periodo &&
                 $trackings[$id_tracking]['fecha_timestamp'] <= $fecha_fin_periodo ) {
@@ -2261,8 +2249,6 @@ function student_profile_get_peer_tracking($id_ases){
 
                     $tracking = $trackings[$id_tracking];
                     $timestamp_tracking = $trackings[$id_tracking]['fecha_timestamp'];
-
-                    file_put_contents("test.txt", "Fecha seguimiento: ".$timestamp_tracking."\n", FILE_APPEND);
 
                     if($timestamp_tracking < $fecha_inicio_periodo || $timestamp_tracking > $fecha_fin_periodo ) {
                         break;
@@ -2285,7 +2271,6 @@ function student_profile_get_peer_tracking($id_ases){
         $peer_tracking['trackings'] = $trackings_out_of_range;
         array_push( $peer_tracking_v3, $peer_tracking );
     }
-    file_put_contents("test.txt", "\n\nTrackings fuera de rango: ".json_encode($peer_tracking_v3), FILE_APPEND);
     return $peer_tracking_v3;
 }
 
