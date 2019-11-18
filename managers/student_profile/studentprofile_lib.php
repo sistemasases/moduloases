@@ -2164,22 +2164,7 @@ function save_profile($form, $option1, $option2, $live_with){
     }
 }
 
-function filter_trackings($periods, $trackings) {
-
-    $filtered_trackings = [];
-
-    foreach($periods as $period) {
-
-        $fecha_inicio_periodo = strtotime($period->fecha_inicio);
-        $fecha_fin_periodo = strtotime($period->fecha_fin);
-
-        foreach($trackings AS $tracking) {
-
-            $timestamp_tracking = $tracking['fecha_timestamp'];
-
-        }
-    }
-}
+//function student_profile_process_tracking(&$trackings_out_of_range, $tracking) {}
 
 /**
  * @see get_peer_tracking_v4
@@ -2198,18 +2183,21 @@ function student_profile_get_peer_tracking($id_ases){
 
     $periods = core_periods_get_all_periods();
     $trackings = get_tracking_current_semesterV4($id_ases);
-
-    $trackings = filter_trackings($periods, $trackings);
+    $trackings_out_of_range = [];
 
     file_put_contents("test.txt", "");
     file_put_contents("test.txt", "********************\n", FILE_APPEND);
     file_put_contents("test.txt", "**********".json_encode($trackings)."**********\n", FILE_APPEND);
     file_put_contents("test.txt", "********************\n", FILE_APPEND);
 
-    $id_tracking = 0;
     $number_of_trackings = count($trackings);
+    $number_of_periods = count($periods);
+    $id_tracking = 0;
+    $id_period = $number_of_periods;
 
-    foreach( $periods as $key => $period ) {
+    for(;$id_period>0;$id_period--) {
+
+        $period = $periods[$id_period];
 
         if( ($number_of_trackings - $id_tracking) > 0  ) {
 
@@ -2220,6 +2208,7 @@ function student_profile_get_peer_tracking($id_ases){
             file_put_contents("test.txt", "**********".strtotime($period->nombre)."**********\n", FILE_APPEND);
             file_put_contents("test.txt", "Fecha inicio periodo: ".$fecha_inicio_periodo."\n", FILE_APPEND);
             file_put_contents("test.txt", "Fecha fin periodo: ".$fecha_fin_periodo."\n\n", FILE_APPEND);
+            file_put_contents("test.txt", "Fecha seguimiento: ".$trackings[$id_tracking]['fecha_timestamp']."\n\n", FILE_APPEND);
 
             if( $trackings[$id_tracking]['fecha_timestamp'] >= $fecha_inicio_periodo &&
                 $trackings[$id_tracking]['fecha_timestamp'] <= $fecha_fin_periodo ) {
@@ -2230,7 +2219,7 @@ function student_profile_get_peer_tracking($id_ases){
                 for(;$id_tracking<$number_of_trackings;$id_tracking++) {
 
                     $tracking = $trackings[$id_tracking];
-                    $timestamp_tracking = $tracking['fecha_timestamp'];
+                    $timestamp_tracking = $trackings[$id_tracking]['fecha_timestamp'];
 
                     file_put_contents("test.txt", "Fecha seguimiento: ".$timestamp_tracking."\n", FILE_APPEND);
 
@@ -2239,7 +2228,7 @@ function student_profile_get_peer_tracking($id_ases){
                     }
 
                     $_fecha = null;
-                    if ( array_key_exists("fecha", $tracking) ) {
+                    if( array_key_exists("fecha", $tracking) ) {
                         $_fecha = strtotime( $tracking['fecha'] );
                     }else{
                         $_fecha = strtotime( $tracking['in_fecha'] );
@@ -2253,22 +2242,22 @@ function student_profile_get_peer_tracking($id_ases){
                     $tracking['custom_extra']['rev_pro'] = false;
                     $tracking['custom_extra']['rev_pract'] = false;
 
-                    if ( array_key_exists("revisado_profesional", $tracking) ) {
+                    if( array_key_exists("revisado_profesional", $tracking) ) {
                         if( $tracking['revisado_profesional'] === "0" ){
                             $tracking['custom_extra']['rev_pro'] = true;
                         }
                     }
-                    if ( array_key_exists("revisado_practicante", $tracking) ) {
+                    if( array_key_exists("revisado_practicante", $tracking) ) {
                         if( $tracking['revisado_practicante'] === "0" ){
                             $tracking['custom_extra']['rev_pract'] = true;
                         }
                     }
-                    if ( array_key_exists("in_revisado_profesional", $tracking) ) {
+                    if( array_key_exists("in_revisado_profesional", $tracking) ) {
                         if( $tracking['in_revisado_profesional'] === "0" ){
                             $tracking['custom_extra']['rev_pro'] = true;
                         }
                     }
-                    if ( array_key_exists("in_revisado_practicante", $tracking) ) {
+                    if( array_key_exists("in_revisado_practicante", $tracking) ) {
                         if( $tracking['in_revisado_practicante'] === "0" ){
                             $tracking['custom_extra']['rev_pract'] = true;
                         }
@@ -2278,9 +2267,14 @@ function student_profile_get_peer_tracking($id_ases){
                 }
                 $peer_tracking['trackings'] = $tracking_modified;
                 array_push( $peer_tracking_v3, $peer_tracking );
+            } elseif($id_period == 1 || $trackings[$id_tracking]['fecha_timestamp'] > strtotime($periods[$id_period-1]->fecha_fin)) {
+                //student_profile_process_tracking( $trackings_out_of_range, $trackings[$id_tracking] );
+                $id_tracking++;
+                $id_period++;
             }
         }
     }
+    file_put_contents("test.txt", "\n\nTrackings fuera de rango: ".json_encode($trackings_out_of_range), FILE_APPEND);
     return $peer_tracking_v3;
 }
 

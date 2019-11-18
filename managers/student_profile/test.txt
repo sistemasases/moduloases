@@ -9,6 +9,27 @@
 Fecha inicio periodo: 1533099600
 Fecha fin periodo: 1558155600
 
+Fecha seguimiento: 1574053200
+
+
+  {"id":"8","nombre":"2018B","fecha_inicio":"2018-08-01 00:00:00","fecha_fin":"2019-05-18 00:00:00"}
+
+
+**********1574101080**********
+Fecha inicio periodo: 1533099600
+Fecha fin periodo: 1558155600
+
+Fecha seguimiento: 1556254800
+
+Fecha seguimiento: 1556254800
+Fecha seguimiento: 1548392400
+Fecha seguimiento: 1543381200
+Fecha seguimiento: 1538370000
+Fecha seguimiento: 1537506000
+Fecha seguimiento: 1536901200
+Fecha seguimiento: 1536296400
+Fecha seguimiento: 1535691600
+Fecha seguimiento: 1528434000
 
   {"id":"7","nombre":"2018A","fecha_inicio":"2018-01-01 00:00:00","fecha_fin":"2018-07-31 00:00:00"}
 
@@ -17,51 +38,23 @@ Fecha fin periodo: 1558155600
 Fecha inicio periodo: 1514782800
 Fecha fin periodo: 1533013200
 
+Fecha seguimiento: 1528434000
 
-  {"id":"6","nombre":"2017B","fecha_inicio":"2017-08-01 00:00:00","fecha_fin":"2017-12-31 00:00:00"}
-
-
-**********1574101020**********
-Fecha inicio periodo: 1501563600
-Fecha fin periodo: 1514696400
-
-
-  {"id":"5","nombre":"2017A","fecha_inicio":"2017-02-19 00:00:00","fecha_fin":"2017-07-15 00:00:00"}
-
-
-**********1574104620**********
-Fecha inicio periodo: 1487480400
-Fecha fin periodo: 1500094800
-
-
-  {"id":"4","nombre":"2016B","fecha_inicio":"2016-08-19 00:00:00","fecha_fin":"2016-12-12 00:00:00"}
-
-
-**********1574100960**********
-Fecha inicio periodo: 1471582800
-Fecha fin periodo: 1481518800
+Fecha seguimiento: 1528434000
+Fecha seguimiento: 1527224400
+Fecha seguimiento: 1526619600
+Fecha seguimiento: 1526014800
+Fecha seguimiento: 1525410000
+Fecha seguimiento: 1524805200
+Fecha seguimiento: 1524200400
+Fecha seguimiento: 1523595600
+Fecha seguimiento: 1522990800
+Fecha seguimiento: 1521781200
+Fecha seguimiento: 1521176400
+Fecha seguimiento: 1520226000
+Fecha seguimiento: 1519966800
+Fecha seguimiento: 1519362000
+Fecha seguimiento: 1518411600
 
 
-  {"id":"3","nombre":"2016A","fecha_inicio":"2016-02-20 00:00:00","fecha_fin":"2016-06-26 00:00:00"}
-
-
-**********1574104560**********
-Fecha inicio periodo: 1455944400
-Fecha fin periodo: 1466917200
-
-
-  {"id":"2","nombre":"2015B","fecha_inicio":"2015-08-20 00:00:00","fecha_fin":"2015-12-12 00:00:00"}
-
-
-**********1574100900**********
-Fecha inicio periodo: 1440046800
-Fecha fin periodo: 1449896400
-
-
-  {"id":"1","nombre":"2015A","fecha_inicio":"2015-02-19 00:00:00","fecha_fin":"2015-06-26 00:00:00"}
-
-
-**********1574104500**********
-Fecha inicio periodo: 1424322000
-Fecha fin periodo: 1435294800
-
+Trackings fuera de rango: [{"fecha_hora_registro":1574085464,"id_registro":"27242","puntuacion_riesgo_economico":"-#$%-","revisado_practicante":"-1","id_estudiante":"788","puntuacion_riesgo_familiar":"-#$%-","puntuacion_riesgo_individual":"-#$%-","puntuacion_vida_uni":"-#$%-","revisado_profesional":"-1","puntuacion_riesgo_academico":"-#$%-","fecha":"2019-11-18","alias_form":"seguimiento_pares","fecha_timestamp":1574053200}]
