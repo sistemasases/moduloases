@@ -27,29 +27,29 @@ module_loader("security");
  * $xQuery->recordStatus = [ "!deleted" ]; // options "deleted" or "!deleted", can be both. Empty = both.
  * $xQuery->asFields = [ [ [ function( $_this ){ return (int) $_this['id_registro'] ; } ], "id_estudiante" ], ["revisado_profesional", "id_estudiante"] ]; 
  * $xQuery->selectedFields = [ "id_creado_por", "id_estudiante" ]; // Without support.
-echo json_encode( dphpformsV2_find_records( $xQuery ) );*/
+echo json_encode( _dphpforms_find_records( $xQuery ) );*/
 // -- End Dev test block
 
 
 /**
  * Function that given a valid xQuery returns the execution result.
  * @author Jeison Cardona Gómez. <jeison.cardona@correounivalle.edu.co>
- * @see dphpformsV2_validate_xquery( ... ) in this file
+ * @see _dphpforms_validate_xquery( ... ) in this file
  * @param Object $query stdClass with the specified properties. 
  * @return stdClass | Array
  */
- function dphpformsV2_find_records( $query ){
+ function _dphpforms_find_records( $query ){
 
     global $DB;
 
-    $form = dphpformsV2_get_form_info( $query->form );
+    $form = _dphpforms_get_form_info( $query->form );
     
-    $validation_status = dphpformsV2_validate_xquery($query);
+    $validation_status = _dphpforms_validate_xquery($query);
     if( $validation_status['status_code'] === -1 ){
         return $validation_status;
     }
     
-    $fields = dphpformsV2_get_fields_form( $form->id );
+    $fields = _dphpforms_get_fields_form( $form->id );
     $list_fields_alias = [];
     $list_fields_alias_id = [];
     $list_fields_id_alias = [];
@@ -268,9 +268,9 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );*/
 
  }
 
- function dphpformsV2_find_n_count_records( $query ){
+ function _dphpforms_find_n_count_records( $query ){
 
-    $response = dphpformsV2_find_records( $query );
+    $response = _dphpforms_find_records( $query );
     if( $response["status_code"] !== -1 ){
         return count( $response );
     }else{
@@ -285,7 +285,7 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );*/
  * @param int/$string Alias or identifier 
  * @return stdClass with id, nombre, alias, descripcion, method, action, enctype, fecha_hora_registro, estado
  */
- function dphpformsV2_get_form_info( $alias_identifier ){
+ function _dphpforms_get_form_info( $alias_identifier ){
     
     global $DB;
 
@@ -309,7 +309,7 @@ echo json_encode( dphpformsV2_find_records( $xQuery ) );*/
  * @param int/$string Alias or identifier 
  * @return stdClass
  */
-function dphpformsV2_get_find_forms( $column_name, $value, $using_like = false, $status = 1 ){
+function _dphpforms_get_find_forms( $column_name, $value, $using_like = false, $status = 1 ){
     
     global $DB;
 
@@ -338,7 +338,7 @@ function dphpformsV2_get_find_forms( $column_name, $value, $using_like = false, 
  * @param int $status: 0 = deleted.
  * @return stdClass
  */
-function dphpformsV2_get_fields_form( $form_id, $status = 1 ){
+function _dphpforms_get_fields_form( $form_id, $status = 1 ){
     
     global $DB;
 
@@ -372,11 +372,11 @@ function dphpformsV2_get_fields_form( $form_id, $status = 1 ){
  }
 
  
-function dphpformsV2_reverse_new_field_update( $form_id_alias, $id_pregunta, $default_value ){
+function _dphpforms_reverse_new_field_update( $form_id_alias, $id_pregunta, $default_value ){
 
     global $DB;
 
-    $form_info = dphpformsV2_get_form_info( $form_id_alias );
+    $form_info = _dphpforms_get_form_info( $form_id_alias );
 
     $records_to_update = "SELECT id AS id_formulario_respuestas
     FROM {talentospilos_df_form_resp} 
@@ -397,7 +397,7 @@ function dphpformsV2_reverse_new_field_update( $form_id_alias, $id_pregunta, $de
 
     foreach( $records as $key => $record ){
 
-        $return = dphpformsv2_store_reverse_rield( $record->id_formulario_respuestas, $id_pregunta, $default_value );
+        $return = _dphpforms_store_reverse_rield( $record->id_formulario_respuestas, $id_pregunta, $default_value );
         if( !$return ){
             array_push( $fails, $record->id_formulario_respuestas  );
         }else{
@@ -413,11 +413,11 @@ function dphpformsV2_reverse_new_field_update( $form_id_alias, $id_pregunta, $de
 
 }
 
-function dphpformsV2_get_records_reverse_new_field_update( $id_respuesta, $form_id_alias ){
+function _dphpforms_get_records_reverse_new_field_update( $id_respuesta, $form_id_alias ){
 
     global $DB;
 
-    $form_info = dphpformsV2_get_form_info( $form_id_alias );
+    $form_info = _dphpforms_get_form_info( $form_id_alias );
 
     $records_to_update = "SELECT id AS id_formulario_respuestas
     FROM {talentospilos_df_form_resp} 
@@ -435,7 +435,7 @@ function dphpformsV2_get_records_reverse_new_field_update( $id_respuesta, $form_
 
 }
 
-function dphpformsv2_store_reverse_rield( $form_response_id, $id_pregunta, $value ){
+function _dphpforms_store_reverse_rield( $form_response_id, $id_pregunta, $value ){
 
     global $DB;
 
@@ -447,9 +447,9 @@ function dphpformsv2_store_reverse_rield( $form_response_id, $id_pregunta, $valu
     //If it does not exist.
     if( !$DB->get_record_sql( $sql_form_solu_exist ) ){
  
-        $respuesta = dphpformsv2_store_respuesta( $id_pregunta, $value );
+        $respuesta = _dphpforms_store_respuesta( $id_pregunta, $value );
         if( $respuesta ){
-            return dphpformsV2_store_form_soluciones( $form_response_id, $respuesta );
+            return _dphpforms_store_form_soluciones( $form_response_id, $respuesta );
         }else{
             return null;
         }
@@ -457,7 +457,7 @@ function dphpformsv2_store_reverse_rield( $form_response_id, $id_pregunta, $valu
     }
 }
 
-function dphpformsv2_store_respuesta( $id, $value ){
+function _dphpforms_store_respuesta( $id, $value ){
     
     global $DB;
 
@@ -465,11 +465,11 @@ function dphpformsv2_store_respuesta( $id, $value ){
     $obj_respuesta->id_pregunta = $id;
     $obj_respuesta->respuesta = $value;
 
-    $pregunta = dphpformsV2_get_pregunta( $id );
+    $pregunta = _dphpforms_get_pregunta( $id );
 
     if( $pregunta ){
 
-        if( dphpformsV2_regex_validator( $id, $value )->status ){
+        if( _dphpforms_regex_validator( $id, $value )->status ){
             $respuesta_identifier = $DB->insert_record('talentospilos_df_respuestas', $obj_respuesta, $returnid=true, $bulk=false);
             return $respuesta_identifier;
         }
@@ -479,7 +479,7 @@ function dphpformsv2_store_respuesta( $id, $value ){
     }
 }
 
-function dphpformsV2_regex_validator( $id, $value ){
+function _dphpforms_regex_validator( $id, $value ){
 
     global $DB;
 
@@ -488,8 +488,8 @@ function dphpformsV2_regex_validator( $id, $value ){
     $to_return->human_readable = "";
     $to_return->example =  "";
 
-    $pregunta_obj = dphpformsV2_get_pregunta( $id );
-    $tipo_campo_obj = dphpformsV2_tipo_campo( $pregunta_obj->tipo_campo );
+    $pregunta_obj = _dphpforms_get_pregunta( $id );
+    $tipo_campo_obj = _dphpforms_tipo_campo( $pregunta_obj->tipo_campo );
 
     $regex = $tipo_campo_obj->expresion_regular;
 
@@ -509,7 +509,7 @@ function dphpformsV2_regex_validator( $id, $value ){
 
 }
 
-function dphpformsV2_get_pregunta( $id ){
+function _dphpforms_get_pregunta( $id ){
 
     global $DB;
 
@@ -518,7 +518,7 @@ function dphpformsV2_get_pregunta( $id ){
 
 }
 
-function dphpformsV2_tipo_campo( $id ){
+function _dphpforms_tipo_campo( $id ){
 
     global $DB;
 
@@ -527,7 +527,7 @@ function dphpformsV2_tipo_campo( $id ){
 
 }
 
-function dphpformsV2_store_form_soluciones($form_response_id, $respuesta_identifier){
+function _dphpforms_store_form_soluciones($form_response_id, $respuesta_identifier){
 
     global $DB;
 
@@ -540,7 +540,7 @@ function dphpformsV2_store_form_soluciones($form_response_id, $respuesta_identif
 
 }
 
-function dphpformsV2_get_permisos_pregunta( $id_formulario_pregunta ){
+function _dphpforms_get_permisos_pregunta( $id_formulario_pregunta ){
     
     global $DB;
     $sql =  "SELECT * FROM {talentospilos_df_per_form_pr} WHERE id_formulario_pregunta = '$id_formulario_pregunta'";
@@ -553,7 +553,7 @@ function dphpformsV2_get_permisos_pregunta( $id_formulario_pregunta ){
 
 }
 
-function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = null, bool $minify = false  ){
+function _dphpforms_generate_html_recorder( $id_form, $rol_, $initial_config = null, bool $minify = false  ){
 
     global $DB;
 
@@ -566,7 +566,7 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
     $dom->preserveWhiteSpace = false;
     $dom->formatOutput = true;
 
-    $form_info = dphpformsV2_get_form_info( $id_form );
+    $form_info = _dphpforms_get_form_info( $id_form );
     if( $form_info ){
         if( $form_info->estado == 1 ){
             $FORM_ID = $form_info->id;
@@ -670,7 +670,7 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
         $atributos = json_decode( $statement->atributos_campo );
 
         //Consulta de permisos
-        $permisos_JSON = json_decode( dphpformsV2_get_permisos_pregunta( $statement->id_pregunta ) );
+        $permisos_JSON = json_decode( _dphpforms_get_permisos_pregunta( $statement->id_pregunta ) );
         
         foreach ($permisos_JSON as $key => $v_rol) {
 
@@ -801,34 +801,34 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
 
                     switch ($campo) {
                         case "TEXTFIELD":
-                            $field = dphpformsV2_generate_TEXTFIELD( $dom, $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
+                            $field = _dphpforms_generate_TEXTFIELD( $dom, $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
                             break;
                         case "TEXTFIELD_LIST":
-                            $field = dphpformsV2_generate_TEXTFIELD_LIST( $dom, $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
+                            $field = _dphpforms_generate_TEXTFIELD_LIST( $dom, $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
                             break;
                         case "TEXTAREA":
-                            $field = dphpformsV2_generate_TEXTAREA( $dom, $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
+                            $field = _dphpforms_generate_TEXTAREA( $dom, $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
                             break;
                         case "DATE":
-                            $field = dphpformsV2_generate_DATE( $dom, $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
+                            $field = _dphpforms_generate_DATE( $dom, $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
                             break;
                         case "DATETIME":
-                            $field = dphpformsV2_generate_DATETIME( $dom, $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
+                            $field = _dphpforms_generate_DATETIME( $dom, $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
                             break;
                         case "TIME":
-                            $field = dphpformsV2_generate_TIME( $dom, $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
+                            $field = _dphpforms_generate_TIME( $dom, $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
                             break;
                         case "FILE":
-                            $field = dphpformsV2_generate_FILE( $dom, $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
+                            $field = _dphpforms_generate_FILE( $dom, $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
                             break;
                         case "RADIOBUTTON":
-                            $field = dphpformsV2_generate_RADIOBUTTON( $dom, $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
+                            $field = _dphpforms_generate_RADIOBUTTON( $dom, $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
                             break;
                         case "CHECKBOX":
-                            $field = dphpformsV2_generate_CHECKBOX( $dom, $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
+                            $field = _dphpforms_generate_CHECKBOX( $dom, $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
                             break;
                         case "SELECT":
-                            $field = dphpformsV2_generate_SELECT( $dom, $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
+                            $field = _dphpforms_generate_SELECT( $dom, $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
                             break;
                     }
                     
@@ -877,12 +877,12 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
 
                 //Verification of button alias.
                 if( is_null( $button->alias ) || ( $button->alias == "" ) ){
-                    return dphpformsV2_build_exception_message( "<strong>button->alias</strong> cannot be empty" );
+                    return _dphpforms_build_exception_message( "<strong>button->alias</strong> cannot be empty" );
                 }
 
                 //Validation of alias string structure.
                 if( !preg_match( '/^[a-z0-9_]+$/', $button->alias )  ){
-                    return dphpformsV2_build_exception_message( "<strong>".$button->alias."</strong> is not a valid alias, valid regex [a-z0-9_]+, for instance, alias_1 " );
+                    return _dphpforms_build_exception_message( "<strong>".$button->alias."</strong> is not a valid alias, valid regex [a-z0-9_]+, for instance, alias_1 " );
                 }
 
                 //Prevent that many buttons with the same identifier can be defined.
@@ -902,17 +902,17 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
                         }
                     }
                    
-                    $html_button = dphpformsV2_generate_html_button( $button->alias, $button->text, $button->classes, false );
+                    $html_button = _dphpforms_generate_html_button( $button->alias, $button->text, $button->classes, false );
 
                     //If return is null means that was defined an invalid alias or was tried to define and reserved alias without flag.
                     if( !$html_button ){
-                        return dphpformsV2_build_exception_message( "<strong>" . $button->alias . "</strong> is an reserved alias and its not allowed for recorder" );
+                        return _dphpforms_build_exception_message( "<strong>" . $button->alias . "</strong> is an reserved alias and its not allowed for recorder" );
                     }else{
                         $html_aditional_buttons .= $html_button;
                     }
 
                 }else{
-                    return dphpformsV2_build_exception_message( "<strong>" . $button->alias . "</strong> cannot be defined more that one time" );
+                    return _dphpforms_build_exception_message( "<strong>" . $button->alias . "</strong> cannot be defined more that one time" );
                 }
             }
         }
@@ -936,11 +936,11 @@ function dphpformsV2_generate_html_recorder( $id_form, $rol_, $initial_config = 
     
     $dom = $dom->loadHTML($dom->saveHTML());
    
-    return  ( $minify ?  dphpformsV2_html_minifier( $html ) :  $html );
+    return  ( $minify ?  _dphpforms_html_minifier( $html ) :  $html );
 
 }
 
-function dphpformsV2_generate_TEXTFIELD_LIST( &$dom, $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
+function _dphpforms_generate_TEXTFIELD_LIST( &$dom, $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
     
     $div_attr = new DOMAttributeList( [
         'class' =>  [ 
@@ -1002,7 +1002,7 @@ function dphpformsV2_generate_TEXTFIELD_LIST( &$dom, $id_formulario_pregunta, $c
 
 }
 
-function dphpformsV2_generate_FILE( &$dom, $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
+function _dphpforms_generate_FILE( &$dom, $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
             
     $div = _core_dphpforms_build_tag( $dom, "div", new DOMAttributeList() );
     
@@ -1010,7 +1010,7 @@ function dphpformsV2_generate_FILE( &$dom, $id_formulario_pregunta, $context, $s
 
 }
 
-function dphpformsV2_generate_SELECT( &$dom, $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
+function _dphpforms_generate_SELECT( &$dom, $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
             
     $div = _core_dphpforms_build_tag( $dom, "div", new DOMAttributeList() );
     
@@ -1018,7 +1018,7 @@ function dphpformsV2_generate_SELECT( &$dom, $id_formulario_pregunta, $context, 
 
 }
 
-function dphpformsV2_generate_TEXTFIELD(  &$dom, $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
+function _dphpforms_generate_TEXTFIELD(  &$dom, $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
             
     $div_attr = new DOMAttributeList( [
         'class' =>  [ "div-$id_formulario_pregunta", $context[ 'attr_class' ] ,$context[ 'attr_local_alias' ] ],
@@ -1054,7 +1054,7 @@ function dphpformsV2_generate_TEXTFIELD(  &$dom, $id_formulario_pregunta, $conte
     
 }
 
-function dphpformsV2_generate_TEXTAREA( &$dom, $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
+function _dphpforms_generate_TEXTAREA( &$dom, $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
     
     $div_attr = new DOMAttributeList([
         'class' =>  [ "div-$id_formulario_pregunta", $context[ 'attr_class' ] ,$context[ 'attr_local_alias' ] ],
@@ -1090,7 +1090,7 @@ function dphpformsV2_generate_TEXTAREA( &$dom, $id_formulario_pregunta, $context
     
 }
 
-function dphpformsV2_generate_DATE( &$dom, $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
+function _dphpforms_generate_DATE( &$dom, $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
     
     $div_attr = new DOMAttributeList( [
         'class' =>  [ "div-$id_formulario_pregunta", $context[ 'attr_class' ] ,$context[ 'attr_local_alias' ] ],
@@ -1125,7 +1125,7 @@ function dphpformsV2_generate_DATE( &$dom, $id_formulario_pregunta, $context, $s
 
 }
 
-function dphpformsV2_generate_DATETIME( &$dom, $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
+function _dphpforms_generate_DATETIME( &$dom, $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
     
     $div_attr = new DOMAttributeList( [
         'class' =>  [ "div-$id_formulario_pregunta", $context[ 'attr_class' ] ,$context[ 'attr_local_alias' ] ],
@@ -1159,7 +1159,7 @@ function dphpformsV2_generate_DATETIME( &$dom, $id_formulario_pregunta, $context
 
 }
 
-function dphpformsV2_generate_TIME( &$dom, $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
+function _dphpforms_generate_TIME( &$dom, $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
     
     $div_attr = new DOMAttributeList( [
         'class' =>  [ "div-$id_formulario_pregunta", $context[ 'attr_class' ] ,$context[ 'attr_local_alias' ] ],
@@ -1193,7 +1193,7 @@ function dphpformsV2_generate_TIME( &$dom, $id_formulario_pregunta, $context, $s
 
 }
 
-function dphpformsV2_generate_RADIOBUTTON( &$dom, $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
+function _dphpforms_generate_RADIOBUTTON( &$dom, $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
 
     $field_attr_required = $context[ 'attr_required' ];
     $options = $context[ 'options' ];
@@ -1310,7 +1310,7 @@ function dphpformsV2_generate_RADIOBUTTON( &$dom, $id_formulario_pregunta, $cont
 
 }
 
-function dphpformsV2_generate_CHECKBOX( &$dom, $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
+function _dphpforms_generate_CHECKBOX( &$dom, $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
 
     $options = $context[ 'options' ];
 
@@ -1418,7 +1418,7 @@ function dphpformsV2_generate_CHECKBOX( &$dom, $id_formulario_pregunta, $context
  * @return String HTML with the buttons tags.
  */
 
-function dphpformsV2_generate_html_button( $alias, $text, $classes, $allow_reserved_alias = false ){
+function _dphpforms_generate_html_button( $alias, $text, $classes, $allow_reserved_alias = false ){
     
     $reserved_aliases = [
         "update",
@@ -1465,12 +1465,12 @@ function dphpformsV2_generate_html_button( $alias, $text, $classes, $allow_reser
  * @param String $reason, cause of exception.
  * @return String standard exception message.
  */
-function dphpformsV2_build_exception_message( $reason ){
+function _dphpforms_build_exception_message( $reason ){
     return "<h1>Error rendering</h1> The form cannot be rendered for the following reason: " . $reason . "."; 
 }
   
 
-function dphpformsV2_html_minifier($buffer) {
+function _dphpforms_html_minifier($buffer) {
 
     $search = array(
         '/\>[^\S ]+/s',     // strip whitespaces after tags, except space
@@ -1513,12 +1513,12 @@ function dphpformsV2_html_minifier($buffer) {
  * $xQuery->asFields = [ [ [ function( $_this ){ return (int) $_this['id_registro'] ; } ], "id_estudiante" ], ["revisado_profesional", "id_estudiante"] ]; 
  * $xQuery->selectedFields = [ "id_creado_por", "id_estudiante" ]; // Without support.
 */
-function dphpformsV2_validate_xquery( $query ){
+function _dphpforms_validate_xquery( $query ){
     
-    $form = dphpformsV2_get_form_info( $query->form );
+    $form = _dphpforms_get_form_info( $query->form );
     
     if( $form ){
-        $fields = dphpformsV2_get_fields_form( $form->id );
+        $fields = _dphpforms_get_fields_form( $form->id );
         $list_fields_alias = [];
         $list_fields_alias_id = [];
         $list_fields_id_alias = [];
@@ -1740,17 +1740,17 @@ function dphpformsV2_validate_xquery( $query ){
   $xQuery->asFields = [ [ "fecha", "id_estudiante_x" ], ["revisado_profesional", "id_estudiante"] ]; 
   $xQuery->selectedFields = [ "id_creado_por", "id_estudiante" ]; // Without support.
   
-  echo dphpformsV2_get_json_xquery($xQuery); die();*/
+  echo _dphpforms_get_json_xquery($xQuery); die();*/
  
 
-function dphpformsV2_get_json_xquery( $query ){
+function _dphpforms_get_json_xquery( $query ){
     
-    $validation_data = dphpformsV2_validate_xquery($query);
+    $validation_data = _dphpforms_validate_xquery($query);
     if( $validation_data['status_code'] === -1 ){
         return null;
     }
     
-    $form = dphpformsV2_get_form_info( $query->form );
+    $form = _dphpforms_get_form_info( $query->form );
     
     $query_params = [
         'filterFields',
@@ -1785,7 +1785,7 @@ function dphpformsV2_get_json_xquery( $query ){
  * @param integer $record_id
  * @return array History.
  */
-function dphpformsV2_get_record_history( $record_id ){
+function _dphpforms_get_record_history( $record_id ){
     
     if( !is_numeric( $record_id ) ){
         throw new Exception( "Invalid record id", -1 );
@@ -1812,13 +1812,13 @@ function dphpformsV2_get_record_history( $record_id ){
 /**
  * Function that given a record id, return its history. 
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
- * @see dphpformsV2_get_record_history(...) in this file.
+ * @see _dphpforms_get_record_history(...) in this file.
  * @param integer $record_id
  * @return array History.
  */
-function dphpformsV2_get_pretty_record_history( $record_id ){
+function _dphpforms_get_pretty_record_history( $record_id ){
        
-    $history = dphpformsV2_get_record_history( $record_id );
+    $history = _dphpforms_get_record_history( $record_id );
     return array_values(array_filter(array_map(function($in){
         
         global $DB;
@@ -1913,7 +1913,7 @@ function dphpformsV2_get_pretty_record_history( $record_id ){
  * 
  * @return bool True if exist a record with the given ID.
  */
-function dphpformsV2_record_exist( int $record_id ):bool
+function _dphpforms_record_exist( int $record_id ):bool
 {
     global $DB;                                                                 // Moodle DB manager.
     
@@ -1937,9 +1937,9 @@ function dphpformsV2_record_exist( int $record_id ):bool
  * 
  * @return string K
  */
-function dphpformsV2_get_k( int $record_id ) :string
+function _dphpforms_get_k( int $record_id ) :string
 {
-    if( !dphpformsV2_record_exist( $record_id ) ){
+    if( !_dphpforms_record_exist( $record_id ) ){
         throw new Exception( "Invalid ID.", -1 );
     }
     
@@ -1954,7 +1954,7 @@ function dphpformsV2_get_k( int $record_id ) :string
     
 }
 
-function dphpformsV2_get_form_rules( $form_id ){
+function _dphpforms_get_form_rules( $form_id ){
 
     global $DB;
 
@@ -1976,7 +1976,7 @@ function dphpformsV2_get_form_rules( $form_id ){
 
 }
 
-function dphpformsV2_add_new_form_rule( $form_id, $preg_a_id, $rule_id, $preg_b_id ){
+function _dphpforms_add_new_form_rule( $form_id, $preg_a_id, $rule_id, $preg_b_id ){
 
     global $DB;
 
