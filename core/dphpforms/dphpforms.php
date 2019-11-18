@@ -14,4 +14,4 @@ require_once( __DIR__ . "/../module_loader.php");
 
 require_once( __DIR__ . "/v" . VERSION . "/entrypoint.php");
 
-?>
+
