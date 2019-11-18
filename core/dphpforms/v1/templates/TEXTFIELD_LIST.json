@@ -7,11 +7,13 @@
         "initial_list" : [
             {
                 "statement" : "First element",
-                "value" : "Value #1"
+                "value" : "Value #1",
+                "pos" : 0
             },
             {
                 "statement" : "Second element",
-                "value" : "Value #2"
+                "value" : "Value #2",
+                "pos" : 1
             }
         ]
     },
