@@ -8,12 +8,14 @@
             {
                 "statement" : "First element",
                 "value" : "Value #1",
-                "pos" : 0
+                "pos" : 0,
+                "id" : "first_element"
             },
             {
                 "statement" : "Second element",
                 "value" : "Value #2",
-                "pos" : 1
+                "pos" : 1,
+                "id" : "second_element"
             }
         ]
     },
