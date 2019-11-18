@@ -1,0 +1,25 @@
+{
+    "id_temporal": "cmp_xx",
+    "enunciado": "Foto de perfil",
+    "tipo_campo": "FILE",
+    "opciones_campo": {
+        "allowed_extensions":[
+            "jpg", "mp3"
+        ]
+    },
+    "atributos_campo": {
+        "class": "",
+        "name": "profile_pic",
+        "required": "false",
+        "local_alias": "profile_pic"
+    },
+    "permisos_campo": [
+        {
+            "rol": "sistemas",
+            "permisos": [
+                "lectura",
+                "escritura"
+            ]
+        }
+    ]
+}
