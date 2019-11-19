@@ -1076,14 +1076,20 @@ function get_ases_report($general_fields=null,
 
         $user_role = $DB->get_record_sql($sql_query);
 
+
+
         switch($user_role->nombre_rol){
             case 'director_prog':
 
                 $conditions_query_directors = " ases_students.id_academic_program = $user_role->id_programa";
+                $conditions_query_assigned = " AND ases_students.student_id IN (SELECT id_estudiante AS student_id
+                                  FROM {talentospilos_monitor_estud} 
+                            WHERE id_semestre = ". get_current_semester()->max ." AND id_instancia = $instance_id)";
 
-                $where_clause .= $conditions_query_directors;
+                $where_clause .= $conditions_query_directors.$conditions_query_assigned;
 
-                $sql_query = $select_clause.$from_clause.$subquery_cohort.$sub_query_status.$sub_query_icetex_status.$sub_query_academic.$sub_query_assignment_fields.$where_clause;
+                $sql_query = $select_clause.$from_clause.$subquery_cohort.$sub_query_status.$sub_query_academic.$sub_query_assignment_fields.$where_clause;
+
                 $result_query = $DB->get_records_sql($sql_query);
 
                 break;
@@ -1708,6 +1714,58 @@ function get_icetex_states(){
     return $data;
 
  }
+
+function getGeographicReport($cohorte, $instance_id){
+
+    global $DB;
+
+    $sql_where = condicionCohorte($cohorte, $instance_id, 0);
+
+    $sql_query = "SELECT DISTINCT
+                    ases_students.student_id,
+                    demografia.latitud AS latitude,
+                    demografia.longitud AS longitude,
+                    demografia.barrio AS neighborhood,
+                    ases_students.cohorte AS cohorte
+                    FROM
+                       (SELECT
+                          ases_user.id AS student_id,
+                          user_extended.id_academic_program,
+                          program_statuses.nombre AS program_status,
+                          CASE WHEN cohort.idnumber LIKE 'SPP%' THEN 'SPP'
+                               WHEN cohort.idnumber LIKE 'SPE%' THEN 'SPE'
+                               WHEN cohort.idnumber LIKE 'SPT%' THEN 'SPT'
+                               WHEN cohort.idnumber LIKE '3740%' THEN '3740'
+                               ELSE 'Otros'
+                          END AS cohorte                          
+                        FROM {cohort} AS cohort
+                          INNER JOIN {talentospilos_inst_cohorte} AS instance_cohort ON cohort.id = instance_cohort.id_cohorte
+                          INNER JOIN {cohort_members} AS cohort_member ON cohort_member.cohortid = cohort.id
+                          INNER JOIN {user} AS moodle_user ON moodle_user.id = cohort_member.userid
+                          INNER JOIN {talentospilos_user_extended} AS user_extended ON user_extended.id_moodle_user = moodle_user.id
+                          INNER JOIN {talentospilos_usuario} AS ases_user ON ases_user.id = user_extended.id_ases_user
+                          INNER JOIN {talentospilos_estad_programa} AS program_statuses ON program_statuses.id = user_extended.program_status
+                        $sql_where
+                        GROUP BY student_id, user_extended.id_academic_program, program_statuses.nombre, cohorte) AS ases_students
+                         INNER JOIN {talentospilos_demografia} AS demografia ON demografia.id_usuario = ases_students.student_id";
+
+
+     $result_query = $DB->get_records_sql($sql_query);
+
+     $result_to_return = array();
+
+     foreach($result_query as $result){
+
+         array_push($result_to_return, $result);
+     }
+
+     return $result_to_return;
+
+
+ }
+
+
+
 
 
 

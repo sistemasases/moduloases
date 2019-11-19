@@ -280,4 +280,8 @@ class renderer extends plugin_renderer_base {
         $data = $page->export_for_template($this);
         return parent::render_from_template('block_ases/plugin_status', $data);
     }
+    public function render_ases_geographic_reports_page($page){
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('block_ases/ases_geographic_reports', $data);
+    }
 }

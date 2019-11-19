@@ -41,7 +41,9 @@ li:hover{
 }
 
 .header-hr-dphpforms, 
-.footer-hr-dphpforms{
+.footer-hr-dphpforms,
+.dphpforms-header-hr, 
+.dphpforms-footer-hr{
     border-color: red;
 }
 

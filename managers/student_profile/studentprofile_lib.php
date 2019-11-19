@@ -813,6 +813,68 @@ function get_trackings_student($id_ases, $tracking_type, $id_instance){
     return $tracking_array;
 }
 
+/**
+ * Latest version
+ *
+ * @see dphpformsV2_find_records, dphpformsV2_find_records
+ * @param $student_id string -> ASES student id
+ * @return array of trackings
+ */
+function get_tracking_current_semesterV4($student_id) {
+
+    $all_trackings = null;
+
+    $xQuery = new stdClass();
+    $xQuery->form = "seguimiento_pares";
+    $xQuery->filterFields = [["id_estudiante",[[$student_id,"="]], false],
+        ["fecha",[["%%","LIKE"]], false],
+        ["revisado_profesional",[["%%","LIKE"]], false],
+        ["revisado_practicante",[["%%","LIKE"]], false],
+        ["puntuacion_riesgo_individual",[["%%","LIKE"]], false],
+        ["puntuacion_riesgo_academico",[["%%","LIKE"]], false],
+        ["puntuacion_riesgo_economico",[["%%","LIKE"]], false],
+        ["puntuacion_riesgo_familiar",[["%%","LIKE"]], false],
+        ["puntuacion_vida_uni",[["%%","LIKE"]], false]
+    ];
+    $xQuery->orderFields = [["fecha","DESC"]];
+    $xQuery->orderByDatabaseRecordDate = false;
+    $xQuery->recordStatus = [ "!deleted" ];
+    $xQuery->asFields = [ [ [ function( $_this ){ return "seguimiento_pares"; } ] , 'alias_form' ],
+        [ [ function( $_this ){ return strtotime($_this['fecha']); } ] , 'fecha_timestamp' ] ];
+
+    $trackings = dphpformsV2_find_records( $xQuery );
+
+    $xQuery = new stdClass();
+    $xQuery->form = "inasistencia";
+    $xQuery->filterFields = [["in_id_estudiante",[[$student_id,"="]], false],
+        ["in_fecha",[["%%","LIKE"]], false],
+        ["in_revisado_profesional",[["%%","LIKE"]], false],
+        ["in_revisado_practicante",[["%%","LIKE"]], false]
+    ];
+    $xQuery->orderFields = [["in_fecha","DESC"]];
+    $xQuery->orderByDatabaseRecordDate = false;
+    $xQuery->recordStatus = [ "!deleted" ];
+    $xQuery->asFields = [ ['in_fecha', 'fecha'],
+        [ [ function( $_this ){ return "inasistencia"; } ] , 'alias_form' ],
+        [ [ function( $_this ){ return strtotime($_this['in_fecha']); } ], 'fecha_timestamp' ]
+        ];
+
+    $in_trackings = dphpformsV2_find_records( $xQuery );
+
+    $all_trackings = array_merge( $trackings, $in_trackings );
+
+    $trackings = NULL;
+    $in_trackings = NULL;
+
+    $fecha = array();
+    foreach ($all_trackings as $key => $tracking){
+        $fecha[$key] =  strtotime( $tracking['fecha'] );
+    }
+    array_multisort($fecha, SORT_DESC, $all_trackings);
+
+    return $all_trackings;
+}
+
 function get_tracking_current_semesterV3($criterio,$student_id, $semester_id,$intervals=null){
 
     $fecha_inicio = null;
@@ -854,23 +916,23 @@ function get_tracking_current_semesterV3($criterio,$student_id, $semester_id,$in
 
     //$student [monitor or student]
     $all_trackings = null;
-    
+
     if( $criterio == 'student' ){
 
         $xQuery = new stdClass();
         $xQuery->form = "seguimiento_pares";
         $xQuery->filterFields = [["id_estudiante",[[$student_id,"="]], false],
-                                 ["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
-                                 ["revisado_profesional",[["%%","LIKE"]], false],
-                                 ["revisado_practicante",[["%%","LIKE"]], false],
-                                 ["puntuacion_riesgo_individual",[["%%","LIKE"]], false],
-                                 ["puntuacion_riesgo_academico",[["%%","LIKE"]], false],
-                                 ["puntuacion_riesgo_economico",[["%%","LIKE"]], false],
-                                 ["puntuacion_riesgo_familiar",[["%%","LIKE"]], false],
-                                 ["puntuacion_vida_uni",[["%%","LIKE"]], false]
-                                ];
+            ["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+            ["revisado_profesional",[["%%","LIKE"]], false],
+            ["revisado_practicante",[["%%","LIKE"]], false],
+            ["puntuacion_riesgo_individual",[["%%","LIKE"]], false],
+            ["puntuacion_riesgo_academico",[["%%","LIKE"]], false],
+            ["puntuacion_riesgo_economico",[["%%","LIKE"]], false],
+            ["puntuacion_riesgo_familiar",[["%%","LIKE"]], false],
+            ["puntuacion_vida_uni",[["%%","LIKE"]], false]
+        ];
         $xQuery->orderFields = [["fecha","DESC"]];
-        $xQuery->orderByDatabaseRecordDate = false; 
+        $xQuery->orderByDatabaseRecordDate = false;
         $xQuery->recordStatus = [ "!deleted" ];
         $xQuery->asFields = [ [ [ function( $_this ){ return "seguimiento_pares"; } ] , 'alias_form' ] ];
 
@@ -879,19 +941,19 @@ function get_tracking_current_semesterV3($criterio,$student_id, $semester_id,$in
         $xQuery = new stdClass();
         $xQuery->form = "inasistencia";
         $xQuery->filterFields = [["in_id_estudiante",[[$student_id,"="]], false],
-                                 ["in_fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
-                                 ["in_revisado_profesional",[["%%","LIKE"]], false],
-                                 ["in_revisado_practicante",[["%%","LIKE"]], false]
-                                ];
+            ["in_fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+            ["in_revisado_profesional",[["%%","LIKE"]], false],
+            ["in_revisado_practicante",[["%%","LIKE"]], false]
+        ];
         $xQuery->orderFields = [["in_fecha","DESC"]];
-        $xQuery->orderByDatabaseRecordDate = false; 
+        $xQuery->orderByDatabaseRecordDate = false;
         $xQuery->recordStatus = [ "!deleted" ];
         $xQuery->asFields = [ [ 'in_fecha', 'fecha' ], [ [ function( $_this ){ return "inasistencia"; } ] , 'alias_form' ] ];
 
         $in_trackings = dphpformsV2_find_records( $xQuery );
-        
+
         $all_trackings = array_merge( $trackings, $in_trackings );
-        
+
         $trackings = NULL;
         $in_trackings = NULL;
 
@@ -901,22 +963,22 @@ function get_tracking_current_semesterV3($criterio,$student_id, $semester_id,$in
         }
         array_multisort($fecha, SORT_DESC, $all_trackings);
 
-   }elseif( $criterio == 'monitor' ){
-        
+    }elseif( $criterio == 'monitor' ){
+
         $xQuery = new stdClass();
         $xQuery->form = "seguimiento_pares";
         $xQuery->filterFields = [["id_creado_por",[[$student_id,"="]], false],
-                                 ["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
-                                 ["revisado_profesional",[["%%","LIKE"]], false],
-                                 ["revisado_practicante",[["%%","LIKE"]], false],
-                                 ["puntuacion_riesgo_individual",[["%%","LIKE"]], false],
-                                 ["puntuacion_riesgo_academico",[["%%","LIKE"]], false],
-                                 ["puntuacion_riesgo_economico",[["%%","LIKE"]], false],
-                                 ["puntuacion_riesgo_familiar",[["%%","LIKE"]], false],
-                                 ["puntuacion_vida_uni",[["%%","LIKE"]], false]
-                                ];
+            ["fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+            ["revisado_profesional",[["%%","LIKE"]], false],
+            ["revisado_practicante",[["%%","LIKE"]], false],
+            ["puntuacion_riesgo_individual",[["%%","LIKE"]], false],
+            ["puntuacion_riesgo_academico",[["%%","LIKE"]], false],
+            ["puntuacion_riesgo_economico",[["%%","LIKE"]], false],
+            ["puntuacion_riesgo_familiar",[["%%","LIKE"]], false],
+            ["puntuacion_vida_uni",[["%%","LIKE"]], false]
+        ];
         $xQuery->orderFields = [["fecha","DESC"]];
-        $xQuery->orderByDatabaseRecordDate = false; 
+        $xQuery->orderByDatabaseRecordDate = false;
         $xQuery->recordStatus = [ "!deleted" ];
         $xQuery->asFields = [ [ [ function( $_this ){ return "seguimiento_pares"; } ] , 'alias_form' ] ];
 
@@ -925,19 +987,19 @@ function get_tracking_current_semesterV3($criterio,$student_id, $semester_id,$in
         $xQuery = new stdClass();
         $xQuery->form = "inasistencia";
         $xQuery->filterFields = [["in_id_creado_por",[[$student_id,"="]], false],
-                                 ["in_fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
-                                 ["in_revisado_profesional",[["%%","LIKE"]], false],
-                                 ["in_revisado_practicante",[["%%","LIKE"]], false]
-                                ];
+            ["in_fecha",[[$fecha_inicio_str,">="],[$fecha_fin_str,"<="]], false],
+            ["in_revisado_profesional",[["%%","LIKE"]], false],
+            ["in_revisado_practicante",[["%%","LIKE"]], false]
+        ];
         $xQuery->orderFields = [["in_fecha","DESC"]];
-        $xQuery->orderByDatabaseRecordDate = false; 
+        $xQuery->orderByDatabaseRecordDate = false;
         $xQuery->recordStatus = [ "!deleted" ];
         $xQuery->asFields = [ [ 'in_fecha', 'fecha' ], [ [ function( $_this ){ return "inasistencia"; } ] , 'alias_form' ] ];
 
         $in_trackings = dphpformsV2_find_records( $xQuery );
 
         $all_trackings = array_merge( $trackings, $in_trackings );
-        
+
         $trackings = NULL;
         $in_trackings = NULL;
 
@@ -2130,7 +2192,61 @@ function save_profile($form, $option1, $option2, $live_with){
 }
 
 /**
- * @see get_peer_tracking_v3
+ * @desc Process a given tracking and pushed it into the array that follows
+ *       the pointer.
+ * @param $array_of_trackings array -> Pointer to the array on which will
+ *                                     be stored the tracking
+ * @param $tracking array -> tracking to push
+ * @return void
+ */
+function student_profile_process_tracking(&$array_of_trackings, $tracking) {
+
+    $special_date_interval = [
+        'start' => strtotime( "2019-01-01" ),
+        'end' => strtotime( "2019-04-30" )
+    ];
+
+    $_fecha = null;
+    if( array_key_exists("fecha", $tracking) ) {
+        $_fecha = strtotime( $tracking['fecha'] );
+    }else{
+        $_fecha = strtotime( $tracking['in_fecha'] );
+    }
+
+    if( ( $_fecha >= $special_date_interval['start'] ) && ( $_fecha <= $special_date_interval['end'] ) ){
+        $tracking['custom_extra']['special_tracking'] = true;
+    }
+
+    $tracking['custom_extra'][$tracking['alias_form']] = true;
+    $tracking['custom_extra']['rev_pro'] = false;
+    $tracking['custom_extra']['rev_pract'] = false;
+
+    if( array_key_exists("revisado_profesional", $tracking) ) {
+        if( $tracking['revisado_profesional'] === "0" ){
+            $tracking['custom_extra']['rev_pro'] = true;
+        }
+    }
+    if( array_key_exists("revisado_practicante", $tracking) ) {
+        if( $tracking['revisado_practicante'] === "0" ){
+            $tracking['custom_extra']['rev_pract'] = true;
+        }
+    }
+    if( array_key_exists("in_revisado_profesional", $tracking) ) {
+        if( $tracking['in_revisado_profesional'] === "0" ){
+            $tracking['custom_extra']['rev_pro'] = true;
+        }
+    }
+    if( array_key_exists("in_revisado_practicante", $tracking) ) {
+        if( $tracking['in_revisado_practicante'] === "0" ){
+            $tracking['custom_extra']['rev_pract'] = true;
+        }
+    }
+
+    array_push( $array_of_trackings, $tracking );
+}
+
+/**
+ * @see get_tracking_current_semesterV4, student_profile_process_tracking
  * @desc Constructs the peer tracking of an student.
  *          This is the latest version.
  * @param $id_ases string -> ASES student id
@@ -2139,73 +2255,57 @@ function save_profile($form, $option1, $option2, $live_with){
 function student_profile_get_peer_tracking($id_ases){
 
     $peer_tracking_v3 = [];
-    $new_forms_date =strtotime('2018-01-01 00:00:00');
-    $special_date_interval = [
-        'start' => strtotime( "2019-01-01" ),
-        'end' => strtotime( "2019-04-30" )
-    ];
-    
+    $trackings_out_of_range = [];
+
     $periods = core_periods_get_all_periods();
-    
+    $number_of_periods = count($periods);
+    $id_period = $number_of_periods;
 
-    foreach( $periods as $key => $period ){
+    $trackings = get_tracking_current_semesterV4($id_ases);
+    $number_of_trackings = count($trackings);
+    $id_tracking = 0;
 
-        if( strtotime( $period->fecha_inicio ) >= $new_forms_date ){
+    for(;$id_period>0;$id_period--) {
 
-            $trackings = get_tracking_current_semesterV3('student', $id_ases, $period->id);
-            if( count( $trackings ) > 0 ){
+        $period = $periods[$id_period];
+
+        if( ($number_of_trackings - $id_tracking) > 0 ) {
+
+            $fecha_inicio_periodo = strtotime($period->fecha_inicio);
+            $fecha_fin_periodo = strtotime($period->fecha_fin);
+
+            if( $trackings[$id_tracking]['fecha_timestamp'] >= $fecha_inicio_periodo &&
+                $trackings[$id_tracking]['fecha_timestamp'] <= $fecha_fin_periodo ) {
 
                 $peer_tracking['period_name'] = $period->nombre;
                 $tracking_modified = [];
-                //Here can be added metadata.
-                foreach ($trackings as $key => $tracking) {
 
-                    $_fecha = null;
+                for(;$id_tracking<$number_of_trackings;$id_tracking++) {
 
-                    if ( array_key_exists("fecha", $tracking) ) {
-                        $_fecha = strtotime( $tracking['fecha'] );
-                    }else{
-                        $_fecha = strtotime( $tracking['in_fecha'] );
-                    }
+                    $tracking = $trackings[$id_tracking];
+                    $timestamp_tracking = $trackings[$id_tracking]['fecha_timestamp'];
 
-                    if( ( $_fecha >= $special_date_interval['start'] ) && ( $_fecha <= $special_date_interval['end'] ) ){
-                        $tracking['custom_extra']['special_tracking'] = true;
+                    if($timestamp_tracking < $fecha_inicio_periodo || $timestamp_tracking > $fecha_fin_periodo ) {
+                        break;
                     }
-
-                    $tracking['custom_extra'][$tracking['alias_form']] = true;
-                    $tracking['custom_extra']['rev_pro'] = false;
-                    $tracking['custom_extra']['rev_pract'] = false;
-
-                    if ( array_key_exists("revisado_profesional", $tracking) ) {
-                        if( $tracking['revisado_profesional'] === "0" ){
-                            $tracking['custom_extra']['rev_pro'] = true;
-                        }
-                    }
-                    if ( array_key_exists("revisado_practicante", $tracking) ) {
-                        if( $tracking['revisado_practicante'] === "0" ){
-                            $tracking['custom_extra']['rev_pract'] = true;
-                        }
-                    }
-                    if ( array_key_exists("in_revisado_profesional", $tracking) ) {
-                        if( $tracking['in_revisado_profesional'] === "0" ){
-                            $tracking['custom_extra']['rev_pro'] = true;
-                        }
-                    }
-                    if ( array_key_exists("in_revisado_practicante", $tracking) ) {
-                        if( $tracking['in_revisado_practicante'] === "0" ){
-                            $tracking['custom_extra']['rev_pract'] = true;
-                        }
-                    }
-
-                    //Using reference fail
-                    array_push( $tracking_modified, $tracking );
+                    student_profile_process_tracking( $tracking_modified, $tracking );
                 }
-
                 $peer_tracking['trackings'] = $tracking_modified;
-
                 array_push( $peer_tracking_v3, $peer_tracking );
+            } elseif($id_period == 1 || $trackings[$id_tracking]['fecha_timestamp'] > strtotime($periods[$id_period-1]->fecha_fin)) {
+
+                //student_profile_process_tracking( $trackings_out_of_range, $trackings[$id_tracking] );
+                $id_tracking++;
+                $id_period++;
             }
         }
+    }
+
+    if(count($trackings_out_of_range) > 0) {
+        $peer_tracking = [];
+        $peer_tracking['period_name'] = 'Seguimientos fuera de rango';
+        $peer_tracking['trackings'] = $trackings_out_of_range;
+        array_push( $peer_tracking_v3, $peer_tracking );
     }
     return $peer_tracking_v3;
 }
