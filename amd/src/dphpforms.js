@@ -40,7 +40,6 @@ define([
         jQuery( form ).find('button').prop("disabled", true);
         jQuery( form ).find('input[type="button"]').attr("disabled", true);
         
-       
         jQuery.ajax({
             type: 'POST',
             url: url_processor,
@@ -62,6 +61,5 @@ define([
     return {
         init: () => {
         }
-    }
-}
-);
+    };
+});

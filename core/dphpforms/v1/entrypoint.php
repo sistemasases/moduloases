@@ -802,6 +802,7 @@ function _dphpforms_generate_html_recorder( $id_form, $rol_, $initial_config = n
                             foreach( $initial_values as &$initial_value ){
                                 if( $initial_value->alias === $context[ 'attr_local_alias' ] ){
                                     $field_default_value = $initial_value->default_value;
+                                    break;
                                 }
                             }
                         }
@@ -1209,6 +1210,7 @@ function _dphpforms_generate_TIME( &$dom, $id_formulario_pregunta, $context, $st
 function _dphpforms_generate_RADIOBUTTON( &$dom, $id_formulario_pregunta, $context, $statement, $prefix_uniqid ){
 
     $field_attr_required = $context[ 'attr_required' ];
+        
     $options = $context[ 'options' ];
         
     $div = _core_dphpforms_build_tag(
@@ -1400,6 +1402,8 @@ function _dphpforms_generate_CHECKBOX( &$dom, $id_formulario_pregunta, $context,
         $label_span = _core_dphpforms_build_tag( $dom, "span", new DOMAttributeList() );
         $label_span->nodeValue = $option['enunciado'];
         
+        $checked = ( in_array( $option['valor'], $context['default_value']) ? true : false  );
+        
         $opt = _core_dphpforms_build_tag(
                     $dom, "input", new DOMAttributeList([
                         'type' => "checkbox",
@@ -1407,6 +1411,7 @@ function _dphpforms_generate_CHECKBOX( &$dom, $id_formulario_pregunta, $context,
                         'name' => $name_checkbox,
                         'value' => $option['valor'],
                         'disabled' => $context[ 'enabled' ],
+                        'checked' => $checked
                     ])
             );
         

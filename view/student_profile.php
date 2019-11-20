@@ -773,7 +773,53 @@ if ($student_code != 0) {
     $record->form_seguimientos = null;
     $record->primer_acercamiento = null;
     //$record->form_seguimientos = dphpforms_render_recorder('seguimiento_pares', $rol);
-    $record->form_seguimientos = _dphpforms_generate_html_recorder('seguimiento_pares', $rol);
+    $initial_config = '{
+        "allow_register":true,
+        "allow_update":true,
+        "allow_delete":true,
+        "allow_reset":true,
+        "aditional_form_classes" : ["ases-col-xs-12", "ases-col-sm-12", "dphpforms"],
+        "initial_values" : [
+            {
+                "alias" : "lugar",
+                "default_value" : "Lugar de prueba"
+            },
+            {
+                "alias" : "objetivos",
+                "default_value" : "Objetivos de prueba"
+            },
+            {
+                "alias" : "id_instancia",
+                "default_value" : "450299"
+            },
+            {
+                "alias" : "hora_inicio",
+                "default_value" : "11:00"
+            },
+            {
+                "alias" : "hora_finalizacion",
+                "default_value" : "13:00"
+            },
+            {
+                "alias" : "fecha",
+                "default_value" : "2019-11-20"
+            },
+            {
+                "alias" : "acciones",
+                "default_value" : ["c_acciones_monitor_apoyo_academico"]
+            }
+        ],
+        "aditional_buttons" : [
+            {
+                "alias" : "extra_button",
+                "text" : "Extra Button",
+                "classes" : ["e-class", "e-class-2"]
+            }
+        ]
+    }';
+
+    $initial_config = json_decode( $initial_config );
+    $record->form_seguimientos = _dphpforms_generate_html_recorder('seguimiento_pares', $rol, $initial_config);
     $record->form_inasistencia = dphpforms_render_recorder('inasistencia', $rol);
 
     if ($record->form_seguimientos == '') {
@@ -918,7 +964,7 @@ $PAGE->requires->css('/blocks/ases/style/creadorFormulario.css', true);
 $PAGE->requires->js_call_amd('block_ases/ases_incident_system', 'init');
 $PAGE->requires->js_call_amd('block_ases/student_profile_main', 'init', $data_init);
 $PAGE->requires->js_call_amd('block_ases/student_profile_main', 'equalize');
-$PAGE->requires->js_call_amd('block_ases/dphpforms_form_renderer', 'init');
+//$PAGE->requires->js_call_amd('block_ases/dphpforms_form_renderer', 'init');
 $PAGE->requires->js_call_amd('block_ases/dphpforms_form_discapacity', 'init');
 $PAGE->requires->js_call_amd('block_ases/students_profile_others_tab_sp', 'init');
 $PAGE->requires->js_call_amd('block_ases/academic_profile_main', 'init');

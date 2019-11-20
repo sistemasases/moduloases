@@ -8,11 +8,11 @@ function _core_dphpforms_dom_add_attributtes( DOMElement &$tag, DOMAttributeList
         
         $is_array = ( ( gettype( array() ) == gettype( $val ) ) ? true : false );
         
-        if( ( ( $attr == "disabled" ) || ( $attr == "required" ) ) && !$val[0] ){
+        if( ( ( $attr == "disabled" ) || ( $attr == "required" ) || ( $attr == "checked" ) )  && !$val[0] ){
             
             continue;
             
-        }else if( ( ( $attr == "disabled" ) || ( $attr == "required" ) ) && $val[0] ){
+        }else if( ( ( $attr == "disabled" ) || ( $attr == "required" ) || ( $attr == "checked" ) ) && $val[0] ){
             
             $tag->setAttribute( $attr, '' );
             

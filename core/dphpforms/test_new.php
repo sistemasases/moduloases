@@ -34,7 +34,27 @@ $initial_config = '{
         },{
             "alias" : "id_instancia",
             "default_value" : "450299"
-        }
+        },
+            {
+                "alias" : "hora_inicio",
+                "default_value" : "11:00"
+            },
+            {
+                "alias" : "hora_finalizacion",
+                "default_value" : "13:00"
+            },
+            {
+                "alias" : "fecha",
+                "default_value" : "2019-11-20"
+            },
+            {
+                "alias" : "acciones",
+                "default_value" : [
+                    "c_acciones_monitor_apoyo_academico", 
+                    "c_acciones_monitor_apoyo_reconocimiento_ciudad_universidad"
+                ]
+            }
+        
     ],
     "aditional_buttons" : [
         {
