@@ -767,159 +767,155 @@ define(['jquery',
             for (field in form) {
 
                 var msg = new Object();
+                var field = form[field];
 
                 msg.title = "Éxito";
                 msg.msg = "El formulario fue validado con éxito";
                 msg.status = "success";
 
-                switch (form[field].name) {
+                switch (field.name) {
 
                     case "email":
 
                         let regexemail = /((?:[a-z]+\.)*[a-z]+(?:@correounivalle\.edu\.co))/;
 
-                        let validate_email = regexemail.exec(form[field].value);
-
+                        let validate_email = regexemail.exec(field.value);
 
                         if (validate_email !== null) {
-                            if (!(validate_email[0] === form[field].value)) {
+                            if (!(validate_email[0] === field.value)) {
                                 msg.title = "Error";
                                 msg.status = "error";
-                                msg.msg = "El campo " + form[field].name + " no cumple con el formato institucional.";
+                                msg.msg = "El campo " + field.name + " no cumple con el formato institucional.";
                                 return msg;
                             }
                         }else {
                             msg.title = "Error";
                             msg.status = "error";
-                            msg.msg = "El campo " + form[field].name + " no cumple con el formato institucional.";
+                            msg.msg = "El campo " + field.name + " no cumple con el formato institucional.";
                             return msg;
                         }
                         break;
                     case "fecha_nac":
 
-                        let regexDateWithTime = /^((19[5-9][0-9]|20[0-5][0-9])-(1[012]|0?[1-9])-([12][0-9]|3[01]|0?[1-9]) 00:00:00)$/;
-                        let regexDateWithoutTime = /^((19[5-9][0-9]|20[0-5][0-9])-(1[012]|0?[1-9])-([12][0-9]|3[01]|0?[1-9]))$/;
+                        let regex_date = /^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/;
+                        let validate_date = regex_date.exec(field.value);
 
-                        let validateDateWithTime = regexDateWithTime.exec(form[field].value);
-                        let validateDateWithoutTime = regexDateWithoutTime.exec(form[field].value);
-
-                        if (validateDateWithTime == null) {
-                            if(validateDateWithoutTime == null){
-                                msg.title = "Error";
-                                msg.status = "error";
-                                msg.msg = "El campo " + form[field].name + " no cumple con el formato de fecha aceptado (yyyy-mm-dd).";
-                                return msg;
-                            } else{
-                                form[field].value +=" 00:00:00";
-                            }
+                        if(validate_date == null){
+                            msg.title = "Error";
+                            msg.status = "error";
+                            msg.msg = "El campo 'fecha de nacimiento' no cumple con el formato de fecha aceptado (yyyy-mm-dd).";
+                            return msg;
+                        } else{
+                            field.value +=" 00:00:00";
                         }
                         break;
                     case "estrato":
 
-                        if (form[field].value < 0) {
+                        if (field.value < 0) {
                             msg.title = "Error";
                             msg.status = "error";
-                            msg.msg = "El campo " + form[field].name + " no debe ser negativo";
+                            msg.msg = "El campo " + field.name + " no debe ser negativo";
                             return msg;
                         }
 
-                        if (form[field].value > 6) {
+                        if (field.value > 6) {
                             msg.title = "Error";
                             msg.status = "error";
-                            msg.msg = "El campo año de " + form[field].name + " no debe ser mayor al permitido";
+                            msg.msg = "El campo año de " + field.name + " no debe ser mayor al permitido";
                             return msg;
                         }
 
-                        if (has_letters(form[field].value)) {
+                        if (has_letters(field.value)) {
                             msg.title = "Error";
                             msg.status = "error";
-                            msg.msg = "El campo " + form[field].name + " no debe contener letras";
+                            msg.msg = "El campo " + field.name + " no debe contener letras";
                             return msg;
                         }
                         break;
                     case "ingreso":
 
-
-                        if (form[field].value < 0) {
+                        if (field.value < 0) {
                             msg.title = "Error";
                             msg.status = "error";
-                            msg.msg = "El campo año de " + form[field].name + " no debe ser negativo";
+                            msg.msg = "El campo año de " + field.name + " no debe ser negativo";
                             return msg;
                         }
                         let fecha = new Date();
                         let anio = fecha.getFullYear();
 
-                        if (form[field].value > anio) {
+                        if (field.value > anio) {
                             msg.title = "Error";
                             msg.status = "error";
-                            msg.msg = "El campo año de " + form[field].name + " no debe ser mayor al actual";
+                            msg.msg = "El campo año de " + field.name + " no debe ser mayor al actual";
                             return msg;
                         }
 
-                        if (has_letters(form[field].value)) {
+                        if (has_letters(field.value)) {
                             msg.title = "Error";
                             msg.status = "error";
-                            msg.msg = "El campo año de " + form[field].name + " no debe contener letras";
+                            msg.msg = "El campo año de " + field.name + " no debe contener letras";
                             return msg;
                         }
                         break;
 
                     case "puntaje_icfes":
 
-                        if (form[field].value < 0) {
+                        if (field.value < 0) {
                             msg.title = "Error";
                             msg.status = "error";
-                            msg.msg = "El campo " + form[field].name + " no debe ser negativo";
+                            msg.msg = "El campo " + field.name + " no debe ser negativo";
                             return msg;
                         }
 
-                        if (form[field].value > 500) {
+                        if (field.value > 500) {
                             msg.title = "Error";
                             msg.status = "error";
-                            msg.msg = "El campo " + form[field].name + " no debe ser mayor al permitido";
+                            msg.msg = "El campo " + field.name + " no debe ser mayor al permitido";
                             return msg;
                         }
 
-                        if (has_letters(form[field].value)) {
+                        if (has_letters(field.value)) {
                             msg.title = "Error";
                             msg.status = "error";
-                            msg.msg = "El campo " + form[field].name + " no debe contener letras";
+                            msg.msg = "El campo " + field.name + " no debe contener letras";
                             return msg;
                         }
 
                         break;
 
                     case "hijos":
-                        if (form[field].value == "") {
+
+                        if (field.value == "") {
                             msg.title = "Error";
                             msg.status = "error";
-                            msg.msg = "El campo " + form[field].name + " es obligatorio";
+                            msg.msg = "El campo " + field.name + " es obligatorio";
                             return msg;
                         }
-                        if (form[field].value < 0) {
+                        if (field.value < 0) {
                             msg.title = "Error";
                             msg.status = "error";
-                            msg.msg = "El campo " + form[field].name + " no debe ser negativo";
+                            msg.msg = "El campo " + field.name + " no debe ser negativo";
                             return msg;
                         }
-                        if (has_letters(form[field].value)) {
+                        if (has_letters(field.value)) {
                             msg.title = "Error";
                             msg.status = "error";
-                            msg.msg = "El campo " + form[field].name + " no debe contener letras";
+                            msg.msg = "El campo " + field.name + " no debe contener letras";
                             return msg;
                         }
                         break;
                     case "name_person":
-                        if (form[field].value == "") {
+
+                        if (field.value == "") {
                             msg.title = "Error";
                             msg.status = "error";
-                            msg.msg = "El campo " + form[field].name + " es obligatorio";
+                            msg.msg = "El campo " + field.name + " es obligatorio";
                             return msg;
                         }
-                        if (has_numbers(form[field].value)) {
+                        if (has_numbers(field.value)) {
                             msg.title = "Error";
                             msg.status = "error";
-                            msg.msg = "El campo " + form[field].name + " no debe contener números";
+                            msg.msg = "El campo " + field.name + " no debe contener números";
                             return msg;
                         }
 
@@ -929,13 +925,13 @@ define(['jquery',
                         if ((document.getElementById("otro_genero").value) == "" && $('#otro_genero').attr("required")) {
                             msg.title = "Error";
                             msg.status = "error";
-                            msg.msg = "El campo " + form[field].name + " es obligatorio";
+                            msg.msg = "El campo " + field.name + " es obligatorio";
                             return msg;
                         }
-                        if (has_numbers(form[field].value)) {
+                        if (has_numbers(field.value)) {
                             msg.title = "Error";
                             msg.status = "error";
-                            msg.msg = "El campo " + form[field].name + " no debe contener números";
+                            msg.msg = "El campo " + field.name + " no debe contener números";
                             return msg;
                         }
                         break;
@@ -944,13 +940,13 @@ define(['jquery',
                         if ((document.getElementById("otro_act_simultanea").value) == "" && $('#otro_act_simultanea').attr("required")) {
                             msg.title = "Error";
                             msg.status = "error";
-                            msg.msg = "El campo " + form[field].name + " es obligatorio";
+                            msg.msg = "El campo " + field.name + " es obligatorio";
                             return msg;
                         }
-                        if (has_numbers(form[field].value)) {
+                        if (has_numbers(field.value)) {
                             msg.title = "Error";
                             msg.status = "error";
-                            msg.msg = "El campo " + form[field].name + " no debe contener números";
+                            msg.msg = "El campo " + field.name + " no debe contener números";
                             return msg;
                         }
                         break;
@@ -958,23 +954,23 @@ define(['jquery',
                     case "tel_res":
                     case "celular":
                     case "tel_acudiente":
-                        if (has_letters(form[field].value)) {
+                        if (has_letters(field.value)) {
                             msg.title = "Error";
                             msg.status = "error";
-                            msg.msg = "El campo " + form[field].name + " solo debe contener números";
+                            msg.msg = "El campo " + field.name + " solo debe contener números";
                             return msg;
-                        };
+                        }
                         break;
                     case "emailpilos":
-                        if (!is_email(form[field].value)) {
+                        if (!is_email(field.value)) {
                             msg.title = "Error";
                             msg.status = "error";
-                            msg.msg = "El campo " + form[field].name + " no tiene el formato de un correo electrónico";
+                            msg.msg = "El campo " + field.name + " no tiene el formato de un correo electrónico";
                             return msg;
-                        };
+                        }
                         break;
-                };
-            };
+                }
+            }
 
             return msg;
         }, save_form_edit_profile: function (form, object_function, control1, control2, json) {
