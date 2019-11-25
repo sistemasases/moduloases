@@ -107,8 +107,12 @@ $ases_student = null;
 if ($student_code != 0) {
 
     $ases_student = get_ases_user_by_code($student_code);
-    $record->birthdate = $ases_student->fecha_nac;
     $student_id = $ases_student->id;
+
+    $matches = array();
+    $birthdate = $ases_student->fecha_nac;
+    preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])/", $birthdate, $matches);
+    $record->birthdate = isset($matches[0])?$matches[0]:'1920-01-01';
 
     // Student information to display on file header (ficha)
     $id_user_moodle = get_id_user_moodle($ases_student->id);
