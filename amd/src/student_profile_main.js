@@ -220,7 +220,7 @@ define(['jquery',
                 $.ajax({
                     url: '../managers/student_profile/studentprofile_api.php',
                     data: JSON.stringify({
-                        "func": 'update_user_image',
+                        "function": 'update_user_image',
                         "params": [id_moodle, image_file]
                     }),
                     cache: false,
@@ -317,8 +317,8 @@ define(['jquery',
                 }
 
                 var heights = $(".equalize").map(function () {
-                    return $(this).height();
-                }).get(),
+                        return $(this).height();
+                    }).get(),
                     maxHeight = Math.max.apply(null, heights);
 
                 $(".equalize").height(maxHeight);
@@ -336,22 +336,22 @@ define(['jquery',
             var status_program = element.val();
 
             swal({
-                title: "Advertencia",
-                text: "¿Está seguro que desea cambiar el estado del programa?",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonClass: "btn-danger",
-                confirmButtonText: "Si",
-                cancelButtonText: "No",
-                closeOnConfirm: false
-            },
+                    title: "Advertencia",
+                    text: "¿Está seguro que desea cambiar el estado del programa?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonClass: "btn-danger",
+                    confirmButtonText: "Si",
+                    cancelButtonText: "No",
+                    closeOnConfirm: false
+                },
                 function (isConfirm) {
                     if (isConfirm) {
                         loading_indicator.show();
                         $.ajax({
                             type: "POST",
                             data: JSON.stringify({
-                                "func": 'update_status_program',
+                                "function": 'update_status_program',
                                 "params": [id_moodle, id_program, status_program]
                             }),
                             url: "../managers/student_profile/studentprofile_api.php",
@@ -412,7 +412,7 @@ define(['jquery',
                         $.ajax({
                             type: "POST",
                             data: JSON.stringify({
-                                "func": 'update_ases_status',
+                                "function": 'update_ases_status',
                                 "params": [id_ases, parameters_url.instanceid, parameters_url.student_code,
                                     id_reason_dropout, observation]
                             }),
@@ -469,16 +469,16 @@ define(['jquery',
 
                 if (has_tracking_status.tracking_status) {
                     swal({
-                        title: "¿Está seguro/a de cambiar el estado?",
-                        text: "Se alternará el perfil de Moodle asociado al estudiante al cual se el realiza seguimiento",
-                        type: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#d51b23",
-                        confirmButtonText: "Si",
-                        cancelButtonText: "No",
-                        closeOnConfirm: true,
-                        allowEscapeKey: false
-                    },
+                            title: "¿Está seguro/a de cambiar el estado?",
+                            text: "Se alternará el perfil de Moodle asociado al estudiante al cual se el realiza seguimiento",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#d51b23",
+                            confirmButtonText: "Si",
+                            cancelButtonText: "No",
+                            closeOnConfirm: true,
+                            allowEscapeKey: false
+                        },
                         function (isConfirm) {
                             if (isConfirm) {
 
@@ -493,7 +493,7 @@ define(['jquery',
                                 $.ajax({
                                     type: "POST",
                                     data: JSON.stringify({
-                                        "func": 'update_tracking_status',
+                                        "function": 'update_tracking_status',
                                         "params": [id_ases_student, id_academic_program]
                                     }),
                                     url: "../managers/student_profile/studentprofile_api.php",
@@ -980,7 +980,7 @@ define(['jquery',
             $.ajax({
                 type: "POST",
                 data: JSON.stringify({
-                    "func": 'save_profile',
+                    "function": 'save_profile',
                     "params": [form, control1, control2, json]
                 }),
                 url: "../managers/student_profile/studentprofile_api.php",
@@ -1056,7 +1056,7 @@ define(['jquery',
 
         var id_ases = $('#id_ases').val();
         var tab_name = event.data.tab_name;
-        var id_block = document.querySelector('#dphpforms_block_instance').dataset.info;
+        var id_instance = document.querySelector('#dphpforms_block_instance').dataset.info;
 
         $(".active").removeClass("active");
         $("#"+tab_name+"_li").addClass("active");
@@ -1064,8 +1064,8 @@ define(['jquery',
         $.ajax({
             type: "POST",
             data: JSON.stringify({
-                "func": 'load_tabs',
-                "params": [id_ases, tab_name, id_block],
+                "function": 'load_tabs',
+                "params": [id_ases, tab_name, id_instance],
             }),
             url: "../managers/student_profile/studentprofile_api.php",
             success: function(msg) {
@@ -1131,7 +1131,7 @@ define(['jquery',
         $.ajax({
             type: "POST",
             data: JSON.stringify({
-                "func": 'load_risk_info',
+                "function": 'load_risk_info',
                 "params": [id_ases, peer_tracking_info],
             }),
             url: "../managers/student_profile/studentprofile_api.php",
@@ -1237,7 +1237,7 @@ define(['jquery',
         $.ajax({
             type: "POST",
             data: JSON.stringify({
-                "func": 'save_icetex_status',
+                "function": 'save_icetex_status',
                 "params": [id_ases, id_new_status]
             }),
             dataType: "json",
@@ -2015,7 +2015,7 @@ define(['jquery',
         $.ajax({
             type: "POST",
             data: JSON.stringify({
-                "func": 'is_student',
+                "function": 'is_student',
                 "params": [code_student]
             }),
             url: "../managers/student_profile/studentprofile_api.php",

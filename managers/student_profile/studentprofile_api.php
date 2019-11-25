@@ -31,9 +31,9 @@ date_default_timezone_set('America/Bogota');
 
 $input = json_decode(file_get_contents("php://input"));
 
-if(isset($input->func) && isset($input->params)) {
+if(isset($input->function) && isset($input->params)) {
 
-    $function = $input->func;
+    $function = $input->function;
 
     //Loads tabs of student profile
     if($function == 'load_tabs') {
@@ -41,20 +41,20 @@ if(isset($input->func) && isset($input->params)) {
         /**
          * [0] => id_ases: string
          * [1] => tab_name: string
-         * [2] => id_block: string
+         * [2] => id_instance: string
          */
         $params = $input->params;
         if(count($params) == 3) {
 
             $id_ases = $params[0];
             $tab_name = $params[1];
-            $id_block = $params[2];
+            $id_instance = $params[2];
 
-            if(is_string($id_ases) && is_string($tab_name) && is_string($id_block)) {
+            if(is_string($id_ases) && is_string($tab_name) && is_string($id_instance)) {
 
                 switch($tab_name){
                     case 'socioed':
-                        $result = student_profile_load_socioed_tab($id_ases, $id_block);
+                        $result = student_profile_load_socioed_tab($id_ases, $id_instance);
                         break;
                     case 'academic':
                         $result = student_profile_load_academic_tab($id_ases);
@@ -105,7 +105,7 @@ if(isset($input->func) && isset($input->params)) {
             $live_with = $params[3];
 
             if(is_array($form) && is_string($option1) && is_string($option2) &&
-               is_string($live_with)) {
+                is_string($live_with)) {
                 $msg = save_profile($form, $option1, $option2, $live_with);
                 echo json_encode(
                     array(
