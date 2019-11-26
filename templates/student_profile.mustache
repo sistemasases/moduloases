@@ -237,11 +237,15 @@
           </li>{{/view_geographic_tab_sp}}{{#view_others_tab_sp}}
           <li id="tracing_others_li">
             <a href="#tracing_others_tab" data-toggle="tab">CARACTERIZACIÓN</a>
-          </li>{{/view_others_tab_sp}}
+          </li>{{/view_others_tab_sp}}{{#view_tracking_discapacity_tab_sp}}
+          <li id="tracking_discapacity_li">
+            <a href="#tracking_discapacity_tab" data-toggle="tab">AJUSTES RAZONABLES</a>
+          </li>{{/view_tracking_discapacity_tab_sp}}
         </ul>
         <div class="tab-content clearfix ">
           {{#view_general_tab_sp}} {{> block_ases/view_general_tab_sp}} {{/view_general_tab_sp}}
           {{#view_others_tab_sp}} {{> block_ases/view_others_tab_sp}} {{/view_others_tab_sp}}
+          {{#view_tracking_discapacity_tab_sp}} {{> block_ases/view_discapacity_tracking_tab_sp}} {{/view_tracking_discapacity_tab_sp}}
         </div>
       </div>
     </div>
