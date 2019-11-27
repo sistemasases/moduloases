@@ -28,14 +28,14 @@ define([
         );
     }
 
-    jQuery(document).on('submit', 'form[data-dphpforms="dphpforms"]', function (evt) {
+    jQuery(document).on( event = 'submit',  selector = 'form[data-dphpforms="dphpforms"]', callback = function (evt) {
 
         evt.preventDefault();
       
-        var formData = new FormData(this);
+        let formData = new FormData(this);
 
-        var form = jQuery(this);
-        var url_processor = get_processor_url( form );
+        let form = jQuery(this);
+        let url_processor = get_processor_url( form );
         
         jQuery( form ).find('button').prop("disabled", true);
         jQuery( form ).find('input[type="button"]').attr("disabled", true);
@@ -54,6 +54,20 @@ define([
                 
             }
         });
+    });
+        
+    jQuery(document).on( event = 'click', selector = '.dphpf-text-list-add-elem-btn', callback = function (evt) {
+
+        let elem = jQuery(this);
+    
+        let block_uuid = elem.data( "uid" );
+        
+        let template = jQuery( jQuery( `div[data-uid='${ block_uuid }']` ).find("template").html() );
+        
+        template.appendTo( `div[data-uid='${ block_uuid }']` );
+        
+        console.log( template );
+        
     });
 
     console.log("Dphpforms CORE initialised");
