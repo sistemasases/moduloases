@@ -3100,7 +3100,7 @@ function student_profile_load_tracing_others_tab($id_ases){
 
 /**
  * @see student_profile_load_discapacity_tracking_tab($id_ases)
- * @desc Gets all the additional information of an student
+ * @desc Gets all the discapacity tracking information of an student
  * @param $id_ases string -> ASES student id
  * @return Object
  */
