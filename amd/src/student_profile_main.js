@@ -60,6 +60,11 @@ define(['jquery',
             $("#geographic_li").one('click', {tab_name: 'geographic'}, load_tabs);
 
             /**
+             * Event that loads asynchronously the discapacity_tracking tab
+             */
+            $("#discapacity_tracking_li").one('click', {tab_name: 'discapacity_tracking'}, load_tabs);
+
+            /**
              * Event that moves the Google Maps map from
              * "General" to "Geografico".
              */
