@@ -1060,6 +1060,8 @@ define(['jquery',
 
         loading_indicator.show();
 
+        console.log("entro");
+
         var id_ases = $('#id_ases').val();
         var tab_name = event.data.tab_name;
         var id_instance = document.querySelector('#dphpforms_block_instance').dataset.info;
