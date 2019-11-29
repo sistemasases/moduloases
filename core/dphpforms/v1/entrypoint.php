@@ -959,68 +959,6 @@ function _dphpforms_generate_html_recorder( $id_form, $rol_, $initial_config = n
 }
 
 /**
- * Function that generates the html of the buttons.
- * @author Jeison Cardona Gómez, <jeison.cardona@correounivalle.edu.co>
- * @param String $alias, this alias will be used as class-identifier, for instance, btn-dphpforms-alias
- * @param String $text, it is the buttom value.
- * @param String $classes, aditional css classes.
- * @return String HTML with the buttons tags.
- */
-
-function _dphpforms_generate_html_button( &$dom, $alias, $text, $classes, $allow_reserved_alias = false ){
-    
-    $reserved_aliases = [
-        "update",
-        "delete",
-        "reset"
-    ];
-
-    if( is_null( $alias ) ){
-        return null;
-    } 
-    
-    if( in_array( $alias, $reserved_aliases ) && !$allow_reserved_alias ){
-        return null;
-    }
-
-    $aditional_classes = "";
-
-    if( $classes ){
-        $classes = array_map(
-            function($class) use ($alias){
-                $default_classes = [
-                    "button",
-                    "btn-dphpforms",
-                    "btn-dphpforms-" . $alias,
-                ];
-                if( in_array( $class, $default_classes ) ){
-                    return null;
-                }else{
-                    return $class;
-                }
-            },
-            $classes
-        );
-        $aditional_classes = join( $classes, " " );
-    }
-    
-    $btn_input = _core_dphpforms_build_tag(
-            $dom, "input", new DOMAttributeList([
-                'class' => array_merge(
-                        ["button", "btn-dphpforms", "btn-dphpforms-" . $alias,],
-                        $classes
-                ),
-                'type' => "button",
-                'value' => $text
-             ])
-    );
-
-    return $btn_input;
-    
-    //return '<input type="button" class="button btn-dphpforms btn-dphpforms-'. $alias .' '. $aditional_classes .'" value="'.$text.'" >';
-}
-
-/**
  * Function that allow build and standard error message when the process of rendering cannot be completed.
  * @author Jeison Cardona Gómez, <jeison.cardona@correounivalle.edu.co>
  * @param String $reason, cause of exception.

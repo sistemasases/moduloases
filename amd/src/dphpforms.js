@@ -27,7 +27,8 @@ define([
             form.attr('action') 
         );
     }
-
+    
+    //------------------------------------
     jQuery(document).on( event = 'submit',  selector = 'form[data-dphpforms="dphpforms"]', callback = function (evt) {
 
         evt.preventDefault();
@@ -56,6 +57,7 @@ define([
         });
     });
         
+    //------------------------------------
     jQuery(document).on( event = 'click', selector = '.dphpf-text-list-add-elem-btn', callback = function (evt) {
 
         let elem = jQuery(this);
@@ -65,8 +67,6 @@ define([
         let template = jQuery( jQuery( `div[data-uid='${ block_uuid }']` ).find("template").html() );
         
         template.appendTo( `div[data-uid='${ block_uuid }']` );
-        
-        console.log( template );
         
     });
 

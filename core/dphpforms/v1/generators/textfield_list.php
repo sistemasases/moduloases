@@ -49,13 +49,10 @@ function _dphpforms_generate_TEXTFIELD_LIST(&$dom, $id_formulario_pregunta, $con
 
     $template = _core_dphpforms_build_tag($dom, "template", new DOMAttributeList());
 
-    $inner_element_attr['name'] = "";
-
     $dom_element_attr = new DOMAttributeList($inner_element_attr);
-
-    $elem_container = _core_dphpforms_build_tag($dom, "div", new DOMAttributeList([
-                "class" => ["dphpf-list-element"]
-    ]));
+        $elem_container = _core_dphpforms_build_tag($dom, "div", new DOMAttributeList([
+            "class" => ["dphpf-list-element"]
+        ]));
 
     $label = _core_dphpforms_build_tag($dom, "label", new DOMAttributeList());
     $br = _core_dphpforms_build_tag($dom, "br", new DOMAttributeList());
@@ -78,8 +75,8 @@ function _dphpforms_generate_TEXTFIELD_LIST(&$dom, $id_formulario_pregunta, $con
         $dom_element_attr = new DOMAttributeList($inner_element_attr);
 
         $elem_container = _core_dphpforms_build_tag($dom, "div", new DOMAttributeList([
-                    "class" => ["dphpf-list-element"]
-                        ]));
+            "class" => ["dphpf-list-element"]
+        ]));
 
         $label = _core_dphpforms_build_tag($dom, "label", new DOMAttributeList());
         $label->nodeValue = $element->statement . ":";
