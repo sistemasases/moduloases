@@ -10,7 +10,10 @@
 
 require_once(dirname(__FILE__). '/../../../core/module_loader.php'); 
 require_once( __DIR__ . "/DOMTools.php");
-require_once( __DIR__ . "/generators/textfield.php" );
+foreach (glob( __DIR__ . "/generators/*.php") as $filename){
+    require_once( $filename );
+}
+
 module_loader("security");
 
 // -- Dev test block - This block cannot be considerated as documentation.
