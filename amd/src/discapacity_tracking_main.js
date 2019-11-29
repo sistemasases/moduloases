@@ -23,8 +23,6 @@ define([
     return {
         init: function(){
 
-            alert("hola");
-
             function has_numbers(str) {
                 var numbers = "0123456789";
                 for (i = 0; i < str.length; i++) {
