@@ -20,7 +20,8 @@ define(['jquery',
     'block_ases/loading_indicator',
     'block_ases/academic_profile_main',
     'block_ases/socioed_profile_main',
-    'block_ases/geographic_main'], function ($, bootstrap, d3, sweetalert, jqueryui, select2, Chart, mustache, loading_indicator, academic, socioed, geographic) {
+    'block_ases/geographic_main',
+    'block_ases/discapacity_tracking_main'], function ($, bootstrap, d3, sweetalert, jqueryui, select2, Chart, mustache, loading_indicator, academic, socioed, geographic, discapacity_tracking) {
 
     return {
         init: function (data_init) {
@@ -57,6 +58,11 @@ define(['jquery',
              * Event that loads asynchronously the geographic tab
              */
             $("#geographic_li").one('click', {tab_name: 'geographic'}, load_tabs);
+
+            /**
+             * Event that loads asynchronously the discapacity_tracking tab
+             */
+            $("#discapacity_tracking_li").one('click', {tab_name: 'discapacity_tracking'}, load_tabs);
 
             /**
              * Event that moves the Google Maps map from
@@ -1092,6 +1098,9 @@ define(['jquery',
                                     $("#mapa").appendTo("#geographic_map");
                                     break;
                                 case 'tracing_others':
+                                    break;
+                                case 'discapacity_tracking':
+                                    discapacity_tracking.init();
                                     break;
                             }
 

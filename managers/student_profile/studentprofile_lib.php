@@ -3097,3 +3097,16 @@ function student_profile_load_tracing_others_tab($id_ases){
 
     return $record;
 }
+
+/**
+ * @see student_profile_load_discapacity_tracking_tab($id_ases)
+ * @desc Gets all the discapacity tracking information of an student
+ * @param $id_ases string -> ASES student id
+ * @return Object
+ */
+function student_profile_load_discapacity_tracking_tab($id_ases){
+
+    $record = new stdClass();
+    $record->saludo = "HOLA";
+    return $record;
+}
