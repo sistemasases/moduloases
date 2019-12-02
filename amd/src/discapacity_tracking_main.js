@@ -18,10 +18,43 @@ define([
     'block_ases/bootstrap',
     'block_ases/sweetalert',
     'block_ases/jqueryui',
-    'block_ases/select2'
-], function ($, jszip, dataTables, autoFill, buttons, html5, flash, print, bootstrap, sweetalert, jqueryui, select2) {
+    'block_ases/select2',
+    'block_ases/_general_modal_manager'
+], function ($, jszip, dataTables, autoFill, buttons, html5, flash, print, bootstrap, sweetalert, jqueryui, select2,gmm) {
     return {
         init: function(){
+
+                $("#add_discapacity_tracking").click(function(){v
+                    let html_content = 
+                    //Crear JSON con general_modal_manager
+                    gmm.generate_modal("modal_to_reasonable_adjusment", "Ajustes razonables", html_content, null, function(){ gmm.show_modal( ".modal_to_compare" ) });
+                });
+
+                //Delete table row
+                $(document).on('click', '#table_actions_to_discapacity_tracking tbody tr td button', function () {
+                    $(this).parent().parent().remove();
+                });
+    
+                /**
+                 * Add new row
+                */
+                $("#bt_add_action_to_discapacity_tracking").click(function () {
+    
+                    let nuevaFila = "";
+                    nuevaFila += '<tr><td> <input name="achievement_indicator" class="input_fields_general_tab"  type="text"/></td>';
+                    nuevaFila += '<td> <input name="action_performed" class="input_fields_general_tab"  type="text" /></td>';
+                    nuevaFila += '<td>  <select name="cars" class="custom-select">';
+                    nuevaFila += '<option selected disabled>Seleccione un estado de acción</option>';
+                    nuevaFila += '<option value="1">Urgente</option>';
+                    nuevaFila += '<option value="2">Realizado</option>';
+                    nuevaFila += '<option value="3">En proceso</option>';
+                    nuevaFila += '<option value="4">A futuro</option>';
+                    nuevaFila += '<option value="5">Descartado</option>';
+                    nuevaFila += '</select> </td>';
+                    nuevaFila += '<td> <button type ="button" id="bt_delete_action" title="Eliminar acción" name="btn_delete_person" style="visibility:visible;"> </button></td> </tr>';
+                    $("#table_actions_to_discapacity_tracking").find("tbody").append(nuevaFila);
+    
+                });
 
             function has_numbers(str) {
                 var numbers = "0123456789";
