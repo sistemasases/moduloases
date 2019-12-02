@@ -20,12 +20,16 @@ define([
     'block_ases/jqueryui',
     'block_ases/select2',
     'block_ases/_general_modal_manager',
-    'block_ases/mustache'
-], function ($, jszip, dataTables, autoFill, buttons, html5, flash, print, bootstrap, sweetalert, jqueryui, select2,gmm, mustache) {
+    'block_ases/mustache',
+    'block_ases/loading_indicator'
+], function ($, jszip, dataTables, autoFill, buttons, html5, flash, print, bootstrap, sweetalert, jqueryui, select2,gmm, mustache, loading_indicator) {
     return {
         init: function(){
 
                 $("#add_discapacity_tracking").click(function(){
+
+                    loading_indicator.show();
+
                     $.ajax({
                         url: "../templates/_discapacity_reasonable_adjusment_theme.mustache",
                         data: null,
