@@ -84,8 +84,39 @@
             </div>
         </div>
 
+         <div class="row">
 
+                    {{#add_action_to_discapacity_tracking_record}}
 
+                        <div class=" row " name="div_add_action_to_discapacity_tracking" id="div_add_action_to_discapacity_tracking" style="float: right;">
+                            <input class="btn btn-block" type="button" id="bt_add_action_to_discapacity_tracking" name="bt_add_action_to_discapacity_tracking" title="Agregar acción realizada" />
+                        </div>
+                    {{/add_action_to_discapacity_tracking_record}}
+
+                    <h3 class="h-sections-general-tab h_others">Resalte aspectos positivos que favorecieron el desempeño, avance y graduación.
+                    </h3>
+
+                    <hr class="hr-general-tab-fields">
+
+                    <div>
+
+                        <table class="table table_aspectos_instituciones" id="table_aspectos_instituciones" name="table_aspectos_instituciones">
+                            <thead>
+                            <tr>
+                                <th>Indicador de logro</th>
+                                <th>Acción realizada</th>
+                                <th>Estado</th>
+                                <th id="edit_action"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {{{info_actions_to_discapacity_tracking}}}
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </div>
 
     </div>
 
