@@ -19,16 +19,31 @@ define([
     'block_ases/sweetalert',
     'block_ases/jqueryui',
     'block_ases/select2',
-    'block_ases/_general_modal_manager'
-], function ($, jszip, dataTables, autoFill, buttons, html5, flash, print, bootstrap, sweetalert, jqueryui, select2,gmm) {
+    'block_ases/_general_modal_manager',
+    'block_ases/mustache'
+], function ($, jszip, dataTables, autoFill, buttons, html5, flash, print, bootstrap, sweetalert, jqueryui, select2,gmm, mustache) {
     return {
         init: function(){
 
-                $("#add_discapacity_tracking").click(function(){v
-                    let html_content = 
-                    //Crear JSON con general_modal_manager
-                    gmm.generate_modal("modal_to_reasonable_adjusment", "Ajustes razonables", html_content, null, function(){ gmm.show_modal( ".modal_to_compare" ) });
-                });
+                $("#add_discapacity_tracking").click(function(){
+                    $.ajax({
+                        url: "../templates/_discapacity_reasonable_adjusment_theme.mustache",
+                        data: null,
+                        dataType: "text",
+                        async: false,
+                        success: function( template ){
+                            loading_indicator.hide();
+                            let html_to_load = $(mustache.render( template, msg.data_response ));
+                            //Crear JSON con general_modal_manager
+                            gmm.generate_modal("modal_to_reasonable_adjusment", "Ajustes razonables", html_to_load, null, function(){ gmm.show_modal( ".modal_to_reasonable_adjusment" ) });
+              
+                        },
+                        error: function(){
+                            loading_indicator.hide();
+                            console.log( "../templates/_discapacity_reasonable_adjusment_theme.mustache cannot be reached." );
+                        }
+                    });
+                 });
 
                 //Delete table row
                 $(document).on('click', '#table_actions_to_discapacity_tracking tbody tr td button', function () {
