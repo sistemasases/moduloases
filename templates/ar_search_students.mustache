@@ -102,7 +102,7 @@
                 <div class="checkbox">
                     <input type="checkbox" name="assignment_fields[]" value="training"> Practicante
                 </div>
-                <div class="checkbox">
+                <div class="">
                     <input type="checkbox" name="assignment_fields[]" value="monitor"> Monitor
                 </div>
             </fieldset>
@@ -121,8 +121,9 @@
 <div class="col-sm-12">
     {{#url_graphic}}
         <div class="row div_boton_reportes_graficos">
-            <a id="reportes_graficos" href="{{url}}" hidden>Guardar</a>
-            <button id="btn_reportes_graficos" class="button dt-button">Reportes Gráficos</button>
+            <a id="reportes_graficos" href="{{url}}">
+                <button id="btn_reportes_graficos" class="button dt-button">Reportes Gráficos</button>
+            </a>
         </div>
     {{/url_graphic}}
 </div>
