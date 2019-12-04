@@ -26,6 +26,13 @@ define([
     return {
         init: function(){
 
+                //Load css file to _discapacity_reasonable_adjusment_theme.mustache
+
+                let css_location = "../style/_discapacity_reasonable_adjusment_theme.css";
+    
+                $('head').append('<link rel="stylesheet" href="' + css_location + '" type="text/css" />');
+
+                //Load _discapacity_reasonable_adjusment_theme.mustache into modal_manager
                 $(document).on('click', '#add_discapacity_tracking',function(){
 
                     loading_indicator.show();
@@ -75,6 +82,11 @@ define([
     
                 });
 
+            /**
+            * Function: has_numbers(str)
+            * Params: str (String)
+            * Result: true or false
+            */
             function has_numbers(str) {
                 var numbers = "0123456789";
                 for (i = 0; i < str.length; i++) {
@@ -85,6 +97,11 @@ define([
                 return 0;
             }
 
+            /**
+            * Function: getIdinstancia(str)
+            * Params: undefined
+            * Result: String
+            */
             function getIdinstancia() {
                 var urlParameters = location.search.split('&');
 
@@ -97,6 +114,11 @@ define([
                 return 0;
             }
 
+            /**
+            * Function: getIdcourse(str)
+            * Params: undefined
+            * Result: String
+            */
             function getIdcourse() {
                 var urlParameters = location.search.split('&');
 
