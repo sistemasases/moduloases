@@ -38,9 +38,9 @@ global $COURSE;
 $msg_error = new stdClass();
 $msg = new stdClass();
 
-if(isset($_POST['func'])){
+if(isset($_POST['function'])){
 
-    if($_POST['func'] == 'load_discapacity_reasonable_adjusment_theme'){
+    if($_POST['function'] == 'load_discapacity_reasonable_adjusment_theme'){
         
         /**
          * [0] => id_ases: string
