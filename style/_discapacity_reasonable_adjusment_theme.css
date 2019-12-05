@@ -34,3 +34,7 @@
 #table_actions_to_discapacity_tracking td {
     width: 300px;
 }
+
+.adjustment_objetive input {
+    height: 30px !important;
+}
