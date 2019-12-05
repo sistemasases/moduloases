@@ -71,49 +71,12 @@ define([
             function load_discapacity_reasonable_adjusment_theme() {
 
              loading_indicator.show();
-
-                var id_ases = $('#id_ases').val();
-                var theme = "_discapacity_reasonable_adjusment_theme.mustache";
-
-                $.ajax({
-                type: "POST",
-                data: JSON.stringify({
-                            "function": 'load_discapacity_reasonable_adjusment_theme',
-                            "params": [id_ases, theme],
-                    }),
-                    url: "../managers/student_profile/reasonable_adjusment_api.php",
-                    success: function(msg) {
-                        if(msg.status_code == 0) {
-                            $.ajax({
-                                url: "../templates/"+theme,
-                                data: null,
-                                dataType: "text",
-                                async: false,
-                                success: function( template ){
-                                    loading_indicator.hide();
-                                    let html_to_load = $(mustache.render( template, msg.data_response ));
-                                    html_to_load = html_to_load[0];
-                                    console.log(html_to_load);
-                                    //Crear JSON con general_modal_manager
-                                    gmm.generate_modal("modal_to_reasonable_adjusment", "Ajustes razonables", html_to_load, null, function(){ gmm.show_modal( ".modal_to_reasonable_adjusment" ) });
-                                },
-                                error: function(){
-                                    loading_indicator.hide();
-                                    console.log( "../templates/view_"+tab_name+"_tab_sp.mustache cannot be reached." );
-                                }
-                            });
-                        } else {
-                            loading_indicator.hide();
-                            console.log(msg);
-                        }
-                    },
-                    dataType: "json",
-                    cache: "false",
-                    error: function(msg) {
-                        loading_indicator.hide();
-                        console.log(msg);
-                    }
-                });
+             let html_to_load = document.getElementsByTagName('discapacity_reasonable_adjusment_theme');
+             console.log(html_to_load);
+             //Crear JSON con general_modal_manager
+             gmm.generate_modal("modal_to_reasonable_adjusment", "Ajustes razonables", html_to_load, null, function(){ gmm.show_modal( ".modal_to_reasonable_adjusment" ) });
+             loading_indicator.hide();
+               
          }
 
             /**
