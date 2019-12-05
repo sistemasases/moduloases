@@ -71,7 +71,7 @@ define([
             function load_discapacity_reasonable_adjusment_theme() {
 
              loading_indicator.show();
-             let html_to_load = document.getElementsByTagName('discapacity_reasonable_adjusment_theme');
+             let html_to_load = document.getElementsById('discapacity_reasonable_adjusment_theme');
              console.log(html_to_load);
              //Crear JSON con general_modal_manager
              gmm.generate_modal("modal_to_reasonable_adjusment", "Ajustes razonables", html_to_load, null, function(){ gmm.show_modal( ".modal_to_reasonable_adjusment" ) });
