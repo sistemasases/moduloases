@@ -79,9 +79,9 @@ define([
                 type: "POST",
                 data: JSON.stringify({
                             "function": 'load_discapacity_reasonable_adjusment_theme',
-                            "params": [id_ases, tab_name],
+                            "params": [id_ases, theme],
                     }),
-                    url: "../managers/discapacity_tracking/discapacity_reasonable_adjusment_api.php",
+                    url: "../managers/student_profile/reasonable_adjusment_api.php",
                     success: function(msg) {
                         if(msg.status_code == 0) {
                             $.ajax({

@@ -3107,6 +3107,5 @@ function student_profile_load_tracing_others_tab($id_ases){
 function student_profile_load_discapacity_tracking_tab($id_ases){
 
     $record = new stdClass();
-    $record->saludo = "HOLA";
     return $record;
 }
