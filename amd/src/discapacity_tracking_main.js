@@ -34,7 +34,26 @@ define([
 
                 //Load _discapacity_reasonable_adjusment_theme.mustache into modal_manager
                 $(document).on('click', '#add_discapacity_tracking',function(){
-                    load_discapacity_reasonable_adjusment_theme();
+
+                    loading_indicator.show();
+
+                    $.ajax({
+                        url: "../templates/_discapacity_reasonable_adjusment_theme.mustache",
+                        data: null,
+                        dataType: "text",
+                        async: false,
+                        success: function( template ){
+                            loading_indicator.hide();
+                            let html_to_load = template;
+                            //Crear JSON con general_modal_manager
+                            gmm.generate_modal("modal_to_reasonable_adjusment", "Ajustes razonables", html_to_load, null, function(){ gmm.show_modal( ".modal_to_reasonable_adjusment" ) });
+              
+                        },
+                        error: function(){
+                            loading_indicator.hide();
+                            console.log( "../templates/_discapacity_reasonable_adjusment_theme.mustache cannot be reached." );
+                        }
+                    });
                  });
 
                 //Delete table row
@@ -51,7 +70,7 @@ define([
                     nuevaFila += '<tr><td> <input name="achievement_indicator" class="input_fields_general_tab"  type="text"/></td>';
                     nuevaFila += '<td> <input name="action_performed" class="input_fields_general_tab"  type="text" /></td>';
                     nuevaFila += '<td>  <select name="cars" class="custom-select">';
-                    nuevaFila += '<option selected="true" disabled="true" >Seleccione un estado de acción</option>';
+                    nuevaFila += '<option selected disabled>Seleccione un estado de acción</option>';
                     nuevaFila += '<option value="1">Urgente</option>';
                     nuevaFila += '<option value="2">Realizado</option>';
                     nuevaFila += '<option value="3">En proceso</option>';
@@ -62,22 +81,6 @@ define([
                     $("#table_actions_to_discapacity_tracking").find("tbody").append(nuevaFila);
     
                 });
-
-            /**
-            * @author Juan Pablo Castro <juan.castro.vasquez@correounivale.edu.co>
-            * @see load_discapacity_reasonable_adjusment_theme()
-            * @desc Loads the specified discapacity_reasonable_adjusment_theme.
-            */
-            function load_discapacity_reasonable_adjusment_theme() {
-
-             loading_indicator.show();
-             let html_to_load = document.getElementById('discapacity_reasonable_adjusment_theme');
-             console.log(html_to_load);
-             //Crear JSON con general_modal_manager
-             gmm.generate_modal("modal_to_reasonable_adjusment", "Ajustes razonables", html_to_load, null, function(){ gmm.show_modal( ".modal_to_reasonable_adjusment" ) });
-             loading_indicator.hide();
-               
-         }
 
             /**
             * Function: has_numbers(str)
