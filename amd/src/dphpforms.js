@@ -64,9 +64,9 @@ define([
     
         let block_uuid = elem.data( "uid" );
         
-        let template = jQuery( jQuery( `div[data-uid='${ block_uuid }']` ).find("template").html() );
+        let template = jQuery( jQuery( `div[data-uid='${ block_uuid }'] template` ).html() );
         
-        template.appendTo( `div[data-uid='${ block_uuid }']` );
+        template.appendTo( `div[data-uid='${ block_uuid }'] .dphpf-elements` );
         
     });
 
