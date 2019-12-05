@@ -50,9 +50,9 @@ function _dphpforms_generate_TEXTFIELD_LIST(&$dom, $id_formulario_pregunta, $con
     $template = _core_dphpforms_build_tag($dom, "template", new DOMAttributeList());
 
     $dom_element_attr = new DOMAttributeList($inner_element_attr);
-        $elem_container = _core_dphpforms_build_tag($dom, "div", new DOMAttributeList([
-            "class" => ["dphpf-list-element"]
-        ]));
+    $elem_container = _core_dphpforms_build_tag($dom, "div", new DOMAttributeList([
+        "class" => ["dphpf-list-element"]
+    ]));
 
     $label = _core_dphpforms_build_tag($dom, "label", new DOMAttributeList());
     $br = _core_dphpforms_build_tag($dom, "br", new DOMAttributeList());
@@ -67,6 +67,10 @@ function _dphpforms_generate_TEXTFIELD_LIST(&$dom, $id_formulario_pregunta, $con
     $div->appendChild($template);
 
     //End template
+    
+    $list_elements = _core_dphpforms_build_tag($dom, "div", new DOMAttributeList([
+        "class" => ["dphpf-elements"]
+    ]));
 
     foreach ($elements as $key => $element) {
 
@@ -89,8 +93,10 @@ function _dphpforms_generate_TEXTFIELD_LIST(&$dom, $id_formulario_pregunta, $con
         $elem_container->appendChild($br);
         $elem_container->appendChild($textfield);
 
-        $div->appendChild($elem_container);
+        $list_elements->appendChild($elem_container);
     }
+
+    $div->appendChild($list_elements);
 
     if ($context['options']->list_type === "dynamic") {
         $add_element = _core_dphpforms_build_tag($dom, "input", new DOMAttributeList([
