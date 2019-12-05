@@ -45,7 +45,7 @@ if(isset($input->function) && isset($input->params)) {
          * [1] => tab_name: string
          */
         $params = $input->params;
-        if(count($params) == ) {
+        if(count($params) == 2) {
 
             $id_ases = $params[0];
             $tab_name = $params[1];
