@@ -34,26 +34,7 @@ define([
 
                 //Load _discapacity_reasonable_adjusment_theme.mustache into modal_manager
                 $(document).on('click', '#add_discapacity_tracking',function(){
-
-                    loading_indicator.show();
-
-                    $.ajax({
-                        url: "../templates/_discapacity_reasonable_adjusment_theme.mustache",
-                        data: null,
-                        dataType: "text",
-                        async: false,
-                        success: function( template ){
-                            loading_indicator.hide();
-                            let html_to_load = template;
-                            //Crear JSON con general_modal_manager
-                            gmm.generate_modal("modal_to_reasonable_adjusment", "Ajustes razonables", html_to_load, null, function(){ gmm.show_modal( ".modal_to_reasonable_adjusment" ) });
-              
-                        },
-                        error: function(){
-                            loading_indicator.hide();
-                            console.log( "../templates/_discapacity_reasonable_adjusment_theme.mustache cannot be reached." );
-                        }
-                    });
+                    load_discapacity_reasonable_adjusment_theme();
                  });
 
                 //Delete table row
@@ -81,6 +62,57 @@ define([
                     $("#table_actions_to_discapacity_tracking").find("tbody").append(nuevaFila);
     
                 });
+
+            /**
+            * @author Juan Pablo Castro <juan.castro.vasquez@correounivale.edu.co>
+            * @see load_discapacity_reasonable_adjusment_theme()
+            * @desc Loads the specified discapacity_reasonable_adjusment_theme.
+            */
+            function load_discapacity_reasonable_adjusment_theme() {
+
+             loading_indicator.show();
+
+                var id_ases = $('#id_ases').val();
+                var theme = "_discapacity_reasonable_adjusment_theme.mustache";
+
+                $.ajax({
+                type: "POST",
+                data: JSON.stringify({
+                            "function": 'load_discapacity_reasonable_adjusment_theme',
+                            "params": [id_ases, tab_name],
+                    }),
+                    url: "../managers/discapacity_tracking/discapacity_reasonable_adjusment_api.php",
+                    success: function(msg) {
+                        if(msg.status_code == 0) {
+                            $.ajax({
+                                url: "../templates/"+theme,
+                                data: null,
+                                dataType: "text",
+                                async: false,
+                                success: function( template ){
+                                    loading_indicator.hide();
+                                    let html_to_load = $(mustache.render( template, msg.data_response ));
+                                    //Crear JSON con general_modal_manager
+                                    gmm.generate_modal("modal_to_reasonable_adjusment", "Ajustes razonables", html_to_load, null, function(){ gmm.show_modal( ".modal_to_reasonable_adjusment" ) });
+                                },
+                                error: function(){
+                                    loading_indicator.hide();
+                                    console.log( "../templates/view_"+tab_name+"_tab_sp.mustache cannot be reached." );
+                                }
+                            });
+                        } else {
+                            loading_indicator.hide();
+                            console.log(msg);
+                        }
+                    },
+                    dataType: "json",
+                    cache: "false",
+                    error: function(msg) {
+                        loading_indicator.hide();
+                        console.log(msg);
+                    }
+                });
+         }
 
             /**
             * Function: has_numbers(str)
