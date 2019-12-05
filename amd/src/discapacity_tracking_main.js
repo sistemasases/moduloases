@@ -51,7 +51,7 @@ define([
                     nuevaFila += '<tr><td> <input name="achievement_indicator" class="input_fields_general_tab"  type="text"/></td>';
                     nuevaFila += '<td> <input name="action_performed" class="input_fields_general_tab"  type="text" /></td>';
                     nuevaFila += '<td>  <select name="cars" class="custom-select">';
-                    nuevaFila += '<option selected disabled>Seleccione un estado de acción</option>';
+                    nuevaFila += '<option selected="true" disabled="true" >Seleccione un estado de acción</option>';
                     nuevaFila += '<option value="1">Urgente</option>';
                     nuevaFila += '<option value="2">Realizado</option>';
                     nuevaFila += '<option value="3">En proceso</option>';
