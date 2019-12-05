@@ -38,7 +38,7 @@ if(isset($input->function) && isset($input->params)) {
     $function = $input->function;
 
     //Loads tabs of student profile
-    if($function == 'load_tabs') {
+    if($function == 'load_discapacity_reasonable_adjusment_theme') {
 
         /**
          * [0] => id_ases: string
@@ -196,66 +196,5 @@ function return_with_code($code){
     }
     die();
 }
-
-require_once(dirname(__FILE__). '/../../../../config.php');
-require_once(dirname(__FILE__).'/reasonable_adjusment_lib.php');
-require_once(dirname(__FILE__).'/../student_profile/studentprofile_lib.php');
-
-global $USER;
-global $COURSE;
-
-
-$msg_error = new stdClass();
-$msg = new stdClass();
-
-if(isset($_POST['function'])){
-
-    if($_POST['function'] == 'load_discapacity_reasonable_adjusment_theme'){
-        
-        /**
-         * [0] => id_ases: string
-         * [1] => tab_name: string
-         */
-        $params = $input->params;
-        if(count($params) == 2) {
-
-            $id_ases = $params[0];
-            $tab_name = $params[1];
-
-            if(is_string($id_ases) && is_string($tab_name)) {
-
-                $result = load_discapacity_reasonable_adjusment_theme($id_ases);
-
-                if($result != null){
-                    echo json_encode(
-                        array(
-                            "status_code" => 0,
-                            "message" => $tab_name." information",
-                            "data_response" => $result
-                        )
-                    );
-                } else {
-                    return_with_code(-5);
-                }
-            } else {
-                return_with_code(-2);
-            }
-        } else {
-            return_with_code(-6);
-        }
-    } 
-    else{
-        $msg->title = "Error";
-        $msg->msg = "No se ha enviado una función. Informe al área de sistemas.";
-        $msg->status = "error";
-        echo json_encode($msg);
-    }
-}else{
-    $msg->title = "Error";
-    $msg->msg = "Error en el servidor. Informe al área de sistemas.";
-    $msg->status = "error";
-    echo json_encode($msg);
-}
-
 
 ?>
