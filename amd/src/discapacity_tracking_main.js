@@ -91,7 +91,8 @@ define([
                                 async: false,
                                 success: function( template ){
                                     loading_indicator.hide();
-                                    let html_to_load = $(mustache.render( template[0], msg.data_response ));
+                                    let html_to_load = $(mustache.render( template, msg.data_response ));
+                                    html_to_load = html_to_load[0];
                                     console.log(html_to_load);
                                     //Crear JSON con general_modal_manager
                                     gmm.generate_modal("modal_to_reasonable_adjusment", "Ajustes razonables", html_to_load, null, function(){ gmm.show_modal( ".modal_to_reasonable_adjusment" ) });
