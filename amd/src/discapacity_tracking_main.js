@@ -60,6 +60,13 @@ define([
                 $(document).on('click', '#table_actions_to_discapacity_tracking tbody tr td button', function () {
                     $(this).parent().parent().remove();
                 });
+
+                //Insert new record of reasonable adjusment
+                $(document).on('click', '#insert_record_reasonable_adjusment', function () {
+                    //Function to insert record
+                    inser_record_reasonable_adjusment();
+                });
+                
     
                 /**
                  * Add new row
@@ -82,6 +89,20 @@ define([
     
                 });
 
+        
+             /**
+            * Function: inser_record_reasonable_adjusment()
+            * Params: undefined
+            * Result: String
+            */
+           function inser_record_reasonable_adjusment() {
+            swal(
+                "Éxito",
+                "Se ha registrado ajuste razonable correctamente.",
+                "success"
+            );
+        }
+
             /**
             * Function: has_numbers(str)
             * Params: str (String)
@@ -97,8 +118,9 @@ define([
                 return 0;
             }
 
+
             /**
-            * Function: getIdinstancia(str)
+            * Function: getIdinstancia()
             * Params: undefined
             * Result: String
             */
