@@ -22,3 +22,15 @@
     position: relative;
     cursor: pointer;
 }
+
+#table_actions_to_discapacity_tracking input{
+    height: 30px !important;
+}
+
+#table_actions_to_discapacity_tracking select{
+    width: 100% !important;
+}
+
+#table_actions_to_discapacity_tracking td {
+    width: 300px;
+}

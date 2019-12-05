@@ -77,7 +77,7 @@ define([
                     nuevaFila += '<option value="4">A futuro</option>';
                     nuevaFila += '<option value="5">Descartado</option>';
                     nuevaFila += '</select> </td>';
-                    nuevaFila += '<td> <button type ="button" id="bt_delete_action" title="Eliminar acción" name="btn_delete_person" style="visibility:visible;"> </button></td> </tr>';
+                    nuevaFila += '<td style="width: 10px !important;"> <button type ="button" id="bt_delete_action" title="Eliminar acción" name="btn_delete_person" style="visibility:visible;"> </button></td> </tr>';
                     $("#table_actions_to_discapacity_tracking").find("tbody").append(nuevaFila);
     
                 });
