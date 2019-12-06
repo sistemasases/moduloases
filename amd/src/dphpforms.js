@@ -66,6 +66,8 @@ define([
         
         let template = jQuery( jQuery( `div[data-uid='${ block_uuid }'] template` ).html() );
         
+        template.find( "label" ).text( "Extra element:" );
+        
         template.appendTo( `div[data-uid='${ block_uuid }'] .dphpf-elements` );
         
     });
