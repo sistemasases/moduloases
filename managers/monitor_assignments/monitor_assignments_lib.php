@@ -1056,7 +1056,7 @@ function monitor_assignments_get_last_student_assignment( $id_ases, $instance_id
             
             if( isset($pract_prof_relationship->id) ){
 
-                if( is_numeric($pract_prof_relationship->id_jafe) )
+                if( is_numeric($pract_prof_relationship->id_jefe) )
                 {
                     $prof_id = $pract_prof_relationship->id_jefe;
 
