@@ -1015,7 +1015,7 @@ function monitor_assignments_get_last_student_assignment( $id_ases, $instance_id
 
     $mon_est_relationship = monitor_assignments_get_last_monitor_student_assignment($id_ases, $instance_id);
 
-    if( $mon_est_relationship ){
+    if( isset($mon_est_relationship->id) ){
 
         $monitor_id = $mon_est_relationship->id_monitor;
         $semester_id = $mon_est_relationship->id_semestre;
@@ -1035,7 +1035,7 @@ function monitor_assignments_get_last_student_assignment( $id_ases, $instance_id
 
         $mon_pract_relationship = $DB->get_record_sql( $sql_relationship );
         
-        if( $mon_pract_relationship ){
+        if( isset($mon_pract_relationship->id) ){
 
             $pract_id = $mon_pract_relationship->id_jefe;
 
@@ -1054,17 +1054,19 @@ function monitor_assignments_get_last_student_assignment( $id_ases, $instance_id
 
             $pract_prof_relationship = $DB->get_record_sql( $sql_relationship );
             
-            if( $pract_prof_relationship ){
+            if( isset($pract_prof_relationship->id) ){
 
-                $prof_id = $pract_prof_relationship->id_jefe;
-                
-                $sql_professional = "SELECT id, username, firstname, lastname 
-                FROM {user} 
-                WHERE id  = '$prof_id'";
+                if( is_numeric($pract_prof_relationship->id_jafe) )
+                {
+                    $prof_id = $pract_prof_relationship->id_jefe;
 
-                $prof_obj = $DB->get_record_sql( $sql_professional );
-                $to_return['prof_obj'] =  $prof_obj;
+                    $sql_professional = "SELECT id, username, firstname, lastname 
+                                         FROM {user} 
+                                         WHERE id  = '$prof_id'";
 
+                    $prof_obj = $DB->get_record_sql( $sql_professional );
+                    $to_return['prof_obj'] =  $prof_obj;
+                }
             }
         }
     }
