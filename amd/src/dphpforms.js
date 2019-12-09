@@ -38,8 +38,8 @@ define([
         let form = jQuery(this);
         let url_processor = get_processor_url( form );
         
-        jQuery( form ).find('button').prop("disabled", true);
-        jQuery( form ).find('input[type="button"]').attr("disabled", true);
+        //jQuery( form ).find('button').prop("disabled", true);
+        //jQuery( form ).find('input[type="button"]').attr("disabled", true);
         
         jQuery.ajax({
             type: 'POST',

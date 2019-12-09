@@ -59,6 +59,13 @@
                 'valor' => (string) $elemento
             );
             array_push($respuestas, $respuesta);
+        }else{
+
+            // Special fields
+            //if(  ){
+
+            //}
+
         }
         next($_POST);
     }
@@ -70,6 +77,8 @@
     );
 
     $form_JSON = json_encode($full_form);
+
+    print_r($form_JSON);
     
 
 /*$formularioDiligenciado = '
