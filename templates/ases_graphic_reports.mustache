@@ -31,11 +31,11 @@
         </div>
         <hr class="ases-col-sm-12 ases-col-lg-12" />   
     </div>    
-    <div class="card-group" id="accordion"> 
+    <div class="panel-group" id="accordion"> 
         {{#program_report_agr}}              
         <div class="card panel-default">
             <div class="card panel-default">
-                <div class="card-heading">
+                <div class="card-header">
                     <h4 class="card-title" id="list-students-programa-panel">
                         <a data-toggle="collapse" data-parent="accordion" href="#programa">Reporte de Programa</a>
                     </h4>                    
@@ -48,14 +48,14 @@
                             <hr class="ases-col-sm-12 ases-col-lg-12" />
                             <div class="ases-col-sm-12 ases-col-lg-12">
                                 <div class="ases-row">
-                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="ases-col-lg-12 ases-col-md-12 ases-col-sm-12 ases-col-xs-12">
                                         <div class="horizontal-bar-chart-container">
                                             <canvas id="grafica_programa" ></canvas>
                                         </div>
                                     </div>
                                 </div>
-                                <hr class="col-sm-12" />
-                                <div class="row div_btn_guardar">
+                                <hr class="ases-col-sm-12 ases-col-lg-12" />
+                                <div class="ases-row div_btn_guardar">
                                     <a id="download_programa" hidden>Guardar</a>
                                     <button id="save_btn_programa" class="button dt-button">Guardar Gráfico</button>
                                 </div>
@@ -67,10 +67,10 @@
         </div>        
         {{/program_report_agr}}
         {{#faculty_report_agr}}              
-        <div class="panel panel-default">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title" id="list-students-facultad-panel">
+        <div class="card panel-default">
+            <div class="card panel-default">
+                <div class="card-header">
+                    <h4 class="card-title" id="list-students-facultad-panel">
                         <a data-toggle="collapse" data-parent="accordion" href="#facultad">Reporte de Facultad</a>
                     </h4>                    
                     <div id="facultad" class="panel-collapse collapse">
@@ -99,10 +99,10 @@
         </div>        
         {{/faculty_report_agr}}
         {{#sex_report_agr}}              
-        <div class="panel panel-default">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title" id="list-students-sexo-panel">
+        <div class="card panel-default">
+            <div class="card panel-default">
+                <div class="card-header">
+                    <h4 class="card-title" id="list-students-sexo-panel">
                         <a data-toggle="collapse" data-parent="accordion" href="#sexo">Reporte de Estudiantes por Sexo</a>
                     </h4>                    
                     <div id="sexo" class="panel-collapse collapse">
@@ -131,14 +131,14 @@
         </div>        
         {{/sex_report_agr}}
         {{#age_report_agr}}              
-        <div class="panel panel-default">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title" id="list-students-edad-panel">
+        <div class="card panel-default">
+            <div class="card panel-default">
+                <div class="card-header">
+                    <h4 class="card-title" id="list-students-edad-panel">
                         <a data-toggle="collapse" data-parent="accordion" href="#edad">Reporte de Estudiantes por Edad</a>
                     </h4>                    
                     <div id="edad" class="panel-collapse collapse">
-                        <div class="panel-body">
+                        <div class="card-body">
                             <h2>Reporte de Estudiantes por Edad</h2>                                       
                             <hr class="col-sm-12" />
                             <div class="col-sm-12" id="div_table_edad">
@@ -163,10 +163,10 @@
         </div>        
         {{/age_report_agr}}
         {{#cond_excepcion_report_agr}}              
-        <div class="panel panel-default">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title" id="list-students-condExcepcion-panel">
+        <div class="card panel-default">
+            <div class="card panel-default">
+                <div class="card-header">
+                    <h4 class="card-title" id="list-students-condExcepcion-panel">
                         <a data-toggle="collapse" data-parent="accordion" href="#condExcepcion">Reporte de Condiciones de Excepción</a>
                     </h4>                    
                     <div id="condExcepcion" class="panel-collapse collapse">
@@ -195,14 +195,14 @@
         </div>        
         {{/cond_excepcion_report_agr}}
         {{#risks_report_agr}}              
-        <div class="panel panel-default">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title" id="list-students-riesgos-panel">
+        <div class="card panel-default">
+            <div class="card panel-default">
+                <div class="card-header">
+                    <h4 class="card-title" id="list-students-riesgos-panel">
                         <a data-toggle="collapse" data-parent="accordion" href="#riesgos">Reporte de Riesgos</a>
                     </h4>                    
                     <div id="riesgos" class="panel-collapse collapse">
-                        <div class="panel-body">
+                        <div class="card-body">
                             <h2>Reporte de Riesgos</h2>                                       
                             <hr class="col-sm-12" />
                             <div class="col-sm-12" id="div_table_riesgos">
