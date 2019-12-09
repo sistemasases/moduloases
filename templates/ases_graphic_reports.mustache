@@ -2,20 +2,20 @@
   <!-- Testing -->
   {{#data}}
   {{> block_ases/side_menu}}
-  <div class="container">
+  <div class="ases-container">
     {{{message}}}
     {{! <form role="form" id="form_general_report"> }}
-    <div class="row">
-        <div class="col-sm-8">
+    <div class="ases-row">
+        <div class="ases-col-sm-8 ases-col-lg-8">
             <h2>REPORTE GENERAL GRÁFICO DE ESTUDIANTES</h2>
             <h5 hidden>Por favor seleccione los campos a incluir en el reporte</h5>
         </div>
-        <div class="col-sm-4" id="div_cohorts">
+        <div class="ases-col-sm-4 ases-col-lg-4" id="div_cohorts">
             <label for="">Cohorte:  </label>
                 {{{cohorts_checks}}}
         </div>  
         <div class="top_options">
-            <div class="col-sm-12 col-md-12">
+            <div class="ases-col-sm-12 ases-col-md-12 ases-col-lg-12">
                 <fieldset id="status_fields">
                     <div class="checkbox">
                         <input type="checkbox" name="fields[]" value="ases_status" id="ases_status"> ASES                                
@@ -29,13 +29,13 @@
                 </fieldset>
             </div>
         </div>
-        <hr class="col-sm-12" />   
+        <hr class="ases-col-sm-12 ases-col-lg-12" />   
     </div>    
-    <div class="panel-group" id="accordion">
+    <div class="card-group" id="accordion"> 
         {{#program_report_agr}}              
-        <div class="panel panel-default">
-            <div class="panel panel-default">
-                <div class="panel-heading">
+        <div class="card panel-default">
+            <div class="card panel-default">
+                <div class="card-heading">
                     <h4 class="panel-title" id="list-students-programa-panel">
                         <a data-toggle="collapse" data-parent="accordion" href="#programa">Reporte de Programa</a>
                     </h4>                    
