@@ -108,7 +108,7 @@ function _dphpforms_generate_TEXTFIELD_LIST(&$dom, $id_formulario_pregunta, $con
 
     foreach ($elements as $key => $element) {
 
-        $inner_element_attr['name'] = $id_formulario_pregunta . "_" . $element->id;
+        $inner_element_attr['name'] = $id_formulario_pregunta . "_TEXTFIELD_LIST_" . $element->id;
 
         $dom_element_attr = new DOMAttributeList($inner_element_attr);
 
