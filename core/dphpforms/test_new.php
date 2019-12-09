@@ -53,6 +53,19 @@ $initial_config = '{
                     "c_acciones_monitor_apoyo_academico", 
                     "c_acciones_monitor_apoyo_reconocimiento_ciudad_universidad"
                 ]
+            },
+            {
+                "alias" : "list_abc_fixed",
+                "default_value" : [
+                    {
+                        "statement" : "9999999-9999 - Firstname Lastname",
+                        "value" : "9999999-9999"
+                    }, 
+                    {
+                        "statement" : "0000000-0000 - Firstname Lastname",
+                        "value" : "0000000-0000"
+                    }
+                ]
             }
         
     ],

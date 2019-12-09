@@ -811,6 +811,23 @@ if ($student_code != 0) {
             {
                 "alias" : "acciones",
                 "default_value" : ["c_acciones_monitor_apoyo_academico"]
+            },
+            {
+                "alias" : "list_abc_fixed",
+                "default_value" : [
+                    {
+                        "statement" : "9999999-9999 - Firstname Lastname",
+                        "value" : "9999999-9999",
+                        "pos" : "0",
+                        "id" : "element_1"
+                    }, 
+                    {
+                        "statement" : "0000000-0000 - Firstname Lastname",
+                        "value" : "0000000-0000",
+                        "pos" : "1",
+                        "id" : "element_2"
+                    }
+                ]
             }
         ],
         "aditional_buttons" : [

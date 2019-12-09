@@ -9,6 +9,9 @@
  */
 require_once( __DIR__ . "/../DOMTools.php");
 
+const DYNAMIC = "dynamic";
+const FIXED = "fixed";
+
 function _dphpforms_generate_TEXTFIELD_LIST(&$dom, $id_formulario_pregunta, $context, $statement, $prefix_uniqid) {
 
     $block_uuid = uniqid($prefix_uniqid, true);
@@ -32,11 +35,21 @@ function _dphpforms_generate_TEXTFIELD_LIST(&$dom, $id_formulario_pregunta, $con
 
     $elements = $context['options']->initial_list;
 
+    if(gettype($context['default_value']) === "array"){
+        $elements = $context['default_value'];
+    } 
+
+    // Sorting elements
+
     $elements_pos = array();
     foreach ($elements as $key => $_row) {
         $elements_pos[$key] = $_row->pos;
     }
     array_multisort($elements_pos, SORT_ASC, $elements);
+
+
+
+    // General container
 
     $div = _core_dphpforms_build_tag($dom, "div", $div_attr);
 
@@ -45,58 +58,83 @@ function _dphpforms_generate_TEXTFIELD_LIST(&$dom, $id_formulario_pregunta, $con
 
     $div->appendChild($statem);
 
+
+
+
+
     //Template
 
     $template = _core_dphpforms_build_tag($dom, "template", new DOMAttributeList());
 
-    $dom_element_attr = new DOMAttributeList($inner_element_attr);
-    $elem_container = _core_dphpforms_build_tag($dom, "div", new DOMAttributeList([
-        "class" => ["dphpf-list-element"]
-    ]));
+    if($context['options']->list_type === FIXED){
+        $DOMAttr_elem_container = new DOMAttributeList([
+            "class" => ["dphpf-list-element"],
+            "style" => "margin-top:10px;"
+        ]);
+    }elseif($context['options']->list_type === DYNAMIC){
+        $DOMAttr_elem_container = new DOMAttributeList([
+            "class" => ["dphpf-list-element"],
+            "style" => "margin-top:10px;"
+        ]);
+    }
 
-    $label = _core_dphpforms_build_tag($dom, "label", new DOMAttributeList());
-    $br = _core_dphpforms_build_tag($dom, "br", new DOMAttributeList());
+    $dom_element_attr = new DOMAttributeList($inner_element_attr);
+    $elem_container = _core_dphpforms_build_tag($dom, "div", $DOMAttr_elem_container);
+
+    if($context['options']->list_type === "fixed"){
+        $label = _core_dphpforms_build_tag($dom, "label", new DOMAttributeList());
+        $br = _core_dphpforms_build_tag($dom, "br", new DOMAttributeList());
+    }
     $textfield = _core_dphpforms_build_tag($dom, "input", $dom_element_attr);
 
-    $elem_container->appendChild($label);
-    $elem_container->appendChild($br);
+    if($context['options']->list_type === "fixed"){
+        $elem_container->appendChild($label);
+        $elem_container->appendChild($br);
+    }
     $elem_container->appendChild($textfield);
 
     $template->appendChild($elem_container);
 
     $div->appendChild($template);
 
-    //End template
     
+ 
+
+    // Elements
+
     $list_elements = _core_dphpforms_build_tag($dom, "div", new DOMAttributeList([
         "class" => ["dphpf-elements"]
     ]));
 
     foreach ($elements as $key => $element) {
 
-        $inner_element_attr['name'] = $id_formulario_pregunta . "_" . $element->id . "[]";
+        $inner_element_attr['name'] = $id_formulario_pregunta . "_" . $element->id;
 
         $dom_element_attr = new DOMAttributeList($inner_element_attr);
 
-        $elem_container = _core_dphpforms_build_tag($dom, "div", new DOMAttributeList([
-            "class" => ["dphpf-list-element"]
-        ]));
+        $elem_container = _core_dphpforms_build_tag($dom, "div", $DOMAttr_elem_container);
 
-        $label = _core_dphpforms_build_tag($dom, "label", new DOMAttributeList());
-        $label->nodeValue = $element->statement . ":";
-
-        $br = _core_dphpforms_build_tag($dom, "br", new DOMAttributeList());
+        if($context['options']->list_type === FIXED){
+            $label = _core_dphpforms_build_tag($dom, "label", new DOMAttributeList());
+            $label->nodeValue = $element->statement . ":";
+            $br = _core_dphpforms_build_tag($dom, "br", new DOMAttributeList());
+        }
 
         $textfield = _core_dphpforms_build_tag($dom, "input", $dom_element_attr);
 
-        $elem_container->appendChild($label);
-        $elem_container->appendChild($br);
+        if($context['options']->list_type === FIXED){
+            $elem_container->appendChild($label);
+            $elem_container->appendChild($br);
+        }
         $elem_container->appendChild($textfield);
 
         $list_elements->appendChild($elem_container);
     }
 
     $div->appendChild($list_elements);
+
+
+    // Dynamic button
 
     if ($context['options']->list_type === "dynamic") {
         $add_element = _core_dphpforms_build_tag($dom, "input", new DOMAttributeList([
