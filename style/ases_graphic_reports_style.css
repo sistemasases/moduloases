@@ -15,10 +15,6 @@
     text-align: center;
 }
 
-.ases-col-sm-8 h2{
-    text-align: left;
-    font-weight: normal;
-    font-size: 30px;
-    padding-left: 4%;
-    padding-top: 0.5%;
+.card-title a{
+    font-size: 0.75em
 }
