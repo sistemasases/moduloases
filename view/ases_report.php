@@ -91,6 +91,10 @@ $contextblock =  context_block::instance($blockid);
 
 $url = new moodle_url("/blocks/ases/view/ases_report.php",array('courseid' => $courseid, 'instanceid' => $blockid));
 
+$link = new moodle_url("/blocks/ases/view/ases_graphic_reports.php", array('courseid' => $courseid,'instanceid' => $blockid));
+$url_graphic_reports[] = ['url' => $link->out(false), 'texto' => "Reportes Graficos"];
+
+
 // ---------------------------------------------
 // Carga por defecto de estudiantes relacionados
 // ---------------------------------------------
@@ -105,6 +109,11 @@ $data->summary_spp_cohorts = get_summary_group_cohorts('SPP', $blockid);
 $data->summary_spe_cohorts = get_summary_group_cohorts('SPE', $blockid);
 $data->summary_oa_cohorts = get_summary_group_cohorts('Otros', $blockid);
 $data->summary_3740_cohorts = get_summary_group_cohorts('3740', $blockid);
+
+// Carga link boton reportes graficos
+
+$data->url_graphic = $url_graphic_reports;
+
 
 // Navigation setup
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
