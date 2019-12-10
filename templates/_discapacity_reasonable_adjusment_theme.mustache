@@ -1,0 +1,120 @@
+ <div class="reasonable_adjustments row">
+
+        <div class="row">
+                <h3 class="h-sections-general-tab" style="margin-top: 10px;" >Registro de ajustes razonables
+                </h3>
+                <hr class="hr-general-tab-fields" />
+        </div>
+
+    <div class="row">
+        <div class="col-lg-12" >
+            <div class="university_activity" >
+                    <h3 class="h-sections-general-tab h_others">Tipo de actividad</h3>
+                    <select name="cars" class="custom-select">
+                        <option selected="true" disabled="true" >Seleccione una actividad universitaria</option>
+                        <option value="1">Actividades de aprendizaje y aplicación del conocimiento</option>
+                        <option value="2">Actividades relacionadas con tareas y demandas generales</option>
+                        <option value="3">Actividades de comunicación</option>
+                        <option value="4">Actividades de movilidad</option>
+                        <option value="5">Actividades de autocuidado</option>
+                        <option value="6">Actividades de interacciones y relaciones interpersonales</option>
+                        <option value="7">Actividades relacionadas con la vida comunitaria, social y cívica</option>
+                        <option value="8">Otras</option>
+                    </select>
+            </div>
+        </div>
+    </div>
+
+        <div class = "row">
+            <div class="col-lg-6">
+                <div class="adjustment_type">
+                    <h3 class="h-sections-general-tab h_others">Tipo de ajuste</h3>
+                    <select name="cars" class="custom-select">
+                        <option selected="true" disabled="true">Seleccione un tipo de ajuste</option>
+                        <option value="1">Personal</option>
+                        <option value="2">Mediaciones discursivas en el ámbito pedagógico</option>
+                        <option value="3">Productos y tecnología</option>
+                        <option value="4">Entorno socieducativo</option>
+                        <option value="5">Entorno físico-arquitectónico</option>
+                        <option value="6">Actividad/situación de aprendizaje</option>
+                        <option value="7">Servicio y comunidad</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="adjustment_intensity">
+                    <h3 class="h-sections-general-tab h_others">Intensidad de ajuste</h3>
+                    <select name="cars" class="custom-select">
+                        <option selected="true" disabled="true">Seleccione la intensidad del ajuste</option>
+                        <option value="1">Intermitente</option>
+                        <option value="2">Limitado</option>
+                        <option value="3">Extenso</option>
+                        <option value="4">Generalizado</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="adjustment_objetive">
+                <h3 class="h-sections-general-tab h_others">Objetivo de ajuste</h3>
+                <input type="text" class="form-control" placeholder="Objetivo" />
+            </div>
+        </div>
+    </div>
+
+        <div class = "row">
+            <div class="col-lg-6">
+                <div class="adjustment_description">
+                    <h3 class="h-sections-general-tab h_others">Descripción de ajuste</h3>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="adjustment_justification">
+                    <h3 class="h-sections-general-tab h_others">Justificación de ajuste</h3>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                </div>
+            </div>
+        </div>
+
+         <div class="row">
+                <div class="col-lg-12">
+
+                        <div class=" row " name="div_add_action_to_discapacity_tracking" id="div_add_action_to_discapacity_tracking" style="float: right;">
+                            <input class="btn btn-block" type="button" id="bt_add_action_to_discapacity_tracking" name="bt_add_action_to_discapacity_tracking" title="Agregar acción realizada" />
+                        </div>
+
+                    <h3 class="h-sections-general-tab h_others">Resalte aspectos que favorecieron al seguimiento del ajuste razonable.
+                    </h3>
+
+                    <hr class="hr-general-tab-fields" />
+
+                    <div class="">
+
+                        <table class="table table_aspectos_instituciones" id="table_actions_to_discapacity_tracking" name="table_actions_to_discapacity_tracking">
+                            <thead>
+                            <tr>
+                                <th>Indicador de logro</th>
+                                <th>Acción realizada</th>
+                                <th>Estado de acción</th>
+                                <th id="edit_action"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <button type="button" id="insert_record_reasonable_adjusment" class="btn btn-primary btn-block">Guardar nuevo ajuste razonable</button> 
+                </div>
+            </div>
+
+    </div>

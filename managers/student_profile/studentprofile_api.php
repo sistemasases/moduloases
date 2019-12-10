@@ -65,6 +65,9 @@ if(isset($input->function) && isset($input->params)) {
                     case 'others':
                         $result = student_profile_load_tracing_others_tab($id_ases);
                         break;
+                    case 'discapacity_tracking':
+                        $result = student_profile_load_discapacity_tracking_tab($id_ases);
+                        break;
                     default:
                         return_with_code(-3);
                         break;

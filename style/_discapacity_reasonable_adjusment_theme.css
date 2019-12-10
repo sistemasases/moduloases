@@ -1,0 +1,40 @@
+.reasonable_adjustments{
+    padding: 15px 50px 15px 50px;
+}
+
+#bt_add_action_to_discapacity_tracking{
+    background: url("images/cancel.png") no-repeat;
+    background-size: auto;
+    background-size: 20px 20px;
+    height: 30px;
+    width: 30px;
+    transform: rotate(45deg);
+    margin-left: 0px;
+    margin-top: 15px;
+}
+
+#bt_delete_action{
+    background: url("images/cancel.png") no-repeat;
+    background-size: auto;
+    background-size: 15px 15px;
+    height: 15px;
+    width: 15px;
+    position: relative;
+    cursor: pointer;
+}
+
+#table_actions_to_discapacity_tracking input{
+    height: 30px !important;
+}
+
+#table_actions_to_discapacity_tracking select{
+    width: 100% !important;
+}
+
+#table_actions_to_discapacity_tracking td {
+    width: 300px;
+}
+
+.adjustment_objetive input {
+    height: 30px !important;
+}
