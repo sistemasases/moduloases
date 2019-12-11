@@ -63,8 +63,12 @@ define([
 
                 //Insert new record of reasonable adjusment
                 $(document).on('click', '#insert_record_reasonable_adjusment', function () {
+                    
+                    loading_indicator.show();
+                    //Function to get record
+                    //Function to validate record
                     //Function to insert record
-                    inser_record_reasonable_adjusment();
+                    insert_record_reasonable_adjusment();
                 });
                 
     
@@ -91,16 +95,50 @@ define([
 
         
              /**
-            * Function: inser_record_reasonable_adjusment()
+            * Function: insert_record_reasonable_adjusment()
             * Params: undefined
             * Result: String
             */
-           function inser_record_reasonable_adjusment() {
-            swal(
-                "Éxito",
-                "Se ha registrado ajuste razonable correctamente.",
-                "success"
-            );
+           function insert_record_reasonable_adjusment() {
+
+            //loading_indicator.show();
+
+            $.ajax({
+                url: '../managers/student_profile/reasonable_adjusment_api.php',
+                data: JSON.stringify({
+                    "function": 'insert_reasonable_adjusment',
+                    "params": [id_ases, record_object]
+                }),
+                cache: false,
+                contentType: false,
+                processData: false,
+                method: 'POST',
+                type: 'POST', 
+                success: function (msg) {
+                    loading_indicator.hide();
+                    if(msg.status_code == 0) {
+                        loading_indicator.hide();
+                        swal(
+                            "Éxito",
+                            msg.message,
+                            "success"
+                        );
+                    }else {
+                        loading_indicator.hide();
+                        console.log(msg);
+                    }
+                   
+                },
+                error: function (msg) {
+                    loading_indicator.hide();
+                    swal(
+                        "Error",
+                        msg.message,
+                        "error"
+                    );
+                }
+            });
+            
         }
 
             /**

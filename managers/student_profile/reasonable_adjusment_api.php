@@ -38,7 +38,7 @@ if(isset($input->function) && isset($input->params)) {
     $function = $input->function;
 
     //Loads tabs of student profile
-    if($function == 'load_discapacity_reasonable_adjusment_theme') {
+    if($function == 'insert_reasonable_adjusment') {
 
         /**
          * [0] => id_ases: string
@@ -48,17 +48,17 @@ if(isset($input->function) && isset($input->params)) {
         if(count($params) == 2) {
 
             $id_ases = $params[0];
-            $tab_name = $params[1];
+            $record = $params[1];
 
-            if(is_string($id_ases) && is_string($tab_name)) {
+            if(is_string($id_ases) && is_string($record)) {
 
-                $result = load_discapacity_reasonable_adjusment_theme($id_ases);
+                $result = insert_reasonable_adjusment_theme($id_ases, $record);
 
                 if($result != null){
                     echo json_encode(
                         array(
                             "status_code" => 0,
-                            "message" => $tab_name." information",
+                            "message" => "Formulario almacenado de manera exitosa",
                             "data_response" => $result
                         )
                     );
