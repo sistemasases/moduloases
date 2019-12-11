@@ -27,12 +27,13 @@ require_once(dirname(__FILE__). '/../../../../config.php');
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
 
 /**
- * @see student_profile_load_discapacity_tracking_tab($id_ases)
+ * @see insert_reasonable_adjusment($id_ases)
  * @desc Gets all the discapacity tracking information of an student
  * @param $id_ases string -> ASES student id
+ * @param $record string -> ASES student id
  * @return Object
  */
-function load_discapacity_reasonable_adjusment_theme($id_ases){
+function insert_reasonable_adjusment($id_ase, $record){
 
     $record = new stdClass();
     return $record;

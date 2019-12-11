@@ -52,7 +52,8 @@ if(isset($input->function) && isset($input->params)) {
 
             if(is_string($id_ases) && is_string($record)) {
 
-                $result = insert_reasonable_adjusment_theme($id_ases, $record);
+                $validate = validate_reasonable_adjusment($record);
+                $result = insert_reasonable_adjusment($id_ases, $record);
 
                 if($result != null){
                     echo json_encode(
