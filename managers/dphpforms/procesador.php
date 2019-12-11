@@ -32,6 +32,8 @@
 
     global $DB;
     global $USER;
+    
+    header('Content-Type: application/json');
 
     $RECORD_ID = null;
 
@@ -44,15 +46,25 @@
         //'id_monitor' => $_POST['id_monitor'],
         //'id_estudiante' => $_POST['id_estudiante']
     );
+    
+    $last_special_field = "";
+    $first_special_field = true;
 
-    $respuestas = array();
+    $special_response = array(
+        'id' => null,
+        'valor' => []
+    );
+    
+    $respuestas = [];
 
     foreach ($_POST as $key => $value) {
+        
+        $elemento = $value;
+        if(is_array($value)){
+           $elemento = json_encode($elemento);
+        }
+        
         if(is_numeric($key)){
-            $elemento = $value;
-            if(is_array($value)){
-                $elemento = json_encode($elemento);
-            }
 
             $respuesta = array(
                 'id' => (string) $key,
@@ -62,12 +74,34 @@
         }else{
 
             // Special fields
-            if( strpos($key, 'TEXTFIELD_LIST') !== false ){
-
+            if( strpos($key, '_TEXTFIELD_LIST_') !== false ){
+                                
+                $parts = explode("_TEXTFIELD_LIST_", $key);
+                $id = $parts[0];
+                $value_id = $parts[1];
+                if( $last_special_field === $id ){
+                    $special_response['valor'][$value_id] = (string) $elemento;
+                }else{
+                    if( !$first_special_field ){
+                        array_push($respuestas, $special_response);
+                    }
+                    
+                    $last_special_field = $id;
+                    $special_response['id'] = $id;
+                    $special_response['valor'] = [];
+                    $special_response['valor'][$value_id] = (string) $elemento;
+                    
+                    $first_special_field= false;
+                }
+                                
             }
 
         }
         next($_POST);
+    }
+    
+    if( !$first_special_field ){
+        array_push($respuestas, $special_response);
     }
     
 
@@ -78,7 +112,7 @@
 
     $form_JSON = json_encode($full_form);
 
-    print_r($form_JSON);
+    print_r($form_JSON); die();
     
 
 /*$formularioDiligenciado = '
