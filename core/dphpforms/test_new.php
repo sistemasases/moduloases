@@ -59,13 +59,25 @@ $initial_config = '{
                 "default_value" : [
                     {
                         "statement" : "9999999-9999 - Firstname Lastname",
-                        "value" : "9999999-9999"
+                        "value" : "9999999-9999",
+                        "id" : "first_element",
+                        "pos" : 0
                     }, 
                     {
                         "statement" : "0000000-0000 - Firstname Lastname",
-                        "value" : "0000000-0000"
+                        "value" : "0000000-0000",
+                        "id" : "second_element",
+                        "pos" : 1
                     }
                 ]
+            },
+            {
+                "alias" : "id_creado_por",
+                "default_value" : 999
+            },
+            {
+                "alias" : "id_estudiante",
+                "default_value" : 999
             }
         
     ],
