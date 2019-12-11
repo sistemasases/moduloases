@@ -75,7 +75,8 @@ $initial_config = '{
             "text" : "Extra Button",
             "classes" : ["e-class", "e-class-2"]
         }
-    ]
+    ],
+    "action" : "http://192.168.1.100/moodle366/blocks/ases/managers/dphpforms/procesador.php"
 }';
 
 $initial_config = json_decode( $initial_config );

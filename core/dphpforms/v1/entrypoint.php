@@ -583,7 +583,7 @@ function _dphpforms_generate_html_recorder( $id_form, $rol_, $initial_config = n
 
     $form_name_formatted = $form_info->alias . "_" . $form_info->id;
     
-    $register_button = '<button data-form-id="'.$form_name_formatted.'" type="submit" class="btn-dphpforms btn-dphpforms-sendform">Registrar</button>';
+    //$register_button = '<button data-form-id="'.$form_name_formatted.'" type="submit" class="btn-dphpforms btn-dphpforms-sendform">Registrar</button>';
     $register_button = _core_dphpforms_build_tag( $dom, "button", new DOMAttributeList([
         "data-form-id" => $form_name_formatted,
         'type' => "submit",
@@ -594,7 +594,11 @@ function _dphpforms_generate_html_recorder( $id_form, $rol_, $initial_config = n
     ]) );
     $register_button->nodeValue = "Registrar";
     
-    $form_action = $form_info->action;
+    $form_action = $form_info->action; 
+    
+    if( property_exists($initial_config, 'action') ){
+        $form_action = $initial_config->action;
+    }
     
     if( $initial_config ){
         if( property_exists($initial_config, 'allow_register') ){

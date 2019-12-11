@@ -62,9 +62,9 @@
         }else{
 
             // Special fields
-            //if(  ){
+            if( strpos($key, 'TEXTFIELD_LIST') !== false ){
 
-            //}
+            }
 
         }
         next($_POST);
