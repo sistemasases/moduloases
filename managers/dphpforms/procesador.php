@@ -80,16 +80,17 @@
                 $id = $parts[0];
                 $value_id = $parts[1];
                 if( $last_special_field === $id ){
-                    $special_response['valor'][$value_id] = (string) $elemento;
+                    array_push($special_response['valor'], [ $value_id => (string) $elemento ]);
                 }else{
                     if( !$first_special_field ){
+                        $special_response['valor'] = json_encode( $special_response['valor']);
                         array_push($respuestas, $special_response);
                     }
                     
                     $last_special_field = $id;
                     $special_response['id'] = $id;
                     $special_response['valor'] = [];
-                    $special_response['valor'][$value_id] = (string) $elemento;
+                    array_push($special_response['valor'], [ $value_id => (string) $elemento ]);
                     
                     $first_special_field= false;
                 }
@@ -101,6 +102,7 @@
     }
     
     if( !$first_special_field ){
+        $special_response['valor'] = json_encode( $special_response['valor']);
         array_push($respuestas, $special_response);
     }
     
@@ -110,12 +112,15 @@
         'respuestas' => $respuestas
     );
 
-    $form_JSON = json_encode($full_form);
+    $form_JSON = json_encode($full_form);    
+    print_r($form_JSON);die();
 
-    print_r($form_JSON); die();
     
+/*
 
-/*$formularioDiligenciado = '
+ Ejemplo:
+ 
+ $formularioDiligenciado = '
 
 {
     "formulario":{
@@ -127,6 +132,13 @@
         {
             "id":139,
             "valor":"xyz"
+        },
+        {
+            "id":30,
+            "valor" : [
+                "first_val" : "abc",
+                "secod_val" : "def"
+            ]
         }
     ]
 }
