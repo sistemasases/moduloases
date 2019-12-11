@@ -806,7 +806,7 @@ if ($student_code != 0) {
             },
             {
                 "alias" : "fecha",
-                "default_value" : "2019-11-20"
+                "default_value" : "2019-12-11"
             },
             {
                 "alias" : "acciones",
@@ -839,8 +839,7 @@ if ($student_code != 0) {
         ]
     }';
 
-    $initial_config = json_decode( $initial_config );
-    $record->form_seguimientos = _dphpforms_generate_html_recorder('seguimiento_pares', $rol, $initial_config);
+    $record->form_seguimientos = _dphpforms_generate_html_recorder('seguimiento_pares', $rol, json_decode( $initial_config ));
     $record->form_inasistencia = dphpforms_render_recorder('inasistencia', $rol);
 
     if ($record->form_seguimientos == '') {
