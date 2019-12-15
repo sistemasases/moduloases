@@ -88,7 +88,7 @@ $initial_config = '{
             "classes" : ["e-class", "e-class-2"]
         }
     ],
-    "action" : "http://10.162.13.251/moodle35/blocks/ases/managers/dphpforms/procesador.php"
+    "action" : "http://192.168.1.100/moodle366/blocks/ases/managers/dphpforms/procesador.php"
 }';
 
 $initial_config = json_decode( $initial_config );
