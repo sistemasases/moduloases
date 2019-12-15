@@ -143,11 +143,11 @@ echo json_encode( _dphpforms_find_records( $xQuery ) );*/
 
             }
     
-        };
+        }
 
         $sql_query = $inner_join_values . " " . $where_clause;
 
-     };
+     }
 
      //Grouping
      $records =  $DB->get_records_sql( $sql_query );
@@ -158,7 +158,7 @@ echo json_encode( _dphpforms_find_records( $xQuery ) );*/
         $grouped_records[ $record->id_formulario_respuestas ][ "fecha_hora_registro" ] = strtotime($record->fecha_hora_registro);
         $grouped_records[ $record->id_formulario_respuestas ][ "id_registro" ] = $record->id_formulario_respuestas;
         $grouped_records[ $record->id_formulario_respuestas ][ $list_fields_id_alias[ $record->id_pregunta ] ] = $record->respuesta;
-     };
+     }
 
      $records_ids = array_values(array_unique( $records_ids ));
 
@@ -180,7 +180,7 @@ echo json_encode( _dphpforms_find_records( $xQuery ) );*/
             if( !$exist_in_grouped_record && !$optional ){
                 $record_completed = false;
             }
-         };
+         }
          if($record_completed){
              //array_push($valid_records,$record_id);
              array_push($valid_records,$grouped_records[$record_id]);
