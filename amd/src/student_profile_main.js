@@ -23,6 +23,18 @@ define(['jquery',
     'block_ases/geographic_main',
     'block_ases/discapacity_tracking_main'], function ($, bootstrap, d3, sweetalert, jqueryui, select2, Chart, mustache, loading_indicator, academic, socioed, geographic, discapacity_tracking) {
 
+
+    /** each property of the following object is a tab in the student profile view */
+    const TABS = ['socioed', 'academic', 'geographic', 'discapacity_tracking'];
+
+    /**
+     * status of properties
+     * 0 := Not loaded
+     * 1 := Loading
+     * 2 := Loaded
+     */
+    var tabs_status = {'socioed': 0, 'academic': 0, 'geographic': 0, 'discapacity_tracking': 0};
+
     return {
         init: function (data_init) {
 
@@ -42,27 +54,25 @@ define(['jquery',
                 document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=driving'></iframe>";
             }
 
-
-
             /**
              * Event that loads asynchronously the socio-educational tab
              */
-            $("#socioed_li").one('click', {tab_name: 'socioed'}, load_tabs);
+            $("#socioed_li").one('click', {tab_name: 'socioed'}, load_tab);
 
             /**
              * Event that loads asynchronously the academic tab
              */
-            $("#academic_li").one('click', {tab_name: 'academic'}, load_tabs);
+            $("#academic_li").one('click', {tab_name: 'academic'}, load_tab);
 
             /**
              * Event that loads asynchronously the geographic tab
              */
-            $("#geographic_li").one('click', {tab_name: 'geographic'}, load_tabs);
+            $("#geographic_li").one('click', {tab_name: 'geographic'}, load_tab);
 
             /**
              * Event that loads asynchronously the discapacity_tracking tab
              */
-            $("#discapacity_tracking_li").one('click', {tab_name: 'discapacity_tracking'}, load_tabs);
+            $("#discapacity_tracking_li").one('click', {tab_name: 'discapacity_tracking'}, load_tab);
 
             /**
              * Event that moves the Google Maps map from
@@ -1051,17 +1061,36 @@ define(['jquery',
         }
     };
 
+    function load_tabs() {
+        for(const tab_name of TABS) {
+            var tab_status = tabs_status[tab_name];
+            if(tab_status == 2 || tab_status == 1) {
+                return;
+            } else {
+                tabs_status[tab_name] = 1;
+            }
+            load_tab(tab_name, false);
+        }
+    }
+
     /**
      * @author Jorge Eduardo Mayor <mayor.jorge@correounivale.edu.co>
-     * @see load_tabs()
+     * @see load_tab()
      * @desc Loads the specified tab on the student profile.
      */
-    function load_tabs(event) {
+    function load_tab(event, tab_clicked = true) {
 
-        loading_indicator.show();
-
-        var id_ases = $('#id_ases').val();
         var tab_name = event.data.tab_name;
+        if(tabs_loaded[tab_name]) {
+            return;
+        } else {
+            tabs_loaded[tab_name] = true;
+        }
+
+        if(tab_clicked)
+        loading_indicator.show();
+        var id_ases = $('#id_ases').val();
+
         var id_instance = document.querySelector('#dphpforms_block_instance').dataset.info;
 
         $(".active").removeClass("active");
