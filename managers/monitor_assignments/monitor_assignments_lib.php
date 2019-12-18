@@ -100,7 +100,12 @@ function monitor_assignments_get_monitors_by_instance( $instance_id ){
             SELECT user_0.id, user_0.fullname, user_0.cod_programa, programa_0.nombre AS nombre_programa, programa_0.id_facultad, user_0.username
             FROM {talentospilos_programa} AS programa_0
             INNER JOIN (
-                    SELECT CONCAT(moodle_user.firstname, CONCAT(' ', moodle_user.lastname)) AS fullname, moodle_user.id, moodle_user.username, cast(nullif(split_part(moodle_user.username, '-', 2), '') AS INTEGER) AS cod_programa
+                    SELECT 
+                        CONCAT(moodle_user.firstname, CONCAT(' ', moodle_user.lastname)) AS fullname, moodle_user.id, moodle_user.username, 
+			CASE COALESCE(nullif(split_part(moodle_user.username, '-', 2), ''), 'is_null')  
+                            WHEN 'is_null' THEN 1008
+			    ELSE cast(nullif(split_part(moodle_user.username, '-', 2), '') AS INTEGER)
+			END AS cod_programa
                     FROM {talentospilos_user_rol} AS user_rol
                     INNER JOIN {user} AS moodle_user ON moodle_user.id = user_rol.id_usuario
                     WHERE id_rol = (
