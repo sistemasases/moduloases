@@ -42,6 +42,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
 
 
 
+
             $(document).on('blur', '.text', function () {
                 if (validateNota($(this))) {
                     var id = $(this).attr('id').split("_");
@@ -131,7 +132,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
 
 
             $(document).on('click', '.reload', function () {
-
                 location.reload();
             });
 
@@ -205,12 +205,14 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 $("#user-grades a").removeAttr("href");
 
                 $('.cat').each(function () {
+                    $(this).css('background-color', 'rgb(225, 228, 254)');
                     var input = $(this).children().next('.text');
                     input.attr('disabled', true);
                     input.css('font-weight', 'bold');
                 });
 
                 $('.course').each(function () {
+                    $(this).css('background-color', 'rgb(225, 228, 254)');
                     var input = $(this).children().next('.text');
                     input.attr('disabled', true);
                     input.css('font-weight', 'bold');
@@ -295,6 +297,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                     }
                 }
             }
+
         }
     };
 });
