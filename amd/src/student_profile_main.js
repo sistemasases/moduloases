@@ -319,7 +319,7 @@ define(['jquery',
                 $('#modal_riesgos').fadeOut(200);
             });
 
-            //load_tabs();
+            load_tabs();
 
         }, equalize: function () {
             $(document).ready(function () {
@@ -1067,11 +1067,11 @@ define(['jquery',
      * @see load_tab()
      * @desc Loads the specified tab on the student profile.
      * @param event object --> Contains the data of the event
-     * @param tab_clicked boolean --> Check if the tab button was clicked
      */
-    function load_tab(event, tab_clicked = false) {
+    function load_tab(event) {
 
         var tab_name = event.data.tab_name;
+
         if(tabs_status[tab_name]) {
             return;
         } else {
@@ -1079,11 +1079,6 @@ define(['jquery',
         }
 
         append_tab_loading_indicator(tab_name);
-
-        if(tab_clicked) {
-            $(".active").removeClass("active");
-            $("#"+tab_name+"_li").addClass("active");
-        }
 
         var id_ases = $('#id_ases').val();
         var id_instance = document.querySelector('#dphpforms_block_instance').dataset.info;
@@ -1126,10 +1121,6 @@ define(['jquery',
                                     discapacity_tracking.init();
                                     break;
                             }
-
-                            if(tab_clicked) {
-                                $(tab_id).addClass("active");
-                            }
                         },
                         error: function(){
                             loading_indicator.hide();
@@ -1169,12 +1160,10 @@ define(['jquery',
     function load_tabs() {
         for(const tab_name of TABS) {
             var tab_status = tabs_status[tab_name];
-            if(tab_status) {
-                return;
-            } else {
+            if(!tab_status) {
+                load_tab({data: {tab_name: tab_name}});
                 tabs_status[tab_name] = true;
             }
-            load_tab(tab_name, false);
         }
     }
 
