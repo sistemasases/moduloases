@@ -1,36 +1,34 @@
-<div class="tab-pane" id="academic_tab">
-    <div class="accordion" role="tablist" aria-multiselectable="true">
-        <div class="row" style="padding: 0px 10px 15px ">
-            <div class="col-md-3">Promedio Ponderado:
-                <p class="prom" style="display: inline">
-                    <b>{{promedio}}</b>
-                </p>
-            </div>
-            <div class="col-md-3">Estimulos academicos:
-                <p class="est" style="display: inline">
-                    <b>{{estimulos}}</b>
-                </p>
-            </div>
-            <div class="col-md-3">Bajos rendimientos:
-                <p class="baj" style="display: inline">
-                    <b>{{bajos}}</b>
-                </p>
-            </div>
+<div class="accordion" role="tablist" aria-multiselectable="true">
+    <div class="row" style="padding: 0px 10px 15px ">
+        <div class="col-md-3">Promedio Ponderado:
+            <p class="prom" style="display: inline">
+                <b>{{promedio}}</b>
+            </p>
         </div>
-        <div class="panel panel-default" id="panelActual">
-            <div class="academic panel-heading" role="tab" id="headingOne">
-                <h4 class="panel-title">
-                    <a id="sem_act_title" class="" data-toggle="collapse" data-parent="#accordion" href="#collapseAct" aria-expanded="true" aria-controls="collapseAct">
-                        Semestre Actual
-                    </a>
-                </h4>
-            </div>
-            <div id="collapseAct" class="panel-collapse form-pilos in" role="tabpanel" aria-labelledby="headingOne">
-                <div class="panel-group" id="accordion_academic">
-                    {{{academic_semester_act}}}
-                </div>
-            </div>
+        <div class="col-md-3">Estimulos academicos:
+            <p class="est" style="display: inline">
+                <b>{{estimulos}}</b>
+            </p>
         </div>
-        {{{historic_academic}}}
+        <div class="col-md-3">Bajos rendimientos:
+            <p class="baj" style="display: inline">
+                <b>{{bajos}}</b>
+            </p>
+        </div>
     </div>
+    <div class="panel panel-default" id="panelActual">
+        <div class="academic panel-heading" role="tab" id="headingOne">
+            <h4 class="panel-title">
+                <a id="sem_act_title" class="" data-toggle="collapse" data-parent="#accordion" href="#collapseAct" aria-expanded="true" aria-controls="collapseAct">
+                    Semestre Actual
+                </a>
+            </h4>
+        </div>
+        <div id="collapseAct" class="panel-collapse form-pilos in" role="tabpanel" aria-labelledby="headingOne">
+            <div class="panel-group" id="accordion_academic">
+                {{{academic_semester_act}}}
+            </div>
+        </div>
+    </div>
+    {{{historic_academic}}}
 </div>
