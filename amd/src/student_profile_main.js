@@ -29,11 +29,10 @@ define(['jquery',
 
     /**
      * status of properties
-     * 0 := Not loaded
-     * 1 := Loading
-     * 2 := Loaded
+     * false := Not loaded
+     * true := Loaded
      */
-    var tabs_status = {'socioed': 0, 'academic': 0, 'geographic': 0, 'discapacity_tracking': 0};
+    var tabs_status = {'socioed': false, 'academic': false, 'geographic': false, 'discapacity_tracking': false};
 
     return {
         init: function (data_init) {
@@ -319,6 +318,8 @@ define(['jquery',
             $('#mymodal-riesgo-close').click(function () {
                 $('#modal_riesgos').fadeOut(200);
             });
+
+            //load_tabs();
 
         }, equalize: function () {
             $(document).ready(function () {
@@ -1061,40 +1062,31 @@ define(['jquery',
         }
     };
 
-    function load_tabs() {
-        for(const tab_name of TABS) {
-            var tab_status = tabs_status[tab_name];
-            if(tab_status == 2 || tab_status == 1) {
-                return;
-            } else {
-                tabs_status[tab_name] = 1;
-            }
-            load_tab(tab_name, false);
-        }
-    }
-
     /**
      * @author Jorge Eduardo Mayor <mayor.jorge@correounivale.edu.co>
      * @see load_tab()
      * @desc Loads the specified tab on the student profile.
+     * @param event object --> Contains the data of the event
+     * @param tab_clicked boolean --> Check if the tab button was clicked
      */
-    function load_tab(event, tab_clicked = true) {
+    function load_tab(event, tab_clicked = false) {
 
         var tab_name = event.data.tab_name;
-        if(tabs_loaded[tab_name]) {
+        if(tabs_status[tab_name]) {
             return;
         } else {
-            tabs_loaded[tab_name] = true;
+            tabs_status[tab_name] = true;
         }
 
-        if(tab_clicked)
-        loading_indicator.show();
+        append_tab_loading_indicator(tab_name);
+
+        if(tab_clicked) {
+            $(".active").removeClass("active");
+            $("#"+tab_name+"_li").addClass("active");
+        }
+
         var id_ases = $('#id_ases').val();
-
         var id_instance = document.querySelector('#dphpforms_block_instance').dataset.info;
-
-        $(".active").removeClass("active");
-        $("#"+tab_name+"_li").addClass("active");
 
         $.ajax({
             type: "POST",
@@ -1111,10 +1103,12 @@ define(['jquery',
                         dataType: "text",
                         async: false,
                         success: function( template ){
-                            loading_indicator.hide();
-                            let tab_to_load = $(mustache.render( template, msg.data_response ));
-                            $(".tab-content").append( tab_to_load );
 
+                            let tab_to_load = $(mustache.render( template, msg.data_response ));
+                            var tab_id = "#" + tab_name + "_tab";
+                            //$(tab_id).empty();
+                            $(tab_id).append(tab_to_load);
+                            //document.getElementById(tab_id).innerHTML = tab_to_load;
                             switch(tab_name){
                                 case 'socioed':
                                     socioed.init();
@@ -1133,7 +1127,9 @@ define(['jquery',
                                     break;
                             }
 
-                            $("#"+tab_name+"_tab").addClass("active");
+                            if(tab_clicked) {
+                                $(tab_id).addClass("active");
+                            }
                         },
                         error: function(){
                             loading_indicator.hide();
@@ -1155,10 +1151,38 @@ define(['jquery',
     }
 
     /**
-     * @author Jorge Eduardo Mayor
-     * @see load_risk_info()
+     * @author Jorge Eduardo Mayor <mayor.jorge@correounivale.edu.co>
+     * @desc Appends a loading indicator in a specified tab
+     * @param tab_name string --> the name of the tab
+     */
+    function append_tab_loading_indicator(tab_name) {
+        //TODO
+    }
+
+    /**
+     * @author Jorge Eduardo Mayor <mayor.jorge@correounivale.edu.co>
+     * @desc Load all the tabs that have not been loaded.
+     *
+     * TODO: Filter the priority of the tab to load, counting
+     * how many times the tab is loaded.
+     */
+    function load_tabs() {
+        for(const tab_name of TABS) {
+            var tab_status = tabs_status[tab_name];
+            if(tab_status) {
+                return;
+            } else {
+                tabs_status[tab_name] = true;
+            }
+            load_tab(tab_name, false);
+        }
+    }
+
+    /**
+     * @author Jorge Eduardo Mayor <mayor.jorge@correounivale.edu.co>
+     * @see procesar_datos_riesgo(), graficar()
      * @desc Gets the necessary information to load
-     * the risk graphic
+     * the risk graphic.
      */
     function load_risk_info(){
 
