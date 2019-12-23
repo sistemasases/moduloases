@@ -35,7 +35,7 @@ define([
     let general_call = (
             manager_name, function_name, parameters = [], 
             method = "POST", async_call = true, use_loading_indicator = false, 
-            ok_callback, error_callback
+            ok_callback, error_callback, manager_version = 1
     ) => {
         
         method = method.toUpperCase();                                          // Normalization of method name.
@@ -52,7 +52,9 @@ define([
                 
         $.ajax({                                                                // jQuery AJAX request.
             type: method,
-            url: `${MANAGER_DIR_BASE}/${manager_name}/${manager_name}_api.php`, // Manager API location.
+            url: `${MANAGER_DIR_BASE}/${manager_name}${ 
+                    (manager_version === 1 ? "" : "/v" + manager_version ) 
+                  }/${manager_name}_api.php`,                                   // Manager API location.
             data: JSON.stringify(
                 { 
                     function: function_name,                                    // Function name to call in API.
@@ -101,21 +103,21 @@ define([
     
     let get = (
             manager_name, function_name, parameters = [], async_call = true,    // Short function to GET method.
-            use_loading_indicator = false, ok_callback, error_callback
+            use_loading_indicator = false, ok_callback, error_callback, manager_version = 1
     ) => {
         return general_call( 
             manager_name, function_name, parameters, "GET", 
-            async_call, use_loading_indicator, ok_callback, error_callback 
+            async_call, use_loading_indicator, ok_callback, error_callback , manager_version
         );
     };
     
     let post = (                                                                // Short function to POST method.
             manager_name, function_name, parameters = [], async_call = true, 
-            use_loading_indicator = false, ok_callback, error_callback
+            use_loading_indicator = false, ok_callback, error_callback, manager_version = 1
     ) => {
         return general_call( 
             manager_name, function_name, parameters, "POST", 
-            async_call, use_loading_indicator, ok_callback, error_callback 
+            async_call, use_loading_indicator, ok_callback, error_callback, manager_version 
         );
     };
 
