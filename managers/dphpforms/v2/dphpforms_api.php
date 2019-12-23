@@ -248,6 +248,31 @@
                 return_with_code( -2 );
             }
 
+        }else if( $input->function === "render_record" ){
+
+            /* [0] => record_id (int)
+             * */
+            
+            if( count( $input->params ) == 1 ){
+ 
+                // Validation                
+                if( is_numeric( $input->params[0] ) ){
+                    
+                    echo json_encode( 
+                        array(
+                            "status_code" => 0,
+                            "error_message" => "",
+                            "data_response" => dphpformsV2_render_record( $input->params[0] )
+                        )
+                    );
+                    
+                }else{
+                    return_with_code( -2 );
+                }
+            }else{
+                return_with_code( -2 );
+            }
+
         }else{
             // Function not defined
             return_with_code( -4 );
