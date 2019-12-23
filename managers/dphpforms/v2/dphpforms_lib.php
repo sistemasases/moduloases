@@ -26,6 +26,7 @@ require_once(dirname(__FILE__). '/../../../../../config.php');
 require_once(dirname(__FILE__). '/../../../core/module_loader.php'); 
 
 module_loader("security");
+module_loader("dphpforms");
 
 // -- Dev test block - This block cannot be considerated as documentation.
 /*header('Content-Type: application/json');
@@ -1795,6 +1796,12 @@ function dphpformsV2_add_new_form_rule( $form_id, $preg_a_id, $rule_id, $preg_b_
     $new_form_rule->id_form_pregunta_b = $preg_b_id;
 
     return $DB->insert_record( 'talentospilos_df_reg_form_pr', $new_form_rule );
+
+}
+
+function dphpformsV2_render_record( $record_id ){
+
+    return "<h1>Hello World! I'm $record_id. </h1>";
 
 }
 
