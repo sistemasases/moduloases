@@ -49,11 +49,11 @@ define([
         }
                 
         let to_return;                                                          // If is not an async call, in this variable will be stored the request response.
-                
+                        
         $.ajax({                                                                // jQuery AJAX request.
             type: method,
             url: `${MANAGER_DIR_BASE}/${manager_name}${ 
-                    (manager_version === 1 ? "" : "/v" + manager_version ) 
+                    ( manager_version === 1 ? "" : "/v" + manager_version ) 
                   }/${manager_name}_api.php`,                                   // Manager API location.
             data: JSON.stringify(
                 { 
