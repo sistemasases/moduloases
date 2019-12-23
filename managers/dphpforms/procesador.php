@@ -34,7 +34,7 @@
     global $USER;
     
     header('Content-Type: application/json');
-
+    
     $RECORD_ID = null;
 
     if(isset($_POST['id_registro'])){
@@ -43,9 +43,12 @@
     
     $form = array(
         'id' => $_POST['id']
-        //'id_monitor' => $_POST['id_monitor'],
-        //'id_estudiante' => $_POST['id_estudiante']
     );
+    
+    if( !isset( $_POST['id'] ) || !isset( $_POST['id_registro'] ) ){
+        print_r(json_encode(['status' => "Operational"])); 
+        die();
+    }
     
     $last_special_field = "";
     $first_special_field = true;
@@ -113,6 +116,7 @@
     );
 
     $form_JSON = json_encode($full_form);
+    
 
     
 /*
