@@ -45,7 +45,7 @@
         'id' => $_POST['id']
     );
     
-    if( !isset( $_POST['id'] ) || !isset( $_POST['id_registro'] ) ){
+    if( !isset( $_POST['id'] ) && !isset( $_POST['id_registro'] ) ){
         print_r(json_encode(['status' => "Operational"])); 
         die();
     }
