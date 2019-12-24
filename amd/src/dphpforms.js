@@ -15,7 +15,7 @@ define([
     'block_ases/sweetalert2',
     'block_ases/loading_indicator',
     'block_ases/jquery.scrollTo'
-], function (jQuery, asesApi, Swal2, loading_indicator) {
+], function (jQuery, asesApi, Swal2, loading_indicator, JQS) {
 
     const DEV_MODE = true;
     const DEF_PROCESSOR_PATH = '../managers/dphpforms/procesador.php';
@@ -102,6 +102,32 @@ define([
         jQuery.get( endpoint , () => {});
 
     }
+    
+    function dphpformsJS_scrollTo(uid, question_id) {
+
+        jQuery(`form[data-uid="${ uid }"]`)
+            .closest(".mymodal")
+            .scrollTo('.div-' + question_id, {
+                    duration: 1500,
+                    offset: -150
+                }
+           );
+   
+    }
+    
+    function dphpformsJS_add_error_mark( uid, list_of_question_id ){
+        
+        jQuery(`form[data-uid="${ uid }"]`)
+                .find('div')
+                .removeClass('regla_incumplida');
+        
+        list_of_question_id.forEach( (id) => {
+            jQuery(`form[data-uid="${ uid }"]`)
+                .find(`.div-${id}`)
+                .addClass('regla_incumplida');
+        });
+        
+    }
 
     function dphpformsJS_process_response( uid ) {
         
@@ -148,10 +174,18 @@ define([
         } else if (response['status'] == -6) {
             
             if (response['message'] === 'The value of the field is out of range') {
+                
+                var id_form_pregunta = response['data']['id'];
+                
+                dphpformsJS_add_error_mark( uid, [id_form_pregunta] );
+                
                 message = 
                     'Ups!, el campo marcado en rojo tiene una fecha por fuera del siguiente rango: ' + 
                     response['data']['min'] + " hasta " + 
                     response['data']['max'];
+            
+                dphpformsJS_scrollTo( uid, id_form_pregunta );
+            
             }
             
             Swal2.fire({
@@ -163,11 +197,19 @@ define([
         } else if (response['status'] == -5) {
             
             if (response['message'] === 'The field is static and can not be changed') {
+                
+                var id_form_pregunta = response['data']['id'];
+                
+                dphpformsJS_add_error_mark( uid, [id_form_pregunta] );
+                
                 message = 
                     'Ups!, el campo marcado en rojo está definido como \n\
                     estático y por lo tanto debe mantener el mismo valor, \n\
                     si no logra ver el campo marcado en rojo informe de este \n\
                     incidente.';
+                
+                dphpformsJS_scrollTo( uid, id_form_pregunta );
+                
             }
             
             Swal2.fire({
@@ -179,11 +221,17 @@ define([
         } else if (response['status'] == -4) {
             
             if (response['message'] === 'Field does not match with the regular expression') {
+                
+                var id_form_pregunta = response['data']['id'];
+                
+                dphpformsJS_add_error_mark( uid, [id_form_pregunta] );
 
                 message = 
-                    'Ups!, el campo marcado en rojo no cumple con el \n\
+                    'Ups! El campo marcado en rojo no cumple con el \n\
                     patrón esperado(' + response['data']['human_readable'] + '). \n\
                     Ejemplo: ' + response['data']['example'];
+                
+                dphpformsJS_scrollTo( uid, id_form_pregunta );
             }
             
             Swal2.fire({
@@ -195,11 +243,17 @@ define([
         } else if (response['status'] == -3) {
             
             if (response['message'] === 'Field cannot be null') {
+                
+                var id_form_pregunta = response['data'];
+                
+                dphpformsJS_add_error_mark( uid, [id_form_pregunta] );
 
                 message = 
-                    'Ups!, los campos que se acaban de colorear en rojo \n\
+                    'Ups! Los campos que se acaban de colorear en rojo \n\
                     no pueden estar vacíos, si no logra ver ningún campo, \n\
                     informe de este incidente.';
+                
+                dphpformsJS_scrollTo( uid, id_form_pregunta );
             }
             
             Swal2.fire({
@@ -213,9 +267,17 @@ define([
             if (response['message'] === 'Without changes') {
                 message = 'No hay cambios que registrar';
             } else if (response['message'] === 'Unfulfilled rules') {
-                message = 'Ups!, revise los campos que se acaban de colorear en rojo.';
+                
+                var id_form_pregunta_a = response['data']['id_form_pregunta_a'];
+                var id_form_pregunta_b = response['data']['id_form_pregunta_b'];
+                
+                dphpformsJS_add_error_mark( uid, [id_form_pregunta_a, id_form_pregunta_b] );
+                
+                message = 'Ups! Revise los campos que se acaban de colorear en rojo.';
+                
+                dphpformsJS_scrollTo( uid, id_form_pregunta_a );
             }
-                        
+                    
             Swal2.fire({
                 icon: 'warning',
                 title: 'Alerta',
