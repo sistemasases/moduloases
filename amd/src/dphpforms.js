@@ -103,13 +103,19 @@ define([
 
     }
     
-    function dphpformsJS_scrollTo(uid, question_id) {
+    function dphpformsJS_scrollTo(uid, question_id, callback = ()=>{}) {
 
         jQuery(`form[data-uid="${ uid }"]`)
             .closest(".mymodal")
-            .scrollTo('.div-' + question_id, {
+            .scrollTo(
+                '.div-' + question_id, 
+                {
                     duration: 1500,
                     offset: -150
+                },
+                {
+                    easing:'easeInCubic',
+                    onAfter: callback
                 }
            );
    
@@ -127,6 +133,21 @@ define([
                 .addClass('regla_incumplida');
         });
         
+    }
+    
+    function dphpformsJS_show_warning(uid, message, questions_with_error, scroll_to) {
+
+        dphpformsJS_add_error_mark(uid, questions_with_error);
+
+        Swal2.fire({
+            icon: 'warning',
+            title: 'Alerta',
+            text: message,
+            onClose: () => {
+                dphpformsJS_scrollTo( uid, scroll_to );
+            }
+        });
+
     }
 
     function dphpformsJS_process_response( uid ) {
@@ -270,19 +291,15 @@ define([
                 
                 var id_form_pregunta_a = response['data']['id_form_pregunta_a'];
                 var id_form_pregunta_b = response['data']['id_form_pregunta_b'];
+                                
+                dphpformsJS_show_warning(
+                     uid, 
+                    'Ups!, revise los campos que se acaban de colorear en rojo.', 
+                    [id_form_pregunta_a, id_form_pregunta_b], 
+                    id_form_pregunta_a
+                );
                 
-                dphpformsJS_add_error_mark( uid, [id_form_pregunta_a, id_form_pregunta_b] );
-                
-                message = 'Ups! Revise los campos que se acaban de colorear en rojo.';
-                
-                dphpformsJS_scrollTo( uid, id_form_pregunta_a );
             }
-                    
-            Swal2.fire({
-                icon: 'warning',
-                title: 'Alerta',
-                text: message
-            });
             
         } else if (response['status'] == -1) {
                        
