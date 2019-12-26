@@ -135,16 +135,20 @@ define([
         
     }
     
-    function dphpformsJS_show_warning(uid, message, questions_with_error, scroll_to) {
+    function dphpformsJS_show_warning(uid, message, questions_with_error = null, scroll_to = null) {
 
-        dphpformsJS_add_error_mark(uid, questions_with_error);
+        if( questions_with_error !== null ){
+            dphpformsJS_add_error_mark(uid, questions_with_error);
+        }
 
         Swal2.fire({
             icon: 'warning',
             title: 'Alerta',
             text: message,
             onClose: () => {
-                dphpformsJS_scrollTo( uid, scroll_to );
+                if( scroll_to !== null ){
+                    dphpformsJS_scrollTo( uid, scroll_to );
+                }
             }
         });
 
@@ -286,17 +290,17 @@ define([
         } else if (response['status'] == -2) {
             
             if (response['message'] === 'Without changes') {
-                message = 'No hay cambios que registrar';
+                
+                dphpformsJS_show_warning( uid,  'No hay cambios que registrar' );
+                
             } else if (response['message'] === 'Unfulfilled rules') {
                 
                 var id_form_pregunta_a = response['data']['id_form_pregunta_a'];
                 var id_form_pregunta_b = response['data']['id_form_pregunta_b'];
                                 
-                dphpformsJS_show_warning(
-                     uid, 
-                    'Ups!, revise los campos que se acaban de colorear en rojo.', 
-                    [id_form_pregunta_a, id_form_pregunta_b], 
-                    id_form_pregunta_a
+                dphpformsJS_show_warning( 
+                    uid,  'Ups!, revise los campos que se acaban de colorear en rojo.', 
+                    [id_form_pregunta_a, id_form_pregunta_b],  id_form_pregunta_a
                 );
                 
             }
