@@ -186,11 +186,13 @@ define([
                 });
 
             } else if (response['message'] === 'Updated') {
+                
                 Swal2.fire({
                     icon: 'success',
                     title: 'Alerta',
                     text: 'Actualizado, las fechas e íconos se actualizarán al recargar la página.'
                 });
+                
             }
             //check_risks_tracking();
             //check_risks_geo_tracking();
@@ -202,22 +204,17 @@ define([
                 
                 var id_form_pregunta = response['data']['id'];
                 
-                dphpformsJS_add_error_mark( uid, [id_form_pregunta] );
-                
                 message = 
                     'Ups!, el campo marcado en rojo tiene una fecha por fuera del siguiente rango: ' + 
                     response['data']['min'] + " hasta " + 
                     response['data']['max'];
             
-                dphpformsJS_scrollTo( uid, id_form_pregunta );
+                dphpformsJS_show_warning( 
+                    uid,  message, [id_form_pregunta],  id_form_pregunta
+                );
             
             }
             
-            Swal2.fire({
-                icon: 'warning',
-                title: 'Alerta',
-                text: message
-            });
 
         } else if (response['status'] == -5) {
             
@@ -225,45 +222,34 @@ define([
                 
                 var id_form_pregunta = response['data']['id'];
                 
-                dphpformsJS_add_error_mark( uid, [id_form_pregunta] );
-                
                 message = 
                     'Ups!, el campo marcado en rojo está definido como \n\
                     estático y por lo tanto debe mantener el mismo valor, \n\
                     si no logra ver el campo marcado en rojo informe de este \n\
                     incidente.';
-                
-                dphpformsJS_scrollTo( uid, id_form_pregunta );
+                                
+                dphpformsJS_show_warning( 
+                    uid,  message, [id_form_pregunta],  id_form_pregunta
+                );
                 
             }
             
-            Swal2.fire({
-                icon: 'warning',
-                title: 'Alerta',
-                text: message
-            });
             
         } else if (response['status'] == -4) {
             
             if (response['message'] === 'Field does not match with the regular expression') {
                 
                 var id_form_pregunta = response['data']['id'];
-                
-                dphpformsJS_add_error_mark( uid, [id_form_pregunta] );
 
                 message = 
                     'Ups! El campo marcado en rojo no cumple con el \n\
                     patrón esperado(' + response['data']['human_readable'] + '). \n\
                     Ejemplo: ' + response['data']['example'];
-                
-                dphpformsJS_scrollTo( uid, id_form_pregunta );
+                                
+                dphpformsJS_show_warning( 
+                    uid,  message, [id_form_pregunta],  id_form_pregunta
+                );
             }
-            
-            Swal2.fire({
-                icon: 'warning',
-                title: 'Alerta',
-                text: message
-            });
             
         } else if (response['status'] == -3) {
             
@@ -271,21 +257,16 @@ define([
                 
                 var id_form_pregunta = response['data'];
                 
-                dphpformsJS_add_error_mark( uid, [id_form_pregunta] );
-
                 message = 
                     'Ups! Los campos que se acaban de colorear en rojo \n\
                     no pueden estar vacíos, si no logra ver ningún campo, \n\
                     informe de este incidente.';
                 
-                dphpformsJS_scrollTo( uid, id_form_pregunta );
+                dphpformsJS_show_warning( 
+                    uid,  message, [id_form_pregunta],  id_form_pregunta
+                );
+        
             }
-            
-            Swal2.fire({
-                icon: 'warning',
-                title: 'Alerta',
-                text: message
-            });
             
         } else if (response['status'] == -2) {
             
