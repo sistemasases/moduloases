@@ -70,7 +70,7 @@ define([
                 async = false, use_loading_indicator = true, 
                 ok_callback = () => {}, error_callback = () => {}, 
                 manager_version = 2
-        );
+        ).data_response;
 
     }
     
