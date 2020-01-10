@@ -17,7 +17,7 @@ define([
     'block_ases/jquery.scrollTo'
 ], (jQuery, asesApi, Swal2, loading_indicator, JQS) => {
 
-    const DEV_MODE = true;
+    const DEV_MODE = false;
     const DEF_PROCESSOR_PATH = '../managers/dphpforms/procesador.php';
 
     global_response = [];
@@ -33,12 +33,6 @@ define([
         `;
         jQuery(dev_style).appendTo("head");
     }
-    
-    // To refact.
-    jQuery('.mymodal-close').click(function () {
-        jQuery(this).parent().parent().parent().parent().fadeOut(300);
-        jQuery("#list_grupal_seg_consult_1").remove();
-    });
 
     function dphpformsJS_get_processor_url(form) {
         return (
@@ -51,11 +45,11 @@ define([
     function dphpformsJS_render_record(record_id) {
 
         return asesApi.post(
-                "dphpforms", "render_record", [record_id],
+                "dphpforms", "render_record", [record_id ],
                 async = false, use_loading_indicator = true, 
                 ok_callback = () => {}, error_callback = () => {}, 
                 manager_version = 2
-        );
+        ).data_response;
 
     }
     
@@ -364,6 +358,33 @@ define([
 
         template.appendTo(`div[data-uid='${ block_uuid }'] .dphpf-elements`);
 
+    });
+    
+    jQuery('.mymodal-close').click( function () {
+        
+        jQuery(this).parent().parent().parent().parent().fadeOut(300);
+        
+        jQuery("#list_grupal_seg_consult_1").remove();
+        
+    });
+    
+    // Controles para editar formulario de pares
+    jQuery(document).on('click', ".dphpforms-peer-record", callback = function () {
+        
+        if (!jQuery(this).attr("disabled")) {
+            
+            var record_id = jQuery(this).attr('data-record-id');
+                        
+            let html = dphpformsJS_render_record( record_id );
+            
+            jQuery("#modal_v2_edit_peer_tracking").find("#body_editor").html("");
+            
+            jQuery("#modal_v2_edit_peer_tracking").find("#body_editor").append(html);
+            
+            jQuery('#modal_v2_edit_peer_tracking').fadeIn(300);
+            
+        }
+        
     });
 
     console.log("Dphpforms CORE initialised");
