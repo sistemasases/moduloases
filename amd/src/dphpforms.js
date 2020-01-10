@@ -25,6 +25,12 @@ define([
     if (DEV_MODE) {
         console.log("Developer Mode Activated!!!");
     }
+    
+    // To refact.
+    $('.mymodal-close').click(function () {
+        $(this).parent().parent().parent().parent().fadeOut(300);
+        $("#list_grupal_seg_consult_1").remove();
+    });
 
     function dphpformsJS_get_processor_url(form) {
         return (
