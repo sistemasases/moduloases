@@ -759,6 +759,19 @@ if ($student_code != 0) {
     $record->code = $select;
 
     $dphpforms_ases_user = get_ases_user_by_code( $student_code )->id;
+    
+    $record->ases_student_code = $dphpforms_ases_user;
+
+    $moodle_user = user_management_get_moodle_user_with_tracking_status_1( $dphpforms_ases_user );
+    
+    $record->instance = $blockid;
+    // periods_lib.php contains get_current_semester()
+    $record->current_semester = get_current_semester()->max;
+    
+    $stud_mon_prac_prof = user_management_get_stud_mon_prac_prof( $record->ases_student_code, $record->instance, $record->current_semester );
+    $record->monitor_id = $stud_mon_prac_prof->monitor->id;
+    $record->practicing_id = $stud_mon_prac_prof->practicing->id;
+    $record->professional_id = $stud_mon_prac_prof->professional->id;
 
     // Loading desertion reasons or studies postponement
 
@@ -777,58 +790,45 @@ if ($student_code != 0) {
     $record->form_seguimientos = null;
     $record->primer_acercamiento = null;
     //$record->form_seguimientos = dphpforms_render_recorder('seguimiento_pares', $rol);
-    $initial_config = '{
+    $peer_tracking_initial_config = '{
         "allow_register":true,
-        "allow_update":true,
-        "allow_delete":true,
-        "allow_reset":true,
+        "allow_update":false,
+        "allow_delete":false,
+        "allow_reset":false,
         "aditional_register_btn_classes"    : [ "btn", "btn-sm", "btn-danger", "btn-dphpforms-univalle", "margin-right-3px" ],
         "aditional_update_btn_classes"      : [ "btn", "btn-sm", "btn-danger", "btn-dphpforms-univalle", "margin-right-3px" ],
         "aditional_delete_btn_classes"      : [ "btn", "btn-sm", "btn-danger", "btn-dphpforms-univalle", "margin-right-3px" ],
         "aditional_reset_btn_classes"       : [ "btn", "btn-sm", "btn-danger", "btn-dphpforms-univalle", "margin-right-3px" ],
         "aditional_btn_section_classes"     : [ "center-content" ],
-        "aditional_form_classes"            : ["ases-col-xs-12", "ases-col-sm-12", "dphpforms"],
+        "aditional_form_classes"            : [ "ases-col-xs-12", "ases-col-sm-12", "dphpforms" ],
         "initial_values" : [
             {
-                "alias" : "lugar",
-                "default_value" : "Lugar de prueba"
+                "alias" : "id_creado_por",
+                "default_value" : "' . $USER->id . '"
             },
             {
-                "alias" : "objetivos",
-                "default_value" : "Objetivos de prueba"
+                "alias" : "id_estudiante",
+                "default_value" : "' . $record->ases_student_code . '"
             },
             {
                 "alias" : "id_instancia",
-                "default_value" : "450299"
+                "default_value" : "' . $record->instance . '"
             },
             {
-                "alias" : "hora_inicio",
-                "default_value" : "11:00"
+                "alias" : "id_monitor",
+                "default_value" : "' . $record->monitor_id . '"
             },
             {
-                "alias" : "hora_finalizacion",
-                "default_value" : "13:00"
+                "alias" : "id_practicante",
+                "default_value" : "' . $record->practicing_id . '"
             },
             {
-                "alias" : "fecha",
-                "default_value" : "2019-12-11"
+                "alias" : "id_profesional",
+                "default_value" : "' . $record->professional_id . '"
             },
             {
-                "alias" : "list_abc_fixed",
-                "default_value" : [
-                    {
-                        "statement" : "9999999-9999 - Firstname Lastname",
-                        "value" : "9999999-9999",
-                        "pos" : "0",
-                        "id" : "element_1"
-                    }, 
-                    {
-                        "statement" : "0000000-0000 - Firstname Lastname",
-                        "value" : "0000000-0000",
-                        "pos" : "1",
-                        "id" : "element_2"
-                    }
-                ]
+                "alias" : "username",
+                "default_value" : "' . $student_code . '"
             }
         ],
         "aditional_buttons" : [
@@ -840,8 +840,60 @@ if ($student_code != 0) {
         ]
     }';
 
-    $record->form_seguimientos = _dphpforms_generate_html_recorder('seguimiento_pares', $rol, json_decode( $initial_config ));
-    $record->form_inasistencia = dphpforms_render_recorder('inasistencia', $rol);
+    $record->form_seguimientos = _dphpforms_generate_html_recorder('seguimiento_pares', $rol, json_decode( $peer_tracking_initial_config ));
+    
+    $peer_tracking_in_initial_config = '{
+        "allow_register":true,
+        "allow_update":false,
+        "allow_delete":false,
+        "allow_reset":false,
+        "aditional_register_btn_classes"    : [ "btn", "btn-sm", "btn-danger", "btn-dphpforms-univalle", "margin-right-3px" ],
+        "aditional_update_btn_classes"      : [ "btn", "btn-sm", "btn-danger", "btn-dphpforms-univalle", "margin-right-3px" ],
+        "aditional_delete_btn_classes"      : [ "btn", "btn-sm", "btn-danger", "btn-dphpforms-univalle", "margin-right-3px" ],
+        "aditional_reset_btn_classes"       : [ "btn", "btn-sm", "btn-danger", "btn-dphpforms-univalle", "margin-right-3px" ],
+        "aditional_btn_section_classes"     : [ "center-content" ],
+        "aditional_form_classes"            : [ "ases-col-xs-12", "ases-col-sm-12", "dphpforms" ],
+        "initial_values" : [
+            {
+                "alias" : "in_id_creado_por",
+                "default_value" : "' . $USER->id . '"
+            },
+            {
+                "alias" : "in_id_estudiante",
+                "default_value" : "' . $record->ases_student_code . '"
+            },
+            {
+                "alias" : "in_id_instancia",
+                "default_value" : "' . $record->instance . '"
+            },
+            {
+                "alias" : "in_id_monitor",
+                "default_value" : "' . $record->monitor_id . '"
+            },
+            {
+                "alias" : "in_id_practicante",
+                "default_value" : "' . $record->practicing_id . '"
+            },
+            {
+                "alias" : "in_id_profesional",
+                "default_value" : "' . $record->professional_id . '"
+            },
+            {
+                "alias" : "in_username",
+                "default_value" : "' . $student_code . '"
+            }
+        ],
+        "aditional_buttons" : [
+            {
+                "alias"     : "close_modal",
+                "text"      : "Cerrar",
+                "classes"   : ["btn", "btn-sm", "btn-danger", "btn-dphpforms-univalle", "btn-dphpforms-close", "class-extra-btn", "margin-right-3px"]
+            }
+        ]
+    }';
+    //$record->form_inasistencia = dphpforms_render_recorder('inasistencia', $rol);
+    
+    $record->form_inasistencia = _dphpforms_generate_html_recorder('inasistencia', $rol, json_decode( $peer_tracking_in_initial_config ));
 
     if ($record->form_seguimientos == '') {
         $record->form_seguimientos = "<strong><h3>Oops!: No se ha encontrado un formulario con el alias: <code>seguimiento_pares</code>.</h3></strong>";
@@ -909,13 +961,9 @@ $_user_image_edit_form = new user_image_form($url_user_edit_image_form_manager,n
 $_user_image_edit_form->set_data($toform);
 $record->update_profile_image_form = $_user_image_edit_form->render(null);
 /** End of Update user image  */
-$record->ases_student_code = $dphpforms_ases_user;
-
-$moodle_user = user_management_get_moodle_user_with_tracking_status_1( $dphpforms_ases_user );
 
 $record->student_username = $moodle_user->username;
 $record->student_fullname = $moodle_user->firstname . " " . $moodle_user->lastname;
-$record->instance = $blockid;
 $record->html_profile_image = $html_profile_image;
 
 // Url for update user image profile
@@ -926,14 +974,6 @@ $url_update_user_image           = new moodle_url("/blocks/ases/view/edit_user_i
     'url_return' => $url
 ));
 $record->update_profile_image_url = $url_update_user_image;
-
-// periods_lib.php contains get_current_semester()
-$record->current_semester = get_current_semester()->max;
-
-$stud_mon_prac_prof = user_management_get_stud_mon_prac_prof( $record->ases_student_code, $record->instance, $record->current_semester );
-$record->monitor_id = $stud_mon_prac_prof->monitor->id;
-$record->practicing_id = $stud_mon_prac_prof->practicing->id;
-$record->professional_id = $stud_mon_prac_prof->professional->id;
 
 //Last student assignment
 
