@@ -405,3 +405,28 @@ input[type="text"]{
     border-bottom-width: 2px !important;
     border-bottom-color: #337ab7 !important;
 }
+
+.class-extra-btn{
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+    font-family: inherit !important;
+    font-size: 12px !important;
+    font-weight: bold !important;
+    height: 30px !important;
+}
+
+.margin-right-3px{
+    margin-right: 3px;
+}
+
+.margin-right-4px{
+    margin-right: 4px;
+}
+
+.margin-right-5px{
+    margin-right: 5px;
+}
+
+.center-content{
+    text-align: center;
+}
