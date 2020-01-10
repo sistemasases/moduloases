@@ -21,7 +21,7 @@ define(['jquery'], function($) {
             
             $('.btn-inasistencia').on('click', function () {
                 var data_info = $(this).attr('data-info');
-                if (data_info == 'inasistencia') {
+                if (data_info === 'inasistencia') {
                     $('#modal_inasistencia').fadeOut(300);
                     $('#modal_v2_peer_tracking').fadeIn(300);
 
