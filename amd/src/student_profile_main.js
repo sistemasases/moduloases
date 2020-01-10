@@ -41,22 +41,6 @@ define(['jquery',
 
                 document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=driving'></iframe>";
             }
-            
-            $('.btn-inasistencia').on('click', function () {
-                var data_info = $(this).attr('data-info');
-                if (data_info == 'inasistencia') {
-                    $('#modal_inasistencia').fadeOut(300);
-                    $('#modal_v2_peer_tracking').fadeIn(300);
-
-                } else {
-                    $('#modal_v2_peer_tracking').fadeOut(300);
-                    $('#modal_inasistencia').fadeIn(300);
-                }
-            });
-
-            $(document).on("click", ".btn-dphpforms-close", function () {
-                $(this).closest('div[class="mymodal"]').fadeOut(300);
-            });
 
             /**
              * Event that loads asynchronously the socio-educational tab
