@@ -583,15 +583,26 @@ function _dphpforms_generate_html_recorder( $id_form, $rol_, $initial_config = n
 
     $form_name_formatted = $form_info->alias . "_" . $form_info->id;
     
-    //$register_button = '<button data-form-id="'.$form_name_formatted.'" type="submit" class="btn-dphpforms btn-dphpforms-sendform">Registrar</button>';
-    $register_button = _core_dphpforms_build_tag( $dom, "button", new DOMAttributeList([
-        "data-form-id" => $form_name_formatted,
-        'type' => "submit",
-        'class' => [
-            "btn-dphpforms",
-            "btn-dphpforms-sendform"
-        ]
-    ]) );
+    $register_btn_classes = array();
+    
+    if( property_exists($initial_config, 'aditional_register_btn_classes') ){
+        $register_btn_classes = array_merge( 
+            [ 
+                "btn-dphpforms",
+                "btn-dphpforms-sendform" 
+            ], 
+            $initial_config->aditional_register_btn_classes
+        );
+    }
+    
+    $register_button = _core_dphpforms_build_tag( 
+            $dom, "button", new DOMAttributeList([
+            "data-form-id" => $form_name_formatted,
+            'type' => "submit",
+            'class' => $register_btn_classes 
+        ]) 
+    );
+    
     $register_button->nodeValue = "Registrar";
     
     $form_action = $form_info->action; 
@@ -608,34 +619,8 @@ function _dphpforms_generate_html_recorder( $id_form, $rol_, $initial_config = n
             }
         }
     }
-
-    /*$aditional_form_classes = "";
-    if( $initial_config ){
-        if( property_exists($initial_config, 'aditional_form_classes') ){
-            $aditional_form_classes = array_map(
-                function($class){
-                    $default_classes = [
-                        "dphpforms",
-                        "dphpforms-response"
-                    ];
-                    if( in_array( $class, $default_classes ) ){
-                        return null;
-                    }else{
-                        return $class;
-                    }
-                },
-                $initial_config->aditional_form_classes
-            );
-            $aditional_form_classes = join( $aditional_form_classes, " " );
-        }
-    }*/
     
     $form_uniqid = uniqid("dphpforms_",true);
-    
-    /*$html ='<form id="'. $form_name_formatted .'" data-uid="'. $form_uniqid .'" method="'. $form_info->method .'" action="'. $form_action .'" class="dphpforms dphpforms-response '.$aditional_form_classes.'">
-        <h1>'.$form_info->nombre.'</h1><hr class="header-hr-dphpforms">
-        <input name="id" value="'. $form_info->id .'" style="display:none;">
-    ';*/
     
     $form = _core_dphpforms_build_tag($dom, "form", new DOMAttributeList([
         'id' => $form_name_formatted,
@@ -872,8 +857,24 @@ function _dphpforms_generate_html_recorder( $id_form, $rol_, $initial_config = n
     ]) );
     $form->appendChild( $final_hr );
     
+    
+    $btn_section_classes = array();
+    
+    if( property_exists($initial_config, 'aditional_btn_section_classes') ){
+        $btn_section_classes = array_merge( 
+            [ 
+                "btn-section-dphpforms"
+            ], 
+            $initial_config->aditional_btn_section_classes
+        );
+    }
+    
+    $btn_section = _core_dphpforms_build_tag( $dom, "div", new DOMAttributeList([
+        "class" => $btn_section_classes
+    ]) );
+    
     if( !is_null( $register_button ) ){
-        $form->appendChild( $register_button );
+        $btn_section->appendChild( $register_button );
     }
 
     if( $initial_config ){
@@ -935,7 +936,7 @@ function _dphpforms_generate_html_recorder( $id_form, $rol_, $initial_config = n
                     if( !$html_button ){
                         return _dphpforms_build_exception_message( "<strong>" . $button->alias . "</strong> is an reserved alias and its not allowed for recorder" );
                     }else{
-                        $form->appendChild( $html_button );
+                        $btn_section->appendChild( $html_button );
                     }
 
                 }else{
@@ -945,15 +946,8 @@ function _dphpforms_generate_html_recorder( $id_form, $rol_, $initial_config = n
         }
     }
     
-    /*$html = $html .  ' 
-        <hr class="footer-hr-dphpforms">
-        <div class="dphpforms_response_recorder_buttons">
-            '.$register_button.'
-            '.$html_aditional_buttons.'
-        </div>
-    </form>';*/
-    
-    
+    $form->appendChild( $btn_section );
+        
     $html = $dom->saveHTML();
     
     $dom = $dom->loadHTML($dom->saveHTML());
