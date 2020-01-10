@@ -15,7 +15,7 @@ define([
     'block_ases/sweetalert2',
     'block_ases/loading_indicator',
     'block_ases/jquery.scrollTo'
-], function (jQuery, asesApi, Swal2, loading_indicator, JQS) {
+], (jQuery, asesApi, Swal2, loading_indicator, JQS) => {
 
     const DEV_MODE = true;
     const DEF_PROCESSOR_PATH = '../managers/dphpforms/procesador.php';
@@ -23,13 +23,21 @@ define([
     global_response = [];
     
     if (DEV_MODE) {
-        console.log("Developer Mode Activated!!!");
+        console.log("DphpForms: Developer Mode Activated!!!");
+        let dev_style = `
+            <style data-origin="dphpforms-dev-mode">
+                .oculto{
+                    display:block !important;
+                }
+            </style>
+        `;
+        jQuery(dev_style).appendTo("head");
     }
     
     // To refact.
-    $('.mymodal-close').click(function () {
-        $(this).parent().parent().parent().parent().fadeOut(300);
-        $("#list_grupal_seg_consult_1").remove();
+    jQuery('.mymodal-close').click(function () {
+        jQuery(this).parent().parent().parent().parent().fadeOut(300);
+        jQuery("#list_grupal_seg_consult_1").remove();
     });
 
     function dphpformsJS_get_processor_url(form) {
