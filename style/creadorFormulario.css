@@ -47,6 +47,10 @@ li:hover{
     border-color: red;
 }
 
+.footer-hr-dphpforms{
+    clear: both;
+}
+
 pre, code {
     white-space: pre-line;
 }
