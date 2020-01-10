@@ -12,23 +12,27 @@ define(['jquery'], function($) {
 
         init: function() {
 
-            var student_code = $('#dphpforms_ases_student_code').attr('data-info');
-
             $('#button_add_v2_track').on('click', function() {
-
-                var codigo_monitor = $('#current_user_id').val();
-                var dphpforms_instance = $('#dphpforms_block_instance').attr('data-info');
 
                 $('div').removeClass('regla_incumplida');
                 $('#modal_v2_peer_tracking').fadeIn(300);
-                $('.id_estudiante').find('input').val(student_code);
-                $('.id_creado_por').find('input').val(codigo_monitor);
-                $('.id_instancia').find('input').val(dphpforms_instance);
-                $('.id_monitor').find('input').val( $("#dphpforms_monitor_id").data("info") );
-                $('.id_practicante').find('input').val( $("#dphpforms_practicing_id").data("info") );
-                $('.id_profesional').find('input').val( $("#dphpforms_professional_id").data("info") );
-                $('.username').find('input').val( $("#dphpforms_username").data("info") );
 
+            });
+            
+            $('.btn-inasistencia').on('click', function () {
+                var data_info = $(this).attr('data-info');
+                if (data_info == 'inasistencia') {
+                    $('#modal_inasistencia').fadeOut(300);
+                    $('#modal_v2_peer_tracking').fadeIn(300);
+
+                } else {
+                    $('#modal_v2_peer_tracking').fadeOut(300);
+                    $('#modal_inasistencia').fadeIn(300);
+                }
+            });
+
+            $(document).on("click", ".btn-dphpforms-close", function () {
+                $(this).closest('div[class="mymodal"]').fadeOut(300);
             });
 
             $('#button_primer_acercamiento').on('click', function() {
