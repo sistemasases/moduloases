@@ -782,7 +782,12 @@ if ($student_code != 0) {
         "allow_update":true,
         "allow_delete":true,
         "allow_reset":true,
-        "aditional_form_classes" : ["ases-col-xs-12", "ases-col-sm-12", "dphpforms"],
+        "aditional_register_btn_classes"    : [ "btn", "btn-sm", "btn-danger", "btn-dphpforms-univalle", "margin-right-3px" ],
+        "aditional_update_btn_classes"      : [ "btn", "btn-sm", "btn-danger", "btn-dphpforms-univalle", "margin-right-3px" ],
+        "aditional_delete_btn_classes"      : [ "btn", "btn-sm", "btn-danger", "btn-dphpforms-univalle", "margin-right-3px" ],
+        "aditional_reset_btn_classes"       : [ "btn", "btn-sm", "btn-danger", "btn-dphpforms-univalle", "margin-right-3px" ],
+        "aditional_btn_section_classes"     : [ "center-content" ],
+        "aditional_form_classes"            : ["ases-col-xs-12", "ases-col-sm-12", "dphpforms"],
         "initial_values" : [
             {
                 "alias" : "lugar",
@@ -809,10 +814,6 @@ if ($student_code != 0) {
                 "default_value" : "2019-12-11"
             },
             {
-                "alias" : "acciones",
-                "default_value" : ["c_acciones_monitor_apoyo_academico"]
-            },
-            {
                 "alias" : "list_abc_fixed",
                 "default_value" : [
                     {
@@ -832,9 +833,9 @@ if ($student_code != 0) {
         ],
         "aditional_buttons" : [
             {
-                "alias" : "extra_button",
-                "text" : "Extra Button",
-                "classes" : ["e-class", "e-class-2"]
+                "alias"     : "close_modal",
+                "text"      : "Cerrar",
+                "classes"   : ["btn", "btn-sm", "btn-danger", "btn-dphpforms-univalle", "btn-dphpforms-close", "class-extra-btn", "margin-right-3px"]
             }
         ]
     }';
