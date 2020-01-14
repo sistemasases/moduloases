@@ -557,6 +557,138 @@ function _dphpforms_get_permisos_pregunta( $id_formulario_pregunta ){
 
 }
 
+
+// TO REFACT
+function _dphpforms_get_record($record_id, $alias_key, $super_su = false) {
+
+    global $DB;
+
+    $state = ( $super_su ? '' : 'AND FR.estado = 1' );
+
+    $sql = "SELECT * FROM {talentospilos_df_preguntas} P 
+                INNER JOIN (
+                SELECT * FROM (
+                    SELECT id AS id_form_preg, id_pregunta AS id_tabla_preguntas FROM {talentospilos_df_form_preg}
+                    ) FP INNER JOIN (SELECT * 
+                                FROM {talentospilos_df_respuestas} AS R 
+                                INNER JOIN 
+                                    (
+                                        SELECT * 
+                                        FROM {talentospilos_df_form_resp} AS FR 
+                                        INNER JOIN {talentospilos_df_form_solu} AS FS 
+                                        ON FR.id = FS.id_formulario_respuestas 
+                                        WHERE FR.id = '$record_id' $state
+                                    ) AS FRS 
+                                ON FRS.id_respuesta = R.id) RF
+                            ON RF.id_pregunta = FP.id_form_preg) TT
+                ON id_tabla_preguntas = P.id";
+
+    $list_respuestas = array_values( $DB->get_records_sql($sql) );
+
+    $sql_record = "SELECT * FROM {talentospilos_df_form_resp} WHERE id = '$record_id'";
+    $record_info = $DB->get_record_sql($sql_record);
+
+    $respuestas = array();
+    $key = null;
+    
+    if (count($list_respuestas) > 0) {
+        
+        foreach ($list_respuestas as &$respuesta) {
+            
+            $sql_field_type = "SELECT * FROM {talentospilos_df_tipo_campo} WHERE id = '$respuesta->tipo_campo'";
+            $field_type = $DB->get_record_sql($sql_field_type);
+            
+            $tmp_respuesta = array(
+                'enunciado' => $respuesta->enunciado,
+                'respuesta' => $respuesta->respuesta,
+                'opciones' => $respuesta->opciones_campo,
+                'tipo_campo' => $field_type->campo,
+                'id_pregunta' => $respuesta->id_tabla_preguntas,
+                'id_relacion_form_pregunta' => $respuesta->id_form_preg,
+                'local_alias' => json_decode($respuesta->atributos_campo)->{'local_alias'},
+            );
+                
+            if (($alias_key) && (json_decode($respuesta->atributos_campo)->{'local_alias'} == $alias_key)) {
+                $key = $tmp_respuesta;
+            }
+            
+            array_push($respuestas, $tmp_respuesta);
+        }
+        
+    } else {
+        return json_encode(array('record' => array()));
+    }
+
+    $form_alias = $DB->get_record_sql(
+        "SELECT alias FROM {talentospilos_df_formularios} WHERE id = " . $list_respuestas[0]->id_formulario
+    )->alias;
+
+    return array(
+        'record' => array(
+            'id_formulario'         => $list_respuestas[0]->id_formulario,
+            'alias'                 => $form_alias,
+            'id_registro'           => $list_respuestas[0]->id_formulario_respuestas,
+            'fecha_hora_registro'   => $record_info->fecha_hora_registro,
+            'campos'                => $respuestas,
+            'alias_key'             => $key
+        )
+    );
+}
+
+/**
+ * 
+ * @param integer $id_completed_form Form ID.
+ */
+
+function _dphpforms_generate_html_updater( int $record_id = null, $rol_, bool $minify = false  ){
+    
+    $html = "";
+    
+    $tracking = _dphpforms_get_record( $record_id, $alias_key = "fecha" );
+    
+    
+    if( count( $tracking['record'] ) === 0 ){
+        throw new Exception( "Record does not exist.", -1 );
+    }
+    
+    $peer_tracking_in_initial_config = json_decode('{
+        "allow_register":false,
+        "allow_update":true,
+        "allow_delete":true,
+        "allow_reset":false,
+        "aditional_update_btn_classes"      : [ "btn", "btn-sm", "btn-danger", "btn-dphpforms-univalle", "margin-right-3px" ],
+        "aditional_delete_btn_classes"      : [ "btn", "btn-sm", "btn-danger", "btn-dphpforms-univalle", "margin-right-3px" ],
+        "aditional_btn_section_classes"     : [ "center-content" ],
+        "aditional_form_classes"            : [ "ases-col-xs-12", "ases-col-sm-12", "dphpforms" ],
+        "initial_values" : [ ],
+        "aditional_buttons" : [
+            {
+                "alias"     : "close_modal",
+                "text"      : "Cerrar",
+                "classes"   : ["btn", "btn-sm", "btn-danger", "btn-dphpforms-univalle", "btn-dphpforms-close", "class-extra-btn", "margin-right-3px"]
+            }
+        ]
+    }');
+    
+    $record = $tracking['record'];
+    $fields = $record['campos'];
+            
+    foreach ( $fields as &$stored_field ){
+        $init_field                  = new stdClass();
+        $init_field->alias           = $stored_field['local_alias'];
+        $init_field->default_value   = $stored_field['respuesta'];
+        array_push(
+            $peer_tracking_in_initial_config->initial_values,
+            $init_field
+                       
+        );
+    }
+    
+    
+    return  ( $minify ?  _dphpforms_html_minifier( _dphpforms_generate_html_recorder( 1, $rol_, $peer_tracking_in_initial_config, false  ) ) :  $html );
+    
+}
+
 function _dphpforms_generate_html_recorder( $id_form, $rol_, $initial_config = null, bool $minify = false  ){
 
     global $DB;
@@ -967,7 +1099,7 @@ function _dphpforms_build_exception_message( $reason ){
 }
   
 
-function _dphpforms_html_minifier($buffer) {
+function _dphpforms_html_minifier( string $buffer) {
 
     $search = array(
         '/\>[^\S ]+/s',     // strip whitespaces after tags, except space
