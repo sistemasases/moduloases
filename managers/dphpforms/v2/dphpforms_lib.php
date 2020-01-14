@@ -1801,7 +1801,7 @@ function dphpformsV2_add_new_form_rule( $form_id, $preg_a_id, $rule_id, $preg_b_
 
 function dphpformsV2_render_record( $record_id ){
 
-    return "<h1>Hello World! I'm $record_id. </h1>";
+    return _dphpforms_generate_html_updater( 1, "sistemas", $record_id );
 
 }
 
