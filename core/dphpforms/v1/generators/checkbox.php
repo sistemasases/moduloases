@@ -10,6 +10,8 @@
 require_once( __DIR__ . "/../DOMTools.php");
 
 function _dphpforms_generate_CHECKBOX(&$dom, $id_formulario_pregunta, $context, $statement, $prefix_uniqid) {
+    
+    $context['default_value'] = json_decode($context['default_value']);
 
     $options = $context['options'];
 
@@ -87,7 +89,7 @@ function _dphpforms_generate_CHECKBOX(&$dom, $id_formulario_pregunta, $context, 
         $label_span->nodeValue = $option['enunciado'];
 
         $checked = ( in_array($option['valor'], $context['default_value']) ? true : false );
-
+        
         $opt = _core_dphpforms_build_tag(
                 $dom, "input", new DOMAttributeList([
                     'type' => "checkbox",
@@ -96,7 +98,7 @@ function _dphpforms_generate_CHECKBOX(&$dom, $id_formulario_pregunta, $context, 
                     'value' => $option['valor'],
                     'disabled' => $context['enabled'],
                     'checked' => $checked
-                        ])
+                ])
         );
 
         $label->appendChild($opt);
