@@ -641,9 +641,7 @@ function _dphpforms_get_record($record_id, $alias_key, $super_su = false) {
  */
 
 function _dphpforms_generate_html_updater( int $record_id = null, $rol_, bool $minify = false  ){
-    
-    $html = "";
-    
+        
     $tracking = _dphpforms_get_record( $record_id, $alias_key = "fecha" );
     
     
@@ -676,7 +674,7 @@ function _dphpforms_generate_html_updater( int $record_id = null, $rol_, bool $m
     foreach ( $fields as &$stored_field ){
         $init_field                  = new stdClass();
         $init_field->alias           = $stored_field['local_alias'];
-        $init_field->default_value   = $stored_field['respuesta'];
+        $init_field->default_value   = $stored_field['respuesta'];        
         array_push(
             $peer_tracking_in_initial_config->initial_values,
             $init_field
@@ -684,8 +682,9 @@ function _dphpforms_generate_html_updater( int $record_id = null, $rol_, bool $m
         );
     }
     
-    
-    return  ( $minify ?  _dphpforms_html_minifier( _dphpforms_generate_html_recorder( 1, $rol_, $peer_tracking_in_initial_config, false  ) ) :  $html );
+    $html = _dphpforms_generate_html_recorder( 1, $rol_, $peer_tracking_in_initial_config, falseo  );
+        
+    return  ( $minify ?  _dphpforms_html_minifier( $html ) :  $html );
     
 }
 
