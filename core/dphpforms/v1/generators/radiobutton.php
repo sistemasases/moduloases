@@ -10,6 +10,8 @@
 require_once( __DIR__ . "/../DOMTools.php");
 
 function _dphpforms_generate_RADIOBUTTON(&$dom, $id_formulario_pregunta, $context, $statement, $prefix_uniqid) {
+    
+    $context['default_value'] = json_decode($context['default_value']);
 
     $field_attr_required = $context['attr_required'];
 
