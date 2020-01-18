@@ -665,9 +665,20 @@ function _dphpforms_generate_html_updater( int $record_id = null, $rol_, bool $m
                 "text"      : "Cerrar",
                 "classes"   : ["btn", "btn-sm", "btn-danger", "btn-dphpforms-univalle", "btn-dphpforms-close", "class-extra-btn", "margin-right-3px"]
             }
+        ],
+        "aditional_tags" : [
+            {
+                "tag"   : "input",
+                "attrs" : [
+                    { "attr" : "id"   , "value" : "dphpforms_record_id" },
+                    { "attr" : "name" , "value" : "id_registro"         },
+                    { "attr" : "value", "value" : "50115"               },
+                    { "attr" : "style", "value" : "display:none;"       }
+                ]
+            }
         ]
     }');
-    
+        
     $record = $tracking['record'];
     $fields = $record['campos'];
             
@@ -678,7 +689,6 @@ function _dphpforms_generate_html_updater( int $record_id = null, $rol_, bool $m
         array_push(
             $peer_tracking_in_initial_config->initial_values,
             $init_field
-                       
         );
     }
     
@@ -714,6 +724,7 @@ function _dphpforms_generate_html_recorder( $id_form, $rol_, $initial_config = n
 
     $form_name_formatted = $form_info->alias . "_" . $form_info->id;
     
+    // Register btn
     $register_btn_classes = array();
     
     if( property_exists($initial_config, 'aditional_register_btn_classes') ){
@@ -736,6 +747,32 @@ function _dphpforms_generate_html_recorder( $id_form, $rol_, $initial_config = n
     
     $register_button->nodeValue = "Registrar";
     
+    // End register btn
+    
+    // Update btn
+    $update_btn_classes = array();
+    
+    if( property_exists($initial_config, 'aditional_update_btn_classes') ){
+        $update_btn_classes = array_merge( 
+            [ 
+                "btn-dphpforms",
+                "btn-dphpforms-updateform" 
+            ], 
+            $initial_config->aditional_update_btn_classes
+        );
+    }
+    
+    $update_button = _core_dphpforms_build_tag( 
+            $dom, "button", new DOMAttributeList([
+            'type' => "submit",
+            'class' => $update_btn_classes 
+        ]) 
+    );
+    
+    $update_button->nodeValue = "Actualizar";
+    
+    // End register btn
+    
     $form_action = $form_info->action; 
     
     if( property_exists($initial_config, 'action') ){
@@ -746,9 +783,20 @@ function _dphpforms_generate_html_recorder( $id_form, $rol_, $initial_config = n
         if( property_exists($initial_config, 'allow_register') ){
             if( !$initial_config->allow_register ){
                 $register_button = NULL;
-                $form_action = uniqid();
             }
         }
+        if( property_exists($initial_config, 'allow_update') ){
+            if( !$initial_config->allow_update ){
+                $update_button = NULL;
+            }
+        }
+    }
+    
+    if( !$initial_config->allow_register    && 
+        !$initial_config->allow_update      && 
+        !$initial_config->allow_delete          
+    ){    
+        $form_action = uniqid();
     }
     
     $form_uniqid = uniqid("dphpforms_",true);
@@ -778,6 +826,24 @@ function _dphpforms_generate_html_recorder( $id_form, $rol_, $initial_config = n
     $form->appendChild( $title );
     $form->appendChild( $title_separator );
     $form->appendChild( $hidden_input_form_id );
+    
+    
+    
+    if( property_exists($initial_config, 'aditional_tags') ){
+        count($initial_config->aditional_tags);
+        foreach ( $initial_config->aditional_tags as $atg_key => $ad_tag ){
+            
+            $attrs = [];
+            
+            foreach ( $ad_tag->attrs as $att_key => $attr ){
+                $attrs[$attr->attr] = $attr->value;
+            }
+            
+            $additional_tag = _core_dphpforms_build_tag($dom, $ad_tag->tag, new DOMAttributeList($attrs));
+
+            $form->appendChild( $additional_tag );
+        }
+    }
 
     $dom->appendChild($form);
      
@@ -1007,6 +1073,12 @@ function _dphpforms_generate_html_recorder( $id_form, $rol_, $initial_config = n
     if( !is_null( $register_button ) ){
         $btn_section->appendChild( $register_button );
     }
+    
+    if( !is_null( $update_button ) ){
+        $btn_section->appendChild( $update_button );
+    }
+    
+    
 
     if( $initial_config ){
 
