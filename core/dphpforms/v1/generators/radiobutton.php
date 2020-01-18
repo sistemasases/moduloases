@@ -9,9 +9,17 @@
  */
 require_once( __DIR__ . "/../DOMTools.php");
 
+const ALTERNATIVE_NULL = '-#$%-';
+
 function _dphpforms_generate_RADIOBUTTON(&$dom, $id_formulario_pregunta, $context, $statement, $prefix_uniqid) {
     
     $field_attr_required = $context['attr_required'];
+    
+    $default_value = ( 
+            $context['default_value']!== ""  && 
+            $context['default_value']!== ALTERNATIVE_NULL ? 
+            $context['default_value'] : NULL 
+        );
 
     $options = $context['options'];
 
@@ -76,16 +84,24 @@ function _dphpforms_generate_RADIOBUTTON(&$dom, $id_formulario_pregunta, $contex
 
         $opt_label_span = _core_dphpforms_build_tag($dom, "span");
         $opt_label_span->nodeValue = $option['enunciado'];
+        
+        $checked = false;
+        if( $default_value ){
+            if( $default_value === $option['valor'] ){
+                $checked = true;
+            }
+        }
 
         $opt_label_input = _core_dphpforms_build_tag(
                 $dom, "input", new DOMAttributeList([
-                    'type' => 'radio',
-                    'class' => [$context['attr_inputclass']],
-                    'name' => $id_formulario_pregunta,
-                    'value' => $option['valor'],
-                    'disabled' => $context['enabled'],
-                    'required' => $required_temporal
-                        ])
+                    'type'      => 'radio',
+                    'class'     => [$context['attr_inputclass']],
+                    'name'      => $id_formulario_pregunta,
+                    'value'     => $option['valor'],
+                    'disabled'  => $context['enabled'],
+                    'required'  => $required_temporal, 
+                    'checked'   => $checked
+            ])
         );
 
         $opt_label->appendChild($opt_label_input);
