@@ -25,7 +25,7 @@ function _dphpforms_generate_CHECKBOX(&$dom, $id_formulario_pregunta, $context, 
                     $context['attr_local_alias']
                 ],
                 'data-uid' => uniqid($prefix_uniqid, true)
-                    ])
+            ])
     );
 
 
@@ -88,7 +88,11 @@ function _dphpforms_generate_CHECKBOX(&$dom, $id_formulario_pregunta, $context, 
         $label_span = _core_dphpforms_build_tag($dom, "span", new DOMAttributeList());
         $label_span->nodeValue = $option['enunciado'];
 
-        $checked = ( in_array($option['valor'], $context['default_value']) ? true : false );
+        if(is_array($context['default_value']) ){
+            $checked = ( in_array($option['valor'], $context['default_value']) ? true : false );
+        }else{
+            $checked = ( $context['default_value'] === 0 ? true : false );
+        }
         
         $opt = _core_dphpforms_build_tag(
                 $dom, "input", new DOMAttributeList([
