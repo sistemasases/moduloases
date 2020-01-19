@@ -643,8 +643,7 @@ function _dphpforms_get_record($record_id, $alias_key, $super_su = false) {
 function _dphpforms_generate_html_updater( int $record_id = null, $rol_, bool $minify = false  ){
         
     $tracking = _dphpforms_get_record( $record_id, $alias_key = "fecha" );
-    
-    
+        
     if( count( $tracking['record'] ) === 0 ){
         throw new Exception( "Record does not exist.", -1 );
     }
