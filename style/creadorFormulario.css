@@ -434,3 +434,9 @@ input[type="text"]{
 .center-content{
     text-align: center;
 }
+
+.dphpf-table-col input{
+    border-radius: 0px;
+    border: 1px solid gray;
+    padding: 0.5em;
+}

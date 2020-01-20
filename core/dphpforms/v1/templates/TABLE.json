@@ -1,0 +1,40 @@
+{
+    "id_temporal": "cmp_xx",
+    "enunciado" : "Tabla ABC",
+    "tipo_campo" : "TABLE",
+    "opciones_campo" : {
+        "table_type" : "dynamic",
+        "headers"   : [
+            "# 1",
+            "# 2",
+            "# 3"
+        ],
+        "initial_list" : [
+            [
+                "col 1 1",
+                "col 1 2",
+                "col 1 3"
+            ],
+            [
+                "col 2 1",
+                "col 2 2",
+                "col 2 3"
+            ]
+        ]
+    },
+    "atributos_campo": {
+        "class" : "",
+        "name" : "table_abc",
+        "required": "false",
+        "local_alias": "table_abc"
+    },
+    "permisos_campo": [
+        {
+            "rol" : "sistemas",
+            "permisos" : [
+                "lectura",
+                "escritura"
+            ]
+        }
+    ]
+}

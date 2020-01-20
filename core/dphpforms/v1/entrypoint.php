@@ -1032,6 +1032,9 @@ function _dphpforms_generate_html_recorder( $id_form, $rol_, $initial_config = n
                         case "SELECT":
                             $field = _dphpforms_generate_SELECT( $dom, $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
                             break;
+                        case "TABLE":
+                            $field = _dphpforms_generate_TABLE( $dom, $statement->mod_id_formulario_pregunta, $context, $enunciado, $form_uniqid );
+                            break;
                     }
                     
                     if( !is_null( $field ) ){

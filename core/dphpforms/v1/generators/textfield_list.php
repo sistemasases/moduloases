@@ -27,7 +27,7 @@ function _dphpforms_generate_TEXTFIELD_LIST(&$dom, $id_formulario_pregunta, $con
             ]);
 
     $inner_element_attr = [
-        'class' => [$context['attr_inputclass']],
+        'class' => [$context['attr_inputclass']], // Pendiente
         'disabled' => $context['enabled'],
         'required' => $context['attr_required'],
         'type' => "text"

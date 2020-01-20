@@ -93,6 +93,6 @@ $initial_config = '{
 
 $initial_config = json_decode( $initial_config );
 
-//echo _dphpforms_generate_html_recorder( 'seguimiento_pares', "sistemas", $initial_config, false  );
+echo _dphpforms_generate_html_recorder( 'seguimiento_pares', "sistemas", $initial_config, false  );
 
-echo _dphpforms_generate_html_updater( 50115, "sistemas", false  );
+//echo _dphpforms_generate_html_updater( 50115, "sistemas", false  );
