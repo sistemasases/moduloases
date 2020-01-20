@@ -27,6 +27,7 @@ function _dphpforms_generate_TABLE(&$dom, $id_formulario_pregunta, $context, $st
     ]);
 
     $elements = $context['options']->initial_list;
+    $header = $context['options']->header;
     
     // General container
 
@@ -45,7 +46,35 @@ function _dphpforms_generate_TABLE(&$dom, $id_formulario_pregunta, $context, $st
         "class" => ["dphpf-elements"]
     ]));
     
+    // -- Headers
     
+    $hrow = _core_dphpforms_build_tag($dom, "div", new DOMAttributeList([
+                "class" => ["dphpf-table-row"]
+    ]));
+    
+    $width = 100.0 / count( $header );
+
+    foreach ($header as $h_key => $hd) {
+
+        $hcol = _core_dphpforms_build_tag($dom, "div", new DOMAttributeList([
+                    "class" => ["dphpf-table-col"],
+                    "style" => "width: $width%; float: left;"
+        ]));
+
+        $c_span = _core_dphpforms_build_tag($dom, "span", new DOMAttributeList([
+                    "class" => ["dphpf-table-header"],
+                    "style" => "width: 100%;",
+        ]));
+        
+        $c_span->nodeValue = $hd;
+        $hcol->appendChild($c_span);
+        $hrow->appendChild($hcol);
+        
+    }
+    
+    $list_elements->appendChild($hrow);
+
+    // -- End headers
 
     foreach ($elements as $r_key => $row) {
         

@@ -4,7 +4,7 @@
     "tipo_campo" : "TABLE",
     "opciones_campo" : {
         "table_type" : "dynamic",
-        "headers"   : [
+        "header"   : [
             "# 1",
             "# 2",
             "# 3"
