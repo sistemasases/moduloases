@@ -25,14 +25,16 @@ define(['jquery',
 
 
     /** each property of the following object is a tab in the student profile view */
-    const TABS = ['socioed', 'academic', 'geographic', 'discapacity_tracking'];
+    const TABS = ['general', 'socioed', 'academic', 'geographic', 'discapacity_tracking'];
 
     /**
      * status of properties
      * false := Not loaded
      * true := Loaded
+     *
+     * General tab initialize on 'true', because is loaded by default
      */
-    var tabs_status = {'socioed': false, 'academic': false, 'geographic': false, 'discapacity_tracking': false};
+    var tabs_status = {'general': true, 'socioed': false, 'academic': false, 'geographic': false, 'discapacity_tracking': false};
 
     return {
         init: function (data_init) {
@@ -1072,6 +1074,8 @@ define(['jquery',
 
         var tab_name = event.data.tab_name;
 
+        console.log('Loading tab: ' + tab_name);
+
         if(tabs_status[tab_name]) {
             return;
         } else {
@@ -1159,6 +1163,13 @@ define(['jquery',
      */
     function load_tabs() {
         for(const tab_name of TABS) {
+
+            console.log('Loop on tab: ' + tab_name);
+
+            while(loading_indicator.get_loading_instances() != 0) {
+                console.log('Waiting\n');
+            }
+
             var tab_status = tabs_status[tab_name];
             if(!tab_status) {
                 load_tab({data: {tab_name: tab_name}});
