@@ -7,7 +7,7 @@ img.icon{
 }
 
 .gradeparent{
-    border: solid thin black;
+    border: 1px solid #ccc;
     width: -moz-max-content;    /* Firefox/Gecko */
     width: -webkit-max-content; 
 }
@@ -27,4 +27,19 @@ img.icon{
 
 #padre{
     width: 400px;
+}
+
+tr:nth-child(even) {background-color: #f2f2f2;}
+
+table td{
+    border: 2px solid #ccc;
+}
+
+table tr{
+    border: 2px solid #ccc;
+}
+
+table th{
+    border: 2px solid #ccc;
+    background-color: #eae9e9 !important;
 }
