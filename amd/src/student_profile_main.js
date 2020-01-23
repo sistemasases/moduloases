@@ -25,16 +25,16 @@ define(['jquery',
 
 
     /** each property of the following object is a tab in the student profile view */
-    const TABS = ['general', 'socioed', 'academic', 'geographic', 'discapacity_tracking'];
+    const TABS = ['general', 'socioed', 'academic', 'geographic', 'tracing_others', 'discapacity_tracking'];
 
     /**
-     * status of properties
+     * tabs' status
      * false := Not loaded
      * true := Loaded
      *
-     * General tab initialize on 'true', because is loaded by default
+     * General tab and tracing_others tab initialize on 'true', because they're loaded by default
      */
-    var tabs_status = {'general': true, 'socioed': false, 'academic': false, 'geographic': false, 'discapacity_tracking': false};
+    var tabs_status = {'general': true, 'socioed': false, 'academic': false, 'geographic': false, 'tracing_others': true, 'discapacity_tracking': false};
 
     return {
         init: function (data_init) {
@@ -321,7 +321,7 @@ define(['jquery',
                 $('#modal_riesgos').fadeOut(200);
             });
 
-            load_tabs();
+            load_tabs(0);
 
         }, equalize: function () {
             $(document).ready(function () {
@@ -1074,14 +1074,15 @@ define(['jquery',
 
         var tab_name = event.data.tab_name;
 
-        console.log('Loading tab: ' + tab_name);
-
         if(tabs_status[tab_name]) {
             return;
         } else {
             tabs_status[tab_name] = true;
         }
 
+        console.log('Loading tab: ' + tab_name);
+
+        loading_indicator.show();
         append_tab_loading_indicator(tab_name);
 
         var id_ases = $('#id_ases').val();
@@ -1106,6 +1107,7 @@ define(['jquery',
                             let tab_to_load = $(mustache.render( template, msg.data_response ));
                             var tab_id = "#" + tab_name + "_tab";
                             //$(tab_id).empty();
+                            loading_indicator.hide();
                             $(tab_id).append(tab_to_load);
                             //document.getElementById(tab_id).innerHTML = tab_to_load;
                             switch(tab_name){
@@ -1161,20 +1163,20 @@ define(['jquery',
      * TODO: Filter the priority of the tab to load, counting
      * how many times the tab is loaded.
      */
-    function load_tabs() {
-        for(const tab_name of TABS) {
+    function load_tabs(index) {
 
-            console.log('Loop on tab: ' + tab_name);
+        const tab_name = TABS[index];
+        var tab_loaded = tabs_status[tab_name];
 
-            while(loading_indicator.get_loading_instances() != 0) {
-                console.log('Waiting\n');
-            }
+        console.log('Loop on tab: ' + tab_name + '\nindex: '+ index);
 
-            var tab_status = tabs_status[tab_name];
-            if(!tab_status) {
-                load_tab({data: {tab_name: tab_name}});
-                tabs_status[tab_name] = true;
-            }
+        if(tab_name === undefined) return;
+
+        if(tab_loaded) {
+            load_tabs(++index);
+        } else {
+            $.when(console.log('On when'), load_tab({data: {tab_name: tab_name}})).then(console.log('On done'), load_tabs(++index));
+            tabs_status[tab_name] = true;
         }
     }
 
