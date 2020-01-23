@@ -63,23 +63,18 @@
             var show_loading_indicator =  function(){
                 loading_instances++;
                 $(".loading_indicator").show();
-            };
+            }
 
             var hide_loading_indicator = function(){
                 loading_instances--;
                 if( loading_instances == 0 ){
                     $(".loading_indicator").hide();
                 }
-            };
-
-            var get_loading_instances = function(){
-                return loading_instances;
-            };
+            }
 
             return {
                 show:show_loading_indicator, 
-                hide:hide_loading_indicator,
-                get_loading_instances:get_loading_instances
+                hide:hide_loading_indicator
             }
         }
 );
