@@ -1172,12 +1172,12 @@ define(['jquery',
 
         if(tab_name === undefined) return;
 
-        if(tab_loaded) {
-            load_tabs(++index);
-        } else {
-            $.when(console.log('On when'), load_tab({data: {tab_name: tab_name}})).then(console.log('On done'), load_tabs(++index));
+        if(!tab_loaded) {
+            //$.when(console.log('On when'), load_tab({data: {tab_name: tab_name}})).then(console.log('On done'), load_tabs(++index));
+            $(document).ajaxStop(load_tab({data: {tab_name: tab_name}}));
             tabs_status[tab_name] = true;
         }
+        $(document).ajaxStop(load_tabs(++index));
     }
 
     /**
