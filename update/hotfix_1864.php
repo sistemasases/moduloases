@@ -51,7 +51,13 @@ $script = function () {
 
     //Delete record
 
-    $DB->delete_records('talentospilos_user_extended', ['id_ases_user' => $id_ases_deprecated, 'id_moodle_user' => $id_moodle_with_two_relations]);
+    $sql_query = "SELECT *
+                    FROM {talentospilos_user_extended}
+                    WHERE id_ases_user = 10076 AND id_moodle_user = 121315";
+
+    $id_record_deprecated = $DB->get_record_sql($sql_query);
+
+    $DB->delete_records('talentospilos_user_extended', ['id' => $id_record_deprecated]);
 
     echo "HOTFIX APLICADO";
     // End of the HOTFIX code
