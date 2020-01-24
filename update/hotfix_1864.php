@@ -37,6 +37,16 @@ $script = function () {
 
     $DB->execute($query);
 
+    //Delete record
+
+    $sql_query = "SELECT *
+                    FROM {talentospilos_user_extended}
+                    WHERE id_ases_user = 10076 AND id_moodle_user = 121315";
+
+    $id_record_deprecated = $DB->get_record_sql($sql_query);
+
+    $DB->delete_records('talentospilos_user_extended', ['id' => $id_record_deprecated]);
+
     //Insert of new relation
 
     $relation_to_create = new stdClass();
@@ -48,16 +58,6 @@ $script = function () {
     $relation_to_create->program_status = 4;
 
     $DB->insert_record("talentospilos_user_extended", $relation_to_create, true);
-
-    //Delete record
-
-    $sql_query = "SELECT *
-                    FROM {talentospilos_user_extended}
-                    WHERE id_ases_user = 10076 AND id_moodle_user = 121315";
-
-    $id_record_deprecated = $DB->get_record_sql($sql_query);
-
-    $DB->delete_records('talentospilos_user_extended', ['id' => $id_record_deprecated]);
 
     echo "HOTFIX APLICADO";
     // End of the HOTFIX code
