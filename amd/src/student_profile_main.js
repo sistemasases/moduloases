@@ -1090,6 +1090,9 @@ define(['jquery',
 
         $.ajax({
             type: "POST",
+            async: false,
+            dataType: "json",
+            cache: "false",
             data: JSON.stringify({
                 "function": 'load_tabs',
                 "params": [id_ases, tab_name, id_instance],
@@ -1107,7 +1110,6 @@ define(['jquery',
                             let tab_to_load = $(mustache.render( template, msg.data_response ));
                             var tab_id = "#" + tab_name + "_tab";
                             //$(tab_id).empty();
-                            loading_indicator.hide();
                             $(tab_id).append(tab_to_load);
                             //document.getElementById(tab_id).innerHTML = tab_to_load;
                             switch(tab_name){
@@ -1138,8 +1140,6 @@ define(['jquery',
                     console.log(msg);
                 }
             },
-            dataType: "json",
-            cache: "false",
             error: function(msg) {
                 loading_indicator.hide();
                 console.log(msg);
@@ -1168,16 +1168,14 @@ define(['jquery',
         const tab_name = TABS[index];
         var tab_loaded = tabs_status[tab_name];
 
-        console.log('Loop on tab: ' + tab_name + '\nindex: '+ index);
-
         if(tab_name === undefined) return;
 
-        if(!tab_loaded) {
-            //$.when(console.log('On when'), load_tab({data: {tab_name: tab_name}})).then(console.log('On done'), load_tabs(++index));
-            $(document).ajaxStop(load_tab({data: {tab_name: tab_name}}));
+        if(tab_loaded) {
+            load_tabs(++index);
+        } else {
+            $.when(console.log('On when'), load_tab({data: {tab_name: tab_name}})).then(console.log('On done'), load_tabs(++index));
             tabs_status[tab_name] = true;
         }
-        $(document).ajaxStop(load_tabs(++index));
     }
 
     /**
