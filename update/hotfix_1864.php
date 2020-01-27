@@ -30,7 +30,7 @@ $script = function () {
     $query = "
         UPDATE {talentospilos_usuario}
         SET num_doc_ini = 939393,  num_doc = 939393
-        WHERE id = $id_ases_deprecated";
+        WHERE id = ".$id_ases_deprecated;
 
     $DB->execute($query);
 
@@ -38,9 +38,12 @@ $script = function () {
 
     $sql_query = "SELECT *
                     FROM {talentospilos_user_extended}
-                    WHERE id_ases_user = $id_ases_deprecated AND id_moodle_user = $id_moodle_with_two_relations";
+                    WHERE id_ases_user = ".$id_ases_deprecated." AND id_moodle_user = ".$id_moodle_with_two_relations;
 
     $id_record_deprecated = $DB->get_record_sql($sql_query)->id;
+
+    print_r("\nid_record_deprecated: ".$id_record_deprecated."\n");
+    /*
 
     $DB->delete_records('talentospilos_user_extended', ['id' => $id_record_deprecated]);
 
@@ -57,7 +60,7 @@ $script = function () {
     $relation_to_create->tracking_status = 0;
     $relation_to_create->program_status = 4;
 
-    $DB->insert_record("talentospilos_user_extended", $relation_to_create, true);
+    $DB->insert_record("talentospilos_user_extended", $relation_to_create, true);*/
 
     echo "HOTFIX APLICADO";
     // End of the HOTFIX code
