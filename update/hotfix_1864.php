@@ -25,9 +25,6 @@ $script = function () {
     $id_ases_in_use = 10743;
     $id_ases_deprecated = 10076;
 
-    $sql_query = "SELECT MAX (id) FROM {talentospilos_usuario}";
-    $highest_id = $DB->get_record_sql($sql_query)->id;
-
     //Update of user
 
     $query = "
@@ -48,6 +45,9 @@ $script = function () {
     $DB->delete_records('talentospilos_user_extended', ['id' => $id_record_deprecated]);
 
     //Insert of new relation
+
+    $sql_query = "SELECT MAX (id) FROM {talentospilos_user_extended}";
+    $highest_id = $DB->get_record_sql($sql_query)->id;
 
     $relation_to_create = new stdClass();
     $relation_to_create->id = $highest_id+1;
