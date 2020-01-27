@@ -1072,7 +1072,8 @@ define(['jquery',
      */
     function load_tab(event) {
 
-        var tab_name = event.data.tab_name;
+        const tab_name = event.data.tab_name;
+        const load_async = (event.data.load_async === undefined);
 
         if(tabs_status[tab_name]) {
             return;
@@ -1090,7 +1091,7 @@ define(['jquery',
 
         $.ajax({
             type: "POST",
-            async: false,
+            async: load_async,
             dataType: "json",
             cache: "false",
             data: JSON.stringify({
@@ -1173,7 +1174,7 @@ define(['jquery',
         if(tab_loaded) {
             load_tabs(++index);
         } else {
-            $.when(console.log('On when'), load_tab({data: {tab_name: tab_name}})).then(console.log('On done'), load_tabs(++index));
+            $.when(console.log('On when'), load_tab({data: {tab_name: tab_name, load_async: false}})).then(console.log('On done'), load_tabs(++index));
             tabs_status[tab_name] = true;
         }
     }
