@@ -42,7 +42,7 @@ $script = function () {
 
     $id_record_deprecated = $DB->get_record_sql($sql_query)->id;
 
-    print_r("\nid_record_deprecated: ".$id_record_deprecated."\n");
+    print_r("\nid_record_deprecated: ".((isset($id_record_deprecated))?$id_record_deprecated:"nula")."\n");
     /*
 
     $DB->delete_records('talentospilos_user_extended', ['id' => $id_record_deprecated]);
