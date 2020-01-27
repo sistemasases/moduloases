@@ -26,7 +26,7 @@ $script = function () {
     $id_ases_deprecated = 10076;
 
     $sql_query = "SELECT MAX (id) FROM {talentospilos_usuario}";
-    $highest_id = $DB->get_record_sql($sql_query);
+    $highest_id = $DB->get_record_sql($sql_query)->id;
 
     //Update of user
 
@@ -43,7 +43,7 @@ $script = function () {
                     FROM {talentospilos_user_extended}
                     WHERE id_ases_user = 10076 AND id_moodle_user = 121315";
 
-    $id_record_deprecated = $DB->get_record_sql($sql_query);
+    $id_record_deprecated = $DB->get_record_sql($sql_query)->id;
 
     $DB->delete_records('talentospilos_user_extended', ['id' => $id_record_deprecated]);
 
