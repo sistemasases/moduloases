@@ -14,13 +14,14 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
 
         init: function(){
             
-            var id_ases = $('#id_ases').val();
+            const id_ases = $('#id_ases').val();
             var student_marker;
-            var latLng_univalle_melendez = new google.maps.LatLng(3.375778, -76.533328);
-            var latLng_univalle_sanfer = new google.maps.LatLng(3.431527, -76.546571);
+            const LATLNG_CAMPUS_MELENDEZ = new google.maps.LatLng(3.3741569,-76.5355235);
+            const LATLNG_CAMPUS_SANFER = new google.maps.LatLng(3.431626, -76.546822);
 
             var cod_programa_activo = document.querySelector('#cod_programa_activo').dataset.info;
-            var latLng_student_campus = new google.maps.LatLng(latLng_univalle_sanfer.lat(), latLng_univalle_sanfer.lng());
+            var cod_facultad = cod_programa_activo[1];
+            var latLng_student_campus = (cod_facultad === '6' || cod_facultad === '8')?LATLNG_CAMPUS_SANFER:LATLNG_CAMPUS_MELENDEZ;
 
             /**
              * Executes the method search_direction() by unfocusing the address text area.
