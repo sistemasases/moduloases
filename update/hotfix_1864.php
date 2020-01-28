@@ -40,10 +40,9 @@ $script = function () {
                     FROM {talentospilos_user_extended}
                     WHERE id_ases_user = ".$id_ases_deprecated." AND id_moodle_user = ".$id_moodle_with_two_relations;
 
-    /*$id_record_deprecated = $DB->get_record_sql($sql_query)->id;
+    $id_record_deprecated = $DB->get_record_sql($sql_query)->id;
 
-    print_r("\nid_record_deprecated: ".((isset($id_record_deprecated))?$id_record_deprecated:"nula")."\n");
-
+    //print_r("\nid_record_deprecated: ".((isset($id_record_deprecated))?$id_record_deprecated:"nula")."\n");
 
     $DB->delete_records('talentospilos_user_extended', ['id' => $id_record_deprecated]);
 
@@ -60,7 +59,7 @@ $script = function () {
     $relation_to_create->tracking_status = 0;
     $relation_to_create->program_status = 4;
 
-    $DB->insert_record("talentospilos_user_extended", $relation_to_create, true);*/
+    $DB->insert_record("talentospilos_user_extended", $relation_to_create, true);
 
     echo "HOTFIX APLICADO";
     // End of the HOTFIX code
