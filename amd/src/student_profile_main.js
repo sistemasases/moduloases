@@ -31,15 +31,21 @@ define(['jquery',
             var ciudad_est = $('#municipio_act').val();
             var latitude = $('#latitude').val();
             var longitude = $('#longitude').val();
+            const LATLNG_CAMPUS_MELENDEZ = new google.maps.LatLng(3.3741569,-76.5355235);
+            const LATLNG_CAMPUS_SANFER = new google.maps.LatLng(3.431626, -76.546822);
+
+            var cod_programa_activo = document.querySelector('#cod_programa_activo').dataset.info;
+            var cod_facultad = cod_programa_activo[1];
+            var latLng_student_campus = (cod_facultad === '6' || cod_facultad === '8')?LATLNG_CAMPUS_SANFER:LATLNG_CAMPUS_MELENDEZ;
 
             // Agrega iframe para Google Maps
             if (ciudad_est == 'CALI') {
 
-                document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=transit'></iframe>";
+                document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination="+latLng_student_campus.lat()+","+latLng_student_campus.lng()+"&mode=transit'></iframe>";
 
             } else {
 
-                document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=driving'></iframe>";
+                document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination="+latLng_student_campus.lat()+","+latLng_student_campus.lng()+"&mode=driving'></iframe>";
             }
 
 

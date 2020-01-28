@@ -14,8 +14,14 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
 
         init: function(){
             
-            var id_ases = $('#id_ases').val();
+            const id_ases = $('#id_ases').val();
             var student_marker;
+            const LATLNG_CAMPUS_MELENDEZ = new google.maps.LatLng(3.3741569,-76.5355235);
+            const LATLNG_CAMPUS_SANFER = new google.maps.LatLng(3.431626, -76.546822);
+
+            var cod_programa_activo = document.querySelector('#cod_programa_activo').dataset.info;
+            var cod_facultad = cod_programa_activo[1];
+            var latLng_student_campus = (cod_facultad === '6' || cod_facultad === '8')?LATLNG_CAMPUS_SANFER:LATLNG_CAMPUS_MELENDEZ;
 
             /**
              * Executes the method search_direction() by unfocusing the address text area.
@@ -120,11 +126,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
 
                 if (ciudad_est == 1079) {
 
-                    document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=transit'></iframe>";
+                    document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination="+latLng_student_campus.lat()+","+latLng_student_campus.lng()+"&mode=transit'></iframe>";
 
                 } else {
 
-                    document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=driving'></iframe>";
+                    document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination="+latLng_student_campus.lat()+","+latLng_student_campus.lng()+"&mode=driving'></iframe>";
                 }
             });
 
@@ -190,7 +196,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                         document.getElementById('longitude').value = longitude;
 
                         var latLng_estudiante = new google.maps.LatLng(latitude, longitude);
-                        var latLng_univalle = new google.maps.LatLng(3.3759493, -76.5355789);
 
                         /**
                          * Repaints the map after editing the student's marker.
@@ -199,19 +204,19 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                         if(city == 1079){
                             var mapa = document.getElementById('mapa').outerHTML;
                             document.getElementById('geographic_map').innerHTML = mapa;
-                            document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=transit'></iframe>";
+                            document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination="+latLng_student_campus.lat()+","+latLng_student_campus.lng()+"&mode=transit'></iframe>";
                             mode='TRANSIT';
                         } else {
                             var mapa = document.getElementById('mapa').outerHTML;
                             document.getElementById('geographic_map').innerHTML = mapa;
-                            document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=3.3759493,-76.5355789&mode=driving' allowfullscreen></iframe>";
+                            document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination="+latLng_student_campus.lat()+","+latLng_student_campus.lng()+"&mode=driving' allowfullscreen></iframe>";
                             mode = 'DRIVING';
                         }
 
                         //Instancies a route.
                         var route_request = {
                             origin: latLng_estudiante,
-                            destination: latLng_univalle,
+                            destination: latLng_student_campus,
                             travelMode: mode
                         };
 
@@ -292,16 +297,15 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
 
                 var geocoder;
 
-                var latLng_univalle = new google.maps.LatLng(3.3759493, -76.5355789);
                 var opciones = {
-                    center: latLng_univalle,
+                    center: latLng_student_campus,
                     zoom: 14
                 };
 
                 var map = new google.maps.Map(document.getElementById('mapa'), opciones);
 
                 var initial_marker = new google.maps.Marker({
-                    position: latLng_univalle,
+                    position: latLng_student_campus,
                     map: map,
                     title: 'Universidad del Valle'
                 });
@@ -416,4 +420,4 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
             }
         }
     }
-})
+});
