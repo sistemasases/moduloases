@@ -78,21 +78,21 @@ function make_html_courses($courses)
 
     foreach ($courses as $course) {
 
-        $html .= "<div class='panel panel-default'>
-                    <div class='panel-heading' id = 'academic'>
-                        <h4 class='panel-title'>
-                        <a id = 'academic_link' data-toggle='collapse' data-parent='#accordion_academic' href='#course_$course->id_course' aria-expanded='false' aria-controls='$course->id_course'>
-                            $course->fullname
-                        </a>
+        $html .= "<div class='card card_student_profile'>
+                    <div class='card-header academic_tab_header' id='academic'>
+                        <h4 class='card-title'>
+                            <a id='academic_link' class='academic_tab_title' data-toggle='collapse' data-parent='#accordion_academic' href='#course_$course->id_course' aria-expanded='false' aria-controls='$course->id_course'>
+                                $course->fullname
+                            </a>
                         </h4>
                     </div>
-                    <div id = 'course_$course->id_course' class='panel-collapse collapse'>
-                        <div class = 'panel-body'>
+                    <div id='course_$course->id_course' class='panel-collapse collapse'>
+                        <div class = 'card-body'>
                             $course->descriptions
                         </div>
                     </div>
-                  </div>";
-
+                  </div>"
+        ;
     }
 
     return $html;
@@ -268,28 +268,28 @@ function make_html_semesters($semesters)
                 $promedio_acumulado = "NO REGISTRA";
             }
             
-            $descriptions .= "<div id = 'panel_academic' class = 'panel panel-default'><div id = 'info_course' class = 'row'>
-                                <div class = 'col-md-4'>Programa: <b>$registro->program_name</b></div>
-                                <div class = 'col-md-4'>Promedio Semestre: $promedio_semestre</div>
-                                <div class = 'col-md-4'>Promedio Acumulado: $promedio_acumulado</div>
+            $descriptions .= "<div id = 'panel_academic' class = 'card'><div id = 'info_course' class = 'ases-row'>
+                                <div class = 'ases-col-md-4 ases-col-lg-4'>Programa: <b>$registro->program_name</b></div>
+                                <div class = 'ases-col-md-4 ases-col-lg-4'>Promedio Semestre: $promedio_semestre</div>
+                                <div class = 'ases-col-md-4 ases-col-lg-4'>Promedio Acumulado: $promedio_acumulado</div>
                              </div>";
             $div_bajo = "";
             $div_estimulo = "";
             $div_cancelacion = "";
 
             if ($registro->bajo != false) {
-                $div_bajo .= "<div id = 'bajo' class = 'col-md-8 bajo'>Cae en bajo rendimiento número $registro->bajo.</div>";
+                $div_bajo .= "<div id = 'bajo' class = 'ases-col-md-8 ases-col-lg-8 bajo'>Cae en bajo rendimiento número $registro->bajo.</div>";
             }
 
             if ($registro->estimulo != false) {
-                $div_bajo .= "<div id = 'estimulo' class = 'col-md-8 estimulo'>Gana estimulo ocupando el puesto $registro->estimulo.</div>";
+                $div_bajo .= "<div id = 'estimulo' class = 'ases-col-md-8 ases-col-lg-8 estimulo'>Gana estimulo ocupando el puesto $registro->estimulo.</div>";
             }
 
             if ($registro->cancelacion != false) {
-                $div_bajo .= "<div id = 'cancelacion' class = 'col-md-8 cancelacion'>Cancela semestre. Fecha de cancelación: $registro->cancelacion.</div>";
+                $div_bajo .= "<div id = 'cancelacion' class = 'ases-col-md-8 ases-col-lg-8 cancelacion'>Cancela semestre. Fecha de cancelación: $registro->cancelacion.</div>";
             }
 
-            $descriptions .= "<div class = 'row'>
+            $descriptions .= "<div class = 'ases-row'>
                                 $div_bajo
                                 $div_cancelacion
                                 $div_estimulo
@@ -300,84 +300,80 @@ function make_html_semesters($semesters)
             if ($materias === null) {
                 $descriptions .= "NO REGISTRA MATERIAS EN ESTE SEMESTRE";
             } else {
-                $descriptions .= "<div class = 'row'> <b>
-                <div class = 'col-md-4'>
-                   MATERIA
-                </div>
-             <div class = 'col-md-2'>
-                    CÓDIGO
-             </div>
-               <div class = 'col-md-2'>
-                    NOTA
-               </div>
-               <div class = 'col-md-2'>
-                    CREDITOS
-               </div>
-                </b>
-            </div>";
+                $descriptions .= "<div class = 'ases-row'>
+                    <b>
+                        <div class = 'ases-col-md-4 ases-col-lg-4'>
+                           MATERIA
+                        </div>
+                        <div class = 'ases-col-md-2 ases-col-lg-2'>
+                            CÓDIGO
+                        </div>
+                        <div class = 'ases-col-md-2 ases-col-lg-2'>
+                            NOTA
+                        </div>
+                        <div class = 'ases-col-md-2 ases-col-lg-2'>
+                            CREDITOS
+                        </div>
+                    </b>
+                </div>";
 
                 foreach ($materias as $materia) {
                     $perdida = "";
                     if(is_float($materia->nota + 0) and $materia->nota < 3){
                         $perdida = "perdida";
                     }
-                    $descriptions .= "<div class = 'row $perdida'>
-                    <div class = 'col-md-4'>
+                    $descriptions .= "<div class = 'ases-row $perdida'>
+                    <div class = 'ases-col-md-4 ases-col-lg-4'>
                         $materia->nombre_materia
                     </div>
-                    <div class = 'col-md-2'>
+                    <div class = 'ases-col-md-2 ases-col-lg-2'>
                          $materia->codigo_materia
                     </div>
-                    <div class = 'col-md-2 '>
+                    <div class = 'ases-col-md-2 ases-col-lg-2'>
                          $materia->nota
                     </div>
-                    <div class = 'col-md-2'>
+                    <div class = 'ases-col-md-2 ases-col-lg-2'>
                          $materia->creditos
                     </div>
-                    
                  </div>";
                 }
-
             }
 
             $descriptions .= "</div>";
 
             if($first){
-                $html .= "  <div class='panel panel-default'>
-                      <div class='panel-heading' id = 'academic'>
-                          <h4 class='panel-title'>
+                $html .= "  <div class='card'>
+                      <div class='card-header' id = 'academic'>
+                          <h4 class='card-title'>
                           <a id = 'academic_link' data-toggle='collapse' data-parent='#accordion_academic_historic' href='#register_$semester_name' aria-expanded='false' aria-controls='$semester_name'>
                               Semestre $semester_name
                           </a>
                           </h4>
                       </div>
                       <div id = 'register_$semester_name' class='panel-collapse collapse'>
-                          <div class = 'panel-body'>
+                          <div class = 'card-body'>
                               $descriptions
                           </div>
                       </div>
                     </div>  ";
             } else{
 
-                $html .= "  <div class='panel panel-default'>
-                      <div class='panel-heading' id = 'academic'>
-                          <h4 class='panel-title saltopagina'>
+                $html .= "  <div class='card'>
+                      <div class='card-header' id = 'academic'>
+                          <h4 class='card-title saltopagina'>
                           <a id = 'academic_link' data-toggle='collapse' data-parent='#accordion_academic_historic' href='#register_$semester_name' aria-expanded='false' aria-controls='$semester_name'>
                               Semestre $semester_name
                           </a>
                           </h4>
                       </div>
                       <div id = 'register_$semester_name' class='panel-collapse collapse'>
-                          <div class = 'panel-body'>
+                          <div class = 'card-body'>
                               $descriptions
                           </div>
                       </div>
                     </div>  ";
-
             }
-
             $first = false;
-
         }
     }
 

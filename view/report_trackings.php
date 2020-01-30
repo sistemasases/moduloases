@@ -93,7 +93,8 @@ $data->menu = $menu_option;
 
 $userrole = get_id_rol($USER->id,$blockid);
 if($userrole){
-$usernamerole= get_name_rol($userrole);}
+    $usernamerole = get_name_rol($userrole);
+}
 $username = $USER->username;
 $email = $USER->email;
 
@@ -161,12 +162,12 @@ if($usernamerole=='monitor_ps'){
 
 
 }elseif($usernamerole=='sistemas'){
+
     //Gets all existent periods and roles containing "_ps"
     $roles = get_rol_ps();
 
     //Obtains the people who are in the last added semester in which their roles ended up with "_ps"
     $people = get_people_onsemester(reset($periods)->id,$roles,$blockid);
-
 
     //Sorts People 'select'
     $table_periods.=get_people_select($people);
@@ -174,7 +175,6 @@ if($usernamerole=='monitor_ps'){
 
 }
 $table_permissions=show_according_permissions($table,$actions);
-
 
 $data->rol = $usernamerole;
 
@@ -185,11 +185,12 @@ $data->semester = $semester_id;
 $data->courseid = $courseid;
 $data->blockid = $blockid;
 
-
 $PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
 $PAGE->requires->css('/blocks/ases/style/jqueryui.css', true);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
-$PAGE->requires->css('/blocks/ases/style/bootstrap.min.css', true);
+//@deprecated
+//$PAGE->requires->css('/blocks/ases/style/bootstrap.min.css', true);
+$PAGE->requires->css('/blocks/ases/style/aaspect.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert2.css', true);
 $PAGE->requires->css('/blocks/ases/style/sugerenciaspilos.css', true);
@@ -207,9 +208,7 @@ $PAGE->requires->css('/blocks/ases/style/creadorFormulario.css', true);
 $PAGE->requires->js_call_amd('block_ases/dphpforms_form_renderer', 'init');
 $PAGE->requires->js_call_amd('block_ases/pilos_tracking_main','init');
 $PAGE->requires->js_call_amd('block_ases/groupal_tracking','init');
-
 $PAGE->requires->js_call_amd('block_ases/ases_incident_system', 'init');
-
 
 $PAGE->set_url($url);
 $PAGE->set_title($title);

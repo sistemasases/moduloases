@@ -1,164 +1,159 @@
 {{#data}}
-<div id="custom_metadata" data-view-name="report_trackings"></div>
-<div id="dphpforms_role_support" data-info="{{rol}}" style="display:none;"></div>
-<div id="current_ases_semester" data-info="{{semester}}" style="display:none;"></div>
-<div id="dphpforms_block_courseid" data-info="{{courseid}}" style="display:none;"></div>
-<div id="dphpforms_block_instance" data-info="{{instance}}" style="display:none;"></div>
-{{> block_ases/side_menu}} 
-<!--<div id="loading"><img id="loading-image" src="../icon/load.gif" height="162" width="162">-->
-<div class="container-fluid">
-  <div class="row">
-      <div id="title-report-trackings-view" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-          <h2 class="float-left">SEGUIMIENTO PILOS</h2>
-          {{{message}}}
-          <div id="report-tracking-selectors" data-spy="scroll" data-target=".navbar" data-offset="50" class="col-xs-12 col-sm-12 col-md-8 col-lg-8 float-right reporte-seguimiento">
-            {{{table_periods}}}
-          </div>
-      </div>
-  </div>
-<form>
-   {{#data}}
-   <div class="row">
-       <div id="msg-cache" class="cache col-xs-4 col-sm-3 col-md-2 col-lg-2 col-xs-offset-6 col-sm-offset-8 col-md-offset-9 col-lg-offset-9" title="Click para m&aacute;s informaci&oacute;n">
-           <span class="glyphicon glyphicon-question-sign"></span> Cach&eacute; habilitado
-       </div>
-   </div>
-   <div class="row">
-
-      {{#view_trackings_rt}}
-      <div class="well col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-lg-offset-1  equalize text-center" 
-           id="div-header-info" name="main_counting">
-        <div id="title-informacion-de">
-            INFORMACIÓN: {{human_rol}}
-        </div>
-        <hr style="margin:7px; border-color:rgb(207, 207, 207);">
-
-        <div class="row">
-
-          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-            <strong>Profesional</strong><br />
-            <strong>Fichas:</strong> Revisado : <span id="general_rev_pro">*</span> - No revisado : <span id="general_not_rev_pro">*</span> -  Total : <span id="general_pro_t">*</span><br>
-            <strong>Inasistencias:</strong> Revisado : <span id="general_in_rev_pro">*</span> - No revisado : <span id="general_in_not_rev_pro">*</span> -  Total : <span id="general_in_pro_t">*</span>
-          </div>
-          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-            <strong>Practicante</strong><br />
-            <strong>Fichas:</strong> Revisado : <span id="general_rev_prac">*</span> - No revisado : <span id="general_not_rev_prac">*</span> -  Total : <span id="general_prac_t">*</span><br>
-            <strong>Inasistencias:</strong> Revisado : <span id="general_in_rev_prac">*</span> - No revisado : <span id="general_in_not_rev_prac">*</span> -  Total : <span id="general_in_prac_t">*</span>
-          </div>
-
-        </div>
-
-      </div>
-      <div data-spy="scroll" data-target=".navbar" data-offset="50" 
-           class="well col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-lg-offset-1 reporte-seguimiento " 
-           id="reemplazarToogle" name="reemplazarToogle">
-
-          {{{table}}}
-
-      </div>
-    {{/view_trackings_rt}}
-   {{/data}}
-  </div>
-</form>
-</div>
-
-  <!-- MODALES DE SEGUIMIENTO -->
-  <div class="mymodal" id="modal_v2_peer_tracking" name="modal_v2_pares">
-    <div class="outside" ></div>
-    <div class="mymodal-content">
-      <div class="mymodal-header col-sm-12">
-        <div class="col-sm-11">
-          <h4 class="" id="myModalLabel">Nuevo registro</h4>
-        </div>
-        <div class="col-sm-1">
-          <span id="mymodal-v2-close" class="mymodal-close" aria-hidden="true">&times;</span>
-        </div>
-      </div>
-      <div class="mymodal-body mymodal-body_v2 col-sm-12">
-        <div class="row">
-          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            {{{form_seguimientos}}}
-          </div>
-        </div>
-      </div>
-      <div class="mymodal-footer">
-          .
-      </div>
-    </div>
-  </div>
-
-  <div class="mymodal" id="modal_v2_edit_peer_tracking" name="modal_edit_v2_pares">
-    <div class="outside" ></div>
-    <div class="mymodal-content">
-      <div class="mymodal-header col-sm-12">
-        <div class="col-sm-11">
-          <h4 class="" id="myModalLabel">Visualización/Edición</h4>
-        </div>
-        <div class="col-sm-1">
-          <span id="mymodal-v2-close" class="mymodal-close" aria-hidden="true">&times;</span>
-        </div>
-      </div>
-      <div class="mymodal-body mymodal-body_v2 col-sm-12">
-        <div class="row">
-          <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <div id="body_editor"></div>
-          </div>
-        </div>
-      </div>
-      <div class="mymodal-footer">
-          .
-      </div>
-    </div>
-  </div>
-  <!-- FIN MODALES SEGUIMIENTO V2 -->
-
-  <!-- MODALES DE SEGUIMIENTO GRUPAL NUEVO -->
-<div class="mymodal" id="modal_v2_groupal_tracking" name="modal_v2_pares">
-  <div class="outside" ></div>
-   <div class="mymodal-content">
-      <div class="mymodal-header col-sm-12">
-         <div class="col-sm-11">
-            <h4 class="" id="myModalLabel">Nuevo registro</h4>
-         </div>
-         <div class="col-sm-1">
-            <span id="mymodal-v2-close" class="mymodal-close" aria-hidden="true">&times;</span>
-         </div>
-      </div>
-      <div class="mymodal-body mymodal-body_v2 col-sm-12">
-         <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-               {{{form_seguimientos_grupales}}}
+    <div id="custom_metadata" data-view-name="report_trackings"></div>
+    <div id="dphpforms_role_support" data-info="{{rol}}" style="display:none;"></div>
+    <div id="current_ases_semester" data-info="{{semester}}" style="display:none;"></div>
+    <div id="dphpforms_block_courseid" data-info="{{courseid}}" style="display:none;"></div>
+    <div id="dphpforms_block_instance" data-info="{{instance}}" style="display:none;"></div>
+    {{> block_ases/side_menu}}
+    <!--<div id="loading"><img id="loading-image" src="../icon/load.gif" height="162" width="162">-->
+    <div class="ases-container-fluid">
+        <div class="ases-row">
+            <div id="title-report-trackings-view" class="ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12">
+                <h2 class="float-left">SEGUIMIENTO PILOS</h2>
+                {{{message}}}
+                <div id="report-tracking-selectors" data-spy="scroll" data-target=".navbar" data-offset="50" class="ases-col-xs-12 ases-col-sm-12 ases-col-md-8 ases-col-lg-8 float-right reporte-seguimiento">
+                    {{{table_periods}}}
+                </div>
             </div>
-         </div>
-      </div>
-      <div class="mymodal-footer">
-         .
-      </div>
-   </div>
-</div>
-<div class="mymodal" id="modal_v2_edit_groupal_tracking" name="modal_edit_v2_pares">
-  <div class="outside"></div>
-   <div class="mymodal-content">
-      <div class="mymodal-header col-sm-12">
-         <div class="col-sm-11">
-            <h4 class="" id="myModalLabel">Visualización/Edición</h4>
-         </div>
-         <div class="col-sm-1">
-            <span id="mymodal-v2-close" class="mymodal-close" aria-hidden="true">&times;</span>
-         </div>
-      </div>
-      <div class="mymodal-body mymodal-body_v2 col-sm-12">
-         <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-               <div id="body_editor"></div>
-            </div>
-         </div>
-      </div>
-      <div class="mymodal-footer">
-         .
-      </div>
-   </div>
-</div>
-<!-- FIN MODALES SEGUIMIENTO V2 -->
+        </div>
 
+        <form>
+            {{#data}}
+                <div class="ases-row">
+                    <div id="msg-cache" class="cache ases-col-xs-4 ases-col-sm-3 ases-col-md-2 ases-col-lg-2 ases-col-xs-offset-6 ases-col-sm-offset-8 ases-col-md-offset-9 ases-col-lg-offset-9" title="Click para m&aacute;s informaci&oacute;n">
+                        <span class="ases-glyphicon ases-glyphicon-question-sign"></span>
+                        Cach&eacute; habilitado
+                    </div>
+                </div>
+
+                <div class="ases-row">
+                    {{#view_trackings_rt}}
+                        <div class="well ases-col-xs-10 ases-col-sm-10 ases-col-md-10 ases-col-lg-10 ases-col-xs-offset-1 ases-col-sm-offset-1 ases-col-md-offset-1 ases-col-lg-offset-1  equalize text-center" id="div-header-info" name="main_counting">
+                            <div id="title-informacion-de">
+                                INFORMACIÓN: {{human_rol}}
+                            </div>
+                            <hr style="margin:7px; border-color:rgb(207, 207, 207);">
+
+                            <div class="ases-row">
+                                <div class="ases-col-xs-12 ases-col-sm-12 ases-col-md-6 ases-col-lg-6">
+                                    <strong>Profesional</strong><br/>
+                                    <strong>Fichas:</strong> Revisado : <span id="general_rev_pro">*</span> - No revisado : <span id="general_not_rev_pro">*</span> -  Total : <span id="general_pro_t">*</span><br>
+                                    <strong>Inasistencias:</strong> Revisado : <span id="general_in_rev_pro">*</span> - No revisado : <span id="general_in_not_rev_pro">*</span> -  Total : <span id="general_in_pro_t">*</span>
+                                </div>
+
+                                <div class="ases-col-xs-12 ases-col-sm-12 ases-col-md-6 ases-col-lg-6">
+                                    <strong>Practicante</strong><br/>
+                                    <strong>Fichas:</strong> Revisado : <span id="general_rev_prac">*</span> - No revisado : <span id="general_not_rev_prac">*</span> -  Total : <span id="general_prac_t">*</span><br>
+                                    <strong>Inasistencias:</strong> Revisado : <span id="general_in_rev_prac">*</span> - No revisado : <span id="general_in_not_rev_prac">*</span> -  Total : <span id="general_in_prac_t">*</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div data-spy="scroll" data-target=".navbar" data-offset="50" class="well ases-col-xs-10 ases-col-sm-10 ases-col-md-10 ases-col-lg-10 ases-col-xs-offset-1 ases-col-sm-offset-1 ases-col-md-offset-1 ases-col-lg-offset-1 reporte-seguimiento" id="reemplazarToogle" name="reemplazarToogle">
+                            {{{table}}}
+                        </div>
+                    {{/view_trackings_rt}}
+                </div>
+            {{/data}}
+        </form>
+    </div>
+
+    <!-- MODALES DE SEGUIMIENTO -->
+    <div class="mymodal" id="modal_v2_peer_tracking" name="modal_v2_pares">
+        <div class="outside" ></div>
+        <div class="mymodal-content">
+            <div class="mymodal-header ases-col-sm-12 ases-col-lg-12">
+                <div class="ases-col-sm-11 ases-col-lg-11">
+                    <h4 class="" id="myModalLabel">Nuevo registro</h4>
+                </div>
+
+                <div class="ases-col-sm-1 ases-col-lg-1">
+                    <span id="mymodal-v2-close" class="mymodal-close" aria-hidden="true">&times;</span>
+                </div>
+            </div>
+
+            <div class="mymodal-body mymodal-body_v2 ases-col-sm-12 ases-col-lg-12">
+                <div class="ases-row">
+                    <div class="ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12">
+                        {{{form_seguimientos}}}
+                    </div>
+                </div>
+            </div>
+            <div class="mymodal-footer">.</div>
+        </div>
+    </div>
+
+    <div class="mymodal" id="modal_v2_edit_peer_tracking" name="modal_edit_v2_pares">
+        <div class="outside" ></div>
+        <div class="mymodal-content">
+            <div class="mymodal-header ases-col-sm-12 ases-col-lg-12">
+                <div class="ases-col-sm-11 ases-col-lg-11">
+                    <h4 class="" id="myModalLabel">Visualización/Edición</h4>
+                </div>
+
+                <div class="ases-col-sm-1 ases-col-lg-1">
+                    <span id="mymodal-v2-close" class="mymodal-close" aria-hidden="true">&times;</span>
+                </div>
+            </div>
+
+            <div class="mymodal-body mymodal-body_v2 ases-col-sm-12 ases-col-lg-12">
+                <div class="ases-row">
+                    <div class="ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12">
+                        <div id="body_editor"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="mymodal-footer">.</div>
+        </div>
+    </div>
+    <!-- FIN MODALES SEGUIMIENTO V2 -->
+
+    <!-- MODALES DE SEGUIMIENTO GRUPAL NUEVO -->
+    <div class="mymodal" id="modal_v2_groupal_tracking" name="modal_v2_pares">
+        <div class="outside" ></div>
+        <div class="mymodal-content">
+            <div class="mymodal-header col-sm-12">
+                <div class="ases-col-sm-11 ases-col-lg-11">
+                    <h4 class="" id="myModalLabel">Nuevo registro</h4>
+                </div>
+
+                <div class="ases-col-sm-1 ases-col-lg-1">
+                    <span id="mymodal-v2-close" class="mymodal-close" aria-hidden="true">&times;</span>
+                </div>
+            </div>
+
+            <div class="mymodal-body mymodal-body_v2 ases-col-sm-12 ases-col-lg-12">
+                <div class="ases-row">
+                    <div class="ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12">
+                        {{{form_seguimientos_grupales}}}
+                    </div>
+                </div>
+            </div>
+            <div class="mymodal-footer">.</div>
+        </div>
+    </div>
+
+    <div class="mymodal" id="modal_v2_edit_groupal_tracking" name="modal_edit_v2_pares">
+        <div class="outside"></div>
+        <div class="mymodal-content">
+            <div class="mymodal-header ases-col-sm-12 ases-col-lg-12">
+                <div class="col-sm-11">
+                    <h4 class="" id="myModalLabel">Visualización/Edición</h4>
+                </div>
+                <div class="ases-col-sm-1 ases-col-lg-1">
+                    <span id="mymodal-v2-close" class="mymodal-close" aria-hidden="true">&times;</span>
+                </div>
+            </div>
+
+            <div class="mymodal-body mymodal-body_v2 ases-col-sm-12 ases-col-lg-12">
+                <div class="ases-row">
+                    <div class="ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12">
+                        <div id="body_editor"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="mymodal-footer">.</div>
+        </div>
+    </div>
+    <!-- FIN MODALES SEGUIMIENTO V2 -->
 {{/data}}

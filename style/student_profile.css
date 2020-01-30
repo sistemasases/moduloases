@@ -1,5 +1,10 @@
 @media screen{
 
+    .ases-row{
+        margin-right: -15px;
+        margin-left: -15px;
+    }
+
     #mapa{
         height: 396px !important;
         width: 100% !important;
@@ -10,13 +15,13 @@
     }
 
     #div-header-profile{
-        margin-bottom: 0px;
+        margin-bottom: 0;
         margin-top: 10px;
         display: flex;
         display: -ms-flex;
         display: -webkit-flex;
         align-items: center;
-        padding: 0px 0px 0px 0px;
+        padding: 0 0 0 0;
     }
 
     #div-instance-name{
@@ -27,19 +32,19 @@
     .select2.select2-container.select2-container--default{
         width: 100% !important;
         font-size: 200%;
-        border-radius: 0 0 0px 0px;
+        border-radius: 0 0 0 0;
 
     }
 
     .select2-container .select2-selection--single{
         height: 40px;
-        border-radius: 0 0 0px 0px;
+        border-radius: 0 0 0 0;
     }
 
     .select2-container--default .select2-selection--single .select2-selection__rendered{
         line-height: 40px;
         font-weight: bold;
-        border-radius: 0 0 0px 0px;
+        border-radius: 0 0 0 0;
     }
 
     .margin_bottom_10px .select2.select2-container.select2-container--default {
@@ -54,26 +59,26 @@
 
     /* Controles datos generales */
     .div_general_fields{
-        padding-top: 0px;
-        padding-bottom: 0px;
+        padding-top: 0;
+        padding-bottom: 0;
     }
     .div_cond{
         
         padding-top: 7px;
-        padding-left: 0px;
-        padding-right: 0px;
+        padding-left: 0;
+        padding-right: 0;
     }
     .div_select{
 
-        padding-left: 0px;
-        padding-right: 0px;
+        padding-left: 0;
+        padding-right: 0;
     }
     .div_otro_gen{
-    padding: 0px 0px 0px 0px !important;
+    padding: 0 0 0 0 !important;
     }
 
     .div_fields_general_tab{
-        padding: 0px 0px 0px 0px;
+        padding: 0 0 0 0;
         height: 24px;
     }
 
@@ -81,55 +86,92 @@
         position: relative !important;
         height: 22px !important;
         width: 100% !important;
-        padding: 0px 0px 0px 0px !important;
-        border-radius: 0 0 0px 0px !important;
+        padding: 0 0 0 0 !important;
+        border-radius: 0 0 0 0 !important;
     }
     .input_fields_general_tab_otro{
         position: relative !important;
         height: 30px !important;
         width: 100% !important;
-        padding: 0px 0px 0px 0px !important;
-        border-radius: 0 0 0px 0px !important;
-        margin-top: 0px;
+        padding: 0 0 0 0 !important;
+        border-radius: 0 0 0 0 !important;
+        margin-top: 0;
     }
 
     .label_fields_general_tab{
         text-align: left;
+        font-size: 13px;
+        font-weight: bold;
     }
     .table_vive_con{
         margin-left:  7px;
-        margin-bottom: 0px;
+        margin-bottom: 0;
     }
 
     #div_input_cc{
-        padding-left: 0px;
-        padding-right: 0px;
+        padding-left: 0;
+        padding-right: 0;
         width: 13%;
     }
 
     #div_age{
         padding-left: 4px;
         width: 8.5%;
+        height: 100%;
+    }
+
+    #age{
+        padding-top: 5px;
+        padding-left: 14px;
     }
 
     #birthdate{
-        width: 152%;
+        width: 155%;
         display: none;
+        height: 100%;
+        padding: 6px 6px 6px 6px;
+    }
+
+    .socioed_tab_header, .caract_tab_header, .academic_tab_header {
+        padding-bottom: 4px;
+    }
+
+    .socioed_title, .caract_tab_title, .academic_tab_title{
+        color: inherit;
+    }
+
+    #tracing_others_tab {
+        padding-top: 10px !important;
+    }
+
+    .card_student_profile {
+        margin-bottom: 15px;
     }
 
     #div_email_moodle{
+        padding-left: 24px;
+    }
+
+    #sem_act_title_card{
         padding-left: 20px;
+        padding-top: 20px;
+    }
+
+    #email{
+        width: 108%;
+        padding: 6px 6px 6px 6px;
     }
 
     #div_doc_type{
         padding-right: 4px;
+        height: 100%;
     }
 
     #tipo_doc{
-        padding: 0px 0px 0px 6px;
+        padding: 0 0 0 6px;
         height: 100%;
         position: relative;
-        border-radius: 0 0 0px 0px;
+        border-radius: 0 0 0 0;
     }
 
     #div-instance-icon{
@@ -138,32 +180,30 @@
     }
 
     #div_select_student{
-        padding-right: 0px;
-        padding-left: 0px;
+        padding-right: 0;
+        padding-left: 0;
     }
 
     #div-code-student{
         margin-top: 15px;
         padding-left: 15px;
-        padding-bottom: 0px;
+        padding-bottom: 0;
     }
 
     #div-hr{
-        padding: 0px 15px 2px 15px;
+        padding: 0 15px 2px 15px;
     }
-
-
 
     .hr-general-fields{
         margin-top: 10px;
-        margin-bottom: 0px;
+        margin-bottom: 0;
         border-color: gray;
     }
 
     .hr-general-tab-fields{
-        margin-top: 0px;
-        margin-bottom: 0px;
-        padding-top: 0px;
+        margin-top: 0;
+        margin-bottom: 0;
+        padding-top: 0;
         padding-bottom: 10px;
         border-color: gray;
     }
@@ -172,18 +212,26 @@
         position: relative;
         height: 100%;
         width: 100%;
-        padding: 6px 0px 0px 5px;
-        border-radius: 0 0 0px 0px;
+        padding: 6px 6px 6px 6px;
     }
 
     #div_icetex_status{
-        padding-left: 0px;
+        padding-left: 0;
         padding-right: 15px;
+        height: 100%;
+        width: 22%;
     }
 
     #row-general-fields{
         height: 30px;
         margin-top: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #div_span_icetex_status{
+        padding-bottom: 2%;
     }
 
     #div-select-student{
@@ -191,45 +239,44 @@
     }
 
     #icetex_status{
-        padding: 0px 0px 0px 6px;
+        padding: 0 0 0 6px;
         height: 100%;
         position: relative;
-        border-radius: 0 0 0px 0px;
+        border-radius: 0 0 0 0;
     }
 
     #cond_excep{
-        padding: 0px 0px 0px 6px;
+        padding: 0 0 0 6px;
         height: 5%;
         position: relative;
-        border-radius: 0 0 0px 0px;
+        border-radius: 0 0 0 0;
     }
 
     #icon-tracking{
         position: relative;
         font-size: 30px; 
         cursor: pointer;
-        padding-left: 0px;
+        padding-left: 0;
     }
 
     #div-icon-tracking{
-        padding: 3px 15px 0px 0px;
+        padding: 3px 15px 0 0;
     }
 
     #div-icon-edit{
-        padding: 0px 0px 0px 0px;
+        padding: 0 0 0 0;
         height: 90px;
     }
 
     #div-icon-edit > #span-icon-edit,
     #div-icon-edit > #span-icon-cancel-edit{ 
         position: absolute; 
-        right: 0; 
+        right: 0;
         bottom: 0;
     }
 
     #div-icon-edit > #span-icon-save-profile{
-        position: absolute; 
-        right: 31; 
+        position: absolute;
         bottom: 0;
     }
 
@@ -266,7 +313,7 @@
         height: 30px;
         width: 30px;
         transform: rotate(45deg);
-        margin-left: 0px;
+        margin-left: 0;
         margin-top: 15px;
     }
 
@@ -279,7 +326,7 @@
         background-size: 25px 25px;
         height: 25px;
         width: 25px;
-        margin-left: 0px;
+        margin-left: 0;
         margin-right: 3px;
         margin-top: 6px;
         position: relative;
@@ -299,7 +346,7 @@
         cursor: pointer;
         margin-top: 6px;
         margin-left: 3px;
-        margin-right: 0px;
+        margin-right: 0;
     }
 
     #span-icon-cancel-edit:hover{
@@ -308,13 +355,6 @@
 
     .i-tracking-t{
         color: green !important;
-        font-size: 12px;
-        position: relative;
-        transition:all .5s ease-in-out;
-    }
-
-    .i-tracking-f{
-        color: rgb(128, 186, 128) !important;
         font-size: 12px;
         position: relative;
         transition:all .5s ease-in-out;
@@ -333,15 +373,16 @@
     }
 
     #h-student-info{
-        margin-top: 0px;
+        margin-top: 0;
         padding-top: 10px;
     }
 
     .h-sections-general-tab{
-        margin-bottom: 0px;
+        margin-bottom: 0;
+        font-size: 15px;
     }
-    .h-sections-general-tab2{
-        margin-bottom: 0px;
+
+    #h-general-tab-live-with{
         margin-top: 15px;
     }
 
@@ -350,11 +391,11 @@
     }
 
     .span-staff-ps{
-        padding-left: 0px;
+        padding-left: 0;
     }
 
     .div-span-staff-ps{
-        padding-left: 0px;
+        padding-left: 0;
     }
 
     .div_fields_general_tab-general-fields>input,
@@ -365,14 +406,7 @@
     }
 
     .select_statuses_program{
-        border-radius: 0px;
-    }
-
-    #age,
-    #email,
-    #span-icetex-status,
-    #span-icetex-name{
-        padding-top: 7px;
+        border-radius: 0;
     }
 
     .borderless td, .borderless th {
@@ -386,7 +420,6 @@
     .is-active{
         background-color: #93B793;
     }
-
 
     /*Tool tip*/
 
@@ -417,7 +450,7 @@
     /* Risks styles */
 
     #modal_riesgos > .mymodal-content{
-        padding: 0px !important;
+        padding: 0 !important;
         width: 80% !important;
     }
 
@@ -428,18 +461,17 @@
 
     #modal-content-radial-graph{
         margin-top: 10% !important;
-        padding: 0px;
+        padding: 0;
         
     }
 
     .risk_graph_button,
     .risk_graph_button:active{
-    width: 45% !important;
     background-color: #337ab7;
     border-bottom: 1px solid #337ab7;
-    border-radius: 0px;
-    -webkit-border-radius: 0px;
-    -moz-border-radius: 0px;
+    border-radius: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
     -ms-border-radius: 0px;
     -o-border-radius: 0px;
     box-shadow: inset 0 1px 0 0 #337ab7;
@@ -449,8 +481,8 @@
     -o-box-shadow: 0 1px 0 0 #337ab7 inset;
     color: white; font-weight: bold;
     text-align: center;
-    padding-left: 0px !important;
-    padding-right: 0px !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
     margin-left: 3px;
     margin-right: 3px;
     }
@@ -461,7 +493,6 @@
     border-color: #204d74;
     cursor: pointer;
     }
-
 
     /* Profile image */
 
@@ -512,8 +543,8 @@
         text-align: left;
     }
 
-    .geographic_information > .row > label:not(.label_with_bold), .geographic_information > .row > .geographic_nivel_riesgo_bajo > label,
-    .geographic_information > .row > .geographic_nivel_riesgo_medio > label, .geographic_information > .row > .geographic_nivel_riesgo_alto > label{
+    .geographic_information > .ases-row > label:not(.label_with_bold), .geographic_information > .ases-row > .geographic_nivel_riesgo_bajo > label,
+    .geographic_information > .ases-row > .geographic_nivel_riesgo_medio > label, .geographic_information > .ases-row > .geographic_nivel_riesgo_alto > label{
         font-weight: normal !important;
     }
 
@@ -529,9 +560,14 @@
         margin-top: 25px !important;
     }
 
-    .center_vertically{
+    #label_first_year{
+        width: 35%;
+    }
+
+    .label_geographic_tab{
         vertical-align: middle;
         margin-top: 1%;
+        font-weight: normal;
     }
 
     .center_items{
@@ -572,7 +608,7 @@
         margin-bottom: 10px;
     }
 
-    .row{
+    .ases-row{
         margin-bottom: 15px;
         border: none !important;
     }
@@ -581,16 +617,16 @@
         width: 65px;
         margin-top: 10px;
         position: relative;
-        border-radius: 0 0 0px 0px;
+        border-radius: 0 0 0 0;
     }
 
     #num_doc {
         margin-top: 13px;
         position: relative;
         width: 100px;
-        padding: 6px 0px 0px 5px;
+        padding: 6px 0 0 5px;
         margin-left: 30px;
-        border-radius: 0 0 0px 0px;
+        border-radius: 0 0 0 0;
     }
 
     #age{
@@ -619,7 +655,7 @@
         margin-top: 10px;
         margin-left: -20px;
         position: relative;
-        border-radius: 0 0 0px 0px;
+        border-radius: 0 0 0 0;
     }
 
     #div-instance-icon {
@@ -628,8 +664,8 @@
 
     #div-header-info {
         margin-top: -120px;
-        margin-bottom: 0px;
-        padding-bottom: 0px;
+        margin-bottom: 0;
+        padding-bottom: 0;
         border: none !important;
     }
 
@@ -675,7 +711,7 @@
     .select2-container .select2-selection--single {
         height: 40px;
         width: 125%;
-        border-radius: 0 0 0px 0px;
+        border-radius: 0 0 0 0;
         padding-bottom: 30px;
     }
 
@@ -693,8 +729,8 @@
 
     #mapDiv {
         display: none !important;
-        margin: 0px;
-        padding: 0px;
+        margin: 0;
+        padding: 0;
     }
 
     a.brand{
@@ -717,7 +753,7 @@
     }
 
 
-    ul.nav.nav-tabs>li{
+    ul.ases-nav.nav-tabs>li{
         display: none;
     }
 
@@ -726,7 +762,7 @@
     }
 
     #nav-linea{
-        border-bottom-width: 0px !important;
+        border-bottom-width: 0 !important;
     }
 
     ul.breadcrumb>li:nth-child(3) {
@@ -777,7 +813,7 @@
 
     #div_academic_programs{
         margin-top: 5px;
-        margin-bottom: 0px;
+        margin-bottom: 0;
     }
 
     #div_cohorts{
@@ -839,8 +875,8 @@
         height: 20px !important;
         float: left;
         position: relative;
-        padding: 0px 0px 0px 0px;
-        margin: 0px 0px 0px 0px;
+        padding: 0 0 0 0;
+        margin: 0 0 0 0;
         border: 1px solid black !important;
         text-align: center !important;
         overflow: hidden !important;
@@ -852,8 +888,8 @@
         height: 20px !important;
         float: left;
         position: relative;
-        padding: 0px 0px 0px 0px;
-        margin: 0px 0px 0px 0px;
+        padding: 0 0 0 0;
+        margin: 0 0 0 0;
         border: 1px solid black !important;
         text-align: center !important;
         overflow: hidden !important;
@@ -862,7 +898,7 @@
 
     #ficha_estudiante .panel-collapse {
         margin-top: -40px !important;
-        padding: 0px;
+        padding: 0;
         border: none !important;
     }
 

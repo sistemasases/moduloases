@@ -69,7 +69,7 @@ $risks_table='';
 
 // Carga de riesgos
 foreach($risks as $risk){
-    $risks_table.='<div class="checkbox"><input type="checkbox" name="risk_fields[]" id="'.$risk->id.'" value="'.$risk->id.'" /> '.$risk->descripcion.'</div>';}
+    $risks_table.='<div class="checkbox checkbox_general_reports"><input type="checkbox" name="risk_fields[]" id="'.$risk->id.'" value="'.$risk->id.'" /> '.$risk->descripcion.'</div>';}
 
 
 // Crea una clase con la información que se llevará al template.
@@ -121,14 +121,16 @@ $blocknode = navigation_node::create('Reporte general',$url, null, 'block', $blo
 $coursenode->add_node($blocknode);
 
 $PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
-$PAGE->requires->css('/blocks/ases/style/ases_report_style.css', true);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
-$PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);
+//@deprecated $PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);
+$PAGE->requires->css('/blocks/ases/style/aaspect.min.css', true);
+$PAGE->requires->css('/blocks/ases/style/ases_report_style.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/round-about_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/jquery.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/buttons.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
+
 
 $PAGE->requires->js_call_amd('block_ases/ases_report_main','init');
 $PAGE->requires->js_call_amd('block_ases/ases_report_main','load_defaults_students', $params);
@@ -140,7 +142,7 @@ $PAGE->set_heading($pagetitle);
 $output = $PAGE->get_renderer('block_ases');
 $ases_report_page = new \block_ases\output\ases_report_page($data);
 
-//echo $output->standard_head_html(); 
+//echo $output->standard_head_html();
 echo $output->header();
 echo $output->render($ases_report_page);
 echo $output->footer();

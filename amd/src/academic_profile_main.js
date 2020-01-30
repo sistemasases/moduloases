@@ -19,9 +19,11 @@ define(['jquery'], function($) {
                 if($(".bajo").length != 0){
                     $(".bajo").parent().parent().parent().parent().prev().toggleClass('bajo');
                 }
+
                 if($(".estimulo").length != 0){
                     $(".estimulo").parent().parent().parent().parent().prev().toggleClass('estimulo');
                 }
+
                 if($(".cancelacion").length != 0){
                     $(".cancelacion").parent().parent().parent().parent().prev().toggleClass('cancelacion');
                 }
@@ -39,6 +41,5 @@ define(['jquery'], function($) {
                 }
             });
         }
-
     };
 });

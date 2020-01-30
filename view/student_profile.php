@@ -898,8 +898,10 @@ $PAGE->set_title($title);
 
 $PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
 $PAGE->requires->css('/blocks/ases/style/jqueryui.css', true);
+$PAGE->requires->css('/blocks/ases/style/aaspect.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
-$PAGE->requires->css('/blocks/ases/style/bootstrap.min.css', true);
+//@deprecated
+//$PAGE->requires->css('/blocks/ases/style/bootstrap.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert2.css', true);
 $PAGE->requires->css('/blocks/ases/style/sugerenciaspilos.css', true);
@@ -916,6 +918,7 @@ $PAGE->requires->css('/blocks/ases/style/fontawesome550.min.css', true);
 //Pendiente para cambiar el idioma del nombre del archivo junto con la estructura de
 //su nombramiento.
 $PAGE->requires->css('/blocks/ases/style/creadorFormulario.css', true);
+$PAGE->requires->css('/blocks/ases/style/_view.component.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/ases_incident_system', 'init');
 $PAGE->requires->js_call_amd('block_ases/student_profile_main', 'init', $data_init);
@@ -923,7 +926,6 @@ $PAGE->requires->js_call_amd('block_ases/student_profile_main', 'equalize');
 $PAGE->requires->js_call_amd('block_ases/dphpforms_form_renderer', 'init');
 $PAGE->requires->js_call_amd('block_ases/dphpforms_form_discapacity', 'init');
 $PAGE->requires->js_call_amd('block_ases/students_profile_others_tab_sp', 'init');
-$PAGE->requires->js_call_amd('block_ases/academic_profile_main', 'init');
 
 $output = $PAGE->get_renderer('block_ases');
 

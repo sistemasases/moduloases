@@ -10,7 +10,6 @@
  */
 
 define(['jquery',
-    'block_ases/bootstrap',
     'block_ases/d3',
     'block_ases/sweetalert',
     'block_ases/jqueryui',
@@ -21,7 +20,8 @@ define(['jquery',
     'block_ases/academic_profile_main',
     'block_ases/socioed_profile_main',
     'block_ases/geographic_main',
-    'block_ases/discapacity_tracking_main'], function ($, bootstrap, d3, sweetalert, jqueryui, select2, Chart, mustache, loading_indicator, academic, socioed, geographic, discapacity_tracking) {
+    'block_ases/discapacity_tracking_main',
+    'block_ases/aaspect'], function ($, d3, sweetalert, jqueryui, select2, Chart, mustache, loading_indicator, academic, socioed, geographic, discapacity_tracking, aaspect) {
 
     return {
         init: function (data_init) {
@@ -41,14 +41,12 @@ define(['jquery',
             // Agrega iframe para Google Maps
             if (ciudad_est == 'CALI') {
 
-                document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination="+latLng_student_campus.lat()+","+latLng_student_campus.lng()+"&mode=transit'></iframe>";
+                document.getElementById('mapa').innerHTML = "<iframe class='ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12'  height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination="+latLng_student_campus.lat()+","+latLng_student_campus.lng()+"&mode=transit'></iframe>";
 
             } else {
 
-                document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination="+latLng_student_campus.lat()+","+latLng_student_campus.lng()+"&mode=driving'></iframe>";
+                document.getElementById('mapa').innerHTML = "<iframe class='ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12'  height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination="+latLng_student_campus.lat()+","+latLng_student_campus.lng()+"&mode=driving'></iframe>";
             }
-
-
 
             /**
              * Event that loads asynchronously the socio-educational tab
@@ -186,15 +184,15 @@ define(['jquery',
 
             switch (parameters.tab) {
                 case "socioed_tab":
-                    $('#general_li').removeClass('active');
-                    $('#socioed_li').addClass('active');
-                    $('#general_tab').removeClass('active');
-                    $('#socioed_tab').addClass('active');
-                    panel_collapse.removeClass('in');
-                    $('#collapseOne').addClass('in');
+                    $('#general_li').removeClass('ases-active');
+                    $('#socioed_li').addClass('ases-active');
+                    $('#general_tab').removeClass('ases-tab-active');
+                    $('#socioed_tab').addClass('ases-tab-active');
+                    //panel_collapse.removeClass('in');
+                    //$('#collapseOne').addClass('in');
                     break;
                 default:
-                    panel_collapse.removeClass('in');
+                    //panel_collapse.removeClass('in');
                     break;
             }
 
@@ -760,7 +758,6 @@ define(['jquery',
                         if ($(this).attr('name') == "parentesco_person") {
                             parentesco_persons.push($(this).val());
                         }
-
                     });
                     for (var i = 0; i < name_persons.length; i++) {
                         objeto = { name: name_persons[i], parentesco: parentesco_persons[i] };
@@ -1070,8 +1067,9 @@ define(['jquery',
         var tab_name = event.data.tab_name;
         var id_instance = document.querySelector('#dphpforms_block_instance').dataset.info;
 
-        $(".active").removeClass("active");
-        $("#"+tab_name+"_li").addClass("active");
+        $(".ases-active").removeClass("ases-active");
+        $(".ases-tab-active").removeClass("ases-tab-active");
+        $("#"+tab_name+"_li").addClass("ases-active");
 
         $.ajax({
             type: "POST",
@@ -1090,7 +1088,7 @@ define(['jquery',
                         success: function( template ){
                             loading_indicator.hide();
                             let tab_to_load = $(mustache.render( template, msg.data_response ));
-                            $(".tab-content").append( tab_to_load );
+                            $(".ases-tab-content").append( tab_to_load );
 
                             switch(tab_name){
                                 case 'socioed':
@@ -1110,7 +1108,7 @@ define(['jquery',
                                     break;
                             }
 
-                            $("#"+tab_name+"_tab").addClass("active");
+                            $("#"+tab_name+"_tab").addClass("ases-tab-active");
                         },
                         error: function(){
                             loading_indicator.hide();
@@ -1454,8 +1452,6 @@ define(['jquery',
         });
 
         var panel_heading = $('.panel-heading.heading_semester_tracking');
-
-
 
         panel_heading.on('click', function () {
             if ($(this).parent().attr('class') == 'collapsed') {

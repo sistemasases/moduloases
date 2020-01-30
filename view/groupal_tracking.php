@@ -42,7 +42,6 @@ require_once ('../managers/dphpforms/dphpforms_get_record.php');
 require_once ('../managers/seguimiento_grupal/seguimientogrupal_lib.php');
 
 
-
 // Set up the page.
 $title = "Seguimiento Grupal";
 $pagetitle = $title;
@@ -82,9 +81,9 @@ $data = $actions;
 $data->menu = $menu_option;
 $data->seguimiento_grupal =$render_trackings;
 $data->form_seguimientos_grupales = dphpforms_render_recorder('seguimiento_grupal', $rol);
-  if ($record->form_seguimientos_grupales == '') {
-       $record->form_seguimientos_grupales = "<strong><h3>Oops!: No se ha encontrado un formulario con el alias: <code>seguimientos_grupales</code>.</h3></strong>";
-    }
+if ($record->form_seguimientos_grupales == '') {
+    $record->form_seguimientos_grupales = "<strong><h3>Oops!: No se ha encontrado un formulario con el alias: <code>seguimientos_grupales</code>.</h3></strong>";
+}
 
 $data->id_dphpforms_creado_por = $USER->id;
 
@@ -109,8 +108,10 @@ $PAGE->set_heading($title);
 
 $PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
-$PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.css', true);
-$PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);
+//@deprecated
+//$PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.css', true);
+//$PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);
+$PAGE->requires->css('/blocks/ases/style/aaspect.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/round-about_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/sugerenciaspilos.css', true);
@@ -119,9 +120,9 @@ $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->css('/blocks/ases/style/creadorFormulario.css', true);
 
 if($choosen_date>=$new_forms_date){
-$PAGE->requires->js_call_amd('block_ases/new_logic_form_gt', 'init');
+    $PAGE->requires->js_call_amd('block_ases/new_logic_form_gt', 'init');
 }else{
-$PAGE->requires->js_call_amd('block_ases/groupal_tracking','init');
+    $PAGE->requires->js_call_amd('block_ases/groupal_tracking','init');
 }
 $PAGE->requires->js_call_amd('block_ases/dphpforms_form_renderer', 'init');
 

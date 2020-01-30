@@ -9,17 +9,14 @@
 define(
     ['jquery',
     'block_ases/Modernizr-v282' ,
-    'block_ases/bootstrap', 
     'block_ases/jquery.dataTables',  
     'block_ases/sweetalert', 
     'block_ases/select2',
     'block_ases/loading_indicator'
-], function($,Modernizr,bootstrap, datatables, sweetalert, select2, loading_indicator) {
+], function($,Modernizr, datatables, sweetalert, select2, loading_indicator) {
 
     return {
         init: function() {
-
-            
 
             var collapse_loaded = [];
 
@@ -36,8 +33,7 @@ define(
                     title: "¡Información!",
                     text: "Está observando una versión reciente del conteo, más no una versión en vivo. El conteo se actualizará en un intervalo de tiempo no mayor a 30 minutos.",
                     type: 'info'
-                });                
-                
+                });
             });
 
 
@@ -85,25 +81,25 @@ define(
 
                             let base = '\
                                 <div class="conteo">\
-                                    <div class="row"> \
-                                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> \
+                                    <div class="ases-row"> \
+                                        <div class="ases-col-xs-4 ases-col-sm-4 ases-col-md-4 ases-col-lg-4"> \
                                             Fichas: <strong>'+fichas_totales+'</strong>\
                                         </div>\
-                                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> \
+                                        <div class="ases-col-xs-4 ases-col-sm-4 ases-col-md-4 ases-col-lg-4"> \
                                             <div class="pend-prof">Pendientes Prof: </div>'+fichas_PP+'\
                                         </div>\
-                                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> \
+                                        <div class="ases-col-xs-4 ases-col-sm-4 ases-col-md-4 ases-col-lg-4"> \
                                             <div class="pend-pract">Pendientes pract: </div>'+fichas_Pp+'\
                                         </div>\
                                     </div>\
-                                    <div class="row"> \
-                                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> \
+                                    <div class="ases-row"> \
+                                        <div class="ases-col-xs-4 ases-col-sm-4 ases-col-md-4 ases-col-lg-4"> \
                                             Inasistencias: <strong>'+inasistencias_totales+'</strong>\
                                         </div>\
-                                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> \
+                                        <div class="ases-col-xs-4 ases-col-sm-4 ases-col-md-4 ases-col-lg-4"> \
                                             <div class="pend-prof">Pendientes Prof: </div>'+inasistencias_PP+'\
                                         </div>\
-                                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> \
+                                        <div class="ases-col-xs-4 ases-col-sm-4 ases-col-md-4 ases-col-lg-4"> \
                                             <div class="pend-pract">Pendientes pract: </div>'+inasistencias_Pp+'\
                                         </div>\
                                     </div>\
@@ -113,9 +109,7 @@ define(
                             $("#counting_" + counters[i].username).find(".loader").html(
                                 base
                             );
-
                         }
-
                     },
                     error: function( data ) {
                         loading_indicator.hide();
@@ -131,7 +125,6 @@ define(
                 });
             }
 
-
             $(document).on( "click", ".btn-dphpforms-close", function() {
                 $(this).closest('div[class="mymodal"]').fadeOut(300);
             });
@@ -144,12 +137,11 @@ define(
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonText: 'Salir'
-                  }, function(isConfirm) {
+                }, function(isConfirm) {
                     if (isConfirm) {
                         $(outside).parent('.mymodal').fadeOut(300);
                     }
-                  });
-                
+                });
             });
 
             function custom_actions( form, action ){
@@ -199,7 +191,6 @@ define(
                 }else if( (form=='seguimiento_grupal_')&&( action == 'update' ) ){
 
                 }
-
             }
 
             $(document).ready(function() {
@@ -277,7 +268,6 @@ define(
                     anadirEvento(get_instance());
                     send_email_new_form(get_instance());
                 }
-
             });
 
 
@@ -302,93 +292,91 @@ define(
 
 
             function check_risks_tracking( flag, student_code ){
-                   
 
-                        var individual_risk = get_checked_risk_value_tracking('.puntuacion_riesgo_individual');
-                        var idv_observation = $('.comentarios_individual').find('textarea').val();;
-                        var familiar_risk = get_checked_risk_value_tracking('.puntuacion_riesgo_familiar');
-                        var fam_observation = $('.comentarios_familiar').find('textarea').val();
-                        var academico_risk = get_checked_risk_value_tracking('.puntuacion_riesgo_academico');
-                        var aca_observation = $('.comentarios_academico').find('textarea').val();
-                        var economico_risk = get_checked_risk_value_tracking('.puntuacion_riesgo_economico');
-                        var eco_observation = $('.comentarios_economico').find('textarea').val();
-                        var vida_univer_risk = get_checked_risk_value_tracking('.puntuacion_vida_uni');
-                        var vid_observation = $('.comentarios_vida_uni').find('textarea').val();
+                var individual_risk = get_checked_risk_value_tracking('.puntuacion_riesgo_individual');
+                var idv_observation = $('.comentarios_individual').find('textarea').val();;
+                var familiar_risk = get_checked_risk_value_tracking('.puntuacion_riesgo_familiar');
+                var fam_observation = $('.comentarios_familiar').find('textarea').val();
+                var academico_risk = get_checked_risk_value_tracking('.puntuacion_riesgo_academico');
+                var aca_observation = $('.comentarios_academico').find('textarea').val();
+                var economico_risk = get_checked_risk_value_tracking('.puntuacion_riesgo_economico');
+                var eco_observation = $('.comentarios_economico').find('textarea').val();
+                var vida_univer_risk = get_checked_risk_value_tracking('.puntuacion_vida_uni');
+                var vid_observation = $('.comentarios_vida_uni').find('textarea').val();
 
-                        if( 
-                            ( individual_risk == '3' ) || ( familiar_risk == '3' ) || 
-                            ( academico_risk == '3' ) || ( economico_risk == '3' ) || 
-                            ( vida_univer_risk == '3' ) 
-                        ){
+                if(
+                    ( individual_risk == '3' ) || ( familiar_risk == '3' ) ||
+                    ( academico_risk == '3' ) || ( economico_risk == '3' ) ||
+                    ( vida_univer_risk == '3' )
+                ){
 
-                            var json_risks = {
-                                "function": "send_email_dphpforms",
-                                "student_code": student_code,
-                                "risks": [
-                                    {
-                                        "name":"Individual",
-                                        "risk_lvl": individual_risk,
-                                        "observation":idv_observation
-                                    },
-                                    {
-                                        "name":"Familiar",
-                                        "risk_lvl": familiar_risk,
-                                        "observation":fam_observation
-                                    },
-                                    {
-                                        "name":"Académico",
-                                        "risk_lvl": academico_risk,
-                                        "observation":aca_observation
-                                    },
-                                    {
-                                        "name":"Económico",
-                                        "risk_lvl": economico_risk,
-                                        "observation":eco_observation
-                                    },
-                                    {
-                                        "name":"Vida Universitaria",
-                                        "risk_lvl": vida_univer_risk,
-                                        "observation":vid_observation
-                                    }
-                                ],
-                                "date": $('.fecha').find('input').val(),
-                                "url": window.location.href
-                            };
+                    var json_risks = {
+                        "function": "send_email_dphpforms",
+                        "student_code": student_code,
+                        "risks": [
+                            {
+                                "name":"Individual",
+                                "risk_lvl": individual_risk,
+                                "observation":idv_observation
+                            },
+                            {
+                                "name":"Familiar",
+                                "risk_lvl": familiar_risk,
+                                "observation":fam_observation
+                            },
+                            {
+                                "name":"Académico",
+                                "risk_lvl": academico_risk,
+                                "observation":aca_observation
+                            },
+                            {
+                                "name":"Económico",
+                                "risk_lvl": economico_risk,
+                                "observation":eco_observation
+                            },
+                            {
+                                "name":"Vida Universitaria",
+                                "risk_lvl": vida_univer_risk,
+                                "observation":vid_observation
+                            }
+                        ],
+                        "date": $('.fecha').find('input').val(),
+                        "url": window.location.href
+                    };
 
-                            loading_indicator.show();
-                            $.ajax({
-                                type: "POST",
-                                data: JSON.stringify(json_risks),
-                                url: "../managers/pilos_tracking/send_risk_email.php",
-                                success: function(msg) {
-                                    console.log(msg);
-                                    loading_indicator.hide();
-                                },
-                                dataType: "text",
-                                cache: "false",
-                                error: function(msg) {
-                                    loading_indicator.hide();
-                                    console.log(msg)
-                                }
-                            });
-
-                        }
-
-                    
-                };
-
-            function get_checked_risk_value_tracking( class_id ){
-                    var value = 0;
-                    $( class_id ).find('.opcionesRadio').find('div').each(function(){
-                        if($(this).find('label').find('input').is(':checked')){
-                            value = $(this).find('label').find('input').val();
+                    loading_indicator.show();
+                    $.ajax({
+                        type: "POST",
+                        data: JSON.stringify(json_risks),
+                        url: "../managers/pilos_tracking/send_risk_email.php",
+                        success: function(msg) {
+                            console.log(msg);
+                            loading_indicator.hide();
+                        },
+                        dataType: "text",
+                        cache: "false",
+                        error: function(msg) {
+                            loading_indicator.hide();
+                            console.log(msg)
                         }
                     });
-                    return value;
-                }; 
 
-          //OBSOLETO
-           /*$(document).on('click', '.dphpforms > #button' , function(evt) {
+                }
+            }
+
+            function get_checked_risk_value_tracking( class_id ){
+
+                var value = 0;
+                $( class_id ).find('.opcionesRadio').find('div').each(function(){
+                    if($(this).find('label').find('input').is(':checked')){
+                        value = $(this).find('label').find('input').val();
+                    }
+                });
+                return value;
+            }
+
+            //OBSOLETO
+            /*$(document).on('click', '.dphpforms > #button' , function(evt) {
            
                     evt.preventDefault();
                     $( ':disabled' ).prop( 'disabled', false);
@@ -546,10 +534,9 @@ define(
             */
 
 
-
-                $('.mymodal-close').click(function(){
-                    $(this).parent().parent().parent().parent().fadeOut(300);
-                });
+            $('.mymodal-close').click(function(){
+                $(this).parent().parent().parent().parent().fadeOut(300);
+            });
 
 
             function create_specific_counting(user){
@@ -603,7 +590,6 @@ define(
                 });
 
             }
-
 
                 /*function generate_attendance_table(students){
                     loading_indicator.show();
@@ -712,13 +698,10 @@ define(
 
 
 
-
             student_load();
             monitor_load();
             professional_load();
             groupal_tracking_load();
-
- 
 
 
 
@@ -727,119 +710,112 @@ define(
 
             function professional_load(){
 
-            /*When click on the practicant's name, open the container with the information of 
-            the assigned monitors*/
+                /*When click on the practicant's name, open the container with the information of
+                the assigned monitors*/
 
-            $('a[class*="practicant"]').click(function() {
+                $('a[class*="practicant"]').click(function() {
 
-                let username = $(this).data("username");
-                if( collapse_loaded.indexOf( username ) == -1){
-                    collapse_loaded.push( username );
-                }else{
-                    return;
-                }
+                    let username = $(this).data("username");
+                    if( collapse_loaded.indexOf( username ) == -1){
+                        collapse_loaded.push( username );
+                    }else{
+                        return;
+                    }
 
-                var practicant_code = $(this).attr('href').split("#practicant")[1];
-                var practicant_id = $(this).attr('href');
-                //Fill container with the information corresponding to the monitor 
-                loading_indicator.show();
-                $.ajax({
-                    type: "POST",
-                    data: {
-                        type: "get_practicants_of_professional",
-                        practicant_code: practicant_code,
-                        instance:get_instance(),
-                    },
-                    url: "../managers/pilos_tracking/pilos_tracking_report.php",
-                    async: true,
-                    dataType: "json",
-                    cache: "false",
-                    success: function(msg) {
+                    var practicant_code = $(this).attr('href').split("#practicant")[1];
+                    var practicant_id = $(this).attr('href');
+                    //Fill container with the information corresponding to the monitor
+                    loading_indicator.show();
+                    $.ajax({
+                        type: "POST",
+                        data: {
+                            type: "get_practicants_of_professional",
+                            practicant_code: practicant_code,
+                            instance:get_instance(),
+                        },
+                        url: "../managers/pilos_tracking/pilos_tracking_report.php",
+                        async: true,
+                        dataType: "json",
+                        cache: "false",
+                        success: function(msg) {
 
-                        loading_indicator.hide();
-                        $(practicant_id + " > div").empty();
-                        $(practicant_id + " > div").append(msg.render);
-                        var html = msg.counting;
+                            loading_indicator.hide();
+                            $(practicant_id + " > div").empty();
+                            $(practicant_id + " > div").append(msg.render);
+                            var html = msg.counting;
 
-                        put_tracking_count( practicant_code, current_semester, parseInt( get_instance() ), false );
-                        monitor_load();
-                        groupal_tracking_load();
+                            put_tracking_count( practicant_code, current_semester, parseInt( get_instance() ), false );
+                            monitor_load();
+                            groupal_tracking_load();
 
-                        
 
-                    },
-                    error: function(msg) {
-                       loading_indicator.hide();
-                       swal({
-                            title: "Oops !",
-                            text: "Se presentó un inconveniente con el practicante seleccionado.",
-                            html: true,
-                            type: 'warning',
-                            confirmButtonColor: "#d51b23"
-                        });
-                    },
+
+                        },
+                        error: function(msg) {
+                           loading_indicator.hide();
+                           swal({
+                                title: "Oops !",
+                                text: "Se presentó un inconveniente con el practicante seleccionado.",
+                                html: true,
+                                type: 'warning',
+                                confirmButtonColor: "#d51b23"
+                            });
+                        },
+                    });
                 });
-            
-            });
             }
-
-
-
-
-
 
             function monitor_load(){
 
-            /*When click on the student's name, open the container with the information of 
-            the follow-ups of that date*/
+                /*When click on the student's name, open the container with the information of
+                the follow-ups of that date*/
 
-            $('a[class*="monitor"]').click(function() {
+                $('a[class*="monitor"]').click(function() {
 
-                let username = $(this).data("username");
-                if( collapse_loaded.indexOf( username ) == -1){
-                    collapse_loaded.push( username );
-                }else{
-                    return;
-                }
+                    let username = $(this).data("username");
+                    if( collapse_loaded.indexOf( username ) == -1){
+                        collapse_loaded.push( username );
+                    }else{
+                        return;
+                    }
 
-                var monitor_code = $(this).attr('href').split("#monitor")[1];
-                var monitor_id = $(this).attr('href');
-                //Fill container with the information corresponding to the monitor 
-                loading_indicator.show();
-                $.ajax({
-                    type: "POST",
-                    data: {
-                        type: "get_monitors_of_practicant",
-                        monitor_code: monitor_code,
-                        instance:get_instance(),
-                    },
-                    url: "../managers/pilos_tracking/pilos_tracking_report.php",
-                    async: true,
-                    dataType: "json",
-                    cache: "false",
-                    success: function(msg ) {
+                    var monitor_code = $(this).attr('href').split("#monitor")[1];
+                    var monitor_id = $(this).attr('href');
+                    //Fill container with the information corresponding to the monitor
+                    loading_indicator.show();
+                    $.ajax({
+                        type: "POST",
+                        data: {
+                            type: "get_monitors_of_practicant",
+                            monitor_code: monitor_code,
+                            instance:get_instance(),
+                        },
+                        url: "../managers/pilos_tracking/pilos_tracking_report.php",
+                        async: true,
+                        dataType: "json",
+                        cache: "false",
+                        success: function(msg ) {
 
-                        loading_indicator.hide();
-                        $(monitor_id + " > div").empty();
-                        $(monitor_id + " > div").append(msg);
-                        put_tracking_count( monitor_code, current_semester, parseInt( get_instance() ), true );
-                        student_load();
-                        groupal_tracking_load();
-                        
-                    },
-                    error: function(msg) {
-                        loading_indicator.hide();
-                       swal({
-                            title: "Oops !",
-                            text: "Se presentó un inconveniente con el monitor seleccionado.",
-                            html: true,
-                            type: 'warning',
-                            confirmButtonColor: "#d51b23"
-                        });
-                    },
+                            loading_indicator.hide();
+                            $(monitor_id + " > div").empty();
+                            $(monitor_id + " > div").append(msg);
+                            put_tracking_count( monitor_code, current_semester, parseInt( get_instance() ), true );
+                            student_load();
+                            groupal_tracking_load();
+
+                        },
+                        error: function(msg) {
+                            loading_indicator.hide();
+                           swal({
+                                title: "Oops !",
+                                text: "Se presentó un inconveniente con el monitor seleccionado.",
+                                html: true,
+                                type: 'warning',
+                                confirmButtonColor: "#d51b23"
+                            });
+                        },
+                    });
                 });
-            
-            });
             }
 
 
@@ -848,151 +824,146 @@ define(
 
             function groupal_tracking_load(){
 
-            $('a[class*="groupal"]').click(function() {
-                var student_code = $(this).attr('href').split("#groupal")[1];
-                var student_id = $(this).attr('href');
-                //Fill container with the information corresponding to the trackings of the selected student
-                loading_indicator.show();
-                $.ajax({
-                    type: "POST",
-                    data: {
-                        type: "get_groupal_trackings",
-                        student_code: student_code,
-                        instance:get_instance()
-                    },
-                    url: "../managers/pilos_tracking/pilos_tracking_report.php",
-                    async: false,
-                    success: function(msg) {
+                $('a[class*="groupal"]').click(function() {
+                    var student_code = $(this).attr('href').split("#groupal")[1];
+                    var student_id = $(this).attr('href');
+                    //Fill container with the information corresponding to the trackings of the selected student
+                    loading_indicator.show();
+                    $.ajax({
+                        type: "POST",
+                        data: {
+                            type: "get_groupal_trackings",
+                            student_code: student_code,
+                            instance:get_instance()
+                        },
+                        url: "../managers/pilos_tracking/pilos_tracking_report.php",
+                        async: false,
+                        success: function(msg) {
 
-                        loading_indicator.hide();
-                        $(student_id + " > div").empty();
-                        $(student_id + " > div").append(msg);
-                        //edit_groupal_tracking_new_form();
-                        
-                    },
-                    dataType: "json",
-                    cache: "false",
-                    error: function(msg) {
-                        loading_indicator.hide();
-                        swal({
-                            title: "Oops !",
-                            text: "Se presentó un inconveniente con los seguimientos grupales seleccionados.",
-                            html: true,
-                            type: 'warning',
-                            confirmButtonColor: "#d51b23"
-                        });
-                    },
+                            loading_indicator.hide();
+                            $(student_id + " > div").empty();
+                            $(student_id + " > div").append(msg);
+                            //edit_groupal_tracking_new_form();
+
+                        },
+                        dataType: "json",
+                        cache: "false",
+                        error: function(msg) {
+                            loading_indicator.hide();
+                            swal({
+                                title: "Oops !",
+                                text: "Se presentó un inconveniente con los seguimientos grupales seleccionados.",
+                                html: true,
+                                type: 'warning',
+                                confirmButtonColor: "#d51b23"
+                            });
+                        },
+                    });
+
                 });
-            
-            });}
-
-
+            }
 
 
             function student_load(){
 
-            /*When click on the student's name, open the container with the information of 
-            the follow-ups of that date*/
+                /*When click on the student's name, open the container with the information of
+                the follow-ups of that date*/
 
-            $('a[class*="student"]').click(function() {
+                $('a[class*="student"]').click(function() {
 
-                let username = $(this).data("username");
-                if( collapse_loaded.indexOf( username ) == -1){
-                    collapse_loaded.push( username );
-                }else{
-                    return;
-                }
+                    let username = $(this).data("username");
+                    if( collapse_loaded.indexOf( username ) == -1){
+                        collapse_loaded.push( username );
+                    }else{
+                        return;
+                    }
 
-                var student_code = $(this).attr('href').split("#student")[1];
-                var student_id = $(this).attr('href');
-                //Fill container with the information corresponding to the trackings of the selected student
-                loading_indicator.show();
-                $.ajax({
-                    type: "POST",
-                    data: {
-                        type: "get_student_trackings",
-                        student_code: student_code,
-                        instance:get_instance()
-                    },
-                    url: "../managers/pilos_tracking/pilos_tracking_report.php",
-                    async: false,
-                    success: function(msg) {
+                    var student_code = $(this).attr('href').split("#student")[1];
+                    var student_id = $(this).attr('href');
+                    //Fill container with the information corresponding to the trackings of the selected student
+                    loading_indicator.show();
+                    $.ajax({
+                        type: "POST",
+                        data: {
+                            type: "get_student_trackings",
+                            student_code: student_code,
+                            instance:get_instance()
+                        },
+                        url: "../managers/pilos_tracking/pilos_tracking_report.php",
+                        async: false,
+                        success: function(msg) {
 
-                        loading_indicator.hide();
-                        $(student_id + " > div").empty();
-                        $(student_id + " > div").append(msg);
-                        //edit_tracking_new_form();
-                        //edit_groupal_tracking_new_form();
-                        
-                    },
-                    dataType: "json",
-                    cache: "false",
-                    error: function(msg) {
-                        loading_indicator.hide();
-                        swal({
-                            title: "Oops !",
-                            text: "Se presentó un inconveniente con el estudiante seleccionado.",
-                            html: true,
-                            type: 'warning',
-                            confirmButtonColor: "#d51b23"
-                        });
-                    },
-                });
-            
-            });
+                            loading_indicator.hide();
+                            $(student_id + " > div").empty();
+                            $(student_id + " > div").append(msg);
+                            //edit_tracking_new_form();
+                            //edit_groupal_tracking_new_form();
 
-            /*When click on the button "Ver horas", open a new tab with information of report time control about a
-            determinated monitor*/
+                        },
+                        dataType: "json",
+                        cache: "false",
+                        error: function(msg) {
+                            loading_indicator.hide();
+                            swal({
+                                title: "Oops !",
+                                text: "Se presentó un inconveniente con el estudiante seleccionado.",
+                                html: true,
+                                type: 'warning',
+                                confirmButtonColor: "#d51b23"
+                            });
+                        },
+                    });
 
-            $('.see_history').unbind().click(function(e) {
-
-
-             var element =  $(this).parents().eq(3).attr('href').split("#monitor")[1];
-             loading_indicator.show();
-            $.ajax({
-                    type: "POST",
-                    data: {
-                        type: "redirect_tracking_time_control",
-                        monitor: element,
-                    },
-                    url: "../managers/pilos_tracking/pilos_tracking_report.php",
-                    async: false,
-                    success: function(msg) {
-                        loading_indicator.hide();
-                        var current_url = window.location.href;
-                        var next_url = current_url.replace("report_trackings", "tracking_time_control");
-                        
-                        try{
-                        var win = window.open(next_url+"&&monitorid="+msg, '_blank');
-                        
-                        if (win) {
-                            //Browser has allowed it to be opened
-                            win.focus();
-                        }
-                        }catch(ex){
-                            alert("Se ha producido un error al abrir la ventana : "+ex);
-                        } 
-                        
-                    },
-                    dataType: "json",
-                    cache: "false",
-                    error: function(msg) {
-                        loading_indicator.hide();
-                        swal({
-                            title: "Oops !",
-                            text: "Se presentó un inconveniente al reedirecionar al reporte de horas.",
-                            html: true,
-                            type: 'warning',
-                            confirmButtonColor: "#d51b23"
-                        });
-                    },
                 });
 
-            });
+                /*When click on the button "Ver horas", open a new tab with information of report time control about a
+                determinated monitor*/
 
-        }
+                $('.see_history').unbind().click(function(e) {
 
+                    var element =  $(this).parents().eq(3).attr('href').split("#monitor")[1];
 
+                    loading_indicator.show();
+                    $.ajax({
+                        type: "POST",
+                        data: {
+                            type: "redirect_tracking_time_control",
+                            monitor: element,
+                        },
+                        url: "../managers/pilos_tracking/pilos_tracking_report.php",
+                        async: false,
+                        success: function(msg) {
+                            loading_indicator.hide();
+                            var current_url = window.location.href;
+                            var next_url = current_url.replace("report_trackings", "tracking_time_control");
+
+                            try{
+                            var win = window.open(next_url+"&&monitorid="+msg, '_blank');
+
+                            if (win) {
+                                //Browser has allowed it to be opened
+                                win.focus();
+                            }
+                            }catch(ex){
+                                alert("Se ha producido un error al abrir la ventana : "+ex);
+                            }
+
+                        },
+                        dataType: "json",
+                        cache: "false",
+                        error: function(msg) {
+                            loading_indicator.hide();
+                            swal({
+                                title: "Oops !",
+                                text: "Se presentó un inconveniente al reedirecionar al reporte de horas.",
+                                html: true,
+                                type: 'warning',
+                                confirmButtonColor: "#d51b23"
+                            });
+                        },
+                    });
+                });
+            }
 
 
             /**
@@ -1108,7 +1079,7 @@ define(
 
                     } else {
                         
-                        $(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").show();
+                        $(".well.ases-col-md-10.ases-col-md-offset-1.reporte-seguimiento.oculto").show();
 
                         $(".se-pre-con").show();
                         $("#reemplazarToogle").hide();
@@ -1144,7 +1115,7 @@ define(
                                 monitor_load();
                                 professional_load();
                                 groupal_tracking_load();
-                                $(".well.col-md-10.col-md-offset-1.reporte-seguimiento.oculto").slideDown("slow");
+                                $(".well.ases-col-md-10.ases-col-md-offset-1.reporte-seguimiento.oculto").slideDown("slow");
                                 put_tracking_count( username, id_semestre, parseInt( get_instance() ), false );
                                 
                             },
@@ -1169,7 +1140,6 @@ define(
                 });
             }
 
- 
 
             /**
              * @method send_email_new_form
@@ -1281,14 +1251,8 @@ define(
                         });
                     }
                 });
-
-
             }
 
-
-
-
- 
 
 
             /**   Auxiliary functions !!
@@ -1339,7 +1303,6 @@ define(
                                 $('#personas').append(index + msg);
 
                             }
-
                         },
                         dataType: "text",
                         cache: "false",
@@ -1349,11 +1312,10 @@ define(
                                  'ERROR!',
                                  'Oops!, Se presentó un error al cargar personas',
                                  'error'
-                                );
+                            );
                         },
                     });
                 });
-
             }
 
             /**
@@ -1374,8 +1336,6 @@ define(
                 }
                 return instance;
             }
-
-
         }
     };
 });
