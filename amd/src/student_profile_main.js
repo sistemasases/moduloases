@@ -64,22 +64,22 @@ define(['jquery',
             /**
              * Event that loads asynchronously the socio-educational tab
              */
-            $("#socioed_li").one('click', {tab_name: 'socioed'}, load_tab);
+            $("#socioed_li").one('click', {tab_name: 'socioed'}, load_tab_by_event);
 
             /**
              * Event that loads asynchronously the academic tab
              */
-            $("#academic_li").one('click', {tab_name: 'academic'}, load_tab);
+            $("#academic_li").one('click', {tab_name: 'academic'}, load_tab_by_event);
 
             /**
              * Event that loads asynchronously the geographic tab
              */
-            $("#geographic_li").one('click', {tab_name: 'geographic'}, load_tab);
+            $("#geographic_li").one('click', {tab_name: 'geographic'}, load_tab_by_event);
 
             /**
              * Event that loads asynchronously the discapacity_tracking tab
              */
-            $("#discapacity_tracking_li").one('click', {tab_name: 'discapacity_tracking'}, load_tab);
+            $("#discapacity_tracking_li").one('click', {tab_name: 'discapacity_tracking'}, load_tab_by_event);
 
             /**
              * Event that moves the Google Maps map from
@@ -327,7 +327,7 @@ define(['jquery',
                 $('#modal_riesgos').fadeOut(200);
             });
 
-            load_tabs(0);
+            //load_tabs(0);
 
         }, equalize: function () {
             $(document).ready(function () {
@@ -1072,25 +1072,21 @@ define(['jquery',
 
     /**
      * @author Jorge Eduardo Mayor <mayor.jorge@correounivale.edu.co>
-     * @see load_tab()
-     * @desc Loads the specified tab on the student profile.
-     * @param event object --> Contains the data of the event
+     * @desc Appends a loading indicator in a specified tab
+     * @param tab_name string --> the name of the tab
      */
-    function load_tab(event) {
+    function append_tab_loading_indicator(tab_name) {
+        //TODO
+    }
 
-        const tab_name = event.data.tab_name;
-        const load_async = (event.data.load_async === undefined);
-
-        if(tabs_status[tab_name]) {
-            return;
-        } else {
-            tabs_status[tab_name] = true;
-        }
-
-        console.log('Loading tab: ' + tab_name);
-
-        loading_indicator.show();
-        append_tab_loading_indicator(tab_name);
+    /**
+     * @author Jorge Eduardo Mayor <mayor.jorge@correounivale.edu.co>
+     * @see ajax_load_tab()
+     * @desc Does the AJAX call to load the tabs.
+     * @param load_async boolean --> Determines by which function is this one being called
+     * @param tab_name string --> The tab's name to load
+     */
+    function ajax_load_tab(load_async, tab_name) {
 
         var id_ases = $('#id_ases').val();
         var id_instance = document.querySelector('#dphpforms_block_instance').dataset.info;
@@ -1117,6 +1113,7 @@ define(['jquery',
                             let tab_to_load = $(mustache.render( template, msg.data_response ));
                             var tab_id = "#" + tab_name + "_tab";
                             //$(tab_id).empty();
+                            loading_indicator.hide();
                             $(tab_id).append(tab_to_load);
                             //document.getElementById(tab_id).innerHTML = tab_to_load;
                             switch(tab_name){
@@ -1128,7 +1125,7 @@ define(['jquery',
                                     break;
                                 case 'geographic':
                                     geographic.init();
-                                    $("#mapa").appendTo("#geographic_map");
+                                    (!load_async)?$("#mapa").appendTo("#geographic_map"):null;
                                     break;
                                 case 'tracing_others':
                                     break;
@@ -1156,11 +1153,26 @@ define(['jquery',
 
     /**
      * @author Jorge Eduardo Mayor <mayor.jorge@correounivale.edu.co>
-     * @desc Appends a loading indicator in a specified tab
-     * @param tab_name string --> the name of the tab
+     * @see load_tab()
+     * @desc Loads the specified tab on the student profile.
+     * @param event object --> Contains the data of the event
      */
-    function append_tab_loading_indicator(tab_name) {
-        //TODO
+    function load_tab_by_event(event) {
+
+        const tab_name = event.data.tab_name;
+
+        if(tabs_status[tab_name]) {
+            return;
+        } else {
+            tabs_status[tab_name] = true;
+        }
+
+        console.log('Loading tab: ' + tab_name);
+
+        loading_indicator.show();
+        append_tab_loading_indicator(tab_name);
+
+        ajax_load_tab(false, tab_name);
     }
 
     /**
@@ -1180,7 +1192,7 @@ define(['jquery',
         if(tab_loaded) {
             load_tabs(++index);
         } else {
-            $.when(console.log('On when'), load_tab({data: {tab_name: tab_name, load_async: false}})).then(console.log('On done'), load_tabs(++index));
+            $.when(ajax_load_tab(true, tab_name)).then(load_tabs(++index));
             tabs_status[tab_name] = true;
         }
     }
