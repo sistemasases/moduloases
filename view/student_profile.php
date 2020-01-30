@@ -200,6 +200,8 @@ if ($student_code != 0) {
             $faculty_name .= $program->cod_univalle ."-" .$program->nombre_facultad .  "<br>";
             $program_time .= $program->cod_univalle ."-" .$program->jornada  . "<br>";
             $name_program = $program->nombre_programa."-".$program->cod_univalle;
+
+            $record->cod_programa_activo = $cod_programa;
             break;
         }else {
             $faculty_name .= $program->cod_univalle ."-" .$program->nombre_facultad .  "<br>";

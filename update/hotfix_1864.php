@@ -25,15 +25,12 @@ $script = function () {
     $id_ases_in_use = 10743;
     $id_ases_deprecated = 10076;
 
-    $sql_query = "SELECT MAX (id) FROM {talentospilos_usuario}";
-    $highest_id = $DB->get_record_sql($sql_query);
-
     //Update of user
 
     $query = "
         UPDATE {talentospilos_usuario}
         SET num_doc_ini = 939393,  num_doc = 939393
-        WHERE id = $id_ases_deprecated";
+        WHERE id = ".$id_ases_deprecated;
 
     $DB->execute($query);
 
@@ -41,13 +38,18 @@ $script = function () {
 
     $sql_query = "SELECT *
                     FROM {talentospilos_user_extended}
-                    WHERE id_ases_user = 10076 AND id_moodle_user = 121315";
+                    WHERE id_ases_user = ".$id_ases_deprecated." AND id_moodle_user = ".$id_moodle_with_two_relations;
 
-    $id_record_deprecated = $DB->get_record_sql($sql_query);
+    $id_record_deprecated = $DB->get_record_sql($sql_query)->id;
+
+    //print_r("\nid_record_deprecated: ".((isset($id_record_deprecated))?$id_record_deprecated:"nula")."\n");
 
     $DB->delete_records('talentospilos_user_extended', ['id' => $id_record_deprecated]);
 
     //Insert of new relation
+
+    $sql_query = "SELECT MAX (id) FROM {talentospilos_user_extended}";
+    $highest_id = $DB->get_record_sql($sql_query)->id;
 
     $relation_to_create = new stdClass();
     $relation_to_create->id = $highest_id+1;
