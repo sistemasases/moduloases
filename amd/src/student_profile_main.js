@@ -97,8 +97,6 @@ define(['jquery',
                 $("#mapa").appendTo("#movableMap");
             });
 
-            //Carga una determinada pestaña
-
             //Eliminar fila de una tabla
 
             $(document).on('click', '#table_vive_con tbody tr td button', function () {
@@ -327,7 +325,7 @@ define(['jquery',
                 $('#modal_riesgos').fadeOut(200);
             });
 
-            //load_tabs(0);
+            load_tabs(0);
 
         }, equalize: function () {
             $(document).ready(function () {
@@ -1113,7 +1111,6 @@ define(['jquery',
                             let tab_to_load = $(mustache.render( template, msg.data_response ));
                             var tab_id = "#" + tab_name + "_tab";
                             //$(tab_id).empty();
-                            loading_indicator.hide();
                             $(tab_id).append(tab_to_load);
                             //document.getElementById(tab_id).innerHTML = tab_to_load;
                             switch(tab_name){
@@ -1135,17 +1132,14 @@ define(['jquery',
                             }
                         },
                         error: function(){
-                            loading_indicator.hide();
                             console.log( "../templates/view_"+tab_name+"_tab_sp.mustache cannot be reached." );
                         }
                     });
                 } else {
-                    loading_indicator.hide();
                     console.log(msg);
                 }
             },
             error: function(msg) {
-                loading_indicator.hide();
                 console.log(msg);
             }
         });
@@ -1162,17 +1156,18 @@ define(['jquery',
         const tab_name = event.data.tab_name;
 
         if(tabs_status[tab_name]) {
+            console.log('Returning tab by event: ' + tab_name);
             return;
         } else {
             tabs_status[tab_name] = true;
         }
 
-        console.log('Loading tab: ' + tab_name);
+        console.log('Loading tab by event: ' + tab_name);
 
-        loading_indicator.show();
         append_tab_loading_indicator(tab_name);
-
-        ajax_load_tab(false, tab_name);
+        loading_indicator.show();
+        ajax_load_tab(true, tab_name);
+        loading_indicator.hide();
     }
 
     /**
@@ -1192,7 +1187,8 @@ define(['jquery',
         if(tab_loaded) {
             load_tabs(++index);
         } else {
-            $.when(ajax_load_tab(true, tab_name)).then(load_tabs(++index));
+            console.log('Loading tab by default: ' + tab_name);
+            $.when(ajax_load_tab(false, tab_name)).then(load_tabs(++index));
             tabs_status[tab_name] = true;
         }
     }
