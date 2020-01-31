@@ -8,6 +8,27 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
 
         init: function () {
 
+            var categoryMiniMenu = $('<div class ="mini-menu">' +
+                '<i class="fa fa-plus"></i>' +
+                '</div>');
+
+            var itemMiniMenu = $('<div class ="mini-menu">' +
+                '<i class="fa fa-edit" title="Editar Ítem"></i>' +
+                '<i class="fa fa-trash"></i>' +
+                '</div>');
+
+            categoryMiniMenu.appendTo($('th.category:not(.catlevel1)'));
+
+            itemMiniMenu.appendTo($('th.item'));
+
+            $('.mini-menu').attr('iditem', function () {
+                return $(this).parent().attr('data-itemid');
+            });
+
+            $('.mini-menu').children().attr('iditem', function () {
+                return $(this).parent().attr('iditem');
+            });
+
             var old_weight;
             //Metodos de Wizard de crear categorias e items
             $(document).on('click', '#wizard_button', function () {
@@ -19,12 +40,42 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 loadCategories(id);
             });
 
+            $(document).on('click', '.fa-plus', function () {
+                $("#modalCategories").modal({
+                    backdrop: false
+                });
+                $('.fondo').show();
+                id = getCourseid();
+                loadCategories(id);
+            });
+
+            $(document).on('click', '.fa-edit', function () {
+                id = getCourseid();
+                loadCategories(id);
+                var selector = '#' + $(this).attr('iditem');
+                setTimeout(function() {
+                    editCustom($(selector));
+                }, 300);
+            });
+
+            $(document).on('click', '.fa-trash', function () {
+                id = getCourseid();
+                loadCategories(id);
+                var selector = '#' + $(this).attr('iditem');
+                setTimeout(function() {
+                    $element = $(selector).parent().children().last();
+                    console.log($element);
+                    deleteCustom($(selector));
+                }, 300);
+            });
+
             $(document).on('click', '.mymodal-close', function () {
                 location.reload();
                 $('.fondo').hide();
             });
 
             $(document).on('click', '.edit', function () {
+                console.log($(this));
                 //se carga titulo (item o categoria)
                 var titulo = $(this).attr('title');
                 $("#titulo").text(titulo)
@@ -125,6 +176,109 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 });
             });
 
+            function editCustom($element){
+                console.log($element);
+                //se carga titulo (item o categoria)
+                var titulo = $element.attr('title');
+                $("#titulo").text(titulo)
+
+                var curso = false;
+
+                $("#nombre_editar").show();
+                $("#label_nombre").show();
+                $('#alta').show();
+                $('#div_padres').show();
+
+                if ($element.hasClass('curso')) {
+                    curso = true;
+                    $('#alta').hide();
+                    console.log("CURSO");
+                    $("#nombre_editar").hide();
+                    $("#label_nombre").hide();
+                    $('#div_padres').hide();
+                }
+
+                //se carga la informacion del elemento
+                var id_course = getCourseid();
+                var id_element = $element.attr('id');
+                $('#save_edit').attr('name', id_element);
+
+                //se evalua si el elemento es item o categoria
+                if (titulo === "Editar Categoría") {
+                    $('#type_cal').show();
+                    var tipo = $element.parent().parent().attr('id');
+                    $('#otro').hide();
+                    if (tipo != 10 && tipo != 0 && tipo != 6) {
+                        tipo = 99
+                        $('#otro').show();
+                    }
+                    $('#calific').prop('value', tipo)
+                    var type = 'cat';
+                    var nombre = $element.parent().parent().text();
+                    if (nombre.search("-") == -1) {
+                        nom_text = nombre.split("(");
+                        nombre = nom_text[0];
+                        peso = nom_text[1];
+                        if (!curso) {
+                            $('#peso').show();
+                        }
+                        peso = peso.replace('(', '');
+                        peso = peso.replace(')', '');
+                        peso = peso.replace(' ', '');
+                        peso = peso.replace('%', '');
+                        old_weight = peso;
+                        $('#peso_editar').val(peso);
+
+                        var maxweight = $element.attr('data-maxweight');
+                        $('.maxweight-edit').attr('id', maxweight);
+                    } else {
+                        nombre = nombre.split("-")[0]
+                        $('#peso').hide()
+                    }
+                } else {
+                    //se oculta el tipo de calificacion
+                    $('#type_cal').hide()
+                    //se carga el peso de tenerlo
+                    var peso = $element.parent().parent().prev().text();
+                    if (peso == '-') {
+                        $('#peso').hide()
+                        $('#peso_editar').val(peso)
+                    } else {
+                        $('#peso').show();
+                        peso = peso.replace('(', '');
+                        peso = peso.replace(')', '');
+                        peso = peso.replace(' ', '');
+                        peso = peso.replace('%', '');
+                        old_weight = peso;
+                        $('#peso_editar').val(peso)
+
+                        var maxweight = $element.parent().attr('id');
+                        $('.maxweight-edit').attr('id', maxweight);
+                    }
+                    var type = 'it';
+                    var nombre = $element.parent().parent().prev().prev().attr('title');
+
+                    //Se evalua si es una asignacion para no dejar modificar el nombre
+                    if (nombre == 'Enlazar a la actividad Tarea') {
+                        $("#nombre_editar").hide();
+                        $("#label_nombre").hide();
+                    }
+                }
+                //se carga el nombre
+                $("#nombre_editar").val(nombre)
+
+
+
+                //se cargan las categorias seleccionando la categoria padre del elemento
+                load_parent_categorie(id_course, id_element, type)
+
+                //se abre el modal
+                $("#edit").modal({
+                    backdrop: false
+                });
+
+            };
+
             $(document).on('click', '#save_edit', function () {
                 var id_element = $(this).attr("name");
                 var new_nombre = $("#nombre_editar").val();
@@ -212,6 +366,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                             $("#edit").modal('hide');
                             loadCategories(course_id);
                             console.log(msg);
+                            location.reload();
                         }
                     },
                     dataType: "json",
@@ -221,6 +376,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                         console.log(msg);
                     },
                 });
+
+
 
 
             })
@@ -262,6 +419,44 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                     });
 
             });
+
+            function deleteCustom($element){
+                var element = $element.parent().parent().parent().attr('id').split('_');
+                var courseid = getCourseid();
+                var id = element[1];
+                var type = element[0];
+                if (type === 'cat') {
+                    var tipo = "esta categoría"
+                } else {
+                    var tipo = "este item"
+                }
+                var titulo = "Esta seguro que desea eliminar " + tipo + "?";
+                swal({
+                        title: titulo,
+                        text: "Tenga en cuenta que NO SE PODRAN RECUPERAR ninguna de la notas que haya registrado en este elemento una vez borrado!",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonClass: "btn-danger",
+                        confirmButtonText: "Aceptar, Borrar " + tipo,
+                        cancelButtonText: "Cancelar",
+                        closeOnConfirm: false,
+                        closeOnCancel: false
+                    },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            deleteElement(id, courseid, type);
+                        } else {
+                            swal({
+                                title: "Cancelado",
+                                type: "error",
+                                showCancelButton: false,
+                                showConfirmButton: false,
+                                timer: 1200,
+                            });
+                        }
+                    });
+
+            };
 
             $(document).on("click", ".new", function () {
                 var maxweight = $(this).parent().parent().children().next('.maxweight').attr('id');
@@ -389,6 +584,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                             showConfirmButton: false,
                             timer: 1200,
                         });
+                        location.reload();
                         loadCategories(course_id);
                     },
                     dataType: "json",
@@ -419,6 +615,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                     url: "../managers/grade_categories/grader_processing.php",
                     success: function (msg) {
                         $("#mymodalbody").html(msg);
+                        //console.log(msg);
                     },
                     dataType: "text",
                     cache: "false",
