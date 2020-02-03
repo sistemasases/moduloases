@@ -1,0 +1,186 @@
+.is_ases,
+.is_ases th,
+.is_ases td {
+    //background-color: #bdf2bd!important;
+}
+
+table{
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+#user-grades td {
+    vertical-align: middle;
+    text-align: center;
+}
+.th-student-names a {
+    cursor: pointer;
+}
+
+
+.edit-category-form,
+.add-element-form {
+    padding: 15px;
+}
+.td-grade input {
+    width: 50px;
+}
+/**
+ * Moove theme styles needed
+ * @see https://moodle.org/plugins/theme_moove
+ */
+#region-main > .card {
+    overflow-x: initial;
+}
+
+/** End Moove theme styles needed */
+
+
+.td-grade input::-webkit-outer-spin-button,
+.td-grade input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+.customgrader {
+    height: 12.5cm;
+    overflow-x: auto;
+}
+
+.customgrader table,
+.customgrader table td,
+.customgrader table th {
+    border: 1px solid #ccc;
+}
+
+.customgrader table{
+    z-index: 1029;
+    position: relative;
+    background-color: #ffffff;
+    width:  100%;
+}
+
+
+.td-grade input[type=number] {
+    -moz-appearance: textfield; /* Firefox */
+}
+.th-category {
+    min-width: 130%;
+}
+.table-grader th {
+    border: 1px solid #ccc;
+}
+
+.category-mini-menu:hover{
+    cursor: pointer;
+}
+
+.fa-trash{
+    cursor: pointer;
+}
+
+/*.th-student{
+    background-color: #ffffff;
+}*/
+
+.th-item-category{
+    background-color: #eae9e9 !important;
+}
+
+.th-item-course{
+    background-color: #eae9e9 !important;
+}
+
+th:last-child{
+    background-color: #eae9e9 !important;
+    /*position: sticky;
+    top: 0;*/
+}
+
+tr:nth-child(even) {
+    background-color: #ffffff;
+}
+
+tr:nth-child(odd) {
+    background-color: #f2f2f2;
+}
+
+/*tbody > tr:nth-child(2n+1) > td, .table-striped tbody > tr:nth-child(2n+1) > th {
+    background-color: #f90010!important;
+}*/
+
+th{
+    position: sticky;
+    top: 0;
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding-box;
+    background-clip: padding-box;
+    background-color: inherit;
+}
+
+.th-item-manual-and-mod{
+    min-width: 200px;
+    max-width: 200px;
+}
+
+.th-item-category{
+    min-width: 200px;
+    max-width: 200px;
+}
+
+.th-student-names{
+    min-width: 300px;
+    max-width: 300px;
+}
+
+.v--modal-overlay{
+    z-index: 99999999!important;
+}
+
+.inotfocused{
+    background: rgba(255,255,255,0);
+    border: rgba(255,255,255,0);
+}
+
+.iwithfocus{
+    width: 170px;
+}
+
+.iwnotfocused{
+    background: rgba(255,255,255,0);
+    border: rgba(255,255,255,0);
+    width: 40px;
+}
+
+.iwwithfocus{
+    width: 40px;
+}
+
+.catnotfocused{
+    background: rgba(255,255,255,0);
+    border: rgba(255,255,255,0);
+    width: 100%;
+}
+
+.catwithfocus{
+    width: 100%;
+}
+
+.catwnotfocused{
+    background: rgba(255,255,255,0);
+    border: rgba(255,255,255,0);
+    width: 40px;
+}
+
+.catwwithfocus{
+    width: 40px;
+}
+
+.helpbutton{
+    float: right;
+}
+
+.v--modal-box{
+    height: unset!important;
+}

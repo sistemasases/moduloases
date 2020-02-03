@@ -247,7 +247,7 @@ function secure_render( &$data, $user_id = null, $singularizations = null, $time
 				
 				if( $user_rol ){
 
-					$actions_type = _core_security_get_actions_types();
+					$actions_type = _core_security_get_action_type();
 					$type_id = null;
 					foreach ($actions_type as $key => $type) {
 						if( $type['alias'] == "front" ){
@@ -566,14 +566,14 @@ function secure_assign_role_to_user( $user_id, $role, $start_datetime = NULL, $e
     }else{
         if( ($start_datetime >= $end_datetime) ){ return null; }
     }
-
+    
     $_user = get_db_records( "user", ['id' => $user_id] );
     $_role = _core_security_get_role( $role ); // Rol at the master system (Secutiry Core)
-      
+    
     if( $_user && $_role ){
-     
+       
         if( is_null(_core_security_get_user_rol( $user_id, $start_datetime, $singularizer )) ){
-
+                
         	if( SUPPORT_TO_PREVIOUS_SYSTEM ){
             
 	            //Validation if the role exist at the previous system role
@@ -591,8 +591,12 @@ function secure_assign_role_to_user( $user_id, $role, $start_datetime = NULL, $e
             
             //Valid format
             $use_alternative_interval = ( $use_alternative_interval ? 1 : 0 );
-            $alternative_interval = ( is_null($alternative_interval) ? NULL : json_encode($alternative_interval) );
+            $alternative_interval = ( is_null($alternative_interval) ? NULL : $alternative_interval );
             $singularizer = ( is_null($singularizer) ? NULL : json_encode($singularizer) );
+            
+            if( $use_alternative_interval === 1 ){
+                _core_security_solve_alternative_interval($alternative_interval);
+            }
             
             $tablename = $DB_PREFIX . "talentospilos_usuario_rol";
             $params = [ $user_id, $_role['id'], date( $date_format, $start_datetime),  date( $date_format, $end_datetime), $alternative_interval, $use_alternative_interval, $singularizer ];
