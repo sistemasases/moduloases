@@ -247,7 +247,7 @@ function secure_render( &$data, $user_id = null, $singularizations = null, $time
 				
 				if( $user_rol ){
 
-					$actions_type = _core_security_get_actions_types();
+					$actions_type = _core_security_get_action_type();
 					$type_id = null;
 					foreach ($actions_type as $key => $type) {
 						if( $type['alias'] == "front" ){
