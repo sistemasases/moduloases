@@ -1,0 +1,1 @@
+'use strict';define([],function(){return{aggregations:{SIMPLE:1,PROMEDIO:10},sortStudentMethods:{FIRST_NAME:'firstname',LAST_NAME:'lastname'},sortDirection:{ASC:'asc',DESC:'desc'}}});
