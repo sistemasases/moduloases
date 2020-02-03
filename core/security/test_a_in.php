@@ -20,7 +20,8 @@ module_loader( "security" );
  * 
  * Para replicar:
  */
-$singularization_test_user = [ "id_instancia" => 563336, "id_semestre" => 3 ];
+
+$id_semestre = 9;
 
 $alt_interval = '{
     
@@ -28,16 +29,20 @@ $alt_interval = '{
     "col_name_interval_end"   : "fecha_fin",
     "table_ref"               : {
     
-        "record_id" :1,
-        "name"      :"mdl_talentospilos_semestre"
+        "record_id" : ' . $id_semestre . ',
+        "name"      : "mdl_talentospilos_semestre"
         
     }
 }';
- 
-print_r(_core_security_solve_alternative_interval($alt_interval));
+
+
+$singularization_test_user = [ "id_instancia" => 563336, "id_semestre" => $id_semestre ];
+
+
+//print_r(_core_security_solve_alternative_interval($alt_interval));
 print_r(
         core_secure_assign_role_to_user(
-                161037,
+                16103,
                 'sistemas',
                 strtotime("2020-01-28 09:00:00"),
                 strtotime("2020-02-29 00:00:00"),
