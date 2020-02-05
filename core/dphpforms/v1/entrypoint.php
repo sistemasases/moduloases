@@ -671,7 +671,7 @@ function _dphpforms_generate_html_updater( int $record_id = null, $rol_, bool $m
                 "attrs" : [
                     { "attr" : "id"   , "value" : "dphpforms_record_id" },
                     { "attr" : "name" , "value" : "id_registro"         },
-                    { "attr" : "value", "value" : "50115"               },
+                    { "attr" : "value", "value" : "' . $record_id . '"  },
                     { "attr" : "style", "value" : "display:none;"       }
                 ]
             }
