@@ -68,7 +68,6 @@
         }
         
         if(is_numeric($key)){
-
             $respuesta = array(
                 'id' => (string) $key,
                 'valor' => (string) $elemento
@@ -85,8 +84,9 @@
                 if( $last_special_field === $id ){
                     array_push($special_response['valor'], [ $value_id => (string) $elemento ]);
                 }else{
-                    if( !$first_special_field ){
-                        $special_response['valor'] = json_encode( $special_response['valor']);
+                    
+                    if ($last_special_field !== $id) {
+                        $special_response['valor'] = json_encode($special_response['valor']);
                         array_push($respuestas, $special_response);
                     }
                     
@@ -95,20 +95,49 @@
                     $special_response['valor'] = [];
                     array_push($special_response['valor'], [ $value_id => (string) $elemento ]);
                     
-                    $first_special_field= false;
+                    $first_special_field = false;
+                }
+                                
+            }else if( strpos($key, '_TABLE_') !== false ){
+                                
+                $parts = explode("_TABLE_", $key);
+                $id = $parts[0];
+                
+                $value_ids = explode("_", $parts[1] );
+                
+                $row = $value_ids[0];
+                $col = $value_ids[1];
+                                                
+                if( $last_special_field === $id ){
+                    $special_response['valor'] = [];
+                    $special_response['valor'][$row][$col] = (string) $elemento;
+                }else{
+                    
+                    if ($last_special_field !== $id) {
+                        $special_response['valor'] = json_encode($special_response['valor']);
+                        array_push($respuestas, $special_response);
+                    }
+                    
+                    $last_special_field = $id;
+                    $special_response['id'] = $id;
+                    $special_response['valor'] = [];
+                    $special_response['valor'][$row][$col] = (string) $elemento;
+                    
+                    $first_special_field = false;
                 }
                                 
             }
-
+            
+            
         }
+        
         next($_POST);
     }
     
     if( !$first_special_field ){
         $special_response['valor'] = json_encode( $special_response['valor']);
         array_push($respuestas, $special_response);
-    }
-    
+    }    
 
     $full_form = array(
         'formulario' => $form,
@@ -116,8 +145,6 @@
     );
 
     $form_JSON = json_encode($full_form);
-    
-
     
 /*
 
