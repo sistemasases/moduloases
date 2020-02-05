@@ -371,7 +371,6 @@ function dphpforms_update_respuesta($completed_form, $RECORD_ID){
                     }
                 }
                 if( $is_not_matched ){
-                    
                     $new_respuesta = new stdClass();
                     $new_respuesta->id =  $respuestaActualizada->id;
                     $new_respuesta->valor = $respuestaActualizada->valor;
