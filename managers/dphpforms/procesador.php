@@ -85,7 +85,7 @@
                     array_push($special_response['valor'], [ $value_id => (string) $elemento ]);
                 }else{
                     
-                    if ($last_special_field !== $id) {
+                    if ($last_special_field !== $id && !$first_special_field) {
                         $special_response['valor'] = json_encode($special_response['valor']);
                         array_push($respuestas, $special_response);
                     }
@@ -109,11 +109,10 @@
                 $col = $value_ids[1];
                                                 
                 if( $last_special_field === $id ){
-                    $special_response['valor'] = [];
                     $special_response['valor'][$row][$col] = (string) $elemento;
                 }else{
                     
-                    if ($last_special_field !== $id) {
+                    if ($last_special_field !== $id && !$first_special_field) {
                         $special_response['valor'] = json_encode($special_response['valor']);
                         array_push($respuestas, $special_response);
                     }
@@ -145,6 +144,9 @@
     );
 
     $form_JSON = json_encode($full_form);
+    
+    print_r($form_JSON);
+    die();
     
 /*
 
@@ -590,22 +592,22 @@ function dphpforms_update_respuesta($completed_form, $RECORD_ID){
 }
 
 function dphpforms_new_store_respuesta($completed_form){
-
+    
     $processable = true;
 
     $obj_form_completed = json_decode($completed_form);
     $processable = dphpforms_form_exist($obj_form_completed->{'formulario'}->{'id'});
+    
     foreach($obj_form_completed->{'respuestas'} as &$respuesta){
+        
         if(dphpforms_pregunta_exist_into_form($respuesta->{'id'})){
             if($processable == false){
                 break;
             }
         }else{
             $processable = false;
-        };
+        }
     }
-
-    
 
     $reglas = dphpforms_get_form_reglas($obj_form_completed->{'formulario'}->{'id'});
 
