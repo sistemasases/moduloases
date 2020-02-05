@@ -360,6 +360,39 @@ define([
 
     });
     
+    jQuery(document).on(event = 'click', selector = '.dphpf-text-table-add-row-btn', callback = function (evt) {
+
+        let elem = jQuery(this);
+
+        let block_uuid = elem.data("uid");
+        
+        let question_id = elem.data('question-id');
+
+        let template = jQuery(jQuery(`div[data-uid='${ block_uuid }'] template`).html());
+        
+        let last_row = 0;
+        let last_col = 0;
+        
+        jQuery(`.dphpf-table-input`).each(function(){
+            
+            let row = parseInt( jQuery(this).data('row')  );
+            
+            last_row = ( row > last_row ? row : last_row );
+            
+        });
+        
+        template.find(`input`).each(function(){
+                        
+            jQuery(this).attr(`name`, question_id + "_TABLE_" + (last_row + 1) + "_" + last_col);
+            
+            last_col++;
+            
+        });
+
+        template.appendTo(`div[data-uid='${ block_uuid }'] .dphpf-elements`);
+
+    });
+    
     jQuery('.mymodal-close').click( function () {
         
         jQuery(this).parent().parent().parent().parent().fadeOut(300);
