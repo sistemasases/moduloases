@@ -798,6 +798,8 @@ function _dphpforms_generate_html_recorder( $id_form, $rol_, $initial_config = n
         $form_action = uniqid();
     }
     
+    //$form_action = "http://10.162.13.251/moodle35/blocks/ases/managers/dphpforms/procesador.php";
+    
     $form_uniqid = uniqid("dphpforms_",true);
     
     $form = _core_dphpforms_build_tag($dom, "form", new DOMAttributeList([
@@ -826,7 +828,7 @@ function _dphpforms_generate_html_recorder( $id_form, $rol_, $initial_config = n
     $form->appendChild( $title_separator );
     $form->appendChild( $hidden_input_form_id );
     
-    
+    //http://10.162.13.251/moodle35/blocks/ases/managers/dphpforms/procesador.php
     
     if( property_exists($initial_config, 'aditional_tags') ){
         count($initial_config->aditional_tags);
