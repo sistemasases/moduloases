@@ -145,8 +145,6 @@
 
     $form_JSON = json_encode($full_form);
     
-    print_r($form_JSON);
-    die();
     
 /*
 
