@@ -13,7 +13,7 @@ const DYNAMIC = "dynamic";
 const FIXED = "fixed";
 
 function _dphpforms_generate_TABLE(&$dom, $id_formulario_pregunta, $context, $statement, $prefix_uniqid) {
-
+    
     $block_uuid = uniqid($prefix_uniqid, true);
 
     $div_attr = new DOMAttributeList([
@@ -26,7 +26,9 @@ function _dphpforms_generate_TABLE(&$dom, $id_formulario_pregunta, $context, $st
         'data-uid' => $block_uuid
     ]);
 
-    $elements = $context['options']->initial_list;
+    $def_values = json_decode($context['default_value']);
+    
+    $elements = ( count($def_values) > 0 ? $def_values : $context['options']->initial_list );
     $header = $context['options']->header;
     
     // General container
