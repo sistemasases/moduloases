@@ -94,7 +94,8 @@ function _dphpforms_generate_TABLE(&$dom, $id_formulario_pregunta, $context, $st
             $c_input = _core_dphpforms_build_tag($dom, "input", new DOMAttributeList([
                 "class" => ["dphpf-table-input"],
                 "style" => "width: 100%;",
-                "value" => $col
+                "value" => $col,
+                "name" => $id_formulario_pregunta . "_TABLE_" . $r_key . "_" . $c_key
             ]));
             
             $dcol->appendChild($c_input);
