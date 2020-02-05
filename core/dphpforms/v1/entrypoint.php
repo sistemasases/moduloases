@@ -682,6 +682,7 @@ function _dphpforms_generate_html_updater( int $record_id = null, $rol_, bool $m
     $fields = $record['campos'];
             
     foreach ( $fields as &$stored_field ){
+        
         $init_field                  = new stdClass();
         $init_field->alias           = $stored_field['local_alias'];
         $init_field->default_value   = $stored_field['respuesta'];        
