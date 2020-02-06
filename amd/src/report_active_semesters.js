@@ -145,10 +145,10 @@ define([
                    data.forEach( (item) => {
                        var carrera = '';
                        //console.log("init_from_data");
-                       //console.log(semesters);
+                       console.log(item);
                        semesters.forEach( semester => {
                            //console.log("Semesters:");
-                           //console.log(semester);
+                           console.log(semester);
                            if(!(item[semester].includes('NO') || item[semester].includes('EGRESADO'))){
                                if(!item[semester].includes(carrera) && carrera !== ''){
                                    this.semesters[semester][2]++;
