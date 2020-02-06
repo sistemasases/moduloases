@@ -340,7 +340,7 @@ define([
                         console.log(dataFromApi);
                         var dataTable = dataFromApi.dataTable;
                         $('#download_percentage_desertion').css("display", "inline"); //Show the hidden download button
-                        semesters = Array.from(dataFromApi.semesters);
+                        semesters = Object.values(dataFromApi.semesters);
                         var columns = dataTable.columns;
                         var column_names = columns.map( column => column.name );
                         var total_students = dataTable.data.length;
