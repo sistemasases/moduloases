@@ -144,7 +144,11 @@ define([
                ResumeReport.prototype.init_from_data = function init_from_data(data /*DataTable.data*/, semesters) {
                    data.forEach( (item) => {
                        var carrera = '';
+                       console.log("init_from_data");
+                       console.log(semesters);
                        semesters.forEach( semester => {
+                           console.log("Semesters:");
+                           console.log(semester);
                            if(!(item[semester].includes('NO') || item[semester].includes('EGRESADO'))){
                                if(!item[semester].includes(carrera) && carrera !== ''){
                                    this.semesters[semester][2]++;
