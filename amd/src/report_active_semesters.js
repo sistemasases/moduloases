@@ -89,7 +89,7 @@ define([
             var PercentageResumeReport = (function () {
                 function PercentageResumeReport(resume_report /* instance of ResumeReport */, semesters /* Array of strings */) {
                     var total_students = resume_report.total_students;
-                    semesters.forEach(semester => {
+                    Array.from(semesters).forEach(semester => {
                             var student_cancel = total_students - (resume_report.semesters[semester][0] + resume_report.semesters[semester][1]);
                             this[semester] = student_cancel * 100 / total_students;
                         }
@@ -102,7 +102,7 @@ define([
             var PercentageGradReport = (function () {
                 function PercentageGradReport(resume_report /* instance of ResumeReport */, semesters /* Array of strings */) {
                     var total_students = resume_report.total_students;
-                    semesters.forEach(semester => {
+                    Array.from(semesters).forEach(semester => {
                             var student_grad = resume_report.semesters[semester][1];
                             this[semester] = student_grad * 100 / total_students;
                         }
@@ -115,7 +115,7 @@ define([
             var PercentageActiveReport = (function () {
                 function PercentageActiveReport(resume_report /* instance of ResumeReport */, semesters /* Array of strings */) {
                     var total_students = resume_report.total_students;
-                    semesters.forEach(semester => {
+                    Array.from(semesters).forEach(semester => {
                             var student_active = resume_report.semesters[semester][0];
                             this[semester] = student_active * 100 / total_students;
                         }
@@ -145,7 +145,7 @@ define([
                    data.forEach( (item) => {
                        var carrera = '';
                        console.log("init_from_data");
-                       console.log(semesters);
+                       console.log(Array.from(semesters));
                        Array.from(semesters).forEach( semester => {
                            console.log("Semesters:");
                            console.log(semester);
@@ -165,7 +165,7 @@ define([
 
                    var cambios = 0;
 
-                   semesters.forEach(semester => {
+                   Array.from(semesters).forEach(semester => {
                            cambios = cambios + this.semesters[semester][2];
                        this.semesters[semester][2] = cambios;
                        }
@@ -245,7 +245,7 @@ define([
                 var data = [];
                 var grads = [];
                 var active = [];
-                semesters.forEach(semester => {
+                Array.from(semesters).forEach(semester => {
                    data.push(percentage_resume_report[semester]);
                    grads.push(percentage_grad_report[semester]);
                    active.push(percentage_active_report[semester]);
