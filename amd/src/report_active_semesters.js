@@ -146,7 +146,7 @@ define([
                        var carrera = '';
                        console.log("init_from_data");
                        console.log(semesters);
-                       semesters.forEach( semester => {
+                       Array.from(semesters).forEach( semester => {
                            console.log("Semesters:");
                            console.log(semester);
                            if(!(item[semester].includes('NO') || item[semester].includes('EGRESADO'))){
