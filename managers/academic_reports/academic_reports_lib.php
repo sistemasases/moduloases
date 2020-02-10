@@ -30,7 +30,7 @@
 require_once(__DIR__ . '/../../../../config.php');
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
-require_once $CFG->dirroot.'/blocks/ases/managers/grade_categories/grader_lib.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/grade_categories/customgrader_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib.php'; 
 
 

@@ -205,13 +205,13 @@ function _core_security_get_user_rol( $user_id, $time_context = null, $singulari
 
     $manager = get_db_manager();
     $user_roles = $manager( $query = "SELECT * FROM $tablename WHERE id_usuario = $1 AND eliminado = 0", $params, $extra = null );
-
+    
     foreach ($user_roles as $key => $u_rol) {
         
         $rol = new stdClass();
-		
+        		
         if( 
-            ( $u_rol->usar_intervalo_alternativo == 0 ) && 
+            ( $u_rol['usar_intervalo_alternativo'] == 0 ) && 
             ( !is_null( $u_rol['fecha_hora_inicio'] ) ) && 
             ( !is_null( $u_rol['fecha_hora_fin'] ) )
         ){
@@ -221,6 +221,7 @@ function _core_security_get_user_rol( $user_id, $time_context = null, $singulari
             ( $u_rol['usar_intervalo_alternativo'] == 1 ) && 
             ( !is_null( $u_rol['usar_intervalo_alternativo'] ) )
         ){
+            
             $alternative_interval = _core_security_solve_alternative_interval( $u_rol['intervalo_validez_alternativo'] );
             if( $alternative_interval ){
                 $rol->start = strtotime($alternative_interval['fecha_hora_inicio']);
@@ -251,7 +252,7 @@ function _core_security_get_user_rol( $user_id, $time_context = null, $singulari
                  $valid_singularization = false;
             }      
         }
-                
+                        
         if( ($time_context >= $rol->start) && ($time_context <= $rol->end) && $valid_singularization ){
             return $u_rol;
         }
