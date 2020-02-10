@@ -395,7 +395,7 @@ function  getDataToUrlByIdAses($id_ases_student)
 {
     global $DB; 
 
-    $current_semester = get_current_semester()->max;
+    $current_semester = core_periods_get_current_period()->max;
 
                 $sql_query = "   SELECT url_data.id_instancia AS instanceid, url_data.username, url_data.firstname, url_data.lastname, _context.instanceid AS courseid
                 FROM mdl_context AS _context
