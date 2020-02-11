@@ -119,7 +119,6 @@ function get_cohorts_by_idnumber($id_number){
 
          $user_role = $DB->get_record_sql($sql_query);
 
-
          switch ($user_role->nombre_rol) {
              case 'director_prog':
 
@@ -129,6 +128,53 @@ function get_cohorts_by_idnumber($id_number){
                                 WHERE id_semestre = " . get_current_semester()->max . " AND id_instancia = $instance_id)";
 
                  $where_user = $conditions_query_directors.$conditions_query_assigned;
+                 break;
+
+             case 'profesional_ps':
+
+                 $sub_query_ps_staff = " INNER JOIN {talentospilos_monitor_estud} AS monitor_student ON monitor_student.id_estudiante = ases_students.student_id
+                                        INNER JOIN (SELECT t_monitor_practicante.id_monitor, t_monitor_practicante.id_practicante, t_practicante_profesional.id_profesional
+                                              FROM
+                                                (SELECT id_usuario AS id_monitor, id_jefe AS id_practicante 
+                                                FROM {talentospilos_user_rol} AS user_rol
+                                                    INNER JOIN {talentospilos_rol} AS rol ON user_rol.id_rol = rol.id
+                                                WHERE rol.nombre_rol = 'monitor_ps' AND user_rol.id_semestre = $id_current_semester AND user_rol.id_instancia = $instance_id) AS t_monitor_practicante
+                                                INNER JOIN
+                                                (SELECT id_usuario AS id_practicante, id_jefe AS id_profesional
+                                                FROM {talentospilos_user_rol} AS user_rol
+                                                    INNER JOIN {talentospilos_rol} AS rol ON user_rol.id_rol = rol.id
+                                                WHERE rol.nombre_rol = 'practicante_ps' AND user_rol.id_semestre = $id_current_semester AND user_rol.id_instancia = $instance_id) AS t_practicante_profesional
+                                                ON t_monitor_practicante.id_practicante = t_practicante_profesional.id_practicante) AS t_monitor_practicante_profesional
+                                    ON t_monitor_practicante_profesional.id_monitor = monitor_student.id_monitor";
+
+                 $where_clause = " WHERE t_monitor_practicante_profesional.id_profesional = $user_id AND monitor_student.id_semestre = $id_current_semester ";
+
+                 $where_user = $sub_query_ps_staff.$where_clause;
+                 break;
+
+             case 'practicante_ps':
+
+                 $sub_query_ps_staff = " INNER JOIN {talentospilos_monitor_estud} AS monitor_student ON monitor_student.id_estudiante = ases_students.student_id
+                                        INNER JOIN (SELECT id_usuario AS id_monitor, id_jefe AS id_practicante 
+                                            .        FROM {talentospilos_user_rol} AS user_rol
+                                                        INNER JOIN {talentospilos_rol} AS rol ON user_rol.id_rol = rol.id
+                                                    WHERE rol.nombre_rol = 'monitor_ps' AND user_rol.id_semestre = $id_current_semester AND user_rol.id_instancia = $instance_id) AS t_monitor_practicante
+                                        ON t_monitor_practicante.id_monitor = monitor_student.id_monitor";
+
+                 $where_clause = " WHERE t_monitor_practicante.id_practicante = $user_id AND monitor_student.id_semestre = $id_current_semester";
+
+                 $where_user = $sub_query_ps_staff.$where_clause;
+
+                 break;
+
+
+             case 'monitor_ps':
+
+                 $query_monitors = " INNER JOIN {talentospilos_monitor_estud} AS monitor_student ON monitor_student.id_estudiante = ases_students.student_id";
+                 $where_clause = " WHERE monitor_student.id_monitor = $user_id AND monitor_student.id_semestre = $id_current_semester";
+
+                 $where_user = $query_monitors.$where_clause;
+
                  break;
 
              default:
@@ -1127,7 +1173,7 @@ function get_ases_report($general_fields=null,
 
                 $conditions_query_directors = " ases_students.id_academic_program = $user_role->id_programa";
                 $conditions_query_assigned = " AND ases_students.student_id IN (SELECT id_estudiante AS student_id
-                                  FROM {talentospilos_monitor_estud} 
+                      D            FROM {talentospilos_monitor_estud} 
                             WHERE id_semestre = ". get_current_semester()->max ." AND id_instancia = $instance_id)";
 
                 $where_clause .= $conditions_query_directors.$conditions_query_assigned;
@@ -1137,7 +1183,6 @@ function get_ases_report($general_fields=null,
                 $result_query = $DB->get_records_sql($sql_query);
 
                 break;
-
             case 'profesional_ps':
 
                 $sub_query_ps_staff = " INNER JOIN {talentospilos_monitor_estud} AS monitor_student ON monitor_student.id_estudiante = ases_students.student_id
@@ -1157,7 +1202,7 @@ function get_ases_report($general_fields=null,
 
                 $where_clause .= " t_monitor_practicante_profesional.id_profesional = $user_id AND monitor_student.id_semestre = $id_current_semester";
 
-                $sql_query = $select_clause.$from_clause.$subquery_cohort.$sub_query_status.$sub_query_academic.$sub_query_icetex_status.$sub_query_assignment_fields.$sub_query_ps_staff.$where_clause;
+                $sql_query = $select_clause.$from_clause.$subquery_cohort.$sub_query_status.$sub_query_academic.$sub_query_assignment_fields.$sub_query_ps_staff.$where_clause;
 
                 $result_query = $DB->get_records_sql($sql_query);
                 
