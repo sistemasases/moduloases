@@ -384,6 +384,8 @@ define([
         template.find(`input`).each(function(){
                         
             jQuery(this).attr(`name`, question_id + "_TABLE_" + (last_row + 1) + "_" + last_col);
+            jQuery(this).data('row', last_row + 1);
+            jQuery(this).data('col', last_col);
             
             last_col++;
             
