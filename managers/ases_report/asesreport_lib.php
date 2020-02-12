@@ -1173,7 +1173,7 @@ function get_ases_report($general_fields=null,
 
                 $conditions_query_directors = " ases_students.id_academic_program = $user_role->id_programa";
                 $conditions_query_assigned = " AND ases_students.student_id IN (SELECT id_estudiante AS student_id
-                      D            FROM {talentospilos_monitor_estud} 
+                                  FROM {talentospilos_monitor_estud} 
                             WHERE id_semestre = ". get_current_semester()->max ." AND id_instancia = $instance_id)";
 
                 $where_clause .= $conditions_query_directors.$conditions_query_assigned;
