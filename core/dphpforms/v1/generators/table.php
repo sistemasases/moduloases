@@ -73,7 +73,9 @@ function _dphpforms_generate_TABLE(&$dom, $id_formulario_pregunta, $context, $st
 
         $t_input = _core_dphpforms_build_tag($dom, "input", new DOMAttributeList([
                     "class" => ["dphpf-table-input"],
-                    "style" => "width: 100%;"
+                    "style" => "width: 100%;",
+                    "data-row" => "",
+                    "data-col" => ""
         ]));
 
         $t_col->appendChild($t_input);
