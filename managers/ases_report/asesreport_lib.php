@@ -156,7 +156,7 @@ function get_cohorts_by_idnumber($id_number){
 
                  $sub_query_ps_staff = " INNER JOIN {talentospilos_monitor_estud} AS monitor_student ON monitor_student.id_estudiante = ases_students.student_id
                                         INNER JOIN (SELECT id_usuario AS id_monitor, id_jefe AS id_practicante 
-                                            .        FROM {talentospilos_user_rol} AS user_rol
+                                                    FROM {talentospilos_user_rol} AS user_rol
                                                         INNER JOIN {talentospilos_rol} AS rol ON user_rol.id_rol = rol.id
                                                     WHERE rol.nombre_rol = 'monitor_ps' AND user_rol.id_semestre = $id_current_semester AND user_rol.id_instancia = $instance_id) AS t_monitor_practicante
                                         ON t_monitor_practicante.id_monitor = monitor_student.id_monitor";
