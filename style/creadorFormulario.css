@@ -435,8 +435,83 @@ input[type="text"]{
     text-align: center;
 }
 
-.dphpf-table-col input{
+
+
+/*.dphpf-elements .dphpf-table-row .dphpf-table-col input{
     border-radius: 0px;
     border: 1px solid gray;
     padding: 0.5em;
+}*/
+
+.dphpf-elements .dphpf-table-row .dphpf-table-col input {
+    border-left:    0px;
+    border-bottom:  0px;
+    border-right:   1px dotted gray;
+    border-top:     1px dotted gray;
+    padding:        0.5em;
+} 
+
+.dphpf-elements .dphpf-table-row .dphpf-table-col:first-of-type input {
+    border-left: 1px dotted gray;
+} 
+
+.dphpf-elements .dphpf-table-row:nth-of-type(2) .dphpf-table-col:first-of-type input {
+    border-top-left-radius: 5px;
+} 
+
+.dphpf-elements .dphpf-table-row:nth-of-type(2) .dphpf-table-col:last-of-type input {
+    border-top-right-radius: 5px;
+} 
+
+.dphpf-elements .dphpf-table-row .dphpf-table-col:first-of-type input {
+    border-left: 1px dotted gray;
+} 
+
+.dphpf-elements .dphpf-table-row:last-of-type .dphpf-table-col input {
+    border-bottom: 1px dotted gray;
+} 
+
+.dphpf-elements .dphpf-table-row .dphpf-table-col input:hover {
+    background-color: #f9fff7;
+} 
+
+.dphpf-elements .dphpf-table-row.header .dphpf-table-col{
+    background-color: #ededed;
+    padding: 0.6em 0.5em 0.6em 0.5em;
 }
+
+.dphpf-elements .dphpf-table-row.header .dphpf-table-col{
+    margin-bottom: 0.2em;
+}
+
+.dphpf-elements .dphpf-table-row.header .dphpf-table-col span{
+    font-size:1.1em;
+}
+
+.dphpf-elements .dphpf-table-row.header .dphpf-table-col{
+    border-top:     1px dotted gray;
+    border-bottom:  1px dotted gray;
+    border-right:   1px dotted gray;
+}
+
+.dphpf-elements .dphpf-table-row.header .dphpf-table-col:first-of-type{
+    border-left: 1px dotted gray;
+}
+
+.dphpf-elements .dphpf-table-row.header .dphpf-table-col:first-of-type{
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+.dphpf-elements .dphpf-table-row.header .dphpf-table-col:last-of-type{
+  border-top-right-radius: 4px;
+   border-bottom-right-radius: 4px;
+}
+
+.dphpf-elements .dphpf-table-row:last-of-type .dphpf-table-col:first-of-type input {
+    border-bottom-left-radius: 4px;
+} 
+
+.dphpf-elements .dphpf-table-row:last-of-type .dphpf-table-col:last-of-type input {
+    border-bottom-right-radius: 4px;
+} 
