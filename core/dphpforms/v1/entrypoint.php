@@ -517,7 +517,7 @@ function _dphpforms_get_pregunta( $id ){
 
     global $DB;
 
-    $sql = "SELECT * FROM {talentospilos_df_preguntas} WHERE id = " . $id;
+    $sql = "SELECT * FROM {talentospilos_df_preguntas} WHERE id = '$id'";
     return $DB->get_record_sql( $sql );
 
 }
@@ -526,7 +526,7 @@ function _dphpforms_tipo_campo( $id ){
 
     global $DB;
 
-    $sql = "SELECT * FROM {talentospilos_df_tipo_campo} WHERE id = " . $id;
+    $sql = "SELECT * FROM {talentospilos_df_tipo_campo} WHERE id = '$id'";
     return $DB->get_record_sql( $sql );
 
 }
