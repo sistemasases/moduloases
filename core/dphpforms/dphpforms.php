@@ -15,3 +15,8 @@ require_once( __DIR__ . "/../module_loader.php");
 require_once( __DIR__ . "/v" . VERSION . "/entrypoint.php");
 
 
+function core_dphpforms_get_pregunta( $id = NULL ){
+    return _dphpforms_get_pregunta( $id );
+}
+
+
