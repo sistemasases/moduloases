@@ -477,7 +477,7 @@ input[type="text"]{
 
 .dphpf-elements .dphpf-table-row.header .dphpf-table-col{
     background-color: #ededed;
-    padding: 0.6em 0.5em 0.6em 0.5em;
+    padding: 0.5em;
 }
 
 .dphpf-elements .dphpf-table-row.header .dphpf-table-col{
@@ -485,7 +485,11 @@ input[type="text"]{
 }
 
 .dphpf-elements .dphpf-table-row.header .dphpf-table-col span{
-    font-size:1.1em;
+    font-size:1em;
+}
+
+.dphpf-elements .dphpf-table-row.header .dphpf-table-col{
+    text-align: center;
 }
 
 .dphpf-elements .dphpf-table-row.header .dphpf-table-col{

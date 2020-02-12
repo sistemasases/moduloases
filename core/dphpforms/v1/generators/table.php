@@ -50,8 +50,9 @@ function _dphpforms_generate_TABLE(&$dom, $id_formulario_pregunta, $context, $st
     
     // -- Headers
     
+    
     $hrow = _core_dphpforms_build_tag($dom, "div", new DOMAttributeList([
-        "class" => ["dphpf-table-row"]
+        "class" => ["dphpf-table-row", "header"]
     ]));
     
     $width = 100.0 / count( $header );
