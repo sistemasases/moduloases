@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 // This file is part of Moodle - http://moodle.org/
 //
@@ -23,157 +23,157 @@
  * @copyright  2018 Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 // Standard GPL and phpdocs
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-    require_once(dirname(__FILE__). '/../../../../config.php');
-    require_once(dirname(__FILE__). '/dphpforms_get_record.php');
-    require_once( $CFG->libdir . '/adminlib.php');
+require_once( __DIR__ . "/../../core/module_loader.php");
+require_once(dirname(__FILE__) . '/../../../../config.php');
+require_once(dirname(__FILE__) . '/dphpforms_get_record.php');
+require_once( $CFG->libdir . '/adminlib.php');
 
-    global $DB;
-    global $USER;
-    
-    header('Content-Type: application/json');
-    
-    $RECORD_ID = null;
+module_loader("dphpforms");
 
-    if(isset($_POST['id_registro'])){
-        $RECORD_ID = $_POST['id_registro'];
-    }
-    
-    $form = array(
-        'id' => $_POST['id']
-    );
-    
-    if( !isset( $_POST['id'] ) && !isset( $_POST['id_registro'] ) ){
-        print_r(json_encode(['status' => "Operational"])); 
-        die();
-    }
-    
-    $last_special_field = "";
-    $first_special_field = true;
+global $DB;
+global $USER;
 
-    $special_response = array(
-        'id' => null,
-        'valor' => []
-    );
-    
-    $respuestas = [];
+header('Content-Type: application/json');
 
-    foreach ($_POST as $key => $value) {
-        
-        $elemento = $value;
-        if(is_array($value)){
-           $elemento = json_encode($elemento);
-        }
-        
-        if(is_numeric($key)){
-            $respuesta = array(
-                'id' => (string) $key,
-                'valor' => (string) $elemento
-            );
-            array_push($respuestas, $respuesta);
-        }else{
+$RECORD_ID = null;
 
-            // Special fields
-            if( strpos($key, '_TEXTFIELD_LIST_') !== false ){
-                                
-                $parts = explode("_TEXTFIELD_LIST_", $key);
-                $id = $parts[0];
-                $value_id = $parts[1];
-                if( $last_special_field === $id ){
-                    array_push($special_response['valor'], [ $value_id => (string) $elemento ]);
-                }else{
-                    
-                    if ($last_special_field !== $id && !$first_special_field) {
-                        $special_response['valor'] = json_encode($special_response['valor']);
-                        array_push($respuestas, $special_response);
-                    }
-                    
-                    $last_special_field = $id;
-                    $special_response['id'] = $id;
-                    $special_response['valor'] = [];
-                    array_push($special_response['valor'], [ $value_id => (string) $elemento ]);
-                    
-                    $first_special_field = false;
-                }
-                                
-            }else if( strpos($key, '_TABLE_') !== false ){
-                                
-                $parts = explode("_TABLE_", $key);
-                $id = $parts[0];
-                
-                $value_ids = explode("_", $parts[1] );
-                
-                $row = $value_ids[0];
-                $col = $value_ids[1];
-                                                
-                if( $last_special_field === $id ){
-                    $special_response['valor'][$row][$col] = (string) $elemento;
-                }else{
-                    
-                    if ($last_special_field !== $id && !$first_special_field) {
-                        $special_response['valor'] = json_encode($special_response['valor']);
-                        array_push($respuestas, $special_response);
-                    }
-                    
-                    $last_special_field = $id;
-                    $special_response['id'] = $id;
-                    $special_response['valor'] = [];
-                    $special_response['valor'][$row][$col] = (string) $elemento;
-                    
-                    $first_special_field = false;
-                }
-                                
-            }
-            
-            
-        }
-        
-        next($_POST);
-    }
-    
-    if( !$first_special_field ){
-        $special_response['valor'] = json_encode( $special_response['valor']);
-        array_push($respuestas, $special_response);
-    }    
-
-    $full_form = array(
-        'formulario' => $form,
-        'respuestas' => $respuestas
-    );
-
-    $form_JSON = json_encode($full_form);
-    
-    
-/*
-
- Ejemplo:
- 
- $formularioDiligenciado = '
-
-{
-    "formulario":{
-        "id":43,
-        "id_monitor":5245,
-        "id_estudiante":6548
-    },
-    "respuestas":[
-        {
-            "id":139,
-            "valor":"xyz"
-        },
-        {
-            "id":30,
-            "valor" : [
-                "first_val" : "abc",
-                "secod_val" : "def"
-            ]
-        }
-    ]
+if (isset($_POST['id_registro'])) {
+    $RECORD_ID = $_POST['id_registro'];
 }
 
-';*/
+$form = array(
+    'id' => $_POST['id']
+);
+
+if (!isset($_POST['id']) && !isset($_POST['id_registro'])) {
+    print_r(json_encode(['status' => "Operational"]));
+    die();
+}
+
+$last_special_field = "";
+$first_special_field = true;
+
+$special_response = array(
+    'id' => null,
+    'valor' => []
+);
+
+$respuestas = [];
+
+foreach ($_POST as $key => $value) {
+
+    $elemento = $value;
+    if (is_array($value)) {
+        $elemento = json_encode($elemento);
+    }
+
+    if (is_numeric($key)) {
+        $respuesta = array(
+            'id' => (string) $key,
+            'valor' => (string) $elemento
+        );
+        array_push($respuestas, $respuesta);
+    } else {
+
+        // Special fields
+        if (strpos($key, '_TEXTFIELD_LIST_') !== false) {
+
+            $parts = explode("_TEXTFIELD_LIST_", $key);
+            $id = $parts[0];
+            $value_id = $parts[1];
+            if ($last_special_field === $id) {
+                array_push($special_response['valor'], [$value_id => (string) $elemento]);
+            } else {
+
+                if ($last_special_field !== $id && !$first_special_field) {
+                    $special_response['valor'] = json_encode($special_response['valor']);
+                    array_push($respuestas, $special_response);
+                }
+
+                $last_special_field = $id;
+                $special_response['id'] = $id;
+                $special_response['valor'] = [];
+                array_push($special_response['valor'], [$value_id => (string) $elemento]);
+
+                $first_special_field = false;
+            }
+        } else if (strpos($key, '_TABLE_') !== false) {
+
+            $parts = explode("_TABLE_", $key);
+            $id = $parts[0];
+
+            $value_ids = explode("_", $parts[1]);
+
+            $row = $value_ids[0];
+            $col = $value_ids[1];
+
+            if ($last_special_field === $id) {
+                $special_response['valor'][$row][$col] = (string) $elemento;
+            } else {
+
+                if ($last_special_field !== $id && !$first_special_field) {
+                    $special_response['valor'] = json_encode($special_response['valor']);
+                    array_push($respuestas, $special_response);
+                }
+
+                $last_special_field = $id;
+                $special_response['id'] = $id;
+                $special_response['valor'] = [];
+                $special_response['valor'][$row][$col] = (string) $elemento;
+
+                $first_special_field = false;
+            }
+        }
+    }
+
+    next($_POST);
+}
+
+if (!$first_special_field) {
+    $special_response['valor'] = json_encode($special_response['valor']);
+    array_push($respuestas, $special_response);
+}
+
+$full_form = array(
+    'formulario' => $form,
+    'respuestas' => $respuestas
+);
+
+$form_JSON = json_encode($full_form);
+
+
+/*
+
+  Ejemplo:
+
+  $formularioDiligenciado = '
+
+  {
+  "formulario":{
+  "id":43,
+  "id_monitor":5245,
+  "id_estudiante":6548
+  },
+  "respuestas":[
+  {
+  "id":139,
+  "valor":"xyz"
+  },
+  {
+  "id":30,
+  "valor" : [
+  "first_val" : "abc",
+  "secod_val" : "def"
+  ]
+  }
+  ]
+  }
+
+  '; */
 
 
 if($RECORD_ID){
