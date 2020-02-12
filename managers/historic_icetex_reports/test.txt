@@ -1,0 +1,54 @@
+Data set (ORIGINAL:
+
+  {"semestre":"2017A","num_act_res":"80","monto_act_res":"$510.633.295","cohort":"SPP3"}
+
+  {"semestre":"2017B","num_act_res":"87","monto_act_res":"$555.905.814","cohort":"SPP3"}
+
+  {"semestre":"2018A","num_act_res":"95","monto_act_res":"$735.006.750","cohort":"SPP3"}
+
+  {"semestre":"2018B","num_act_res":"96","monto_act_res":"$743.895.782","cohort":"SPP3"}
+
+
+Data set (WITHOUT tracking_status, No DISTINCT):
+
+  {"semestre":"2017A","num_act_res":"91","monto_act_res":"$581.255.324","cohort":"SPP3"}
+
+  {"semestre":"2017B","num_act_res":"99","monto_act_res":"$632.845.698","cohort":"SPP3"}
+
+  {"semestre":"2018A","num_act_res":"103","monto_act_res":"$796.874.854","cohort":"SPP3"}
+
+  {"semestre":"2018B","num_act_res":"106","monto_act_res":"$821.646.907","cohort":"SPP3"}
+
+
+Data set (DISTINCT):
+
+  {"semestre":"2017A","num_act_res":"80","monto_act_res":"$581.255.324","cohort":"SPP3"}
+
+  {"semestre":"2017B","num_act_res":"87","monto_act_res":"$632.845.698","cohort":"SPP3"}
+
+  {"semestre":"2018A","num_act_res":"95","monto_act_res":"$796.874.854","cohort":"SPP3"}
+
+  {"semestre":"2018B","num_act_res":"96","monto_act_res":"$821.646.907","cohort":"SPP3"}
+
+
+Data set (DISTINCT/No ICETEX filter):
+
+  {"semestre":"2017A","num_act_res":"80","monto_act_res":"$581.255.324","cohort":"SPP3"}
+
+  {"semestre":"2017B","num_act_res":"87","monto_act_res":"$632.845.698","cohort":"SPP3"}
+
+  {"semestre":"2018A","num_act_res":"95","monto_act_res":"$796.874.854","cohort":"SPP3"}
+
+  {"semestre":"2018B","num_act_res":"96","monto_act_res":"$821.646.907","cohort":"SPP3"}
+
+Data set:
+
+  {"semestre":"2017A","num_act_res":"80","monto_act_res":"$510.633.295","cohort":"SPP3"}
+
+  {"semestre":"2017B","num_act_res":"87","monto_act_res":"$555.905.814","cohort":"SPP3"}
+
+  {"semestre":"2018A","num_act_res":"95","monto_act_res":"$735.006.750","cohort":"SPP3"}
+
+  {"semestre":"2018B","num_act_res":"96","monto_act_res":"$743.895.782","cohort":"SPP3"}
+
+
