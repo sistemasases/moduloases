@@ -349,7 +349,7 @@ function get_assigned_monitor($id_student)
 
     global $DB;
 
-    $object_current_semester = core_periods_get_current_period();
+    $object_current_semester = get_current_semester();
 
     $sql_query = "SELECT id_monitor 
                   FROM {talentospilos_monitor_estud} 
@@ -391,7 +391,7 @@ function get_assigned_pract($id_student)
 
     global $DB;
 
-    $object_current_semester = core_periods_get_current_period();
+    $object_current_semester = get_current_semester();
 
     $sql_query = "SELECT id_monitor FROM {talentospilos_monitor_estud} WHERE id_estudiante =" . $id_student . " AND id_semestre = " . $object_current_semester->max . ";";
     $id_monitor = $DB->get_record_sql($sql_query)->id_monitor;
@@ -468,7 +468,7 @@ function get_assigned_professional($id_student)
 
     global $DB;
 
-    $object_current_semester = core_periods_get_current_period();
+    $object_current_semester = get_current_semester();
 
     $sql_query = "SELECT id_monitor FROM {talentospilos_monitor_estud} WHERE id_estudiante =" . $id_student . " AND id_semestre = " . $object_current_semester->max . ";";
     $id_monitor = $DB->get_record_sql($sql_query);
