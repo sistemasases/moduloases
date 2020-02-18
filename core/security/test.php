@@ -94,7 +94,7 @@ $singularizations = array(
 
 
 //print_r( core_secure_find_key( $explicit_hexed_rule = "99999" ) );
-$id_semestre = 9;
+$id_semestre = 10;
 
 $alt_interval = '{
     
@@ -120,13 +120,13 @@ $singularization_test_user = [ "id_instancia" => 563336, "id_semestre" => $id_se
 		true,
 		$alt_interval
 	)
-); */
- 
+);  */
+
 print_r(
 	core_secure_assign_role_to_user(
 		161037,
 		'root',
-		strtotime("2020-02-04 00:00:00"),
+		strtotime("2020-02-04 00:00:00"), // <-- este va a ser el $time_context que usará _core_security_get_user_rol
 		strtotime("2020-12-31 23:59:59"),
 		$singularization_test_user,
 		false,
