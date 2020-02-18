@@ -55,7 +55,7 @@ function monitor_assignments_get_professionals_by_instance( $instance_id ){
     WHERE id_rol = (SELECT id FROM {talentospilos_rol} WHERE nombre_rol = 'profesional_ps')
     AND id_instancia = $instance_id
     AND estado = 1
-    AND id_semestre =". get_current_semester()->max ." ORDER BY fullname";
+    AND id_semestre =". core_periods_get_current_period()->id ." ORDER BY fullname";
     return $DB->get_records_sql( $sql );
 }
 
@@ -77,7 +77,7 @@ function monitor_assignments_get_practicing_by_instance( $instance_id ){
     WHERE id_rol = (SELECT id FROM {talentospilos_rol} WHERE nombre_rol = 'practicante_ps')
     AND id_instancia = $instance_id
     AND estado = 1
-    AND id_semestre = ". get_current_semester()->max." ORDER BY fullname";
+    AND id_semestre = ". core_periods_get_current_period()->id." ORDER BY fullname";
 
     return $DB->get_records_sql( $sql );
 }
@@ -114,7 +114,7 @@ function monitor_assignments_get_monitors_by_instance( $instance_id ){
                                 WHERE nombre_rol = 'monitor_ps'
                             )
                     AND id_instancia = $instance_id
-                    AND id_semestre = ". get_current_semester()->max ." 
+                    AND id_semestre = ". core_periods_get_current_period()->id ." 
                     AND estado = 1 
                     ORDER BY fullname
                    ) AS user_0
@@ -309,7 +309,7 @@ function monitor_assignments_get_monitors_faculty( $instance_id ){
                                 WHERE nombre_rol = 'monitor_ps'
                             )
                     AND id_instancia = $instance_id
-                    AND id_semestre = ". get_current_semester()->max ." 
+                    AND id_semestre = ". core_periods_get_current_period()->id ." 
                     AND estado = 1 
                     ORDER BY fullname
                    ) AS user_0
@@ -350,7 +350,7 @@ function monitor_assignments_get_monitors_programs( $instance_id ){
                         WHERE nombre_rol = 'monitor_ps'
                     )
             AND id_instancia = $instance_id
-            AND id_semestre = ". get_current_semester()->max ." 
+            AND id_semestre = ". core_periods_get_current_period()->id ." 
             AND estado = 1 
             ORDER BY fullname
            ) AS user_0
@@ -379,7 +379,7 @@ function monitor_assignments_get_monitors_students_relationship_by_instance( $in
 
     $sql = "SELECT id, id_monitor, id_estudiante 
     FROM {talentospilos_monitor_estud} 
-    WHERE id_semestre = ". get_current_semester()->max ." AND id_instancia = $instance_id";
+    WHERE id_semestre = ". core_periods_get_current_period()->id ." AND id_instancia = $instance_id";
   
     return $DB->get_records_sql( $sql );;
 
