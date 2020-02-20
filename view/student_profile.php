@@ -216,7 +216,7 @@ if ($student_code != 0) {
     $record->name_program = $name_program;
     $record->faculty_name = $faculty_name;
     $record->name_program_time = $program_time;
-    $record->name_current_semester = get_current_semester()->nombre;
+    $record->name_current_semester = core_periods_get_current_period()->nombre;
     $record->academic_programs = $academic_programs;
     $record->student_cohorts = $student_cohorts;
 
