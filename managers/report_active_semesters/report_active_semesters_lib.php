@@ -43,7 +43,7 @@ use function student_lib\get_active_semesters;
  */
 function _get_semesters_names_after_cohort($id_instance, $ases_cohort_id, $include_current_semester = false) {
     $date_format = 'Y-m-d';
-    $current_semester = get_current_semester();
+    $current_semester = core_periods_get_current_period();
     $cohort_id_number = '';
     $current_semester_name = $current_semester->nombre;
 
