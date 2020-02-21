@@ -863,7 +863,7 @@ $url_update_user_image           = new moodle_url("/blocks/ases/view/edit_user_i
 $record->update_profile_image_url = $url_update_user_image;
 
 // periods_lib.php contains get_current_semester()
-$record->current_semester = get_current_semester()->max;
+$record->current_semester = core_periods_get_current_period()->id;
 
 $stud_mon_prac_prof = user_management_get_stud_mon_prac_prof( $record->ases_student_code, $record->instance, $record->current_semester );
 $record->monitor_id = $stud_mon_prac_prof->monitor->id;
