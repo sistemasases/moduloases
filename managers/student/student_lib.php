@@ -111,8 +111,6 @@ function get_active_semesters_db($id_instance, $ases_cohort_id) {
           on mdl_cohort.id = mdl_talentospilos_inst_cohorte.id_cohorte
         inner join mdl_talentospilos_programa
           on mdl_talentospilos_history_academ.id_programa = mdl_talentospilos_programa.id
-         where mdl_talentospilos_inst_cohorte.id_instancia = $id_instance
-        $cohort_sql_conditions
     order by codigo desc
 SQL;
     return $DB->get_records_sql($sql);
