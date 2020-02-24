@@ -149,6 +149,8 @@ define([
                        semesters.forEach( semester => {
                            //console.log("Semesters:");
                            console.log(semester);
+                           console.log(item[semester]);
+                           //console.log(item);
                            if(!(item[semester].includes('NO') || item[semester].includes('EGRESADO'))){
                                if(!item[semester].includes(carrera) && carrera !== ''){
                                    this.semesters[semester][2]++;
