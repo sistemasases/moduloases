@@ -144,7 +144,11 @@ define([
                ResumeReport.prototype.init_from_data = function init_from_data(data /*DataTable.data*/, semesters) {
                    data.forEach( (item) => {
                        var carrera = '';
+                       //console.log("init_from_data");
+                       console.log(item);
                        semesters.forEach( semester => {
+                           //console.log("Semesters:");
+                           console.log(semester);
                            if(!(item[semester].includes('NO') || item[semester].includes('EGRESADO'))){
                                if(!item[semester].includes(carrera) && carrera !== ''){
                                    this.semesters[semester][2]++;
@@ -333,10 +337,10 @@ define([
                 }).done(
                     function (dataFromApi /*instance of DataFromAPI*/){
                         loading_indicator.hide();
-                        //console.log(dataFromApi);
+                        console.log(dataFromApi);
                         var dataTable = dataFromApi.dataTable;
                         $('#download_percentage_desertion').css("display", "inline"); //Show the hidden download button
-                        semesters = dataFromApi.semesters;
+                        semesters = Object.values(dataFromApi.semesters);
                         var columns = dataTable.columns;
                         var column_names = columns.map( column => column.name );
                         var total_students = dataTable.data.length;
@@ -375,7 +379,7 @@ define([
                             /*Filter columns*/
                             var filter_column_names = semesters;
                             filter_column_names.push('num_carreras');
-                            console.log(semesters);
+                            //console.log(semesters);
                             var filter_column_indexes = get_filter_column_indexes(filter_column_names, column_names);
                             this.api().columns(filter_column_indexes).every(function () {
                                 var column = this;
