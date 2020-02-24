@@ -700,7 +700,11 @@ function _dphpforms_generate_html_updater( int $record_id = null, $rol_, bool $m
 
 function _dphpforms_generate_html_recorder( $id_form, $rol_, $initial_config = null, bool $minify = false  ){
 
-    global $DB;
+    global $DB, $USER;
+    
+    $watermark_id = "10015425101" . (string) $USER->id;
+    
+    $watermark = core_secure_generate_image( $watermark_id, $height = 3, $total = 80, $step_size = 10, $separator_size = 4 );
 
     $FORM_ID = null;
     $ROL = $rol_;
@@ -1041,6 +1045,12 @@ function _dphpforms_generate_html_recorder( $id_form, $rol_, $initial_config = n
                     }
                     
                     if( !is_null( $field ) ){
+                        $security_watermark = _core_dphpforms_build_tag($dom, "img", new DOMAttributeList([
+                            'src'   => 'data:image/jpeg;base64,' . $watermark,
+                            'width' => '100%',
+                            'style' => 'max-height: 2px;'
+                        ]));
+                        $field->appendChild( $security_watermark );
                         $form->appendChild( $field );
                     }
                     
