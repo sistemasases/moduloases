@@ -274,8 +274,8 @@ function recalculate_totals($notas, $categs, $porcentajes){
 function get_role_user($id_moodle, $idinstancia)
 {
     global $DB;
-    $current_semester = get_current_semester(); 
-    $sql_query = "select nombre_rol, rol.id as rolid from {talentospilos_user_rol} as ur inner join {talentospilos_rol} as rol on rol.id = ur.id_rol where  ur.estado = 1 AND ur.id_semestre =".$current_semester->max."  AND id_usuario = ".$id_moodle." AND id_instancia =".$idinstancia.";";
+    $current_semester = core_periods_get_current_period(); 
+    $sql_query = "select nombre_rol, rol.id as rolid from {talentospilos_user_rol} as ur inner join {talentospilos_rol} as rol on rol.id = ur.id_rol where  ur.estado = 1 AND ur.id_semestre =".$current_semester->id."  AND id_usuario = ".$id_moodle." AND id_instancia =".$idinstancia.";";
     return $DB->get_record_sql($sql_query);
 }
 
@@ -377,7 +377,7 @@ function assign_role_professional_ps($username, $role, $state = 1, $semester, $u
         // Start db transaction
         pg_query("BEGIN") or die("Could not start transaction\n");
         
-        assign_role_user($username, $role, $state, $semester->max, null);
+        assign_role_user($username, $role, $state, $semester->id, null);
         
         assign_professional_user($id_user->id, $professional);
         
@@ -666,7 +666,7 @@ function attendance_by_course($code_student)
     $sql_query = "SELECT id FROM {user} WHERE username LIKE '$code_student%'";
     $id_user_moodle = $DB->get_record_sql($sql_query);
     
-    $sql_query = "SELECT id FROM {talentospilos_semestre} WHERE nombre ='".get_current_semester()->nombre."';";
+    $sql_query = "SELECT id FROM {talentospilos_semestre} WHERE nombre ='".core_periods_get_current_period()->nombre."';";
     $id_current_semester = $DB->get_record_sql($sql_query);
     
     $sql_query = "SELECT fecha_inicio::DATE FROM {talentospilos_semestre} WHERE id = $id_current_semester->id";
@@ -769,7 +769,7 @@ function attendance_by_course($code_student)
     $sql_query = "SELECT id FROM {user} WHERE username LIKE '$code_student%'";
     $id_user_moodle = $DB->get_record_sql($sql_query);
     
-    $sql_query = "SELECT id FROM {talentospilos_semestre} WHERE nombre='".get_current_semester()->nombre."';";
+    $sql_query = "SELECT id FROM {talentospilos_semestre} WHERE nombre='".core_periods_get_current_period()->nombre."';";
     $id_current_semester = $DB->get_record_sql($sql_query);
 
     $sql_query = "SELECT coursesSemester.semesterid AS idsemester, coursesSemester.semestersname AS semestername, COUNT({attendance_statuses}.description) AS injustifiedabsence 

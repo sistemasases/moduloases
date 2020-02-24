@@ -30,8 +30,8 @@ require_once dirname(__FILE__) .'/../periods_management/periods_lib.php';
 
     if (isset($_POST['initial_hour'])&&isset($_POST['final_hour'])){
         if($_POST['initial_hour']==0 && $_POST['final_hour']==0){
-            $current_semester =get_current_semester();
-            $semester_interval=get_semester_interval($current_semester->max);
+            $current_semester =core_periods_get_current_period();
+            $semester_interval=get_semester_interval($current_semester->id);
             $initial_hour=$semester_interval->fecha_inicio;
             $final_hour=$semester_interval->fecha_fin;
 

@@ -67,7 +67,7 @@ if(!consult_instance($blockid)){
     if(has_capability('moodle/category:manage', $category_context)) {
         
         // Systems role assignment for the current instance
-        $result_assign_role = update_role_user($USER->username, 'sistemas', $blockid, 1, get_current_semester(), null, null);
+        $result_assign_role = update_role_user($USER->username, 'sistemas', $blockid, 1, core_periods_get_current_period(), null, null);
         insert_instance($blockid, $USER->id);
         
         if($result_assign_role == 4 || $result_assign_role == 2){
