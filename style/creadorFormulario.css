@@ -519,3 +519,7 @@ input[type="text"]{
 .dphpf-elements .dphpf-table-row:last-of-type .dphpf-table-col:last-of-type input {
     border-bottom-right-radius: 4px;
 } 
+
+.dphpforms-wmark{
+    margin-top: -18px;
+}
