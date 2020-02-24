@@ -450,7 +450,7 @@ function get_name_rol($idrol)
 function get_seguimientos_monitor($id_monitor,$id_instance,$fechas_epoch,$periodo){
     global $DB;
 
-    $semestre_act = get_current_semester();
+    $semestre_act = core_periods_get_current_period();
 
     $sql_query = "SELECT ROW_NUMBER() OVER(ORDER BY seguimiento.id ASC) AS number_unique,seguimiento.id AS id_seguimiento,
                   seguimiento.tipo,usuario_monitor
