@@ -74,7 +74,7 @@ if (isset($_POST['profiles_user']) && isset($_POST['users']) && isset($_POST['in
     $record->id_perfil = $profile;
     $record->id_usuario = $user_moodle->id;
     $record->estado = true;
-    $record->id_semestre = get_current_semester()->max;
+    $record->id_semestre = core_periods_get_current_period()->id;
     $record->id_jefe = false;
     $record->id_instancia = $_POST['instance'];
     $DB->insert_record('talentospilos_usuario_perfil', $record, true);

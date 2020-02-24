@@ -66,8 +66,8 @@ $data->monitor=$monitor_name;
 $data->menu = $menu_option;
 
 
-            $current_semester =get_current_semester();
-            $semester_interval=get_semester_interval($current_semester->max);
+            $current_semester = core_periods_get_current_period();
+            $semester_interval=get_semester_interval($current_semester->id);
             $initial_hour=strtotime($semester_interval->fecha_inicio);
             $final_hour=strtotime($semester_interval->fecha_fin);
             $default=true;
