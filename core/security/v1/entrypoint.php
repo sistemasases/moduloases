@@ -1317,4 +1317,93 @@ function secure_find_key( string $explicit_hexed_rule = NULL ): string
     
 }
 
+function _calculate_pos_location( $current_pos, $total_pos = 80, $step_size = 10, $separator_size = 2 ): array
+{
+    $step_start = ( ($step_size + $separator_size) * ( ( $total_pos - 1 ) - $current_pos ) );
+    return [ $step_start, $step_start + $step_size ];
+}
+
+function _calculate_list_pos(int $value, int $total_pos = 80): array {
+   
+    if ($value < 0) {
+        return [];
+    }
+
+    $pos_list = [];
+
+    for ($i = ($total_pos - 1); $i >= 0; $i--) {
+        
+        $pos_value = pow(2, $i);
+        if ($value >= 0 ) {
+            if ($pos_value <= $value){
+                array_push($pos_list, $i);
+                $value -= $pos_value;
+            }
+        } else {
+            break;
+        }
+        
+    }
+
+    return $pos_list;
+}
+
+function _add_separadors(&$img, $total_pos, $color, $step_size = 10, $separator_size = 2) {
+    
+    $pos = 0;
+    for ($i = 0; $i < $total_pos; $i++) {
+
+        imageline(
+                $img,
+                $pos + $step_size,                                              // Inicio Izquierda
+                2.5,                                                            // Altura Izquierda
+                $pos + $step_size + $separator_size,                            // Final Izquierda
+                2.5,                                                            // Altura Izquierda
+                $color
+        );
+
+        $pos += 12;
+    }
+    
+}
+
+function secure_generate_image( int $value, int $width = 960, int $height = 4, $total_pos = 80, $step_size = 10, $separator_size = 2 ) :string
+{
+    $list_pos           = _calculate_list_pos( $value, $total_pos );
+
+    $img                = imagecreate( $width, $height );
+    imagecolorallocate( $img, 255, 255, 255 );
+    
+    $line_colour        = imagecolorallocate( $img, 0, 0, 0 );
+    $separator_color    = imagecolorallocate($img, 194, 194, 194);
+    
+    imagesetthickness ( $img, $width );
+
+    _add_separadors( $img, $total_pos, $separator_color, $step_size, $separator_size );
+    
+    foreach($list_pos as $_pos) {
+
+        $pos = _calculate_pos_location( $_pos, $total_pos, $step_size, $separator_size );
+
+        imageline(
+                $img,
+                $pos[0], // Inicio Izquierda
+                2.5, // Altura Izquierda
+                $pos[1], // Final Izquierda
+                2.5, // Altura Izquierda
+                $line_colour
+        );
+        
+    }
+
+    
+    $path = "/tmp/" . generate_random_string( 15 ) . ".png";
+    imagepng( $img, $path );
+    $data = file_get_contents($path);
+    return base64_encode($data);
+    
+}
+
+
+
 ?>
