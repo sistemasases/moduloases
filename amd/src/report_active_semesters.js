@@ -147,8 +147,9 @@ define([
                        //console.log("init_from_data");
                        console.log(item);
                        semesters.forEach( semester => {
-                           //console.log("Semesters:");
+                           console.log("Semester:");
                            console.log(semester);
+                           console.log("Item[semester:]")
                            console.log(item[semester]);
                            //console.log(item);
                            if(!(item[semester].includes('NO') || item[semester].includes('EGRESADO'))){
