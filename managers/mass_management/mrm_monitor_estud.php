@@ -158,7 +158,7 @@ if (isset($_FILES['file']) || isset($_POST['idinstancia'])) {
                 $record->id_estudiante = $id_estudiante;
                 $record->id_monitor = $id_monitor;
                 $record->id_instancia = $_POST['idinstancia'];
-                $record->id_semestre = $last_semester->max;
+                $record->id_semestre = $last_semester->id;
 
                 $DB->insert_record('talentospilos_monitor_estud', $record);
                 array_push($success_rows, $data);
