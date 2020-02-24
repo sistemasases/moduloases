@@ -96,6 +96,6 @@ $singularizations = array(
 //print_r( core_secure_find_key( $explicit_hexed_rule = "99999" ) );
 
 
-//echo '<img src="data:image/jpeg;base64,' . secure_generate_image( 3000 ) .'" />';
+//echo '<img src="data:image/jpeg;base64,' . secure_generate_image( 9156798765456, $height = 3, $total = 80, $step_size = 10, $separator_size = 5 ) .'" />';
 
 ?>
