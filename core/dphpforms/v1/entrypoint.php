@@ -1048,6 +1048,7 @@ function _dphpforms_generate_html_recorder( $id_form, $rol_, $initial_config = n
                         $security_watermark = _core_dphpforms_build_tag($dom, "img", new DOMAttributeList([
                             'src'   => 'data:image/jpeg;base64,' . $watermark,
                             'width' => '100%',
+                            'class' => ["dphpforms-wmark"],
                             'style' => 'max-height: 2px;'
                         ]));
                         $field->appendChild( $security_watermark );

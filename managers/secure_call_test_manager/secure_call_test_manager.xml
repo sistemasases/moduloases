@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!-- Contiene la lista de funciones definidas bajo la protecci�n del core de seguridad -->
 <configurations>
 	<config config_for="api" manager="security_core">
 		<action>
