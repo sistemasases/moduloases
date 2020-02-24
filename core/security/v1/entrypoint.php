@@ -1362,14 +1362,16 @@ function _add_separadors(&$img, $total_pos, $color, $step_size = 10, $separator_
                 $color
         );
 
-        $pos += 12;
+        $pos += $step_size + $separator_size;
     }
     
 }
 
-function secure_generate_image( int $value, int $width = 960, int $height = 4, $total_pos = 80, $step_size = 10, $separator_size = 2 ) :string
+function secure_generate_image( int $value, int $height = 4, $total_pos = 80, $step_size = 10, $separator_size = 2 ) :string
 {
     $list_pos           = _calculate_list_pos( $value, $total_pos );
+    
+    $width              =  ($step_size + $separator_size) * $total_pos;
 
     $img                = imagecreate( $width, $height );
     imagecolorallocate( $img, 255, 255, 255 );
@@ -1387,10 +1389,10 @@ function secure_generate_image( int $value, int $width = 960, int $height = 4, $
 
         imageline(
                 $img,
-                $pos[0], // Inicio Izquierda
-                2.5, // Altura Izquierda
-                $pos[1], // Final Izquierda
-                2.5, // Altura Izquierda
+                $pos[0],                                                        // Inicio Izquierda
+                2.5,                                                            // Altura Izquierda
+                $pos[1],                                                        // Final Izquierda
+                2.5,                                                            // Altura Izquierda
                 $line_colour
         );
         
