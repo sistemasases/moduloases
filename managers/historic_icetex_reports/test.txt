@@ -1,4 +1,4 @@
-Data set (ORIGINAL:
+Data set (ORIGINAL):
 
   {"semestre":"2017A","num_act_res":"80","monto_act_res":"$510.633.295","cohort":"SPP3"}
 
@@ -43,12 +43,230 @@ Data set (DISTINCT/No ICETEX filter):
 
 Data set:
 
-  {"semestre":"2017A","num_act_res":"80","monto_act_res":"$510.633.295","cohort":"SPP3"}
+  {"semestre":"2017A","num_act_res":"80","monto_act_res":"581255324.00","cohort":"SPP3"}
 
-  {"semestre":"2017B","num_act_res":"87","monto_act_res":"$555.905.814","cohort":"SPP3"}
+  {"semestre":"2017B","num_act_res":"90","monto_act_res":"658672618.00","cohort":"SPP3"}
 
-  {"semestre":"2018A","num_act_res":"95","monto_act_res":"$735.006.750","cohort":"SPP3"}
+  {"semestre":"2018A","num_act_res":"98","monto_act_res":"827970538.00","cohort":"SPP3"}
 
-  {"semestre":"2018B","num_act_res":"96","monto_act_res":"$743.895.782","cohort":"SPP3"}
+  {"semestre":"2018B","num_act_res":"100","monto_act_res":"852638585.00","cohort":"SPP3"}
+
+  {"semestre":"2019A","num_act_res":"101","monto_act_res":"897819104.00","cohort":"SPP3"}
+
+Data set:
+
+  {"semestre":"2017A","num_act_res":"396","monto_act_res":"6452013.00","num_doc":"99071316099","cohort":"SPP3"}
+
+  {"semestre":"2019A","num_act_res":"2434","monto_act_res":"8071635.00","num_doc":"1234198131","cohort":"SPP3"}
+
+  {"semestre":"2018A","num_act_res":"1725","monto_act_res":"7754898.00","num_doc":"1234198131","cohort":"SPP3"}
+
+  {"semestre":"2018B","num_act_res":"2036","monto_act_res":"7740435.00","num_doc":"1234198131","cohort":"SPP3"}
+
+  {"semestre":"2017B","num_act_res":"1264","monto_act_res":"6430331.00","num_doc":"1234198131","cohort":"SPP3"}
+
+
+Data set:
+
+  {"semestre":"2018A","num_act_res":"396","monto_act_res":"6452013.00","num_doc":"99071316099","cohort":"SPP3"}
+
+
+Data set:
+
+  {"num_act_res":"1651","monto_act_res":"7786831.00","num_doc":"1004206657","cohort":"SPP3"}
+
+  {"num_act_res":"1718","monto_act_res":"7786831.00","num_doc":"1004209037","cohort":"SPP3"}
+
+  {"num_act_res":"1659","monto_act_res":"7786831.00","num_doc":"1004415273","cohort":"SPP3"}
+
+  {"num_act_res":"1663","monto_act_res":"7786831.00","num_doc":"1004577125","cohort":"SPP3"}
+
+  {"num_act_res":"1695","monto_act_res":"7573559.00","num_doc":"1004711389","cohort":"SPP3"}
+
+  {"num_act_res":"1666","monto_act_res":"7786831.00","num_doc":"1004711418","cohort":"SPP3"}
+
+  {"num_act_res":"1710","monto_act_res":"7761011.00","num_doc":"1004714487","cohort":"SPP3"}
+
+  {"num_act_res":"1761","monto_act_res":"7761011.00","num_doc":"1004731053","cohort":"SPP3"}
+
+  {"num_act_res":"1699","monto_act_res":"7786831.00","num_doc":"1005890742","cohort":"SPP3"}
+
+  {"num_act_res":"1670","monto_act_res":"7220817.00","num_doc":"1006071244","cohort":"SPP3"}
+
+  {"num_act_res":"1719","monto_act_res":"7934351.00","num_doc":"1006097246","cohort":"SPP3"}
+
+  {"num_act_res":"1697","monto_act_res":"7786831.00","num_doc":"1006179727","cohort":"SPP3"}
+
+  {"num_act_res":"1668","monto_act_res":"7786831.00","num_doc":"1006180555","cohort":"SPP3"}
+
+  {"num_act_res":"1652","monto_act_res":"7786831.00","num_doc":"1006195324","cohort":"SPP3"}
+
+  {"num_act_res":"1716","monto_act_res":"7786831.00","num_doc":"1006341239","cohort":"SPP3"}
+
+  {"num_act_res":"1703","monto_act_res":"7786831.00","num_doc":"1007201493","cohort":"SPP3"}
+
+  {"num_act_res":"1671","monto_act_res":"7786831.00","num_doc":"1007327900","cohort":"SPP3"}
+
+  {"num_act_res":"1664","monto_act_res":"7786831.00","num_doc":"1007736283","cohort":"SPP3"}
+
+  {"num_act_res":"1655","monto_act_res":"7599379.00","num_doc":"1007761335","cohort":"SPP3"}
+
+  {"num_act_res":"1711","monto_act_res":"7761011.00","num_doc":"1007786313","cohort":"SPP3"}
+
+  {"num_act_res":"1757","monto_act_res":"7761011.00","num_doc":"1010067523","cohort":"SPP3"}
+
+  {"num_act_res":"1709","monto_act_res":"7786831.00","num_doc":"1010079548","cohort":"SPP3"}
+
+  {"num_act_res":"1764","monto_act_res":"7761011.00","num_doc":"1010085407","cohort":"SPP3"}
+
+  {"num_act_res":"1704","monto_act_res":"7860591.00","num_doc":"1010091395","cohort":"SPP3"}
+
+  {"num_act_res":"1762","monto_act_res":"7761011.00","num_doc":"1010104512","cohort":"SPP3"}
+
+  {"num_act_res":"1763","monto_act_res":"7761011.00","num_doc":"1053868060","cohort":"SPP3"}
+
+  {"num_act_res":"1654","monto_act_res":"7786831.00","num_doc":"1059534194","cohort":"SPP3"}
+
+  {"num_act_res":"1772","monto_act_res":"7786831.00","num_doc":"1059606601","cohort":"SPP3"}
+
+  {"num_act_res":"1723","monto_act_res":"7786831.00","num_doc":"1061088863","cohort":"SPP3"}
+
+  {"num_act_res":"1758","monto_act_res":"7761011.00","num_doc":"1061545572","cohort":"SPP3"}
+
+  {"num_act_res":"1712","monto_act_res":"7786831.00","num_doc":"1061812638","cohort":"SPP3"}
+
+  {"num_act_res":"1765","monto_act_res":"7786831.00","num_doc":"1080903479","cohort":"SPP3"}
+
+  {"num_act_res":"1693","monto_act_res":"7786831.00","num_doc":"1080903481","cohort":"SPP3"}
+
+  {"num_act_res":"1708","monto_act_res":"7934351.00","num_doc":"1081423387","cohort":"SPP3"}
+
+  {"num_act_res":"1715","monto_act_res":"7309059.00","num_doc":"1085340369","cohort":"SPP3"}
+
+  {"num_act_res":"1660","monto_act_res":"7786831.00","num_doc":"1085342917","cohort":"SPP3"}
+
+  {"num_act_res":"1656","monto_act_res":"7786831.00","num_doc":"1085663205","cohort":"SPP3"}
+
+  {"num_act_res":"1705","monto_act_res":"7786831.00","num_doc":"1085663619","cohort":"SPP3"}
+
+  {"num_act_res":"1667","monto_act_res":"7786831.00","num_doc":"1085663962","cohort":"SPP3"}
+
+  {"num_act_res":"1721","monto_act_res":"7786831.00","num_doc":"1085664015","cohort":"SPP3"}
+
+  {"num_act_res":"1684","monto_act_res":"7786831.00","num_doc":"1085691064","cohort":"SPP3"}
+
+  {"num_act_res":"1700","monto_act_res":"7761011.00","num_doc":"1085950509","cohort":"SPP3"}
+
+  {"num_act_res":"1691","monto_act_res":"7761011.00","num_doc":"1085952361","cohort":"SPP3"}
+
+  {"num_act_res":"1707","monto_act_res":"7786831.00","num_doc":"1086107666","cohort":"SPP3"}
+
+  {"num_act_res":"1759","monto_act_res":"7761011.00","num_doc":"1086363814","cohort":"SPP3"}
+
+  {"num_act_res":"1730","monto_act_res":"7786831.00","num_doc":"1086551218","cohort":"SPP3"}
+
+  {"num_act_res":"1669","monto_act_res":"7786831.00","num_doc":"1087753893","cohort":"SPP3"}
+
+  {"num_act_res":"1698","monto_act_res":"7761011.00","num_doc":"1087753897","cohort":"SPP3"}
+
+  {"num_act_res":"1689","monto_act_res":"7786831.00","num_doc":"1088358610","cohort":"SPP3"}
+
+  {"num_act_res":"1713","monto_act_res":"7786831.00","num_doc":"1088976582","cohort":"SPP3"}
+
+  {"num_act_res":"1692","monto_act_res":"7786831.00","num_doc":"1088976956","cohort":"SPP3"}
+
+  {"num_act_res":"1768","monto_act_res":"7761011.00","num_doc":"1088976963","cohort":"SPP3"}
+
+  {"num_act_res":"1676","monto_act_res":"7786831.00","num_doc":"1089488562","cohort":"SPP3"}
+
+  {"num_act_res":"1766","monto_act_res":"7761011.00","num_doc":"1107519667","cohort":"SPP3"}
+
+  {"num_act_res":"1674","monto_act_res":"7786831.00","num_doc":"1107520643","cohort":"SPP3"}
+
+  {"num_act_res":"1727","monto_act_res":"7907349.00","num_doc":"1107525465","cohort":"SPP3"}
+
+  {"num_act_res":"1686","monto_act_res":"7599379.00","num_doc":"1107525982","cohort":"SPP3"}
+
+  {"num_act_res":"1679","monto_act_res":"7719897.00","num_doc":"1107526455","cohort":"SPP3"}
+
+  {"num_act_res":"1685","monto_act_res":"7894499.00","num_doc":"1107527291","cohort":"SPP3"}
+
+  {"num_act_res":"1677","monto_act_res":"7786831.00","num_doc":"1107527371","cohort":"SPP3"}
+
+  {"num_act_res":"1694","monto_act_res":"7786831.00","num_doc":"1107527620","cohort":"SPP3"}
+
+  {"num_act_res":"1724","monto_act_res":"7599379.00","num_doc":"1107528334","cohort":"SPP3"}
+
+  {"num_act_res":"1688","monto_act_res":"7934351.00","num_doc":"1112498478","cohort":"SPP3"}
+
+  {"num_act_res":"1714","monto_act_res":"7786831.00","num_doc":"1112883060","cohort":"SPP3"}
+
+  {"num_act_res":"1665","monto_act_res":"7599379.00","num_doc":"1112969746","cohort":"SPP3"}
+
+  {"num_act_res":"1717","monto_act_res":"7786831.00","num_doc":"1113684083","cohort":"SPP3"}
+
+  {"num_act_res":"1681","monto_act_res":"7786831.00","num_doc":"1113696451","cohort":"SPP3"}
+
+  {"num_act_res":"1690","monto_act_res":"7934351.00","num_doc":"1113699332","cohort":"SPP3"}
+
+  {"num_act_res":"1767","monto_act_res":"7786831.00","num_doc":"1115094198","cohort":"SPP3"}
+
+  {"num_act_res":"1658","monto_act_res":"7786831.00","num_doc":"1116280826","cohort":"SPP3"}
+
+  {"num_act_res":"1733","monto_act_res":"7786831.00","num_doc":"1116282419","cohort":"SPP3"}
+
+  {"num_act_res":"1657","monto_act_res":"7786831.00","num_doc":"1118312233","cohort":"SPP3"}
+
+  {"num_act_res":"1702","monto_act_res":"7786831.00","num_doc":"1122786929","cohort":"SPP3"}
+
+  {"num_act_res":"1673","monto_act_res":"7599379.00","num_doc":"1143876117","cohort":"SPP3"}
+
+  {"num_act_res":"1653","monto_act_res":"7786831.00","num_doc":"1143876195","cohort":"SPP3"}
+
+  {"num_act_res":"1687","monto_act_res":"7786831.00","num_doc":"1143878076","cohort":"SPP3"}
+
+  {"num_act_res":"1760","monto_act_res":"7761011.00","num_doc":"1143996210","cohort":"SPP3"}
+
+  {"num_act_res":"1678","monto_act_res":"7786831.00","num_doc":"1143997507","cohort":"SPP3"}
+
+  {"num_act_res":"1722","monto_act_res":"7786831.00","num_doc":"1144106668","cohort":"SPP3"}
+
+  {"num_act_res":"1729","monto_act_res":"7786831.00","num_doc":"1144107202","cohort":"SPP3"}
+
+  {"num_act_res":"1731","monto_act_res":"7934351.00","num_doc":"1144107511","cohort":"SPP3"}
+
+  {"num_act_res":"1726","monto_act_res":"7786831.00","num_doc":"1144107516","cohort":"SPP3"}
+
+  {"num_act_res":"1771","monto_act_res":"7786831.00","num_doc":"1144108716","cohort":"SPP3"}
+
+  {"num_act_res":"1732","monto_act_res":"7786831.00","num_doc":"1144109684","cohort":"SPP3"}
+
+  {"num_act_res":"1675","monto_act_res":"7599379.00","num_doc":"1144211395","cohort":"SPP3"}
+
+  {"num_act_res":"1680","monto_act_res":"7786831.00","num_doc":"1144212587","cohort":"SPP3"}
+
+  {"num_act_res":"1756","monto_act_res":"7573559.00","num_doc":"1144212589","cohort":"SPP3"}
+
+  {"num_act_res":"1672","monto_act_res":"7786831.00","num_doc":"1144213418","cohort":"SPP3"}
+
+  {"num_act_res":"1696","monto_act_res":"7934351.00","num_doc":"1192757272","cohort":"SPP3"}
+
+  {"num_act_res":"1661","monto_act_res":"7786831.00","num_doc":"1192769065","cohort":"SPP3"}
+
+  {"num_act_res":"1650","monto_act_res":"7807343.00","num_doc":"1192792827","cohort":"SPP3"}
+
+  {"num_act_res":"1701","monto_act_res":"7786831.00","num_doc":"1192793872","cohort":"SPP3"}
+
+  {"num_act_res":"1706","monto_act_res":"7934351.00","num_doc":"1193033632","cohort":"SPP3"}
+
+  {"num_act_res":"1773","monto_act_res":"5205175.00","num_doc":"1225092683","cohort":"SPP3"}
+
+  {"num_act_res":"1720","monto_act_res":"7786831.00","num_doc":"1234194541","cohort":"SPP3"}
+
+  {"num_act_res":"1662","monto_act_res":"7786831.00","num_doc":"1234196550","cohort":"SPP3"}
+
+  {"num_act_res":"1728","monto_act_res":"7326583.00","num_doc":"1234196901","cohort":"SPP3"}
+
+  {"num_act_res":"1725","monto_act_res":"7754898.00","num_doc":"1234198131","cohort":"SPP3"}
 
 

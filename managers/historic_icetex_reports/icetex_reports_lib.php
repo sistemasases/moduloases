@@ -292,50 +292,25 @@ function get_count_active_res_students($cohort){
                         
                     GROUP BY semestre.nombre";
 
-    $edited_sql_query = "SELECT semestre.nombre AS semestre, COUNT(DISTINCT res_est.id) AS num_act_res, SUM(res_est.monto_estudiante) AS monto_act_res
-                    FROM {talentospilos_res_estudiante} AS res_est
-                        INNER JOIN {talentospilos_res_icetex} res_ice ON res_ice.id = res_est.id_resolucion
-                        INNER JOIN {talentospilos_semestre} semestre ON semestre.id = res_ice.id_semestre
-                        INNER JOIN {talentospilos_user_extended} uext ON uext.id_ases_user = res_est.id_estudiante
-                        INNER JOIN {cohort_members} co_mem ON uext.id_moodle_user = co_mem.userid
-                        INNER JOIN {cohort} cohortm ON cohortm.id = co_mem.cohortid
-                        WHERE cohortm.idnumber LIKE '$cohort%'
-                        AND ((res_est.id_estudiante, res_ice.id_semestre)
-
-                            IN 
-                            
-                            (SELECT DISTINCT academ.id_estudiante, academ.id_semestre
-                            FROM {talentospilos_history_academ} AS academ
-                            INNER JOIN {talentospilos_semestre} AS semest ON semest.id = academ.id_semestre
-                            INNER JOIN {talentospilos_user_extended} uext ON uext.id_ases_user = academ.id_estudiante                            
-                            INNER JOIN {cohort_members} co_mem ON uext.id_moodle_user = co_mem.userid
-                            INNER JOIN {cohort} cohortm ON cohortm.id = co_mem.cohortid
-                            WHERE cohortm.idnumber LIKE '$cohort%' AND academ.promedio_semestre IS NOT NULL))
-
-                        AND ((res_est.id_estudiante, res_ice.id_semestre)
+    $edited_sql_query = "SELECT res_est.id AS num_act_res, res_est.monto_estudiante AS monto_act_res, tu.num_doc
+                        FROM {talentospilos_res_estudiante} AS res_est
+                        INNER JOIN {talentospilos_res_icetex} AS res_ice ON res_ice.id = res_est.id_resolucion
+                        INNER JOIN {talentospilos_user_extended} AS uext ON uext.id_ases_user = res_est.id_estudiante
+                        INNER JOIN {cohort_members} AS cohort_mem ON uext.id_moodle_user = cohort_mem.userid
+                        INNER JOIN {cohort} AS cohort ON cohort.id = cohort_mem.cohortid
+                        INNER JOIN {talentospilos_usuario} AS tu ON tu.id = uext.id_ases_user
+                        WHERE cohort.idnumber LIKE '$cohort%' AND res_ice.id_semestre = 7
                         
-                            IN 
-                            
-                            (SELECT DISTINCT hist_ice.id_estudiante, hist_ice.id_semestre
-                            FROM {talentospilos_hist_est_ice} AS hist_ice
-                            INNER JOIN {talentospilos_semestre} sem ON sem.id = hist_ice.id_semestre
-                            INNER JOIN {talentospilos_user_extended} uext ON uext.id_ases_user = hist_ice.id_estudiante
-                            INNER JOIN {cohort_members} co_mem ON co_mem.userid = uext.id_moodle_user
-                            INNER JOIN {cohort} cohortm ON cohortm.id = co_mem.cohortid
-                            WHERE cohortm.idnumber LIKE '$cohort%'))
-                        
-                    GROUP BY semestre.nombre";
+                        ORDER BY tu.num_doc";
 
-    $new_sql_query = "SELECT "; //semestre.nombre, COUNT(DISTINCT res_est.id) AS num_act_res, SUM(res_est.monto_estudiante) AS monto_act_res
-
-    $count = $DB->get_records_sql($original_sql_query);
-    //$count = $DB->get_records_sql($edited_sql_query);
+    //$count = $DB->get_records_sql($original_sql_query);
+    $count = $DB->get_records_sql($edited_sql_query);
 
     file_put_contents("test.txt", "Data set:",FILE_APPEND);
 
     foreach($count as $record){
         $record->cohort = $cohort;
-        $record->monto_act_res = "$".number_format($record->monto_act_res, 0, ',', '.');
+        //$record->monto_act_res = "$".number_format($record->monto_act_res, 0, ',', '.');
 
         file_put_contents("test.txt", "\n\n  ".json_encode($record), FILE_APPEND);
 
