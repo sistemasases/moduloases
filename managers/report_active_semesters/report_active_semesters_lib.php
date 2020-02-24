@@ -86,7 +86,7 @@ function _student_and_active_semesters_to_row($semester_names, $student_and_acti
             $row[$semester_name] = $student_and_active_semesters->list_active_careers($semester_name);
             $stop_egresado = true;
         }else if(!$stop_egresado){
-            $row[$semester_name] = "egresado";
+            $row[$semester_name] = $semester_names;
         }else {
 
             $row[$semester_name] = $semester_names;
