@@ -219,7 +219,7 @@ if ($student_code != 0) {
     $record->name_program = $name_program;
     $record->faculty_name = $faculty_name;
     $record->name_program_time = $program_time;
-    $record->name_current_semester = get_current_semester()->nombre;
+    $record->name_current_semester = core_periods_get_current_period()->nombre;
     $record->academic_programs = $academic_programs;
     $record->student_cohorts = $student_cohorts;
 
@@ -976,6 +976,15 @@ $url_update_user_image           = new moodle_url("/blocks/ases/view/edit_user_i
     'url_return' => $url
 ));
 $record->update_profile_image_url = $url_update_user_image;
+
+// periods_lib.php contains get_current_semester()
+$record->current_semester = core_periods_get_current_period()->id;
+
+$stud_mon_prac_prof = user_management_get_stud_mon_prac_prof( $record->ases_student_code, $record->instance, $record->current_semester );
+$record->monitor_id = $stud_mon_prac_prof->monitor->id;
+$record->practicing_id = $stud_mon_prac_prof->practicing->id;
+$record->professional_id = $stud_mon_prac_prof->professional->id;
+
 
 //Last student assignment
 

@@ -279,7 +279,7 @@ function get_student_item_grades_sumary_report($student_id, $semestre = null) {
     $report_items = array();
 
     if(!$semestre) {
-        $semestre_object = get_current_semester();
+        $semestre_object = core_periods_get_current_period();
         $sem = $semestre_object->nombre;
         $anio = substr($sem,0,4);
 
