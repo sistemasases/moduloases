@@ -35,7 +35,7 @@ function get_boss_of_monitor_by_semester($id_monitor,$id_semester,$id_instance){
 function get_pract_of_prof($id_prof,$id_instance){
    global $DB;
 
-    $current_semester = get_current_semester();
+    $current_semester = core_periods_get_current_period();
     $id_practicant = get_role_id('practicante_ps');
     $sql_query="SELECT id_usuario,users.firstname,users.lastname,id_semestre,users.username, CONCAT(users.firstname, ' ',users.lastname) AS fullname
     FROM {talentospilos_user_rol} user_rol
@@ -43,7 +43,7 @@ function get_pract_of_prof($id_prof,$id_instance){
     WHERE user_rol.id_jefe = $id_prof 
     AND user_rol.id_rol = $id_practicant->id 
     AND user_rol.estado = 1 
-    AND user_rol.id_semestre = $current_semester->max 
+    AND user_rol.id_semestre = $current_semester->id 
     AND user_rol.id_instancia = $id_instance
     ORDER BY fullname ASC";
 
@@ -60,7 +60,7 @@ function get_pract_of_prof($id_prof,$id_instance){
 function get_monitors_of_pract($id_pract,$id_instance){
    global $DB;
 
-    $current_semester = get_current_semester();
+    $current_semester = core_periods_get_current_period();
     $id_monitor = get_role_id('monitor_ps');
     $sql_query = "SELECT id_usuario, users.firstname,users.lastname,id_semestre,users.username, CONCAT(users.firstname, ' ', users.lastname) AS fullname
                   FROM {talentospilos_user_rol} AS user_rol
@@ -68,7 +68,7 @@ function get_monitors_of_pract($id_pract,$id_instance){
                   WHERE user_rol.id_jefe = '$id_pract' 
                         AND user_rol.id_rol = '$id_monitor->id' 
                         AND user_rol.estado = 1 
-                        AND user_rol.id_semestre = '$current_semester->max' 
+                        AND user_rol.id_semestre = '$current_semester->id' 
                         AND user_rol.id_instancia = '$id_instance'
                   ORDER BY fullname ASC";
 
@@ -88,7 +88,7 @@ function get_quantity_students_by_pract($id_practicant,$instance,$semester=null)
 
 
     if($semester == null){
-       $semester = get_current_semester()->max;
+       $semester = core_periods_get_current_period()->id;
     }
 
 
@@ -113,7 +113,7 @@ function get_quantity_students_by_pract($id_practicant,$instance,$semester=null)
 function get_students_of_monitor($id_monitor,$id_instance){
    global $DB;
 
-    $current_semester = get_current_semester();
+    $current_semester = core_periods_get_current_period();
     $sql_query = 
     "SELECT ME.id, 
      ME.id_monitor,
@@ -125,7 +125,7 @@ function get_students_of_monitor($id_monitor,$id_instance){
     INNER JOIN {user} AS U ON U.id = (SELECT id_moodle_user
                                                   FROM {talentospilos_user_extended} extended
                                                   WHERE id_ases_user = ME.id_estudiante and tracking_status=1)
-    WHERE ME.id_semestre = $current_semester->max 
+    WHERE ME.id_semestre = $current_semester->id 
         AND ME.id_monitor = $id_monitor 
         AND ME.id_instancia = $id_instance
     ORDER BY fullname ASC";
@@ -230,13 +230,13 @@ function monitor_student_assignment($username_monitor, $array_students, $idinsta
         {
                 // $studentid = get_userById(array('*'),$student);
                 $studentid =get_ases_user_by_code($student);
-                $semestre_act = get_current_semester();
+                $semestre_act = core_periods_get_current_period();
 
 
 
                 if($studentid){
                     //se valida si el estudiante ya tiene asignado un monitor
-                    $sql_query = "SELECT u.id as id, username,firstname, lastname FROM {talentospilos_monitor_estud} me INNER JOIN {user} u  ON  u.id = me.id_monitor WHERE me.id_semestre =".$semestre_act->max."  AND me.id_estudiante =".$studentid->id."";
+                    $sql_query = "SELECT u.id as id, username,firstname, lastname FROM {talentospilos_monitor_estud} me INNER JOIN {user} u  ON  u.id = me.id_monitor WHERE me.id_semestre =".$semestre_act->id."  AND me.id_estudiante =".$studentid->id."";
                     $hasmonitor = $DB->get_record_sql($sql_query);
                 
                     if(!$hasmonitor){
@@ -244,7 +244,7 @@ function monitor_student_assignment($username_monitor, $array_students, $idinsta
                         $object->id_monitor = $idmonitor->id;
                         $object->id_estudiante = $studentid->id;
                         $object->id_instancia = $idinstancia;
-                        $object->id_semestre = $semestre_act->max;
+                        $object->id_semestre = $semestre_act->id;
               
                         $insert_record = $DB->insert_record('talentospilos_monitor_estud', $object, true);
                 
@@ -310,7 +310,7 @@ function monitor_student_assignment($username_monitor, $array_students, $idinsta
     $sql_query = "SELECT id FROM {talentospilos_rol} WHERE nombre_rol='$role';";
     $id_role = $DB->get_record_sql($sql_query);
     
-    $id_semester = get_current_semester();
+    $id_semester = core_periods_get_current_period();
     
     if($role == "monitor_ps"){
         $sql_query = "SELECT * FROM {user} WHERE username='$username_boss'";
@@ -325,7 +325,7 @@ function monitor_student_assignment($username_monitor, $array_students, $idinsta
     $array_record->id_rol = $id_role->id;
     $array_record->id_usuario = $id_user_moodle->id;
     $array_record->estado = $state;
-    $array_record->id_semestre = $id_semester->max;
+    $array_record->id_semestre = $id_semester->id;
     $array_record->id_jefe = $id_boss;
     $array_record->id_instancia= $idinstancia;
 

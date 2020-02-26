@@ -230,7 +230,7 @@ class ActiveSemestersReportField {
 
 function get_active_semesters($id_instance, $cohort_id, $include_current_semester = false) {
     $semester_is_canceled = 'SI';
-    $current_semester = \get_current_semester();
+    $current_semester = \core_periods_get_current_period();
     $current_semester_name = $current_semester->nombre;
     $active_semesters_report_fields = array();
     $students_with_active_semesters  = get_active_semesters_db($id_instance, $cohort_id);

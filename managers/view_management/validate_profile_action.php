@@ -9,12 +9,12 @@
     //Hace falta validar que el perfil este en el periodo actual
     function get_perfil_usuario($id_moodle, $id_instancia){
         global $DB;
-        $current_semester = get_current_semester(); 
+        $current_semester = core_periods_get_current_period(); 
        
         $sql_query = "SELECT * FROM {talentospilos_perfil} WHERE id IN (
                         SELECT id_perfil FROM {talentospilos_usuario_perfil} 
                             WHERE estado = 1 
-                            AND id_semestre =".$current_semester->max."
+                            AND id_semestre =".$current_semester->id."
                             AND id_usuario = ".$id_moodle." 
                             AND id_instancia =".$id_instancia."
                         );";

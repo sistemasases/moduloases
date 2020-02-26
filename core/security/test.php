@@ -94,5 +94,47 @@ $singularizations = array(
 
 
 //print_r( core_secure_find_key( $explicit_hexed_rule = "99999" ) );
+$id_semestre = 10;
+
+$alt_interval = '{
+    
+    "col_name_interval_start" : "fecha_inicio",
+    "col_name_interval_end"   : "fecha_fin",
+    "table_ref"               : {
+    
+        "record_id" : ' . $id_semestre . ',
+        "name"      : "mdl_talentospilos_semestre"
+        
+    }
+}';
+
+$singularization_test_user = [ "id_instancia" => 563336, "id_semestre" => $id_semestre ];
+
+/* print_r(
+	core_secure_assign_role_to_user(
+		161037,
+		'sistemas',
+		strtotime("2019-05-21 00:00:00"),
+		strtotime("2020-12-31 23:59:59"),
+		$singularization_test_user,
+		true,
+		$alt_interval
+	)
+);  */
+
+print_r(
+	core_secure_assign_role_to_user(
+		161037,
+		'root',
+		strtotime("2020-02-04 00:00:00"), // <-- este va a ser el $time_context que usará _core_security_get_user_rol
+		strtotime("2020-12-31 23:59:59"),
+		$singularization_test_user,
+		false,
+		NULL
+	)
+); 
+
+
+//echo '<img src="data:image/jpeg;base64,' . secure_generate_image( 3000 ) .'" />';
 
 ?>

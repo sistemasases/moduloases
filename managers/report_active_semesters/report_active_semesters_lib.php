@@ -43,7 +43,7 @@ use function student_lib\get_active_semesters;
  */
 function _get_semesters_names_after_cohort($id_instance, $ases_cohort_id, $include_current_semester = false) {
     $date_format = 'Y-m-d';
-    $current_semester = get_current_semester();
+    $current_semester = core_periods_get_current_period();
     $cohort_id_number = '';
     $current_semester_name = $current_semester->nombre;
 
@@ -77,11 +77,24 @@ function _get_semesters_names_after_cohort($id_instance, $ases_cohort_id, $inclu
 function _student_and_active_semesters_to_row($semester_names, $student_and_active_semesters) {
     $row = array();
 
-    $index = count($semester_names);
+    //$index = count($semester_names);
+
 
     $stop_egresado = false;
 
-    while($index) {
+    foreach(array_reverse($semester_names) as $semester_name){
+        if($student_and_active_semesters->have_active_semester($semester_name)){
+            $row[$semester_name] = $student_and_active_semesters->list_active_careers($semester_name);
+            $stop_egresado = true;
+        }else if(!$stop_egresado){
+            $row[$semester_name] = "EGRESADO";
+        }else {
+
+            $row[$semester_name] = "NO";
+        }
+    }
+
+/*    while($index) {
         $index--;
         $current = $index;
         if($student_and_active_semesters->have_active_semester($semester_names[$current])){
@@ -93,7 +106,7 @@ function _student_and_active_semesters_to_row($semester_names, $student_and_acti
 
             $row[$semester_names[$current]] = $semester_names;
         }
-    }
+    }*/
 
 /*    foreach ($semester_names as $semester_name) {
         $row[$semester_name] = $student_and_active_semesters->have_active_semester($semester_name)? $student_and_active_semesters->list_active_careers($semester_name) : $student_and_active_semesters->egresado;

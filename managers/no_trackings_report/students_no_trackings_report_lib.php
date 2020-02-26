@@ -38,7 +38,7 @@ require_once( $CFG->dirroot.'/blocks/ases/managers/user_management/user_manageme
 
 function students_no_trackings_get_students_count_trackings( $instance_id ){      
 
-    $id_semester = get_current_semester()->max;
+    $id_semester = core_periods_get_current_period()->id;
     $interval_semester = get_semester_interval($id_semester);
     
     $list_inicio = explode(" ", $interval_semester->fecha_inicio);
@@ -108,8 +108,8 @@ function students_no_trackings_get_students_count_trackings( $instance_id ){
 
 function get_students_with_trackings( $instance_id ){      
 
-    $semestre = get_current_semester();
-    $idMaxSemester = $semestre->max;   
+    $semestre = core_periods_get_current_period();
+    $idMaxSemester = $semestre->id;   
     $intervalSemester = get_semester_interval($idMaxSemester);
     
     $list_inicio = explode(" ", $intervalSemester->fecha_inicio);
@@ -154,8 +154,8 @@ function get_students_with_trackings( $instance_id ){
 
 function get_students_with_non_attendance_trackings( $instance_id ){ 
 
-    $semestre = get_current_semester();
-    $idMaxSemester = $semestre->max;   
+    $semestre = core_periods_get_current_period();
+    $idMaxSemester = $semestre->id;   
     $intervalSemester = get_semester_interval($idMaxSemester);
     
     $list_inicio = explode(" ", $intervalSemester->fecha_inicio);
@@ -204,8 +204,8 @@ function get_array_students_with_trackings_count( $instance_id ){
 
     global $DB;   
 
-    $semestre = get_current_semester();
-    $idMaxSemester = $semestre->max;
+    $semestre = core_periods_get_current_period();
+    $idMaxSemester = $semestre->id;
     $monitorias = monitor_assignments_get_monitors_students_relationship_by_instance_n_semester( $instance_id, $idMaxSemester );
 
     $sql_query = "SELECT usuario.id AS id, userm.username, usuario.num_doc AS cedula, userm.firstname, userm.lastname FROM {user} AS userm

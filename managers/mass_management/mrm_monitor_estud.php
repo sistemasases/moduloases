@@ -135,10 +135,10 @@ if (isset($_FILES['file']) || isset($_POST['idinstancia'])) {
             } else {
                 throw new MyException('El campo "username_monitor" es un campo obligatorio');
             }
-            $last_semester = get_current_semester();
+            $last_semester = core_periods_get_last_period();
 
             //validating duplicity on instance
-            $sql_query = "SELECT *  FROM {talentospilos_monitor_estud} where id_semestre='" . $last_semester->max . "' AND id_estudiante='" . $id_estudiante . "' AND id_instancia='" . $_POST['idinstancia'] . "'";
+            $sql_query = "SELECT *  FROM {talentospilos_monitor_estud} where id_semestre='" . $last_semester->id . "' AND id_estudiante='" . $id_estudiante . "' AND id_instancia='" . $_POST['idinstancia'] . "'";
             $exists = $DB->get_record_sql($sql_query);
 
             if ($exists) {
@@ -158,7 +158,7 @@ if (isset($_FILES['file']) || isset($_POST['idinstancia'])) {
                 $record->id_estudiante = $id_estudiante;
                 $record->id_monitor = $id_monitor;
                 $record->id_instancia = $_POST['idinstancia'];
-                $record->id_semestre = $last_semester->max;
+                $record->id_semestre = $last_semester->id;
 
                 $DB->insert_record('talentospilos_monitor_estud', $record);
                 array_push($success_rows, $data);

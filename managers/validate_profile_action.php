@@ -2,7 +2,8 @@
 require_once (dirname(__FILE__) . '/../../../config.php');
 
 require_once ('permissions_management/permissions_lib.php');
-require_once(dirname(__FILE__) . '/periods_management/periods_lib.php');
+require_once (dirname(__FILE__) . '/periods_management/periods_lib.php');
+require_once (dirname(__FILE__) . '/../core/periods/periods.php');
 
 global $USER;
 /*
@@ -113,8 +114,8 @@ function get_id_rol($userid, $blockid)
 {
     global $DB;
 
-    $current_semester = get_current_semester();
-    $sql_query = "SELECT id_rol FROM {talentospilos_user_rol} WHERE id_usuario=$userid AND id_instancia=$blockid AND id_semestre=$current_semester->max  and estado=1";
+    $current_semester = core_periods_get_current_period();
+    $sql_query = "SELECT id_rol FROM {talentospilos_user_rol} WHERE id_usuario=$userid AND id_instancia=$blockid AND id_semestre=$current_semester->id  and estado=1";
     $consulta = $DB->get_record_sql($sql_query);
 
 
