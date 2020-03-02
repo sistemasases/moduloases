@@ -111,7 +111,7 @@ function get_cohorts_by_idnumber($id_number){
      } else if (property_exists($actions, 'search_assigned_students_agr')) {
 
          $user_id = $USER->id;
-         $id_current_semester = get_current_semester()->max;
+         $id_current_semester = core_periods_get_current_period()->id;
          $sql_query = "SELECT roles.nombre_rol, user_role.id_programa 
                           FROM {talentospilos_user_rol} AS user_role 
                                                     INNER JOIN {talentospilos_rol} AS roles ON user_role.id_rol = roles.id
@@ -125,7 +125,7 @@ function get_cohorts_by_idnumber($id_number){
                  $conditions_query_directors = " WHERE ases_students.id_academic_program = $user_role->id_programa";
                  $conditions_query_assigned = " AND ases_students.student_id IN (SELECT id_estudiante AS student_id
                                       FROM {talentospilos_monitor_estud} 
-                                WHERE id_semestre = " . get_current_semester()->max . " AND id_instancia = $instance_id)";
+                                WHERE id_semestre = " . core_periods_get_current_period()->id . " AND id_instancia = $instance_id)";
 
                  $where_user = $conditions_query_directors.$conditions_query_assigned;
                  break;
