@@ -220,6 +220,7 @@ function periods_get_current_semester(){
  * @param $semesterInfo -> array with the new information of a semester
  * @param $idSemester -> semester's id
  * @return boolean true if it was updated, false it wasn't
+ * @deprecated
  */
 
  function update_semester($semesterInfo, $idSemester){
@@ -253,6 +254,7 @@ function periods_get_current_semester(){
  * 
  * @see get_all_semesters_table()
  * @return array
+ * @deprecated
  */
  
  function get_all_semesters_table(){
@@ -288,6 +290,7 @@ function periods_get_current_semester(){
  * @param $beginning_date -> semester's starting date
  * @param $ending_date -> semester's ending date
  * @return number
+ * @deprecated
  */
 
  function create_semester($name, $beginning_date, $ending_date){
@@ -311,7 +314,8 @@ function periods_get_current_semester(){
   * 
   * @see get_semester_id_by_name($semester_name)
   * @param $semester_name -> name of the semester to be found
-  * @return Integer 
+  * @deprecated
+  * @return Integer
   */
  function get_semester_id_by_name($semester_name){
 
@@ -336,6 +340,7 @@ function periods_get_current_semester(){
  * Functions that returns all stored semesters.
  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @return array
+ * @deprecated
  */
 
 function periods_management_get_all_semesters(){
