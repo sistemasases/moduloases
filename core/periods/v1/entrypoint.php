@@ -71,14 +71,22 @@ function periods_get_period_by_id( int $period_id ):stdClass
  * 
  * @return array List of periods.
  */
-function periods_get_all_periods():array
+function periods_get_all_periods($fecha_inicio=null, $fecha_fin=null):array
 {
     global $DB;
     global $PERIODS_TABLENAME;
     
-    $query = "SELECT * 
+    if (isset($fecha_inicio, $fecha_fin)) {
+        $query = "SELECT * 
+        FROM $PERIODS_TABLENAME
+        WHERE fecha_inicio = $fecha_inicio 
+        and fecha_fin = $fecha_fin";
+    }
+    else {
+        $query = "SELECT * 
         FROM $PERIODS_TABLENAME
         ORDER BY fecha_fin DESC";
+    }
     
     return $DB->get_records_sql( $query );
 }

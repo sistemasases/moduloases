@@ -39,13 +39,12 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  */
 
  function get_current_semester_byinterval($fecha_inicio,$fecha_fin){
-     
-     global $DB;
+    error_log('Using deprecated function');
+    global $DB;
 
-     $sql_query = "SELECT id  max, nombre FROM {talentospilos_semestre} WHERE fecha_inicio ='$fecha_inicio' and fecha_fin ='$fecha_fin' ";
-     $current_semester = $DB->get_record_sql($sql_query);
-     error_log('Using deprecated function');
-     return $current_semester;
+    $sql_query = "SELECT id  max, nombre FROM {talentospilos_semestre} WHERE fecha_inicio ='$fecha_inicio' and fecha_fin ='$fecha_fin' ";
+    $current_semester = $DB->get_record_sql($sql_query);
+    return $current_semester;
  }
 
  /**
