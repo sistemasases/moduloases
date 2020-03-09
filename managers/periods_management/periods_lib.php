@@ -44,6 +44,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
 
      $sql_query = "SELECT id  max, nombre FROM {talentospilos_semestre} WHERE fecha_inicio ='$fecha_inicio' and fecha_fin ='$fecha_fin' ";
      $current_semester = $DB->get_record_sql($sql_query);
+     error_log('Using deprecated function');
      return $current_semester;
  }
 
@@ -66,7 +67,7 @@ function periods_management_get_current_semester_by_apprx_interval( $start_date,
                     AND fecha_fin >= '$end_date'";
 
     $to_return = $DB->get_record_sql( $sql );
-
+    error_log('Using deprecated function');
     if( $to_return ){
         return $to_return->id;
     }else{
@@ -90,6 +91,7 @@ function periods_management_get_current_semester_by_apprx_interval( $start_date,
 
      $sql_query = "SELECT id AS max, nombre FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
      $current_semester = $DB->get_record_sql($sql_query);
+     error_log('Using deprecated function');
      return $current_semester;
  }
 
@@ -103,6 +105,7 @@ function get_current_semester_start(){
     global $DB;
     $sql_query = "SELECT fecha_inicio AS fecha FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
     $current_semester = $DB->get_record_sql($sql_query);
+    error_log('Using deprecated function');
     return $current_semester;
 }
 
@@ -120,7 +123,7 @@ function get_current_semester_processed(){
     $mes = substr($semestre,5,2);
 
     $semestre = $año.$mes;
-
+    error_log('Using deprecated function');
     return $semestre;
 }
 
@@ -144,7 +147,7 @@ function periods_get_current_semester(){
     )";
     
     $current_semester = $DB->get_record_sql($sql_query);
-
+    error_log('Using deprecated function');
     return $current_semester;
 }
 
@@ -163,6 +166,7 @@ function periods_get_current_semester(){
 
      $sql_query = "select * from mdl_talentospilos_semestre where id='$id'";
      $interval = $DB->get_record_sql($sql_query);
+     error_log('Using deprecated function');
      return $interval;
  }
 
@@ -179,8 +183,8 @@ function periods_get_current_semester(){
      global $DB;
 
      $sql_query = "SELECT id, nombre, fecha_inicio, fecha_fin FROM {talentospilos_semestre}";
-     $all_semesters = $DB->get_records_sql($sql_query);          
-
+     $all_semesters = $DB->get_records_sql($sql_query);
+     error_log('Using deprecated function');     
      return $all_semesters;
      
  }
@@ -199,6 +203,7 @@ function periods_get_current_semester(){
 
 
  function get_semester_by_id($idSemester){
+     error_log('Using deprecated function');
      global $DB;
 
      $sql_query = "SELECT nombre, fecha_inicio, fecha_fin FROM {talentospilos_semestre} WHERE id = '$idSemester'";
@@ -224,7 +229,7 @@ function periods_get_current_semester(){
  */
 
  function update_semester($semesterInfo, $idSemester){
-
+    error_log('Using deprecated function');
      global $DB;
 
      try{
@@ -243,7 +248,7 @@ function periods_get_current_semester(){
           return $update;
  
      }catch(Exception $e){
-          return $e->getMessage();
+        return $e->getMessage();
      }
 
 
@@ -258,6 +263,7 @@ function periods_get_current_semester(){
  */
  
  function get_all_semesters_table(){
+     error_log('Using deprecated function');
      global $DB;
 
      $array_semesters = array();
@@ -294,7 +300,7 @@ function periods_get_current_semester(){
  */
 
  function create_semester($name, $beginning_date, $ending_date){
-
+    error_log('Using deprecated function');
      global $DB;
 
      $newSemester = new stdClass;
@@ -305,8 +311,6 @@ function periods_get_current_semester(){
      $insert = $DB->insert_record('talentospilos_semestre', $newSemester, true);
 
      return $insert;
-
-
  }
 
  /**
@@ -318,7 +322,7 @@ function periods_get_current_semester(){
   * @return Integer
   */
  function get_semester_id_by_name($semester_name){
-
+    error_log('Using deprecated function');
     global $DB;
 
     $sql_query = "SELECT id FROM {talentospilos_semestre} WHERE nombre = '$semester_name'";
@@ -344,7 +348,7 @@ function periods_get_current_semester(){
  */
 
 function periods_management_get_all_semesters(){
-     
+    error_log('Using deprecated function');
     global $DB;
     $sql = "SELECT * FROM {talentospilos_semestre}";
 
