@@ -63,6 +63,34 @@ function periods_get_period_by_id( int $period_id ):stdClass
     }
 }
 
+/**
+ * Returns a period given its name.
+ * 
+ * @param string $period_name 
+ * @throws Exception if semester does not exists
+ * @return stdClass Period object 
+ */
+function periods_get_period_by_name($period_name):stdClass
+{
+    global $DB;
+    global $PERIODS_TABLENAME;
+
+    $query = "
+        SELECT *
+        FROM $PERIODS_TABLENAME
+        WHERE nombre = '$period_name'";
+    
+    $result = $DB->get_record_sql( $query );
+    if( !property_exists($result, 'nombre') ) {
+        throw new Exception(
+            "Period with name '$period_name' does not exist", 1
+        );
+    }
+    else {
+        return $result;
+    }
+}
+
 /** 
  * Function that return all periods.
  * 

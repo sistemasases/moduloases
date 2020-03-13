@@ -35,7 +35,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  * @param $fecha_inicio ---> starting date
  * @param $fecha_fin ---> ending date
  * @return object that represents the semester within the given interval
- * @deprecated En proceso de refactorización
+ * @deprecated @see core_periods_get_all_periods()
  */
 
  function get_current_semester_byinterval($fecha_inicio,$fecha_fin){
@@ -52,7 +52,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  * @param string $start_date With postgres fortmat YYYY-MM-DD
  * @param string $end_date With postgres fortmat YYYY-MM-DD
  * @return int $to_return id_semester
- * @deprecated
+ * @deprecated Refactorizar llamados a esta función.
  */
 
 function periods_management_get_current_semester_by_apprx_interval( $start_date, $end_date ){
@@ -95,7 +95,7 @@ function periods_management_get_current_semester_by_apprx_interval( $start_date,
  * Función que retorna la fecha de inicio del semestre actual
  * @see get_current_semester()
  * @return cadena de texto que representa la fecha de inicio del semestre actual
- * @deprecated En proceso de refactorización
+ * @deprecated Refactorizar llamados a esta función.
  */
 function get_current_semester_start(){
     global $DB;
@@ -108,7 +108,7 @@ function get_current_semester_start(){
  * Función que retorna la fecha de inicio del semestre actual en el formato #AÑO#MES
  * @see get_current_semester_start()
  * @return cadena de texto que representa la fecha de inicio del semestre actual con formato procesado
- * @deprecated En proceso de refactorización
+ * @deprecated Refactorizar llamados a esta función.
  */
 function get_current_semester_processed(){
     $sem = get_current_semester_start();
@@ -126,7 +126,7 @@ function get_current_semester_processed(){
  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>.
  * @return object that represents the current semester.
  * @return null if are no semesters registered.
- * @deprecated En proceso de refactorización
+ * @deprecated @see core_periods_get_current_period on core/periods/periods.php
  */
  
 function periods_get_current_semester(){
@@ -330,7 +330,7 @@ function periods_get_current_semester(){
  * Functions that returns all stored semesters.
  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @return array
- * @deprecated
+ * @deprecated @see core_periods_get_all_periods()
  */
 
 function periods_management_get_all_semesters(){
