@@ -69,8 +69,8 @@
      * @return cadena de texto que representa la fecha de inicio del semestre actual con formato procesado
      */
     function get_current_semester_processed(){
-        $sem = get_current_semester_start();
-        $semestre = $sem->fecha;
+        $sem = core_periods_get_current_period();
+        $semestre = $sem->fecha_inicio;
 
         $año = substr($semestre,0,4);
         $mes = substr($semestre,5,2);
