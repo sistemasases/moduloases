@@ -47,6 +47,25 @@ function core_periods_get_period_by_id( int $period_id ){
     return periods_get_period_by_id( $period_id );
 }
 
+
+/**
+ * Interface to periods_get_period_by_name
+ * 
+ * @author David Santiago Cortés <david.cortes@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see periods_get_period_by_name(...) in entrypoint.php
+ *  
+ * @param integer $period_name Period name.
+ * 
+ * @throws Exception If doesn't exist a period with the given name.
+ * 
+ * @return stdClass Period object
+ */
+function core_periods_get_period_by_name(string $period_name){
+    return periods_get_period_by_name($period_name);
+}
+
 /**
  * Interface to periods_get_all_periods
  * 
@@ -57,8 +76,8 @@ function core_periods_get_period_by_id( int $period_id ){
  * 
  * @return array List of periods.
  */
-function core_periods_get_all_periods(){
-    return periods_get_all_periods();
+function core_periods_get_all_periods($fecha_inicio=null, $fecha_fin=null){
+    return periods_get_all_periods($fecha_inicio, $fecha_fin);
 }
 
 /**
