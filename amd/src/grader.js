@@ -279,7 +279,7 @@ define([
        <modal 
         v-bind:name="modalName"
         v-bind:transition="'nice-modal-fade'"
-        :draggable="true"
+        :draggable="false"
         >
             <add-element-form v-on:addElementOK="$modal.hide(modalName)"></add-element-form>
             <close-modal-button v-bind:modalName="modalName"></close-modal-button>
@@ -295,7 +295,7 @@ define([
        template: `<modal
                     v-bind:name="modalName" 
                     v-bind:transition="'nice-modal-fade'"
-                    :draggable="true"
+                    :draggable="false"
                     >
                         <edit-category-form   v-on:updateCategoryOK="$modal.hide(modalName)"></edit-category-form>
                         <close-modal-button v-bind:modalName="modalName"></close-modal-button>
@@ -307,6 +307,24 @@ define([
            }
         }
     });
+
+/*    var ModalInitGrader = Vue.component('modal-init-grader', {
+        template: `
+       <modal
+        v-bind:name="modalName"
+        v-bind:transition="'nice-modal-fade'"
+        :draggable="false"
+        >
+            <init-grader-form v-on:initGraderOK="$modal.hide(modalName)"></init-grader-form>
+            <close-modal-button v-bind:modalName="modalName"></close-modal-button>
+       </modal>
+       `,
+        data: function() {
+            return {
+                modalName: modalsEnum.INIT_GRADER
+            }
+        }
+    });*/
 
     var AddElementForm = Vue.component('add-element-form',{
        template: `
@@ -1257,9 +1275,50 @@ define([
 
             app.$mount('#app');
 
+            app.$modal.show('dialog', {
+                title: 'Inicializar grader',
+                text: 'Este grader esta vacio, desea iniciar con una plantilla?',
+                buttons: [
+                    {
+                        title: 'Usar plantilla',
+                        handler: () => {
+                            for(i = 1; i <=10; i++){
+                                const item = {
+                                    itemname: "Item " + i,
+                                    aggregationcoef: 0,
+                                    parent_category: app.parentCategory.id,
+                                    courseid: app.course.id,
+                                };
+
+                                app.$store.dispatch(g_store.actions.ADD_ITEM, item)
+                                    .then(()=> {
+                                        this.$emit(graderVueEvents.ADD_ELEMENT_OK);
+                                        this.$toasted.show(
+                                            `Se ha añadido el item '${item.itemname}'`,
+                                            { duration : 3000, icon: 'fa fa-check'});
+                                    })
+                                    .catch(() => {
+                                        this.$toasted.show(
+                                            'Ha ocurrido un error guardando el nuevo item.',
+                                            {duration: 3000, theme: 'bubble'}
+                                        )
+                                    })
+                            }
+
+                            app.$router.go();
+                        }
+                    },
+                    {
+                        title: 'Calificador en blanco'
+                    }
+                ]
+            });
+
             $(document).ready(function() {
             });
         }
     };
 }
 );
+
+
