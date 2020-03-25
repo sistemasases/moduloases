@@ -50,7 +50,7 @@ function _core_security_get_action( $in ){
 }
 
 /**
- * Function that returns actions given a role_id.
+ * Function that returns actions given an role_id.
  *
  * @see get_db_manager() in query_manager.php
  *

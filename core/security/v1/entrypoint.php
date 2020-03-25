@@ -223,7 +223,7 @@ function secure_Call( $function_name, $args = null, $context = null, $user_id = 
  *
  * @return void
 */
-function secure_render( $data, $user_id = null, $singularizations = null, $time_context = null ){
+function secure_render( &$data, $user_id = null, $singularizations = null, $time_context = null ){
 	
 	if( is_null( $time_context ) ){
 		$time_context = time();
@@ -256,7 +256,7 @@ function secure_render( $data, $user_id = null, $singularizations = null, $time_
 					}
 					$actions = _core_security_get_role_actions( $user_rol['id_rol'], $type_id );
 					foreach ($actions as $key => $action) {
-						$alias_action = 'core_secure_render_' . $action['alias'];
+						$alias_action = $action['alias'];
 						$data->$alias_action = true;
 					}
 					
@@ -403,9 +403,8 @@ function secure_create_call($alias, $action_type, $name = NULL, $description = N
         
             $manager = get_db_manager();
 
-            $tablename = $DB_PREFIX . "talentospilos_acciones"; 
-	    
-	    $params = [
+            $tablename = $DB_PREFIX . "talentospilos_acciones";
+            $params = [
                 $alias, $name, $description, $_action_type['id'], $log
             ];
 
