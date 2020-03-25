@@ -97,7 +97,10 @@ $node->make_active();
 $record = new stdClass;
 $actions = authenticate_user_view($USER->id, $blockid);
 $record = $actions;
-core_secure_render($record, 1, ['id_instancia' => 657784, 'id_semestre' => 10]);
+
+// Security system, blocks defined on mustache files won't show if there is no call to core_secure_render
+// @see core_secure_render on core/security/security.php
+core_secure_render($record, $USER->id);
 
 $data_init = array();
 
