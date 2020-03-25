@@ -97,7 +97,6 @@ $node->make_active();
 $record = new stdClass;
 $actions = authenticate_user_view($USER->id, $blockid);
 $record = $actions;
-core_secure_render($record, 1, ['id_instancia' => 657784, 'id_semestre' => 10]);
 
 $data_init = array();
 
