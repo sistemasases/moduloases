@@ -256,7 +256,7 @@ function secure_render( &$data, $user_id = null, $singularizations = null, $time
 					}
 					$actions = _core_security_get_role_actions( $user_rol['id_rol'], $type_id );
 					foreach ($actions as $key => $action) {
-						$alias_action = $action['alias'];
+						$alias_action = 'core_secure_render_'.$action['alias'];
 						$data->$alias_action = true;
 					}
 					
