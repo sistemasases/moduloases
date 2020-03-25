@@ -223,7 +223,7 @@ function secure_Call( $function_name, $args = null, $context = null, $user_id = 
  *
  * @return void
 */
-function secure_render( &$data, $user_id = null, $singularizations = null, $time_context = null ){
+function secure_render( $data, $user_id = null, $singularizations = null, $time_context = null ){
 	
 	if( is_null( $time_context ) ){
 		$time_context = time();
