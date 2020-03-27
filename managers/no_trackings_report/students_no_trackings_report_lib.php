@@ -377,6 +377,15 @@ function get_array_students_with_trackings_count( $instance_id ){
         $student->cantidad_fichas_normales = $student_count_trackings[ $student->id ];
         $student->cantidad_fichas_inasistencias = $student_count_trackings_non_attendance [ $student->id ];
 
+
+        if (is_null($student->cantidad_fichas_normales)){
+            $student->cantidad_fichas_normales = 0;
+        }
+
+        if (is_null($student->cantidad_fichas_inasistencias)){
+            $student->cantidad_fichas_inasistencias = 0;
+        }
+
         if ($monitor_object) {
             $student->monitor_fullname = "$monitor_object->firstname $monitor_object->lastname";
             $student->id_dphpforms_monitor = '-1';
