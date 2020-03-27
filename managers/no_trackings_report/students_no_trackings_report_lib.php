@@ -290,7 +290,8 @@ function get_array_students_with_trackings_count( $instance_id ){
         $professional_object = $tracking_team->professional;
        
         $student->cantidad_fichas_normales = 0;
-        $student->cantidad_fichas_inasistencias = 0;        
+        $student->cantidad_fichas_inasistencias = 0;
+        $student->cantidad_fichas_totales = 0;        
 
 
         if ($monitor_object) {
@@ -386,6 +387,8 @@ function get_array_students_with_trackings_count( $instance_id ){
             $student->cantidad_fichas_inasistencias = 0;
         }
 
+        $student->cantidad_fichas_totales = $student->cantidad_fichas_normales + $student->cantidad_fichas_inasistencias;
+
         if ($monitor_object) {
             $student->monitor_fullname = "$monitor_object->firstname $monitor_object->lastname";
             $student->id_dphpforms_monitor = '-1';
@@ -455,6 +458,7 @@ function students_no_trackings_generate_datatable( $instance_id ){
     array_push($columns, array("title"=>"Apellidos", "name"=>"lastname", "data"=>"lastname"));              
     array_push($columns, array("title"=>"Cantidad de fichas", "name"=>"cantidad_seguimientos_normales", "data"=>"cantidad_fichas_normales"));
     array_push($columns, array("title"=>"Cantidad de inasistencias", "name"=>"cantidad_seguimientos_inasistencias", "data"=>"cantidad_fichas_inasistencias"));
+    array_push($columns, array("title"=>"Total de fichas", "name"=>"cantidad_seguimientos_totales", "data"=>"cantidad_fichas_totales"));
     array_push($columns, array("title"=>"Monitor".$monitores_options, "name"=>"monitor_fullname", "data"=>"monitor_fullname"));
     array_push($columns, array("title"=>"Practicante".$practicantes_options, "name"=>"trainee_fullname", "data"=>"trainee_fullname"));
     array_push($columns, array("title"=>"Profesional".$profesionales_options, "name"=>"professional_fullname", "data"=>"professional_fullname"));
