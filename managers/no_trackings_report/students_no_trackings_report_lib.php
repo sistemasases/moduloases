@@ -36,7 +36,7 @@ require_once( $CFG->dirroot.'/blocks/ases/managers/user_management/user_manageme
  * 
  */
 
-function students_no_trackings_get_students_count_trackings( $instance_id ){      
+function students_no_trackings_get_students_count_trackings_normal( $instance_id ){      
 
     $id_semester = core_periods_get_current_period()->id;
     $interval_semester = get_semester_interval($id_semester);
@@ -71,6 +71,23 @@ function students_no_trackings_get_students_count_trackings( $instance_id ){
         }
 
     }
+    return $count;
+}
+
+/**
+ * 
+ */
+
+function students_no_trackings_get_students_count_trackings_non_attendance( $instance_id ){      
+
+    $id_semester = core_periods_get_current_period()->id;
+    $interval_semester = get_semester_interval($id_semester);
+    
+    $list_inicio = explode(" ", $interval_semester->fecha_inicio);
+    $list_fin = explode(" ", $interval_semester->fecha_fin);
+    
+    $start_date = $list_inicio[0];
+    $end_date = $list_fin[0];    
 
     $xQuery = new stdClass();
     $xQuery->form = "inasistencia"; 
@@ -272,7 +289,8 @@ function get_array_students_with_trackings_count( $instance_id ){
         $trainee_object = $tracking_team->practicing;
         $professional_object = $tracking_team->professional;
        
-        $student->cantidad_fichas = 0;
+        $student->cantidad_fichas_normales = 0;
+        $student->cantidad_fichas_inasistencias = 0;        
 
 
         if ($monitor_object) {
@@ -299,7 +317,8 @@ function get_array_students_with_trackings_count( $instance_id ){
     }
 
     // users with trackings
-    $student_count_trackings = students_no_trackings_get_students_count_trackings( $instance_id );
+    $student_count_trackings = students_no_trackings_get_students_count_trackings_normal( $instance_id );    
+    $student_count_trackings_non_attendance = students_no_trackings_get_students_count_trackings_non_attendance( $instance_id );
 
     $sql_query = "SELECT usuario.id AS id, userm.username, usuario.num_doc AS cedula, userm.firstname, userm.lastname, user_ext.tracking_status FROM {user} AS userm
     INNER JOIN {talentospilos_user_extended} as user_ext  ON user_ext.id_moodle_user= userm.id
@@ -309,8 +328,19 @@ function get_array_students_with_trackings_count( $instance_id ){
     
     foreach( $student_count_trackings as $key => $student ){
          
-        $where .= "usuario.id = " . $key;
+        $where .= " usuario.id = " . $key;
         if( next( $student_count_trackings ) ){
+            $where .= " OR ";
+        }
+
+    }
+     
+    $where .= " OR ";   
+
+    foreach( $student_count_trackings_non_attendance as $key => $student ){       
+
+        $where .= " usuario.id = " . $key;
+        if( next( $student_count_trackings_non_attendance ) ){
             $where .= " OR ";
         }
 
@@ -344,7 +374,8 @@ function get_array_students_with_trackings_count( $instance_id ){
         $trainee_object = $tracking_team->practicing;
         $professional_object = $tracking_team->professional;
 
-        $student->cantidad_fichas = $student_count_trackings[ $student->id ];
+        $student->cantidad_fichas_normales = $student_count_trackings[ $student->id ];
+        $student->cantidad_fichas_inasistencias = $student_count_trackings_non_attendance [ $student->id ];
 
         if ($monitor_object) {
             $student->monitor_fullname = "$monitor_object->firstname $monitor_object->lastname";
@@ -413,7 +444,8 @@ function students_no_trackings_generate_datatable( $instance_id ){
     array_push($columns, array("title"=>"Cédula", "name"=>"cedula", "data"=>"cedula")); 
     array_push($columns, array("title"=>"Nombres", "name"=>"firstname", "data"=>"firstname"));
     array_push($columns, array("title"=>"Apellidos", "name"=>"lastname", "data"=>"lastname"));              
-    array_push($columns, array("title"=>"Cantidad de fichas", "name"=>"cantidad_seguimientos", "data"=>"cantidad_fichas"));
+    array_push($columns, array("title"=>"Cantidad de fichas", "name"=>"cantidad_seguimientos_normales", "data"=>"cantidad_fichas_normales"));
+    array_push($columns, array("title"=>"Cantidad de inasistencias", "name"=>"cantidad_seguimientos_inasistencias", "data"=>"cantidad_fichas_inasistencias"));
     array_push($columns, array("title"=>"Monitor".$monitores_options, "name"=>"monitor_fullname", "data"=>"monitor_fullname"));
     array_push($columns, array("title"=>"Practicante".$practicantes_options, "name"=>"trainee_fullname", "data"=>"trainee_fullname"));
     array_push($columns, array("title"=>"Profesional".$profesionales_options, "name"=>"professional_fullname", "data"=>"professional_fullname"));
