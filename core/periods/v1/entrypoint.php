@@ -83,7 +83,7 @@ function periods_get_period_by_name($period_name):stdClass
     $result = $DB->get_record_sql( $query );
     if( !property_exists($result, 'nombre') ) {
         throw new Exception(
-            "Period with name '$period_name' does not exist", 1
+            "Period with name '$period_name' does not exist", -1
         );
     }
     else {
