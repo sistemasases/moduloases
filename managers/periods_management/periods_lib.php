@@ -111,9 +111,12 @@ function get_current_semester_start(){
  * @see get_current_semester_start()
  * @return cadena de texto que representa la fecha de inicio del semestre actual con formato procesado
  * @deprecated Refactorizar llamados a esta función.
+ *
+ * @todo ask, this function is used on a BIG sql query @see course_and_teacher_report_lib loc48
  */
 function get_current_semester_processed(){
-    $sem = get_current_semester_start();
+    $current_period = core_get_current_period();
+    $sem = $current_period['fecha_inicio'];
     $semestre = $sem->fecha;
 
     $año = substr($semestre,0,4);
