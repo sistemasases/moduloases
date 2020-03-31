@@ -58,7 +58,7 @@ function render_monitor_groupal_trackings($groupal_tracking_v2){
 
 function get_tracking_grupal_monitor_current_semester($monitor_id, $semester_id){
 
-    $interval = get_semester_interval($semester_id);
+    $interval = core_periods_get_period_by_id($semester_id);
     $fecha_inicio = getdate(strtotime($interval->fecha_inicio));
     $fecha_fin = getdate(strtotime($interval->fecha_fin));
     $ano_semester  = $fecha_inicio['year'];
@@ -122,8 +122,25 @@ function get_tracking_by_monitor($id_monitor, $id_seg= null, $tipo, $idinstancia
     $current_semester = core_periods_get_current_period();
     $semester_interval = get_semester_interval($current_semester->id);
 
-    $sql_query= "";
-    $sql_query="SELECT seg.id as id_seg, to_timestamp(fecha) as fecha_formato,*  from {talentospilos_seguimiento} seg  where seg.id_monitor = ".$id_monitor." AND seg.tipo = '".$tipo."' AND seg.id_instancia=".$idinstancia." AND (fecha between ".strtotime($semester_interval->fecha_inicio)." and ".strtotime($semester_interval->fecha_fin).") AND status<>0 ORDER BY fecha_formato DESC;";
+    //$sql_query="SELECT seg.id as id_seg, to_timestamp(fecha) as fecha_formato,*  from {talentospilos_seguimiento} seg  where seg.id_monitor = ".$id_monitor." AND seg.tipo = '".$tipo."' AND seg.id_instancia=".$idinstancia." AND (fecha between ".strtotime($semester_interval->fecha_inicio)." and ".strtotime($semester_interval->fecha_fin).") AND status<>0 ORDER BY fecha_formato DESC;";
+    $sql_query = "
+		SELECT
+   			seg.id as id_seg,
+   			to_timestamp(fecha) as fecha_formato,
+   			* 
+		FROM	
+   			{talentospilos_seguimiento} seg 
+		WHERE
+   			seg.id_monitor = ". $ id_monitor." 
+   		AND seg.tipo = '".$tipo."' 
+   		AND seg.id_instancia = ". $ idinstancia." 
+   		AND 
+   		(
+      			fecha between ".strtotime( $ semester_interval -> fecha_inicio)." and ".strtotime( $ semester_interval -> fecha_fin)."
+   		)
+   		AND status <> 0 
+		ORDER BY
+   			fecha_formato DESC";
 
     if($id_seg != null){
       $sql_query = trim($sql_query,";");
