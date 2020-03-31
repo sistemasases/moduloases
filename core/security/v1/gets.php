@@ -161,7 +161,7 @@ function _core_security_get_action_type( $alias = null ){
 
 	$manager = get_db_manager();
 	$type = $manager( $query = "SELECT * FROM $tablename $alias_filter", $params, $extra = null );
-	return ( count( $type ) >= 1 ? $type : null );
+	return ( count( $type ) == 1 ? $type[0] : null );
 
 }
 

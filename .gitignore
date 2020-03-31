@@ -6,5 +6,3 @@ package-lock.json
 /nbproject/private/
 .vscode
 .idea
-tags
-vendor/latitude/latitude/src/functions.php
