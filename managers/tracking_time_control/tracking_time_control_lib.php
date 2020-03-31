@@ -61,13 +61,16 @@ function get_unreviewed_trackings($monitorid, $instanceid)
 {
     global $DB;
     $current_semester = core_periods_get_current_period();
-    
+    $semester_interval = get_semester_interval($current_semester->id);
+    $semester_interval->fecha_inicio = strtotime($semester_interval->fecha_inicio);
+    $semester_interval->fecha_fin = strtotime($semester_interval->fecha_fin);
+
     $fecha_inicio = strtotime($current_semester->fecha_inicio);
     $fecha_fin = strtotime($current_semester->fecha_fin);
 
     $sql_query = "SELECT * FROM {talentospilos_seguimiento} seguimiento
         INNER JOIN {talentospilos_seg_estudiante} seg ON seguimiento.id = seg.id_seguimiento
-        where id_instancia=$instanceid and id_monitor=$monitorid and revisado_profesional=0 and (fecha between '$fecha_inicio' and '$fecha_fin');";
+        where id_instancia=$instanceid and id_monitor=$monitorid and revisado_profesional=0 and (fecha between '$semester_interval->fecha_inicio' and '$semester_interval->fecha_fin');";
     $trackings = $DB->get_records_sql($sql_query);
     return $trackings;
 }
