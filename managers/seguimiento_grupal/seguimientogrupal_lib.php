@@ -120,7 +120,6 @@ function get_grupal_students($id_monitor, $idinstancia){
 function get_tracking_by_monitor($id_monitor, $id_seg= null, $tipo, $idinstancia){
     global $DB;
     $current_semester = core_periods_get_current_period();
-    $semester_interval = get_semester_interval($current_semester->id);
 
     //$sql_query="SELECT seg.id as id_seg, to_timestamp(fecha) as fecha_formato,*  from {talentospilos_seguimiento} seg  where seg.id_monitor = ".$id_monitor." AND seg.tipo = '".$tipo."' AND seg.id_instancia=".$idinstancia." AND (fecha between ".strtotime($semester_interval->fecha_inicio)." and ".strtotime($semester_interval->fecha_fin).") AND status<>0 ORDER BY fecha_formato DESC;";
     $sql_query = "
@@ -131,12 +130,12 @@ function get_tracking_by_monitor($id_monitor, $id_seg= null, $tipo, $idinstancia
 		FROM	
    			{talentospilos_seguimiento} seg 
 		WHERE
-   			seg.id_monitor = ". $ id_monitor." 
+   			seg.id_monitor = ". $id_monitor." 
    		AND seg.tipo = '".$tipo."' 
-   		AND seg.id_instancia = ". $ idinstancia." 
+   		AND seg.id_instancia = ". $idinstancia." 
    		AND 
    		(
-      			fecha between ".strtotime( $ semester_interval -> fecha_inicio)." and ".strtotime( $ semester_interval -> fecha_fin)."
+      			fecha between ".strtotime( $current_semester->fecha_inicio)." and ".strtotime( $current_semester->fecha_fin)."
    		)
    		AND status <> 0 
 		ORDER BY
