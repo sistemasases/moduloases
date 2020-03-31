@@ -115,7 +115,7 @@ function get_current_semester_start(){
  * @todo ask, this function is used on a BIG sql query @see course_and_teacher_report_lib loc48
  */
 function get_current_semester_processed(){
-    $current_period = core_get_current_period();
+    $current_period = core_periods_get_current_period();
     $sem = $current_period['fecha_inicio'];
     $semestre = $sem->fecha;
 
