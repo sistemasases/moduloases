@@ -242,6 +242,7 @@ function secure_render( &$data, $user_id = null, $singularizations = null, $time
 		}else{
 
 			if( _core_security_user_exist( $user_id ) ){
+
 				$user_rol = _core_security_get_user_rol( $user_id, $time_context, $singularizations );
 				
 				if( $user_rol ){
@@ -256,10 +257,10 @@ function secure_render( &$data, $user_id = null, $singularizations = null, $time
 					}
 					$actions = _core_security_get_role_actions( $user_rol['id_rol'], $type_id );
 					foreach ($actions as $key => $action) {
-						$alias_action = 'core_secure_render_'.$action['alias'];
+						$alias_action = $action['alias'];
 						$data->$alias_action = true;
 					}
-					
+
 				}else{
 					return array(
 						'status' => -1,
@@ -558,15 +559,17 @@ function secure_create_role( $alias, $father_role = -1, $name = NULL, $descripti
  * @return integer|NULL 1 if okay, null if  assignation already exist.
  */
 function secure_assign_role_to_user( $user_id, $role, $start_datetime = NULL, $end_datetime = NULL, $singularizer = NULL, $use_alternative_interval = false, $alternative_interval = NULL ){
-	
+
     if( ( $use_alternative_interval === false && $start_datetime === NULL ) ||
         ( $use_alternative_interval === false && $end_datetime === NULL ) ){
         return null;
     }else{
         if( ($start_datetime >= $end_datetime) ){ return null; }
-    }   
+    }
+    
     $_user = get_db_records( "user", ['id' => $user_id] );
     $_role = _core_security_get_role( $role ); // Rol at the master system (Secutiry Core)
+    
     if( $_user && $_role ){
        
         if( is_null(_core_security_get_user_rol( $user_id, $start_datetime, $singularizer )) ){
@@ -575,7 +578,7 @@ function secure_assign_role_to_user( $user_id, $role, $start_datetime = NULL, $e
             
 	            //Validation if the role exist at the previous system role
 	            if ( _core_security_get_previous_system_role( $_role['alias'] ) ){
-			    /*Asignar en sistema previo*/
+	                /*Asignar en sistema previo*/
 	                secure_assign_role_to_user_previous_system( $user_id, $_role['alias'], $singularizer);
 	            }
 	            
