@@ -41,7 +41,6 @@ require_once dirname(__FILE__) .'/../periods_management/periods_lib.php';
         }
     }
 
-
     $columns = array();
     array_push($columns, array("title"=>"Fecha", "name"=>"fecha", "data"=>"fecha"));
     array_push($columns, array("title"=>"Número horas", "name"=>"hours", "data"=>"hours"));
