@@ -98,6 +98,10 @@ $record = new stdClass;
 $actions = authenticate_user_view($USER->id, $blockid);
 $record = $actions;
 
+// Security system, blocks defined on mustache files won't show if there is no call to core_secure_render
+// @see core_secure_render on core/security/security.php
+core_secure_render($record, $USER->id);
+
 $data_init = array();
 
 $rol = lib_get_rol_name_ases($USER->id, $blockid);
