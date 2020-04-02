@@ -42,7 +42,7 @@ if(isset($_POST['type'])&&$_POST['type']=="assign_student")
     $role =get_role_id('practicante_ps')->id;
     $practicant = $_POST['practicant'];
     $monitor = $_POST['monitor'];
-    $semester =get_current_semester()->max;
+    $semester = core_periods_get_current_period()->id;
     $student_username= $_POST['student'];
     $instance = $_POST['instance'];
 

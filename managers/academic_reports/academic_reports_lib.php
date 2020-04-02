@@ -44,7 +44,7 @@ require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib
 function studentsWithLoses($instance){
 	global $DB;
 
-	$semestre = get_current_semester();
+	$semestre = core_periods_get_current_period();
     $sem = $semestre->nombre;
 
     $año = substr($sem,0,4);
@@ -183,9 +183,9 @@ function get_loses_by_student($username){
 function get_courses_for_report($user_id){
     global $DB;
     
-    $semestre_object = get_current_semester();
+    $semestre_object = core_periods_get_current_period();
     $sem = $semestre_object->nombre;
-    $id_semestre = $semestre_object->max;
+    $id_semestre = $semestre_object->id;
     $año = substr($sem,0,4);
 
     if(substr($sem,4,1) == 'A'){
@@ -292,8 +292,8 @@ function get_courses_report($user_id){
 function get_info_course_for_reports($course_id, $user_id){
     global $DB;
 
-	$semestre_object = get_current_semester();
-	$id_semestre = $semestre_object->max;
+	$semestre_object = core_periods_get_current_period();
+	$id_semestre = $semestre_object->id;
 
 
     $intersect = "";

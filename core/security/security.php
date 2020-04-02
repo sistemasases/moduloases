@@ -366,4 +366,18 @@ function core_secure_find_key( string $explicit_hexed_rule = NULL ){
     return secure_find_key( $explicit_hexed_rule );
 }
 
+/**
+ * Interface to secure_generate_image
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ *
+ * @see  secure_generate_image( ... ) in entrypoint.php
+ * 
+ * @return string BLOBbase64.
+ */
+function core_secure_generate_image( int $value, int $height = 4, $total_pos = 80, $step_size = 10, $separator_size = 2 ){
+    return secure_generate_image( $value, $height, $total_pos, $step_size, $separator_size );
+}
+
 ?>

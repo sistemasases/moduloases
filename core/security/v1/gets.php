@@ -252,7 +252,7 @@ function _core_security_get_user_rol( $user_id, $time_context = null, $singulari
                  $valid_singularization = false;
             }      
         }
-                        
+
         if( ($time_context >= $rol->start) && ($time_context <= $rol->end) && $valid_singularization ){
             return $u_rol;
         }

@@ -28,9 +28,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+require_once ((__DIR__) . '/../../core/module_loader.php');
 require_once dirname(__FILE__) . '/../../../../config.php';
 require_once $CFG->dirroot . '/blocks/ases/managers/periods_management/periods_lib.php';
 
+module_loader('periods');
 /**
  * Gets all academic programs that are stored on talentospilos_programa table
  *
@@ -138,8 +140,8 @@ function get_role_ases($id)
 {
     global $DB;
 
-    $semestre = get_current_semester();
-    $id_semestre = $semestre->max;
+    $semestre = core_periods_get_current_period();
+    $id_semestre = $semestre->id;
 
     $query_role = "SELECT rol.nombre_rol  FROM {talentospilos_rol} rol INNER JOIN {talentospilos_user_rol} uRol ON rol.id = uRol.id_rol WHERE uRol.id_usuario = $id AND uRol.id_semestre = $id_semestre";
     $rol = $DB->get_record_sql($query_role)->nombre_rol;
@@ -164,7 +166,7 @@ function lib_get_rol_name_ases($user_id, $instance_id, $semester_id = null )
     global $DB;
 
     if( !$semester_id ){
-        $semester_id = periods_get_current_semester()->id;
+        $semester_id = core_periods_get_current_period()->id;
     }
 
     $query_role = "SELECT rol.nombre_rol  
@@ -240,8 +242,8 @@ function get_asigned_by_monitor($id)
 {
     global $DB;
 
-    $semestre = get_current_semester();
-    $id_semestre = $semestre->max;
+    $semestre = core_periods_get_current_period();
+    $id_semestre = $semestre->id;
 
     $query = "SELECT user_moodle.username, user_moodle.firstname, user_moodle.lastname
               FROM {user} AS user_moodle
@@ -266,8 +268,8 @@ function get_asigned_by_practicante($id)
 {
     global $DB;
 
-    $semestre = get_current_semester();
-    $id_semestre = $semestre->max;
+    $semestre = core_periods_get_current_period();
+    $id_semestre = $semestre->id;
 
     $query = "SELECT rol.id_usuario
               FROM {talentospilos_user_rol} AS rol
@@ -297,8 +299,8 @@ function get_asigned_by_profesional($id)
 {
     global $DB;
 
-    $semestre = get_current_semester();
-    $id_semestre = $semestre->max;
+    $semestre = core_periods_get_current_period();
+    $id_semestre = $semestre->id;
 
     $query = "SELECT rol.id_usuario
               FROM {talentospilos_user_rol} AS rol
@@ -325,8 +327,8 @@ function get_asigned_by_dir_prog($id)
 {
     global $DB;
 
-    $semestre = get_current_semester();
-    $id_semestre = $semestre->max;
+    $semestre = core_periods_get_current_period();
+    $id_semestre = $semestre->id;
 
     $query_program = "SELECT id_programa FROM {talentospilos_user_rol} WHERE id_usuario = $id AND id_semestre = $id_semestre";
     $id_programa = $DB->get_record_sql($query_program)->id_programa;
@@ -353,8 +355,8 @@ function get_all_student($instance_id)
 {
     global $DB;
 
-    $semestre = get_current_semester();
-    $id_semestre = $semestre->max;
+    $semestre = core_periods_get_current_period();
+    $id_semestre = $semestre->id;
 
     $query = "SELECT DISTINCT user_moodle.username, user_moodle.firstname, user_moodle.lastname
               FROM {user} AS user_moodle

@@ -60,8 +60,8 @@ function get_info_monitor($id_moodle)
 function get_unreviewed_trackings($monitorid, $instanceid)
 {
     global $DB;
-    $current_semester = get_current_semester();
-    $semester_interval = get_semester_interval($current_semester->max);
+    $current_semester = core_periods_get_current_period();
+    $semester_interval = get_semester_interval($current_semester->id);
     $semester_interval->fecha_inicio = strtotime($semester_interval->fecha_inicio);
     $semester_interval->fecha_fin = strtotime($semester_interval->fecha_fin);
     $sql_query = "SELECT * FROM {talentospilos_seguimiento} seguimiento

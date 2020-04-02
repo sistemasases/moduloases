@@ -104,7 +104,7 @@ $table="";
 $table_periods="";
 
 $periods = get_semesters();
-$semester_id = get_current_semester()->max;
+$semester_id = core_periods_get_current_period()->id;
 
 // Getting last semester date range 
 $intervalo_fechas[0] = reset($periods)->fecha_inicio;

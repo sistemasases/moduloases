@@ -65,8 +65,8 @@ if (isset($_POST['type']) && $_POST['type'] == "user_specific_counting" && isset
     
     
     
-    $current_semester = get_current_semester();
-    $role = get_id_rol_v2($user, $_POST['instance'], $current_semester->max);
+    $current_semester = core_periods_get_current_period();
+    $role = get_id_rol_v2($user, $_POST['instance'], $current_semester->id);
     $role_name = get_name_rol($role);
     $array_final = null;
 
@@ -89,8 +89,8 @@ if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get
 
     $html_tracking_groupal = "";
     $student_code = $_POST['student_code'];
-    $current_semester = get_current_semester();
-    $array_groupal_trackings_dphpforms = get_tracking_grupal_monitor_current_semester($student_code, $current_semester->max);
+    $current_semester = core_periods_get_current_period();
+    $array_groupal_trackings_dphpforms = get_tracking_grupal_monitor_current_semester($student_code, $current_semester->id);
     $html_tracking_groupal.= render_monitor_groupal_trackings($array_groupal_trackings_dphpforms);
     echo json_encode($html_tracking_groupal);
     }
@@ -110,8 +110,8 @@ if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get
         $student_code = explode("-", $_POST['student_code']);
         $ases_student = get_ases_user_by_code($student_code[0]);
         $student_id = $ases_student->id;
-        $current_semester = get_current_semester();
-        $array_peer_trackings_dphpforms = get_tracking_current_semesterV3('student',$student_code[0], $current_semester->max);
+        $current_semester = core_periods_get_current_period();
+        $array_peer_trackings_dphpforms = get_tracking_current_semesterV3('student',$student_code[0], $current_semester->id);
         $array = render_student_trackingsV2($array_peer_trackings_dphpforms);
         echo json_encode($array);
 
@@ -122,10 +122,10 @@ if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get
     // Get Monitors of practicant
 
     $monitor_id = search_user($_POST['monitor_code']);
-    $current_semester = get_current_semester();
+    $current_semester = core_periods_get_current_period();
     $students_by_monitor = get_students_of_monitor($monitor_id->id, $_POST['instance']);
     $array = render_monitor_new_form($students_by_monitor);
-    $array_groupal_trackings_dphpforms = get_tracking_grupal_monitor_current_semester($monitor_id->id, $current_semester->max);
+    $array_groupal_trackings_dphpforms = get_tracking_grupal_monitor_current_semester($monitor_id->id, $current_semester->id);
     $array.= render_groupal_tracks_monitor_new_form($array_groupal_trackings_dphpforms, $monitor_id->id);
 
     echo json_encode($array);
@@ -135,7 +135,7 @@ if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get
 
     // Get practicant of professional
 
-    $current_semester= get_current_semester();
+    $current_semester= core_periods_get_current_period();
 
     $practicant_id = search_user($_POST['practicant_code']);
     $monitors_of_pract = get_monitors_of_pract($practicant_id->id, $_POST['instance']);
