@@ -101,8 +101,8 @@ if(isset($_POST['risk_fields'])){
 if(isset($_POST['status_fields'])){
 
     $array_statuses = array(
-        'seguimiento' => 'SEGUIMIENTO',
-        'sinseguimiento' => 'SIN SEGUIMIENTO'
+        'seguimiento' => 'ACTIVO',
+        'sinseguimiento' => 'INACTIVO'
     );
 
     foreach($_POST['status_fields'] as $status_field){

@@ -52,15 +52,15 @@
         </div>
 
         <!-- Columna de estados -->
-        <div class="col-sm-2" hidden>
+        <div class="col-sm-2">
             <fieldset id="status_fields">
                 <legend><input type="checkbox" id="status_fields_check"> Estados</legend>
                 <div class="checkbox">
                     <input type="checkbox" name="status_fields[]" value="ases_status"> ASES
                 </div>
-                <div class="checkbox">
-                    <input type="checkbox" name="status_fields[]" value="icetex_status"> ICETEX
-                </div>
+               {{!  <div class="checkbox">
+                    <input type="checkbox" name="status_fields[]" value="icetex_status" hidden> ICETEX
+                </div> }}
                 <div class="checkbox">
                     <input type="checkbox" name="status_fields[]" value="academic_program_status"> Registro académico
                 </div>
@@ -68,7 +68,7 @@
         </div>
 
         <!-- Columna de programa académico -->
-        <div class="col-sm-3 col-md-3">
+        <div class="col-sm-2 col-md-2">
             <fieldset id="academic_fields">
                 <legend><input type="checkbox" id="academic_fields_check"> Académico</legend>
                 <div class="checkbox">
@@ -93,7 +93,7 @@
         </div>
 
         <!-- Columna de asignaciones -->
-        <div class="col-sm-3 col-md-3">
+        <div class="col-sm-2 col-md-2">
             <fieldset id="assignments_check_fieldset">
                 <legend><input type="checkbox" id="assignment_fields_check"> Asignaciones</legend>
                 <div class="checkbox">
@@ -109,7 +109,7 @@
         </div>
 
         <!-- Columna de riesgos -->
-        <div class="col-sm-3 col-md-3" id="risk_fields">
+        <div class="col-sm-2 col-md-2" id="risk_fields">
             <fieldset id="riesgo">
                 <legend><input type="checkbox" id="risk_fields_check"> Riesgos</legend>
                 {{{risks_checks}}}
