@@ -511,7 +511,7 @@ function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instanc
     $fecha_fin = null;
 
     $semester_id = $semester->id;
-    $interval = get_semester_interval($semester->id);
+    $interval = core_periods_get_period_by_id($semester->id); //period object.
     $fecha_inicio = getdate(strtotime($interval->fecha_inicio));
     $fecha_fin = getdate(strtotime($interval->fecha_fin));
 
