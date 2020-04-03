@@ -8,3 +8,4 @@ package-lock.json
 .idea
 tags
 */tags
+vendor/latitude/latitude/src/functions.php
