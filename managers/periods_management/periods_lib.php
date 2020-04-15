@@ -155,7 +155,8 @@ function periods_get_current_semester(){
  * @see get_semester_interval($id)
  * @param $id ---> semester's id
  * @return object that represents the semester 
- * @deprecated En proceso de refactorización
+ * @deprecated
+ * @todo delete this function, no other calls to it.
  */
  
  function get_semester_interval($id){
@@ -174,6 +175,7 @@ function periods_get_current_semester(){
  * @see get_all_semesters()
  * @return array that contains every semester registered on the DataBase
  * @deprecated @see core_periods_get_all_periods on core/periods/periods.php
+ * @todo delete this function, no other calls to it.
  */
 
  function get_all_semesters(){

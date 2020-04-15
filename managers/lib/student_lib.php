@@ -692,7 +692,7 @@ function student_lib_get_full_risk_status( $ases_id ){
      */
     $get_semester = function( $_date ){
 
-        $semesters = periods_management_get_all_semesters();
+        $semesters = core_periods_get_all_periods(); 
 
         foreach ($semesters as $key => $semester) {
 

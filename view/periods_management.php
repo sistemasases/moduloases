@@ -56,7 +56,7 @@ if(!consult_instance($blockid)){
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 
 //Getting all semesters
-$semesters = get_all_semesters(); 
+$semesters = core_periods_get_all_periods(); 
 
 $table_semesters = '';
 $table_semesters .= '<option value=""> --------------------------------- </option>';
