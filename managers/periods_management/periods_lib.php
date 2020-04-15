@@ -197,6 +197,7 @@ function periods_get_current_semester(){
  * @param $idSemester -> semester's id
  * @return object that represents certain information about the specific semester
  * @deprecated @see core_periods_get_period_by_id on core/periods/periods.php
+ * @todo delete.
  */
 
 
