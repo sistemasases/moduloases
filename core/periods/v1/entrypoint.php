@@ -160,4 +160,36 @@ function periods_check_if_exist( int $period_id ): bool
     
 }
 
+/**
+ * Function that updates a given period's information.
+ *
+ * @author David S. Cortés <david.cortes@correounivalle.edu.co>
+ * @since 1.0.0
+ *
+ * @param Array $period_info New information.
+ * @param integer $period_id Period ID.
+ *
+ * @todo test that it works.
+ * @return bool True if succesfull, False otherwise.
+ *
+ * @throws Exception's stacktrace.
+ */
+function periods_update_period( $period_info, $period_id ){
+	global $DB;
+    	global $PERIODS_TABLENAME;
+	
+	try {
+		$period = new stdClass();
+		
+		$period->id = $period_id;
+		$period->nombre = $period_info[1];
+		$period->fecha_inicio = $period_info[2];
+		$period->fecha_fin = $period_info[3];
+		
+		$result = $DB->update_record($PERIODS_TABLENAME, $period);
+		return $result;
+	} catch (Exception $ex){
+		return $ex->getMessage();
+	}
+}
 ?>

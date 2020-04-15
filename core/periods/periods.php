@@ -110,4 +110,21 @@ function core_periods_get_last_period(){
 function core_periods_check_if_exist( int $period_id ){
     return periods_check_if_exist( $period_id );
 }
+
+/**
+ * Interface to periods_update_period
+ *
+ * @author David S. Cortés <david.cortes@correounivalle.edu.co>
+ * @since 1.0.0
+ *
+ * @see periods_update_period(...) in entrypoint.php
+ *
+ * @param Array $period_info
+ * @param integer $period_id
+ *
+ * @return bool True if operation ended succesfully, False otherwise
+ */
+function core_periods_update_period( $period_info, $period_id ){
+	return periods_update_period( $period_info, (int)$period_id);
+}	
 ?>
