@@ -25,12 +25,15 @@
  */
 
 	require_once(dirname(__FILE__).'/../../../../config.php');
-	require_once('periods_lib.php');
+	require_once(dirname(__FILE__).'/../../core/module_loader.php');
+	//require_once('periods_lib.php');
+
+	module_loader("periods");
 
 	if(isset($_POST['dat'])){
 
-		$info_semester = core_periods_get_period_by_id($_POST['dat']);
-		
+		$info_semester = core_periods_get_period_by_id((int)$_POST['dat']);
+		unset($info_semester->id);
 		setlocale(LC_TIME, "es_CO");     
 		
 		$info_semester->fecha_inicio = strftime("%d %B %Y", strtotime($info_semester->fecha_inicio));
