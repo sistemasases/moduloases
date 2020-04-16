@@ -124,7 +124,7 @@ function core_periods_check_if_exist( int $period_id ){
  *
  * @return bool True if operation ended succesfully, False otherwise
  */
-function core_periods_update_period( $period_info, $period_id ){
-	return periods_update_period( $period_info, (int)$period_id);
+function core_periods_update_period( $period_info, int $period_id ){
+	return periods_update_period( $period_info, $period_id);
 }	
 ?>

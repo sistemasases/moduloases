@@ -189,7 +189,7 @@ function periods_update_period( $period_info, $period_id ){
 		$result = $DB->update_record($PERIODS_TABLENAME, $period);
 		return $result;
 	} catch (Exception $ex){
-		return $ex->getMessage();
+		throw new Exception($ex);
 	}
 }
 ?>
