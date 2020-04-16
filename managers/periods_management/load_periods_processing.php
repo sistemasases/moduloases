@@ -33,11 +33,20 @@
 		array_push($columns, array("title"=>"Nombre", "name"=>"nombre", "data"=>"nombre"));
 		array_push($columns, array("title"=>"Fecha de Inicio", "name"=>"fecha_inicio", "data"=>"fecha_inicio"));
 		array_push($columns, array("title"=>"Fecha de Finalización", "name"=>"fecha_fin", "data"=>"fecha_fin"));
+		
+		$all_periods = core_periods_get_all_periods();
+		setlocale(LC_TIME, "es_CO");
+
+		foreach ( $all_periods as $period ){
+          		$all_periods[$period->id]->fecha_inicio = strftime("%d %B %Y", strtotime($all_periods[$period->id]->fecha_inicio));
+          		$all_periods[$period->id]->fecha_fin = strftime("%d %B %Y", strtotime($all_periods[$period->id]->fecha_fin));                             
+     		}
+		$all_periods = array_reverse($all_periods);
 
 		$data = array(
 					"bsort" => false,
 					"columns" => $columns,
-					"data" => get_all_semesters_table(),
+					"data" => $all_periods,
 					"language" => 
                 	 array(
                     	"search"=> "Buscar:",

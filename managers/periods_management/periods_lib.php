@@ -257,6 +257,7 @@ function periods_get_current_semester(){
  * @see get_all_semesters_table()
  * @return array
  * @deprecated
+ * @todo delete, no more calls to this function.
  */
  
  function get_all_semesters_table(){
