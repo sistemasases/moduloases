@@ -34,7 +34,7 @@
 
 		$semesterInfo = array($_POST['id'], $_POST['name'], $_POST['beginning'], $_POST['ending']);
 
-		$success = core_periods_update_period($semesterInfo, (int)$_POST['id']);
+		$success = core_periods_update_period($semesterInfo, $_POST['id']);
 
 		if(!$success) {
 		 	echo "Ocurrió un error al tratar de actualizar la información";
