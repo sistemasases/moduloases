@@ -169,24 +169,22 @@ function periods_check_if_exist( int $period_id ): bool
  * @param Array $period_info New information.
  * @param integer $period_id Period ID.
  *
- * @todo test that it works.
- * @return bool True if succesfull, False otherwise.
+ * @return True if operation was successful, false otherwise.
  *
- * @throws Exception's stacktrace.
+ * @throws Exception.
  */
 function periods_update_period( $period_info, $period_id ){
 	global $DB;
     	global $PERIODS_TABLENAME;
-	
 	try {
 		$period = new stdClass();
 		
-		$period->id = $period_id;
+		$period->id = (int)$period_id;
 		$period->nombre = $period_info[1];
 		$period->fecha_inicio = $period_info[2];
 		$period->fecha_fin = $period_info[3];
 		
-		$result = $DB->update_record($PERIODS_TABLENAME, $period);
+		$result = $DB->update_record(substr($PERIODS_TABLENAME,4), $period);
 		return $result;
 	} catch (Exception $ex){
 		throw new Exception($ex);
