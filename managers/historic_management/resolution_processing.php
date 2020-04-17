@@ -110,7 +110,7 @@ if (isset($_FILES['file'])) {
             $nombre_semestre = $data[$associativeTitles['nombre_semestre']];
             if ($nombre_semestre != '') {
 
-                $id_semestre = get_semester_id_by_name($nombre_semestre);
+                $id_semestre = (core_periods_get_period_by_name($nombre_semestre))->id;
                 if (!$id_semestre) {
                     $isValidRow = false;
                     array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['nombre_semestre'] + 1), 'nombre_semestre', 'No existe ningun semestre registrado con el nombre: ' . $nombre_semestre]);

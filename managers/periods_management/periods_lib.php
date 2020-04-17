@@ -317,6 +317,7 @@ function periods_get_current_semester(){
   * @param $semester_name -> name of the semester to be found
   * @deprecated
   * @return Integer
+  * @todo delete.
   */
  function get_semester_id_by_name($semester_name){
     global $DB;
