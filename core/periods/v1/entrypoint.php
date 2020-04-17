@@ -70,7 +70,7 @@ function periods_get_period_by_id( int $period_id ):stdClass
  * @throws Exception if semester does not exists
  * @return stdClass Period object 
  */
-function periods_get_period_by_name($period_name):stdClass
+function periods_get_period_by_name($period_name)
 {
     global $DB;
     global $PERIODS_TABLENAME;
