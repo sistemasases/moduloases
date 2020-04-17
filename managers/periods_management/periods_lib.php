@@ -132,6 +132,7 @@ function get_current_semester_processed(){
  * @return object that represents the current semester.
  * @return null if are no semesters registered.
  * @deprecated @see core_periods_get_current_period on core/periods/periods.php
+ * @todo check if there aren't more calls to this function.
  */
  
 function periods_get_current_semester(){
@@ -293,7 +294,7 @@ function periods_get_current_semester(){
  * @param $beginning_date -> semester's starting date
  * @param $ending_date -> semester's ending date
  * @return number
- * @deprecated
+ * @deprecated @see core_periods_create_period
  */
 
  function create_semester($name, $beginning_date, $ending_date){

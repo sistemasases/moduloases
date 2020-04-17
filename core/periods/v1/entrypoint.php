@@ -82,9 +82,7 @@ function periods_get_period_by_name($period_name):stdClass
     
     $result = $DB->get_record_sql( $query );
     if( !property_exists($result, 'nombre') ) {
-        throw new Exception(
-            "Period with name '$period_name' does not exist", -1
-        );
+       return false; 
     }
     else {
         return $result;
@@ -190,4 +188,37 @@ function periods_update_period( $period_info, $period_id ){
 		throw new Exception($ex);
 	}
 }
-?>
+
+/**
+ * Creates a new period.
+ *
+ * @param string $name. Period's name.
+ * @param time $fecha_inicio. Period's start date.
+ * @param time $fecha_fin. Period's end date.
+ *
+ * @return stdClass with new period.
+ * @throws Exception if there is an existing period with the same name.
+ */
+function periods_create_period( $nombre, $fecha_inicio, $fecha_fin ){
+	global $DB;
+	global $PERIODS_TABLENAME;
+
+	try {
+		if( !periods_get_period_by_name($nombre) ){
+			$new_period = new stdClass();
+			$new_period->nombre = $nombre;
+			$new_period->fecha_inicio = $fecha_inicio;
+			$new_period->fecha_fin = $fecha_fin;
+
+			$result = $DB->insert_record(substr($PERIODS_TABLENAME, 4), $new_period);
+
+			return $result;
+		}
+		else {
+			Throw new Exception("Ya existe periodo con ese nombre", -1);
+		}
+	}
+	catch ( Exception $ex ){
+		return $ex->getMessage();
+	}
+}

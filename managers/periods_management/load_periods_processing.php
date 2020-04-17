@@ -25,8 +25,9 @@
  */
 
 	require_once(dirname(__FILE__). '/../../../../config.php');
-	require_once('periods_lib.php');
+	require_once(dirname(__FILE__).'/../../core/module_loader.php');
 
+	module_loader("periods");
 	if(isset($_POST['load']) && $_POST['load'] == 'loadSemester'){
 		$columns = array();
 		array_push($columns, array("title"=>"Código", "name"=>"id", "data"=>"id"));

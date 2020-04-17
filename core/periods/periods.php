@@ -126,5 +126,19 @@ function core_periods_check_if_exist( int $period_id ){
  */
 function core_periods_update_period( $period_info, $period_id ){
 	return periods_update_period( $period_info, $period_id);
-}	
+}
+
+/**
+ * Inteface to periods_create_period
+ *
+ * @param time $fecha_inicio. Period's start date.
+ * @param time $fecha_fin. Period's end date.
+ * @param string $nombre. Period's name.
+ *
+ * @return stdClass of new period.
+ * @throws Exception if there is already a period with the given name.
+ */
+function core_periods_create_period( $nombre, $fecha_inicio, $fecha_fin ){
+	return periods_create_period($nombre, $fecha_inicio, $fecha_fin);
+}
 ?>
