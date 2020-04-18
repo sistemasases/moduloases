@@ -342,6 +342,7 @@ function periods_get_current_semester(){
  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @return array
  * @deprecated @see core_periods_get_all_periods()
+ * @todo delete.
  */
 
 function periods_management_get_all_semesters(){
