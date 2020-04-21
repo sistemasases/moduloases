@@ -53,7 +53,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  * @param string $end_date With postgres fortmat YYYY-MM-DD
  * @return int $to_return id_semester
  * @deprecated Refactorizar llamados a esta función.
- * @todo This function is called on some .js files, ask.
+ * @todo Refactor last call.
  */
 
 function periods_management_get_current_semester_by_apprx_interval( $start_date, $end_date ){

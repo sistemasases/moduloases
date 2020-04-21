@@ -67,8 +67,7 @@ function periods_get_period_by_id( int $period_id ):stdClass
  * Returns a period given its name.
  * 
  * @param string $period_name 
- * @throws Exception if semester does not exists
- * @return stdClass Period object 
+ * @return bool, true if there's a period with given name, false otherwise. 
  */
 function periods_get_period_by_name($period_name)
 {
