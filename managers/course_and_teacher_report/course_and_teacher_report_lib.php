@@ -1,6 +1,7 @@
 <?php
 
 
+require_once(__DIR__ . '/../../core/module_loader.php');
 require_once(__DIR__ . '/../../../../config.php');
 require_once (__DIR__ . '/../jquery_datatable/jquery_datatable_lib.php');
 require_once (__DIR__ . '/../../managers/periods_management/periods_lib.php');
@@ -10,6 +11,7 @@ require_once (__DIR__ . '/../course/course_lib.php');
 
 require_once(__DIR__.'/../../vendor/autoload.php');
 
+module_loader("periods");
 
 use Latitude\QueryBuilder\Query\SelectQuery;
 use function Latitude\QueryBuilder\{ alias, on, field, QueryInterface, criteria, literal };

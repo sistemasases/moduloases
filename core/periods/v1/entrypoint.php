@@ -88,6 +88,20 @@ function periods_get_period_by_name($period_name)
     }
 }
 
+/**
+ * Returns a period given its start and end dates
+ *
+ * @param time $fecha_inicio
+ * @param time $fecha_fin
+ *
+ * @return stdClass
+ * @throws Exception if there's no period with those dates.
+ */
+function periods_get_period_by_date($fecha_inicio, $fecha_fin):stdClass
+{
+	//@todo
+}
+
 /** 
  * Function that return all periods.
  * 
@@ -96,21 +110,21 @@ function periods_get_period_by_name($period_name)
  * 
  * @return array List of periods.
  */
-function periods_get_all_periods($fecha_inicio=null, $fecha_fin=null):array
+function periods_get_all_periods($fecha_inicio=null, $fecha_fin=null, $relax_query=false):array
 {
     global $DB;
-    global $PERIODS_TABLENAME;
-    
-    if (isset($fecha_inicio, $fecha_fin)) {
-        $query = "SELECT * 
-        FROM $PERIODS_TABLENAME
-        WHERE fecha_inicio = $fecha_inicio 
-        and fecha_fin = $fecha_fin";
+    global $PERIODS_TABLENAME; 
+
+    $query = "SELECT * FROM $PERIODS_TABLENAME ";
+
+    if ( isset($fecha_inicio, $fecha_fin) and $relax_query ){
+        $query .= "WHERE fecha_inicio >= $fecha_inicio AND fecha_fin <= $fecha_fin";
     }
-    else {
-        $query = "SELECT * 
-        FROM $PERIODS_TABLENAME
-        ORDER BY fecha_fin DESC";
+    else if( isset($fecha_inicio, $fecha_fin) ){
+	    $query .= "WHERE fecha_inicio = $fecha_inicio AND fecha_fin = $fecha_fin";
+    }
+    else{
+        $query .= "ORDER BY fecha_fin DESC";
     }
     
     return $DB->get_records_sql( $query );

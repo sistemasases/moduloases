@@ -24,10 +24,13 @@
  */
 
 require_once dirname(__FILE__) . '/../../../../config.php';
+require_once dirname(__FILE__) . '/../../core/module_loader.php';
 require_once '../MyException.php';
 require_once '../mass_management/massmanagement_lib.php';
 require_once '../historic_management/historic_academic_lib.php';
 require_once '../historic_management/historic_icetex_lib.php';
+
+module_loader("periods");
 
 if (isset($_FILES['file'])) {
 
