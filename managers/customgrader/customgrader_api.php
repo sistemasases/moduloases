@@ -84,7 +84,7 @@ if( isset( $input->function ) ){
             'levels' => $levels,
             'other_grades'=> get_student_grades($editedItemResponse->courseid)
         ];
-        echo json_encode(array($response));
+        echo json_encode($response);
 
     }
 
