@@ -76,8 +76,8 @@ function core_periods_get_period_by_name(string $period_name){
  * 
  * @return array List of periods.
  */
-function core_periods_get_all_periods($fecha_inicio=null, $fecha_fin=null){
-    return periods_get_all_periods($fecha_inicio, $fecha_fin);
+function core_periods_get_all_periods(){
+    return periods_get_all_periods();
 }
 
 /**
@@ -109,6 +109,26 @@ function core_periods_get_last_period(){
  */
 function core_periods_check_if_exist( int $period_id ){
     return periods_check_if_exist( $period_id );
+}
+
+/**
+ * Interface to periods_get_period_by_date
+ *
+ * @author David S. Cortés <david.cortes@correounivalle.edu.co>
+ * @since 1.0.0
+ * 
+ * @see periods_get_period_by_date(...) in entrypoint.php
+ *
+ * @param time/string $fecha_inicio
+ * @param time/string $fecha_fin
+ * @param bool $relax_query. If set to true, the function returns all periods
+ * between the start and end date. If set to false, it will return an exact match.
+ *
+ * @return Period object
+ * @throws Exception if there's no period between the given interval.
+ */
+function core_periods_get_period_by_date( $fecha_inicio, $fecha_fin, $relax_query=false ){
+	return periods_get_period_by_date( $fecha_inicio, $fecha_fin, $relax_query=false );
 }
 
 /**

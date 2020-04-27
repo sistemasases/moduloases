@@ -25,6 +25,7 @@
  */
 
 require_once( 'pilos_tracking_lib.php' );
+require_once( dirname(__FILE__) . '/../../core/module_loader.php');
 require_once( dirname(__FILE__) . '/../lib/student_lib.php' );
 require_once( dirname(__FILE__) . '/../dphpforms/dphpforms_get_record.php' );
 require_once( dirname(__FILE__) . '/../../core/cache/cache.php' );
@@ -34,6 +35,7 @@ require_once( dirname(__FILE__) . '/../dphpforms/v2/dphpforms_lib.php' );
 require_once( dirname(__FILE__) . '/../monitor_assignments/monitor_assignments_lib.php' );
 require_once( dirname(__FILE__) . '/../pilos_tracking/v2/pilos_tracking_lib.php' );
 
+module_loader("periods");
 
 /**
  * Get the toggle of the monitor with the follow-ups of each student with the implementation of the new form
@@ -1100,7 +1102,7 @@ function get_peer_trackings_by_monitor($pares, $grupal, $codigoMonitor, $noMonit
     $fecha_epoch = [];
     $fecha_epoch[0] = strtotime($fechas[0]);
     $fecha_epoch[1] = strtotime($fechas[1]);
-    $semestre_periodo = core_periods_get_all_periods($fechas[0], $fechas[1]);
+    $semestre_periodo = core_periods_get_period_by_date($fechas[0], $fechas[1]); //<-- stdClass
     $monitorstudents = get_seguimientos_monitor($codigoMonitor, $instanceid, $fecha_epoch, $semestre_periodo);
     return $monitorstudents;
 }

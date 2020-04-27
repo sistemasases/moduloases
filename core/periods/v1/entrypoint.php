@@ -65,7 +65,8 @@ function periods_get_period_by_id( int $period_id ):stdClass
 
 /**
  * Returns a period given its name.
- * 
+ * @author David S. Cortés - <david.cortes@correounivalle.edu.co>
+ *
  * @param string $period_name 
  * @return bool, true if there's a period with given name, false otherwise. 
  */
@@ -91,15 +92,39 @@ function periods_get_period_by_name($period_name)
 /**
  * Returns a period given its start and end dates
  *
+ * @author David S. Cortés - <david.cortes@correounivalle.edu.co>
+ *
  * @param time $fecha_inicio
- * @param time $fecha_fin
+ * @param time $fecha_fin	
+ * @param bool $relax_query. If set to true, the function returns all periods
+ * between the start and end date. If set to false, it will return an exact match.
  *
  * @return stdClass
  * @throws Exception if there's no period with those dates.
  */
-function periods_get_period_by_date($fecha_inicio, $fecha_fin):stdClass
+function periods_get_period_by_date($fecha_inicio, $fecha_fin, $relax_query=false):stdClass
 {
-	//@todo
+	global $DB;
+	global $PERIODS_TABLENAME;
+
+	$query = "SELECT * FROM $PERIODS_TABLENAME WHERE ";
+
+	if( $relax_query ){
+		$query .= "fecha_inicio >= '$fecha_inicio' AND fecha_fin <= '$fecha_fin'";
+	}
+	else{
+		$query .= "fecha_inicio = '$fecha_inicio' AND fecha_fin = '$fecha_fin'";
+	}
+
+	$result = $DB->get_record_sql( $query );
+	if( !property_exists($result, 'id') ){
+		throw new Exception( 
+				"Period with start date '$fecha_inicio' and end date '$fecha_fin' 
+				does not exists.", -1
+			);
+	}
+	
+	return $result;
 }
 
 /** 
@@ -110,22 +135,12 @@ function periods_get_period_by_date($fecha_inicio, $fecha_fin):stdClass
  * 
  * @return array List of periods.
  */
-function periods_get_all_periods($fecha_inicio=null, $fecha_fin=null, $relax_query=false):array
+function periods_get_all_periods():array
 {
     global $DB;
     global $PERIODS_TABLENAME; 
 
-    $query = "SELECT * FROM $PERIODS_TABLENAME ";
-
-    if ( isset($fecha_inicio, $fecha_fin) and $relax_query ){
-        $query .= "WHERE fecha_inicio >= $fecha_inicio AND fecha_fin <= $fecha_fin";
-    }
-    else if( isset($fecha_inicio, $fecha_fin) ){
-	    $query .= "WHERE fecha_inicio = $fecha_inicio AND fecha_fin = $fecha_fin";
-    }
-    else{
-        $query .= "ORDER BY fecha_fin DESC";
-    }
+    $query = "SELECT * FROM $PERIODS_TABLENAME";
     
     return $DB->get_records_sql( $query );
 }
