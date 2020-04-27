@@ -5,6 +5,8 @@ require_once(dirname(__FILE__).'/../lib/lib.php');
 require_once(dirname(__FILE__).'/../lib/student_lib.php');
 require_once(dirname(__FILE__).'/../user_management/user_lib.php');
 require_once(dirname(__FILE__).'/../cohort/cohort_lib.php');
+require_once(dirname(__FILE__).'/../monitor_assignments/monitor_assignments_lib.php');
+require_once(dirname(__FILE__).'/../periods_management/periods_lib.php' ); 
 
 /**
  * Función que recupera riesgos 
@@ -978,28 +980,32 @@ function get_ases_report($general_fields=null,
         foreach($statuses_fields as $status_field){
             switch(explode(".", $status_field)[1]){
                 case 'ases_status_student':
-
+                    
                     $select_clause .= $status_field.", ";
+                    $monitorias = monitor_assignments_get_monitors_students_relationship_by_instance_n_semester( $instance_id, $id_current_semester );
 
-                    $sub_query_status .= " LEFT JOIN (SELECT current_ases_status.id_ases_student AS id_ases_student,
-                                                        CASE WHEN historic_ases_statuses.nombre = 'seguimiento' THEN 'SEGUIMIENTO'
-                                                             WHEN historic_ases_statuses.nombre = 'sinseguimiento' THEN 'SIN SEGUIMIENTO'
-                                                             ELSE 'N.R.' 
-                                                        END AS ases_status_student
-                                                      FROM
-                                                        (SELECT student_ases_status.id_estudiante AS id_ases_student,
-                                                                MAX(student_ases_status.fecha) AS fecha
-                                                        FROM {talentospilos_est_estadoases} AS student_ases_status
-                                                        WHERE id_instancia = $instance_id
-                                                        GROUP BY student_ases_status.id_estudiante) AS current_ases_status
-                                                      INNER JOIN
-                                                      (SELECT student_ases_status.id_estudiante, 
-                                                            student_ases_status.fecha, ases_statuses.nombre
-                                                      FROM {talentospilos_est_estadoases} AS student_ases_status
-                                                            INNER JOIN {talentospilos_estados_ases} AS ases_statuses ON ases_statuses.id = student_ases_status.id_estado_ases) AS historic_ases_statuses
-                                                      ON (historic_ases_statuses.id_estudiante = current_ases_status.id_ases_student AND historic_ases_statuses.fecha = current_ases_status.fecha)
-                                                      ) AS ases_status ON ases_status.id_ases_student = ases_students.student_id";
+                    //Condition to get the students who do have a monitor assigned on the current semester
+                    $monitorias_condition = " IN (";
+
+                    foreach($monitorias as $monitoria){                 
+                        $monitorias_condition .="'". $monitoria->id_estudiante . "', ";
+                    }   
+
+                    $monitorias_condition.= ")";    
+                    $monitorias_condition = str_replace("', )", "') ", $monitorias_condition);   
+
+
+                    $sub_query_status .= " LEFT JOIN (SELECT usuario.id AS id_ases_student,
+                                                    CASE WHEN usuario.id $monitorias_condition THEN 'ACTIVO'
+                                                        ELSE 'INACTIVO'
+                                                    END AS ases_status_student
+                                                    FROM {user} AS userm
+                                                    INNER JOIN {talentospilos_user_extended} AS user_ext  ON user_ext.id_moodle_user= userm.id
+                                                    INNER JOIN  {talentospilos_usuario} AS usuario ON id_ases_user = usuario.id
+                                                    WHERE tracking_status = 1 ) AS ases_status ON ases_status.id_ases_student = ases_students.student_id
+                                                    ";                    
                     break;
+                    
                 case 'icetex_status_student':
 
                     $select_clause .= $status_field.", ";
@@ -1022,6 +1028,9 @@ function get_ases_report($general_fields=null,
                 case 'program_status':
 
                     $select_clause .= $status_field.", ";
+
+
+                    
 
                     break;
             }
