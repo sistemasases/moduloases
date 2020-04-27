@@ -1,18 +1,38 @@
-<body name="communications" class="ases-container">
-    <div class="ases-row">
-        <div class="ases-form-group ases-col-xs-10 ases-col-sm-10 ases-col-md-5 ases-col-lg-5">
-            <label for="email">Destinatarios adicionales <span class="ases-glyphicon ases-glyphicon-envelope"></span>:</label>
-            <input id="email" type="email" class="ases-form-control">
+<form id="form_communications" class="ases-container">
+    {{#data}}
+        {{> block_ases/side_menu}}
+        <div class="ases-row">
+            <div class="ases-col-xs-8 ases-col-sm-8 ases-col-md-8 ases-col-lg-8">
+                <h2 id="communications_title">COMUNICACIONES</h2>
+            </div>
         </div>
-        <div class="ases-form-group ases-col-xs-10 ases-col-sm-10 ases-col-md-5 ases-col-lg-5">
-            <label for="subject">Asunto:</label>
-            <input id="subject" type="text" class="ases-form-control">
+
+        <div class="ases-row">
+            <hr class="ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12" />
         </div>
-    </div>
-    <div class="ases-row">
-        <div class="ases-form-group ases-col-xs-10 ases-col-sm-10 ases-col-md-9 ases-col-lg-9">
-            <textarea id="fullmessage" class="ases-form-control" cols="30" rows="10" style="width: 100% !important;"></textarea>
+
+        <div class="ases-row">
+            <div class="ases-form-group ases-col-xs-10 ases-col-sm-10 ases-col-md-5 ases-col-lg-5">
+                <label for="email">Destinatarios adicionales <span class="ases-glyphicon ases-glyphicon-envelope"></span>:</label>
+                <input id="email" type="email" class="ases-form-control">
+            </div>
+            <div class="ases-form-group ases-col-xs-10 ases-col-sm-10 ases-col-md-5 ases-col-lg-5">
+                {{{cohorts_select}}}
+            </div>
         </div>
-        <button type="submit" class="ases-btn ases-btn-default">Submit</button>
-    </div>
-</body>
+
+        <div class="ases-row">
+            <div class="ases-form-group ases-col-xs-10 ases-col-sm-10 ases-col-md-5 ases-col-lg-5">
+                <label for="subject">Asunto:</label>
+                <input id="subject" type="text" class="ases-form-control">
+            </div>
+        </div>
+
+        <div class="ases-row">
+            <div class="ases-form-group ases-col-xs-10 ases-col-sm-10 ases-col-md-9 ases-col-lg-9">
+                <textarea id="fullmessage" class="ases-form-control" cols="30" rows="10" style="width: 100% !important;"></textarea>
+            </div>
+            <button type="submit" class="ases-btn ases-btn-default">Submit</button>
+        </div>
+    {{/data}}
+</form>
