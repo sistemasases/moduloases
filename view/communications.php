@@ -57,6 +57,8 @@ $url = new moodle_url("/blocks/ases/view/communications.php", array('courseid' =
 // Crea una clase con la información que se llevará al template.
 $data = new stdClass();
 
+$cohorts_select = \cohort_lib\get_html_cohorts_select($block_id);
+$data->cohorts_select = $cohorts_select;
 
 // Navigation setup
 $coursenode = $PAGE->navigation->find($course_id, navigation_node::TYPE_COURSE);
@@ -69,6 +71,8 @@ $PAGE->set_title($pagetitle);
 $PAGE->set_heading($pagetitle);
 
 $PAGE->requires->css('/blocks/ases/style/aaspect.min.css', true);
+$PAGE->requires->css('/blocks/ases/style/communications.css', true);
+$PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/communications', 'init');
 
