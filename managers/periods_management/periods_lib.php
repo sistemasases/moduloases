@@ -28,6 +28,8 @@ module_loader("periods");<?php
 
 require_once(dirname(__FILE__). '/../../../../config.php');
 
+echo 'Usando funciones deprecadas, por favor usar las funciones dentro de
+		 core/periods/periods.php';
  /**
  * Function that returns the current semester in a given interval
  * 
@@ -228,6 +230,7 @@ function periods_get_current_semester(){
  */
 
  function update_semester($semesterInfo, $idSemester){
+	 
      global $DB;
 
      try{
