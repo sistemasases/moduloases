@@ -43,6 +43,7 @@
      * Función que retorna el identificador del semestre actual 
      * @see get_current_semester()
      * @return cadena de texto que representa el semestre actual
+	 * @deprecated -- Please see core/periods
      */
     function get_current_semester(){
         global $DB;
@@ -55,6 +56,7 @@
      * Función que retorna la fecha de inicio del semestre actual
      * @see get_current_semester()
      * @return cadena de texto que representa la fecha de inicio del semestre actual
+	 * @deprecated -- Please see core/periods
      */
     function get_current_semester_start(){
         global $DB;
