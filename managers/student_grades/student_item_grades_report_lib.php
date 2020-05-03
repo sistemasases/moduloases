@@ -23,6 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 require_once (__DIR__ . '/../../../../config.php');
+require_once (__DIR__ .'/../../module_loader.php');
 require_once ($CFG->dirroot . '/lib/grade/grade_item.php');
 require_once ($CFG->dirroot . '/lib/datalib.php');
 require_once ($CFG->dirroot . '/lib/grade/grade_grade.php');
@@ -30,6 +31,7 @@ require_once (__DIR__ . '/../jquery_datatable/jquery_datatable_lib.php');
 require_once (__DIR__ . '/../../managers/periods_management/periods_lib.php');
 require_once (__DIR__ . '/../../managers/course/course_lib.php');
 
+module_loader("periods");
 
 use block_rss_client\output\item;
 use core_analytics\course;
@@ -63,7 +65,8 @@ function get_losed_and_aproved_item_grades($id_instancia, $semestre = null) {
     global $DB;
 
     if(!$semestre) {
-        $semestre = get_current_semester_processed();
+    	$inicio_periodo_actual = (core_periods_get_current_period())->fecha_inicio;    
+    	$semestre = substr($inicio_periodo_actual,0,4) . substr($inicio_periodo_actual, 5, 2);
     }
 
     $sql = <<<SQL

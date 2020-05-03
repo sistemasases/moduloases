@@ -67,9 +67,8 @@ $data->menu = $menu_option;
 
 
             $current_semester = core_periods_get_current_period();
-            $semester_interval=get_semester_interval($current_semester->id);
-            $initial_hour=strtotime($semester_interval->fecha_inicio);
-            $final_hour=strtotime($semester_interval->fecha_fin);
+            $initial_hour=strtotime($current_semester->fecha_inicio);
+            $final_hour=strtotime($current_semester->fecha_fin);
             $default=true;
 
 

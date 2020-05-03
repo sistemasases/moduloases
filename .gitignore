@@ -7,4 +7,5 @@ package-lock.json
 .vscode
 .idea
 tags
+*/tags
 vendor/latitude/latitude/src/functions.php

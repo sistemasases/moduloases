@@ -39,8 +39,7 @@ require_once( $CFG->dirroot.'/blocks/ases/managers/user_management/user_manageme
 function students_no_trackings_get_students_count_trackings_normal( $instance_id ){      
 
     $id_semester = core_periods_get_current_period()->id;
-    $interval_semester = get_semester_interval($id_semester);
-    
+    $interval_semester = core_periods_get_period_by_id($id_semester);
     $list_inicio = explode(" ", $interval_semester->fecha_inicio);
     $list_fin = explode(" ", $interval_semester->fecha_fin);
     
@@ -127,7 +126,7 @@ function get_students_with_trackings( $instance_id ){
 
     $semestre = core_periods_get_current_period();
     $idMaxSemester = $semestre->id;   
-    $intervalSemester = get_semester_interval($idMaxSemester);
+    $intervalSemester = core_periods_get_period_by_id($idMaxSemester);
     
     $list_inicio = explode(" ", $intervalSemester->fecha_inicio);
     $list_fin = explode(" ", $intervalSemester->fecha_fin);
@@ -173,7 +172,7 @@ function get_students_with_non_attendance_trackings( $instance_id ){
 
     $semestre = core_periods_get_current_period();
     $idMaxSemester = $semestre->id;   
-    $intervalSemester = get_semester_interval($idMaxSemester);
+    $intervalSemester = core_periods_get_period_by_id($idMaxSemester);
     
     $list_inicio = explode(" ", $intervalSemester->fecha_inicio);
     $list_fin = explode(" ", $intervalSemester->fecha_fin);

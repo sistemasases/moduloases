@@ -28,11 +28,13 @@
  */
 
 require_once dirname(__FILE__) . '/../../../../config.php';
+require_once dirname(__FILE__).'/../../core/module_loader.php';
 
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/v2/dphpforms_lib.php';
 require_once (__DIR__. '/../../classes/TrackingStatus.php');
 
+module_loader("periods");
 /**
  * Obtains an user object given user id from {talentospilos_usuario} table
  *
@@ -692,7 +694,7 @@ function student_lib_get_full_risk_status( $ases_id ){
      */
     $get_semester = function( $_date ){
 
-        $semesters = periods_management_get_all_semesters();
+        $semesters = core_periods_get_all_periods(); 
 
         foreach ($semesters as $key => $semester) {
 
@@ -721,7 +723,7 @@ function student_lib_get_full_risk_status( $ases_id ){
      */
     $get_next_semesters = function( $_date ){
 
-        $semesters = periods_management_get_all_semesters();
+        $semesters = core_periods_get_all_periods();
         $to_return = [];
 
         foreach ($semesters as $key => $semester) {
