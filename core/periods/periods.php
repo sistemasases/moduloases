@@ -127,8 +127,8 @@ function core_periods_check_if_exist( int $period_id ){
  * @return Period object
  * @throws Exception if there's no period between the given interval.
  */
-function core_periods_get_period_by_date( $fecha_inicio, $fecha_fin, $relax_query=false ){
-	return periods_get_period_by_date( $fecha_inicio, $fecha_fin, $relax_query=false );
+function core_periods_get_period_by_date( $fecha_inicio, $fecha_fin=date('Y-m-d'), $relax_query=false ){
+	return periods_get_period_by_date( $fecha_inicio, $fecha_fin, $relax_query );
 }
 
 /**

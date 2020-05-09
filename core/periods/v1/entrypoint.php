@@ -102,7 +102,7 @@ function periods_get_period_by_name($period_name)
  * @return stdClass
  * @throws Exception if there's no period with those dates.
  */
-function periods_get_period_by_date($fecha_inicio, $fecha_fin, $relax_query=false):stdClass
+function periods_get_period_by_date($fecha_inicio, $fecha_fin=date('Y-m-d'), $relax_query=false):stdClass
 {
 	global $DB;
 	global $PERIODS_TABLENAME;
@@ -119,7 +119,7 @@ function periods_get_period_by_date($fecha_inicio, $fecha_fin, $relax_query=fals
 	$result = $DB->get_record_sql( $query );
 	if( !property_exists($result, 'id') ){
 		throw new Exception( 
-				"Period with start date '$fecha_inicio' and end date '$fecha_fin' 
+				"Period(s) with start date '$fecha_inicio' and end date '$fecha_fin' 
 				does not exists.", -1
 			);
 	}
