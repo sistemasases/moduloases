@@ -39,6 +39,8 @@ require_once 'validate_profile_action.php';
 function create_menu_options($userid, $blockid, $courseid)
 {
 
+    file_put_contents('../test.txt', "Inicio test\n\n");
+
     $menu_options = '';
     $dropdown_close_tags = '</div>
                             </div>';
@@ -72,13 +74,26 @@ function create_menu_options($userid, $blockid, $courseid)
                                 </button>
                                 <div class="dropdown-content">';
     $discapacity_options = array();
+    $communications_dropdown = '<div id="communications_dropdown" class="dropdown">
+                                  <button class="dropbtn">Comunicaciones <i class="fa fa-caret-down"></i>
+                                  </button>
+                                <div class="dropdown-content">';
+
+
+
+    $communications_options = array();
     $menu_return = "";
     $id_role = get_id_rol($userid, $blockid);
      
     if($id_role != ""){
-        $functions = get_functions_by_role_id($id_role);        
+        $functions = get_functions_by_role_id($id_role);
+
+        file_put_contents('../test.txt', "On IF \n\n\n", FILE_APPEND);
 
         foreach ($functions as $function) {
+
+            file_put_contents('../test.txt', "On FOREACH ".$function."\n\n\n", FILE_APPEND);
+
 
             if ($function == 'ases_report') {
                 $url = new moodle_url("/blocks/ases/view/ases_report.php", array(
@@ -398,6 +413,16 @@ function create_menu_options($userid, $blockid, $courseid)
 
             }
 
+            if($function == 'ases_communications') {
+                $url = new moodle_url("/blocks/ases/view/communications.php", array(
+                    'courseid' => $courseid,
+                    'instanceid' => $blockid
+                ));
+
+                $menu_options = '<a id="menu_comunicaciones" class="menu_a" href= "' . $url . '">Comunicaciones ASES</a>';
+                $communications_options['Comunicaciones'] = $menu_options;
+            }
+
         }
 
         //ORDENA
@@ -444,6 +469,15 @@ function create_menu_options($userid, $blockid, $courseid)
             }
             $discapacity_dropdown .= $dropdown_close_tags;
             $menu_return .= $discapacity_dropdown;
+        }
+
+        if (sizeof($communications_options) > 0) {
+            ksort($communications_options);
+            foreach ($communications_options as $value) {
+                $communications_dropdown .= $value;
+            }
+            $communications_dropdown .= $dropdown_close_tags;
+            $menu_return .= $communications_dropdown;
         }
     }
 
