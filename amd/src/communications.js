@@ -7,22 +7,44 @@
  * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define([jquery], function($){
+define(['jquery', 'block_ases/select2',], function($, select2){
 
     return {
         init: function () {
-            $("#button-send").on('click', send_email);
+            //$("#send-button").on('click', send_email);
+            $('#conditions').attr('multiple', true);
+
+            $("#conditions").select2({
+
+                language: {
+
+                    noResults: function() {
+
+                        return "No hay resultado";
+                    },
+                    searching: function() {
+
+                        return "Buscando..";
+                    }
+                },
+                dropdownAutoWidth: true,
+            });
         }
     }
 
     function send_email() {
+        var cohortes = $('#conditions').val();
+        var subject = $('#subject').val();
+        var to_users = $('#additional_email').val();
+        var message = $('#full_message').val();
+
         $.ajax({
             type: "POST",
             data: JSON.stringify({
                 "function": 'send_email',
-                "params": [],
+                "params": [to_users, cohortes, subject, message],
             }),
-            url: "../managers/student_profile/communications_api.php",
+            url: "../managers/communications/communications_api.php",
             dataType: "json",
             cache: "false",
             success: function(msg) {
