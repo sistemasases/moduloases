@@ -8,3 +8,4 @@ package-lock.json
 .idea
 tags
 vendor/latitude/latitude/src/functions.php
+test.txt
