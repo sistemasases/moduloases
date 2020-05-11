@@ -39,8 +39,6 @@ require_once 'validate_profile_action.php';
 function create_menu_options($userid, $blockid, $courseid)
 {
 
-    file_put_contents('../test.txt', "Inicio test\n\n");
-
     $menu_options = '';
     $dropdown_close_tags = '</div>
                             </div>';
@@ -79,8 +77,6 @@ function create_menu_options($userid, $blockid, $courseid)
                                   </button>
                                 <div class="dropdown-content">';
 
-
-
     $communications_options = array();
     $menu_return = "";
     $id_role = get_id_rol($userid, $blockid);
@@ -88,12 +84,7 @@ function create_menu_options($userid, $blockid, $courseid)
     if($id_role != ""){
         $functions = get_functions_by_role_id($id_role);
 
-        file_put_contents('../test.txt', "On IF \n\n\n", FILE_APPEND);
-
         foreach ($functions as $function) {
-
-            file_put_contents('../test.txt', "On FOREACH ".$function."\n\n\n", FILE_APPEND);
-
 
             if ($function == 'ases_report') {
                 $url = new moodle_url("/blocks/ases/view/ases_report.php", array(
