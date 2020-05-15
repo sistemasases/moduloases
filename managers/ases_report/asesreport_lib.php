@@ -974,7 +974,7 @@ function get_ases_report($general_fields=null,
                                      program_statuses.nombre, 
                                      user_extended.id_academic_program) AS ases_students";
     }
-
+    
     // Subconsutlas relacionadas con los campos de estado
     if($statuses_fields){
         foreach($statuses_fields as $status_field){
@@ -1090,6 +1090,14 @@ function get_ases_report($general_fields=null,
                                                 INNER JOIN {talentospilos_history_estim} AS history_stim ON history_stim.id_history = academic_history.id
                                             GROUP BY academic_history.id_estudiante
                                             ) AS history_estim ON history_estim.id_estudiante = ases_students.student_id";
+                    break;
+                //condicion_excepcion_code
+                case 'condicion_excepcion':
+                    $select_clause .= $field.', ';
+                    $sub_query_academic .= " LEFT JOIN (SELECT ases_user.id AS id_estudiante, cond_excepcion.condicion_excepcion AS condicion
+                                                FROM {talentospilos_usuario} AS ases_user
+                                                INNER JOIN {talentospilos_cond_excepcion} AS cond_excepcion ON ases_user.id_cond_excepcion = cond_excepcion.id                                                
+                                                ) AS cond_excepcion ON cond_excepcion.id_estudiante = ases_students.student_id";
                     break;
             }
             

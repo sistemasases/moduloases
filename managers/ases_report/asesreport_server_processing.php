@@ -30,6 +30,7 @@ $fields_format = array(
     'average'=>'accum_average.promedio_acumulado AS promedio_acumulado',
     'academic_stimuli'=>'history_estim.numero_estimulos AS estimulos',
     'low_academic_performance'=>'history_bajo.numero_bajo AS bajos',
+    'exception_cond'=>'cond_excepcion.condicion AS condicion_excepcion', //condicion_excepcion_code
 
     'ases_status'=>'ases_status.ases_status_student',
     'icetex_status'=>'icetex_status.icetex_status_student',
@@ -55,6 +56,7 @@ $columns_format = array(
     'average'=>'Promedio acumulado',
     'academic_stimuli'=>'Estimulos',
     'low_academic_performance'=>'Bajos rendimientos',
+    'exception_cond'=>'Condición de Excepción', //condicion_excepcion_code
     'ases_status'=>'Estado ASES',
     'icetex_status'=>'Estado ICETEX',
     'academic_program_status'=>'Estado programa',
