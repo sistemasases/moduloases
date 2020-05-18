@@ -964,7 +964,6 @@ define([
                 wblur: function (){
                     this.getWeightClass = 'iwnotfocused';
                     if (parseFloat(this.weight) !== parseFloat(this.item.aggregationcoef)){
-                        console.log('nel');
                         this.saveAggregationCoefChanges();
                     }else {
                         this.updateWeight();
@@ -1161,9 +1160,11 @@ define([
                     },
                     finalGrade: {
                         get() {
+                            console.log("getFInal");
                            return g_utils.round(this.grade.finalgrade, this.decimalPlaces);
                         },
                         set(value) {
+                            console.log("setFinal");
                             this.grade.finalgrade = value;
                             this.updateGrade(this.grade, this.course.id);
                         }
