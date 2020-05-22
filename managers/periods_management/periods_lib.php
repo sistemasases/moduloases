@@ -1,4 +1,4 @@
-module_loader("periods");<?php
+<?php
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -28,8 +28,6 @@ module_loader("periods");<?php
 
 require_once(dirname(__FILE__). '/../../../../config.php');
 
-echo 'Usando funciones deprecadas, por favor usar las funciones dentro de
-		 core/periods/periods.php';
  /**
  * Function that returns the current semester in a given interval
  * 

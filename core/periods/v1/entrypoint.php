@@ -102,12 +102,14 @@ function periods_get_period_by_name($period_name)
  * @return stdClass
  * @throws Exception if there's no period with those dates.
  */
-function periods_get_period_by_date($fecha_inicio, $fecha_fin=date('Y-m-d'), $relax_query=false):stdClass
+function periods_get_period_by_date($fecha_inicio, $fecha_fin, $relax_query=false):stdClass
 {
 	global $DB;
 	global $PERIODS_TABLENAME;
 
 	$query = "SELECT * FROM $PERIODS_TABLENAME WHERE ";
+
+	$fecha_fin = date('Y-m-d');
 
 	if( $relax_query ){
 		$query .= "fecha_inicio >= '$fecha_inicio' AND fecha_fin <= '$fecha_fin'";
