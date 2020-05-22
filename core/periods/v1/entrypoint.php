@@ -110,7 +110,7 @@ function periods_get_period_by_date($fecha_inicio, $fecha_fin, $relax_query=fals
 	$query = "SELECT * FROM $PERIODS_TABLENAME WHERE ";
 
 	if( $relax_query ){
-		$query .= "fecha_inicio >= '$fecha_inicio' AND fecha_fin <= '$fecha_fin'";
+		$query .= "fecha_inicio <= '$fecha_inicio' AND fecha_fin >= '$fecha_fin'";
 	}
 	else{
 		$query .= "fecha_inicio = '$fecha_inicio' AND fecha_fin = '$fecha_fin'";
@@ -124,7 +124,11 @@ function periods_get_period_by_date($fecha_inicio, $fecha_fin, $relax_query=fals
 			);
 	}
 	
-	return $result;
+	if ( $relax_query ){
+		return $result->id;
+	}else{
+		return $result;
+	}
 }
 
 /** 
