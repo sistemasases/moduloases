@@ -1092,13 +1092,15 @@ function get_ases_report($general_fields=null,
                                             ) AS history_estim ON history_estim.id_estudiante = ases_students.student_id";
                     break;
                 //condicion_excepcion_code
-                /* case 'condicion_excepcion':
+                case 'condicion_excepcion':
                     $select_clause .= $field.', ';
                     $sub_query_academic .= " LEFT JOIN (SELECT ases_user.id AS id_estudiante, cond_excepcion.condicion_excepcion AS condicion
                                                 FROM {talentospilos_usuario} AS ases_user
                                                 INNER JOIN {talentospilos_cond_excepcion} AS cond_excepcion ON ases_user.id_cond_excepcion = cond_excepcion.id                                                
-                                                ) AS cond_excepcion ON cond_excepcion.id_estudiante = ases_students.student_id";
-                    break; */
+                                                WHERE cond_excepcion.condicion_excepcion <> 'Ninguna de las anteriores'
+                                                ) AS cond_excepcion ON cond_excepcion.id_estudiante = ases_students.student_id
+                                                ";
+                    break;
             }
             
         }
@@ -1869,6 +1871,21 @@ function getGeographicReport($cohorte, $instance_id){
 
 
  }
+
+function get_exception_conditions(){
+
+    global $DB;
+
+    $result = array();
+
+    $sql_query = "SELECT alias AS name, condicion_excepcion AS value
+                    FROM {talentospilos_cond_excepcion} AS cond
+                    WHERE cond.condicion_excepcion <> 'Ninguna de las anteriores'";
+
+    $result = $DB->get_records_sql($sql_query);    
+
+    return $result;
+}
 
 
 
