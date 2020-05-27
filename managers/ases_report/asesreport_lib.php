@@ -1026,6 +1026,8 @@ function get_ases_report($general_fields=null,
                                                         ON (historic_icetex_statuses.id_estudiante = current_icetex_status.id_ases_student AND historic_icetex_statuses.fecha = current_icetex_status.fecha)) AS icetex_status ON icetex_status.id_ases_student = ases_students.student_id";
                     break;
                 case 'program_status':
+                    $id_last_semester = strval(intval($id_current_semester) - 1);
+                    
 
                     $select_clause .="COALESCE(".$status_field.", 'INACTIVO') AS program_status, ";
 
@@ -1036,7 +1038,7 @@ function get_ases_report($general_fields=null,
                                             FROM {talentospilos_history_academ} AS history
                                             LEFT JOIN {talentospilos_history_cancel} AS cancel
                                             ON history.id = cancel.id_history
-                                            WHERE history.id_semestre = 9) AS current_program_status
+                                            WHERE history.id_semestre = $id_last_semester) AS current_program_status
                                             ON current_program_status.id_ases_student = ases_students.student_id";
                     break;
             }
