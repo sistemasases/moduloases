@@ -27,6 +27,9 @@
 
     require_once(dirname(__FILE__). '/../../../../config.php');
     require_once(dirname(__FILE__).'/periods_lib.php');
+	require_once(dirname(__FILE__).'/../../core/module_loader.php');
+
+	module_loader("periods");
 
     header('Content-Type: application/json');
 
@@ -56,7 +59,7 @@
 
         // Get practicant monitor relationship by instance
         // params[0] => instance_id
-        if( $input->function == "get_current_semester_by_apprx_interval" ){
+        if( $input->function == "core_periods_get_period_by_date" ){
 
             /* In this request is only valid pass like param(Parameters) the instance identificatior, 
              * for this reason, the input param only can be equal in quantity to one.
@@ -76,7 +79,7 @@
                         array(
                             "status_code" => 0,
                             "error_message" => "",
-                            "data_response" => periods_management_get_current_semester_by_apprx_interval( $input->params[0], $input->params[1] )
+                            "data_response" => core_periods_get_period_by_date( $input->params[0], $input->params[1], true )
                         )
                     );
                     

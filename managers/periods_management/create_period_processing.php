@@ -25,11 +25,13 @@
  */
 
 	require_once(dirname(__FILE__).'/../../../../config.php'); 
-	require_once('periods_lib.php');
+	require_once(dirname(__FILE__).'/../../core/module_loader.php');
+
+	module_loader("periods");
 
 	if(isset($_POST['op']) && isset($_POST['name']) && isset($_POST['beginning']) && isset($_POST['ending']) && $_POST['op'] == 'createSemester'){
 
-		$create = create_semester($_POST['name'], $_POST['beginning'], $_POST['ending']);
+		$create = core_periods_create_period($_POST['name'], $_POST['beginning'], $_POST['ending']);
 
 		echo "El registro se realizó con éxito";	
 

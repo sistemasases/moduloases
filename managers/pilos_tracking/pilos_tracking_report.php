@@ -163,7 +163,7 @@ if (isset($_POST['type']) && $_POST['type'] == "consulta_sistemas" && isset($_PO
     $globalArregloPares = [];
     $globalArregloGrupal = [];
     $fechas = [];
-    $intervalos = get_semester_interval($_POST['id_semestre']);
+    $intervalos = core_periods_get_period_by_id( (int)$_POST['id_semestre']);
     $fechas[0] = $intervalos->fecha_inicio;
     $fechas[1] = $intervalos->fecha_fin;
     $fechas[2] = $intervalos->id;

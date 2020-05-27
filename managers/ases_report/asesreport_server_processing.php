@@ -30,6 +30,7 @@ $fields_format = array(
     'average'=>'accum_average.promedio_acumulado AS promedio_acumulado',
     'academic_stimuli'=>'history_estim.numero_estimulos AS estimulos',
     'low_academic_performance'=>'history_bajo.numero_bajo AS bajos',
+    'exception_cond'=>'cond_excepcion.condicion AS condicion_excepcion', //condicion_excepcion_code
 
     'ases_status'=>'ases_status.ases_status_student',
     'icetex_status'=>'icetex_status.icetex_status_student',
@@ -55,6 +56,7 @@ $columns_format = array(
     'average'=>'Promedio acumulado',
     'academic_stimuli'=>'Estimulos',
     'low_academic_performance'=>'Bajos rendimientos',
+    'exception_cond'=>'Condición de Excepción', //condicion_excepcion_code
     'ases_status'=>'Estado ASES',
     'icetex_status'=>'Estado ICETEX',
     'academic_program_status'=>'Estado programa',
@@ -79,9 +81,26 @@ if(isset($_POST['fields'])){
 
 if(isset($_POST['academic_fields'])){
     $counter_columns += 1;
-    foreach($_POST['academic_fields'] as $academic_field){
-        array_push($academic_fields, $fields_format[$academic_field]);
-        array_push($columns, array("title"=>$columns_format[$academic_field], "name"=>explode(' ', $fields_format[$academic_field])[2], "data"=>explode(' ', $fields_format[$academic_field])[2]));
+    foreach($_POST['academic_fields'] as $academic_field){        
+
+        if($academic_field == 'exception_cond'){
+            $exception_conditions = get_exception_conditions();
+
+            $option = "";
+            foreach($exception_conditions as $condition){
+                $option .= "<option value='$condition->value'>";
+                $option .= $condition->name;
+                $option .= "</option>";
+            }
+
+            $filter_select = "<br><select class='filter_assignments'><option></option>$option</select>";
+            array_push($academic_fields, $fields_format[$academic_field]);
+            array_push($columns, array("title"=>$columns_format[$academic_field].$filter_select, "name"=>explode(' ', $fields_format[$academic_field])[2], "data"=>explode(' ', $fields_format[$academic_field])[2]));
+        }else{
+            array_push($academic_fields, $fields_format[$academic_field]);
+            array_push($columns, array("title"=>$columns_format[$academic_field], "name"=>explode(' ', $fields_format[$academic_field])[2], "data"=>explode(' ', $fields_format[$academic_field])[2]));
+        }
+
     }
 }
 
