@@ -1027,11 +1027,17 @@ function get_ases_report($general_fields=null,
                     break;
                 case 'program_status':
 
-                    $select_clause .= $status_field.", ";
+                    $select_clause .="COALESCE(".$status_field.", 'INACTIVO') AS program_status, ";
 
-
-                    
-
+                    $sub_query_status .= " LEFT JOIN (SELECT id_estudiante AS id_ases_student, 
+                                            CASE WHEN cancel.fecha_cancelacion IS NULL THEN 'ACTIVO'
+                                                ELSE 'SEMESTRE CANCELADO' 
+                                            END AS program_status
+                                            FROM {talentospilos_history_academ} AS history
+                                            LEFT JOIN {talentospilos_history_cancel} AS cancel
+                                            ON history.id = cancel.id_history
+                                            WHERE history.id_semestre = 9) AS current_program_status
+                                            ON current_program_status.id_ases_student = ases_students.student_id";
                     break;
             }
         }
