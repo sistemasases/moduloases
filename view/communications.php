@@ -29,6 +29,7 @@ require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 
 require_once '../managers/instance_management/instance_lib.php';
+require_once('../managers/menu_options.php');
 require_once '../managers/lib/lib.php';
 require_once('../managers/validate_profile_action.php');
 
@@ -51,6 +52,7 @@ if (!consult_instance($block_id)) {
 
 $contextcourse = context_course::instance($course_id);
 $contextblock = context_block::instance($block_id);
+$id_current_user = $USER->id;
 
 $url = new moodle_url("/blocks/ases/view/communications.php", array('courseid' => $course_id, 'instanceid' => $block_id));
 
@@ -65,14 +67,18 @@ $coursenode = $PAGE->navigation->find($course_id, navigation_node::TYPE_COURSE);
 $blocknode = navigation_node::create('Comunicaciones',$url, null, 'block', $block_id);
 $coursenode->add_node($blocknode);
 
+$menu_option = create_menu_options($id_current_user, $block_id, $course_id);
+$data->menu = $menu_option;
 
+$page_title = 'Comunicaciones';
 $PAGE->set_url($url);
-$PAGE->set_title($pagetitle);
-$PAGE->set_heading($pagetitle);
+$PAGE->set_title($page_title);
+$PAGE->set_heading($page_title);
 
 $PAGE->requires->css('/blocks/ases/style/aaspect.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/communications.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
+$PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/communications', 'init');
 
