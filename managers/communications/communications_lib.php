@@ -121,7 +121,7 @@ function communications_send_email($additional_emails, $cohorts, $subject, $mess
 
     foreach($user_ids  as $user_id) {
 
-        file_put_contents('../../test.txt', json_encode($user_id)."\n", FILE_APPEND);
+        //file_put_contents('../../test.txt', json_encode($user_id)."\n", FILE_APPEND);
         $userto = $DB->get_record('user', array('id' => '118524'));
 
         $message = new \core\message\message();
