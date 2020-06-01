@@ -11,7 +11,7 @@ define(['jquery', 'block_ases/select2',], function($, select2){
 
     return {
         init: function () {
-            //$("#send-button").on('click', send_email);
+            $("#send-button").on('click', send_email);
             $('#conditions').attr('multiple', true);
 
             $("#conditions").select2({
@@ -32,17 +32,36 @@ define(['jquery', 'block_ases/select2',], function($, select2){
         }
     }
 
+    function getIdcourse() {
+        var urlParameters = location.search.split('&');
+
+        for (x in urlParameters) {
+            if (urlParameters[x].indexOf('courseid') >= 0) {
+                var intanceparameter = urlParameters[x].split('=');
+                return intanceparameter[1];
+            }
+        }
+        return 0;
+    }
+
     function send_email() {
+
+        var to_users = document.getElementById('additional_email').value;
         var cohortes = $('#conditions').val();
-        var subject = $('#subject').val();
-        var to_users = $('#additional_email').val();
-        var message = $('#full_message').val();
+        var subject = document.getElementById('subject').value;
+        var message = document.getElementById('full_message').value;
+        var course_id = getIdcourse();
+
+        console.log(cohortes);
+        console.log(subject);
+        console.log(to_users);
+        console.log(message);
 
         $.ajax({
             type: "POST",
             data: JSON.stringify({
                 "function": 'send_email',
-                "params": [to_users, cohortes, subject, message],
+                "params": [to_users, cohortes, subject, message, course_id],
             }),
             url: "../managers/communications/communications_api.php",
             dataType: "json",

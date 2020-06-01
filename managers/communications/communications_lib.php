@@ -60,7 +60,35 @@ function get_emails_by_cohorts($cohorts){
         $condition .= " OR cohort.id = ".$cohort_id;
     }
 
-    $sql_query = "SELECT user_.emailpilos
+    $sql_query = "SELECT user_.emailpilos, cohort.idnumber
+                      FROM {talentospilos_usuario} AS user_ 
+                        INNER JOIN {talentospilos_user_extended} AS ue ON ue.id_ases_user = user_.id
+                        INNER JOIN {cohort_members} AS cm ON cm.userid = ue.id_moodle_user
+                        INNER JOIN {cohort} AS cohort ON cm.cohortid = cohort.id
+                      WHERE $condition";
+
+    return $DB->get_records_sql($sql_query);
+}
+
+/**
+ * Gets the emails of the members of all the cohorts specified
+ *
+ * @see get_cohort_id_by_name()
+ * @param $cohorts array array with the names of the cohorts
+ * @return array containing the emails of cohort members specified
+ */
+function get_user_ids_by_cohort($cohorts){
+
+    global $DB;
+
+    $condition = "true";
+    foreach ($cohorts AS $cohort)
+    {
+        $cohort_id = get_cohort_id_by_name($cohort);
+        $condition .= " OR cohort.id = ".$cohort_id;
+    }
+
+    $sql_query = "SELECT cm.userid
                       FROM {talentospilos_usuario} AS user_ 
                         INNER JOIN {talentospilos_user_extended} AS ue ON ue.id_ases_user = user_.id
                         INNER JOIN {cohort_members} AS cm ON cm.userid = ue.id_moodle_user
@@ -73,14 +101,51 @@ function get_emails_by_cohorts($cohorts){
 /**
  * Sends emails
  *
- * @see get_emails_by_cohorts()
+ * @param $additional_emails
  * @param $cohorts array names of cohorts whose members are
  *                       gonna receive the email
+ * @param $subject
+ * @param $message_body
+ * @param $course_id
  * @return boolean specifying if all messages have been sent
+ * @see get_emails_by_cohorts()
  */
-function communications_send_email($cohorts){
+function communications_send_email($additional_emails, $cohorts, $subject, $message_body, $course_id){
 
-    $emails = get_emails_by_cohorts($cohorts);
+    global $DB, $USER;
+
+    //$emails = get_emails_by_cohorts($cohorts);
+    $user_ids = get_user_ids_by_cohort($cohorts);
+
+    file_put_contents('../../test.txt', "Start\n\n\n");
+
+    foreach($user_ids  as $user_id) {
+
+        file_put_contents('../../test.txt', json_encode($user_id)."\n", FILE_APPEND);
+        $userto = $DB->get_record('user', array('id' => '118524'));
+
+        $message = new \core\message\message();
+        $message->component = 'moodle';
+        $message->name = 'instantmessage';
+        $message->userfrom = $USER;
+        $message->userto = $userto;
+        $message->subject = $subject;
+        $message->fullmessage = $message_body;
+        $message->fullmessageformat = FORMAT_MARKDOWN;
+        $message->fullmessagehtml = '<p>message body</p>';
+        $message->smallmessage = 'small message';
+        $message->notification = '0';
+        $message->contexturl = 'http://localhost/moodle366_new/blocks/ases/view/communications.php';
+        $message->contexturlname = 'Context name';
+        $message->replyto = "jorge.e.mayor@gmail.com";
+        $content = array('*' => array('header' => ' test ', 'footer' => ' test ')); // Extra content for specific processor
+        $message->set_additional_content('email', $content);
+        $message->courseid = $course_id;
+
+        message_send($message);
+        break;
+    }
+
 
     return true;
 }

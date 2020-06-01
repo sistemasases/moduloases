@@ -34,9 +34,43 @@ if(isset($input->function) && isset($input->params)) {
 
     if($function == 'send_email') {
 
-        communications_send_email();
+        /**
+         * [0] => additional_emails: array of string
+         * [1] => cohortes: array of string
+         * [2] => subject: string
+         * [3] => message: string
+         */
+        $params = $input->params;
+        if(count($params) == 5) {
 
-    }  else {
+            $additional_emails = $params[0];
+            $cohorts = $params[1];
+            $subject = $params[2];
+            $message = $params[3];
+            $course_id = $params[4];
+
+            if(is_string($additional_emails) && is_string($subject) && is_string($message)) {
+
+                $result = communications_send_email($additional_emails, $cohorts, $subject, $message, $course_id);
+
+                if($result){
+                    echo json_encode(
+                        array(
+                            "status_code" => 1,
+                            "message" => "Success",
+                            "data_response" => $result
+                        )
+                    );
+                } else {
+                    return_with_code(-5);
+                }
+            } else {
+                return_with_code(-2);
+            }
+        } else {
+            return_with_code(-6);
+        }
+    } else {
         return_with_code(-4);
     }
 } else {
