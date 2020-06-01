@@ -1,0 +1,16 @@
+#communications_title{
+    font-weight: 500;
+}
+
+#container_communications{
+    margin-left: 10%;
+}
+
+.select2{
+    width: 359px !important;
+}
+
+#div-send-button{
+    text-align: center;
+    padding-right: 25%;
+}
