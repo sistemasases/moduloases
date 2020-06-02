@@ -34,7 +34,7 @@ $fields_format = array(
 
     'ases_status'=>'ases_status.ases_status_student',
     'icetex_status'=>'icetex_status.icetex_status_student',
-    'academic_program_status'=>'ases_students.program_status',
+    'academic_program_status'=>'current_program_status.program_status',
 
     'professional'=>'assignments_query.professional',
     'training'=>'assignments_query.trainer',
@@ -174,11 +174,11 @@ if(isset($_POST['status_fields'])){
             
             case 'academic_program_status':
 
-                $academic_program_statuses = get_academic_program_statuses();
+                $academic_program_statuses = array("ACTIVO","INACTIVO","SEMESTRE CANCELADO");
 
                 foreach($academic_program_statuses as $status){
                     $option .= "<option>";
-                    $option .= $status->nombre;
+                    $option .= $status;
                     $option .= "</option>";
                 }
 
