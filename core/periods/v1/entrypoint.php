@@ -102,7 +102,7 @@ function periods_get_period_by_name($period_name)
  * @return stdClass
  * @throws Exception if there's no period with those dates.
  */
-function periods_get_period_by_date($fecha_inicio, $fecha_fin, $relax_query=false):stdClass
+function periods_get_period_by_date($fecha_inicio, $fecha_fin, $relax_query=false)
 {
 	global $DB;
 	global $PERIODS_TABLENAME;
