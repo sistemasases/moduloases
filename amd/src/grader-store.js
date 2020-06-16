@@ -304,7 +304,7 @@ define([
                 g_service.update_grade(grade, state.course.id)
                     .then( response => {
                         commit(mutationsType.SET_GRADE, {old: grade, new: response.grade});
-                        //commit(mutationsType.SET_GRADES, response.other_grades);
+                        commit(mutationsType.SET_GRADES, response.other_grades);
                     });
             },
             [actionsType.UPDATE_CATEGORY]({dispatch, commit}, category) {
@@ -331,10 +331,14 @@ define([
             [actionsType.UPDATE_ITEM]({dispatch, commit}, item) {
                 g_service.update_item(item)
                     .then( response => {
+                        //console.log(response.api_response);
                         let item = response.item;
                         let levels = response.levels;
                         commit(mutationsType.SET_ITEM, item);
                         commit(mutationsType.SET_LEVELS, levels);
+                        commit(mutationsType.SET_GRADES, response.other_grades);
+                        //console.log(item);
+                        //console.log(response.other_grades);
                     })
             },
             [actionsType.FETCH_STATE] ({dispatch, commit}) {
