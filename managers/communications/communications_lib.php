@@ -122,7 +122,7 @@ function communications_send_email($additional_emails, $cohorts, $subject, $mess
     foreach($user_ids  as $user_id) {
 
         //file_put_contents('../../test.txt', json_encode($user_id)."\n", FILE_APPEND);
-        $userto = $DB->get_record('user', array('id' => '118524'));
+        $userto = $DB->get_record('user', array('id' => $user_id));
 
         $message = new \core\message\message();
         $message->component = 'moodle';
@@ -136,14 +136,12 @@ function communications_send_email($additional_emails, $cohorts, $subject, $mess
         $message->smallmessage = 'small message';
         $message->notification = '0';
         $message->contexturl = 'http://localhost/moodle366_new/blocks/ases/view/communications.php';
-        $message->contexturlname = 'Context name';
-        $message->replyto = "jorge.e.mayor@gmail.com";
+        $message->contexturlname = 'ASES - Universidad del Valle';
         $content = array('*' => array('header' => ' test ', 'footer' => ' test ')); // Extra content for specific processor
         $message->set_additional_content('email', $content);
         $message->courseid = $course_id;
 
         message_send($message);
-        break;
     }
 
 
