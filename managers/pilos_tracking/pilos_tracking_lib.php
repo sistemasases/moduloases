@@ -469,7 +469,7 @@ function get_seguimientos_monitor($id_monitor,$id_instance,$fechas_epoch,$period
                   (nombre_usuario_estudiante.id=usuario_estudiante.id_moodle_user)
                    INNER JOIN {talentospilos_monitor_estud} as monitor_actual 
                   ON (CAST(monitor_actual.id_estudiante AS text)=CAST(s_estudiante.id_estudiante AS text)) INNER JOIN {user} AS usuario_mon_actual ON (monitor_actual.id_monitor=usuario_mon_actual.id)
-                 WHERE monitor_actual.id_monitor='$id_monitor' AND seguimiento.id_instancia='$id_instance' AND seguimiento.status <> 0  AND monitor_actual.id_semestre='$periodo->max' AND
+                 WHERE monitor_actual.id_monitor='$id_monitor' AND seguimiento.id_instancia='$id_instance' AND seguimiento.status <> 0  AND monitor_actual.id_semestre='$periodo->id' AND
                   (seguimiento.fecha between '$fechas_epoch[0]' and '$fechas_epoch[1]')  AND monitor_actual.id_instancia='$id_instance'  ORDER BY usuario_monitor.firstname;";
 
     

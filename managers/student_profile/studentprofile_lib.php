@@ -887,7 +887,7 @@ function get_tracking_current_semesterV3($criterio,$student_id, $semester_id,$in
 
     }else{
 
-        $interval = get_semester_interval($semester_id);
+        $interval = core_periods_get_period_by_id($semester_id);
         $fecha_inicio = getdate(strtotime($interval->fecha_inicio));
         $fecha_fin = getdate(strtotime($interval->fecha_fin));
     }
@@ -1024,7 +1024,7 @@ function get_tracking_current_semesterV2($criterio,$student_id, $semester_id,$in
 
     }else{
 
-        $interval = get_semester_interval($semester_id);
+        $interval = core_periods_get_period_by_id($semester_id);
         $fecha_inicio = getdate(strtotime($interval->fecha_inicio));
         $fecha_fin = getdate(strtotime($interval->fecha_fin));
     }
@@ -1103,7 +1103,7 @@ function get_tracking_current_semester($criterio,$student_id, $semester_id,$inte
         $ano_semester  = $fecha_inicio['year'];
 
     }else{
-        $interval = get_semester_interval($semester_id);
+        $interval = core_periods_get_period_by_id($semester_id);
         $fecha_inicio = getdate(strtotime($interval->fecha_inicio));
         $fecha_fin = getdate(strtotime($interval->fecha_fin));
         $ano_semester  = $fecha_inicio['year'];
