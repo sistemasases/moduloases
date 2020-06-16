@@ -68,6 +68,7 @@ function get_info_students($id_curso)
     $estudiantes = $DB->get_records_sql($query_students);
     return $estudiantes;
 }
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -495,7 +496,31 @@ function update_grades_moodle_($userid, $itemid, $finalgrade, $courseid)
     return $updated;
 }
 
+/**
+ * Updates grades for all students in course
+ *
 
+ * @see update_grades_moodle_($userid, $itemid, $finalgrade, $courseid)
+ * @param $item --> item id
+ * @param $courseid --> course id
+ *
+ * @return bool Return true
+
+ */
+
+function update_all_grades_moodle($itemid, $courseid)
+{
+    $grades = get_student_grades($courseid);
+    foreach($grades as $grade){
+        if($grade->itemid === $itemid){
+            $finalgrade = $grade->finalgrade;
+            // Supposedly it should just work with finalgrade = false, but i havent slept in 28 hours and am too tired to figure out why it doesnt
+            update_grades_moodle_($grade->userid, $grade->itemid, $finalgrade/2, $courseid);
+            update_grades_moodle_($grade->userid, $grade->itemid, $finalgrade, $courseid);
+        }
+    }
+    return true;
+}
 
 
 
