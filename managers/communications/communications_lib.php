@@ -49,34 +49,6 @@ function get_cohort_id_by_name($cohort_name){
  * @param $cohorts array array with the names of the cohorts
  * @return array containing the emails of cohort members specified
  */
-function get_emails_by_cohorts($cohorts){
-
-    global $DB;
-
-    $condition = "true";
-    foreach ($cohorts AS $cohort)
-    {
-        $cohort_id = get_cohort_id_by_name($cohort);
-        $condition .= " OR cohort.id = ".$cohort_id;
-    }
-
-    $sql_query = "SELECT user_.emailpilos, cohort.idnumber
-                      FROM {talentospilos_usuario} AS user_ 
-                        INNER JOIN {talentospilos_user_extended} AS ue ON ue.id_ases_user = user_.id
-                        INNER JOIN {cohort_members} AS cm ON cm.userid = ue.id_moodle_user
-                        INNER JOIN {cohort} AS cohort ON cm.cohortid = cohort.id
-                      WHERE $condition";
-
-    return $DB->get_records_sql($sql_query);
-}
-
-/**
- * Gets the emails of the members of all the cohorts specified
- *
- * @see get_cohort_id_by_name()
- * @param $cohorts array array with the names of the cohorts
- * @return array containing the emails of cohort members specified
- */
 function get_user_ids_by_cohort($cohorts){
 
     global $DB;
@@ -114,7 +86,6 @@ function communications_send_email($additional_emails, $cohorts, $subject, $mess
 
     global $DB, $USER;
 
-    //$emails = get_emails_by_cohorts($cohorts);
     $user_ids = get_user_ids_by_cohort($cohorts);
 
     file_put_contents('../../test.txt', "Start\n\n\n");
