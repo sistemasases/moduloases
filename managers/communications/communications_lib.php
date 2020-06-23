@@ -103,10 +103,10 @@ function communications_send_email($additional_emails, $cohorts, $subject, $mess
         $message->subject = $subject;
         $message->fullmessage = $message_body;
         $message->fullmessageformat = FORMAT_MARKDOWN;
-        $message->fullmessagehtml = '<p>message body</p>';
+        $message->fullmessagehtml = $message_body;
         $message->smallmessage = 'small message';
         $message->notification = '0';
-        $message->contexturl = 'http://localhost/moodle366_new/blocks/ases/view/communications.php';
+        $message->contexturl = 'http://www.campusvirtual.univalle.edu.co/moodle/blocks/ases/view/communications.php';
         $message->contexturlname = 'ASES - Universidad del Valle';
         $content = array('*' => array('header' => ' test ', 'footer' => ' test ')); // Extra content for specific processor
         $message->set_additional_content('email', $content);
