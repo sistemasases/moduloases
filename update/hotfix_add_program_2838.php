@@ -28,7 +28,7 @@ $script = function(){
     
     $programa = new Programa();
     $nombre_sede ='SANTANDER DE QUILICHAO';
-    $nombre_facultad = 'ADMINISTRACIÓN';
+    $nombre_facultad = 'CIENCIAS DE LA ADMINISTRACIÓN';
     $programa->nombre = 'TECNOLOGÍA EN GESTIÓN DEL TALENTO HUMANO';
     //@var Sede $sede
     $sede = Sede::get_one_by(array(Sede::NOMBRE=>$nombre_sede));
