@@ -88,13 +88,13 @@ function communications_send_email($additional_emails, $cohorts, $subject, $mess
 
     $user_ids = get_user_ids_by_cohort($cohorts);
 
-    file_put_contents('../../test.txt', "Start\n\n\n");
+    //file_put_contents('../../test.txt', "Start\n\n\n");
+    //file_put_contents('../../test.txt', json_encode($user_ids)."\n\n\n", FILE_APPEND);
 
     foreach($user_ids  as $user_id) {
 
         //file_put_contents('../../test.txt', json_encode($user_id)."\n", FILE_APPEND);
-        $userto = $DB->get_record('user', array('id' => $user_id));
-
+        $userto = $DB->get_record('user', array('id' => $user_id->userid));
         $message = new \core\message\message();
         $message->component = 'moodle';
         $message->name = 'instantmessage';
