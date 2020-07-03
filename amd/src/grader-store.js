@@ -141,21 +141,27 @@ define([
             },
             [mutationsType.SET_GRADES] (state, newGrades) {
                 newGrades.forEach(newGrade => {
+                    const oldGrade = Object.values(state.grades).find(grade =>
+                        grade.itemid === newGrade.itemid &&
+                        grade.userid === newGrade.userid);
+
                     newGrade.finalgrade = g_utils.removeInsignificantTrailZeros(newGrade.finalgrade);
 
-                    if(!state.grades[newGrade.id]) {
-                        const oldGrade = Object.values(state.grades).find(grade =>
-                            grade.itemid === newGrade.itemid &&
-                            grade.userid === newGrade.userid);
-                        state.grades[newGrade.id] =  newGrade;
-                        const studentGradeIds = state.students[oldGrade.userid].gradeIds;
-                        const newGradeIds =
-                            [...studentGradeIds.filter(gradeId => gradeId !== oldGrade.id), newGrade.id];
-                        state.students[newGrade.userid] = {...state.students[newGrade.userid], gradeIds: newGradeIds};
-                        Vue.delete(state.grades, oldGrade.id);
+                    if(oldGrade.finalgrade != newGrade.finalgrade){
+                        console.log("nel prro")
+
+
+                        if(!state.grades[newGrade.id]) {
+                            state.grades[newGrade.id] =  newGrade;
+                            const studentGradeIds = state.students[oldGrade.userid].gradeIds;
+                            const newGradeIds =
+                                [...studentGradeIds.filter(gradeId => gradeId !== oldGrade.id), newGrade.id];
+                            state.students[newGrade.userid] = {...state.students[newGrade.userid], gradeIds: newGradeIds};
+                            Vue.delete(state.grades, oldGrade.id);
+                        }
+                        Vue.set(state.grades, newGrade.id, newGrade);
                     }
-                    Vue.set(state.grades, newGrade.id, newGrade);
-              })  ;
+                })  ;
             },
             [mutationsType.SET_GRADE] (state, payload) {
                 let oldGrade = payload.old;
@@ -303,7 +309,7 @@ define([
             [actionsType.UPDATE_GRADE] ({commit, state}, grade) {
                 g_service.update_grade(grade, state.course.id)
                     .then( response => {
-                        commit(mutationsType.SET_GRADE, {old: grade, new: response.grade});
+                        //commit(mutationsType.SET_GRADE, {old: grade, new: response.grade});
                         commit(mutationsType.SET_GRADES, response.other_grades);
                     });
             },
