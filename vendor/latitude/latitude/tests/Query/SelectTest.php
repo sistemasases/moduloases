@@ -6,7 +6,7 @@ use Latitude\QueryBuilder\TestCase;
 
 use function Latitude\QueryBuilder\alias;
 use function Latitude\QueryBuilder\field;
-use function Latitude\QueryBuilder\fn;
+use function Latitude\QueryBuilder\fnctn;
 use function Latitude\QueryBuilder\on;
 
 class SelectTest extends TestCase
@@ -167,7 +167,7 @@ class SelectTest extends TestCase
     {
         $select = $this->factory
             ->select(
-                alias(fn('COUNT', 'id'), 'total')
+                alias(fnctn('COUNT', 'id'), 'total')
             )
             ->from('employees')
             ->groupBy('department');
@@ -187,7 +187,7 @@ class SelectTest extends TestCase
         $select = $this->factory
             ->select(
                 'department',
-                alias($sum = fn('SUM', 'salary'), 'total')
+                alias($sum = fnctn('SUM', 'salary'), 'total')
             )
             ->from('employees')
             ->groupBy('department')
@@ -222,7 +222,7 @@ class SelectTest extends TestCase
             ->select(
                 'u.id',
                 'u.username',
-                alias(fn('COUNT', 'l.id'), 'total')
+                alias(fnctn('COUNT', 'l.id'), 'total')
             )
             ->from(alias('users', 'u'))
             ->join(alias('logins', 'l'), on('u.id', 'l.user_id'))

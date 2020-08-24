@@ -23,7 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use function Latitude\QueryBuilder\{alias, on, fn, param};
+use function Latitude\QueryBuilder\{alias, on, fnctn, param};
 
 defined('MOODLE_INTERNAL') || die;
 require_once(__DIR__ . '/../../../config.php');
@@ -66,7 +66,7 @@ class Programa extends BaseDAO {
             ->select(
                 'programa.'.Programa::ID,
                 alias(
-                    fn(
+                    fnctn(
                         'concat_ws',
                         param(' - '),
                         'programa.'.Programa::NOMBRE,
