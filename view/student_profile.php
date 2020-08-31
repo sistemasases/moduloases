@@ -528,6 +528,9 @@ if ($student_code != 0) {
         $record->sons = $ases_student->hijos;
     }
 
+    // traer enlace a documento de autorización para el tratamiento de datos personales
+    $record->tratamiento_datos_personales_doc = json_decode($ases_student->json_detalle)->tratamiento_datos_personales_doc;
+
 
     $reasons_dropout_observations = getReasonDropoutStudent ($ases_student->id);
     $record->observations = $reasons_dropout_observations."\n".$ases_student->observacion;
