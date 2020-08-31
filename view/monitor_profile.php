@@ -34,6 +34,8 @@ require_once('../managers/lib/lib.php');
 require_once('../managers/lib/student_lib.php');
 require_once('../managers/validate_profile_action.php');
 require_once('../managers/menu_options.php');
+require_once('../managers/monitor_assignments/monitor_assignments_lib.php');
+require_once('../managers/monitor_profile/monitor_profile_lib.php');
 
 include "../lib.php";
 include "../classes/output/monitor_profile_page.php";
@@ -48,6 +50,7 @@ global $USER;
 // Set up the page
 $course_id = required_param('courseid', PARAM_INT);
 $block_id = required_param('instanceid', PARAM_INT);
+$monitor_code = (string)optional_param('monitor_code', 0, PARAM_TEXT);
 
 require_login($course_id, false);
 
@@ -59,21 +62,55 @@ $contextcourse = context_course::instance($course_id);
 $contextblock = context_block::instance($block_id);
 $id_current_user = $USER->id;
 
-$url = new moodle_url("/blocks/ases/view/monitor_profile.php", array('courseid' => $course_id, 'instanceid' => $block_id));
+$rol = lib_get_rol_name_ases($id_current_user, $block_id);
+$url = new moodle_url("/blocks/ases/view/monitor_profile.php", array('courseid' => $course_id, 'instanceid' => $block_id, 'monitor_code' => $monitor_code));
 
 // Clase con la información que se llevará al template.
 $data = new stdClass();
 
+// Evalua si el rol del usuario tiene permisos en esta view.
+$actions = authenticate_user_view($USER->id, $block_id);
+
+if ($rol == 'sistemas') {
+    $data->not_sistemas = false;
+} else {
+    $user = (object) [
+        'id' => $id_current_user,
+        'fullname' => $USER->firstname . " " . $USER->lastname,
+        'username' => $USER->username,
+    ];
+    $data->user_logged = $user;
+}
+
 $cohorts_select = \cohort_lib\get_html_cohorts_select($block_id);
 $data->cohorts_select = $cohorts_select;
+
+$menu_option = create_menu_options($id_current_user, $block_id, $course_id);
+$data->menu = $menu_option;
 
 // Navegación
 $coursenode = $PAGE->navigation->find($course_id, navigation_node::TYPE_COURSE);
 $blocknode = navigation_node::create('Pérfil del monitor', $url, null, 'block', $block_id);
 $coursenode->add_node($blocknode);
 
-$menu_option = create_menu_options($id_current_user, $block_id, $course_id);
-$data->menu = $menu_option;
+// Recolección de la información básica del monitor.
+if ($monitor_code != 0){
+    $ases_monitor = get_ases_user_by_code($monitor_code);
+} else {
+    $data->monitors = array_values( monitor_assignments_get_monitors_by_instance( $block_id));
+    $monitor_id = -1;
+    $select = make_select_monitors($data->monitors); 
+    $data->select = $select;
+}
+
+
+
+
+
+
+
+
+
 
 $page_title = 'Pérfil del monitor';
 $PAGE->set_url($url);
@@ -84,6 +121,7 @@ $PAGE->requires->css('/blocks/ases/style/aaspect.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 
+$PAGE->requires->js_call_amd('block_ases/monitor_profile', 'init');
 
 $output = $PAGE->get_renderer('block_ases');
 $monitor_profile_page = new \block_ases\output\monitor_profile_page($data);
