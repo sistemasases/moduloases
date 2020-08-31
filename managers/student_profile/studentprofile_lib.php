@@ -2087,9 +2087,11 @@ function save_profile($form, $option1, $option2, $live_with){
         //an id is assigned to update
         $obj_updatable->id = $id_ases;
 
-        $sql_query = "SELECT observacion FROM {talentospilos_usuario} WHERE id = $id_ases";
+        $sql_query = "SELECT observacion, json_detalle FROM {talentospilos_usuario} WHERE id = $id_ases";
 
-        $observations = $DB->get_record_sql($sql_query)->observacion;
+        $result = $DB->get_record_sql($sql_query);
+        $observations = $result->observacion;
+        $json_detalle = json_decode($result->json_detalle);
 
         //Agregar campos nuevos
 
@@ -2135,6 +2137,9 @@ function save_profile($form, $option1, $option2, $live_with){
             //Guardar con género existente en opciones generales
             $obj_updatable->id_identidad_gen = $genero;
         }
+
+        $json_detalle->tratamiento_datos_personales_doc = $obj_updatable->link_doc_dtddp;
+        $obj_updatable->json_detalle = json_encode($json_detalle);
 
         $obj_updatable->vive_con = $live_with;
         $obj_updatable->id_estado_civil = $estado_civil;
