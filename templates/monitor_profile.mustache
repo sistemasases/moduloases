@@ -1,29 +1,54 @@
 {{#data}} 
-    {{> block_ases/side_menu}}
+    {{> block_ases/side_menu}} {{{message}}}
     <form id="ficha_monitor" class="ases-container">
         
+        <input type="text" class="hidden" id="id_ases" name="id_ases" value="{{id_ases}}" />
+        <input type="text" class="hidden" id="id_moodle" name="id_moodle" value="{{id_moodle}}" />
+        
         <div class="ases-container" id="monitor-header-container">
+            
+
             <div class="ases-row" id="div-header-profile">
-                <div class="ases-col-xs-10" id="div-header-info">
-                    <!-- monitor code -->
-                    <div class="ases-row" id="div-monitor-code">
-                        
-                    </div>
-                    
-                    <!-- monitor info (age, cc) --> 
-                    <div class="ases-row" id="div-monitor-info">
-                        
-                    </div>
+                <div id="div-select-monitor" class="ases-col-xs-10">
+                    {{{select}}}
                 </div>
 
-                <!-- picture -->
-                <div id="div-monitor-photo" class="ases-col-xs-2">
+                <div id="monitor-picture" class="ases-col-xs-2">
+                    
+                </div>
+            </div>
+
+            <div class="ases-row" id="div-info">
+                <div id="div-document" class="ases-col-xs-6 ases-col-md-3">
+                    
+                </div>
+
+                <div id="div-age" class="ases-col-xs-6 ases-col-md-3">
+
+                </div>
+
+                <div id="div-email" class="ases-col-xs-6 ases-col-md-3">
+
+                </div>
+                <div id="div-age" class="ases-col-xs-xs-6 ases-col-md-3">
 
                 </div>
 
             </div>
-        </div>
 
+
+            <div class="ases-row id="div-programa">
+                <div id="programa" class="ases-col-xs-12">
+                </div>
+            </div>
+        </div>
+        
+        <div id="assignments-container" class="ases-container">
+
+            <div id="historical-assignments" class="ases-row">
+            </div>
+
+        </div>
 
 
     </form>
