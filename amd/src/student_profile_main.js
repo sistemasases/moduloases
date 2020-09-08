@@ -683,6 +683,7 @@ define(['jquery',
                 $('#estado_civil').prop('disabled', false);
                 $('#observacion').prop('readonly', false);
                 $('.select_statuses_program').prop('disabled', false);
+                $('#field_doc_dtddp').toggle();
                 $('.input_fields_general_tab').prop('readonly', false);
                 $('.bt_delete_person').css("visibility", "visible");
                 $('.input-tracking').prop('disabled', false);
@@ -690,6 +691,10 @@ define(['jquery',
                 $('#edit_person_vive').show();
                 $('#age').hide();
                 $('#birthdate').show();
+                $('#link_doc_dtddp').bind('click', function(e) {e.preventDefault();});
+                $('#link_doc_dtddp').css("color", "black")
+                    .css("text-decoration", "none");
+
                 //$('#edit_institucion').show();
 
                 $('#genero').on('click', function () {
@@ -739,7 +744,6 @@ define(['jquery',
             $('#span-icon-save-profile').on('click', function () {
 
                 var form_with_changes = $('#ficha_estudiante').serializeArray();
-
                 var result_validation = object_function.validate_form(form_with_changes);
 
                 if (result_validation.status == "error") {
@@ -768,6 +772,7 @@ define(['jquery',
                     }
                     data_persons = JSON.stringify(data_persons);
                     object_function.save_form_edit_profile(form_with_changes, object_function, update_or_insert1, update_or_insert2, data_persons);
+
                     $('#otro_genero').prop('disabled', true);
                     $('#otro_act_simultanea').prop('disabled', true);
                     $('#otro_genero').prop('required', false);
@@ -998,6 +1003,7 @@ define(['jquery',
                 url: "../managers/student_profile/studentprofile_api.php",
                 success: function (msg) {
                     loading_indicator.hide();
+                    $('#link_doc_dtddp').attr('href',$('#field_doc_dtddp').val());
                     if(msg.status_code == 0) {
                         swal(
                             msg.title,
@@ -1042,12 +1048,17 @@ define(['jquery',
             $('#pais').prop('disabled', true);
             $('#observacion').prop('readonly', true);
             $('.select_statuses_program').prop('disabled', true);
+            $('#field_doc_dtddp').toggle();
             $('.input_fields_general_tab').prop('readonly', true);
             $('.input-tracking').prop('disabled', true);
             $(".bt_delete_person").css("visibility", "hidden");
             $('#age').show();
             $('#birthdate').hide();
-
+            $('#link_doc_dtddp')
+                .css("color", "")
+                .css("text-decoration", "");
+            $('#link_doc_dtddp').unbind('click');
+            
         }, revert_changes: function (form) {
             // Revertir cualquier cambio después de cancelar la edición
             for (field in form) {
