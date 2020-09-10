@@ -884,6 +884,12 @@ $record->flag_with_assignation = $flag_with_assignation;
 if( $dphpforms_ases_user ){
     if( !$flag_with_assignation ){
         $last_assignment = monitor_assignments_get_last_student_assignment( $dphpforms_ases_user, $blockid );
+        foreach ($last_assignment as $i => $e) {
+            if(is_null($e)){
+                $last_assignment[$i]->firstname = 'No se encontraron asignaciones';
+                $last_assignment[$i]->lastname = '';
+            }
+        }
         $record->last_assignment_monitor = $last_assignment['monitor_obj']->firstname . " " . $last_assignment['monitor_obj']->lastname;
         $record->last_assignment_practicant = $last_assignment['pract_obj']->firstname . " " . $last_assignment['pract_obj']->lastname;
         $record->last_assignment_professional = $last_assignment['prof_obj']->firstname . " " . $last_assignment['prof_obj']->lastname;
