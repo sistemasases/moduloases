@@ -7,14 +7,14 @@
  * @license   	http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-const VERSION = 1; //Current version.
+const VERSION_PERIODS = 1; //Current version.
 
 require_once( __DIR__ . "/../../../../config.php");
 require_once( __DIR__ . "/../module_loader.php");
 
 global $PERIODS_TABLENAME;
 $PERIODS_TABLENAME = $GLOBALS[ 'CFG' ]->prefix . "talentospilos_semestre";
-require_once( __DIR__ . "/v" . VERSION . "/entrypoint.php");
+require_once( __DIR__ . "/v" . VERSION_PERIODS . "/entrypoint.php");
 
 /**
  * Interface to periods_get_current_period
