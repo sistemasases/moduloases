@@ -149,44 +149,51 @@ if ($student_code != 0) {
     }
 
     //Get academics data of student
+    $body_table_others_institutions = '';
     if(get_exist_academics_data($ases_student->id)){
         $record->academics_data      = "1";
         $record->academics_data_json = json_encode(get_academics_data($ases_student->id));
+    
+        //Get aditional academics existing data
+
+        $aditional_academics_data = get_academics_data($ases_student->id);
+
+        //Extraer json y decodificar datos de otras instituciones del estudiante
+        $objeto_json_institutions = json_decode($aditional_academics_data->otras_instituciones);
+
+        //Recorrer el objeto json (array) y contruir los tr y td de la tabla
+        foreach($objeto_json_institutions as $objeto){
+
+            $body_table_others_institutions .= "<tr><td> <input name='name_institucion' class='input_fields_general_tab'  type='text' value='$objeto->name_institution'/></td>
+        <td> <input name='nivel_academico_institucion' class='input_fields_general_tab'  type='text' value='$objeto->academic_level'/></td>
+        <td> <input name='apoyos_institucion' class='input_fields_general_tab'  type='text' value='$objeto->supports'/></td>
+        <td> <button type ='button' id='bt_delete_institucion' title='Eliminar institución' name='btn_delete_institucion' style='visibility:visible;'> </button></td> </tr>";
+
+        }
+
+        $record->current_resolution         =$aditional_academics_data->resolucion_programa;
+        $record->total_time                 =$aditional_academics_data->creditos_totales;
+        $record->previous_academic_title    =$aditional_academics_data->titulo_academico_colegio;
+        $record->info_others_institutions   =$body_table_others_institutions;
+        $record->academics_observations     =$aditional_academics_data->observaciones;
+        $record->academics_dificults        =$aditional_academics_data->dificultades;
+        $record->academics_data_json        =json_encode($aditional_academics_data);
+
     }else{
         $record->academics_data = "0";
+        $record->current_resolution         ='No encontrado';
+        $record->total_time                 ='No encontrado';
+        $record->previous_academic_title    ='No encontrado';
+        $record->info_others_institutions   ='No encontrado';
+        $record->academics_observations     ='No encontrado';
+        $record->academics_dificults        ='No encontrado';
+        $record->academics_data_json        ='No encontrado';
     }
-
-    //Get aditional academics existing data
-
-    $aditional_academics_data = get_academics_data($ases_student->id);
-
-    $body_table_others_institutions = '';
-
-    //Extraer json y decodificar datos de otras instituciones del estudiante
-    $objeto_json_institutions = json_decode($aditional_academics_data->otras_instituciones);
-
-    //Recorrer el objeto json (array) y contruir los tr y td de la tabla
-    foreach($objeto_json_institutions as $objeto){
-
-        $body_table_others_institutions .= "<tr><td> <input name='name_institucion' class='input_fields_general_tab'  type='text' value='$objeto->name_institution'/></td>
-    <td> <input name='nivel_academico_institucion' class='input_fields_general_tab'  type='text' value='$objeto->academic_level'/></td>
-    <td> <input name='apoyos_institucion' class='input_fields_general_tab'  type='text' value='$objeto->supports'/></td>
-    <td> <button type ='button' id='bt_delete_institucion' title='Eliminar institución' name='btn_delete_institucion' style='visibility:visible;'> </button></td> </tr>";
-
-    }
-
-    $record->current_resolution         =$aditional_academics_data->resolucion_programa;
-    $record->total_time                 =$aditional_academics_data->creditos_totales;
-    $record->previous_academic_title    =$aditional_academics_data->titulo_academico_colegio;
-    $record->info_others_institutions   =$body_table_others_institutions;
-    $record->academics_observations     =$aditional_academics_data->observaciones;
-    $record->academics_dificults        =$aditional_academics_data->dificultades;
-    $record->academics_data_json        =json_encode($aditional_academics_data);
 
     //Faculty name foreach academic program
 
     $faculty_name = '';
-
+    $program_time = '';
 
     $record->id_moodle = $id_user_moodle;
     $record->id_ases = $student_id;
