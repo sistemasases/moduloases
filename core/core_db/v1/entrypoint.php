@@ -212,9 +212,12 @@ function call_db_function($func_name, ...$args) {
 
     global $functs_than_need_table_rename, $talentospilos_classes;
     $class_name = normalize_class_name($args[0]);
-    if(in_array($func_name, $functs_than_need_table_rename) && in_array($class_name, $talentospilos_classes)) {
+    if(is_array($functs_than_need_table_rename)){
+        if(in_array($func_name, $functs_than_need_table_rename) && in_array($class_name, $talentospilos_classes)) {
 
-        require_once (__DIR__."./../classes/".$class_name.".php");
+            require_once (__DIR__."./../classes/".$class_name.".php");
+        }
     }
+   
     return call_user_func_array(__NAMESPACE__ . "\\" . $func_name, $args);
 }
