@@ -7,7 +7,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $dbman = $DB->get_manager();
     $result = true;
 
-    if ($oldversion < 2019111514080 ) {
+    if ($oldversion < 2020092117310 ) {
       
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
@@ -4028,8 +4028,42 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $DB->execute( "ALTER TABLE " . $tablename . " ADD COLUMN $colname JSON" );
             
         }
+
+        // ********************************************************************************************************
+        // ACTUALIZACIÓN QUE CREA LA NUEVA TABLA talentospilos_monitores NECESARIA PARA LA FICHA DE MONITORES
+        // Version: 2020092117300
+        // ********************************************************************************************************
+
+        $table = new xmldb_table('talentospilos_monitores');
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
+        $table->add_field('id_moodle_user', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'id');
+        $table->add_field('id_jefe', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'id_moodle_user');
+        $table->add_field('id_instancia', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'id_jefe');
+        $table->add_field('id_academic_program', XMLDB_TYPE_INTEGER, '4', null, XMLDB_NOTNULL, null, null, 'id_instancia'); 
+        $table->add_field('documento', XMLDB_TYPE_INTEGER, '15', null, XMLDB_NOTNULL, null, null, 'id_academic_program'); 
+        $table->add_field('activo', XMLDB_TYPE_BINARY, null, null, XMLDB_NOTNULL, null, null, 'documento');
+        $table->add_field('cuenta_bancaria', XMLDB_TYPE_TEXT, null, null, null, null, null, 'activo');
+        $table->add_field('acuerdo_conf', XMLDB_TYPE_TEXT, null, null, null, null, null, 'cuenta_bancaria');
+        $table->add_field('link_documento', XMLDB_TYPE_TEXT, null, null, null, null, null, 'acuerdo_conf');
         
-        upgrade_block_savepoint(true, 2019111514080, 'ases');
+        // Launch add key primary.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        
+        // Launch add key id_moodle_user.
+        $table->add_key('id_moodle_user', XMLDB_KEY_FOREIGN_UNIQUE, ['id_moodle_user'], 'user', ['id']);
+
+        // Launch add key jefe_mon_fk.
+        $table->add_key('jefe_mon_fk', XMLDB_KEY_FOREIGN, ['id_jefe'], 'talentospilos_usuario_prof', ['id']);
+        
+        // Launch add key mon_instancia_fk.
+        $table->add_key('mon_instancia_fk', XMLDB_KEY_FOREIGN, ['id_instancia'], 'talentospilos_instancia', ['id']);
+        
+        // Conditionally launch create table.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+        // *********************************************************************************************************************
+        upgrade_block_savepoint(true, 2020092117310, 'ases');
         return $result;
 
     }
