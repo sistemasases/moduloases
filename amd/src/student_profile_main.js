@@ -683,7 +683,7 @@ define(['jquery',
                 $('#estado_civil').prop('disabled', false);
                 $('#observacion').prop('readonly', false);
                 $('.select_statuses_program').prop('disabled', false);
-                $('#field_doc_dtddp').toggle();
+                $('#field_doc_dtddp').show();
                 $('.input_fields_general_tab').prop('readonly', false);
                 $('.bt_delete_person').css("visibility", "visible");
                 $('.input-tracking').prop('disabled', false);
@@ -1048,15 +1048,13 @@ define(['jquery',
             $('#pais').prop('disabled', true);
             $('#observacion').prop('readonly', true);
             $('.select_statuses_program').prop('disabled', true);
-            $('#field_doc_dtddp').toggle();
+            $('#field_doc_dtddp').hide();
             $('.input_fields_general_tab').prop('readonly', true);
             $('.input-tracking').prop('disabled', true);
             $(".bt_delete_person").css("visibility", "hidden");
             $('#age').show();
             $('#birthdate').hide();
-            $('#link_doc_dtddp')
-                .css("color", "")
-                .css("text-decoration", "");
+            $('#link_doc_dtddp').css("color", "").css("text-decoration", "");
             $('#link_doc_dtddp').unbind('click');
             
         }, revert_changes: function (form) {
