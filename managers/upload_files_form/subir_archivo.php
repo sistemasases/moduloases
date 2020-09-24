@@ -718,7 +718,11 @@ if (isset($_FILES['csv_file'])) {
                     $new_risk->id = $registro->id;
                     $DB->update_record('talentospilos_riesg_usuario', $new_risk);                    
                 }else{
-                    $DB->insert_record('talentospilos_riesg_usuario', $new_risk);
+                    // Bandaid fix
+                    // id_usuario sometimes reaches as 0
+                    if($new_risk->id_usuario != 0 && $new_risk->id_usuario != null){
+                        $DB->insert_record('talentospilos_riesg_usuario', $new_risk);
+                    }
                 }
                 
                 $count++;

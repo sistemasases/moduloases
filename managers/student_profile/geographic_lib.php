@@ -212,7 +212,11 @@ function student_profile_save_geographic_info($id_ases, $latitude, $longitude, $
         $data_object_risk->calificacion_riesgo = (int)$nivel_riesgo;
         $data_object_risk->recorder = "other";
 
-        $result_geographic_risk = $DB->insert_record('talentospilos_riesg_usuario', $data_object_risk, true);
+        // Bandaid fix
+        // id_usuario sometimes reaches as 0
+        if($data_object_risk->id_usuario != 0 && $data_object_risk->id_usuario != null){
+            $result_geographic_risk = $DB->insert_record('talentospilos_riesg_usuario', $data_object_risk, true);
+        }
     }
 
     if($geographic_info){
