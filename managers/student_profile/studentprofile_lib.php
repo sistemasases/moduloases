@@ -1529,7 +1529,12 @@ function save_tracking_peer($object_tracking){
         $object_risk_individual->id_usuario = $object_tracking->id_estudiante_ases;
         $object_risk_individual->id_riesgo = $id_individual_risk;
         $object_risk_individual->calificacion_riesgo = 0;
-        $DB->insert_record('talentospilos_riesg_usuario', $object_risk_individual);
+        // Bandaid fix
+        // id_usuario sometimes reaches as 0
+        if($object_risk_individual->id_usuario != 0 && $object_risk_individual->id_usuario != null){
+            $DB->insert_record('talentospilos_riesg_usuario', $object_risk_individual);
+        }
+
     }
         
 
@@ -1554,7 +1559,12 @@ function save_tracking_peer($object_tracking){
         $object_risk_familiar->id_usuario = $object_tracking->id_estudiante_ases;
         $object_risk_familiar->id_riesgo = $id_familiar_risk;
         $object_risk_familiar->calificacion_riesgo = 0;
-        $DB->insert_record('talentospilos_riesg_usuario', $object_risk_familiar);
+        // Bandaid fix
+        // id_usuario sometimes reaches as 0
+        if($object_risk_familiar->id_usuario != 0 && $object_risk_familiar->id_usuario != null){
+            $DB->insert_record('talentospilos_riesg_usuario', $object_risk_familiar);
+        }
+
     }
 
     // {estudiante_riesgo - académico} relation id
@@ -1579,7 +1589,11 @@ function save_tracking_peer($object_tracking){
         $object_risk_academic->id_usuario = $object_tracking->id_estudiante_ases;
         $object_risk_academic->id_riesgo = $id_academic_risk;
         $object_risk_academic->calificacion_riesgo = 0;
-        $DB->insert_record('talentospilos_riesg_usuario', $object_risk_academic);
+        // Bandaid fix
+        // id_usuario sometimes reaches as 0
+        if($object_risk_academic->id_usuario != 0 && $object_risk_academic->id_usuario != null){
+            $DB->insert_record('talentospilos_riesg_usuario', $object_risk_academic);
+        }
     }
 
     // {estudiante_riesgo - económico} relation id
@@ -1604,7 +1618,10 @@ function save_tracking_peer($object_tracking){
         $object_risk_economic->id_usuario = $object_tracking->id_estudiante_ases;
         $object_risk_economic->id_riesgo = $id_economic_risk;
         $object_risk_economic->calificacion_riesgo = 0;
-        $DB->insert_record('talentospilos_riesg_usuario', $object_risk_economic);
+        if($object_risk_economic->id_usuario != 0 && $object_risk_economic->id_usuario != null){
+            $DB->insert_record('talentospilos_riesg_usuario', $object_risk_economic);
+        }
+
     }
 
     // {estudiante_riesgo vida universitaria} relation id
@@ -1629,7 +1646,9 @@ function save_tracking_peer($object_tracking){
         $object_risk_life->id_usuario = $object_tracking->id_estudiante_ases;
         $object_risk_life->id_riesgo = $id_life_u_risk;
         $object_risk_life->calificacion_riesgo = 0;
-        $DB->insert_record('talentospilos_riesg_usuario', $object_risk_life);
+        if($object_risk_life->id_usuario != 0 && $object_risk_life->id_usuario != null){
+            $DB->insert_record('talentospilos_riesg_usuario', $object_risk_life);
+        }
     }
 
 

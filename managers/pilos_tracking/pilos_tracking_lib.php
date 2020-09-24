@@ -1088,8 +1088,12 @@ function update_last_user_risk( $ases_student_code, $record_id ){
                 $new_user_risk->id_riesgo = $risk->id;
                 $new_user_risk->calificacion_riesgo = $geo_risk_lvl;
                 $new_user_risk->recorder = "dphpforms";
-                $DB->insert_record( 'talentospilos_riesg_usuario', $new_user_risk, $returnid=false, $bulk=false );
-            } 
+                // Bandaid fix
+                // id_usuario sometimes reaches as 0
+                if($new_user_risk->id_usuario != 0 && $new_user_risk->id_usuario != null){
+                    $DB->insert_record( 'talentospilos_riesg_usuario', $new_user_risk, $returnid=false, $bulk=false );
+                }
+            }
         }
     }
     return 0;
