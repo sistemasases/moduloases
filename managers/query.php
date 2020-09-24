@@ -971,7 +971,11 @@ function updateRisks($segObject, $idStudent){
             $sr->id = $exists->id;
             $DB->update_record('talentospilos_riesg_usuario',$sr);
         }else{
-            $DB->insert_record('talentospilos_riesg_usuario',$sr);
+            // Bandaid fix
+            // id_usuario sometimes reaches as 0
+            if($sr->id_usuario != 0 && $sr->id_usuario != null){
+                $DB->insert_record('talentospilos_riesg_usuario',$sr);
+            }
         }
     }
     return true;

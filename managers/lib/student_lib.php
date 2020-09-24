@@ -547,8 +547,11 @@ function get_full_user($id)
 {
     global $DB;
 
-    $sql_query = "SELECT * FROM {user} WHERE id= " . $id;
-    $user = $DB->get_record_sql($sql_query);
+    //TO DO: $id sometimes reaches this point as empty
+    if($id != null) {
+        $sql_query = "SELECT * FROM {user} WHERE id= " . $id;
+        $user = $DB->get_record_sql($sql_query);
+    }else return 1;
 
     return $user;
 }
