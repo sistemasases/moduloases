@@ -192,7 +192,8 @@ function update($instance, $table_name=null) {
     if(!property_exists($instance, 'id')) {
         return false;
     } else if($instance->id == 0){
-        trigger_error('ASES Error: actualizar instance en la BD con id 0');
+        trigger_error('ASES Notificacion: actualizar instance en la BD con id 0');
+        return 0;
     }else{
         return $DB->update_record($table_name, $instance);
     }

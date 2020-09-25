@@ -67,7 +67,8 @@ function update_talentosusuario($column,$values,$id){
         //se le asigna el id del usario a actualizar
         $obj_updatable->id = $iduser->idtalentos;
         if($obj_updatable->id == 0){
-            trigger_error('ASES Error: actualizar usuario en la BD con id 0');
+            trigger_error('ASES Notificacion: actualizar usuario en la BD con id 0');
+            return 0;
         }
         return $DB->update_record('talentospilos_usuario', $obj_updatable);
     }catch(Exception $e){
@@ -122,7 +123,8 @@ function update_notas($user_id, $items, $old_n, $new_n){
 
                     if(are_register($user_id, $items[$i])){
                         if( $user_id == 0){
-                            trigger_error('ASES Error: actualizar notas en la BD con id 0');
+                            trigger_error('ASES Notificacion: actualizar notas en la BD con id 0');
+                            return 0;
                         }  
                         $sql_query = "UPDATE {grade_grades} SET finalgrade = {$new_n[$i]} WHERE userid = {$user_id} AND itemid = {$items[$i]}";
                         $succes = $DB->execute($sql_query);
@@ -522,7 +524,8 @@ function delete_last_register($table_name){
      $object->id_usuario = $id_user;
      $object->id_profesional = $id_profesional->id;
      if($object->id == 0){
-        trigger_error('ASES Error: actualizar usuario profesional en la BD con id 0');
+        trigger_error('ASES Notificacion: actualizar usuario profesional en la BD con id 0');
+        return 0;
     }
      $update = $DB->update_record('talentospilos_usuario_prof', $object);
      
@@ -977,9 +980,10 @@ function updateRisks($segObject, $idStudent){
         if($exists){
             $sr->id = $exists->id;
             if($sr->id == 0){
-                trigger_error('ASES Error: actualizar riesgo en la BD con id 0');
+                trigger_error('ASES Notificacion: actualizar riesgo en la BD con id 0');
+            }else{
+                $DB->update_record('talentospilos_riesg_usuario',$sr);
             }
-            $DB->update_record('talentospilos_riesg_usuario',$sr);
         }else{
             $DB->insert_record('talentospilos_riesg_usuario',$sr);
         }
@@ -1266,7 +1270,8 @@ function insertPrimerAcerca($object){
 function updatePrimerAcerca($object){
     global $DB;
     if($object->id == 0){
-        trigger_error('ASES Error: actualizar primer_acerca en la BD con id 0');
+        trigger_error('ASES Notificacion: actualizar primer_acerca en la BD con id 0');
+        return 0;
     }
     return $DB->update_record('talentospilos_primer_acerca', $object);
 }
@@ -1329,7 +1334,8 @@ function getFamilia($idtalentos){
 function updateAcompaSocio($object){
     global $DB;
     if($object->id == 0){
-        trigger_error('ASES Error: actualizar AcompaSocio en la BD con id 0');
+        trigger_error('ASES Notificacion: actualizar AcompaSocio en la BD con id 0');
+        return 0;
     }
     return $DB->update_record('talentospilos_socioeducativo', $object);
 }
@@ -1337,7 +1343,8 @@ function updateAcompaSocio($object){
 function updateInfoEconomica($object){
     global $DB;
     if($object->id == 0){
-        trigger_error('ASES Error: actualizar infoEconomica en la BD con id 0');
+        trigger_error('ASES Notificacion: actualizar infoEconomica en la BD con id 0');
+        return 0;
     }
     return $DB->update_record('talentospilos_economia', $object);
 }
@@ -1345,7 +1352,8 @@ function updateInfoEconomica($object){
 function updateInfoFamilia($object){
     global $DB;
     if($object->id == 0){
-        trigger_error('ASES Error: actualizar infoFamilia en la BD con id 0');
+        trigger_error('ASES Notificacion: actualizar infoFamilia en la BD con id 0');
+        return 0;
     }
     return $DB->update_record('talentospilos_familia', $object);
 }
@@ -1372,7 +1380,8 @@ function insertSegSocio($object){
 function updateSegSocio($object){
     global $DB;
     if($object->id == 0){
-        trigger_error('ASES Error: actualizar segSocio en la BD con id 0');
+        trigger_error('ASES Notificacion: actualizar segSocio en la BD con id 0');
+        return 0;
     }
     return $DB->update_record('talentospilos_seg_soc_educ', $object);
 }
@@ -2223,7 +2232,8 @@ function saveMotivoRetiro($talentosid, $motivoid,$detalle){
     {
         $record->id = $exists->id;
         if($record->id == 0){
-            trigger_error('ASES Error: actualizar retiro en la BD con id 0');
+            trigger_error('ASES Notificacion: actualizar retiro en la BD con id 0');
+            return 0;
         }
         return $DB->update_record('talentospilos_retiros', $record);
     }
@@ -2372,7 +2382,8 @@ function updateSeguimiento_pares($object){
    
       if($lastSeg->id_seguimiento == $object->id) updateRisks($object, $seg_estud->id_estudiante );
       if($object->id == 0){
-            trigger_error('ASES Error: actualizar seguimiento en la BD con id 0');
+            trigger_error('ASES Notificacion: actualizar seguimiento en la BD con id 0');
+            return 0;
         }
      $lastinsertid = $DB->update_record('talentospilos_seguimiento', $object);
 
@@ -2414,7 +2425,8 @@ $obeconomico,$riesgoEconomico,$obuniversitario,$riesgoUniversitario,$observacion
     date_default_timezone_set('America/Los_Angeles'); 
     $record->fecha = strtotime($fecha_formato);
     if($record->id == 0){
-        trigger_error('ASES Error: actualizar seguimiento en la BD con id 0');
+        trigger_error('ASES Notificacion: actualizar seguimiento en la BD con id 0');
+        return 0;
     }
     $lastinsertid = $DB->update_record('talentospilos_seguimiento', $record);
     if($lastinsertid){
@@ -2724,7 +2736,8 @@ function save_geographic_risk($id_student, $rate_risk){
         $update_record->calificacion_riesgo = (int)$rate_risk;
         
         if($update_record->id == 0){
-            trigger_error('ASES Error: actualizar riesgo_geo en la BD con id 0');
+            trigger_error('ASES Notificacion: actualizar riesgo_geo en la BD con id 0');
+            return 0;
         }
 
         $update_result = $DB->update_record($table, $update_record);
@@ -2799,7 +2812,8 @@ function save_geographic_risk($id_student, $rate_risk){
         $update_record->barrio = $id_barrio;
          
         if($update_record->id == 0){
-            trigger_error('ASES Error: actualizar geo_info en la BD con id 0');
+            trigger_error('ASES Notificacion: actualizar geo_info en la BD con id 0');
+            return 0;
         }
 
         $result_demographic = $DB->update_record($table_demographic, $update_record);

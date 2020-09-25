@@ -296,7 +296,8 @@ function update_record_talentospilos_df_form_resp($id_registro_respuesta_form){
 
     global $DB;
     if( $id_registro_respuesta_form['id']== 0){
-        trigger_error('ASES Error: actualizar df_form_resp en la BD con id 0');
+        trigger_error('ASES Notificacion: actualizar df_form_resp en la BD con id 0');
+        return -1;
     }  
     $sql_query = "UPDATE {talentospilos_df_form_resp} SET estado = 1 WHERE id = $id_registro_respuesta_form";  
     

@@ -771,9 +771,10 @@ function dphpforms_update_completed_form( $form_identifier_respuesta, $pregunta_
 
         //echo json_encode( $obj_updated_respuesta );
         if($obj_updated_respuesta->id == 0){
-            trigger_error('ASES Error: actualizar respuesta en la BD con id 0');
-        }
+            trigger_error('ASES Notificacion: actualizar respuesta en la BD con id 0');
+        }else{
         $DB->update_record('talentospilos_df_respuestas', $obj_updated_respuesta, $bulk=false);
+        }
        };
 
        /*}else{

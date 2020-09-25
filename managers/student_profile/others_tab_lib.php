@@ -44,7 +44,8 @@ function save_detalle_discapacidad($json, $id_ases){
     $student->id = $id_ases;
     $student->json_detalle = $json;
     if($student->id == 0){
-        trigger_error('ASES Error: actualizar estudiante en la BD con id 0');
+        trigger_error('ASES Notificacion: actualizar estudiante en la BD con id 0');
+        return -1;
     }
     $result = $DB->update_record('talentospilos_usuario', $student);
     // $sql_query = "UPDATE {talentospilos_usuario} SET json_detalle = '$json' WHERE id = $id_ases";
@@ -104,7 +105,8 @@ function update_academics_data($academics_data, $id_ases){
     $register_academics_data->titulo_academico_colegio  = $data->previous_academic_title;
 
     if($register_academics_data->id == 0){
-        trigger_error('ASES Error: actualizar academics_data en la BD con id 0');
+        trigger_error('ASES Notificacion: actualizar academics_data en la BD con id 0');
+        return -1;
     }
     $result = $result = $DB->update_record('talentospilos_academics_data', $register_academics_data);
     return $result;
@@ -149,7 +151,8 @@ function update_health_data($health_data, $id_ases){
     $register_health_data->servicios_usados             = json_encode($data[2]);
     $register_health_data->id_ases_user                 = $id_ases;
     if($register_health_data->id == 0){
-        trigger_error('ASES Error: actualizar health_data en la BD con id 0');
+        trigger_error('ASES Notificacion: actualizar health_data en la BD con id 0');
+        return -1;
     }
     $result = $result = $DB->update_record('talentospilos_health_data', $register_health_data);
     return $result;
@@ -203,7 +206,8 @@ function update_economics_data($economics_data, $id_ases){
     $register_economics_data->expectativas_laborales    = json_encode($data[9]);
     $register_economics_data->id_ases_user              = $id_ases;
     if($register_economics_data->id == 0){
-        trigger_error('ASES Error: actualizar economics_data en la BD con id 0');
+        trigger_error('ASES Notificacion: actualizar economics_data en la BD con id 0');
+        return -1;
     }
     $result = $result = $DB->update_record('talentospilos_economics_data', $register_economics_data);
     return $result;

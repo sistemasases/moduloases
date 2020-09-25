@@ -316,9 +316,10 @@ if (isset($_FILES['csv_file'])) {
                     $record->id_discapacidad = $data[24];
                     $record->id = $array_id_talentos[$count];
                     if($record->id == 0){
-                        trigger_error('ASES Error: actualizar usuario en la BD con id 0');
+                        trigger_error('ASES Notificacion: actualizar usuario en la BD con id 0');
+                    }else{
+                        $DB->update_record('talentospilos_usuario', $record);
                     }
-                    $DB->update_record('talentospilos_usuario', $record);
                 } else {
                     $record->id_ciudad_ini = $array_id_ciudadini[$count];
                     $record->id_ciudad_res = $array_id_ciudadres[$count];
@@ -481,9 +482,10 @@ if (isset($_FILES['csv_file'])) {
                     //dat[4] --> tracking_status
                     $record->tracking_status = $dat[4];
                     if($record->id == 0){
-                        trigger_error('ASES Error: actualizar usuario en la BD con id 0');
-                    }
+                        trigger_error('ASES Notificacion: actualizar usuario en la BD con id 0');
+                    }else{
                     $DB->update_record('talentospilos_user_extended', $record);
+                    }
                     // foreach ($result as $value) {
 
                     //     //METODO USANDO MODELO ANTIGUO.(usando user_info_data)
@@ -646,9 +648,10 @@ if (isset($_FILES['csv_file'])) {
                     $record->nombre = $data[2];
                     $record->estrato = $data[3];
                     if($record->id == 0){
-                        trigger_error('ASES Error: actualizar usuario en la BD con id 0');
-                    }
+                        trigger_error('ASES Notificacion: actualizar usuario en la BD con id 0');
+                    }else{
                     $DB->update_record('talentospilos_barrios', $record);
+                    }
                 } else {
                     $record->cod_barrio = (int) $data[0];
                     $record->cod_comuna = $data[1];
@@ -702,9 +705,10 @@ if (isset($_FILES['csv_file'])) {
                     $record->latitud = (double) $data[3];
                     $record->barrio = (int) $id_barrio->id;
                     if($record->id == 0){
-                        trigger_error('ASES Error: actualizar demografia en la BD con id 0');
-                    }
+                        trigger_error('ASES Notificacion: actualizar demografia en la BD con id 0');
+                    }else{
                     $DB->update_record('talentospilos_demografia', $record);
+                    }
 
                 } else {
                     $record->id_usuario = (int) $id_user_talentos;
@@ -727,9 +731,10 @@ if (isset($_FILES['csv_file'])) {
                 if( $registro ){
                     $new_risk->id = $registro->id;
                     if($record->id == 0){
-                        trigger_error('ASES Error: actualizar riesgo en la BD con id 0');
-                    }
-                    $DB->update_record('talentospilos_riesg_usuario', $new_risk);                    
+                        trigger_error('ASES Notificacion: actualizar riesgo en la BD con id 0');
+                    }else{
+                    $DB->update_record('talentospilos_riesg_usuario', $new_risk);
+                    }                    
                 }else{
                     $DB->insert_record('talentospilos_riesg_usuario', $new_risk);
                 }
