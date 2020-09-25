@@ -184,7 +184,8 @@ function cache_update_value( $key, $value = NULL ){
     $obj_cache = cache_get_obj( $key );
     $obj_cache->valor = $value;
     if($obj_cache->id == 0){
-        trigger_error('ASES Error: actualizar cache en la BD con id 0');
+        trigger_error('ASES Notificacion: actualizar cache en la BD con id 0');
+        return 0;
     }
     return $DB->update_record("talentospilos_cache", $obj_cache);
     
@@ -213,7 +214,8 @@ function cache_update_description( $key, $description = NULL ){
     $obj_cache->descripcion = $description;
     $obj_cache->fecha_hora_actualizado = "now()";
     if($obj_cache->id == 0){
-        trigger_error('ASES Error: actualizar cache en la BD con id 0');
+        trigger_error('ASES Notificacion: actualizar cache en la BD con id 0');
+        return 0;
     }
     return $DB->update_record("talentospilos_cache", $obj_cache);
     

@@ -240,7 +240,8 @@ function periods_get_current_semester(){
           $semester->fecha_fin = $semesterInfo[3];
 
           if($semester->id == 0){
-            trigger_error('ASES Error: actualizar semestre en la BD con id 0');
+            trigger_error('ASES Notificacion: actualizar semestre en la BD con id 0');
+            return -1;
         }
           $update = $DB->update_record('talentospilos_semestre', $semester);
 

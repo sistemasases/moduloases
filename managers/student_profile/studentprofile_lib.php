@@ -337,9 +337,10 @@ function update_record_act($act){
  if( !$DB->record_exists("talentospilos_act_simultanea",array('actividad'=> $act_M))){
      $act->actividad  = $act_M;
      if($act->id == 0){
-        trigger_error('ASES Error: actualizar act en la BD con id 0');
-    }
+        trigger_error('ASES Notificacion: actualizar act en la BD con id 0');
+    }else{
     $DB->update_record("talentospilos_act_simultanea", $act);
+    }
  }
 
 }
@@ -395,9 +396,10 @@ function update_record_genero($genero){
  if( !$DB->record_exists("talentospilos_identidad_gen",array('genero'=> $genero_M))){
      $genero->genero  = $genero_M;
      if($genero->id == 0){
-        trigger_error('ASES Error: actualizar genero en la BD con id 0');
-    }
+        trigger_error('ASES Notificacion: actualizar genero en la BD con id 0');
+    }else{
     $DB->update_record("talentospilos_identidad_gen", $genero);
+    }
  }
 
 }
@@ -560,7 +562,8 @@ function  get_act_simultaneas()
             $result_cv_update = false;
         } else{
             if($obj_updatable_moodle->id == 0){
-                trigger_error('ASES Error: actualizar email en la BD con id 0');
+                trigger_error('ASES Notificacion: actualizar email en la BD con id 0');
+                return false;
             }
             $result_cv_update = $DB->update_record('user', $obj_updatable_moodle);
         }
@@ -710,7 +713,8 @@ function save_reason_dropout_ases($code_student, $reason, $observation){
     if($exists) {
         $record->id = $exists->id;
         if($record->id == 0){
-            trigger_error('ASES Error: actualizar retiro en la BD con id 0');
+            trigger_error('ASES Notificacion: actualizar retiro en la BD con id 0');
+            return 0;
         }
         $result = $DB->update_record('talentospilos_retiros', $record);
     }
@@ -1483,10 +1487,11 @@ function save_tracking_peer($object_tracking){
 
         unset($object_tracking->id_monitor);
         if($object_tracking->id == 0){
-            trigger_error('ASES Error: actualizar retiro en la BD con id 0');
-        }
+            trigger_error('ASES Notificacion: actualizar retiro en la BD con id 0');
+        }else{
         $result = $DB->update_record('talentospilos_seguimiento', $object_tracking);
         $result_insertion_tracking = -1;  // This variable value indicates it wasn't an insertion but an update
+        }
     }else{
         // Inserts track
         unset($object_tracking->id);
@@ -1537,9 +1542,10 @@ function save_tracking_peer($object_tracking){
             $object_risk_individual->id_riesgo = $id_individual_risk;
             $object_risk_individual->calificacion_riesgo = (int)$object_tracking->individual_riesgo;
             if($object_risk_individual->id == 0){
-                trigger_error('ASES Error: actualizar riesgo en la BD con id 0');
+                trigger_error('ASES Notificacion: actualizar riesgo en la BD con id 0');
+            }else{
+                $DB->update_record('talentospilos_riesg_usuario', $object_risk_individual);
             }
-            $DB->update_record('talentospilos_riesg_usuario', $object_risk_individual);
         }
     }else{
         $object_risk_individual = new stdClass();
@@ -1570,9 +1576,10 @@ function save_tracking_peer($object_tracking){
             $object_risk_familiar->id_riesgo = $id_familiar_risk;
             $object_risk_familiar->calificacion_riesgo = (int)$object_tracking->familiar_riesgo;
             if($object_risk_familiar->id == 0){
-                trigger_error('ASES Error: actualizar riesgo en la BD con id 0');
+                trigger_error('ASES Notificacion: actualizar riesgo en la BD con id 0');
+            }else{
+                $DB->update_record('talentospilos_riesg_usuario', $object_risk_familiar);
             }
-            $DB->update_record('talentospilos_riesg_usuario', $object_risk_familiar);
         }
     }else{
         $object_risk_familiar = new stdClass();
@@ -1603,9 +1610,10 @@ function save_tracking_peer($object_tracking){
             $object_risk_academic->id_riesgo = $id_academic_risk;
             $object_risk_academic->calificacion_riesgo = (int)$object_tracking->academico_riesgo;
             if($object_risk_academic->id == 0){
-                trigger_error('ASES Error: actualizar riesgo en la BD con id 0');
+                trigger_error('ASES Notificacion: actualizar riesgo en la BD con id 0');
+            }else{
+                $DB->update_record('talentospilos_riesg_usuario', $object_risk_academic);
             }
-            $DB->update_record('talentospilos_riesg_usuario', $object_risk_academic);
         }
     }else{
         $object_risk_academic = new stdClass();
@@ -1635,9 +1643,10 @@ function save_tracking_peer($object_tracking){
             $object_risk_economic->id_riesgo = $id_economic_risk;
             $object_risk_economic->calificacion_riesgo = (int)$object_tracking->economico_riesgo;
             if($object_risk_economic->id == 0){
-                trigger_error('ASES Error: actualizar riesgo en la BD con id 0');
-            }
+                trigger_error('ASES Notificacion: actualizar riesgo en la BD con id 0');
+            }else{
             $DB->update_record('talentospilos_riesg_usuario', $object_risk_economic);
+            }
         }
     }else{
         $object_risk_economic = new stdClass();
@@ -1666,9 +1675,10 @@ function save_tracking_peer($object_tracking){
             $object_risk_life->id_riesgo = $id_life_u_risk;
             $object_risk_life->calificacion_riesgo = (int)$object_tracking->vida_uni_riesgo;
             if($object_risk_life->id == 0){
-                trigger_error('ASES Error: actualizar riesgo en la BD con id 0');
-            }
+                trigger_error('ASES Notificacion: actualizar riesgo en la BD con id 0');
+            }else{
             $DB->update_record('talentospilos_riesg_usuario', $object_risk_life);
+            }
         }
     }else{
         $object_risk_life = new stdClass();
@@ -1717,9 +1727,11 @@ function delete_tracking_peer($id_tracking){
     $object_updatable->status = 0;
 
     if($object_updatable->id == 0){
-        trigger_error('ASES Error: actualizar riesgo en la BD con id 0');
-    }
+        trigger_error('ASES Notificacion: actualizar riesgo en la BD con id 0');
+        $result_query = false;
+    }else{
     $result_query = $DB->update_record('talentospilos_seguimiento', $object_updatable);
+    }
 
     if($result_query){
         $msg_result->title = "Éxito";
@@ -1775,9 +1787,10 @@ function save_status_icetex($id_status, $id_student, $id_reason=null, $observati
         $object_updatable->id = $id_student;
         $object_updatable->observacion = $user_observations;
         if($object_updatable->id == 0){
-            trigger_error('ASES Error: actualizar observaciones usuario en la BD con id 0');
+            trigger_error('ASES Notificacion: actualizar observaciones usuario en la BD con id 0');
+        }else{
+            $DB->update_record('talentospilos_usuario', $object_updatable);
         }
-        $DB->update_record('talentospilos_usuario', $object_updatable);
     }
 
     $result_insertion = $DB->insert_record('talentospilos_est_est_icetex', $object_status);
@@ -2022,15 +2035,20 @@ function update_tracking_status($id_ases_user, $id_academic_program){
         $record->id = $reg->id;
         $record->tracking_status = 0;
         if($record->id == 0){
-            trigger_error('ASES Error: actualizar usuario en la BD con id 0');
-        }
+            trigger_error('ASES Notificacion: actualizar usuario en la BD con id 0');
+        }else{
         $DB->update_record('talentospilos_user_extended', $record);
+        }
     }
 
     $record->id = $id_reg_user_extended;
     $record->tracking_status = 1;
-
+    if($record->id == 0){
+        trigger_error('ASES Notificacion: actualizar usuario en la BD con id 0');
+        $result = false;
+    }else{
     $result = $DB->update_record('talentospilos_user_extended', $record);
+    }
 
     return $result;
 }
@@ -2229,9 +2247,11 @@ function save_profile($form, $option1, $option2, $live_with){
         $obj_updatable_moodle->email = $email;
 
         if($obj_updatable->id == 0){
-            trigger_error('ASES Error: actualizar usuario en la BD con id 0');
+            trigger_error('ASES Notificacion: actualizar usuario en la BD con id 0');
+            $result= false;
+        }else{
+            $result = $DB->update_record('talentospilos_usuario', $obj_updatable);
         }
-        $result = $DB->update_record('talentospilos_usuario', $obj_updatable);
 
         $result_cv_update = studentprofile_update_email_moodle($obj_updatable_moodle);
 
