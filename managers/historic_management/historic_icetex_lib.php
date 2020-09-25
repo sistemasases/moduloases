@@ -169,7 +169,9 @@ function update_resolution_credit_note($id_resolution, $credit_note){
     $object_resolution = new stdClass();
     $object_resolution->id = $id_resolution;
     $object_resolution->nota_credito = $credit_note;
-
+    if($object_resolution->id == 0){
+        trigger_error('ASES Error: actualizar resolucion en la BD con id 0');
+    }
     $update = $DB->update_record('talentospilos_res_icetex', $object_resolution);
 
     if($update){
@@ -191,7 +193,9 @@ function update_resolution_amount_students($id_resolution, $amount_students){
     $object_resolution = new stdClass();
     $object_resolution->id = $id_resolution;
     $object_resolution->cantidad_estudiantes = $amount_students;
-
+    if($object_resolution->id == 0){
+        trigger_error('ASES Error: actualizar resolucion en la BD con id 0');
+    }
     $update = $DB->update_record('talentospilos_res_icetex', $object_resolution);
 
     if($update){
@@ -282,7 +286,9 @@ function update_historic_icetex_status($student_id, $semester_id, $id_icetex_sta
         $object_historic->id_estudiante = $student_id;
         $object_historic->id_semestre = $semester_id;
         $object_historic->id_estado_icetex = $id_icetex_status;
-
+        if($object_historic->id == 0){
+            trigger_error('ASES Error: actualizar historic en la BD con id 0');
+        }
         $update = $DB->update_record('talentospilos_hist_est_ice', $object_historic);
 
         if ($update) {

@@ -147,6 +147,9 @@ function modify_record($id,$table,$nombre,$descripcion,$funcionalidad)
     }
 
     $tabla = "talentospilos_".$table;
+    if($record->id == 0){
+        trigger_error('ASES Error: actualizar record en la BD con id 0');
+    }
     $modify = $DB->update_record($tabla, $record);
 
     if($modify){

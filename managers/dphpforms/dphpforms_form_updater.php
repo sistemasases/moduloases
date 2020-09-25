@@ -253,6 +253,9 @@
         $pregunta = $DB->get_record_sql($sql);
         if($pregunta){
             $pregunta->enunciado = $new_enunciado;
+            if($pregunta->id == 0){
+                trigger_error('ASES Error: actualizar df_pregunta en la BD con id 0');
+            }
             $DB->update_record('talentospilos_df_preguntas', $pregunta, $bulk=false);
             return 0;
         }else{
@@ -266,6 +269,9 @@
         $pregunta = $DB->get_record_sql($sql);
         if($pregunta){
             $pregunta->atributos_campo = $new_atributos;
+            if($pregunta->id == 0){
+                trigger_error('ASES Error: actualizar pregunta en la BD con id 0');
+            }
             $DB->update_record('talentospilos_df_preguntas', $pregunta, $bulk=false);
             return 0;
         }else{
@@ -279,6 +285,9 @@
         $pregunta = $DB->get_record_sql($sql);
         if($pregunta){
             $pregunta->opciones_campo = $new_opciones;
+            if($pregunta->id == 0){
+                trigger_error('ASES Error: actualizar pregunta en la BD con id 0');
+            }
             $DB->update_record('talentospilos_df_preguntas', $pregunta, $bulk=false);
             return 0;
         }else{
@@ -298,6 +307,9 @@
             $form_preg_updated->posicion = $new_position;
             $form_preg_updated->fecha_hora_registro = $form_preg->fecha_hora_registro;
             $form_preg_updated->estado = $form_preg->estado;
+            if($form_preg_updated->id == 0){
+                trigger_error('ASES Error: actualizar pregunta en la BD con id 0');
+            }
             $DB->update_record('talentospilos_df_form_preg', $form_preg_updated, $bulk=false);
             return 0;
         }else{
@@ -325,6 +337,9 @@
         if($formulario){
             $formulario->estado = '0';
             $formulario->alias = null;
+            if($formulario->id == 0){
+                trigger_error('ASES Error: actualizar formulario en la BD con id 0');
+            }
             $DB->update_record('talentospilos_df_formularios', $formulario, $bulk = false);
             return 0;
         }else{
@@ -447,7 +462,9 @@
             $db_permiso = $DB->get_record_sql($sql_permiso);
             $db_permiso->id = $db_permiso->id;
             $db_permiso->permisos = $permisos;
-
+            if($db_permiso->id == 0){
+                trigger_error('ASES Error: actualizar permiso en la BD con id 0');
+            }
             $DB->update_record('talentospilos_df_per_form_pr', $db_permiso, $bulk=false);
 
             return 0;
@@ -577,6 +594,9 @@
         $disparador = $DB->get_record_sql( $sql );
         if( $disparador ){
             $disparador->disparadores = trim( $disparadores );
+            if($disparador->id == 0){
+                trigger_error('ASES Error: actualizar disparador_fordil en la BD con id 0');
+            }
             if ( $DB->update_record('talentospilos_df_disp_fordil', $disparador, $bulk=false) == 1 ){
                 return 0;
             };

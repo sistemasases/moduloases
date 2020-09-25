@@ -106,6 +106,9 @@ function incident_close_incident( $id, $closed_by_user_id ){
         $record->estados = json_encode( $status );
         $record->id_usuario_cierra = $closed_by_user_id;
         $record->cerrada = 1;
+        if($record->id == 0){
+            trigger_error('ASES Error: actualizar incidencia en la BD con id 0');
+        }
         return $DB->update_record( 'talentospilos_incidencias', $record, $bulk=false );
 
     }else{

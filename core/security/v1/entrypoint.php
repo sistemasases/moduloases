@@ -456,7 +456,9 @@ function secure_remove_call( $alias, $user_id ){
         }
         
         if( $user ){
-            
+            if($action['id']== 0){
+                trigger_error('ASES Error: actualizar usuario en la BD con id 0');
+            }
             $tablename = $DB_PREFIX . "talentospilos_acciones";
             $params = [ $action['id'] ];
             $query = "UPDATE $tablename SET eliminado = 1, fecha_hora_eliminacion = 'now()', id_usuario_eliminador = $user_id "
@@ -786,6 +788,9 @@ function secure_remove_role_to_user( $user_id, $role, $start_datetime, $executed
             $executed_by,
             $assignation_in_master_system['id']
         ];
+        if($assignation_in_master_system['id']== 0){
+            trigger_error('ASES Error: actualizar usuario en la BD con id 0');
+        }
         $query = "UPDATE $tablename SET eliminado = $1, fecha_hora_eliminacion = $2, id_usuario_eliminador = $3 WHERE id = $4";
     	$manager( $query, $params, $extra = null );
     }
@@ -860,6 +865,9 @@ function secure_remove_role_from_user_previous_system( $user_id, $role, $singula
             $assignation['id'], 
             $period_id
         ];
+        if($assignation['id']== 0){
+            trigger_error('ASES Error: actualizar usuario_rol en la BD con id 0');
+        }
         $query = "UPDATE $tablename SET estado = $1 WHERE id = $2 AND id_semestre = $3";
     	return $manager( $query, $params, $extra = null );
     }
@@ -1003,7 +1011,9 @@ function secure_remove_role( $role, int $exceuted_by )
         $manager = get_db_manager();                                            // Security core database manager.
         $tablename = $DB_PREFIX . "talentospilos_roles";                        // Moodle tablename with Moodle prefix. Ex. mdl_talentospilos_usuario
         $params = [ $db_role['id'],  1, "now()", $exceuted_by ];                // [0] Role id. [1] Status: 1 = Removed. [2] Time when it was removed. [3] User id that makes the acction
-            
+        if( $db_role['id']== 0){
+            trigger_error('ASES Error: actualizar roles en la BD con id 0');
+        }    
         $query = "UPDATE $tablename " .                                          // Query to remove in a logical way the record from the Database. See $param var.
             "SET eliminado = $2, " .                                            // Existence status, 0 = exist, 1 = no exist. See $param var.
             "   fecha_hora_eliminacion = $3, ".                                 // Time when was removed. See $param var.
@@ -1103,7 +1113,9 @@ function secure_remove_call_role( $call, $role, int $exec_by )
         $manager = get_db_manager();                                            // Security core database manager.
         $tablename = $DB_PREFIX . "talentospilos_roles_acciones";               // Moodle tablename with Moodle prefix. Ex. mdl_talentospilos_usuario
         $params = [ $obj_role['id'], $obj_action['id'],  1, "now()", $exec_by ];// [0] Role id. [1] Action ID. [2] Status: 1 = Removed. [3] Time when it was removed. [4] User id that makes the acction
-            
+        if( $obj_role['id']== 0){
+            trigger_error('ASES Error: actualizar roles en la BD con id 0');
+        }  
         $query = "UPDATE $tablename " .                                         // Query to remove in a logical way the record from the Database. See $param var.
             "SET eliminado = $3, " .                                            // Existence status, 0 = exist, 1 = no exist. See $param var.
             "   fecha_hora_eliminacion = $4, ".                                 // Time when was removed. See $param var.
@@ -1173,7 +1185,9 @@ function secure_update_role( $role, string $name = NULL, string $description = N
     $manager = get_db_manager();                                                // Security core database manager.
     $tablename = $DB_PREFIX . "talentospilos_roles";                            // Moodle tablename with Moodle prefix. Ex. mdl_talentospilos_usuario
     $params = [ $db_role['id'], $new_name, $new_description ];                  // [0] Role id. [1] New role name. [2] New role description.
-            
+    if( $db_role['id']== 0){
+        trigger_error('ASES Error: actualizar roles en la BD con id 0');
+    }        
     $query = "UPDATE $tablename " .                                             // Query to update a given role in the Database. See $param var.
         "SET nombre = $2, " .                                                   // New name.
         "   descripcion = $3 ".                                                 // New description.
@@ -1244,7 +1258,9 @@ function secure_update_action( $call, string $name = NULL, string $description =
     $manager = get_db_manager();                                                // Security core database manager.
     $tablename = $DB_PREFIX . "talentospilos_acciones";                         // Moodle tablename with Moodle prefix. Ex. mdl_talentospilos_usuario
     $params = [ $db_call['id'], $new_name, $new_description, $new_log ];        // [0] Action id. [1] New action name. [2] New action description. [3] New log configuration.
-            
+    if( $db_call['id']== 0){
+        trigger_error('ASES Error: actualizar accion en la BD con id 0');
+    }         
     $query = "UPDATE $tablename " .                                             // Query to update a given action in the Database. See $param var.
         "SET nombre = $2, " .                                                   // New name.
         "   descripcion = $3, ".                                                // New description.

@@ -616,7 +616,9 @@ function update_status_program($program_id, $status, $student_id){
     $object_updatable = new stdClass();
     $object_updatable->id = $id_register;
     $object_updatable->program_status = $status;
-
+    if($object_updatable->id == 0){
+        trigger_error('ASES Error: actualizar academic program status en la BD con id 0');
+    }
     $result = $DB->update_record('talentospilos_user_extended', $object_updatable);
 
     if($result){

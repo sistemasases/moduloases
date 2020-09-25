@@ -26,7 +26,9 @@ $script = function () {
     $id_ases_deprecated = 10076;
 
     //Update of user
-
+    if($id_ases_deprecated == 0){
+        trigger_error('ASES Error: actualizar usuario en la BD con id 0');
+    }
     $query = "
         UPDATE {talentospilos_usuario}
         SET num_doc_ini = 939393,  num_doc = 939393
