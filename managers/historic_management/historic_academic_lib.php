@@ -227,7 +227,8 @@ function update_historic_academic($id_student, $id_program, $id_semester, $avera
         $object_historic->promedio_semestre = $average;
         $object_historic->promedio_acumulado = $overall_average;
         if($object_historic->id == 0){
-            trigger_error('ASES Error: actualizar historia en la BD con id 0');
+            trigger_error('ASES Notificacion: actualizar historia en la BD con id 0');
+            return -1;
         }
         $update = $DB->update_record('talentospilos_history_academ', $object_historic);
 
@@ -269,7 +270,8 @@ function update_student_status($id_student, $id_program, $id_semester, $hasGradu
         }
     }
     if($object_historic->id == 0){
-        trigger_error('ASES Error: actualizar historic en la BD con id 0');
+        trigger_error('ASES Notificacion: actualizar historic en la BD con id 0');
+        return -1;
     }
     $update = $DB->update_record('talentospilos_user_extended', $object_historic);
     return $update;
@@ -320,7 +322,8 @@ function update_historic_materias($id_student, $id_program, $id_semester, $json_
         $object_historic->id_semestre = $id_semester;
         $object_historic->json_materias = $json_materias;
         if($object_historic->id == 0){
-            trigger_error('ASES Error: actualizar historic en la BD con id 0');
+            trigger_error('ASES Notificacion: actualizar historic en la BD con id 0');
+            return -1;
         }
         $update = $DB->update_record('talentospilos_history_academ', $object_historic);
 
@@ -372,7 +375,8 @@ function update_historic_cancel($id_historic, $cancel_date)
         $object_cancel->fecha_cancelacion = strtotime($cancel_date);
         //print_r($object_cancel);
         if($object_cancel->id == 0){
-            trigger_error('ASES Error: actualizar historic en la BD con id 0');
+            trigger_error('ASES Notificacion: actualizar historic en la BD con id 0');
+            return -1;
         }
         $update = $DB->update_record('talentospilos_history_cancel', $object_cancel);
 
@@ -423,7 +427,8 @@ function update_historic_bajo($id_historic, $num_bajo)
         $object_bajo->id_history = $id_historic;
         $object_bajo->numero_bajo = $num_bajo;
         if($object_bajo->id == 0){
-            trigger_error('ASES Error: actualizar historic en la BD con id 0');
+            trigger_error('ASES Notificacion: actualizar historic en la BD con id 0');
+            return -1;
         }
         $update = $DB->update_record('talentospilos_history_bajos', $object_bajo);
 
@@ -474,7 +479,8 @@ function update_historic_estimulo($id_historic, $puesto)
         $object_estimulo->id_history = $id_historic;
         $object_estimulo->puesto_ocupado = $puesto;
         if($object_estimulo->id == 0){
-            trigger_error('ASES Error: actualizar historic en la BD con id 0');
+            trigger_error('ASES Notificacion: actualizar historic en la BD con id 0');
+            return -1;
         }
         $update = $DB->update_record('talentospilos_history_estim', $object_estimulo);
 

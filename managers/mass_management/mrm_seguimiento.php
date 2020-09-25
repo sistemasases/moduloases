@@ -296,9 +296,10 @@ if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
                     $record->id = $seguimientoid;
                     $generatedId = $seguimientoid;
                     if($record->id == 0){
-                        trigger_error('ASES Error: actualizar seguimiento en la BD con id 0');
+                        trigger_error('ASES Notificacion: actualizar seguimiento en la BD con id 0');
+                    }else{
+                        $DB->update_record('talentospilos_seguimiento',$record);
                     }
-                    $DB->update_record('talentospilos_seguimiento',$record);
                 }
                 
                 array_push($arrayids, [$data[$associativeTitles['registroid']],$generatedId]);
