@@ -213,7 +213,9 @@ function periods_update_period( $period_info, $period_id ){
 		$period->nombre = $period_info[1];
 		$period->fecha_inicio = $period_info[2];
 		$period->fecha_fin = $period_info[3];
-		
+		if($period->id == 0){
+            trigger_error('ASES Error: actualizar periodo en la BD con id 0');
+        }
 		$result = $DB->update_record(substr($PERIODS_TABLENAME,4), $period);
 		return $result;
 	} catch (Exception $ex){

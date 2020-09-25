@@ -224,7 +224,9 @@ function update_info_instance($id_instance, $idnumber, $description){
     $record->id_instance = $id_instance;
     $record->id_number = $idnumber;
     $record->descripcion = $description;
-
+    if($record->id == 0){
+        trigger_error('ASES Error: actualizar instancia en la BD con id 0');
+    }
     $result = $DB->update_record('talentospilos_instancia', $record);
 
     return $result;
