@@ -105,8 +105,12 @@
             $deleted_record->id_estudiante = $result->id_estudiante;
             $deleted_record->fecha_hora_registro = $result->fecha_hora_registro;
             $deleted_record->estado = '0';
-            $DB->update_record('talentospilos_df_form_resp', $deleted_record, $bulk=false);
-
+            if($deleted_record->id == 0){
+                trigger_error('ASES Notificacion: actualizar entrada en la BD con id 0');
+                return -1;
+            }else
+                $DB->update_record('talentospilos_df_form_resp', $deleted_record, $bulk=false);
+            }
             $retorno = json_encode(
                 array(
                     'status' => '0',

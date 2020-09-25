@@ -202,7 +202,12 @@ function student_profile_save_geographic_info($id_ases, $latitude, $longitude, $
         $data_object_risk->calificacion_riesgo = (int)$nivel_riesgo;
         $data_object_risk->recorder = "other";
 
+        if($data_object_risk->id == 0){
+            trigger_error('ASES Notificacion: actualizar user_rol en la BD con id 0');
+            $result_geographic_risk = false;
+        }else{
         $result_geographic_risk = $DB->update_record('talentospilos_riesg_usuario', $data_object_risk);
+        }
     }
     else{
         $data_object_risk = new stdClass();
@@ -233,8 +238,12 @@ function student_profile_save_geographic_info($id_ases, $latitude, $longitude, $
         $geographic_info->vive_zona_riesgo = (isset($vive_zona_riesgo)?$vive_zona_riesgo:$geographic_info->vive_zona_riesgo);
         $geographic_info->nativo = (isset($nativo)?$nativo:$geographic_info->nativo);
         $geographic_info->nivel_riesgo = (isset($nivel_riesgo)?$nivel_riesgo:$geographic_info->nivel_riesgo);
-
-        $result_geographic_info = $DB->update_record('talentospilos_demografia', $geographic_info);
+        if($geographic_info->id == 0){
+            trigger_error('ASES Notificacion: actualizar demografia en la BD con id 0');
+            $result_geographic_info = false;
+        }else{
+            $result_geographic_info = $DB->update_record('talentospilos_demografia', $geographic_info);
+        }
     }
     else{
         $data_object = new stdClass();

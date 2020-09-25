@@ -191,7 +191,10 @@ function update($instance, $table_name=null) {
     $table_name = normalize_table_name($table_name, PLUGIN_TABLES_PREFIX);
     if(!property_exists($instance, 'id')) {
         return false;
-    } else {
+    } else if($instance->id == 0){
+        trigger_error('ASES Notificacion: actualizar instance en la BD con id 0');
+        return 0;
+    }else{
         return $DB->update_record($table_name, $instance);
     }
 }
