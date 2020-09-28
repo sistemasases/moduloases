@@ -23,18 +23,81 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+require_once(__DIR__ . "/../../../../config.php");
+require_once(__DIR__ . "/../lib/lib.php");
+
+
+$MONITORS_TABLENAME = $GLOBALS[ 'CFG' ]->prefix . "talentospilos_monitores";
+
 /**
- * Get monitor's basic info given its student code (username)
+ * Checks if a user has the monitor_ps role assigned
+ * 
+ * @param string $code
  *
- * {
- *      cc, fullname, email, current boss, link to NDA, link to bank account,
- *      picture.
- * }
+ * @return true if the given user has monitor_ps role assigned
+ * false otherwise. 
+ */
+function monitor_is_monitor_ps($code)
+{
+    global $DB;
+    global $DB_PREFIX;
+
+    $tablename = $DB_PREFIX . "talentospilos_user_rol";
+    $user_id = search_user($code)->id;
+
+    if (!is_numeric($user_id)){
+        return false;
+    }
+
+    $query = "
+        SELECT *
+        FROM $tablename
+        WHERE estado=1
+        AND id_usuario=$user_id
+        AND id_rol=4";
+
+    $result = $DB->get_record_sql($query);
+
+    if (isset($result)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
+
+
+/**
+ * Returns all monitors in the same instance
+ * 
+ * @param $id_instancia int
+ * @return Array monitors
+ */
+function get_all_monitors()
+{
+
+    global $DB;
+    global $MONITORS_TABLENAME;
+
+    $query ="
+        SELECT U.username, U.firstname, U.username 
+        FROM $MONITORS_TABLENAME 
+        INNER JOIN {user} U 
+        ON $MONITORS_TABLENAME.id_moodle_user = U.id";
+
+    $result = $DB->get_records_sql( $query );
+    return $result;
+}
+
+
+/**
+ * Get's monitor'
  *
  * @param $monitor_code String
  * @return Object $monitor
  */
-function get_monitor($monitor_code) {
+function get_monitor($monitor_id) {
     //ToDo
     // Consulta a la nueva bd de monitores.
     // Mientras tanto crear tabla para ensayar.
@@ -66,11 +129,13 @@ function get_individual_url($monitor_code) {
 /**
  *  Realiza un select con los monitores de la instancia ASES
  * */
-function make_select_monitors($monitors) {
-    $html = "<select id=''monitores' style='width:100%'> <option selected=Selected>Seleccione un monitor</option>";
+function make_select_monitors() {
+
+    $monitors = get_all_monitors();
+    $html = "<select id='select-monitores' style='width:100%'> <option selected=Selected>Seleccione un monitor</option>";
 
     foreach($monitors as $monitor) {
-        $monitor_name = $monitor->username . $monitor->fullname;
+        $monitor_name = $monitor->username . " " . $monitor->firstname;
         $html .= "<option value='$monitor_name'>$monitor_name</option>";
     }
     $html .= "</select>";

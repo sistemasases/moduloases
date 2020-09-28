@@ -97,10 +97,8 @@ $coursenode->add_node($blocknode);
 if ($monitor_code != 0){
     $ases_monitor = get_ases_user_by_code($monitor_code);
 } else {
-    $data->monitors = array_values( monitor_assignments_get_monitors_by_instance( $block_id));
     $monitor_id = -1;
-    $select = make_select_monitors($data->monitors); 
-    $data->select = $select;
+    $data->select = make_select_monitors();
 }
 
 
