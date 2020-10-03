@@ -390,7 +390,12 @@ function monitor_student_assignment($username_monitor, $array_students, $idinsta
         
         
         $array->id = $checkrole->id;
+        if($array->id == 0){
+            trigger_error('ASES Notificacion: actualizar user_roll en la BD con id 0');
+            $update_record = false;
+        }else{
         $update_record = $DB->update_record('talentospilos_user_rol', $array);
+        }
         if($update_record){
             $result = 3;
         }else{

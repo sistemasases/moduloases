@@ -22,7 +22,12 @@
  * @copyright  2019 Luis Gerardo Manrique Cardona <luis.manrique@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+<<<<<<< HEAD
 const VERSION_CORE = 1;
+=======
+if (!defined('VERSION')) define('VERSION', 1);
+//const VERSION=1;
+>>>>>>> c46032fa5afebbabf08482716a08295ee489e801
 
 require_once( __DIR__ . "/../../../../config.php");
 require_once( __DIR__ . "/v" . VERSION_CORE . "/entrypoint.php");

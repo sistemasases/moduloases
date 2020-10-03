@@ -331,7 +331,11 @@ function updateRisks($segObject, $idStudent){
             trigger_error('ASES Notificacion: actualizar riesgo en la BD con id 0');
         }else if($exists){
             $sr->id = $exists->id;
-            $DB->update_record('talentospilos_riesg_usuario',$sr);
+            if($sr->id == 0){
+                trigger_error('ASES Notificacion: actualizar riesgo en la BD con id 0');
+            }else{
+                $DB->update_record('talentospilos_riesg_usuario',$sr);
+            }
         }else{
             $DB->insert_record('talentospilos_riesg_usuario',$sr);
         }
@@ -996,7 +1000,11 @@ function update_last_user_risk( $ases_student_code, $record_id ){
             if( $previous_record_risk ){
                 $previous_record_risk->calificacion_riesgo = $individual_risk_lvl;
                 $previous_record_risk->recorder = "dphpforms";
+                if($previous_record_risk->id == 0){
+                    trigger_error('ASES Notificacion: actualizar riesgo en la BD con id 0');
+                }else{
                 $DB->update_record( 'talentospilos_riesg_usuario', $previous_record_risk, $bulk=false );
+                }
             }else{
                 $new_user_risk = new stdClass();
                 $new_user_risk->id_usuario = $ases_user_id;
@@ -1012,7 +1020,11 @@ function update_last_user_risk( $ases_student_code, $record_id ){
             if( $previous_record_risk ){
                 $previous_record_risk->calificacion_riesgo = $familiar_risk_lvl;
                 $previous_record_risk->recorder = "dphpforms";
+                if($previous_record_risk->id == 0){
+                    trigger_error('ASES Notificacion: actualizar riesgo en la BD con id 0');
+                }else{
                 $DB->update_record( 'talentospilos_riesg_usuario', $previous_record_risk, $bulk=false );
+                }
             }else{
                 $new_user_risk = new stdClass();
                 $new_user_risk->id_usuario = $ases_user_id;
@@ -1028,7 +1040,11 @@ function update_last_user_risk( $ases_student_code, $record_id ){
             if( $previous_record_risk ){
                 $previous_record_risk->calificacion_riesgo = $academico_risk_lvl;
                 $previous_record_risk->recorder = "dphpforms";
+                if($previous_record_risk->id == 0){
+                    trigger_error('ASES Notificacion: actualizar riesgo en la BD con id 0');
+                }else{
                 $DB->update_record( 'talentospilos_riesg_usuario', $previous_record_risk, $bulk=false );
+                }
             }else{
                 $new_user_risk = new stdClass();
                 $new_user_risk->id_usuario = $ases_user_id;
@@ -1044,7 +1060,11 @@ function update_last_user_risk( $ases_student_code, $record_id ){
             if( $previous_record_risk ){
                 $previous_record_risk->calificacion_riesgo = $economico_risk_lvl;
                 $previous_record_risk->recorder = "dphpforms";
+                if($previous_record_risk->id == 0){
+                    trigger_error('ASES Notificacion: actualizar riesgo en la BD con id 0');
+                }else{
                 $DB->update_record( 'talentospilos_riesg_usuario', $previous_record_risk, $bulk=false );
+                }
             }else{
                 $new_user_risk = new stdClass();
                 $new_user_risk->id_usuario = $ases_user_id;
@@ -1060,7 +1080,11 @@ function update_last_user_risk( $ases_student_code, $record_id ){
             if( $previous_record_risk ){
                 $previous_record_risk->calificacion_riesgo = $vida_universitaria_risk_lvl;
                 $previous_record_risk->recorder = "dphpforms";
+                if($previous_record_risk->id == 0){
+                    trigger_error('ASES Notificacion: actualizar riesgo en la BD con id 0');
+                }else{
                 $DB->update_record( 'talentospilos_riesg_usuario', $previous_record_risk, $bulk=false );
+                }
             }else{
                 
                 $new_user_risk = new stdClass();
@@ -1079,7 +1103,11 @@ function update_last_user_risk( $ases_student_code, $record_id ){
                 if( ($previous_record_risk->recorder === "dphpforms") || ($previous_record_risk->recorder == null)  ){
 
                     $previous_record_risk->calificacion_riesgo = $geo_risk_lvl;
+                    if($previous_record_risk->id == 0){
+                        trigger_error('ASES Notificacion: actualizar riesgo en la BD con id 0');
+                    }else{
                     $DB->update_record( 'talentospilos_riesg_usuario', $previous_record_risk, $bulk=false );
+                    }
 
                 }
 
@@ -1090,8 +1118,12 @@ function update_last_user_risk( $ases_student_code, $record_id ){
                 $new_user_risk->id_riesgo = $risk->id;
                 $new_user_risk->calificacion_riesgo = $geo_risk_lvl;
                 $new_user_risk->recorder = "dphpforms";
-                $DB->insert_record( 'talentospilos_riesg_usuario', $new_user_risk, $returnid=false, $bulk=false );
-            } 
+                // Bandaid fix
+                // id_usuario sometimes reaches as 0
+                if($new_user_risk->id_usuario != 0 && $new_user_risk->id_usuario != null){
+                    $DB->insert_record( 'talentospilos_riesg_usuario', $new_user_risk, $returnid=false, $bulk=false );
+                }
+            }
         }
     }
     return 0;

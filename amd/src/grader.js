@@ -332,7 +332,8 @@ define([
                         <input 
             placeholder="Ingrese un valor entre 1 y 100" 
             id="elementAggregationCoef" 
-            v-model="elementAggregationCoef" type="number">
+            v-model="elementAggregationCoef" type="number"
+            v-on:keypress="isNumber($event)">
             </template>
             <br/>
             <template v-if="elementTypeId === categoryElementTypeId || elementTypeId === partialExamElementId">
@@ -376,6 +377,15 @@ define([
             }
         },
         methods: {
+            isNumber: function(evt) {
+                evt = (evt) ? evt : window.event;
+                var charCode = (evt.which) ? evt.which : evt.keyCode;
+                if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
+                    evt.preventDefault();
+                } else {
+                    return true;
+                }
+            },
            changeAggregation(aggregation) {
              this.aggregation = aggregation;
            },
@@ -682,6 +692,7 @@ define([
                      @focus="catWFocus" @blur="catWBlur"
                      @keyup.enter="$event.target.blur()"
                      v-if="parentCategory.aggregation == weightedAggregation"
+                     v-on:keypress="isNumber($event)"
                      ></input>
                     <category-mini-menu v-bind:categoryId="category.id" v-show="showMenu"></category-mini-menu>
                 </flex-row>
@@ -737,6 +748,15 @@ define([
             }
         },
         methods: {
+            isNumber: function(evt) {
+                evt = (evt) ? evt : window.event;
+                var charCode = (evt.which) ? evt.which : evt.keyCode;
+                if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
+                    evt.preventDefault();
+                } else {
+                    return true;
+                }
+            },
             catFocus: function (){
                 //this.length = 17;
                 this.getCatClass = 'catwithfocus';
@@ -909,6 +929,7 @@ define([
                      @focus="wfocus" @blur="wblur"
                      @keyup.enter="$event.target.blur()"
                      v-if="parentCategory.aggregation == weightedAggregation"
+                     v-on:keypress="isNumber($event)"
                      ></input>
                     <item-mini-menu v-show="showMenuItems" v-bind:itemId="item.id"></item-mini-menu>
                 </flex-row>
@@ -942,6 +963,15 @@ define([
             },
             props: ['itemId'],
             methods: {
+                isNumber: function(evt) {
+                    evt = (evt) ? evt : window.event;
+                    var charCode = (evt.which) ? evt.which : evt.keyCode;
+                    if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
+                        evt.preventDefault();
+                    } else {
+                        return true;
+                    }
+                },
                 focus: function (){
                     //this.length = 17;
                     this.getClass = 'iwithfocus';
@@ -1109,7 +1139,7 @@ define([
             });
         var TdGrade = Vue.component('td-grade',
             {
-               template: `
+                template: `
                 <td  class="td-grade"
                 v-bind:style="this.inputDisabled? { 'background-color': '#e1e4fe' } : { }"> 
                 <!--{{item.itemtype}}-->
@@ -1130,7 +1160,7 @@ define([
                 methods: {
                     ...Vuex.mapActions({
                         updateGrade: g_store.actions.UPDATE_GRADE
-                }),
+                    }),
                     isNumber: function(evt) {
                         evt = (evt) ? evt : window.event;
                         var charCode = (evt.which) ? evt.which : evt.keyCode;
@@ -1156,7 +1186,7 @@ define([
                         'studentsCount'
                     ]),
                     tabIndex: function() {
-                      return (this.itemIndex + 1) * this.studentsCount +  this.studentIndex + 1;
+                        return (this.itemIndex + 1) * this.studentsCount +  this.studentIndex + 1;
                     },
                     inputDisabled: function () {
 
@@ -1166,12 +1196,12 @@ define([
                         return this.grades[this.gradeId];
                     },
                     item: function () {
-                      return this.items[this.grade.itemid];
+                        return this.items[this.grade.itemid];
                     },
                     finalGrade: {
                         get() {
                             console.log("getFInal");
-                           return g_utils.round(this.grade.finalgrade, this.decimalPlaces);
+                            return g_utils.round(this.grade.finalgrade, this.decimalPlaces);
                         },
                         set(value) {
                             console.log("setFinal");
