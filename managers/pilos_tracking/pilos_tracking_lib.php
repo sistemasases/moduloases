@@ -326,14 +326,11 @@ function updateRisks($segObject, $idStudent){
     foreach($array_student_risks as $sr){
         $sql_query ="SELECT riesg_stud.id as id FROM {talentospilos_riesg_usuario} riesg_stud WHERE riesg_stud.id_usuario=".$idStudent." AND riesg_stud.id_riesgo=".$sr->id_riesgo;
         $exists = $DB->get_record_sql($sql_query);
-        
-        if($exists){
+        if($sr->id == 0){
+            trigger_error('ASES Notificacion: actualizar riesgo en la BD con id 0');
+        }else if($exists){
             $sr->id = $exists->id;
-            if($sr->id == 0){
-                trigger_error('ASES Notificacion: actualizar riesgo en la BD con id 0');
-            }else{
-                $DB->update_record('talentospilos_riesg_usuario',$sr);
-            }
+            $DB->update_record('talentospilos_riesg_usuario',$sr);
         }else{
             $DB->insert_record('talentospilos_riesg_usuario',$sr);
         }
