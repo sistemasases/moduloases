@@ -1003,8 +1003,9 @@ define(['jquery',
                 url: "../managers/student_profile/studentprofile_api.php",
                 success: function (msg) {
                     loading_indicator.hide();
+                    console.log('hola test');
                     console.log( $('#field_doc_dtddp').val());
-                    $('#link_doc_dtddp').attr('href', $('#field_doc_dtddp').val());
+                    $('#link_doc_dtddp').attr('href', $('#field_doc_dtddp').prop('value'));
                     if(msg.status_code == 0) {
                         swal(
                             msg.title,
