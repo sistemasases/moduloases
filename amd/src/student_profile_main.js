@@ -9,7 +9,6 @@
  * @module block_ases/student_profile_main
  */
 
-Error.stackTraceLimit = 50;
 
 define(['jquery',
     'block_ases/bootstrap',
@@ -685,7 +684,7 @@ define(['jquery',
                 $('#estado_civil').prop('disabled', false);
                 $('#observacion').prop('readonly', false);
                 $('.select_statuses_program').prop('disabled', false);
-                $('#field_doc_dtddp').show();
+                //$('#field_doc_dtddp').show();
                 $('.input_fields_general_tab').prop('readonly', false);
                 $('.bt_delete_person').css("visibility", "visible");
                 $('.input-tracking').prop('disabled', false);
@@ -1005,8 +1004,6 @@ define(['jquery',
                 url: "../managers/student_profile/studentprofile_api.php",
                 success: function (msg) {
                     loading_indicator.hide();
-                    console.log('hola test');
-                    console.log( $('#field_doc_dtddp').val());
                     $('#link_doc_dtddp').attr('href', $('#field_doc_dtddp').prop('value'));
                     if(msg.status_code == 0) {
                         swal(
