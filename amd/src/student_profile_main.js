@@ -48,7 +48,7 @@ define(['jquery',
                 document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination="+latLng_student_campus.lat()+","+latLng_student_campus.lng()+"&mode=driving'></iframe>";
             }
 
-            $('#field_doc_dtddp').hide();
+            //$('#field_doc_dtddp').hide();
 
             /**
              * Event that loads asynchronously the socio-educational tab
@@ -1048,7 +1048,7 @@ define(['jquery',
             $('#pais').prop('disabled', true);
             $('#observacion').prop('readonly', true);
             $('.select_statuses_program').prop('disabled', true);
-            $('#field_doc_dtddp').hide();
+            //$('#field_doc_dtddp').hide();
             $('.input_fields_general_tab').prop('readonly', true);
             $('.input-tracking').prop('disabled', true);
             $(".bt_delete_person").css("visibility", "hidden");
