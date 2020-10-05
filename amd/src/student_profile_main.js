@@ -1049,8 +1049,7 @@ define(['jquery',
             $('#pais').prop('disabled', true);
             $('#observacion').prop('readonly', true);
             $('.select_statuses_program').prop('disabled', true);
-            console.log('hola');
-            $('#field_doc_dtddp').hide();
+            $('#field_doc_dtddp').css("visibility", "hidden");
             $('.input_fields_general_tab').prop('readonly', true);
             $('.input-tracking').prop('disabled', true);
             $(".bt_delete_person").css("visibility", "hidden");
