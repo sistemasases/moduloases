@@ -624,7 +624,10 @@ function monitor_assignments_create_practicant_monitor_relationship( $instance_i
     if( $record ){
 
         $record->id_jefe = $practicant_id;
-
+        if($record->id == 0){
+            trigger_error('ASES Notificacion: actualizar user_rol en la BD con id 0');
+            return -1;
+        }
         return $DB->update_record('talentospilos_user_rol', $record, $bulk=false);
 
     }else{
@@ -664,7 +667,10 @@ function monitor_assignments_delete_practicant_monitor_relationship( $instance_i
             $is_monlog = false, $record->id, $type = 'remove' 
         );
         $record->id_jefe = null;
-
+        if($record->id == 0){
+            trigger_error('ASES Notificacion: actualizar user_rol en la BD con id 0');
+            return -1;
+        }
         return $DB->update_record('talentospilos_user_rol', $record, $bulk=false);
 
     }else{
@@ -702,7 +708,11 @@ function monitor_assignments_transfer( $instance_id, $old_monitor_id, $new_monit
                 $is_monlog = true, $asignation->id, $type = 'transfer' 
             );
             $asignation->id_monitor = $new_monitor_id;
+            if($asignation->id == 0){
+                trigger_error('ASES Notificacion: actualizar asignacion en la BD con id 0');
+            }else{
             $DB->update_record('talentospilos_monitor_estud', $asignation, $bulk=false);
+            }
 
         }
         return 1;
