@@ -9,6 +9,8 @@
  * @module block_ases/student_profile_main
  */
 
+Error.stackTraceLimit = 50;
+
 define(['jquery',
     'block_ases/bootstrap',
     'block_ases/d3',
