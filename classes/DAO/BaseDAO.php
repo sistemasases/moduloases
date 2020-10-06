@@ -286,6 +286,8 @@ abstract class BaseDAO extends Validable
         global $DB;
         if(!property_exists($this, 'id')) {
                return false;
+        } else if($this->id == 0){
+            trigger_error('ASES Notificacion: actualizar entrada de la BD con id 0');
         } else {
             return $DB->update_record($this->get_table_name(), $this );
         }

@@ -369,6 +369,10 @@ function update_status_student($id_user_extended, $id_talentos, $id_estado_ases,
     $object_user_extended_update->id = $id_user_extended;
     $object_user_extended_update->program_status = $id_estado_programa;
 
+    if($object_user_extended_update->id == 0){
+        trigger_error('ASES Notificacion: actualizar user_extended en la BD con id 0');
+        return false;
+    }
     $update = $DB->update_record('talentospilos_user_extended', $object_user_extended_update);
 
     if (!$update) {
@@ -459,8 +463,11 @@ function update_tracking_status($id_update_record, $track_status){
     }else{
         $object_user_extended_update->tracking_status = $track_status;
     }
-    
-    $result = $DB->update_record('talentospilos_user_extended', $object_user_extended_update);
+    if($object_user_extended_update->id == 0){
+        trigger_error('ASES Notificacion: actualizar user_extended en la BD con id 0');
+    }else{
+        $result = $DB->update_record('talentospilos_user_extended', $object_user_extended_update);
+    }
 
     if($result === true){
         return true;
