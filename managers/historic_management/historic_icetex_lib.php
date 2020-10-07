@@ -142,6 +142,15 @@ function create_historic_icetex($student_id, $program_id, $resolution_id, $amoun
 
     global $DB;
 
+    $sql_query = "SELECT id FROM {talentospilos_res_estudiante}
+                    WHERE id_estudiante = '$student_id' AND id_resolucion = '$resolution_id'";
+
+    $result = $DB->get_record_sql($sql_query);
+
+    if(!isset($result)) {
+        return false;
+    }
+
     $newHistoric = new stdClass();
     $newHistoric->id_estudiante = $student_id;
     $newHistoric->id_resolucion = $resolution_id;
