@@ -18,3 +18,8 @@ console_log($data);
 
 $input = file_get_contents('php://input');
 
+$msg->title = "Recibido";
+$msg->msg = "cod monitor: ".$data->monitor;
+$msg->status = "OK";
+ 
+echo json_encode($msg);
