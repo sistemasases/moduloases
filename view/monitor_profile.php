@@ -31,16 +31,16 @@ require_once($CFG->libdir . '/adminlib.php');
 //require_once(__DIR__ . '/../core/module_loader.php');
 require_once('../managers/instance_management/instance_lib.php');
 require_once('../managers/lib/lib.php');
-require_once('../managers/lib/student_lib.php');
+//require_once('../managers/lib/student_lib.php');
 require_once('../managers/validate_profile_action.php');
 require_once('../managers/menu_options.php');
 require_once('../managers/monitor_assignments/monitor_assignments_lib.php');
 require_once('../managers/monitor_profile/monitor_profile_lib.php');
+require_once('../classes/AsesUser.php');
 
 include "../lib.php";
 include "../classes/output/monitor_profile_page.php";
 include "../classes/output/renderer.php";
-
 
 //module_loader('periods');
 
@@ -67,9 +67,8 @@ $url = new moodle_url("/blocks/ases/view/monitor_profile.php", array('courseid' 
 
 // Clase con la información que se llevará al template.
 $data = new stdClass();
-
-// Evalua si el rol del usuario tiene permisos en esta view.
 $actions = authenticate_user_view($USER->id, $block_id);
+$data = $actions;
 
 if ($rol == 'sistemas') {
     $data->not_sistemas = false;
@@ -93,11 +92,24 @@ $coursenode = $PAGE->navigation->find($course_id, navigation_node::TYPE_COURSE);
 $blocknode = navigation_node::create('Pérfil del monitor', $url, null, 'block', $block_id);
 $coursenode->add_node($blocknode);
 
-// Recolección de la información básica del monitor.
 if ($monitor_code != 0){
-    $ases_monitor = get_ases_user_by_code($monitor_code);
+    // Recolección de la información básica del monitor.
+    $monitor = search_user($monitor_code);
+    $data->select = make_select_monitors($monitor);
+    $monitor_info = get_monitor($monitor->id);
+    $data->email = $monitor->email;
+    $data->fullname = $monitor->username . " " . $monitor->firstname . " " . $monitor->lastname;
+    $data->phone1 = $monitor->phone1;
+    $data->phone2 = $monitor->phone2;
+    //$data->id_programa = $monitor->id_programa;
+    $data->num_doc = $monitor_info->num_doc; 
+    $data->pdf_cuenta_banco = isset($monitor_info->pdf_cuenta_banco) ? $monitor_info->pdf_cuenta_banco : 'https://www.example.com';
+    $data->pdf_acuerdo_conf = $monitor_info->pdf_acuerdo_conf;
+    $data->pdf_doc = $monitor_info->pdf_doc;
+    $data->pdf_d10 = $monitor_info->pdf_d10;
+    
 } else {
-    $monitor_id = -1;
+    $monitor_code = -1;
     $data->select = make_select_monitors();
 }
 
@@ -118,12 +130,16 @@ $PAGE->set_heading($page_title);
 $PAGE->requires->css('/blocks/ases/style/aaspect.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
+$PAGE->requires->css('/blocks/ases/style/monitor_profile.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/monitor_profile', 'init');
 
-$output = $PAGE->get_renderer('block_ases');
+$OUTPUT = $PAGE->get_renderer('block_ases');
+
+$data->profile_image = $monitor_code != -1 ? $OUTPUT->user_picture($monitor, array('size'=>100, 'link'=>false)) : null;
+
 $monitor_profile_page = new \block_ases\output\monitor_profile_page($data);
 
-echo $output->header();
-echo $output->render($monitor_profile_page);
-echo $output->footer();
+echo $OUTPUT->header();
+echo $OUTPUT->render($monitor_profile_page);
+echo $OUTPUT->footer();

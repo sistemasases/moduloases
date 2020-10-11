@@ -7,7 +7,6 @@
         
         <div class="ases-container" id="monitor-header-container">
             
-
             <div class="ases-row" id="div-header-profile">
                 <div id="div-select-monitor" class="ases-col-lg-12">
                     {{{select}}}
@@ -27,75 +26,27 @@
                    {{{profile_image}}} 
                 </div>
             </div>
+            
+            <div class="row cabecera" id="container-profile">
 
+                <div id="tabs" class="ases-col-sm-12 ases-col-md-12 ases-col-lg-12">
+                    <ul id="nav-linea" class="nav nav-tabs">
+                        {{#monitor_view_general_tab_sp}}
+                        <li id="general_li" class="active">
+                            <a href="#general_tab" data-toggle="tab">GENERAL</a>
+                        </li>
+                        {{/monitor_view_general_tab_sp}}
+                        <li id="asignaciones_li">
+                            <a href="#asignaciones_tab" data-toggle="tab">Asignaciones Semestrales</a>
+                        </li>
+                    </ul>
+                    
+                    <!-- Logic for tabs -->
 
-            <div class="ases-row" id="div-info">
-                <div class="ases-col-xs-12 ases-col-sm-7 ases-col-md-7 ases-col-lg-7">
-                    <div id="monitor-info">
-                        <h3>INFORMACIÓN DEL MONITOR</h3>
-                        <hr >
-
-                        <div class="ases-row">
-                            <label class="ases-col-xs-3 ases-col-sm-3 ases-col-md-3 ases-col-lg-3" for="num_doc"> Identificación </label>
-                            <input id="input_num_doc" class="ases-col-xs-2 ases-col-sm-2 ases-col-md-2 ases-col-lg-2" readonly="" value={{num_doc}}>
-
-                            <label class="ases-col-xs-4 ases-col-sm-4 ases-col-md-4 ases-col-lg-4" for="email"> Correo electronico </label>
-                            <input id="input_email" class="ases-col-xs-3 ases-col-sm-3 ases-col-md-3 ases-col-lg-3" readonly="" value={{email}} >
-                        </div>
-
-                        <div class="ases-row">
-                            <label class="ases-col-xs-3 ases-col-sm-3 ases-col-md-3 ases-col-lg-3" for="phone1"> Teléfono 1 </label>
-                            <input id="input_phone1" class="ases-col-xs-2 ases-col-md-2 ases-col-lg-2" readonly="" value={{phone1}}>
-                            
-                            <label class="ases-col-xs-4 ases-col-sm-4 ases-col-md-4 ases-col-lg-4" for="num_doc"> Teléfono 2 </label>
-                            <input id="input_phone2" class="ases-col-xs-3 ases-col-sm-3 ases-col-md-3 ases-col-lg-3" readonly="true" value={{phone2}} >
-                        </div>
-                        <h5>Documentos</h5>
-                        <div class="ases-row">
-                            <label class="ases-col-xs-4 ases-col-sm-4 ases-col-md-4 ases-col-lg-4"> Acuerdo de Confidencialidad </label>
-                            <span id="input" class="ases-col-xs-6 ases-col-sm-6 ases-col-md-6 ases-col-lg-6">
-                                <a href={{pdf_acuerdo_conf}} target="_blank">{{pdf_acuerdo_conf}}</a></span>
-                        </div>
-
-                        <div class="ases-row">
-                            <label class="ases-col-xs-4 ases-col-sm-4 ases-col-md-4 ases-col-lg-4"> Documento de identidad </label>
-                            <span id="input" class="ases-col-xs-6 ases-col-sm-6 ases-col-md-6 ases-col-lg-6">
-                                <a href={pdf_doc}} target="_blank">{{pdf_doc}}</a>
-                            </span>
-                        </div>
-                        
-                        <div class="ases-row">
-                            <label class="ases-col-xs-4 ases-col-sm-4 ases-col-md-4 ases-col-lg-4"> D-10 </label>
-                            <span id="input" class="ases-col-xs-6 ases-col-sm-6 ases-col-md-6 ases-col-lg-6">
-                                <a href={{pdf_d10}}>{{pdf_d10}}</a>
-                            </span>
-                        </div>
-                        
-                        <div class="ases-row">
-                            <label class="ases-col-xs-4 ases-col-sm-4 ases-col-md-4 ases-col-lg-4"> Cuenta bancaria </label>
-                            <span id="input" class="ases-col-xs-6 ases-col-sm-6 ases-col-md-6 ases-col-lg-6">
-                                <a target="_blank" href={{pdf_cuenta_banco}}>Link</a>
-                            </span>
-                        </div>
+                    <div class="tab-content clearfix">
+                        {{#monitor_view_general_tab_sp}} {{> block_ases/monitor_view_general_tab_sp}} {{/monitor_view_general_tab_sp}}
                     </div>
                 </div>
-
             </div>
-
-
-            <div class="ases-row id="div-programa">
-                <div id="programa" class="ases-col-xs-12">
-                </div>
-            </div>
-        </div>
-        
-        <div id="assignments-container" class="ases-container">
-
-            <div id="historical-assignments" class="ases-row">
-            </div>
-
-        </div>
-
-
     </form>
 {{/data}}
