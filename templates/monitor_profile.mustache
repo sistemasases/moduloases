@@ -31,20 +31,21 @@
 
                 <div id="tabs" class="ases-col-sm-12 ases-col-md-12 ases-col-lg-12">
                     <ul id="nav-linea" class="nav nav-tabs">
-                        {{#monitor_view_general_tab_sp}}
+                        {{#monitor_view_general_tab}}
                         <li id="general_li" class="active">
                             <a href="#general_tab" data-toggle="tab">GENERAL</a>
                         </li>
-                        {{/monitor_view_general_tab_sp}}
+                        {{/monitor_view_general_tab}}
                         <li id="asignaciones_li">
-                            <a href="#asignaciones_tab" data-toggle="tab">Asignaciones Semestrales</a>
+                            <a href="#asignaciones_tab" data-toggle="tab">ASIGNACIONES SEMESTRALES</a>
                         </li>
                     </ul>
                     
                     <!-- Logic for tabs -->
 
                     <div class="tab-content clearfix">
-                        {{#monitor_view_general_tab_sp}} {{> block_ases/monitor_view_general_tab_sp}} {{/monitor_view_general_tab_sp}}
+                        {{#monitor_view_general_tab}} {{> block_ases/monitor_view_general_tab}} {{/monitor_view_general_tab}}
+                        {{#monitor_view_assignments_tab}} {{> block_ases/monitor_view_assignments_tab}} {{/monitor_view_assignments_tab}}
                     </div>
                 </div>
             </div>
