@@ -66,8 +66,6 @@ function monitor_is_monitor_ps($code)
 }
 
 
-
-
 /**
  * Returns all monitors in the same instance
  * 
@@ -95,12 +93,58 @@ function get_all_monitors()
  * Get's monitor'
  *
  * @param $monitor_code String
- * @return Object $monitor
+ * @return Object $monitor | null
+ * @Throws Exception if there's no monitor with given id.
  */
-function get_monitor($monitor_id) {
-    //ToDo
-    // Consulta a la nueva bd de monitores.
-    // Mientras tanto crear tabla para ensayar.
+function get_monitor(int $monitor_id) {
+    global $DB;
+    global $MONITORS_TABLENAME;
+
+    if($monitor_id <= 0) {
+        return null;
+    }
+
+    $query = "SELECT * FROM $MONITORS_TABLENAME WHERE id_moodle_user = $monitor_id";
+
+    $result = $DB->get_record_sql($query); 
+
+    if (!property_exists($result, 'id')) {
+        Throw new Exception("Error consultando la información", -1);
+    } else {
+        return $result;
+    }
+}
+
+function get_url_monitor_profile_image(int $context_block_id, int $id_moodle_user): string
+{
+
+    $fs = get_file_storage();
+    $files = $fs->get_area_files( $context_block_id, 'group', 'icon', $id_moodle_user );
+    $image_file = array_pop($files);
+    if(sizeof($files)==0) {
+        return '';
+    } else {
+    
+    }
+}
+
+
+/**
+ * Gets profile image's html
+ * 
+ * @param int $id_moodle
+ *
+ * @return string HTML <img> tag
+ */
+function get_HTML_monitor_profile_image(string $monitor_code): string 
+{
+    global $OUTPUT;
+    
+    $monitor_obj = search_user($monitor_code);
+
+
+
+    return $OUTPUT->user_picture($monitor_obj, array('size'=>200, 'link'=>false));
 }
 
 /**
@@ -116,28 +160,21 @@ function get_monitor_assignments($monitor_code, $period) {
     // a wrapper.
 }
 
-/**
- * Returns  a individual url for a specific monitor
- * 
- * @param int $monitor_code
- * @return String $url
- */
-function get_individual_url($monitor_code) {
-
-}
 
 /**
  *  Realiza un select con los monitores de la instancia ASES
  * */
-function make_select_monitors() {
+function make_select_monitors($monitor=null) {
 
     $monitors = get_all_monitors();
+        
     $html = "<select id='select-monitores' style='width:100%'> <option selected=Selected>Seleccione un monitor</option>";
 
     foreach($monitors as $monitor) {
         $monitor_name = $monitor->username . " " . $monitor->firstname;
         $html .= "<option value='$monitor_name'>$monitor_name</option>";
     }
+
     $html .= "</select>";
 
     return $html;
