@@ -1,6 +1,6 @@
 {{!-- Monitor's semestral assignments tab'}}
 
-<div id="assignments_tab" class="tab-pane">
+<div id="trackings_tab" class="tab-pane">
     <h1>Hola</h1>
 </div>
 
