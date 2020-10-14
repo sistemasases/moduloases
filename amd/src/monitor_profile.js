@@ -6,7 +6,10 @@
  * @copyright 2020 David S. Cortés <david.cortes@correounivalle.edu.co>
  * @license GNU GPL v3 or later
  */
-define(['jquery', 'block_ases/select2', 'block_ases/bootstrap'], function($, select2, bootstrap){
+define(['jquery', 
+        'block_ases/select2', 
+        'block_ases/bootstrap',
+        'block_ases/loading_indicator',], function($, select2, bootstrap) {
     
     return {
         init: function () {
@@ -28,9 +31,13 @@ define(['jquery', 'block_ases/select2', 'block_ases/bootstrap'], function($, sel
                 loadMonitor(monitorCode);
             })
 
+            // Load trackings tab on click.
+            $("#trackings_li").one('click', {tab_name: 'trackings'}, load_tabs);
+
         }
     }
 
+    // Loads monitor page
     function loadMonitor(monitorCode) {
 
         $.ajax({
@@ -71,6 +78,13 @@ define(['jquery', 'block_ases/select2', 'block_ases/bootstrap'], function($, sel
             },
         });
     }
+
+    //Load a single tab.
+    function load_tabs(event) {
+        console.log("hola mundo");
+        loading_indicator.show(); 
+    }
+
     function get_url_parameters(page) {
         // This function is anonymous, is executed immediately and
         // the return value is assigned to QueryString!
