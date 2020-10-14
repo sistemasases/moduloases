@@ -25,7 +25,7 @@
 
 require_once(__DIR__ . "/../../../../config.php");
 require_once(__DIR__ . "/../lib/lib.php");
-
+require_once(__DIR__ . "/../pilos_tracking/v2/pilos_tracking_lib.php");
 
 $MONITORS_TABLENAME = $GLOBALS[ 'CFG' ]->prefix . "talentospilos_monitores";
 
@@ -72,6 +72,7 @@ function monitor_is_monitor_ps($code)
  * @param $id_instancia int
  * @return Array monitors
  */
+
 function get_all_monitors()
 {
 
@@ -92,10 +93,11 @@ function get_all_monitors()
 /**
  * Get's monitor'
  *
- * @param $monitor_code String
+ * @param $monitor_id int -> monitor's moodle user
  * @return Object $monitor | null
  * @Throws Exception if there's no monitor with given id.
  */
+
 function get_monitor(int $monitor_id) {
     global $DB;
     global $MONITORS_TABLENAME;
@@ -115,49 +117,56 @@ function get_monitor(int $monitor_id) {
     }
 }
 
-function get_url_monitor_profile_image(int $context_block_id, int $id_moodle_user): string
+/**
+ * Handles all activities needed to load de assignments tab
+ * 
+ * @param int $monitor_id
+ * @param int $instance_id
+ */
+function monitor_load_trackings_tab(string $monitor_username, int $monitor_id, int $instance_id)
 {
-
-    $fs = get_file_storage();
-    $files = $fs->get_area_files( $context_block_id, 'group', 'icon', $id_moodle_user );
-    $image_file = array_pop($files);
-    if(sizeof($files)==0) {
-        return '';
-    } else {
+    $active_periods = get_active_periods($monitor_id, $instance_id); 
     
+    if ( count($active_periods) >= 1 ) {
+
+        $tracking_count = array();
+        
+        foreach ($active_periods as $period_id) {
+            $tracking_count[$period_id] = pilos_tracking_get_tracking_count($monitor_username, $period_id, $instance_id, true);
+        }   
+
+        print_r($tracking_count);
+
+    } else {
+        return 0;
     }
 }
 
 
 /**
- * Gets profile image's html
+ * Gets the periods in which a given monitor has been active under a given instance.
+ *
+ * @param int $monitor_id -> monitor's id from {user} table
+ * @param int $instance_id 
  * 
- * @param int $id_moodle
- *
- * @return string HTML <img> tag
+ * @return array $active_periods
  */
-function get_HTML_monitor_profile_image(string $monitor_code): string 
+
+function get_active_periods(int $monitor_id, int $instance_id)
 {
-    global $OUTPUT;
+    global $DB;
     
-    $monitor_obj = search_user($monitor_code);
+    if($monitor_id <= 0 || $instance_id <= 0) {
+        throw new Exception('Argumento(s) inválidos.');
+    }
 
-
-
-    return $OUTPUT->user_picture($monitor_obj, array('size'=>200, 'link'=>false));
-}
-
-/**
- * Gets monitor assignments on a certain period.
- *
- * @param int $monitor_code
- * @param int $period
- *
- * @return Object $assignments.
- */
-function get_monitor_assignments($monitor_code, $period) {
-    // A function like this already exists, this will be just
-    // a wrapper.
+    $sql = "SELECT id_semestre 
+            FROM {talentospilos_monitor_estud} 
+            WHERE id_monitor = $monitor_id 
+            AND id_instancia = $instance_id";
+    
+   $result = $DB->get_records_sql($sql); 
+    return $result;
 }
 
 

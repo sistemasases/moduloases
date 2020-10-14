@@ -31,12 +31,12 @@ $input = json_decode(file_get_contents("php://input"));
 if ( isset($input->function) && isset($input->params) ){
 
     $function = $input->function;
+    $params = $input->params;
 
     if ($function == 'is_monitor_ps') {
         /**
          * [0] => code : student code.
          */
-        $params = $input->params;
         if(count($params) == 1) {
 
             $code = $params[0];
@@ -56,12 +56,39 @@ if ( isset($input->function) && isset($input->params) ){
         } else {
             return_with_code(-6);
         }
+
+    // Cargar pestaña de conteo de fichas.
+    } else if ($function == 'load_trackings_tab') {
+        /**
+         * [0] => monitor_code : monitor's username.
+         * [1] => monitor_id : monitor's id.
+         * [2] => instance_id : instance the monitor belongs to.
+         */
+        if (count($params) == 3) {
+            $result = monitor_load_trackings_tab($params[0], $params[1], $params[2]); 
+
+            if ($result) {
+                echo json_encode(
+                    array(
+                        "status_code" => 1,
+                        "message" => "",
+                        "data_response" => $result;
+                    )
+                );
+            } else {
+                return_with_code(-6);
+            }
+        }
+        else {
+            return_with_code(-5);
+        }
     } else {
         return_with_code(-2);
     }
 } else {
     return_with_code(-1);
 }
+
 /**
  * Returns a message with an error code
  * @param int $code
