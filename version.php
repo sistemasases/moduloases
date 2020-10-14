@@ -1,6 +1,6 @@
 <?php
     $plugin->component = 'block_ases';  
 
-    $plugin->version= 2020092309540;
+    $plugin->version= 2020101411330;
 
     $plugin->requires = 2010112400;
