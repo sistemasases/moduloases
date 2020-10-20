@@ -1,0 +1,54 @@
+{{#data}} 
+    {{> block_ases/side_menu}} {{{message}}}
+    <form id="ficha_monitor" class="ases-container">
+        
+        <input type="text" class="hidden" id="id_ases" name="id_ases" value="{{id_ases}}" />
+        <input type="text" class="hidden" id="id_moodle" name="id_moodle" value="{{id_moodle}}" />
+        
+        <div class="ases-container" id="monitor-header-container">
+            
+            <div class="ases-row" id="div-header-profile">
+                <div id="div-select-monitor" class="ases-col-lg-12">
+                    {{{select}}}
+                </div>
+            </div>
+
+            <div id="div-hr" class="ases-row">
+                <hr class="hr-general-fields">
+            </div>
+
+            <div class="ases-row" id="div-nombre-foto">
+                <div id="monitor-fullname" class="ases-col-lg-7">
+                    <h2>{{fullname}}</h2>
+                </div>
+
+                <div id="monitor-picture" class="ases-col-lg-5">
+                   {{{profile_image}}} 
+                </div>
+            </div>
+            
+            <div class="ases-row cabecera" id="container-profile">
+
+                <div id="tabs" class="ases-col-sm-12 ases-col-md-12 ases-col-lg-12">
+                    <ul id="nav-linea" class="nav nav-tabs">
+                        {{#monitor_view_general_tab}}
+                        <li id="general_li" class="active">
+                            <a href="#general_tab" data-toggle="tab">GENERAL</a>
+                        </li>
+                        {{/monitor_view_general_tab}}
+                        <li id="trackings_li">
+                            <a href="#trackings_tab" data-toggle="tab">FICHAS SEMESTRALES</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="ases-row"> 
+                <!-- Logic for tabs -->
+                <div class="tab-content clearfix">
+                    {{#monitor_view_general_tab}} {{> block_ases/monitor_view_general_tab}} {{/monitor_view_general_tab}}
+                    {{#monitor_view_assignments_tab}} {{> block_ases/monitor_view_trackings_tab}} {{/monitor_view_assignments_tab}}
+                </div>
+            </div>
+    </form>
+{{/data}}
