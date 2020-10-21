@@ -1,12 +1,19 @@
-{{!-- Monitor general tab}}
-
 <div id="general_tab" class="tab-pane active p-t-100">
-     <div class="ases-row" id="div-info">
-          <div class="ases-col-xs-12 ases-col-sm-7 ases-col-md-7 ases-col-lg-7">
-              <div id="monitor-info">
-                  <h3>INFORMACIÓN DEL MONITOR</h3>
-                  <hr >
+        <div class="ases-col-xs-12 ases-col-sm-7 ases-col-md-7 ases-col-lg-7">
 
+
+            <div class="ases-row">
+              <h3 class="ases-col-xs-12 ases-col-md-9 ases-col-lg-9">INFORMACIÓN DEL MONITOR</h3>
+              <span class="ases-col-lg-1 tooltip-v1" id="span-icon-edit" data-toggle="tooltip" data-placement="bottom" title="Editar ficha">
+              </span>
+
+              <span class="ases-col-lg-1 tooltip-v1" id="span-icon-save" data-toggle="tooltip" data-placement="left" title="Guardar cambios"
+                hidden></span>
+              
+              <span class="ases-col-lg-1 tooltip-v1" id="span-icon-cancel" data-toggle="tooltip" data-placement="right" title="Cancelar"
+                hidden></span>
+            </div>
+            <hr/>
                   <div class="ases-row">
                       <label class="ases-col-xs-3 ases-col-sm-3 ases-col-md-3 ases-col-lg-3" for="num_doc"> Identificación </label>
                       <input id="input_num_doc" class="ases-col-xs-2 ases-col-sm-2 ases-col-md-2 ases-col-lg-2" readonly="" value={{num_doc}}>
@@ -18,7 +25,7 @@
                   <div class="ases-row">
                       <label class="ases-col-xs-3 ases-col-sm-3 ases-col-md-3 ases-col-lg-3" for="phone1"> Teléfono 1 </label>
                       <input id="input_phone1" class="ases-col-xs-2 ases-col-md-2 ases-col-lg-2" readonly="" value={{phone1}}>
-                      
+
                       <label class="ases-col-xs-4 ases-col-sm-4 ases-col-md-4 ases-col-lg-4" for="num_doc"> Teléfono 2 </label>
                       <input id="input_phone2" class="ases-col-xs-3 ases-col-sm-3 ases-col-md-3 ases-col-lg-3" readonly="true" value={{phone2}} >
                   </div>
@@ -35,23 +42,19 @@
                           <a href={pdf_doc}} target="_blank">{{pdf_doc}}</a>
                       </span>
                   </div>
-                  
+
                   <div class="ases-row">
                       <label class="ases-col-xs-4 ases-col-sm-4 ases-col-md-4 ases-col-lg-4"> D-10 </label>
                       <span id="input" class="ases-col-xs-6 ases-col-sm-6 ases-col-md-6 ases-col-lg-6">
-                          <a href={{pdf_d10}}>{{pdf_d10}}</a>
+                          <a href={{pdf_d10}} target="_blank">{{pdf_d10}}</a>
                       </span>
                   </div>
-                  
+
                   <div class="ases-row">
                       <label class="ases-col-xs-4 ases-col-sm-4 ases-col-md-4 ases-col-lg-4"> Cuenta bancaria </label>
                       <span id="input" class="ases-col-xs-6 ases-col-sm-6 ases-col-md-6 ases-col-lg-6">
                           <a target="_blank" href={{pdf_cuenta_banco}}>Link</a>
                       </span>
                   </div>
-              </div>
           </div>
-
-      </div>
 </div>
-{{!-- End monitor general tab}}

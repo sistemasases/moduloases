@@ -10,6 +10,7 @@
             <div class="ases-row" id="div-header-profile">
                 <div id="div-select-monitor" class="ases-col-lg-12">
                     {{{select}}}
+                    <p id="mon_id" hidden>{{mon_id}}</p>
                 </div>
             </div>
 
@@ -18,10 +19,10 @@
             </div>
 
             <div class="ases-row" id="div-nombre-foto">
-                <div id="monitor-fullname" class="ases-col-lg-7">
-                    <h2>{{fullname}}</h2>
-                </div>
+                <div id="div_monitor-fullname" class="ases-col-lg-7">
+                    <h2 id="monitor_fullname">{{fullname}}</h2>
 
+                </div>
                 <div id="monitor-picture" class="ases-col-lg-5">
                    {{{profile_image}}} 
                 </div>
@@ -37,7 +38,7 @@
                         </li>
                         {{/monitor_view_general_tab}}
                         <li id="trackings_li">
-                            <a href="#trackings_tab" data-toggle="tab">FICHAS SEMESTRALES</a>
+                            <a href="#trackings_tab" data-toggle="tab">FICHAS POR PERIODOS</a>
                         </li>
                     </ul>
                 </div>
@@ -47,7 +48,7 @@
                 <!-- Logic for tabs -->
                 <div class="tab-content clearfix">
                     {{#monitor_view_general_tab}} {{> block_ases/monitor_view_general_tab}} {{/monitor_view_general_tab}}
-                    {{#monitor_view_assignments_tab}} {{> block_ases/monitor_view_trackings_tab}} {{/monitor_view_assignments_tab}}
+                    {{#monitor_view_trackings_tab}} {{> block_ases/monitor_view_trackings_tab}} {{/monitor_view_trackings_tab}}
                 </div>
             </div>
     </form>
