@@ -1,0 +1,9 @@
+#input {
+    border-top: 2px solid;
+    border-left: 2px solid;
+    height: 26px;
+    box-sizing: border-box;
+    border-color: #999;
+    background-color: #eee;
+    margin-bottom: 5px;
+}
