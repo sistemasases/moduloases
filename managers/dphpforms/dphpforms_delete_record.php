@@ -108,7 +108,7 @@
             if($deleted_record->id == 0){
                 trigger_error('ASES Notificacion: actualizar entrada en la BD con id 0');
                 return -1;
-            }else
+            }else{
                 $DB->update_record('talentospilos_df_form_resp', $deleted_record, $bulk=false);
             }
             $retorno = json_encode(

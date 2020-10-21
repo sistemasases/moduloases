@@ -288,10 +288,17 @@ class renderer extends plugin_renderer_base {
         $data = $page->export_for_template($this);
         return parent::render_from_template('block_ases/communications', $data);
     }
+<<<<<<< HEAD
 
     public function render_monitorias_page($page){
         $data = $page->export_for_template($this);
         return parent::render_from_template('block_ases/monitorias', $data);
     }
 
+=======
+    public function render_monitor_profile_page($page){
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('block_ases/monitor_profile', $data);
+    }
+>>>>>>> 957aad97754837d1376a8bb7bf3deed054ab5959
 }
