@@ -1,4 +1,4 @@
-#input {
+label + span {
     border-top: 2px solid;
     border-left: 2px solid;
     height: 26px;
@@ -24,14 +24,20 @@
     background-image: url('images/save.png');
     margin-left: 0px;
     margin-right: 3px;
+    display: none;
 }
 
 #span-icon-cancel {
    background-image: url('images/cancel.png'); 
+   display: none;
 }
 
-.tooltip{
+.tooltip-v1 + .tooltip > .tooltip-inner{
     background-color: #73ad21;
+    color: #FFFFFF;
+    border: 1px solid green;
+    padding: 15px;
+    font-size: 12px;
 }
 
 /* Tooltip on top */

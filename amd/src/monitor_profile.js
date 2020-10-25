@@ -8,8 +8,7 @@
  */
 define(['jquery', 
         'block_ases/select2', 
-        'block_ases/bootstrap',
-        'block_ases/loading_indicator',], function($, select2, bootstrap) {
+        'block_ases/bootstrap',], function($, select2, bootstrap) {
     
     return {
         init: function () {
@@ -33,7 +32,29 @@ define(['jquery',
 
             // Load trackings tab on click.
             $("#trackings_li").one('click', {tab_name: 'trackings'}, load_tabs);
+            
+            $('[data-toggle="tooltip"]').tooltip({
+                container : 'body'
+            });
 
+            $("#span-icon-edit").on('click', function() {
+                console.log("hola");
+                $(this).hide();
+                $("#span-icon-save").show();
+                $("#span-icon-cancel").show();
+                $("#input_num_doc").prop('readonly', false);
+                $("#input_email").prop('readonly', false);
+                $("#input_phone1").prop('readonly', false);
+                $("#input_phone2").prop('readonly', false);
+
+                // Links
+                $("#input_span_acuerdo").attr('contentEditable', true);
+                $("#input_span_d10").attr('contentEditable', true);
+                $("#input_span_doc").attr('contentEditable', true);
+                $("#input_span_banco").attr('contentEditable', true);
+
+            });
+            
         }
     }
 
@@ -84,6 +105,7 @@ define(['jquery',
         console.log("hola mundo");
         loading_indicator.show(); 
     }
+
 
     function get_url_parameters(page) {
         // This function is anonymous, is executed immediately and

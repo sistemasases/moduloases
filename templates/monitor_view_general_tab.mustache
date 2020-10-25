@@ -1,18 +1,22 @@
 <div id="general_tab" class="tab-pane active p-t-100">
         <div class="ases-col-xs-12 ases-col-sm-7 ases-col-md-7 ases-col-lg-7">
 
+            <div class="ases-row" id="div-edicion">
+                <h3 class="ases-col-lg-5">INFORMACIÓN DEL MONITOR</h3>
+                    <div class="ases-col-sm-2 ases-col-md-2 ases-col-lg-2> id="div-span-edits">
+                        
+                        <span id="span-icon-edit" class="ases-col-sm-1 ases-col-md-1 ases-col-lg-1 tooltip-v1" data-toggle="tooltip" data-placement="top" title="Editar ficha">
+                        </span>
 
-            <div class="ases-row">
-              <h3 class="ases-col-xs-12 ases-col-md-9 ases-col-lg-9">INFORMACIÓN DEL MONITOR</h3>
-              <span class="ases-col-lg-1 tooltip-v1" id="span-icon-edit" data-toggle="tooltip" data-placement="bottom" title="Editar ficha">
-              </span>
 
-              <span class="ases-col-lg-1 tooltip-v1" id="span-icon-save" data-toggle="tooltip" data-placement="left" title="Guardar cambios"
-                hidden></span>
-              
-              <span class="ases-col-lg-1 tooltip-v1" id="span-icon-cancel" data-toggle="tooltip" data-placement="right" title="Cancelar"
-                hidden></span>
+                        <span id="span-icon-save" class="ases-col-sm-1 ases-col-md-1 ases-col-lg-1 tooltip-v1" 
+                            data-toggle="tooltip" data-placement="top" title="Guardar cambios">
+                        </span>
+                    </div>
+
+
             </div>
+
             <hr/>
                   <div class="ases-row">
                       <label class="ases-col-xs-3 ases-col-sm-3 ases-col-md-3 ases-col-lg-3" for="num_doc"> Identificación </label>
@@ -32,27 +36,27 @@
                   <h5>Documentos</h5>
                   <div class="ases-row">
                       <label class="ases-col-xs-4 ases-col-sm-4 ases-col-md-4 ases-col-lg-4"> Acuerdo de Confidencialidad </label>
-                      <span id="input" class="ases-col-xs-6 ases-col-sm-6 ases-col-md-6 ases-col-lg-6">
+                      <span id="input_span_acuerdo" class="ases-col-xs-6 ases-col-sm-6 ases-col-md-6 ases-col-lg-6">
                           <a href={{pdf_acuerdo_conf}} target="_blank">{{pdf_acuerdo_conf}}</a></span>
                   </div>
 
                   <div class="ases-row">
                       <label class="ases-col-xs-4 ases-col-sm-4 ases-col-md-4 ases-col-lg-4"> Documento de identidad </label>
-                      <span id="input" class="ases-col-xs-6 ases-col-sm-6 ases-col-md-6 ases-col-lg-6">
+                      <span id="input_span_doc" class="ases-col-xs-6 ases-col-sm-6 ases-col-md-6 ases-col-lg-6">
                           <a href={pdf_doc}} target="_blank">{{pdf_doc}}</a>
                       </span>
                   </div>
 
                   <div class="ases-row">
                       <label class="ases-col-xs-4 ases-col-sm-4 ases-col-md-4 ases-col-lg-4"> D-10 </label>
-                      <span id="input" class="ases-col-xs-6 ases-col-sm-6 ases-col-md-6 ases-col-lg-6">
+                      <span id="input_span_d10" class="ases-col-xs-6 ases-col-sm-6 ases-col-md-6 ases-col-lg-6">
                           <a href={{pdf_d10}} target="_blank">{{pdf_d10}}</a>
                       </span>
                   </div>
 
                   <div class="ases-row">
                       <label class="ases-col-xs-4 ases-col-sm-4 ases-col-md-4 ases-col-lg-4"> Cuenta bancaria </label>
-                      <span id="input" class="ases-col-xs-6 ases-col-sm-6 ases-col-md-6 ases-col-lg-6">
+                      <span id="input_span_banco" class="ases-col-xs-6 ases-col-sm-6 ases-col-md-6 ases-col-lg-6">
                           <a target="_blank" href={{pdf_cuenta_banco}}>Link</a>
                       </span>
                   </div>
