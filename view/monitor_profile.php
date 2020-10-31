@@ -132,6 +132,8 @@ $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 $PAGE->requires->css('/blocks/ases/style/monitor_profile.css', true);
 $PAGE->requires->css('/blocks/ases/style/monitor_trackings_tab.css', true);
+$PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
+$PAGE->requires->css('/blocks/ases/style/sweetalert2.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/monitor_profile', 'init');
 
