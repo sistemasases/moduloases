@@ -72,7 +72,7 @@ if ( isset($input->function) && isset($input->params) ){
                     array(
                         "status_code" => 1,
                         "message" => "",
-                        "data_response" => $result;
+                        "data_response" => $result,
                     )
                 );
             } else {

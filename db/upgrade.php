@@ -7,7 +7,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $dbman = $DB->get_manager();
     $result = true;
 
-    if ($oldversion < 2020101411330 ) {
+    if ($oldversion < 2020103117040 ) {
       
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
@@ -4082,7 +4082,14 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->add_field($table, $field_pdf_d10);
         }
 
-        upgrade_block_savepoint(true, 2020101411330, 'ases');
+        // ACTUALIZACIÓN SE AÑADE CAMPO PDF_ACUERDO_CONF a la tabla {talentospilos_monitores} 
+        // VERSION: 2020103117040//
+
+        if (!$dbman->field_exists($table, $field_pdf_acuerdo)) {
+            $dbman->add_field($table, $field_pdf_acuerdo);
+        }
+
+        upgrade_block_savepoint(true, 2020103117040, 'ases');
         return $result;
 
     }
