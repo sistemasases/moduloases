@@ -169,6 +169,23 @@ function get_active_periods(int $monitor_id, int $instance_id)
     return $result;
 }
 
+/**
+ * Se encarga de guardar la información del monitor en la bd.
+ *
+ * @param Array $form, contiene los campos a actualizar.
+ * @return ?
+ * @throws ?
+ */
+function monitor_save_profile($form) {
+    global $DB;
+
+    print_r($form); die();
+
+    foreach ($form as $field) {
+        
+    }
+}
+
 
 /**
  *  Realiza un select con los monitores de la instancia ASES

@@ -82,6 +82,30 @@ if ( isset($input->function) && isset($input->params) ){
         else {
             return_with_code(-5);
         }
+    } else if ($function == 'save_profile') {
+        /**
+         * [0] => form : Array with monitor's info to be saved.
+         */
+        if (count($params) == 1) {
+            $result = monitor_save_profile($params[0]);
+
+            if ($result) {
+                echo json_encode(
+                    array(
+                        "status_code" => 1,
+                        "message" => "",
+                        "data_response" => $result,
+                    )
+                );
+            }
+            else{
+                return_with_code(-6);
+            }
+        }
+        else {
+            return_with_code(-5);
+        }
+    
     } else {
         return_with_code(-2);
     }
