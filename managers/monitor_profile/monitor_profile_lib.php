@@ -173,16 +173,64 @@ function get_active_periods(int $monitor_id, int $instance_id)
  * Se encarga de guardar la información del monitor en la bd.
  *
  * @param Array $form, contiene los campos a actualizar.
- * @return ?
- * @throws ?
+ * @return true, si la operación fue exitosa.
+ * @throws Exception
  */
 function monitor_save_profile($form) {
-    global $DB;
 
-    print_r($form); die();
+    // Se prepara el objeto que tendrá
+    // todos los registros a ser actualizados.
+    $dataObj = new stdClass();
+
+    $monitor_id_moodle = array_pop($form)->value;
+
+    // Id del registro a actualiazar.
+    $id_record = get_monitor($monitor_id_moodle)->id;
+
+    $dataObj->id = (int)$id_record;
 
     foreach ($form as $field) {
-        
+        switch ($field->name) {
+            case "num_doc":
+            case "pdf_doc":
+            case "pdf_d10":
+            case "pdf_cuenta_banco":
+            case "pdf_acuerdo_conf":
+                $key = $field->name;
+                $value = $field->value;
+                $dataObj->$key = $value;
+                break;
+            case "email":
+            case "phone1":
+            case "phone2":
+                print_r('Preguntar a samuel');
+                break;
+
+            default:
+                Throw new exception("El campo $field->name no existe en el formulario.");
+        }
+    }
+    return update_monitor_records($dataObj);
+}
+
+/**
+ * Actualiza un registro específico de la tabla monitores.
+ *
+ * @param stdClass $data -> objeto de datos con los campos a actualizar.
+ *
+ * @return true, si la operación fue exitosa.
+ * @throws Exception, si hubo problemas en la operación.
+ */
+function update_monitor_records(stdClass $data)
+{
+    
+    global $DB;
+    global $MONITORS_TABLENAME;
+    try {
+        $DB->update_record(substr($MONITORS_TABLENAME, 4), $data);
+        return true;
+    } catch (Exception $e) {
+        Throw new exception($e); 
     }
 }
 

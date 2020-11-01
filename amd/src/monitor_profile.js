@@ -77,11 +77,13 @@ define(['jquery',
                 } else {
 
                     let formOnlyWithChanges = [];
-                    changedForm.forEach((field, i) => {
-                        if (field.value != unchangedForm[i].value) {
+                    changedForm.slice(1,11).forEach((field, i) => {
+                        if (field.value != unchangedForm.slice(1,11)[i].value) {
                             formOnlyWithChanges.push(field);
                         }
                     });
+
+                    formOnlyWithChanges.push(changedForm[0]);
                     object_function.saveForm(formOnlyWithChanges);
                 }
 
@@ -182,7 +184,6 @@ define(['jquery',
             location.reload(true);
         }, saveForm: function (form) {
             $('#span-icon-cancel').hide(); 
-            
             $.ajax({
                 type: "POST",
                 data: JSON.stringify({
@@ -199,6 +200,7 @@ define(['jquery',
                         msg.type
                     );
                 },
+                success: () => {swal("Éxito", "Información guardada con éxito.", "success");},
             });
         } 
     };

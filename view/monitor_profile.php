@@ -97,6 +97,7 @@ if ($monitor_code != 0){
     $monitor = search_user($monitor_code);
     $data->select = make_select_monitors($monitor);
     $monitor_info = get_monitor($monitor->id);
+    $data->id_moodle = $monitor->id;
     $data->email = $monitor->email;
     $data->fullname = $monitor->username . " " . $monitor->firstname . " " . $monitor->lastname;
     $data->phone1 = $monitor->phone1;
