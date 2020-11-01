@@ -63,13 +63,28 @@ define(['jquery',
                 $("#link_doc").removeAttr("href");
 
                 $("#input_banco").prop('readonly', false);
-                $("#link_banco").removeAttr("href");
+                $("#link_banco").attr("href", "");
             });
             
             $('#span-icon-save').on('click', function () {
                 var changedForm = $('#ficha_monitor').serializeArray();
-                console.log(object_function);
                 var resultValidation = object_function.validateForm(changedForm);
+
+                if (resultValidation.status == 'error') {
+                    swal(resultValidation.title,
+                        resultValidation.msg,
+                        resultValidation.status);
+                } else {
+
+                    let formOnlyWithChanges = [];
+                    changedForm.forEach((field, i) => {
+                        if (field.value != unchangedForm[i].value) {
+                            formOnlyWithChanges.push(field);
+                        }
+                    });
+                    object_function.saveForm(formOnlyWithChanges);
+                }
+
             });
 
             $('#span-icon-cancel').on('click', { form: unchangedForm }, function(data) {
@@ -87,7 +102,7 @@ define(['jquery',
                 }, function (isConfirm) {
                     if (isConfirm) {
                         object_function.cancelEdition(); 
-                        //object_function.revertChanges(data.data.form);
+                        object_function.revertChanges(data.data.form);
                     }
                 });
             });
@@ -124,17 +139,23 @@ define(['jquery',
                         }
                         break;
 
-                    case "acuerdo_conf":
-                    case "doc":
-                    case "d10":
-                    case "banco":
+                    case "pdf_acuerdo_conf":
+                    case "pdf_doc":
+                    case "pdf_d10":
+                    case "pdf_cuenta_banco":
                         let urlregex = /^(http|https):\/\//;
                         let validUrl = urlregex.exec(field.value);
 
-                        console.log(validUrl);
+                        if (validUrl == null) {
+                            msg.title = "Error";
+                            msg.status = "error";
+                            msg.msg = `El campo ${field.name} no es un enlace válido. Recuerde incluir https://.`
+                        }
+                        break;
                 }
             }
             return msg;
+            
         }, cancelEdition: function () {
             $('#span-icon-edit').show();
             $('#span-icon-save').hide();
@@ -148,7 +169,38 @@ define(['jquery',
             $("#input_d10").prop('readonly', true);
             $("#input_doc").prop('readonly', true);
             $("#input_banco").prop('readonly', true);
-        }
+        
+        }, revertChanges: function (form) {
+
+            form.forEach(field => $('[name='+field.name+']').val(field.value));
+            
+            $("#link_acuerdo").attr("href", $("#input_acuerdo")[0].value);
+            $("#link_banco").attr("href", $('#input_banco')[0].value);
+            $("#link_d10").attr("href", $("#input_d10")[0].value);
+            $('#link_doc').attr('href', $('#input_doc')[0].value);
+
+            location.reload(true);
+        }, saveForm: function (form) {
+            $('#span-icon-cancel').hide(); 
+            
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({
+                    "function": 'save_profile',
+                    "params": [form]
+                }),
+                url: '../managers/monitor_profile/monitor_profile_api.php',
+                dataType: "json",
+                cache: "false",
+                error: function (msg) {
+                    swal(
+                        msg.title,
+                        msg.msg,
+                        msg.type
+                    );
+                },
+            });
+        } 
     };
 
     // Loads monitor page
