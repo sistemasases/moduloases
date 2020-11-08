@@ -37,11 +37,17 @@
                         </li>
                         {{/monitor_view_general_tab}}
 
-			{{#monitor_view_trackings_tab}}
+		                {{#monitor_view_trackings_tab}}
                         <li id="trackings_li">
-                            <a href="#trackings_tab" data-toggle="tab">FICHAS POR PERIODOS</a>
+                            <a href="#trackings_tab" data-toggle="tab">HISTORICO FICHAS</a>
                         </li>
-			{{/monitor_view_trackings_tab}}
+			            {{/monitor_view_trackings_tab}}
+
+                        {{#monitor_view_history_boss_tab}}
+                        <li id="boss_history_li">
+                            <a href="#boss_history_tab" data-toggle="tab">HISTORICO JEFES</a>
+                        </li>
+                        {{/monitor_view_history_boss_tab}}
                     </ul>
                 </div>
             </div>
@@ -51,6 +57,7 @@
                 <div class="tab-content clearfix">
                     {{#monitor_view_general_tab}} {{> block_ases/monitor_view_general_tab}} {{/monitor_view_general_tab}}
                     {{#monitor_view_trackings_tab}} {{> block_ases/monitor_view_trackings_tab}} {{/monitor_view_trackings_tab}}
+                    {{#monitor_view_history_boss_tab}} {{> block_ases/monitor_view_history_boss_tab}} {{/monitor_view_history_boss_tab}}
                 </div>
             </div>
     </form>

@@ -45,7 +45,7 @@ if ( isset($input->function) && isset($input->params) ){
             if ($result) {
                 echo json_encode(
                     array(
-                        "status_code" => 1,
+                        "status_code" => 0,
                         "message" => "Is monitor",
                         "data_response" => $result,
                     )
@@ -58,25 +58,42 @@ if ( isset($input->function) && isset($input->params) ){
         }
 
     // Cargar pestaña de conteo de fichas.
-    } else if ($function == 'load_trackings_tab') {
+    } else if ($function == 'load_tabs') {
         /**
-         * [0] => monitor_code : monitor's username.
-         * [1] => monitor_id : monitor's id.
-         * [2] => instance_id : instance the monitor belongs to.
+         * [0] => monitor_id : monitor's id.
+         * [1] => instance_id : instance the monitor belongs to.
+         * [2] => tab_name : Specific tab to load.
          */
         if (count($params) == 3) {
-            $result = monitor_load_trackings_tab($params[0], $params[1], $params[2]); 
+            if (is_string($params[2])) {
+                $tab_name = $params[2];
+                
+                switch($tab_name) {
+                    case 'trackings':
+                        print_r("hola");
+                        break;
 
-            if ($result) {
-                echo json_encode(
-                    array(
-                        "status_code" => 1,
-                        "message" => "",
-                        "data_response" => $result,
-                    )
-                );
+                    case 'history_boss':
+                        $result = monitor_load_bosses_tab($params[0], $params[1]); 
+                        break;
+
+                    default:
+                        return_with_code(-2);
+                } 
+
+                if ($result != null) {
+                    echo json_encode(
+                        array(
+                            "status_code" => 0,
+                            "message" => "",
+                            "data_response" => $result
+                        )
+                    );
+                } else {
+                    return_with_code(-5);
+                }
             } else {
-                return_with_code(-6);
+                return_with_code(-2);
             }
         }
         else {
@@ -106,7 +123,7 @@ if ( isset($input->function) && isset($input->params) ){
             return_with_code(-5);
         }
     
-    } else {
+    }  else {
         return_with_code(-2);
     }
 } else {

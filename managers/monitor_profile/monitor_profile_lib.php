@@ -25,7 +25,10 @@
 
 require_once(__DIR__ . "/../../../../config.php");
 require_once(__DIR__ . "/../lib/lib.php");
+require_once(__DIR__ . "/../../core/module_loader.php");
 require_once(__DIR__ . "/../pilos_tracking/v2/pilos_tracking_lib.php");
+
+module_loader("periods");
 
 $MONITORS_TABLENAME = $GLOBALS[ 'CFG' ]->prefix . "talentospilos_monitores";
 
@@ -160,7 +163,7 @@ function get_active_periods(int $monitor_id, int $instance_id)
         throw new Exception('Argumento(s) inválidos.');
     }
 
-    $sql = "SELECT id_semestre 
+    $sql = "SELECT DISTINCT id_semestre 
             FROM {talentospilos_monitor_estud} 
             WHERE id_monitor = $monitor_id 
             AND id_instancia = $instance_id";
@@ -234,6 +237,62 @@ function update_monitor_records(stdClass $data)
     }
 }
 
+
+function monitor_load_bosses_tab(int $monitor_moodle_id, int $instance_id) {
+    $data = new stdClass();
+    $active_periods = get_active_periods($monitor_moodle_id, $instance_id ); 
+    
+    $table_html = "<table id='table_boss'><tr><th>Periodo</th><th>Jefe</th></tr>";
+    foreach ($active_periods as $period) {
+        $period_id = $period->id_semestre;
+        $period_nombre = core_periods_get_period_by_id($period_id)->nombre;
+        $period->nombre = $period_nombre;
+
+        $boss = get_monitor_boss($monitor_moodle_id, $period_id); 
+        $boss_name = $boss->firstname." ".$boss->lastname;
+        $period->jefe = $boss_name;
+
+        $table_html .= "<tr><td>".$period_nombre."</td><td>".$boss_name."</td></tr>";
+    }
+    $table_html .= "</table>";
+    $data->table_html = $table_html;
+    
+    return $data;
+}
+
+/**
+ * Retorna el jefe de un monitor durante un período específico.
+ *
+ * @param int $monitor_moodle_id
+ * @param int $period_id
+ *
+ * @return stdClass $jefe
+ * @throws Exception e
+ */
+function get_monitor_boss(int $monitor_moodle_id, int $period_id)
+{
+
+    if ($monitor_moodle_id <= 0) {
+        Throw new Exception("ID del monitor inválido");
+    }
+
+    global $DB;
+    try {
+        $query = 
+            "SELECT username, firstname, lastname
+            FROM {user}
+            WHERE id in(
+                SELECT id_jefe 
+                FROM {talentospilos_user_rol}
+                WHERE id_usuario=$monitor_moodle_id
+                AND id_semestre=$period_id)";
+        
+        $result = $DB->get_record_sql($query);
+        return $result; 
+    } catch (Exception $e){
+        Throw new Exception($e);
+    }
+}
 
 /**
  *  Realiza un select con los monitores de la instancia ASES

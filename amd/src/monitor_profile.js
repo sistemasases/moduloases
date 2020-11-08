@@ -9,7 +9,9 @@
 define(['jquery', 
         'block_ases/select2', 
         'block_ases/bootstrap',
-        'block_ases/sweetalert'], function($, select2, bootstrap) {
+        'block_ases/sweetalert',
+        'block_ases/mustache',
+        'block_ases/history_boss'], function($, select2, bootstrap, sweetalert, mustache, history_boss) {
     
     return {
         init: function (data_init) {
@@ -34,6 +36,7 @@ define(['jquery',
             // Load trackings tab on click.
 
             $("#trackings_li").one('click', {tab_name: 'trackings'}, load_tabs);
+            $("#boss_history_li").one('click', {tab_name: 'history_boss'}, load_tabs);
             
             $('[data-toggle="tooltip"]').tooltip({
                 container : 'body'
@@ -220,7 +223,7 @@ define(['jquery',
             success: function (msg) {
                 var result = msg;
 
-                if (result.status_code === 1) {
+                if (result.status_code === 0) {
                     var parameters = get_url_parameters(document.location.search);
                     var fullUrl = String(document.location);
                     var url = fullUrl.split("?");
@@ -248,8 +251,53 @@ define(['jquery',
 
     //Load a single tab.
     function load_tabs(event) {
-        console.log("hola mundo");
-        loading_indicator.show(); 
+        var tabName = event.data.tab_name;
+        var parameters = get_url_parameters(document.location.search);
+        var monitorId = $("#id_moodle")[0].value;
+
+	$.ajax({
+            type: "POST",
+            url: "../managers/monitor_profile/monitor_profile_api.php",
+            dataType: "json",
+            cache: "false",
+            data: JSON.stringify({
+                "function": 'load_tabs',
+                "params": [monitorId, parameters.instanceid, tabName],
+            }),
+	        success: function(msg) {
+                if (msg.status_code == 0) {
+                    $.ajax({
+                        type: "POST",
+                        url: "../templates/monitor_view_"+tabName+"_tab.mustache",
+                        data: null,
+                        dataType: "text",
+                        async: "false",
+                        success: function(template) {
+                            console.log("el mensaje:->", msg.data_response);
+                            let tabToLoad = $(mustache.render(template, msg.data_response));
+                            console.log(tabToLoad);
+                            $("#div-table-bosses").append(tabToLoad);
+
+                            switch (tabName) {
+                                case 'history_boss':
+                                    history_boss.init();
+                                    break;
+                            }
+                            $("#"+tabName+"_tab").addClass("active");
+                        },
+                        error: function() {
+                            console.log(`../templates/monitor_view_${tabName}_tab.mustache cannot be reached.`);
+                        }
+                    });
+                } else {
+                    console.log(msg);
+                }
+    
+            },
+            error: function(msg) {
+                console.log(msg)
+            }
+        });
     }
 
 
