@@ -312,3 +312,52 @@ function make_select_monitors($monitor=null) {
 
     return $html;
 }
+
+/**
+ * Retorna la URL de la imagen del pérfil de moodle del monitor, utilizando
+ * la FileAPI de Moodle
+ *
+ * @param int $context_block_id
+ * @param int $moodle_id
+ *
+ * @return string moodle url | empty string
+ *
+ * @see https://github.com/sistemasases/moduloases/wiki/Cargar-archivos-de-plugin
+ */
+function get_mon_URL_profile_img(int $context_block_id, int $moodle_id): string {
+    $fs = get_file_storage();
+    $files = $fs->get_area_files($context_block_id, 'block_ases', 'profile_image', $moodle_id);
+    $image_file = array_pop($files);
+
+    if (sizeof($files) == 0) {
+        return '';
+    }
+    return moodle_url::make_pluginfile_url(
+        $image_file->getcontextid(), $image_file->get_component(), $image_file->get_filearea(),
+        $image_file->get_itemid(), $image_file->get_filepath(), $image_file->get_filename()
+    );
+}
+
+/**
+ * Retorna el html necesario para mostrar la imagen de pérfil del monitor en su ficha.
+ *
+ * @param int $context_block_id
+ * @param int $moodle_id
+ *
+ * @return string <img> element
+ *
+ * @see https://github.com/sistemasases/moduloases/wiki/Cargar-archivos-de-plugin 
+ *
+ */
+function get_mon_html_profile_img(int $context_block_id, int $moodle_id)
+{
+    global $OUTPUT;
+    $image_url = get_mon_URL_profile_img($context_block_id, $moodle_id);
+
+    if ($image_url != '') {
+        return html_writer::empty_tag('img', array('src' => $image_url, 'alt'=>'profile_image'));
+    }
+
+    $monitor = \core_user::get_user($moodle_id, '*', MUST_EXIST);
+    return $OUTPUT->user_picture($monitor, array('size'=>100, 'link'=>false));
+}

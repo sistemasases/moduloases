@@ -38,9 +38,9 @@ define(['jquery',
             $("#trackings_li").one('click', {tab_name: 'trackings'}, load_tabs);
             $("#boss_history_li").one('click', {tab_name: 'history_boss'}, load_tabs);
             
-            $('[data-toggle="tooltip"]').tooltip({
-                container : 'body'
-            });
+            //$('[data-toggle="tooltip"]').tooltip({
+            //    container : 'body',
+            //});
 
             this.editProfile(self);
         },

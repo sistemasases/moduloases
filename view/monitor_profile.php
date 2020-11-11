@@ -62,6 +62,7 @@ $contextcourse = context_course::instance($course_id);
 $contextblock = context_block::instance($block_id);
 $id_current_user = $USER->id;
 
+
 $rol = lib_get_rol_name_ases($id_current_user, $block_id);
 $url = new moodle_url("/blocks/ases/view/monitor_profile.php", array('courseid' => $course_id, 'instanceid' => $block_id, 'monitor_code' => $monitor_code));
 
@@ -108,6 +109,7 @@ if ($monitor_code != 0){
     $data->pdf_acuerdo_conf = $monitor_info->pdf_acuerdo_conf;
     $data->pdf_doc = $monitor_info->pdf_doc;
     $data->pdf_d10 = $monitor_info->pdf_d10;
+    $data->profile_image =  get_mon_HTML_profile_img($contextblock->id, $monitor->id );
     
 } else {
     $monitor_code = -1;
@@ -140,7 +142,6 @@ $PAGE->requires->js_call_amd('block_ases/monitor_profile', 'init');
 
 $OUTPUT = $PAGE->get_renderer('block_ases');
 
-$data->profile_image = $monitor_code != -1 ? $OUTPUT->user_picture($monitor, array('size'=>100, 'link'=>false)) : null;
 
 $monitor_profile_page = new \block_ases\output\monitor_profile_page($data);
 
