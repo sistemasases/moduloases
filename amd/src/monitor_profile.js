@@ -267,22 +267,14 @@ define(['jquery',
 	        success: function(msg) {
                 if (msg.status_code == 0) {
                     $.ajax({
-                        type: "POST",
                         url: "../templates/monitor_view_"+tabName+"_tab.mustache",
                         data: null,
                         dataType: "text",
-                        async: "false",
                         success: function(template) {
-                            console.log("el mensaje:->", msg.data_response);
                             let tabToLoad = $(mustache.render(template, msg.data_response));
                             console.log(tabToLoad);
-                            $("#div-table-bosses").append(tabToLoad);
-
-                            switch (tabName) {
-                                case 'history_boss':
-                                    history_boss.init();
-                                    break;
-                            }
+                            $(".tab-content").append(tabToLoad);
+                            $("#general_tab").removeClass("active");
                             $("#"+tabName+"_tab").addClass("active");
                         },
                         error: function() {
@@ -290,7 +282,7 @@ define(['jquery',
                         }
                     });
                 } else {
-                    console.log(msg);
+                    console.log('error:', msg);
                 }
     
             },
