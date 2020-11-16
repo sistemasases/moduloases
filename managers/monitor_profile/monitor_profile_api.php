@@ -65,16 +65,16 @@ if ( isset($input->function) && isset($input->params) ){
          * [2] => tab_name : Specific tab to load.
          */
         if (count($params) == 3) {
-            if (is_string($params[2])) {
+            if (is_string($params[2]) && is_numeric($params[0]) && is_numeric($params[1])) {
                 $tab_name = $params[2];
                 
                 switch($tab_name) {
                     case 'trackings':
-                        print_r("hola");
+                        $result = monitor_load_trackings_tab($params[0], $params[1]); 
                         break;
 
                     case 'history_boss':
-                        $result = monitor_load_bosses_tab($params[0], $params[1]); 
+                        $result = monitor_load_bosses_tab($params[0], $params[1]);
                         break;
 
                     default:

@@ -72,11 +72,11 @@ function monitor_is_monitor_ps($code)
 /**
  * Returns all monitors in the same instance
  * 
- * @param $id_instancia int
+ * @param int $instance_id
  * @return Array monitors
  */
 
-function get_all_monitors()
+function get_all_monitors(int $instance_id)
 {
 
     global $DB;
@@ -86,7 +86,10 @@ function get_all_monitors()
         SELECT U.username, U.firstname, U.username 
         FROM $MONITORS_TABLENAME 
         INNER JOIN {user} U 
-        ON $MONITORS_TABLENAME.id_moodle_user = U.id";
+        ON $MONITORS_TABLENAME.id_moodle_user = U.id
+        INNER JOIN {talentospilos_monitor_estud} ME
+        ON ME.id_monitor=U.id
+        AND ME.id_instancia=$instance_id";
 
     $result = $DB->get_records_sql( $query );
     return $result;
@@ -121,30 +124,101 @@ function get_monitor(int $monitor_id) {
 }
 
 /**
- * Handles all activities needed to load de assignments tab
+ * Handles all activities needed to load de 
  * 
  * @param int $monitor_id
  * @param int $instance_id
  */
-function monitor_load_trackings_tab(string $monitor_username, int $monitor_id, int $instance_id)
+function monitor_load_trackings_tab(int $monitor_id, int $instance_id)
 {
     $active_periods = get_active_periods($monitor_id, $instance_id); 
-    
+
+    $table_html = "<table>";
     if ( count($active_periods) >= 1 ) {
 
         $tracking_count = array();
         
-        foreach ($active_periods as $period_id) {
-            $tracking_count[$period_id] = pilos_tracking_get_tracking_count($monitor_username, $period_id, $instance_id, true);
-        }   
+        foreach ($active_periods as $period) {
+            $tracking_count[$period->id_semestre] = monitor_get_tracking_count($monitor_id, $instance_id, $period->id_semestre);
+        } 
 
-        print_r($tracking_count);
 
     } else {
         return 0;
     }
 }
 
+/**
+ * Gets tracking count of given monitor during a given semester on a given instance.
+ * This function is a slimmer versión of pilos_tracking_get_tracking_count, adapted
+ * for only counting the monitor's forms count.
+ *
+ * @param int $moodle_id
+ * @param int $instance_id
+ * @param int $period_id
+ * 
+ * @see managers/pilos_tracking/v2/
+ * @return ?
+ */ 
+function monitor_get_tracking_count(int $moodle_id, int $instance_id, int $period_id)
+{
+   global $DB; 
+
+   $fecha_inicio = null;
+   $fecha_fin = null;
+
+   $interval = core_periods_get_period_by_id($period_id);
+   if (!$interval) {
+       Throw new exception("ID de Período inválido: $period_id");
+   }
+
+    $fecha_inicio = getdate(strtotime($interval->fecha_inicio));
+    $fecha_fin = getdate(strtotime($interval->fecha_fin));
+
+    $mon_tmp = $fecha_inicio["mon"];
+    $day_tmp = $fecha_inicio["mday"];
+    if( $mon_tmp < 10 ){
+        $mon_tmp = "0" . $mon_tmp;
+    }
+    if( $day_tmp < 10 ){
+        $day_tmp = "0" . $day_tmp;
+    }
+
+    $fecha_inicio_str = $fecha_inicio["year"]."-".$mon_tmp."-".$day_tmp;
+
+    $mon_tmp = $fecha_fin["mon"];
+    $day_tmp = $fecha_fin["mday"];
+    if( $mon_tmp < 10 ){
+        $mon_tmp = "0" . $mon_tmp;
+    }
+    if( $day_tmp < 10 ){
+        $day_tmp = "0" . $day_tmp;
+    }
+
+    $fecha_fin_str = $fecha_fin["year"]."-".$mon_tmp."-".$day_tmp;
+
+    $sql_mon_estud = 
+        "SELECT ME.id_estudiante, U.username, ME.id_monitor
+        FROM {talentospilos_monitor_estud} AS ME
+        INNER JOIN {user} AS U ON ME.id_monitor = U.id
+        WHERE id_monitor=$moodle_id 
+        AND id_semestre=$period_id
+        AND id_instancia=$instance_id";
+    
+    $assigned_students = $DB->get_records_sql($sql_mon_estud);
+    
+    $to_return = [];
+    foreach($assigned_students as $student) {
+        $count = new stdClass();
+        $count->username = $student->id_estudiante;
+        $count->count = pilos_tracking_general_get_count(
+            $student->id_estudiante, "estudiante_t", $fecha_inicio_str, $fecha_fin_str, $instance_id, $period_id
+        );
+
+        array_push($to_return, $count);
+    }
+    return $to_return;
+}
 
 /**
  * Gets the periods in which a given monitor has been active under a given instance.
@@ -168,8 +242,15 @@ function get_active_periods(int $monitor_id, int $instance_id)
             WHERE id_monitor = $monitor_id 
             AND id_instancia = $instance_id";
     
-   $result = $DB->get_records_sql($sql); 
-    return $result;
+    $result = $DB->get_records_sql($sql); 
+    
+    $to_return = [];
+
+    foreach($result as $item) {
+        array_push($to_return, core_periods_get_period_by_id($item->id_semestre));
+    }
+    
+    return $to_return;
 }
 
 /**
@@ -244,9 +325,8 @@ function monitor_load_bosses_tab(int $monitor_moodle_id, int $instance_id) {
     
     $table_html = "<table id='table_boss'><tr><th>Periodo</th><th>Jefe</th></tr>";
     foreach ($active_periods as $period) {
-        $period_id = $period->id_semestre;
-        $period_nombre = core_periods_get_period_by_id($period_id)->nombre;
-        $period->nombre = $period_nombre;
+        $period_id = $period->id;
+        $period_nombre = $period->nombre;
 
         $boss = get_monitor_boss($monitor_moodle_id, $period_id); 
         $boss_name = $boss->firstname." ".$boss->lastname;
@@ -294,12 +374,25 @@ function get_monitor_boss(int $monitor_moodle_id, int $period_id)
     }
 }
 
+function make_select_active_periods($moodle_id, $instance_id) {
+    $active_periods = get_active_periods($moodle_id, $instance_id); 
+    $html = "<select id='select-periods'> <option selected=Selected>Seleccione un período</option>";
+
+    foreach($active_periods as $period) {
+        $html .= "<option value='$period->id'>$period->nombre</option>";
+    }
+    $html .= "</select>";
+
+    return $html;
+}
+
+
 /**
  *  Realiza un select con los monitores de la instancia ASES
  * */
-function make_select_monitors($monitor=null) {
+function make_select_monitors(int $instance_id, $monitor=null) {
 
-    $monitors = get_all_monitors();
+    $monitors = get_all_monitors($instance_id);
         
     $html = "<select id='select-monitores' style='width:100%'> <option selected=Selected>Seleccione un monitor</option>";
 

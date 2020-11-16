@@ -96,7 +96,7 @@ $coursenode->add_node($blocknode);
 if ($monitor_code != 0){
     // Recolección de la información básica del monitor.
     $monitor = search_user($monitor_code);
-    $data->select = make_select_monitors($monitor);
+    $data->select = make_select_monitors($block_id, $monitor);
     $monitor_info = get_monitor($monitor->id);
     $data->id_moodle = $monitor->id;
     $data->email = $monitor->email;
@@ -110,20 +110,12 @@ if ($monitor_code != 0){
     $data->pdf_doc = $monitor_info->pdf_doc;
     $data->pdf_d10 = $monitor_info->pdf_d10;
     $data->profile_image =  get_mon_HTML_profile_img($contextblock->id, $monitor->id );
+    $data->select_periods = make_select_active_periods($monitor->id, $block_id);
     
 } else {
     $monitor_code = -1;
-    $data->select = make_select_monitors();
+    $data->select = make_select_monitors($block_id);
 }
-
-
-
-
-
-
-
-
-
 
 $page_title = 'Pérfil del monitor';
 $PAGE->set_url($url);
