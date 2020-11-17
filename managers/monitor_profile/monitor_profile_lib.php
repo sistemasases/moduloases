@@ -124,7 +124,7 @@ function get_monitor(int $monitor_id) {
 }
 
 /**
- * Handles all activities needed to load de 
+ * Handles all activities needed to load the trackings tab. 
  * 
  * @param int $monitor_id
  * @param int $instance_id
@@ -132,20 +132,21 @@ function get_monitor(int $monitor_id) {
 function monitor_load_trackings_tab(int $monitor_id, int $instance_id)
 {
     $active_periods = get_active_periods($monitor_id, $instance_id); 
+    return $active_periods;
 
-    $table_html = "<table>";
-    if ( count($active_periods) >= 1 ) {
+    //$table_html = "<table>";
+    //if ( count($active_periods) >= 1 ) {
 
-        $tracking_count = array();
-        
-        foreach ($active_periods as $period) {
-            $tracking_count[$period->id_semestre] = monitor_get_tracking_count($monitor_id, $instance_id, $period->id_semestre);
-        } 
+    //    $tracking_count = array();
+    //    
+    //    foreach ($active_periods as $period) {
+    //        $tracking_count[$period->id_semestre] = monitor_get_tracking_count($monitor_id, $instance_id, $period->id_semestre);
+    //    } 
 
 
-    } else {
-        return 0;
-    }
+    //} else {
+    //    return 0;
+    //}
 }
 
 /**
@@ -206,16 +207,16 @@ function monitor_get_tracking_count(int $moodle_id, int $instance_id, int $perio
         AND id_instancia=$instance_id";
     
     $assigned_students = $DB->get_records_sql($sql_mon_estud);
-    
-    $to_return = [];
+
+    $to_return = new stdClass(); 
+    $to_return->total_count = 0;
     foreach($assigned_students as $student) {
         $count = new stdClass();
         $count->username = $student->id_estudiante;
         $count->count = pilos_tracking_general_get_count(
             $student->id_estudiante, "estudiante_t", $fecha_inicio_str, $fecha_fin_str, $instance_id, $period_id
         );
-
-        array_push($to_return, $count);
+        $to_return->total_count += ($count->count["total_profesional"]);
     }
     return $to_return;
 }

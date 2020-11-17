@@ -123,6 +123,36 @@ if ( isset($input->function) && isset($input->params) ){
             return_with_code(-5);
         }
     
+    } else if ($function == 'tracking_count') {
+        /**
+         * [0] => Moodle's monitor user id.
+         * [1] => Instance ID
+         * [2] => Period ID
+         */
+        if (count($params) == 3) {
+
+            if (is_numeric($params[0]) && is_numeric($params[1]) && is_numeric($params[2])) {
+               $result = monitor_get_tracking_count($params[0], $params[1], $params[2]); 
+
+               if ($result) {
+                   echo json_encode(
+                       array(
+                            "status_code" => 0,
+                            "message" => "",
+                            "data_response" => $result,
+                       )
+                   );
+               } else {
+                   return_with_code(-6);
+               }
+            } else {
+                return_with_code(-3);
+            }
+
+        
+        } else {
+            return_with_code(-6);
+        }
     }  else {
         return_with_code(-2);
     }
@@ -145,7 +175,15 @@ function return_with_code($code){
                 )
             );
             break;
-
+        case -3:
+            echo json_encode(
+                array(
+                    "status_code" => $code,
+                    "error_message" => "El tipo de los argumentos es inválido.",
+                    "data_response" => ""
+                )
+            );
+            break;
         case -2:
             echo json_encode(
                 array(

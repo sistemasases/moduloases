@@ -11,7 +11,7 @@ define(['jquery',
         'block_ases/bootstrap',
         'block_ases/sweetalert',
         'block_ases/mustache',
-        'block_ases/history_boss'], function($, select2, bootstrap, sweetalert, mustache, history_boss) {
+        'block_ases/mon_trackings'], function($, select2, bootstrap, sweetalert, mustache, mon_trackings) {
     
     return {
         init: function (data_init) {
@@ -272,10 +272,14 @@ define(['jquery',
                         dataType: "text",
                         success: function(template) {
                             let tabToLoad = $(mustache.render(template, msg.data_response));
-                            console.log(tabToLoad);
                             $(".tab-content").append(tabToLoad);
                             $("#general_tab").removeClass("active");
                             $("#"+tabName+"_tab").addClass("active");
+
+                            switch (tabName) {
+                                case "trackings":
+                                    mon_trackings.init([monitorId, parameters.instanceid]);
+                            }
                         },
                         error: function() {
                             console.log(`../templates/monitor_view_${tabName}_tab.mustache cannot be reached.`);
