@@ -27,6 +27,8 @@
  */
 
 require_once(dirname(__FILE__). '/../../../../config.php');
+
+
  /**
  * Function that returns the current semester in a given interval
  * 
