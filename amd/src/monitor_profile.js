@@ -33,10 +33,11 @@ define(['jquery',
 
                 loadMonitor(monitorCode);
             })
-            // Load trackings tab on click.
+            var parameters = get_url_parameters(document.location.search);
+            var monitorId = $("#id_moodle")[0].value;
 
-            $("#trackings_li").one('click', {tab_name: 'trackings'}, load_tabs);
             $("#boss_history_li").one('click', {tab_name: 'history_boss'}, load_tabs);
+            $("#trackings_li").one('click', mon_trackings.init([monitorId, parameters.instanceid]));
             
             //$('[data-toggle="tooltip"]').tooltip({
             //    container : 'body',

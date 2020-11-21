@@ -69,9 +69,6 @@ if ( isset($input->function) && isset($input->params) ){
                 $tab_name = $params[2];
                 
                 switch($tab_name) {
-                    case 'trackings':
-                        $result = monitor_load_trackings_tab($params[0], $params[1]); 
-                        break;
 
                     case 'history_boss':
                         $result = monitor_load_bosses_tab($params[0], $params[1]);
@@ -93,7 +90,7 @@ if ( isset($input->function) && isset($input->params) ){
                     return_with_code(-5);
                 }
             } else {
-                return_with_code(-2);
+                return_with_code(-3);
             }
         }
         else {
@@ -148,7 +145,6 @@ if ( isset($input->function) && isset($input->params) ){
             } else {
                 return_with_code(-3);
             }
-
         
         } else {
             return_with_code(-6);

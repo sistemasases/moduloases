@@ -8,8 +8,8 @@
  */
 
 define(['jquery', 
-        'block_ases/loading_indicator',
-        'block_ases/mustache'], function($, loading_indicator, mustache){
+        'block_ases/mustache',
+        'block_ases/loading_indicator'], function($, mustache, loading_indicator){
 
     return {
         init: function(dataInit) {
@@ -22,12 +22,16 @@ define(['jquery',
 
             $("#btn-consulta-fichas").one('click', function () {
                 let periodID = $("#select-periods").val();
+                console.log(periodID);
+                loading_indicator.show();
                 trackingsCount(moodleID, instanceID, periodID);
+                loading_indicator.hide();
             });
         }
     };
 
     function trackingsCount(moodleID, instanceID, periodID) {
+
         $.ajax({
             type: "POST",
             dataType: "json",
@@ -47,9 +51,8 @@ define(['jquery',
                         cache: "false",
                         async: "false",
                         success: function (template) {
-                            let tab = $(mustache.render(template, result.data_response));
-                            console.log(tab);
-                            $("#ases-container-tracking").append(tab);
+                            let divToAppend = $(mustache.render(template, result.data_response));
+                            $("#ases-container-tracking").append(divToAppend);
                         },
                         error: function() {
                             console.log('Cannot reach template.');
@@ -62,6 +65,11 @@ define(['jquery',
             },
             error: function (msg) {
                console.log('error', msg); 
+                swal(
+                    "Error",
+                    "Error al comunicarse con el servidor, por favor inténtelo nuevamente.",
+                    "error"
+                );
             },
 
         });

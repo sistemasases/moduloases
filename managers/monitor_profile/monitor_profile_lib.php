@@ -70,7 +70,7 @@ function monitor_is_monitor_ps($code)
 
 
 /**
- * Returns all monitors in the same instance
+ * Returns all monitors belonging to the same instance.
  * 
  * @param int $instance_id
  * @return Array monitors
@@ -97,7 +97,8 @@ function get_all_monitors(int $instance_id)
 
 
 /**
- * Get's monitor'
+ * Returns all fields in MONITORS_TABLENAME
+ * belonging to the given monitor (bank account, cc, etc)
  *
  * @param $monitor_id int -> monitor's moodle user
  * @return Object $monitor | null
@@ -124,42 +125,46 @@ function get_monitor(int $monitor_id) {
 }
 
 /**
- * Handles all activities needed to load the trackings tab. 
- * 
- * @param int $monitor_id
+ * Handles all backend activities needed to initialize the history boss tab:
+ * - Find out every boss a monitor has had during each active semester.
+ * - Add the previous info to the table html.
+ *
+ * @param int $monitor_moodle_id
  * @param int $instance_id
+ *
+ * @return Object $data containing the table html.
  */
-function monitor_load_trackings_tab(int $monitor_id, int $instance_id)
-{
-    $active_periods = get_active_periods($monitor_id, $instance_id); 
-    return $active_periods;
+function monitor_load_bosses_tab(int $monitor_moodle_id, int $instance_id) {
+    $data = new stdClass();
+    $active_periods = get_active_periods($monitor_moodle_id, $instance_id ); 
+    
+    $table_html = "<table id='table_boss'><tr><th>Periodo</th><th>Jefe</th></tr>";
+    foreach ($active_periods as $period) {
+        $period_id = $period->id;
+        $period_nombre = $period->nombre;
 
-    //$table_html = "<table>";
-    //if ( count($active_periods) >= 1 ) {
+        $boss = get_monitor_boss($monitor_moodle_id, $period_id); 
+        $boss_name = $boss->firstname." ".$boss->lastname;
+        $period->jefe = $boss_name;
 
-    //    $tracking_count = array();
-    //    
-    //    foreach ($active_periods as $period) {
-    //        $tracking_count[$period->id_semestre] = monitor_get_tracking_count($monitor_id, $instance_id, $period->id_semestre);
-    //    } 
-
-
-    //} else {
-    //    return 0;
-    //}
+        $table_html .= "<tr><td>".$period_nombre."</td><td>".$boss_name."</td></tr>";
+    }
+    $table_html .= "</table>";
+    $data->table_html = $table_html;
+    
+    return $data;
 }
-
 /**
  * Gets tracking count of given monitor during a given semester on a given instance.
- * This function is a slimmer versión of pilos_tracking_get_tracking_count, adapted
+ * This function is a slimmer version of pilos_tracking_get_tracking_count, adapted
  * for only counting the monitor's forms count.
  *
  * @param int $moodle_id
  * @param int $instance_id
  * @param int $period_id
  * 
- * @see managers/pilos_tracking/v2/
- * @return ?
+ * @see pilos_tracking_get_tracking_count on managers/pilos_tracking/v2/pilos_tracking_lib
+ * @return Object
  */ 
 function monitor_get_tracking_count(int $moodle_id, int $instance_id, int $period_id)
 {
@@ -223,11 +228,12 @@ function monitor_get_tracking_count(int $moodle_id, int $instance_id, int $perio
 
 /**
  * Gets the periods in which a given monitor has been active under a given instance.
+ * i.e: has a record in {talentospilos_monitor_estud}
  *
  * @param int $monitor_id -> monitor's id from {user} table
- * @param int $instance_id 
+ * @param int $instance_id -> instance which the monitor belongs to. 
  * 
- * @return array $active_periods
+ * @return array
  */
 
 function get_active_periods(int $monitor_id, int $instance_id)
@@ -319,28 +325,6 @@ function update_monitor_records(stdClass $data)
     }
 }
 
-
-function monitor_load_bosses_tab(int $monitor_moodle_id, int $instance_id) {
-    $data = new stdClass();
-    $active_periods = get_active_periods($monitor_moodle_id, $instance_id ); 
-    
-    $table_html = "<table id='table_boss'><tr><th>Periodo</th><th>Jefe</th></tr>";
-    foreach ($active_periods as $period) {
-        $period_id = $period->id;
-        $period_nombre = $period->nombre;
-
-        $boss = get_monitor_boss($monitor_moodle_id, $period_id); 
-        $boss_name = $boss->firstname." ".$boss->lastname;
-        $period->jefe = $boss_name;
-
-        $table_html .= "<tr><td>".$period_nombre."</td><td>".$boss_name."</td></tr>";
-    }
-    $table_html .= "</table>";
-    $data->table_html = $table_html;
-    
-    return $data;
-}
-
 /**
  * Retorna el jefe de un monitor durante un período específico.
  *
@@ -375,6 +359,14 @@ function get_monitor_boss(int $monitor_moodle_id, int $period_id)
     }
 }
 
+/**
+ * Generates the html for the active periods select on the trackings tab.
+ *
+ * @param int $moodle_id
+ * @param int $instance_id
+ *
+ * @return Object
+ */
 function make_select_active_periods($moodle_id, $instance_id) {
     $active_periods = get_active_periods($moodle_id, $instance_id); 
     $html = "<select id='select-periods'> <option selected=Selected>Seleccione un período</option>";
