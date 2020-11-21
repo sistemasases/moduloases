@@ -974,7 +974,7 @@ function get_ases_report($general_fields=null,
                                      program_statuses.nombre, 
                                      user_extended.id_academic_program) AS ases_students";
     }
-
+    
     // Subconsutlas relacionadas con los campos de estado
     if($statuses_fields){
         foreach($statuses_fields as $status_field){
@@ -1026,12 +1026,20 @@ function get_ases_report($general_fields=null,
                                                         ON (historic_icetex_statuses.id_estudiante = current_icetex_status.id_ases_student AND historic_icetex_statuses.fecha = current_icetex_status.fecha)) AS icetex_status ON icetex_status.id_ases_student = ases_students.student_id";
                     break;
                 case 'program_status':
-
-                    $select_clause .= $status_field.", ";
-
-
+                    $id_last_semester = strval(intval($id_current_semester) - 1);
                     
 
+                    $select_clause .="COALESCE(".$status_field.", 'INACTIVO') AS program_status, ";
+
+                    $sub_query_status .= " LEFT JOIN (SELECT id_estudiante AS id_ases_student, 
+                                            CASE WHEN cancel.fecha_cancelacion IS NULL THEN 'ACTIVO'
+                                                ELSE 'SEMESTRE CANCELADO' 
+                                            END AS program_status
+                                            FROM {talentospilos_history_academ} AS history
+                                            LEFT JOIN {talentospilos_history_cancel} AS cancel
+                                            ON history.id = cancel.id_history
+                                            WHERE history.id_semestre = $id_last_semester) AS current_program_status
+                                            ON current_program_status.id_ases_student = ases_students.student_id";
                     break;
             }
         }
@@ -1090,6 +1098,16 @@ function get_ases_report($general_fields=null,
                                                 INNER JOIN {talentospilos_history_estim} AS history_stim ON history_stim.id_history = academic_history.id
                                             GROUP BY academic_history.id_estudiante
                                             ) AS history_estim ON history_estim.id_estudiante = ases_students.student_id";
+                    break;
+                //condicion_excepcion_code
+                case 'condicion_excepcion':
+                    $select_clause .= $field.', ';
+                    $sub_query_academic .= " LEFT JOIN (SELECT ases_user.id AS id_estudiante, cond_excepcion.condicion_excepcion AS condicion
+                                                FROM {talentospilos_usuario} AS ases_user
+                                                INNER JOIN {talentospilos_cond_excepcion} AS cond_excepcion ON ases_user.id_cond_excepcion = cond_excepcion.id                                                
+                                                WHERE cond_excepcion.condicion_excepcion <> 'Ninguna de las anteriores'
+                                                ) AS cond_excepcion ON cond_excepcion.id_estudiante = ases_students.student_id
+                                                ";
                     break;
             }
             
@@ -1861,6 +1879,21 @@ function getGeographicReport($cohorte, $instance_id){
 
 
  }
+
+function get_exception_conditions(){
+
+    global $DB;
+
+    $result = array();
+
+    $sql_query = "SELECT alias AS name, condicion_excepcion AS value
+                    FROM {talentospilos_cond_excepcion} AS cond
+                    WHERE cond.condicion_excepcion <> 'Ninguna de las anteriores'";
+
+    $result = $DB->get_records_sql($sql_query);    
+
+    return $result;
+}
 
 
 

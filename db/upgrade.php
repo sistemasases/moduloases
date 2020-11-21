@@ -7,7 +7,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $dbman = $DB->get_manager();
     $result = true;
 
-    if ($oldversion < 2019111514080 ) {
+    if ($oldversion < 2020103117040 ) {
       
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
@@ -4028,8 +4028,68 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $DB->execute( "ALTER TABLE " . $tablename . " ADD COLUMN $colname JSON" );
             
         }
+
+        // ********************************************************************************************************
+        // ACTUALIZACIÓN QUE CREA LA NUEVA TABLA talentospilos_monitores NECESARIA PARA LA FICHA DE MONITORES
+        // Version: 2020101411330
+        // ********************************************************************************************************
+
+        $table = new xmldb_table('talentospilos_monitores');
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
+        $table->add_field('id_moodle_user', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'id');
         
-        upgrade_block_savepoint(true, 2019111514080, 'ases');
+        // Launch add key primary.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        //
+        // Launch add key id_moodle_user.
+        $table->add_key('id_moodle_user', XMLDB_KEY_FOREIGN_UNIQUE, ['id_moodle_user'], 'user', ['id']);
+
+        //// Conditionally launch create table.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        $field_id_programa = new xmldb_field('id_programa', XMLDB_TYPE_INTEGER, '4', null, XMLDB_NOTNULL, null, null, 'id_moodle_user');
+
+        $field_num_doc = new xmldb_field('num_doc', XMLDB_TYPE_INTEGER, '15', null, XMLDB_NOTNULL, null, null, 'id_programa');
+
+        $field_pdf_banco = new xmldb_field('pdf_cuenta_banco', XMLDB_TYPE_TEXT, null, null, null, null, null, 'num_doc');
+        
+        $field_pdf_acuerdo = new xmldb_field('pdf_acuerdo_conf', XMLDB_TYPE_TEXT, null, null, null, null, null, 'pdf_cuenta_banco');
+
+        $field_pdf_doc = new xmldb_field('pdf_doc', XMLDB_TYPE_TEXT, null, null, null, null, null, 'pdf_acuerdo_conf');
+
+        $field_pdf_d10 = new xmldb_field('pdf_d10', XMLDB_TYPE_TEXT, null, null, null, null, null, 'pdf_doc');
+
+        // Conditionally launch add fields.
+        if (!$dbman->field_exists($table, $field_id_programa)) {
+            $dbman->add_field($table, $field_id_programa);
+        }
+
+        if (!$dbman->field_exists($table, $field_num_doc)) {
+            $dbman->add_field($table, $field_num_doc);
+        }
+
+        if (!$dbman->field_exists($table, $field_pdf_banco)) {
+            $dbman->add_field($table, $field_pdf_banco);
+        }
+
+        if (!$dbman->field_exists($table, $field_pdf_doc)) {
+            $dbman->add_field($table, $field_pdf_doc);
+        }
+
+        if (!$dbman->field_exists($table, $field_pdf_d10)) {
+            $dbman->add_field($table, $field_pdf_d10);
+        }
+
+        // ACTUALIZACIÓN SE AÑADE CAMPO PDF_ACUERDO_CONF a la tabla {talentospilos_monitores} 
+        // VERSION: 2020103117040//
+
+        if (!$dbman->field_exists($table, $field_pdf_acuerdo)) {
+            $dbman->add_field($table, $field_pdf_acuerdo);
+        }
+
+        upgrade_block_savepoint(true, 2020103117040, 'ases');
         return $result;
 
     }

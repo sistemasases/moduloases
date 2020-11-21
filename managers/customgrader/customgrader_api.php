@@ -78,10 +78,13 @@ if( isset( $input->function ) ){
         $editedItemResponse =  editItem($item);
         update_grade_items_by_course( $input->courseid);
         $levels = get_table_levels($item->courseid);
+        //$regrading = grade_regrade_final_grades($item->courseid);
+        $updategrades = update_all_grades_moodle($item->id, $item->courseid);
 
         $response = [
             'item' => $editedItemResponse,
             'levels' => $levels,
+            'api_response' => $updategrades,
             'other_grades'=> get_student_grades($editedItemResponse->courseid)
         ];
         echo json_encode($response);
