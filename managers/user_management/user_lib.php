@@ -469,7 +469,11 @@ function changeMonitor($oldMonitor, $newMonitor)
             $newObject             = new stdClass();
             $newObject->id         = $row->id;
             $newObject->id_monitor = $newMonitor;
+            if($newObject->id == 0){
+                trigger_error('ASES Notificacion: actualizar monitor en la BD con id 0');
+            }else{
             $DB->update_record('talentospilos_monitor_estud', $newObject);
+            }
         }
         
         return 1;
@@ -536,7 +540,12 @@ function actualiza_rol_practicante($username, $role, $idinstancia, $state = 1, $
         }
         
         $array->id     = $checkrole->id;
+        if($array->id == 0){
+            trigger_error('ASES Notificacion: actualizar user_rol en la BD con id 0');
+            $update_record = false;
+        }else{
         $update_record = $DB->update_record('talentospilos_user_rol', $array);
+        }
         //echo $update_record;
         if ($update_record) {
             $result = 3;
@@ -624,7 +633,11 @@ function update_role_monitor_ps($username, $role, $array_students, $boss, $idins
             $DB->delete_records_select('talentospilos_usuario_prof', $whereclause);
         }
         $object_role->id = $id_rol_actual->id_user_rol;
-        $DB->update_record('talentospilos_user_rol', $object_role);
+        if($object_role->id == 0){
+            trigger_error('ASES Notificacion: actualizar rol en la BD con id 0');
+        }else{
+            $DB->update_record('talentospilos_user_rol', $object_role);
+        }
         
         $check_assignment = monitor_student_assignment($username, $array_students, $idinstancia);
         
@@ -916,8 +929,12 @@ function update_professional_user($id_user, $professional)
         $record_professional_type                 = new stdClass;
         $record_professional_type->id             = $id_to_update->id;
         $record_professional_type->id_profesional = $id_professional->id;
-        
+        if($record_professional_type->id == 0){
+            trigger_error('ASES Notificacion: actualizar profesional en la BD con id 0');
+            $update_record = false;
+        }else{
         $update_record = $DB->update_record('talentospilos_usuario_prof', $record_professional_type);
+        }
         
         return $update_record;
     } else {

@@ -205,6 +205,15 @@ class ActiveSemestersReportField {
 
     }
 
+    public function is_egresado(): bool {
+        if($this->egresado){
+            return true;
+        }else {
+            return false;
+        }
+
+    }
+
     public function list_active_careers($semester): string{
         $lista = '';
         foreach($this->semestres_activos as $semestre){

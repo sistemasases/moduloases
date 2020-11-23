@@ -142,6 +142,15 @@ function create_historic_icetex($student_id, $program_id, $resolution_id, $amoun
 
     global $DB;
 
+    $sql_query = "SELECT id FROM {talentospilos_res_estudiante}
+                    WHERE id_estudiante = '$student_id' AND id_resolucion = '$resolution_id'";
+
+    $result = $DB->get_record_sql($sql_query);
+
+    if(!isset($result)) {
+        return false;
+    }
+
     $newHistoric = new stdClass();
     $newHistoric->id_estudiante = $student_id;
     $newHistoric->id_resolucion = $resolution_id;
@@ -169,7 +178,10 @@ function update_resolution_credit_note($id_resolution, $credit_note){
     $object_resolution = new stdClass();
     $object_resolution->id = $id_resolution;
     $object_resolution->nota_credito = $credit_note;
-
+    if($object_resolution->id == 0){
+        trigger_error('ASES Notificacion: actualizar resolucion en la BD con id 0');
+        return false;
+    }
     $update = $DB->update_record('talentospilos_res_icetex', $object_resolution);
 
     if($update){
@@ -191,8 +203,11 @@ function update_resolution_amount_students($id_resolution, $amount_students){
     $object_resolution = new stdClass();
     $object_resolution->id = $id_resolution;
     $object_resolution->cantidad_estudiantes = $amount_students;
-
-    $update = $DB->update_record('talentospilos_res_icetex', $object_resolution);
+    if($object_resolution->id == 0){
+        trigger_error('ASES Notificacion: actualizar resolucion en la BD con id 0');
+    }else{
+        $update = $DB->update_record('talentospilos_res_icetex', $object_resolution);
+    }
 
     if($update){
         $upd_am_stud = true;
@@ -282,9 +297,11 @@ function update_historic_icetex_status($student_id, $semester_id, $id_icetex_sta
         $object_historic->id_estudiante = $student_id;
         $object_historic->id_semestre = $semester_id;
         $object_historic->id_estado_icetex = $id_icetex_status;
-
-        $update = $DB->update_record('talentospilos_hist_est_ice', $object_historic);
-
+        if($object_historic->id == 0){
+            trigger_error('ASES Notificacion: actualizar historic en la BD con id 0');
+        }else{
+            $update = $DB->update_record('talentospilos_hist_est_ice', $object_historic);
+        }
         if ($update) {
             return $id_historic;
         } else {

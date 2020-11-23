@@ -109,6 +109,8 @@ function periods_get_period_by_date($fecha_inicio, $fecha_fin, $relax_query=fals
 
 	$query = "SELECT * FROM $PERIODS_TABLENAME WHERE ";
 
+	$fecha_fin = date('Y-m-d');
+
 	if( $relax_query ){
 		$query .= "fecha_inicio <= '$fecha_inicio' AND fecha_fin >= '$fecha_fin'";
 	}
@@ -119,7 +121,7 @@ function periods_get_period_by_date($fecha_inicio, $fecha_fin, $relax_query=fals
 	$result = $DB->get_record_sql( $query );
 	if( !property_exists($result, 'id') ){
 		throw new Exception( 
-				"Period with start date '$fecha_inicio' and end date '$fecha_fin' 
+				"Period(s) with start date '$fecha_inicio' and end date '$fecha_fin' 
 				does not exists.", -1
 			);
 	}
@@ -213,7 +215,10 @@ function periods_update_period( $period_info, $period_id ){
 		$period->nombre = $period_info[1];
 		$period->fecha_inicio = $period_info[2];
 		$period->fecha_fin = $period_info[3];
-		
+		if($period->id == 0){
+            trigger_error('ASES Notificacion: actualizar periodo en la BD con id 0');
+            return 0;
+        }
 		$result = $DB->update_record(substr($PERIODS_TABLENAME,4), $period);
 		return $result;
 	} catch (Exception $ex){
