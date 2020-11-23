@@ -7,7 +7,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $dbman = $DB->get_manager();
     $result = true;
 
-    if ($oldversion < 2020103117040 ) {
+    if ($oldversion < 2020112316010) {
       
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
@@ -4089,7 +4089,37 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->add_field($table, $field_pdf_acuerdo);
         }
 
-        upgrade_block_savepoint(true, 2020103117040, 'ases');
+        // ACTUALIZACIÓN 2020112316010, SE AÑADEN CAMPOS DE INFORMACIÓN GENERAL DEL MONITOR
+        // - Email alternátivo
+        // - Telefono 1
+        // - Telefono 2
+        // A LA TABLA {talentospilos_monitores}
+        
+        // Define field email_alternativo to be added to talentospilos_monitores.
+        $table = new xmldb_table('talentospilos_monitores');
+        $field_alt_email = new xmldb_field('email_alternativo', XMLDB_TYPE_TEXT, null, null, null, null, null, 'pdf_d10');
+
+        // Conditionally launch add field email_alternativo.
+        if (!$dbman->field_exists($table, $field_alt_email)) {
+            $dbman->add_field($table, $field_alt_email);
+        }
+        
+        $field = new xmldb_field('telefono1', XMLDB_TYPE_TEXT, null, null, null, null, null, 'email_alternativo');
+
+        // Conditionally launch add field telefono1.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $field = new xmldb_field('telefono2', XMLDB_TYPE_TEXT, null, null, null, null, null, 'telefono1');
+
+        // Conditionally launch add field telefono2.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }    
+
+
+        upgrade_block_savepoint(true, 2020112316010, 'ases');
         return $result;
 
     }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="blocks/ases/db" VERSION="20200923" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
+<XMLDB PATH="blocks/ases/db" VERSION="20201123" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -1224,6 +1224,9 @@
         <FIELD NAME="pdf_acuerdo_conf" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="pdf_doc" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="pdf_d10" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="email_alternativo" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="telefono1" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="telefono2" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
