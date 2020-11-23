@@ -1,0 +1,80 @@
+<div id="anadir-formulario" style="display: block">
+<form id="form_anadir">
+<div style="display: flex">
+          <label class="input-anadir">
+                  <h3>Dia de la semana</h3>
+                  <select name="dia" class="campo-anadir">
+                      <option selected="true" value=0 >Lunes</option>
+                      <option value=1>Martes</option>
+                      <option value=2>Miércoles</option>
+                      <option value=3>Jueves</option>
+                      <option value=4>Viernes</option>
+                      <option value=5>Sábado</option>
+                      <option value=6>Domingo</option>
+                  </select></label>
+          <label class="input-anadir">
+                  <h3>Hora de inicio</h3>
+                  <div><select id="hora_inicio1" class="campo-anadir">
+                      <option>1:00</option>
+                      <option>2:00</option>
+                      <option>3:00</option>
+                      <option>4:00</option>
+                      <option>5:00</option>
+                      <option>6:00</option>
+                      <option>7:00</option>
+                      <option>8:00</option>
+                      <option selected="true">9:00</option>
+                      <option>10:00</option>
+                      <option>11:00</option>
+                      <option>12:00</option>
+                  </select>
+                  <select name="hora_inicio2" class="campo-anadir">
+                      <option selected="true">AM</option>
+                      <option>PM</option>
+                  </select></div>
+          </label>
+          <label class="input-anadir">
+                  <h3>Hora final</h3>
+                  <div><select id="hora_final1" class="campo-anadir">
+                      <option>1:00</option>
+                      <option>2:00</option>
+                      <option>3:00</option>
+                      <option>4:00</option>
+                      <option>5:00</option>
+                      <option>6:00</option>
+                      <option>7:00</option>
+                      <option>8:00</option>
+                      <option>9:00</option>
+                      <option>10:00</option>
+                      <option selected="true">11:00</option>
+                      <option>12:00</option>
+                  </select>
+                  <select id="hora_final2" class="campo-anadir">
+                      <option selected="true">AM</option>
+                      <option>PM</option>
+                  </select></div>
+          </label>
+          <label class="input-anadir" style="width:25%">
+                  <h3>Materia *</h3>
+                  <select id="materia" class="campo-anadir" style="width:100%" required><option></option></select>
+          </label>
+          <label class="input-anadir" style="width:40%">
+                  <h3>Monitor *</h3>
+                  <select id="monitor" class="campo-anadir" style="width:100%" required><option></option></select>
+        </label>
+  
+  </div>
+        <label class="input-anadir" style="padding-bottom:8px!important"><input type="checkbox" id="programar_monitorias_chckbx" checked>
+        Programar sesiones de esta monitoria automáticamente</label>
+
+<label id="seleccionar-fecha-anadir"> Programar sesiones semanalmente hasta 
+<input type="text" name="fecha_hasta" id="fecha_hasta" style="width: 12em;margin:2px 2px 4px 6px" placeholder="Seleccionar fecha ..." autocomplete="off" required> *</label>
+
+
+  <div style="display: flex">
+        <button type="submit" class="dt-button buttons-print" id="save_monitoria_btn">Guardar</button>
+        <button type="button" class="dt-button" id="cancel_monitoria_btn">Cancelar</button>
+    </div>
+    <div id="debug"></div>
+</form>
+</div>

@@ -7,6 +7,7 @@ require_once '../managers/instance_management/instance_lib.php';
 require_once('../managers/menu_options.php');
 require_once '../managers/lib/lib.php';
 require_once('../managers/validate_profile_action.php');
+require_once('../managers/asistencia_monitorias/asistencia_monitorias_lib.php');
 
 include '../lib.php';
 include "../classes/output/monitorias_page.php";
@@ -14,7 +15,7 @@ include "../classes/output/renderer.php";
 
 global $PAGE;
 
-$page_title = 'Monitorias';
+$page_title = 'Monitorias académicas';
 $course_id = required_param('courseid', PARAM_INT);
 $block_id = required_param('instanceid', PARAM_INT);
 
@@ -44,10 +45,19 @@ $PAGE->set_title($page_title);
 $PAGE->set_heading($page_title);
 
 $PAGE->requires->css('/blocks/ases/style/aaspect.min.css', true);
+$PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
+$PAGE->requires->css('/blocks/ases/style/jquery.dataTables.min.css', true);
+$PAGE->requires->css('/blocks/ases/style/buttons.dataTables.min.css', true);
+$PAGE->requires->css('/blocks/ases/style/jqueryui.css', true);
 
-//$PAGE->requires->js_call_amd('block_ases/communications', 'init');
+$PAGE->requires->js_call_amd('block_ases/asistencia_monitorias','init');
+
+$monitorias = get_default_monitorias();
+$params = new stdClass();
+$params->table = $monitorias;
+$PAGE->requires->js_call_amd('block_ases/asistencia_monitorias','cargar_monitorias_default', $params);
 
 $output = $PAGE->get_renderer('block_ases');
 $monitorias_page = new \block_ases\output\monitorias_page($data);
