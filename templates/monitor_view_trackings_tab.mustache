@@ -1,22 +1,12 @@
-{{!-- Monitor's semestral assignments tab'}}
-
-<div id="trackings_tab" class="tab-pane">
-    <div id="container" class="ases-container"
+<div id="trackings_tab" class="ases-tab-pane">
+    <div id="ases-container-tracking" class="ases-container">
+        <h5>Seleccione un período</h5>
         <div class="ases-row">
-            <div id="div_table_count" class="ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12">
-                <table id="table_count">
-                    <tr>
-                        <th>Período</th>
-                        <th>Número de fichas realizadas</th>
-                    </tr>
-
-                    <tr>
-                        <td>2020-2</td> <td>201212302</td>
-                    </tr>
-                </table>
+            <div class="ases-col-xs-12 ases-col-sm-12 ases-col-md-12 ases-col-lg-12">
+                {{{select_periods}}} 
+                <button class="ases-btn" id="btn-consulta-fichas" type="button">Consultar</button>
             </div>
         </div>
+
     </div>
 </div>
-
-{{!-- End monitor's semestral assignments tab'}}
