@@ -15,8 +15,8 @@ require_once(dirname(__FILE__). '/../../../config.php');                        
 module_loader("cache");                                                         // Load of core cache module
 module_loader("core_db");                                                       // Load of core_db module.
 
-const ISSUE_NUMNER = 1972;                                                      // Example ID.
-const PASSWORD = 1972;                                                          // Null if you want a none secure execution.
+const ISSUE_NUMNER = 1998;                                                      // Example ID.
+const PASSWORD = 1998;                                                          // Null if you want a none secure execution.
 
 $script = function(){
     // Your code here
@@ -24,11 +24,11 @@ $script = function(){
 
     //Modificación de registro duplicado en talentospilos_user_extended
     $user_extended = new StdClass;
-    $user_extended->id = 7944;
+    $user_extended->id = 11718;
     $user_extended->id_ases_user = '10054';
     $DB->update_record('talentospilos_user_extended', $user_extended);
     $user_extended_2 = new StdClass;
-    $user_extended_2->id = 7948;
+    $user_extended_2->id = 11668;
     $user_extended_2->id_ases_user = '10054';
     $DB->update_record('talentospilos_user_extended', $user_extended_2);
     echo "HOTFIX APLICADO";

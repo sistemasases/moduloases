@@ -1,7 +1,7 @@
 /**
  * Profile for every individual ASES monitor
  *
- * @module amd/src/monitor_profile
+ * @module block_ases/monitor_profile
  * @author David Santiago Cortés
  * @copyright 2020 David S. Cortés <david.cortes@correounivalle.edu.co>
  * @license GNU GPL v3 or later
@@ -9,10 +9,10 @@
 define(['jquery', 
         'block_ases/select2', 
         'block_ases/bootstrap',
-        'block_ases/loading_indicator',], function($, select2, bootstrap) {
+        'block_ases/sweetalert'], function($, select2, bootstrap) {
     
     return {
-        init: function () {
+        init: function (data_init) {
             $('#select-monitores').select2({
                 language: {
                     noResults: function() {
@@ -23,6 +23,7 @@ define(['jquery',
                     }
                 },
             });
+            var self = this;
             
             $("#select-monitores").on('change', function () {
                 var code = $('#select-monitores').val();
@@ -30,12 +31,125 @@ define(['jquery',
 
                 loadMonitor(monitorCode);
             })
-
             // Load trackings tab on click.
-            $("#trackings_li").one('click', {tab_name: 'trackings'}, load_tabs);
 
+            $("#trackings_li").one('click', {tab_name: 'trackings'}, load_tabs);
+            
+            $('[data-toggle="tooltip"]').tooltip({
+                container : 'body'
+            });
+
+            this.editProfile(self);
+        },
+        editProfile: function(object_function) {
+            var unchangedForm = $('#ficha_monitor').serializeArray();
+            $("#span-icon-edit").on('click', function() {
+                $(this).hide();
+                $("#span-icon-save").show();
+                $("#span-icon-cancel").show();
+
+                $("#input_num_doc").prop('readonly', false);
+                $("#input_email").prop('readonly', false);
+                $("#input_phone1").prop('readonly', false);
+                $("#input_phone2").prop('readonly', false);
+                // Documentos
+                $("#input_acuerdo").prop('readonly', false);
+                $("#link_acuerdo").removeAttr("href");
+
+                $("#input_d10").prop('readonly', false);
+                $("#link_d10").removeAttr("href");
+
+                $("#input_doc").prop('readonly', false);
+                $("#link_doc").removeAttr("href");
+
+                $("#input_banco").prop('readonly', false);
+                $("#link_banco").removeAttr("href");
+            });
+            
+            $('#span-icon-save').on('click', function () {
+                var changedForm = $('#ficha_monitor').serializeArray();
+                console.log(object_function);
+                var resultValidation = object_function.validateForm(changedForm);
+            });
+
+            $('#span-icon-cancel').on('click', { form: unchangedForm }, function(data) {
+                swal({
+                    title: "¿Desea cancelar la edición?",
+                    text: "Los cambios no guardados se perderán",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#d51b23",
+                    confirmButtonText: "Sí",
+                    cancelButtonText: "No",
+                    closeOnConfirm: true,
+                    allowEscapeKey: false,
+
+                }, function (isConfirm) {
+                    if (isConfirm) {
+                        object_function.cancelEdition(); 
+                        //object_function.revertChanges(data.data.form);
+                    }
+                });
+            });
+        }, validateForm: function (form) {
+            
+            for (field in form) {
+                var msg = new Object();
+                var field = form[field];
+
+                msg.title = "Éxito";
+                msg.msg = "El formulario fue validado con éxito";
+                msg.status = "success";
+
+                switch(field.name) {
+                    case "email":
+                        let regexemail = /((?:[a-z]+\.)*[a-z]+(?:@correounivalle\.edu\.co))/;
+                        let validEmail = regexemail.exec(field.value);
+
+                        if (validEmail !== null) {
+                            console.log(validEmail)
+                        } else {
+                            msg.title = "Error";
+                            msg.status = "error";
+                            msg.msg = `El campo ${field.name} no cumple con el formato institucional.`;
+                            return msg;
+                        }
+                        break;
+
+                    case "num_doc":
+                        if (isNaN(field.name) || isNaN(parseFloat(field.name))) {
+                            msg.title = "Error";
+                            msg.status = "error";
+                            msg.msg = `El campo ${field.name} no es válido.`;
+                        }
+                        break;
+
+                    case "acuerdo_conf":
+                    case "doc":
+                    case "d10":
+                    case "banco":
+                        let urlregex = /^(http|https):\/\//;
+                        let validUrl = urlregex.exec(field.value);
+
+                        console.log(validUrl);
+                }
+            }
+            return msg;
+        }, cancelEdition: function () {
+            $('#span-icon-edit').show();
+            $('#span-icon-save').hide();
+            $('#span-icon-cancel').hide();
+            $("#input_num_doc").prop('readonly', true);
+            $("#input_email").prop('readonly', true);
+            $("#input_phone1").prop('readonly', true);
+            $("#input_phone2").prop('readonly', true);
+            // Documentos
+            $("#input_acuerdo").prop('readonly', true);
+            $("#input_d10").prop('readonly', true);
+            $("#input_doc").prop('readonly', true);
+            $("#input_banco").prop('readonly', true);
         }
-    }
+    };
 
     // Loads monitor page
     function loadMonitor(monitorCode) {
@@ -50,7 +164,6 @@ define(['jquery',
             dataType: "json",
             cache: "false",
             success: function (msg) {
-                console.log(msg);
                 var result = msg;
 
                 if (result.status_code === 1) {
@@ -84,6 +197,7 @@ define(['jquery',
         console.log("hola mundo");
         loading_indicator.show(); 
     }
+
 
     function get_url_parameters(page) {
         // This function is anonymous, is executed immediately and
