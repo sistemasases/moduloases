@@ -11,7 +11,8 @@ define(['jquery',
         'block_ases/bootstrap',
         'block_ases/sweetalert',
         'block_ases/mustache',
-        'block_ases/mon_trackings'], function($, select2, bootstrap, sweetalert, mustache, mon_trackings) {
+        'block_ases/mon_trackings',
+        'block_ases/loading_indicator'], function($, select2, bootstrap, sweetalert, mustache, mon_trackings, loading_indicator) {
     
     return {
         init: function (data_init) {
@@ -39,9 +40,7 @@ define(['jquery',
             $("#boss_history_li").one('click', {tab_name: 'history_boss'}, load_tabs);
             $("#trackings_li").one('click', mon_trackings.init([monitorId, parameters.instanceid]));
             
-            //$('[data-toggle="tooltip"]').tooltip({
-            //    container : 'body',
-            //});
+            $('[data-toggle="tooltip"]').tooltip();
 
             this.editProfile(self);
         },
@@ -267,10 +266,12 @@ define(['jquery',
             }),
 	        success: function(msg) {
                 if (msg.status_code == 0) {
+                    //loading_indicator.show();
                     $.ajax({
                         url: "../templates/monitor_view_"+tabName+"_tab.mustache",
                         data: null,
                         dataType: "text",
+                        async: false,
                         success: function(template) {
                             let tabToLoad = $(mustache.render(template, msg.data_response));
                             $(".tab-content").append(tabToLoad);

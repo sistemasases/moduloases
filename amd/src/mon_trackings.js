@@ -13,18 +13,25 @@ define(['jquery',
 
     return {
         init: function(dataInit) {
-            $('#select-periods').on('change', function () {
-                $("#btn-consulta-fichas").removeAttr('hidden');
-            })
+            //$('#select-periods').on('click', function () {
+            //    $("#btn-consulta-fichas").removeAttr('hidden');
+            //})
             
             var moodleID = dataInit[0];
             var instanceID = dataInit[1];
 
-            $("#btn-consulta-fichas").one('click', function () {
+            $("#btn-consulta-fichas").on('click', function () {
+                if ( $("#total-count-row").length ) {
+                    $("#total-count-row").remove();
+                }
+
                 let periodID = $("#select-periods").val();
-                console.log(periodID);
-                loading_indicator.show();
                 trackingsCount(moodleID, instanceID, periodID);
+            });
+
+            $( document ).ajaxStart(function() {
+                loading_indicator.show();
+            }).ajaxStop(function() {
                 loading_indicator.hide();
             });
         }
