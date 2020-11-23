@@ -12,7 +12,7 @@ define(['jquery',
         'block_ases/sweetalert',
         'block_ases/mustache',
         'block_ases/mon_trackings',
-        'block_ases/loading_indicator'], function($, select2, bootstrap, sweetalert, mustache, mon_trackings, loading_indicator) {
+        'block_ases/aaspect'], function($, select2, bootstrap, sweetalert, mustache, mon_trackings, aaspect) {
     
     return {
         init: function (data_init) {
@@ -27,7 +27,7 @@ define(['jquery',
                 },
             });
             var self = this;
-            
+         
             $("#select-monitores").on('change', function () {
                 var code = $('#select-monitores').val();
                 var monitorCode = code.split(' ')[0];
@@ -73,7 +73,7 @@ define(['jquery',
                 var changedForm = $('#ficha_monitor').serializeArray();
                 var resultValidation = object_function.validateForm(changedForm);
 
-                if (resultValidation.status == 'error') {
+                if (resultValidation.status == "error") {
                     swal(resultValidation.title,
                         resultValidation.msg,
                         resultValidation.status);
@@ -87,7 +87,7 @@ define(['jquery',
                     });
 
                     formOnlyWithChanges.push(changedForm[0]);
-                    object_function.saveForm(formOnlyWithChanges);
+                    object_function.saveForm(formOnlyWithChanges, object_function, resultValidation);
                 }
 
             });
@@ -123,7 +123,7 @@ define(['jquery',
 
                 switch(field.name) {
                     case "email":
-                        let regexemail = /((?:[a-z]+\.)*[a-z]+(?:@correounivalle\.edu\.co))/;
+                        let regexemail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
                         let validEmail = regexemail.exec(field.value);
 
                         if (validEmail !== null) {
@@ -131,7 +131,7 @@ define(['jquery',
                         } else {
                             msg.title = "Error";
                             msg.status = "error";
-                            msg.msg = `El campo ${field.name} no cumple con el formato institucional.`;
+                            msg.msg = `El campo ${field.name} no tiene formato válido.`;
                             return msg;
                         }
                         break;
@@ -185,7 +185,7 @@ define(['jquery',
             $('#link_doc').attr('href', $('#input_doc')[0].value);
 
             location.reload(true);
-        }, saveForm: function (form) {
+        }, saveForm: function (form, object_function, resultMsg) {
             $('#span-icon-cancel').hide(); 
             $.ajax({
                 type: "POST",
@@ -203,8 +203,15 @@ define(['jquery',
                         msg.type
                     );
                 },
-                success: () => {swal("Éxito", "Información guardada con éxito.", "success");},
+                success: function (msg) {
+                    swal(
+                        resultMsg.title,
+                        msg.message,
+                        "success"
+                    );
+                },
             });
+            object_function.cancelEdition();
         } 
     };
 
@@ -271,13 +278,11 @@ define(['jquery',
                         url: "../templates/monitor_view_"+tabName+"_tab.mustache",
                         data: null,
                         dataType: "text",
-                        async: false,
                         success: function(template) {
                             let tabToLoad = $(mustache.render(template, msg.data_response));
-                            $(".tab-content").append(tabToLoad);
-                            $("#general_tab").removeClass("active");
-                            $("#"+tabName+"_tab").addClass("active");
-
+                            $(".ases-tab-content").append(tabToLoad);
+                            //$("#general_tab").removeClass("ases-tab-active");
+                            //$("#"+tabName+"_tab").addClass("ases-tab-active");
                             switch (tabName) {
                                 case "trackings":
                                     mon_trackings.init([monitorId, parameters.instanceid]);

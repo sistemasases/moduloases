@@ -106,14 +106,14 @@ if ( isset($input->function) && isset($input->params) ){
             if ($result) {
                 echo json_encode(
                     array(
-                        "status_code" => 1,
-                        "message" => "",
+                        "status_code" => 0,
+                        "message" => "Información guardada con éxito",
                         "data_response" => $result,
                     )
                 );
             }
             else{
-                return_with_code(-6);
+                return_with_code(-1);
             }
         }
         else {

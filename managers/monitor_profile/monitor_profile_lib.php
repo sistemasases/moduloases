@@ -273,6 +273,12 @@ function monitor_save_profile($form) {
     // todos los registros a ser actualizados.
     $dataObj = new stdClass();
 
+    // La variable form contiene todos los campos a actualizar
+    // junto con su nuevo valor, pero en la primera posición
+    // contiene el id_moodle del monitor a actualizar. 
+    //
+    // db manager necesita el id para saber que registro
+    // actualizar en la db.
     $monitor_id_moodle = array_pop($form)->value;
 
     // Id del registro a actualiazar.
@@ -287,16 +293,13 @@ function monitor_save_profile($form) {
             case "pdf_d10":
             case "pdf_cuenta_banco":
             case "pdf_acuerdo_conf":
+            case "email_alternativo":
+            case "telefono1":
+            case "telefono2":
                 $key = $field->name;
                 $value = $field->value;
                 $dataObj->$key = $value;
                 break;
-            case "email":
-            case "phone1":
-            case "phone2":
-                print_r('Preguntar a samuel');
-                break;
-
             default:
                 Throw new exception("El campo $field->name no existe en el formulario.");
         }
@@ -322,6 +325,7 @@ function update_monitor_records(stdClass $data)
         return true;
     } catch (Exception $e) {
         Throw new exception($e); 
+        return false;
     }
 }
 
