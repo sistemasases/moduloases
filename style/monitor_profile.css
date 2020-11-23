@@ -5,6 +5,16 @@
         border: 1px solid #c5c7c6;
         margin-bottom: 1.5vh;
     }
+
+    a input {
+        color:#457fe4 !important;
+    }
+
+    #nav-linea {
+        padding-left: 0px;
+        margin-left: -5px;
+    }
+
     
     .tooltip-v1 {
         background-repeat: no-repeat;
