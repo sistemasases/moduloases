@@ -12,7 +12,7 @@ define(['jquery',
         'block_ases/sweetalert',
         'block_ases/mustache',
         'block_ases/mon_trackings',
-        'block_ases/aaspect'], function($, select2, bootstrap, sweetalert, mustache, mon_trackings, aaspect) {
+        'block_ases/aaspect',], function($, select2, bootstrap, sweetalert, mustache, mon_trackings, aaspect) {
     
     return {
         init: function (data_init) {
@@ -273,7 +273,6 @@ define(['jquery',
             }),
 	        success: function(msg) {
                 if (msg.status_code == 0) {
-                    //loading_indicator.show();
                     $.ajax({
                         url: "../templates/monitor_view_"+tabName+"_tab.mustache",
                         data: null,
@@ -281,11 +280,11 @@ define(['jquery',
                         success: function(template) {
                             let tabToLoad = $(mustache.render(template, msg.data_response));
                             $(".ases-tab-content").append(tabToLoad);
-                            //$("#general_tab").removeClass("ases-tab-active");
-                            //$("#"+tabName+"_tab").addClass("ases-tab-active");
                             switch (tabName) {
-                                case "trackings":
-                                    mon_trackings.init([monitorId, parameters.instanceid]);
+                                case "history_boss":
+                                    $("#general_tab").removeClass("ases-tab-active");
+                                    $("#"+tabName+"_tab").addClass("ases-tab-active");
+                                    break;
                             }
                         },
                         error: function() {
