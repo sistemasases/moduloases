@@ -369,7 +369,7 @@ function get_monitor_boss(int $monitor_moodle_id, int $period_id)
  */
 function make_select_active_periods($moodle_id, $instance_id) {
     $active_periods = get_active_periods($moodle_id, $instance_id); 
-    $html = "<select id='select-periods'> <option selected=Selected>Seleccione un período</option>";
+    $html = "<select id='select-periods' style='width:20%'> ";
 
     foreach($active_periods as $period) {
         $html .= "<option value='$period->id'>$period->nombre</option>";
