@@ -39,6 +39,14 @@ if(isset($input->function) && isset($input->params)) {
                             "data_response" => $result
                         )
                     );
+                }else{
+                    echo json_encode(
+                        array(
+                            "status_code" => 0,
+                            "message" => "Results may be empty",
+                            "data_response" => $result
+                        )
+                    );
                 }
     }else if($function == 'cargar_monitores'){
         $result = cargar_monitores($input->params[0]);
@@ -50,9 +58,17 @@ if(isset($input->function) && isset($input->params)) {
                         "data_response" => $result
                     )
                 );
+            }else{
+                echo json_encode(
+                    array(
+                        "status_code" => 0,
+                        "message" => "Results may be empty",
+                        "data_response" => $result
+                    )
+                );
             }
-}
-    else if($function == 'anadir_monitoria') {
+            
+} else if($function == 'anadir_monitoria') {
         $params = $input->params;
         if(count($params) == 6) {
             // dia, hora, materia, monitor, programar, hasta

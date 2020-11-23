@@ -102,6 +102,7 @@ define(['jquery',
                 success: function(msg) {
                     //$("#div_table").html(msg.responseText);
                     var materias = $.map(msg.data_response, function(a) {return {"id" : a.id, "text" : a.nombre}});
+                    console.log(materias);
                     $('#materia').select2({
                         "data" : materias,
                         "placeholder": "Seleccionar materia",
@@ -184,7 +185,7 @@ define(['jquery',
                 },
                 error: function(msg) {
                     console.log("Error consulta BD materias");
-                    console.log(msg.responseText);
+                    console.log(msg);
                 }
             });
             function renderizar_opcion(m){
