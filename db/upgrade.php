@@ -8,7 +8,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $result = true;
 
 
-    if ($oldversion < 2020103117040 ) {
+    if ($oldversion < 2020112311242 ) {
       
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
@@ -4086,7 +4086,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         // ********************************************************************************************************
         // Creación de tablas monitoria, sesi_monitoria, asis_monitoria, mate_monitoria necesarias para 
         // la funcionalidad de control de asistencia a monitorias academicas
-        // Version: 2020102910260
+        // Version: 2020112311242
         // ********************************************************************************************************
 
         //  table talentospilos_monitoria
@@ -4173,7 +4173,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->add_field($table, $field_pdf_acuerdo);
         }
 
-        upgrade_block_savepoint(true, 2020103117040, 'ases');
+        upgrade_block_savepoint(true, 2020112311242, 'ases');
 
         return $result;
 
