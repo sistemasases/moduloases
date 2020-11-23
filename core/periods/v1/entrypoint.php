@@ -109,6 +109,8 @@ function periods_get_period_by_date($fecha_inicio, $fecha_fin, $relax_query=fals
 
 	$query = "SELECT * FROM $PERIODS_TABLENAME WHERE ";
 
+	$fecha_fin = date('Y-m-d');
+
 	if( $relax_query ){
 		$query .= "fecha_inicio <= '$fecha_inicio' AND fecha_fin >= '$fecha_fin'";
 	}
@@ -119,7 +121,7 @@ function periods_get_period_by_date($fecha_inicio, $fecha_fin, $relax_query=fals
 	$result = $DB->get_record_sql( $query );
 	if( !property_exists($result, 'id') ){
 		throw new Exception( 
-				"Period with start date '$fecha_inicio' and end date '$fecha_fin' 
+				"Period(s) with start date '$fecha_inicio' and end date '$fecha_fin' 
 				does not exists.", -1
 			);
 	}
