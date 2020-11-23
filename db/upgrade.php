@@ -7,6 +7,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $dbman = $DB->get_manager();
     $result = true;
 
+
     if ($oldversion < 2020103117040 ) {
       
     //     // ************************************************************************************************************
@@ -4082,6 +4083,89 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->add_field($table, $field_pdf_d10);
         }
 
+        // ********************************************************************************************************
+        // Creación de tablas monitoria, sesi_monitoria, asis_monitoria, mate_monitoria necesarias para 
+        // la funcionalidad de control de asistencia a monitorias academicas
+        // Version: 2020102910260
+        // ********************************************************************************************************
+
+        //  table talentospilos_monitoria
+        $table = new xmldb_table('talentospilos_monitoria');
+
+        // Adding fields to table talentospilos_monitoria.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('dia', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('hora', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('monitor', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('materia', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('eliminado', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, null);
+        
+        // Adding keys to table talentospilos_monitoria.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('monitoria_monitor', XMLDB_KEY_FOREIGN, ['monitor'], 'talentospilos_monitor', ['id']);
+        $table->add_key('materia_materia', XMLDB_KEY_FOREIGN, ['materia'], 'talentospilos_mate_monitoria', ['id']);
+
+        // Conditionally launch create table for talentospilos_monitoria.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Define table talentospilos_mate_monitoria to be created.
+        $table = new xmldb_table('talentospilos_mate_monitoria');
+
+        // Adding fields to table talentospilos_mate_monitoria.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('nombre', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
+        $table->add_field('eliminado', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table talentospilos_mate_monitoria.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+
+        // Conditionally launch create table for talentospilos_mate_monitoria.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Define table talentospilos_sesi_monitoria to be created.
+        $table = new xmldb_table('talentospilos_sesi_monitoria');
+
+        // Adding fields to table talentospilos_sesi_monitoria.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('id_monitoria', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('fecha', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+    $table->add_field('eliminado', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table talentospilos_sesi_monitoria.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('sesion_monitoria', XMLDB_KEY_FOREIGN, ['id_monitoria'], 'talentospilos_monitoria', ['id']);
+
+        // Conditionally launch create table for talentospilos_sesi_monitoria.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Define table talentospilos_asis_monitoria to be created.
+        $table = new xmldb_table('talentospilos_asis_monitoria');
+
+        // Adding fields to table talentospilos_asis_monitoria.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('sesion', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('asistente', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('fecha_inscripcion', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('telefono', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('asiste', XMLDB_TYPE_BINARY, null, null, null, null, null);
+        $table->add_field('eliminado', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table talentospilos_asis_monitoria.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('asistente_usuario', XMLDB_KEY_FOREIGN, ['asistente'], 'moodle_usuario', ['id']);
+        $table->add_key('sesion_sesion', XMLDB_KEY_FOREIGN, ['sesion'], 'talentospilos_sesi_monitoria', ['id']);
+
+        // Conditionally launch create table for talentospilos_asis_monitoria.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
         // ACTUALIZACIÓN SE AÑADE CAMPO PDF_ACUERDO_CONF a la tabla {talentospilos_monitores} 
         // VERSION: 2020103117040//
 
@@ -4090,6 +4174,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         }
 
         upgrade_block_savepoint(true, 2020103117040, 'ases');
+
         return $result;
 
     }

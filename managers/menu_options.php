@@ -414,6 +414,16 @@ function create_menu_options($userid, $blockid, $courseid)
                 $communications_options['Comunicaciones'] = $menu_options;
             }
 
+            if($function == 'monitorias_academicas') {
+                $url = new moodle_url("/blocks/ases/view/monitorias.php", array(
+                    'courseid' => $courseid,
+                    'instanceid' => $blockid
+                ));
+
+                $menu_options = '<a id="menu_monitorias" class="menu_a" href= "' . $url . '">Monitorias académicas</a>';
+                $academic_options['Monitorias académicas'] = $menu_options;
+            }
+
         }
 
         //ORDENA
