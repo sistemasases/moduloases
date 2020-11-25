@@ -127,14 +127,7 @@ function periods_get_period_by_date($fecha_inicio, $fecha_fin, $relax_query=fals
 	    }
 	}
 
-
-
-	
-	if ( $relax_query ){
-		return $result->id;
-	}else{
-		return $result;
-	}
+    return $result;
 }
 
 /** 
