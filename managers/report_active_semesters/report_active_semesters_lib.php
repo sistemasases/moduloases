@@ -61,10 +61,10 @@ function _get_semesters_names_after_cohort($id_instance, $ases_cohort_id, $inclu
 
     $cohort_start_date_string = \cohort_lib\get_date_string_from_mdl_cohort_id_number($cohort_id_number);
     //$semesters = Semestre::get_semesters_later_than($cohort_start_date_string, -1, false, $date_format);
-	$semesters = core_periods_get_period_by_date($cohort_date_string, ,true); 
+	$semesters = core_periods_get_period_by_date($cohort_start_date_string, null ,true); 
     $semester_names = array_map(
-        function(Semestre $semester ) {
-            return $semester->nombre;
+        function( $period ) {
+            return $period->nombre;
         }, $semesters);
     if(!$include_current_semester) {
         /*Remove the current semester in the list of semesters*/
