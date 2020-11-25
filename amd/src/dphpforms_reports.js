@@ -580,7 +580,7 @@ define([
                     $.ajax({
                         type: "POST",
                         url: "../managers/periods_management/periods_api.php",
-                        data: JSON.stringify({ "function": "core_periods_get_period_by_date", "params": [ start_date, end_date, true ] }),
+                        data: JSON.stringify({ "function": "core_periods_get_period_by_date", "params": [ start_date, end_date ] }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         async: false,  

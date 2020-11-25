@@ -8,7 +8,8 @@
  */
 
 //General configuration
-const VERSION = 1; //Current version.
+if (!defined('VERSION')) define('VERSION', 1);
+//const VERSION = 1; //Current version.
 
 require_once( __DIR__ . "/../../../../config.php");
 require_once( __DIR__ . "/../module_loader.php");

@@ -145,12 +145,12 @@ define([
                    data.forEach( (item) => {
                        var carrera = '';
                        //console.log("init_from_data");
-                       console.log(item);
+                       //console.log(item);
                        semesters.forEach( semester => {
-                           console.log("Semester:");
+                           /*console.log("Semester:");
                            console.log(semester);
                            console.log("Item[semester:]")
-                           console.log(item[semester]);
+                           console.log(item[semester]);*/
                            //console.log(item);
                            if(!(item[semester].includes('NO') || item[semester].includes('EGRESADO'))){
                                if(!item[semester].includes(carrera) && carrera !== ''){
@@ -340,14 +340,14 @@ define([
                 }).done(
                     function (dataFromApi /*instance of DataFromAPI*/){
                         loading_indicator.hide();
-                        console.log(dataFromApi);
+                        //console.log(dataFromApi);
                         var dataTable = dataFromApi.dataTable;
                         $('#download_percentage_desertion').css("display", "inline"); //Show the hidden download button
                         semesters = Object.values(dataFromApi.semesters);
                         var columns = dataTable.columns;
                         var column_names = columns.map( column => column.name );
                         var total_students = dataTable.data.length;
-                        console.log(semesters);
+                        //console.log(semesters);
                         resume_report = new ResumeReport(semesters, total_students);
                         resume_report.init_from_data(dataTable.data, semesters);
                         percentage_resume_report = new PercentageResumeReport(resume_report, semesters);

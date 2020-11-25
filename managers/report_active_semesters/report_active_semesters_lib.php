@@ -83,17 +83,20 @@ function _student_and_active_semesters_to_row($semester_names, $student_and_acti
 
     //$index = count($semester_names);
 
-
-    $stop_egresado = false;
+    if($student_and_active_semesters->is_egresado()){
+        $stop_egresado = true;
+    }else{
+        $stop_egresado = false;
+    }
 
     foreach(array_reverse($semester_names) as $semester_name){
+
         if($student_and_active_semesters->have_active_semester($semester_name)){
             $row[$semester_name] = $student_and_active_semesters->list_active_careers($semester_name);
             $stop_egresado = true;
         }else if(!$stop_egresado){
             $row[$semester_name] = "EGRESADO";
         }else {
-
             $row[$semester_name] = "NO";
         }
     }

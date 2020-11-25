@@ -28,6 +28,7 @@
 
 require_once(dirname(__FILE__). '/../../../../config.php');
 
+
  /**
  * Function that returns the current semester in a given interval
  * 
@@ -240,7 +241,10 @@ function periods_get_current_semester(){
           $semester->fecha_inicio = $semesterInfo[2];
           $semester->fecha_fin = $semesterInfo[3];
 
-
+          if($semester->id == 0){
+            trigger_error('ASES Notificacion: actualizar semestre en la BD con id 0');
+            return -1;
+        }
           $update = $DB->update_record('talentospilos_semestre', $semester);
 
 
