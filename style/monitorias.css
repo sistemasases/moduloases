@@ -1,0 +1,64 @@
+#anadir-formulario{
+    padding: 15px 50px 15px 50px;
+}
+
+.campo-anadir{
+    height: 30px!important;
+    font-size: 13px;
+}
+
+.input-anadir{
+    padding: 15px 15px 15px 15px!important;
+    display: inline-block;
+    font-size: 15px;
+}
+
+.opcion-select{
+    position: relative;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.boton-eliminar-materia,
+.icono-agregar-materia {
+    margin-left: auto;
+    width: 17px;
+    height: 14px;
+    opacity: 0;
+}
+.select2-results__option--highlighted .boton-eliminar-materia, 
+.select2-results__option--highlighted .icono-agregar-materia{
+    opacity: 0.3;
+}
+
+.boton-eliminar-materia:hover {
+    opacity: 1!important;
+}
+.boton-eliminar-materia:before, 
+.boton-eliminar-materia:after,
+.icono-agregar-materia:before, 
+.icono-agregar-materia:after {
+    position: absolute;
+    margin-left: 0.615em;
+    content: ' ';
+    height: 1em;
+    width: 2px;
+    background-color: #333;
+}
+.boton-eliminar-materia:before {
+    transform: rotate(45deg);
+}
+.boton-eliminar-materia:after {
+    transform: rotate(-45deg);
+}
+
+.icono-agregar-materia:before {
+    transform: rotate(90deg);
+}
+
+#seleccionar-fecha-anadir{
+    display:flex;
+    align-items: center;
+    padding:0px 10px 20px 45px;
+    width: 35%;
+}

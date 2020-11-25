@@ -9,7 +9,10 @@
 define(['jquery', 
         'block_ases/select2', 
         'block_ases/bootstrap',
-        'block_ases/sweetalert'], function($, select2, bootstrap) {
+        'block_ases/sweetalert',
+        'block_ases/mustache',
+        'block_ases/mon_trackings',
+        'block_ases/aaspect',], function($, select2, bootstrap, sweetalert, mustache, mon_trackings, aaspect) {
     
     return {
         init: function (data_init) {
@@ -24,20 +27,20 @@ define(['jquery',
                 },
             });
             var self = this;
-            
+         
             $("#select-monitores").on('change', function () {
                 var code = $('#select-monitores').val();
                 var monitorCode = code.split(' ')[0];
 
                 loadMonitor(monitorCode);
             })
-            // Load trackings tab on click.
+            var parameters = get_url_parameters(document.location.search);
+            var monitorId = $("#id_moodle")[0].value;
 
-            $("#trackings_li").one('click', {tab_name: 'trackings'}, load_tabs);
+            $("#boss_history_li").one('click', {tab_name: 'history_boss'}, load_tabs);
+            $("#trackings_li").one('click', mon_trackings.init([monitorId, parameters.instanceid]));
             
-            $('[data-toggle="tooltip"]').tooltip({
-                container : 'body'
-            });
+            $('[data-toggle="tooltip"]').tooltip();
 
             this.editProfile(self);
         },
@@ -63,13 +66,30 @@ define(['jquery',
                 $("#link_doc").removeAttr("href");
 
                 $("#input_banco").prop('readonly', false);
-                $("#link_banco").removeAttr("href");
+                $("#link_banco").attr("href", "");
             });
             
             $('#span-icon-save').on('click', function () {
                 var changedForm = $('#ficha_monitor').serializeArray();
-                console.log(object_function);
                 var resultValidation = object_function.validateForm(changedForm);
+
+                if (resultValidation.status == "error") {
+                    swal(resultValidation.title,
+                        resultValidation.msg,
+                        resultValidation.status);
+                } else {
+
+                    let formOnlyWithChanges = [];
+                    changedForm.slice(1,11).forEach((field, i) => {
+                        if (field.value != unchangedForm.slice(1,11)[i].value) {
+                            formOnlyWithChanges.push(field);
+                        }
+                    });
+
+                    formOnlyWithChanges.push(changedForm[0]);
+                    object_function.saveForm(formOnlyWithChanges, object_function, resultValidation);
+                }
+
             });
 
             $('#span-icon-cancel').on('click', { form: unchangedForm }, function(data) {
@@ -87,7 +107,7 @@ define(['jquery',
                 }, function (isConfirm) {
                     if (isConfirm) {
                         object_function.cancelEdition(); 
-                        //object_function.revertChanges(data.data.form);
+                        object_function.revertChanges(data.data.form);
                     }
                 });
             });
@@ -103,7 +123,7 @@ define(['jquery',
 
                 switch(field.name) {
                     case "email":
-                        let regexemail = /((?:[a-z]+\.)*[a-z]+(?:@correounivalle\.edu\.co))/;
+                        let regexemail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
                         let validEmail = regexemail.exec(field.value);
 
                         if (validEmail !== null) {
@@ -111,7 +131,7 @@ define(['jquery',
                         } else {
                             msg.title = "Error";
                             msg.status = "error";
-                            msg.msg = `El campo ${field.name} no cumple con el formato institucional.`;
+                            msg.msg = `El campo ${field.name} no tiene formato válido.`;
                             return msg;
                         }
                         break;
@@ -124,17 +144,23 @@ define(['jquery',
                         }
                         break;
 
-                    case "acuerdo_conf":
-                    case "doc":
-                    case "d10":
-                    case "banco":
+                    case "pdf_acuerdo_conf":
+                    case "pdf_doc":
+                    case "pdf_d10":
+                    case "pdf_cuenta_banco":
                         let urlregex = /^(http|https):\/\//;
                         let validUrl = urlregex.exec(field.value);
 
-                        console.log(validUrl);
+                        if (validUrl == null) {
+                            msg.title = "Error";
+                            msg.status = "error";
+                            msg.msg = `El campo ${field.name} no es un enlace válido. Recuerde incluir https://.`
+                        }
+                        break;
                 }
             }
             return msg;
+            
         }, cancelEdition: function () {
             $('#span-icon-edit').show();
             $('#span-icon-save').hide();
@@ -148,7 +174,45 @@ define(['jquery',
             $("#input_d10").prop('readonly', true);
             $("#input_doc").prop('readonly', true);
             $("#input_banco").prop('readonly', true);
-        }
+        
+        }, revertChanges: function (form) {
+
+            form.forEach(field => $('[name='+field.name+']').val(field.value));
+            
+            $("#link_acuerdo").attr("href", $("#input_acuerdo")[0].value);
+            $("#link_banco").attr("href", $('#input_banco')[0].value);
+            $("#link_d10").attr("href", $("#input_d10")[0].value);
+            $('#link_doc').attr('href', $('#input_doc')[0].value);
+
+            location.reload(true);
+        }, saveForm: function (form, object_function, resultMsg) {
+            $('#span-icon-cancel').hide(); 
+            $.ajax({
+                type: "POST",
+                data: JSON.stringify({
+                    "function": 'save_profile',
+                    "params": [form]
+                }),
+                url: '../managers/monitor_profile/monitor_profile_api.php',
+                dataType: "json",
+                cache: "false",
+                error: function (msg) {
+                    swal(
+                        msg.title,
+                        msg.msg,
+                        msg.type
+                    );
+                },
+                success: function (msg) {
+                    swal(
+                        resultMsg.title,
+                        msg.message,
+                        "success"
+                    );
+                },
+            });
+            object_function.cancelEdition();
+        } 
     };
 
     // Loads monitor page
@@ -166,7 +230,7 @@ define(['jquery',
             success: function (msg) {
                 var result = msg;
 
-                if (result.status_code === 1) {
+                if (result.status_code === 0) {
                     var parameters = get_url_parameters(document.location.search);
                     var fullUrl = String(document.location);
                     var url = fullUrl.split("?");
@@ -194,8 +258,48 @@ define(['jquery',
 
     //Load a single tab.
     function load_tabs(event) {
-        console.log("hola mundo");
-        loading_indicator.show(); 
+        var tabName = event.data.tab_name;
+        var parameters = get_url_parameters(document.location.search);
+        var monitorId = $("#id_moodle")[0].value;
+
+	$.ajax({
+            type: "POST",
+            url: "../managers/monitor_profile/monitor_profile_api.php",
+            dataType: "json",
+            cache: "false",
+            data: JSON.stringify({
+                "function": 'load_tabs',
+                "params": [monitorId, parameters.instanceid, tabName],
+            }),
+	        success: function(msg) {
+                if (msg.status_code == 0) {
+                    $.ajax({
+                        url: "../templates/monitor_view_"+tabName+"_tab.mustache",
+                        data: null,
+                        dataType: "text",
+                        success: function(template) {
+                            let tabToLoad = $(mustache.render(template, msg.data_response));
+                            $(".ases-tab-content").append(tabToLoad);
+                            switch (tabName) {
+                                case "history_boss":
+                                    $("#general_tab").removeClass("ases-tab-active");
+                                    $("#"+tabName+"_tab").addClass("ases-tab-active");
+                                    break;
+                            }
+                        },
+                        error: function() {
+                            console.log(`../templates/monitor_view_${tabName}_tab.mustache cannot be reached.`);
+                        }
+                    });
+                } else {
+                    console.log('error:', msg);
+                }
+    
+            },
+            error: function(msg) {
+                console.log(msg)
+            }
+        });
     }
 
 
