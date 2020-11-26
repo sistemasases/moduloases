@@ -62,6 +62,7 @@ $contextcourse = context_course::instance($course_id);
 $contextblock = context_block::instance($block_id);
 $id_current_user = $USER->id;
 
+
 $rol = lib_get_rol_name_ases($id_current_user, $block_id);
 $url = new moodle_url("/blocks/ases/view/monitor_profile.php", array('courseid' => $course_id, 'instanceid' => $block_id, 'monitor_code' => $monitor_code));
 
@@ -95,8 +96,9 @@ $coursenode->add_node($blocknode);
 if ($monitor_code != 0){
     // Recolección de la información básica del monitor.
     $monitor = search_user($monitor_code);
-    $data->select = make_select_monitors($monitor);
+    $data->select = make_select_monitors($block_id, $monitor);
     $monitor_info = get_monitor($monitor->id);
+    $data->id_moodle = $monitor->id;
     $data->email = $monitor->email;
     $data->fullname = $monitor->username . " " . $monitor->firstname . " " . $monitor->lastname;
     $data->phone1 = $monitor->phone1;
@@ -107,20 +109,13 @@ if ($monitor_code != 0){
     $data->pdf_acuerdo_conf = $monitor_info->pdf_acuerdo_conf;
     $data->pdf_doc = $monitor_info->pdf_doc;
     $data->pdf_d10 = $monitor_info->pdf_d10;
+    $data->profile_image =  get_mon_HTML_profile_img($contextblock->id, $monitor->id );
+    $data->select_periods = make_select_active_periods($monitor->id, $block_id);
     
 } else {
     $monitor_code = -1;
-    $data->select = make_select_monitors();
+    $data->select = make_select_monitors($block_id);
 }
-
-
-
-
-
-
-
-
-
 
 $page_title = 'Pérfil del monitor';
 $PAGE->set_url($url);
@@ -131,12 +126,14 @@ $PAGE->requires->css('/blocks/ases/style/aaspect.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 $PAGE->requires->css('/blocks/ases/style/monitor_profile.css', true);
+$PAGE->requires->css('/blocks/ases/style/monitor_trackings_tab.css', true);
+$PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
+$PAGE->requires->css('/blocks/ases/style/sweetalert2.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/monitor_profile', 'init');
 
 $OUTPUT = $PAGE->get_renderer('block_ases');
 
-$data->profile_image = $monitor_code != -1 ? $OUTPUT->user_picture($monitor, array('size'=>100, 'link'=>false)) : null;
 
 $monitor_profile_page = new \block_ases\output\monitor_profile_page($data);
 

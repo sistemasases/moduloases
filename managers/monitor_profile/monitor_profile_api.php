@@ -45,7 +45,7 @@ if ( isset($input->function) && isset($input->params) ){
             if ($result) {
                 echo json_encode(
                     array(
-                        "status_code" => 1,
+                        "status_code" => 0,
                         "message" => "Is monitor",
                         "data_response" => $result,
                     )
@@ -58,31 +58,98 @@ if ( isset($input->function) && isset($input->params) ){
         }
 
     // Cargar pestaña de conteo de fichas.
-    } else if ($function == 'load_trackings_tab') {
+    } else if ($function == 'load_tabs') {
         /**
-         * [0] => monitor_code : monitor's username.
-         * [1] => monitor_id : monitor's id.
-         * [2] => instance_id : instance the monitor belongs to.
+         * [0] => monitor_id : monitor's id.
+         * [1] => instance_id : instance the monitor belongs to.
+         * [2] => tab_name : Specific tab to load.
          */
         if (count($params) == 3) {
-            $result = monitor_load_trackings_tab($params[0], $params[1], $params[2]); 
+            if (is_string($params[2]) && is_numeric($params[0]) && is_numeric($params[1])) {
+                $tab_name = $params[2];
+                
+                switch($tab_name) {
 
-            if ($result) {
-                echo json_encode(
-                    array(
-                        "status_code" => 1,
-                        "message" => "",
-                        "data_response" => $result;
-                    )
-                );
+                    case 'history_boss':
+                        $result = monitor_load_bosses_tab($params[0], $params[1]);
+                        break;
+
+                    default:
+                        return_with_code(-2);
+                } 
+
+                if ($result != null) {
+                    echo json_encode(
+                        array(
+                            "status_code" => 0,
+                            "message" => "",
+                            "data_response" => $result
+                        )
+                    );
+                } else {
+                    return_with_code(-5);
+                }
             } else {
-                return_with_code(-6);
+                return_with_code(-3);
             }
         }
         else {
             return_with_code(-5);
         }
-    } else {
+    } else if ($function == 'save_profile') {
+        /**
+         * [0] => form : Array with monitor's info to be saved.
+         */
+        if (count($params) == 1) {
+            $result = monitor_save_profile($params[0]);
+
+            if ($result) {
+                echo json_encode(
+                    array(
+                        "status_code" => 0,
+                        "message" => "Información guardada con éxito",
+                        "data_response" => $result,
+                    )
+                );
+            }
+            else{
+                return_with_code(-1);
+            }
+        }
+        else {
+            return_with_code(-5);
+        }
+    
+    } else if ($function == 'tracking_count') {
+        /**
+         * [0] => Moodle's monitor user id.
+         * [1] => Instance ID
+         * [2] => Period ID
+         */
+        if (count($params) == 3) {
+
+            if (is_numeric($params[0]) && is_numeric($params[1]) && is_numeric($params[2])) {
+               $result = monitor_get_tracking_count($params[0], $params[1], $params[2]); 
+
+               if ($result) {
+                   echo json_encode(
+                       array(
+                            "status_code" => 0,
+                            "message" => "",
+                            "data_response" => $result,
+                       )
+                   );
+               } else {
+                   return_with_code(-6);
+               }
+            } else {
+                return_with_code(-3);
+            }
+        
+        } else {
+            return_with_code(-6);
+        }
+    }  else {
         return_with_code(-2);
     }
 } else {
@@ -104,7 +171,15 @@ function return_with_code($code){
                 )
             );
             break;
-
+        case -3:
+            echo json_encode(
+                array(
+                    "status_code" => $code,
+                    "error_message" => "El tipo de los argumentos es inválido.",
+                    "data_response" => ""
+                )
+            );
+            break;
         case -2:
             echo json_encode(
                 array(

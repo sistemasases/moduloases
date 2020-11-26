@@ -20,6 +20,9 @@ require_once (__DIR__ . '/../../classes/Semestre.php');
 require_once (__DIR__ . '/../jquery_datatable/jquery_datatable_lib.php');
 require_once (__DIR__ . '/../../managers/cohort/cohort_lib.php');
 require_once (__DIR__ . '/../../managers/periods_management/periods_lib.php');
+require_once(__DIR__ . '/../../core/module_loader.php');
+
+module_loader("periods");
 
 use jquery_datatable\Column;
 use student_lib\ActiveSemestersReportField;
@@ -57,10 +60,13 @@ function _get_semesters_names_after_cohort($id_instance, $ases_cohort_id, $inclu
     }
 
     $cohort_start_date_string = \cohort_lib\get_date_string_from_mdl_cohort_id_number($cohort_id_number);
-    $semesters = Semestre::get_semesters_later_than($cohort_start_date_string, -1, false, $date_format);
+
+    //$semesters = Semestre::get_semesters_later_than($cohort_start_date_string, -1, false, $date_format);
+	  $semesters = core_periods_get_period_by_date($cohort_start_date_string, null ,true); 
+
     $semester_names = array_map(
-        function(Semestre $semester ) {
-            return $semester->nombre;
+        function( $period ) {
+            return $period->nombre;
         }, $semesters);
     if(!$include_current_semester) {
         /*Remove the current semester in the list of semesters*/
@@ -79,38 +85,41 @@ function _student_and_active_semesters_to_row($semester_names, $student_and_acti
 
     //$index = count($semester_names);
 
-
-    $stop_egresado = false;
+    if($student_and_active_semesters->is_egresado()){
+        $stop_egresado = true;
+    }else{
+        $stop_egresado = false;
+    }
 
     foreach(array_reverse($semester_names) as $semester_name){
+
         if($student_and_active_semesters->have_active_semester($semester_name)){
             $row[$semester_name] = $student_and_active_semesters->list_active_careers($semester_name);
             $stop_egresado = true;
         }else if(!$stop_egresado){
             $row[$semester_name] = "EGRESADO";
         }else {
-
             $row[$semester_name] = "NO";
         }
     }
 
-/*    while($index) {
-        $index--;
-        $current = $index;
-        if($student_and_active_semesters->have_active_semester($semester_names[$current])){
-            $row[$semester_names[$current]] = $student_and_active_semesters->list_active_careers($semester_names[$current]);
-            $stop_egresado = true;
-        }else if(!$stop_egresado){
-            $row[$semester_names[$current]] = $semester_names;
-        }else {
+    /*    while($index) {
+            $index--;
+            $current = $index;
+            if($student_and_active_semesters->have_active_semester($semester_names[$current])){
+                $row[$semester_names[$current]] = $student_and_active_semesters->list_active_careers($semester_names[$current]);
+                $stop_egresado = true;
+            }else if(!$stop_egresado){
+                $row[$semester_names[$current]] = $semester_names;
+            }else {
 
-            $row[$semester_names[$current]] = $semester_names;
-        }
-    }*/
+                $row[$semester_names[$current]] = $semester_names;
+            }
+        }*/
 
-/*    foreach ($semester_names as $semester_name) {
-        $row[$semester_name] = $student_and_active_semesters->have_active_semester($semester_name)? $student_and_active_semesters->list_active_careers($semester_name) : $student_and_active_semesters->egresado;
-    }*/
+    /*    foreach ($semester_names as $semester_name) {
+            $row[$semester_name] = $student_and_active_semesters->have_active_semester($semester_name)? $student_and_active_semesters->list_active_careers($semester_name) : $student_and_active_semesters->egresado;
+        }*/
     $row['num_doc'] = $student_and_active_semesters->num_doc;
     $row['nombre'] = $student_and_active_semesters->nombre;
     $row['codigo'] = $student_and_active_semesters->codigo;

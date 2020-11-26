@@ -107,7 +107,6 @@ define([
         );
     } );
 
-    console.log( "General Modal Manager initialised" );
 
     return {
         generate_modal: generate_modal,
