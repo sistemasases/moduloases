@@ -14,23 +14,32 @@
             </div>
 
             <div id="div-hr" class="ases-row">
-                <hr class="hr-general-fields">
+                <hr class="hr-general-tab-fields">
             </div>
 
             <div class="ases-row" id="div-nombre-foto">
-                <div id="div_monitor-fullname" class="ases-col-xs-2 ases-col-lg-7">
+                <div id="div-monitor-fullname" class="ases-col-xs-12 ases-col-sm-12 ases-col-lg-7">
                     <h2 id="monitor_fullname">{{fullname}}</h2>
+                    <p class="ases-col-lg-10">{{email}}</p>
 
+                    <span id="span-icon-edit" class="ases-col-xs-1 ases-col-sm-1 ases-col-md-1 ases-col-lg-1 tooltip-v1" 
+                        data-toggle="tooltip" data-placement="top" title="Editar ficha">
+                    </span>
+
+                    <span id="span-icon-save" class="ases-col-xs-1 ases-col-sm-1 ases-col-md-1 ases-col-lg-1 tooltip-v1" 
+                          data-toggle="tooltip" data-placement="top" title="Guardar cambios">
+                    </span>
+                            
+                    <span id="span-icon-cancel" class="ases-col-xs-1 ases-col-sm-1 ases-col-md-1 ases-col-lg-1 tooltip-v1" 
+                        data-toggle="tooltip" data-placement="top" title="Cancelar cambios">
+                    </span>
                 </div>
-                <div id="monitor-picture" class="ases-col-xs-12 ases-col-lg-5">
+
+                <div id="monitor-picture" class="ases-col-xs-12 ases-col-lg-4">
                    {{{profile_image}}} 
                 </div>
             </div>
 
-            <div class="ases-row" id="div-correo-institucional">
-                <p class="ases-col-lg-7">{{email}}</p>
-            </div>
-            
             <div class="ases-row cabecera" id="container-profile">
 
                 <div id="tabs" class="ases-col-sm-12 ases-col-md-12 ases-col-lg-12">

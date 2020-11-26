@@ -122,13 +122,14 @@ define(['jquery',
                 msg.status = "success";
 
                 switch(field.name) {
-                    case "email":
+                    case "email_alternativo":
                         let regexemail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
                         let validEmail = regexemail.exec(field.value);
 
                         if (validEmail !== null) {
-                            console.log(validEmail)
+                            console.log("email valido: ", validEmail)
                         } else {
+                            console.log("error");
                             msg.title = "Error";
                             msg.status = "error";
                             msg.msg = `El campo ${field.name} no tiene formato válido.`;
@@ -174,6 +175,11 @@ define(['jquery',
             $("#input_d10").prop('readonly', true);
             $("#input_doc").prop('readonly', true);
             $("#input_banco").prop('readonly', true);
+            
+            $("#link_acuerdo").attr("href", $("#input_acuerdo")[0].value);
+            $("#link_banco").attr("href", $('#input_banco')[0].value);
+            $("#link_d10").attr("href", $("#input_d10")[0].value);
+            $('#link_doc').attr('href', $('#input_doc')[0].value);
         
         }, revertChanges: function (form) {
 
@@ -258,11 +264,12 @@ define(['jquery',
 
     //Load a single tab.
     function load_tabs(event) {
+
         var tabName = event.data.tab_name;
         var parameters = get_url_parameters(document.location.search);
         var monitorId = $("#id_moodle")[0].value;
 
-	$.ajax({
+	    $.ajax({
             type: "POST",
             url: "../managers/monitor_profile/monitor_profile_api.php",
             dataType: "json",
@@ -280,6 +287,7 @@ define(['jquery',
                         success: function(template) {
                             let tabToLoad = $(mustache.render(template, msg.data_response));
                             $(".ases-tab-content").append(tabToLoad);
+                            console.log(tabName);
                             switch (tabName) {
                                 case "history_boss":
                                     $("#general_tab").removeClass("ases-tab-active");

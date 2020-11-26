@@ -449,5 +449,5 @@ function get_mon_html_profile_img(int $context_block_id, int $moodle_id)
     }
 
     $monitor = \core_user::get_user($moodle_id, '*', MUST_EXIST);
-    return $OUTPUT->user_picture($monitor, array('size'=>100, 'link'=>false));
+    return $OUTPUT->user_picture($monitor, array('size'=>100, 'link'=>false, 'class'=>'img-general-fields'));
 }
