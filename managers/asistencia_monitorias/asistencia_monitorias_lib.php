@@ -16,7 +16,7 @@ function get_default_monitorias(){
 
 function get_monitorias(){
     global $DB;
-    $sql_query = "SELECT monitoria.id, 
+    $sql_query = "SELECT monitoria.id AS id, 
                         dia, 
                         hora, 
                         materia.nombre AS materia, 
@@ -34,6 +34,9 @@ function get_monitorias(){
     $result_to_return = array();
     foreach($result_query as $result){
         $result->dia = array("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo")[$result->dia];
+        $result->botones = "<button id=\"".$result->id."\" class=\"dt-button buttons-print ver-sesiones\">Ver sesiones programadas</button>
+                            <button id=\"".$result->id."\" class=\"dt-button buttons-print modificar\">Modificar</button>
+                            <button id=\"".$result->id."\" class=\"dt-button buttons-print eliminar\">Eliminar</button>";
         array_push($result_to_return, $result);
     }
     // materia, dia, hora, monitor
@@ -43,7 +46,7 @@ function get_monitorias(){
     array_push($columns, array("title"=>"Hora", "name"=>"hora", "data"=>"hora", "width"=>"10%"));
     array_push($columns, array("title"=>"Nombre Monitor", "name"=>"firstname_mon", "data"=>"firstname_mon", "width"=>"17%"));
     array_push($columns, array("title"=>"Apellido Monitor", "name"=>"lastname_mon", "data"=>"lastname_mon", "width"=>"17%"));
-    array_push($columns, array("title"=>"", "name"=>"opciones", "data"=>null, "width"=>"25%", 
+    array_push($columns, array("title"=>"", "name"=>"botones", "data"=>"botones", "width"=>"25%", 
     "defaultContent"=>
     "<button class=\"dt-button buttons-print\">Ver sesiones programadas</button>
     <button class=\"dt-button buttons-print\">Modificar</button>
@@ -168,6 +171,23 @@ function eliminar_materia($id){
             return -1;
         }
         $DB->update_record('talentospilos_mate_monitoria', $materia, $bulk=false);
+        return 1;
+    }else{
+        return -1;
+    }
+}
+
+function eliminar_monitoria($id){
+    global $DB;
+    $sql = "SELECT * FROM {talentospilos_monitoria} WHERE id = '$id'";
+    $monitoria = $DB->get_record_sql($sql);
+    if($monitoria){
+        $monitoria->eliminado = true;
+        if($monitoria->id == 0){
+            trigger_error('ASES Notificacion: actualizar monitoria en la BD con id 0');
+            return -1;
+        }
+        $DB->update_record('talentospilos_monitoria', $monitoria, $bulk=false);
         return 1;
     }else{
         return -1;

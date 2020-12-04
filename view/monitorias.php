@@ -58,7 +58,7 @@ $monitorias = get_default_monitorias();
 $params = new stdClass();
 $params->table = $monitorias;
 $PAGE->requires->js_call_amd('block_ases/asistencia_monitorias','cargar_monitorias_default', $params);
-
+$PAGE->requires->js_call_amd('block_ases/asistencia_monitorias','continuar_setup_inicial');
 $output = $PAGE->get_renderer('block_ases');
 $monitorias_page = new \block_ases\output\monitorias_page($data);
 
