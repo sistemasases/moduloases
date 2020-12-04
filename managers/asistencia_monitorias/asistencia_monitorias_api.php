@@ -111,6 +111,25 @@ if(isset($input->function) && isset($input->params)) {
                 )
             );
         }
+    } else if($function == 'eliminar_monitoria') {
+        $id = intval($input->params);
+            if(is_int($id)) {
+
+                $result = eliminar_monitoria($id);
+
+                if($result){
+                    echo json_encode(
+                        array(
+                            "status_code" => 0,
+                            "message" => "Éxito",
+                        )
+                    );
+                } else {
+                    return_with_code(-5);
+                }
+            } else {
+                return_with_code(-2);
+            }
     } else if($function == 'anadir_materia') {
         $params = $input->params;
         if(count($params) == 1) {
