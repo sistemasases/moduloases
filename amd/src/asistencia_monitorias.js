@@ -28,7 +28,7 @@ define(['jquery',
                 $('head').append('<link rel="stylesheet" href="' + css_location + '" type="text/css" />');
                 // adjuntar listeners
                 $(document).on('click', '#anadir_monitoria', iniciar_agregar_monitoria);
-                 // localizacion
+                // localizacion
                  //// datepicker
                 $.datepicker.setDefaults({
                     closeText: "Cerrar",
@@ -54,6 +54,9 @@ define(['jquery',
             $("#div_table").fadeIn(500).append('<table id="tableResult" class="stripe row-border order-column" cellspacing="0" width="100%"><thead> </thead></table>');
             $("#tableResult").DataTable(data);
         },
+        continuar_setup_inicial : function(){
+            poner_listeners_tabla();
+        }
         
     }
 
@@ -233,26 +236,7 @@ define(['jquery',
             });
         }
     
-        function recargar_monitorias(){
-            $.ajax({
-                type: "POST",
-                data: JSON.stringify({
-                    "function": 'cargar_monitorias',
-                    "params": [],
-                }),
-                url: "../managers/asistencia_monitorias/asistencia_monitorias_api.php",
-                dataType: "json",
-                success: function(msg) {
-                    $("#div_table").html('');
-                    $("#div_table").fadeIn(500).append('<table id="tableResult" class="stripe row-border order-column" cellspacing="0" width="100%"><thead> </thead></table>');
-                    $("#tableResult").DataTable(msg.data_response);
-                },
-                error: function(msg) {
-                    console.log("Error consulta BD monitorias");
-                }
-            });
-        }
-    
+   
         function attach_listeners_botones(){
          
             // cancelar
@@ -307,7 +291,66 @@ define(['jquery',
        
         }
     }
-}});
+    
+}
+
+function poner_listeners_tabla(){
+    $(".dt-button.buttons-print.eliminar").click(eliminar_monitoria);
+}
+
+function recargar_monitorias(){
+    $.ajax({
+        type: "POST",
+        data: JSON.stringify({
+            "function": 'cargar_monitorias',
+            "params": [],
+        }),
+        url: "../managers/asistencia_monitorias/asistencia_monitorias_api.php",
+        dataType: "json",
+        success: function(msg) {
+            $("#div_table").html('');
+            $("#div_table").fadeIn(500).append('<table id="tableResult" class="stripe row-border order-column" cellspacing="0" width="100%"><thead> </thead></table>');
+            $("#tableResult").DataTable(msg.data_response);
+            poner_listeners_tabla();
+        },
+        error: function(msg) {
+            console.log("Error consulta BD monitorias");
+        }
+    });
+}
+
+    function eliminar_monitoria(e){
+        let materia_info = $(e.target).parent().parent().find("td").toArray().map(td => td.innerHTML)
+        swal({
+            title: 'Eliminar monitoría',
+            text: "¿Deseas eliminar la monitoría de  "+materia_info[0]+" programada los "+materia_info[1]+" de "+ materia_info[2]+"?",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Eliminar'
+        }, function (isConfirmed) {
+            if (isConfirmed) {
+                console.log(e.target.id)
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({
+                        "function": 'eliminar_monitoria',
+                        "params": e.target.id,
+                    }),
+                    url: "../managers/asistencia_monitorias/asistencia_monitorias_api.php",
+                    dataType: "json",
+                    success: function(msg) {
+                        recargar_monitorias();
+                    },
+                    error : function(msg) {
+                        swal('Error!', msg, 'error')
+                        console.log(msg)
+                    },
+                });
+            }
+        });
+    }
+
+});
 
 
 define('extras', function(){
