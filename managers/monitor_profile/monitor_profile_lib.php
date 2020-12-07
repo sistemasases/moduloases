@@ -124,6 +124,7 @@ function get_monitor(int $monitor_id) {
     }
 }
 
+
 /**
  * Handles all backend activities needed to initialize the history boss tab:
  * - Find out every boss a monitor has had during each active semester.

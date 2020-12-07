@@ -31,7 +31,7 @@ require_once($CFG->libdir . '/adminlib.php');
 //require_once(__DIR__ . '/../core/module_loader.php');
 require_once('../managers/instance_management/instance_lib.php');
 require_once('../managers/lib/lib.php');
-//require_once('../managers/lib/student_lib.php');
+require_once('../managers/lib/student_lib.php');
 require_once('../managers/validate_profile_action.php');
 require_once('../managers/menu_options.php');
 require_once('../managers/monitor_assignments/monitor_assignments_lib.php');
@@ -101,16 +101,24 @@ if ($monitor_code != 0){
     $data->id_moodle = $monitor->id;
     $data->email = $monitor->email;
     $data->fullname = $monitor->username . " " . $monitor->firstname . " " . $monitor->lastname;
-    $data->phone1 = $monitor->phone1;
-    $data->phone2 = $monitor->phone2;
-    //$data->id_programa = $monitor->id_programa;
+    $data->phone1 = $monitor_info->telefono1;
+    $data->phone2 = $monitor_info->telefono2;
     $data->num_doc = $monitor_info->num_doc; 
-    $data->pdf_cuenta_banco = isset($monitor_info->pdf_cuenta_banco) ? $monitor_info->pdf_cuenta_banco : 'https://www.example.com';
+    $data->pdf_cuenta_banco = $monitor_info->pdf_cuenta_banco;
     $data->pdf_acuerdo_conf = $monitor_info->pdf_acuerdo_conf;
     $data->pdf_doc = $monitor_info->pdf_doc;
     $data->pdf_d10 = $monitor_info->pdf_d10;
+    $data->email_alter = $monitor_info->email_alternativo;
     $data->profile_image =  get_mon_HTML_profile_img($contextblock->id, $monitor->id );
     $data->select_periods = make_select_active_periods($monitor->id, $block_id);
+
+
+    // Nombre del plan actual
+    if (isset($monitor_info->id_programa)) {
+        $program_obj = get_program($monitor_info->id_programa);
+        $data->plan = ($program_obj->nombre) . ' ' . ($program_obj->jornada);
+    } 
+
     
 } else {
     $monitor_code = -1;
