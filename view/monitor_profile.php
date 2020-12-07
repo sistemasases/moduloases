@@ -28,8 +28,9 @@
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 
-//require_once(__DIR__ . '/../core/module_loader.php');
+require_once(__DIR__ . '/../core/module_loader.php'); // Please don't remove
 require_once('../managers/instance_management/instance_lib.php');
+require_once('../managers/user_management/user_management_lib.php');
 require_once('../managers/lib/lib.php');
 require_once('../managers/lib/student_lib.php');
 require_once('../managers/validate_profile_action.php');
@@ -42,7 +43,7 @@ include "../lib.php";
 include "../classes/output/monitor_profile_page.php";
 include "../classes/output/renderer.php";
 
-//module_loader('periods');
+module_loader('periods');
 
 global $PAGE;
 global $USER;
@@ -119,7 +120,12 @@ if ($monitor_code != 0){
         $data->plan = ($program_obj->nombre) . ' ' . ($program_obj->jornada);
     } 
 
-    
+    // Jefe actual.
+    $jefe = user_management_get_boss($monitor->id, $block_id, core_periods_get_current_period()->id); 
+    if (isset($jefe)) {
+        $nombre = $jefe->firstname ." ". $jefe->lastname;
+        $data->jefe = $nombre; 
+    }
 } else {
     $monitor_code = -1;
     $data->select = make_select_monitors($block_id);
