@@ -121,11 +121,13 @@ if ($monitor_code != 0){
     } 
 
     // Jefe actual.
+    $data->jefe = "No registra";
     $jefe = user_management_get_boss($monitor->id, $block_id, core_periods_get_current_period()->id); 
-    if (isset($jefe)) {
+    if (isset($jefe->id)) {
         $nombre = $jefe->firstname ." ". $jefe->lastname;
         $data->jefe = $nombre; 
-    }
+    } 
+
 } else {
     $monitor_code = -1;
     $data->select = make_select_monitors($block_id);
