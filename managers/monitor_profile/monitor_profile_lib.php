@@ -31,6 +31,8 @@ require_once(__DIR__ . "/../pilos_tracking/v2/pilos_tracking_lib.php");
 module_loader("periods");
 
 $MONITORS_TABLENAME = $GLOBALS[ 'CFG' ]->prefix . "talentospilos_monitores";
+$CURRENT_PERIOD = core_periods_get_current_period()->id;
+
 
 /**
  * Checks if a user has the monitor_ps role assigned
@@ -70,7 +72,7 @@ function monitor_is_monitor_ps($code)
 
 
 /**
- * Returns all monitors belonging to the same instance.
+ * Returns all monitors belonging to the same instance and under the same boss.
  * 
  * @param int $instance_id
  * @return Array monitors
@@ -83,16 +85,82 @@ function get_all_monitors(int $instance_id)
     global $MONITORS_TABLENAME;
 
     $query ="
-        SELECT U.username, U.firstname, U.username 
-        FROM $MONITORS_TABLENAME 
-        INNER JOIN {user} U 
-        ON $MONITORS_TABLENAME.id_moodle_user = U.id
-        INNER JOIN {talentospilos_monitor_estud} ME
-        ON ME.id_monitor=U.id
-        AND ME.id_instancia=$instance_id";
+        SELECT * 
+        FROM {user} WHERE id in(
+            SELECT DISTINCT id_usuario
+            FROM {talentospilos_user_rol}
+            WHERE id_rol=4 
+            AND id_instancia=$instance_id
+            AND id_usuario IN(
+                SELECT id_moodle_user
+                FROM $MONITORS_TABLENAME
+            )
+        )";
 
     $result = $DB->get_records_sql( $query );
     return $result;
+}
+
+/**
+ * Retorna todos los monitores activos de una instancia dada bajo
+ * la directriz del practicante dado.
+ *
+ * @param int $instance_id : instancia a consultar.
+ * @param int $pract_id : id moodle del practicante.
+ */
+function get_all_monitors_pract(int $instance_id, int $pract_id) {
+   global $DB; 
+   global $MONITORS_TABLENAME;
+
+   $query ="
+        SELECT * FROM {user} WHERE id in(
+            SELECT DISTINCT id_usuario 
+            FROM {talentospilos_user_rol}
+            WHERE id_jefe=$pract_id
+            AND id_instancia=$instance_id
+            AND id_rol=4
+            AND id_usuario IN (
+                SELECT id_moodle_user
+                FROM $MONITORS_TABLENAME
+            )
+        )";
+    
+    $result = $DB->get_records_sql( $query ); 
+    return $result;
+}
+
+
+/**
+ * Retorna todos los monitores de una instancia dada
+ * bajo la directriz de los practicantes de un profesional dado.
+ *
+ * @param int $instance_id : id de la instancia a la que pertenece.
+ * @param int $prof_id : id moodle del profesional.
+ */
+function get_all_monitors_prof(int $instance_id, int $prof_id)
+{
+    $practicants = get_all_practs_of_prof($instance_id, $prof_id);
+    $monitors = array();
+    foreach($practicants as $pract) {
+       $monitors += get_all_monitors_pract($instance_id, $pract->id_usuario); 
+    }
+
+    return $monitors;
+}
+
+
+function get_all_practs_of_prof(int $instance_id, int $prof_id)
+{
+    global $DB;
+
+    $query =
+        "SELECT DISTINCT * 
+        FROM {talentospilos_user_rol}
+        WHERE id_jefe=$prof_id
+        AND id_rol=7
+        AND id_instancia=$instance_id";
+    
+   return $DB->get_records_sql( $query ); 
 }
 
 
@@ -388,14 +456,12 @@ function make_select_active_periods($moodle_id, $instance_id) {
 /**
  *  Realiza un select con los monitores de la instancia ASES
  * */
-function make_select_monitors(int $instance_id, $monitor=null) {
+function make_select_monitors($monitors) {
 
-    $monitors = get_all_monitors($instance_id);
-        
     $html = "<select id='select-monitores' style='width:100%'> <option selected=Selected>Seleccione un monitor</option>";
 
     foreach($monitors as $monitor) {
-        $monitor_name = $monitor->username . " " . $monitor->firstname;
+        $monitor_name = $monitor->username . " " . $monitor->firstname . " " . $monitor->lastname;
         $html .= "<option value='$monitor_name'>$monitor_name</option>";
     }
 
@@ -403,6 +469,7 @@ function make_select_monitors(int $instance_id, $monitor=null) {
 
     return $html;
 }
+
 
 /**
  * Retorna la URL de la imagen del pérfil de moodle del monitor, utilizando

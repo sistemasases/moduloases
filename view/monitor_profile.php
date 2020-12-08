@@ -83,6 +83,20 @@ if ($rol == 'sistemas') {
     $data->user_logged = $user;
 }
 
+switch ($rol) {
+    
+case "sistemas":
+    $data->select = make_select_monitors(get_all_monitors($block_id));
+    break;
+    
+case "practicante_ps":
+    $data->select = make_select_monitors( get_all_monitors_pract($block_id, $user->id) );
+    break;
+case "profesional_ps":
+    $data->select = make_select_monitors( get_all_monitors_prof($block_id, $user->id) );
+    break;
+}
+
 $cohorts_select = \cohort_lib\get_html_cohorts_select($block_id);
 $data->cohorts_select = $cohorts_select;
 
@@ -97,7 +111,6 @@ $coursenode->add_node($blocknode);
 if ($monitor_code != 0){
     // Recolección de la información básica del monitor.
     $monitor = search_user($monitor_code);
-    $data->select = make_select_monitors($block_id, $monitor);
     $monitor_info = get_monitor($monitor->id);
     $data->id_moodle = $monitor->id;
     $data->email = $monitor->email;
@@ -112,7 +125,6 @@ if ($monitor_code != 0){
     $data->email_alter = $monitor_info->email_alternativo;
     $data->profile_image =  get_mon_HTML_profile_img($contextblock->id, $monitor->id );
     $data->select_periods = make_select_active_periods($monitor->id, $block_id);
-
 
     // Nombre del plan actual
     if (isset($monitor_info->id_programa)) {
@@ -130,7 +142,8 @@ if ($monitor_code != 0){
 
 } else {
     $monitor_code = -1;
-    $data->select = make_select_monitors($block_id);
+
+
 }
 
 $page_title = 'Pérfil del monitor';
