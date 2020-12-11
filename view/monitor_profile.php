@@ -88,7 +88,6 @@ switch ($rol) {
 case "sistemas":
     $data->select = make_select_monitors(get_all_monitors($block_id));
     break;
-    
 case "practicante_ps":
     $data->select = make_select_monitors( get_all_monitors_pract($block_id, $user->id) );
     break;
@@ -125,25 +124,30 @@ if ($monitor_code != 0){
     $data->email_alter = $monitor_info->email_alternativo;
     $data->profile_image =  get_mon_HTML_profile_img($contextblock->id, $monitor->id );
     $data->select_periods = make_select_active_periods($monitor->id, $block_id);
+    $data->jefe = "No registra";
 
+    $estado = monitor_is_active($monitor->id);
+    if ($estado) {
+        $data->activo=true;
+        $jefe = user_management_get_boss($monitor->id, $block_id, core_periods_get_current_period()->id); 
+        if (isset($jefe->id)) {
+            $nombre = $jefe->firstname ." ". $jefe->lastname;
+            $data->jefe = $nombre; 
+        } 
+
+    } else {
+        $data->inactivo=true;
+    }
+    
     // Nombre del plan actual
-    if (isset($monitor_info->id_programa)) {
+    $data->plan = "No registra programa académico";
+    if ($monitor_info->id_programa > 0) {
         $program_obj = get_program($monitor_info->id_programa);
         $data->plan = ($program_obj->nombre) . ' ' . ($program_obj->jornada);
     } 
 
-    // Jefe actual.
-    $data->jefe = "No registra";
-    $jefe = user_management_get_boss($monitor->id, $block_id, core_periods_get_current_period()->id); 
-    if (isset($jefe->id)) {
-        $nombre = $jefe->firstname ." ". $jefe->lastname;
-        $data->jefe = $nombre; 
-    } 
-
 } else {
     $monitor_code = -1;
-
-
 }
 
 $page_title = 'Pérfil del monitor';
@@ -158,6 +162,7 @@ $PAGE->requires->css('/blocks/ases/style/monitor_profile.css', true);
 $PAGE->requires->css('/blocks/ases/style/monitor_trackings_tab.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert2.css', true);
+$PAGE->requires->css('/blocks/ases/style/switch.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/monitor_profile', 'init');
 

@@ -33,7 +33,6 @@ module_loader("periods");
 $MONITORS_TABLENAME = $GLOBALS[ 'CFG' ]->prefix . "talentospilos_monitores";
 $CURRENT_PERIOD = core_periods_get_current_period()->id;
 
-
 /**
  * Checks if a user has the monitor_ps role assigned
  * 
@@ -148,7 +147,9 @@ function get_all_monitors_prof(int $instance_id, int $prof_id)
     return $monitors;
 }
 
-
+/**
+ *
+ */
 function get_all_practs_of_prof(int $instance_id, int $prof_id)
 {
     global $DB;
@@ -163,6 +164,31 @@ function get_all_practs_of_prof(int $instance_id, int $prof_id)
    return $DB->get_records_sql( $query ); 
 }
 
+function monitor_is_active(int $monitor_moodle_id)
+{
+    global $DB;
+    global $CURRENT_PERIOD;
+
+    if ($monitor_moodle_id <= 0) {
+        Throw New Exception('ID del mónitor es inválido', -1);
+    }
+
+    $query = 
+        "SELECT *
+        FROM {talentospilos_user_rol}
+        WHERE id_usuario=$monitor_moodle_id
+        AND estado=1
+        AND id_semestre=$CURRENT_PERIOD
+        AND id_rol=4";
+    
+    $result = $DB->get_record_sql( $query );
+
+    if ( property_exists($result, 'id') ) {
+        
+        return true; 
+    }
+    return false;
+}
 
 /**
  * Returns all fields in MONITORS_TABLENAME
@@ -207,21 +233,75 @@ function monitor_load_bosses_tab(int $monitor_moodle_id, int $instance_id) {
     $data = new stdClass();
     $active_periods = get_active_periods($monitor_moodle_id, $instance_id ); 
     
-    $table_html = "<table id='table_boss'><tr><th>Periodo</th><th>Jefe</th></tr>";
+    $table_html = 
+        "<table id='table_boss'>
+            <tr>
+                <th>Período</th><th>Jefe (Prácticante)</th><th>Jefe (Profesional)</th>
+            </tr>";
     foreach ($active_periods as $period) {
         $period_id = $period->id;
         $period_nombre = $period->nombre;
 
-        $boss = get_monitor_boss($monitor_moodle_id, $period_id); 
-        $boss_name = $boss->firstname." ".$boss->lastname;
-        $period->jefe = $boss_name;
+        $practicant = get_monitor_boss($monitor_moodle_id, $period_id); 
+        $practicant_name = $practicant->firstname." ".$practicant->lastname;
 
-        $table_html .= "<tr><td>".$period_nombre."</td><td>".$boss_name."</td></tr>";
+
+        if (property_exists($practicant, 'id')) {
+            
+            $profesional = get_practicant_boss_under_period($practicant->id, $period_id);
+            $profesional_name = $profesional->firstname . " " . $profesional->lastname; 
+        }
+        else {
+            $profesional_name="";
+        }
+        
+        
+
+        //$period->jefe = $profesional_name;
+        $table_html .= 
+            "<tr>
+                <td>".$period_nombre."</td><td>".$practicant_name."</td>
+                <td>".$profesional_name."</td>
+            </tr>";
     }
     $table_html .= "</table>";
     $data->table_html = $table_html;
     
     return $data;
+}
+
+/**
+ * Retorna el jefe de un prácticante durante un período específico.
+ *
+ * @param int $pract_moodle_id : ID moodle del prácticante.
+ * @param int $period_id : Período a consultar.
+ *
+ * @return array | null|
+ * @throws Exception en caso que los id's sean menores a cero
+ */
+function get_practicant_boss_under_period(int $pract_moodle_id, int $period_id)
+{
+   global $DB; 
+
+   if ($pract_moodle_id <=0 || $period_id <=0) {
+       Throw New Exception("Argumento(s) inválido(s)");
+   }
+
+   $query = 
+       "SELECT * FROM {user} WHERE id IN (
+            SELECT id_jefe
+            FROM {talentospilos_user_rol}
+            WHERE id_usuario=$pract_moodle_id
+            AND id_semestre=$period_id
+            AND id_rol=7
+        )";
+
+    $result = $DB->get_record_sql( $query ); 
+    if ( !property_exists($result, 'id') ) {
+        return null;
+    }
+
+    return $result;
 }
 /**
  * Gets tracking count of given monitor during a given semester on a given instance.
@@ -297,7 +377,7 @@ function monitor_get_tracking_count(int $moodle_id, int $instance_id, int $perio
 
 /**
  * Gets the periods in which a given monitor has been active under a given instance.
- * i.e: has a record in {talentospilos_monitor_estud}
+ * i.e: has a record in {talentospilos_user_rol}
  *
  * @param int $monitor_id -> monitor's id from {user} table
  * @param int $instance_id -> instance which the monitor belongs to. 
@@ -314,9 +394,10 @@ function get_active_periods(int $monitor_id, int $instance_id)
     }
 
     $sql = "SELECT DISTINCT id_semestre 
-            FROM {talentospilos_monitor_estud} 
-            WHERE id_monitor = $monitor_id 
-            AND id_instancia = $instance_id";
+            FROM {talentospilos_user_rol} 
+            WHERE id_usuario = $monitor_id 
+            AND id_instancia = $instance_id
+            AND id_rol=4";
     
     $result = $DB->get_records_sql($sql); 
     
@@ -417,7 +498,7 @@ function get_monitor_boss(int $monitor_moodle_id, int $period_id)
     global $DB;
     try {
         $query = 
-            "SELECT username, firstname, lastname
+            "SELECT * 
             FROM {user}
             WHERE id in(
                 SELECT id_jefe 
@@ -517,5 +598,5 @@ function get_mon_html_profile_img(int $context_block_id, int $moodle_id)
     }
 
     $monitor = \core_user::get_user($moodle_id, '*', MUST_EXIST);
-    return $OUTPUT->user_picture($monitor, array('size'=>100, 'link'=>false, 'class'=>'img-general-fields'));
+    return $OUTPUT->user_picture($monitor, array('size'=>150, 'link'=>false, 'class'=>'img-general-fields'));
 }

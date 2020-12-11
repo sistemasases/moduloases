@@ -48,6 +48,8 @@ define(['jquery',
             var unchangedForm = $('#ficha_monitor').serializeArray();
             $("#span-icon-edit").on('click', function() {
                 $(this).hide();
+                
+
                 $("#span-icon-save").show();
                 $("#span-icon-cancel").show();
 
@@ -184,7 +186,7 @@ define(['jquery',
         }, revertChanges: function (form) {
 
             form.forEach(field => $('[name='+field.name+']').val(field.value));
-            
+
             $("#link_acuerdo").attr("href", $("#input_acuerdo")[0].value);
             $("#link_banco").attr("href", $('#input_banco')[0].value);
             $("#link_d10").attr("href", $("#input_d10")[0].value);

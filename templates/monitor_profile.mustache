@@ -24,7 +24,8 @@
                     <div class="ases-row">
                         <span class="ases-col-lg-5">{{plan}}</span>
                         <span class="ases-col-lg-5">{{email}}</span>
-                        
+                       
+                        {{#edit_monitor_profile}}
                         <span id="span-icon-edit" class="ases-col-xs-1 ases-col-sm-1 ases-col-md-1 ases-col-lg-1 tooltip-v1" 
                             data-toggle="tooltip" data-placement="top" title="Editar ficha">
                         </span>
@@ -36,6 +37,34 @@
                         <span id="span-icon-cancel" class="ases-col-xs-1 ases-col-sm-1 ases-col-md-1 ases-col-lg-1 tooltip-v1" 
                             data-toggle="tooltip" data-placement="top" title="Cancelar cambios">
                         </span>
+                        {{/edit_monitor_profile}}
+                    </div>
+                    <hr class="hr-general-tab" />
+
+                    <div class="ases-row">
+                        <span class="ases-col-xs-1 ases-col-sm-1 ases-col-md-1 ases-col-lg-2">Estado:</span>
+                        <div class="ases-col-xs-offset-2 ases-col-sm-3 ases-col-md-2 ases-col-lg-1">
+                            
+                            {{#activo}}
+                            <label class="switch">ACTIVO
+                                <input type="checkbox" checked="checked" disabled>
+                                <div class="ases-row slider round"></div>
+                            </label>
+                            {{/activo}}
+
+                            {{#inactivo}}
+                            <label class="switch" >INÁCTIVO
+                                <input type="checkbox" name="input-estado" disabled>
+                                <div class="ases-row slider round"></div>
+                            </label>
+                            {{/inactivo}}
+
+                        </div>
+
+                        <span id="span-jefe" class="ases-col-xs-12 ases-col-sm-12 ases-col-md-7 ases-col-lg-6 ases-col-lg-offset-1">
+                           Jefe actual: <b>{{jefe}}</b>
+                        </span>
+
                     </div>
 
                 </div>
