@@ -28,10 +28,11 @@
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 
-//require_once(__DIR__ . '/../core/module_loader.php');
+require_once(__DIR__ . '/../core/module_loader.php'); // Please don't remove
 require_once('../managers/instance_management/instance_lib.php');
+require_once('../managers/user_management/user_management_lib.php');
 require_once('../managers/lib/lib.php');
-//require_once('../managers/lib/student_lib.php');
+require_once('../managers/lib/student_lib.php');
 require_once('../managers/validate_profile_action.php');
 require_once('../managers/menu_options.php');
 require_once('../managers/monitor_assignments/monitor_assignments_lib.php');
@@ -42,7 +43,7 @@ include "../lib.php";
 include "../classes/output/monitor_profile_page.php";
 include "../classes/output/renderer.php";
 
-//module_loader('periods');
+module_loader('periods');
 
 global $PAGE;
 global $USER;
@@ -82,6 +83,22 @@ if ($rol == 'sistemas') {
     $data->user_logged = $user;
 }
 
+switch ($rol) {
+    
+case "sistemas":
+    $data->select = make_select_monitors(get_all_monitors($block_id));
+    break;
+case "practicante_ps":
+    $data->select = make_select_monitors( get_all_monitors_pract($block_id, $user->id) );
+    break;
+case "profesional_ps":
+    $data->select = make_select_monitors( get_all_monitors_prof($block_id, $user->id) );
+    break;
+case "monitor_ps":
+    //$data->select = make_select_monitors( get_monitor($user->id) );
+    $monitor_code = $user->username;
+}
+
 $cohorts_select = \cohort_lib\get_html_cohorts_select($block_id);
 $data->cohorts_select = $cohorts_select;
 
@@ -96,25 +113,44 @@ $coursenode->add_node($blocknode);
 if ($monitor_code != 0){
     // Recolección de la información básica del monitor.
     $monitor = search_user($monitor_code);
-    $data->select = make_select_monitors($block_id, $monitor);
     $monitor_info = get_monitor($monitor->id);
     $data->id_moodle = $monitor->id;
     $data->email = $monitor->email;
     $data->fullname = $monitor->username . " " . $monitor->firstname . " " . $monitor->lastname;
-    $data->phone1 = $monitor->phone1;
-    $data->phone2 = $monitor->phone2;
-    //$data->id_programa = $monitor->id_programa;
+    $data->phone1 = $monitor_info->telefono1;
+    $data->phone2 = $monitor_info->telefono2;
     $data->num_doc = $monitor_info->num_doc; 
-    $data->pdf_cuenta_banco = isset($monitor_info->pdf_cuenta_banco) ? $monitor_info->pdf_cuenta_banco : 'https://www.example.com';
+    $data->pdf_cuenta_banco = $monitor_info->pdf_cuenta_banco;
     $data->pdf_acuerdo_conf = $monitor_info->pdf_acuerdo_conf;
     $data->pdf_doc = $monitor_info->pdf_doc;
     $data->pdf_d10 = $monitor_info->pdf_d10;
+    $data->email_alter = $monitor_info->email_alternativo;
     $data->profile_image =  get_mon_HTML_profile_img($contextblock->id, $monitor->id );
     $data->select_periods = make_select_active_periods($monitor->id, $block_id);
+    $data->jefe = "No registra";
+
+    $estado = monitor_is_active($monitor->id);
+    if ($estado) {
+        $data->activo=true;
+        $jefe = user_management_get_boss($monitor->id, $block_id, core_periods_get_current_period()->id); 
+        if (isset($jefe->id)) {
+            $nombre = $jefe->firstname ." ". $jefe->lastname;
+            $data->jefe = $nombre; 
+        } 
+
+    } else {
+        $data->inactivo=true;
+    }
     
+    // Nombre del plan actual
+    $data->plan = "No registra programa académico";
+    if ($monitor_info->id_programa > 0) {
+        $program_obj = get_program($monitor_info->id_programa);
+        $data->plan = ($program_obj->nombre) . ' ' . ($program_obj->jornada);
+    } 
+
 } else {
     $monitor_code = -1;
-    $data->select = make_select_monitors($block_id);
 }
 
 $page_title = 'Pérfil del monitor';
@@ -129,6 +165,7 @@ $PAGE->requires->css('/blocks/ases/style/monitor_profile.css', true);
 $PAGE->requires->css('/blocks/ases/style/monitor_trackings_tab.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert2.css', true);
+$PAGE->requires->css('/blocks/ases/style/switch.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/monitor_profile', 'init');
 

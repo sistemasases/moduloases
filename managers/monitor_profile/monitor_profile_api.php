@@ -90,6 +90,7 @@ if ( isset($input->function) && isset($input->params) ){
                     return_with_code(-5);
                 }
             } else {
+                print_r($params);
                 return_with_code(-3);
             }
         }
