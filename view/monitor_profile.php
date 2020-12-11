@@ -94,6 +94,9 @@ case "practicante_ps":
 case "profesional_ps":
     $data->select = make_select_monitors( get_all_monitors_prof($block_id, $user->id) );
     break;
+case "monitor_ps":
+    //$data->select = make_select_monitors( get_monitor($user->id) );
+    $monitor_code = $user->username;
 }
 
 $cohorts_select = \cohort_lib\get_html_cohorts_select($block_id);
