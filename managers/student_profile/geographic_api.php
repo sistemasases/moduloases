@@ -30,10 +30,10 @@ date_default_timezone_set('America/Bogota');
 
 $input = json_decode(file_get_contents("php://input"));
 
-if(isset($input->func) && isset($input->params)) {
+if(isset($input->function) && isset($input->params)) {
 
     //Saves the student's geographic information
-    if ($input->func == 'save_geographic_info') {
+    if ($input->function == 'save_geographic_info') {
 
         /**
          * id_ases: String
