@@ -21,7 +21,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
             var cod_programa_activo = document.querySelector('#cod_programa_activo').dataset.info;
             var cod_facultad = cod_programa_activo[1];
             var latLng_student_campus = (cod_facultad === '6' || cod_facultad === '8')?LATLNG_CAMPUS_SANFER:LATLNG_CAMPUS_MELENDEZ;
-            var map_working = true;
+            var map_working = map_is_enable();
             var student_marker;
 
             /**
@@ -35,7 +35,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
              * Executes the method search_direction() by pressing the enter key.
              */
             $("#geographic_direccion").keypress(function(event) {
-                var keycode = (event.keyCode ? event.keyCode : event.which);
+                let keycode = (event.keyCode ? event.keyCode : event.which);
                 if(keycode == '13') {
                     search_direction();
                 }
@@ -49,32 +49,24 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
             });
 
             $("#select_neighborhood").select2({
-
                 language: {
-
                     noResults: function() {
-
                         return "No hay resultado";
                     },
                     searching: function() {
-
-                        return "Buscando..";
+                        return "Buscando...";
                     }
                 },
                 dropdownAutoWidth: true,
             });
 
             $("#geographic_ciudad").select2({
-
                 language: {
-
                     noResults: function() {
-
                         return "No hay resultado";
                     },
                     searching: function() {
-
-                        return "Buscando..";
+                        return "Buscando...";
                     }
                 },
                 dropdownAutoWidth: true,
@@ -279,12 +271,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
              */
             function edit_map(latitude, longitude){
 
-                var geocoder;
-
-                try {
-                    geocoder = new google.maps.Geocoder();
-                } catch(error) {
-                    console.log("Mapas fuera de servicio.");
+                if(!map_working) {
+                    console.log("Mapas fuera de servicio");
                     return student_marker;
                 }
 
@@ -318,6 +306,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 var infowindow = new google.maps.InfoWindow();
                 infowindow.setContent("Residencia Estudiante");
                 infowindow.open(map, marker);
+
+                var geocoder = new google.maps.Geocoder();
 
                 google.maps.event.addListener(map, 'click', function (event) {
                     geocoder.geocode({
@@ -432,6 +422,13 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                     error: function(msg) {
                         console.log(msg);
                     }
+                });
+            }
+
+            function map_is_enable() {
+                var geocoder = new google.maps.Geocoder();
+                geocoder.geocode( {'address': 'prueba'}, function(results, status) {
+                    return status == google.maps.GeocoderStatus.OK;
                 });
             }
         }
