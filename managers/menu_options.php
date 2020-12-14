@@ -415,7 +415,7 @@ function create_menu_options($userid, $blockid, $courseid)
             }
 
             if($function == 'monitorias_academicas') {
-                $url = new moodle_url("/blocks/ases/view/monitorias.php", array(
+                $url = new moodle_url("/blocks/ases/view/monitorias_academicas.php", array(
                     'courseid' => $courseid,
                     'instanceid' => $blockid
                 ));

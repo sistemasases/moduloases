@@ -18,14 +18,11 @@ define(['jquery',
     'block_ases/jqueryui',
     'block_ases/loading_indicator',
     'block_ases/sweetalert',
-    'extras'
+    'extras',
 ],
-    function ($, dataTables, buttons, html5, flash, print,  gmm, select2, jqueryui, loading_indicator, sweetalert,extras) {
+    function ($, dataTables, buttons, html5, flash, print,  gmm, select2, jqueryui, loading_indicator, sweetalert, extras) {
         return {
             init: function () {
-                // cargar estilos
-                let css_location = "../style/monitorias.css";
-                $('head').append('<link rel="stylesheet" href="' + css_location + '" type="text/css" />');
                 // adjuntar listeners
                 $(document).on('click', '#anadir_monitoria', iniciar_agregar_monitoria);
                 // localizacion
@@ -55,7 +52,7 @@ define(['jquery',
             $("#tableResult").DataTable(data);
         },
         continuar_setup_inicial : function(){
-            poner_listeners_tabla();
+            $(".dt-button.buttons-print.eliminar").click(eliminar_monitoria);
         }
         
     }
@@ -63,7 +60,7 @@ define(['jquery',
     function iniciar_agregar_monitoria(){
         // cargar mustache
             $.ajax({
-                url: "../templates/monitorias_anadir.mustache",
+                url: "../templates/monitorias_academicas_anadir.mustache",
                 data: null,
                 dataType: "text",
                 async: true,
@@ -74,7 +71,7 @@ define(['jquery',
                     mostrar_agregar_monitoria();
                 },
                 error: function(){
-                    console.log( "../templates/monitorias_anadir.mustache cannot be reached." );
+                    console.log( "../templates/monitorias_academicas_anadir.mustache cannot be reached." );
                 }
             });
     function mostrar_agregar_monitoria(){
@@ -85,7 +82,7 @@ define(['jquery',
         $("#fecha_hasta").datepicker({
             minDate: 0,
             showWeek: true,
-            dateFormat: "yy-mm-dd",
+            dateFormat: "dd/M/y"
         });
     
         $("#programar_monitorias_chckbx").change(() => {
@@ -270,8 +267,11 @@ define(['jquery',
                             swal(
                                 {title:"Monitoria registrada",
                                 text: "Se ha agregado correctamente la monitoria",
-                                icon: "success"});
-                        recargar_monitorias();
+                                icon: "success"},
+                                function (isConfirmed) {
+                                    location.reload()
+                                });
+                                
                         } else {
                             swal(
                                     'Error!',
@@ -294,36 +294,12 @@ define(['jquery',
     
 }
 
-function poner_listeners_tabla(){
-    $(".dt-button.buttons-print.eliminar").click(eliminar_monitoria);
-}
-
-function recargar_monitorias(){
-    $.ajax({
-        type: "POST",
-        data: JSON.stringify({
-            "function": 'cargar_monitorias',
-            "params": [],
-        }),
-        url: "../managers/asistencia_monitorias/asistencia_monitorias_api.php",
-        dataType: "json",
-        success: function(msg) {
-            $("#div_table").html('');
-            $("#div_table").fadeIn(500).append('<table id="tableResult" class="stripe row-border order-column" cellspacing="0" width="100%"><thead> </thead></table>');
-            $("#tableResult").DataTable(msg.data_response);
-            poner_listeners_tabla();
-        },
-        error: function(msg) {
-            console.log("Error consulta BD monitorias");
-        }
-    });
-}
 
     function eliminar_monitoria(e){
-        let materia_info = $(e.target).parent().parent().find("td").toArray().map(td => td.innerHTML)
+        let monitoria_info = $(e.target).parent().parent().find("td").toArray().map(td => td.innerHTML)
         swal({
             title: 'Eliminar monitoría',
-            text: "¿Deseas eliminar la monitoría de  "+materia_info[0]+" programada los "+materia_info[1]+" de "+ materia_info[2]+"?",
+            text: "¿Deseas eliminar la monitoría de  "+monitoria_info[0]+" programada los "+monitoria_info[1]+" de "+ monitoria_info[2]+"?",
             type: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Eliminar'
@@ -339,7 +315,7 @@ function recargar_monitorias(){
                     url: "../managers/asistencia_monitorias/asistencia_monitorias_api.php",
                     dataType: "json",
                     success: function(msg) {
-                        recargar_monitorias();
+                        location.reload();
                     },
                     error : function(msg) {
                         swal('Error!', msg, 'error')
@@ -349,6 +325,7 @@ function recargar_monitorias(){
             }
         });
     }
+
 
 });
 

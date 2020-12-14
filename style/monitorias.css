@@ -1,3 +1,8 @@
+.universo {
+    padding: 10px 200px 75px 200px;
+    margin: auto;
+}
+
 #anadir-formulario{
     padding: 15px 50px 15px 50px;
 }
@@ -61,4 +66,43 @@
     align-items: center;
     padding:0px 10px 20px 45px;
     width: 35%;
+}
+
+#datos-monitoria {
+    display : inline;
+}
+
+#datos-monitoria h2, 
+#datos-monitoria h3, 
+#datos-monitoria tr,
+#datos-monitoria td {
+    margin: 5px;
+}
+
+#datos-monitoria h2 {
+    line-height:30px;
+}
+
+#datos-monitoria h3 {
+    line-height:20px;
+}
+
+.flecha {
+    border: solid rgba(73, 73, 73, 0.514);
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    margin-left: 5px;
+}
+
+.abajo {
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}
+
+#desplegar-filtrar{
+    font-weight: bold;
+    color: #555;
 }

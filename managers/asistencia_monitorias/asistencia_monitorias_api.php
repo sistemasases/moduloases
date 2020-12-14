@@ -100,8 +100,34 @@ if(isset($input->function) && isset($input->params)) {
         } else {
             return_with_code(-6);
         }
+    } else if($function == 'get_tabla_sesiones') {
+        $params = $input->params;
+        if(count($params) == 3) {
+            $id = $params[0];
+            $desde = $params[1];
+            $hasta = $params[2];
+
+            $result = get_tabla_sesiones($id, $desde, $hasta);
+
+                if($result){
+                    echo json_encode(
+                        array(
+                            "status_code" => 0,
+                            "message" => "Éxito",
+                            "data_response" => $result
+                        )
+                    );
+                } else {
+                    return_with_code(-5);
+                }
+        } else {
+            return_with_code(-6);
+        }
     } else if($function == 'cargar_monitorias'){
-        $result = get_monitorias();
+        $params = $input->params;
+        if(count($params) == 1) {
+            echo json_encode(get_reporte_by_id($params[0]));
+        }
         if($result){
             echo json_encode(
                 array(
@@ -116,6 +142,25 @@ if(isset($input->function) && isset($input->params)) {
             if(is_int($id)) {
 
                 $result = eliminar_monitoria($id);
+
+                if($result){
+                    echo json_encode(
+                        array(
+                            "status_code" => 0,
+                            "message" => "Éxito",
+                        )
+                    );
+                } else {
+                    return_with_code(-5);
+                }
+            } else {
+                return_with_code(-2);
+            }
+    } else if($function == 'eliminar_sesion') {
+        $id = intval($input->params);
+            if(is_int($id)) {
+
+                $result = eliminar_sesion($id);
 
                 if($result){
                     echo json_encode(
