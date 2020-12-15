@@ -148,6 +148,13 @@ function get_all_monitors_prof(int $instance_id, int $prof_id)
 }
 
 /**
+ * Retorna los practicantes que ha tenido asignado un profesional, durante
+ * cualquier semestre.
+ *
+ * @param int $instance_id : ID de la instancia.
+ * @param int $prof_id : ID Moodle del profesional.
+ *
+ * @return array 
  *
  */
 function get_all_practs_of_prof(int $instance_id, int $prof_id)
@@ -164,6 +171,13 @@ function get_all_practs_of_prof(int $instance_id, int $prof_id)
    return $DB->get_records_sql( $query ); 
 }
 
+/**
+ * Determina si un monitor esta activo:
+ * - Tiene estado=1 durante el semestre actual.
+ *
+ * @param int $monitor_moodle_id : ID moodle del monitor
+ * @return true sí el monitor está activo | false sino.
+ */
 function monitor_is_active(int $monitor_moodle_id)
 {
     global $DB;
@@ -255,8 +269,6 @@ function monitor_load_bosses_tab(int $monitor_moodle_id, int $instance_id) {
             $profesional_name="";
         }
         
-        
-
         //$period->jefe = $profesional_name;
         $table_html .= 
             "<tr>
