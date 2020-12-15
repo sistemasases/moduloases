@@ -291,11 +291,16 @@ class renderer extends plugin_renderer_base {
 
     public function render_monitorias_page($page){
         $data = $page->export_for_template($this);
-        return parent::render_from_template('block_ases/monitorias', $data);
+        return parent::render_from_template('block_ases/monitorias_academicas', $data);
     }
 
     public function render_monitor_profile_page($page){
         $data = $page->export_for_template($this);
         return parent::render_from_template('block_ases/monitor_profile', $data);
+    }
+
+    public function render_monitoria_page($page){
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('block_ases/monitorias_academicas_detalle', $data);
     }
 }

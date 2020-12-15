@@ -217,6 +217,16 @@ function create_menu_options($userid, $blockid, $courseid)
 
             }
 
+            if ($function == 'monitor_profile') {
+                $url = new moodle_url("/blocks/ases/view/monitor_profile.php", array(
+                    'courseid' => $courseid,
+                    'instanceid' => $blockid,
+                ));
+
+                $menu_options = '<a id="menu_monitor_profile" href="' .$url .'"> Ficha de monitores </a>';
+                $soc_ed_options['Ficha de monitores'] = $menu_options;
+            }
+
             if ($function == 'upload_files_form') {
                 $url = new moodle_url("/blocks/ases/view/upload_files_form.php", array(
                     'courseid' => $courseid,
@@ -415,7 +425,7 @@ function create_menu_options($userid, $blockid, $courseid)
             }
 
             if($function == 'monitorias_academicas') {
-                $url = new moodle_url("/blocks/ases/view/monitorias.php", array(
+                $url = new moodle_url("/blocks/ases/view/monitorias_academicas.php", array(
                     'courseid' => $courseid,
                     'instanceid' => $blockid
                 ));
