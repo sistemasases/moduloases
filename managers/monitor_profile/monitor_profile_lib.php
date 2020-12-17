@@ -69,7 +69,6 @@ function monitor_is_monitor_ps($code)
     }
 }
 
-
 /**
  * Returns all monitors belonging to the same instance and under the same boss.
  * 
@@ -173,12 +172,11 @@ function get_all_practs_of_prof(int $instance_id, int $prof_id)
 
 /**
  * Determina si un monitor esta activo:
- * - Tiene estado=1 durante el semestre actual.
  *
  * @param int $monitor_moodle_id : ID moodle del monitor
  * @return true sí el monitor está activo | false sino.
  */
-function monitor_is_active(int $monitor_moodle_id)
+function monitor_is_active(int $monitor_moodle_id, int $instance_id)
 {
     global $DB;
     global $CURRENT_PERIOD;
@@ -191,9 +189,10 @@ function monitor_is_active(int $monitor_moodle_id)
         "SELECT *
         FROM {talentospilos_user_rol}
         WHERE id_usuario=$monitor_moodle_id
-        AND estado=1
-        AND id_semestre=$CURRENT_PERIOD
-        AND id_rol=4";
+        AND id_instancia=$instance_id
+        AND id_jefe IS NOT NULL
+        AND id_rol=4
+        AND id_semestre=$CURRENT_PERIOD";
     
     $result = $DB->get_record_sql( $query );
 
@@ -406,10 +405,10 @@ function get_active_periods(int $monitor_id, int $instance_id)
     }
 
     $sql = "SELECT DISTINCT id_semestre 
-            FROM {talentospilos_user_rol} 
-            WHERE id_usuario = $monitor_id 
-            AND id_instancia = $instance_id
-            AND id_rol=4";
+            FROM {talentospilos_monitor_estud} 
+            WHERE id_monitor = $monitor_id 
+            AND id_instancia = $instance_id";
+            
     
     $result = $DB->get_records_sql($sql); 
     
