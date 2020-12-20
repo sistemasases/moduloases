@@ -98,7 +98,6 @@ case "monitor_ps":
     //$data->select = make_select_monitors( get_monitor($user->id) );
     $monitor_code = $user->username;
 }
-
 $cohorts_select = \cohort_lib\get_html_cohorts_select($block_id);
 $data->cohorts_select = $cohorts_select;
 
@@ -129,10 +128,12 @@ if ($monitor_code != 0){
     $data->select_periods = make_select_active_periods($monitor->id, $block_id);
     $data->jefe = "No registra";
 
-    $estado = monitor_is_active($monitor->id);
+    $estado = monitor_is_active($monitor->id, $block_id);
     if ($estado) {
         $data->activo=true;
-        $jefe = user_management_get_boss($monitor->id, $block_id, core_periods_get_current_period()->id); 
+        $mon_pract = user_management_get_boss($monitor->id, $block_id, core_periods_get_current_period()->id); 
+	$jefe = user_management_get_boss($mon_pract->id, $block_id, core_periods_get_current_period()->id); 
+
         if (isset($jefe->id)) {
             $nombre = $jefe->firstname ." ". $jefe->lastname;
             $data->jefe = $nombre; 
