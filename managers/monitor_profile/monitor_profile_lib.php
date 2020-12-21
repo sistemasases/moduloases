@@ -69,7 +69,6 @@ function monitor_is_monitor_ps($code)
     }
 }
 
-
 /**
  * Returns all monitors belonging to the same instance and under the same boss.
  * 
@@ -148,6 +147,13 @@ function get_all_monitors_prof(int $instance_id, int $prof_id)
 }
 
 /**
+ * Retorna los practicantes que ha tenido asignado un profesional, durante
+ * cualquier semestre.
+ *
+ * @param int $instance_id : ID de la instancia.
+ * @param int $prof_id : ID Moodle del profesional.
+ *
+ * @return array 
  *
  */
 function get_all_practs_of_prof(int $instance_id, int $prof_id)
@@ -164,7 +170,13 @@ function get_all_practs_of_prof(int $instance_id, int $prof_id)
    return $DB->get_records_sql( $query ); 
 }
 
-function monitor_is_active(int $monitor_moodle_id)
+/**
+ * Determina si un monitor esta activo:
+ *
+ * @param int $monitor_moodle_id : ID moodle del monitor
+ * @return true sí el monitor está activo | false sino.
+ */
+function monitor_is_active(int $monitor_moodle_id, int $instance_id)
 {
     global $DB;
     global $CURRENT_PERIOD;
@@ -177,9 +189,10 @@ function monitor_is_active(int $monitor_moodle_id)
         "SELECT *
         FROM {talentospilos_user_rol}
         WHERE id_usuario=$monitor_moodle_id
-        AND estado=1
-        AND id_semestre=$CURRENT_PERIOD
-        AND id_rol=4";
+        AND id_instancia=$instance_id
+        AND id_jefe IS NOT NULL
+        AND id_rol=4
+        AND id_semestre=$CURRENT_PERIOD";
     
     $result = $DB->get_record_sql( $query );
 
@@ -255,8 +268,6 @@ function monitor_load_bosses_tab(int $monitor_moodle_id, int $instance_id) {
             $profesional_name="";
         }
         
-        
-
         //$period->jefe = $profesional_name;
         $table_html .= 
             "<tr>
@@ -394,10 +405,10 @@ function get_active_periods(int $monitor_id, int $instance_id)
     }
 
     $sql = "SELECT DISTINCT id_semestre 
-            FROM {talentospilos_user_rol} 
-            WHERE id_usuario = $monitor_id 
-            AND id_instancia = $instance_id
-            AND id_rol=4";
+            FROM {talentospilos_monitor_estud} 
+            WHERE id_monitor = $monitor_id 
+            AND id_instancia = $instance_id";
+            
     
     $result = $DB->get_records_sql($sql); 
     

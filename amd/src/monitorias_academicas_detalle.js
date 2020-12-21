@@ -5,7 +5,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 /**
- * @module block_ases/asistencia_monitorias_detalle
+ * @module block_ases/monitorias_academicas_detalle
  */
 define(['jquery',
     'block_ases/jquery.dataTables',
@@ -54,6 +54,7 @@ define(['jquery',
                     showWeek: true,
                     dateFormat: "dd/M/y",
                 });
+                $("#fecha_desde").datepicker("setDate", new Date());
                 // filtrar
                 $("#desplegar-filtrar").click(() => {
                     $("#flecha").toggleClass("abajo");

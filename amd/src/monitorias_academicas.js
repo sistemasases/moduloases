@@ -5,7 +5,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 /**
- * @module block_ases/asistencia_monitorias
+ * @module block_ases/monitorias_academicas
  */
 define(['jquery',
     'block_ases/jquery.dataTables',
