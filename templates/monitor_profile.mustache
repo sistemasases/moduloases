@@ -42,21 +42,24 @@
                     <hr class="hr-general-tab" />
 
                     <div class="ases-row">
-                        <span class="ases-col-xs-1 ases-col-sm-1 ases-col-md-1 ases-col-lg-2">Estado:</span>
-                        <div class="ases-col-xs-offset-2 ases-col-sm-3 ases-col-md-2 ases-col-lg-1">
+
+
+                        <div class="ases-col-xs-offset-2 ases-col-sm-3 ases-col-md-2 ases-col-lg-2">
                             
                             {{#activo}}
-                            <label class="switch">ACTIVO
-                                <input type="checkbox" checked="checked" disabled>
-                                <div class="ases-row slider round"></div>
-                            </label>
+							<div class="estado-div">
+								<span class="activo"></span> 
+                            	<b>ACTIVO</b>
+							</div>
+
                             {{/activo}}
 
                             {{#inactivo}}
-                            <label class="switch" >INÁCTIVO
-                                <input type="checkbox" name="input-estado" disabled>
-                                <div class="ases-row slider round"></div>
-                            </label>
+							<div class="estado-div">
+								<span class="inactivo"></span>
+								<b>INÁCTIVO</b>
+							</div>
+
                             {{/inactivo}}
 
                         </div>
