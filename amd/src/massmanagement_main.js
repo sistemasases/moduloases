@@ -87,6 +87,10 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($,
                     case 'status':
                         controler = 'mrm_status.php'; //
                         break;
+					case 'monitor_data':
+						controler = 'mrm_monitor_data.php';
+						console.log('hola');
+						break;
                     default:
                         return 0;
                 }
@@ -120,7 +124,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($,
                         $('#informacion').append(msj.urlzip);
                     },
                     error: function (msj) {
-                        alert("error ajax");
+						swal(
+							'Error',
+							'Error, por favor inténtelo nuevamente',
+							'error'
+						);
                         $('#response').html("");
                         var val = $('#selector').val();
                         addHelpMessage(val);

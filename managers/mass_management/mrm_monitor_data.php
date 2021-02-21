@@ -32,9 +32,10 @@
 // - ...
 // Para todos los campos posibles revisar las columnas de la tabla monitores. 
 
-require_once(dirname(__FILE__). '/../../../config.php');
-require_once('MyException.php');
-require_once('mass_management/massmanagement_lib.php');
+//require_once(dirname(__FILE__). '/../../../config.php');
+require_once('../MyException.php');
+require_once(dirname(__FILE__). '/../../../../config.php');
+require_once('massmanagement_lib.php');
 
 
 if ( isset($_FILES['file']) || isset($_POST['idinstancia']) ) {
@@ -43,11 +44,11 @@ if ( isset($_FILES['file']) || isset($_POST['idinstancia']) ) {
 
 		$file = $_FILES['file'];
 		$extension = pathinfo( $file['name'], PATHINFO_EXTENSION );
-		date_default_timezone("America/Bogota");
+		date_default_timezone_set("America/Bogota");
 		$filename = $file['name'];
 
-		$rootFolder = "../view/archivos_subidos/mrm/monitor_data/files/";
-		$zipFolder = "../view/archivos_subidos/mrm/monitor_data/comprimidos/";
+		$rootFolder = "../../view/archivos_subidos/mrm/monitor_data/files/";
+		$zipFolder = "../../view/archivos_subidos/mrm/monitor_data/comprimidos/";
 
 		// Limpiar carpetas antes de escribir.
 		deleteFilesFromFolder($rootFolder);
@@ -82,7 +83,8 @@ if ( isset($_FILES['file']) || isset($_POST['idinstancia']) ) {
 		$title_pointer = fgetcsv($handle, 0, ",");
 		array_push($detail_errors, $title_pointer);
 		array_push($success_rows, $title_pointer);
-
+		
+		validateHeaders();
 
 	
 	} catch(MyException $ex) {
@@ -92,14 +94,26 @@ if ( isset($_FILES['file']) || isset($_POST['idinstancia']) ) {
 	}
 }
 
-function validateHeaders($headerPos) {
-	$requiredHeaders = [
+function validateHeaders() {
+	$required_headers = [
 		"username",
 		"programa",
 		"num_doc",
 		"pdf_cuenta_banco",
 		"pdf_doc",
 		"pdf_d10",
-		"email_alternativo"
-	]
+		"pdf_acuerdo_conf",
+		"email_alternativo",
+		"telefono1",
+		"telefono2"
+	];
+
+	$first_line = fgets($handle);
+	$found_headers = str_getcsv(trim($first_line), ',', '""');
+
+	if ($found_headers !== $required_headers) {
+		Throw New MyException (
+			'Error al cargar el archivo. Los encabezados no son los correctos.'
+		);
+	}
 }
