@@ -7,7 +7,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $dbman = $DB->get_manager();
     $result = true;
 
-    if ($oldversion < 2020112316010) {
+    if ($oldversion < 2021022019010) {
 
       
     //     // ************************************************************************************************************
@@ -4203,8 +4203,19 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->add_field($table, $field);
         }    
 
+		/*
+		 * Se añade campo faltante a la tabla de monitores (pdf_acuerdo_conf)
+		 * VERSION: 2021022018500
+		 */
+		
+        if (!$dbman->field_exists($table, $field_pdf_acuerdo)) {
+            $dbman->add_field($table, $field_pdf_acuerdo);
+        }
 
-        upgrade_block_savepoint(true, 2020112316010, 'ases');
+
+
+        upgrade_block_savepoint(true, 2021022019010, 'ases');
+
 
        
         return $result;
