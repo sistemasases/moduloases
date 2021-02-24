@@ -200,17 +200,13 @@ if ($student_code != 0) {
     
     $num_doc = $ases_student->num_doc;
     $student_codes = get_student_codes($num_doc);
-    $holi = json_encode($student_codes);
-    file_put_contents("../test.txt","consulta bd: ".$holi."//",0);
     foreach($academic_programs as $program) {
         $cod_programa = $program->cod_univalle;
         foreach($student_codes as $codes){
             $moodle_username = $codes->code;
-            file_put_contents("../test.txt","codigo: ".$moodle_username,FILE_APPEND);
             $student_program = substr($moodle_username,-4);
             if($cod_programa == $student_program){
                 $cod_programa = $moodle_username;
-                file_put_contents("../test.txt","codigo dentro del if: ".$cod_programa."//",FILE_APPEND);
                 break;
             }      
         }
