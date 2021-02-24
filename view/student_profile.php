@@ -200,12 +200,11 @@ if ($student_code != 0) {
     
     $num_doc = $ases_student->num_doc;
     $student_codes = get_student_codes($num_doc);
-
     foreach($academic_programs as $program) {
         $cod_programa = $program->cod_univalle;
         foreach($student_codes as $codes){
             $moodle_username = $codes->code;
-            $student_program = substr($moodle_username,8,12);
+            $student_program = substr($moodle_username,-4);
             if($cod_programa == $student_program){
                 $cod_programa = $moodle_username;
                 break;
