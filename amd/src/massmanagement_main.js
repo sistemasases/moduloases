@@ -89,7 +89,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($,
                         break;
 					case 'monitor_data':
 						controler = 'mrm_monitor_data.php';
-						console.log('hola');
 						break;
                     default:
                         return 0;
@@ -126,9 +125,10 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($,
                     error: function (msj) {
 						swal(
 							'Error',
-							'Error, por favor inténtelo nuevamente',
+							'Error con el servidor, por favor inténtelo nuevamente',
 							'error'
 						);
+						console.error(msj);
                         $('#response').html("");
                         var val = $('#selector').val();
                         addHelpMessage(val);

@@ -33,9 +33,11 @@
 // Para todos los campos posibles revisar las columnas de la tabla monitores. 
 
 //require_once(dirname(__FILE__). '/../../../config.php');
-require_once('../MyException.php');
+
 require_once(dirname(__FILE__). '/../../../../config.php');
 require_once('massmanagement_lib.php');
+require_once('../MyException.php');
+require_once('../query.php');
 
 
 if ( isset($_FILES['file']) || isset($_POST['idinstancia']) ) {
@@ -49,6 +51,15 @@ if ( isset($_FILES['file']) || isset($_POST['idinstancia']) ) {
 
 		$rootFolder = "../../view/archivos_subidos/mrm/monitor_data/files/";
 		$zipFolder = "../../view/archivos_subidos/mrm/monitor_data/comprimidos/";
+		
+
+		if (!file_exists($rootFolder)) {
+			mkdir($rootFolder, 0777, true);
+		}
+
+		if (!file_exists($zipFolder)) {
+			mkdir($zipFolder, 0777, true);
+		}
 
 		// Limpiar carpetas antes de escribir.
 		deleteFilesFromFolder($rootFolder);
@@ -63,9 +74,10 @@ if ( isset($_FILES['file']) || isset($_POST['idinstancia']) ) {
 		}
 
         ini_set('auto_detect_line_endings', true);
+		$handle = fopen($rootFolder.'Original_'.$filename, 'r');
 
-		if (! ($handle = fopen($rootFolder.'Original_'.$nombre, 'r')) ) {
-			Throw New MyException("Error al cargar el archivo ".$archivo['name'].". Es posible que el archivo se encuentre dañado");
+		if (! $handle ) {
+			Throw New MyException("Error al cargar el archivo ".$file['name'].". Es posible que el archivo se encuentre dañado");
 		} 
 
 
@@ -84,17 +96,44 @@ if ( isset($_FILES['file']) || isset($_POST['idinstancia']) ) {
 		array_push($detail_errors, $title_pointer);
 		array_push($success_rows, $title_pointer);
 		
-		validateHeaders();
+		validateHeaders($title_pointer);
+		$mappedFields = mapFields($title_pointer);
 
+		// Iterar linea a linea sobre el .csv
+		while ($data = fgetcsv($handle, 0, ",")) {
+			
+			$isValidRow = true;
+			$seguimientoid = 0;
+
+			// Validación username
+			validateUsername($data[0]);
+
+			print_r($data); die();
+		
+		}
 	
 	} catch(MyException $ex) {
 		$msj = new stdClass();
 		$msj->error = $ex->getMessage().pg_last_error();
 		echo json_encode($msj);
+		fclose($handle);
 	}
 }
 
-function validateHeaders() {
+function validateUsername($username) {
+	
+	if (isset($username)) {
+		$user = get_user_by_username($username);
+		if (is_null($user)) {
+			$isValidRow = false;
+			array_push($detail_errors, $line_count, $lc_wrong_file, 1, 'username', 'No existe usuario asociado al username ' . $username);
+		}
+	} else {
+		Throw New MyException('El campo username es obligatorio.');
+	}
+}
+
+function validateHeaders($title_pointer) {
 	$required_headers = [
 		"username",
 		"programa",
@@ -108,12 +147,18 @@ function validateHeaders() {
 		"telefono2"
 	];
 
-	$first_line = fgets($handle);
-	$found_headers = str_getcsv(trim($first_line), ',', '""');
-
-	if ($found_headers !== $required_headers) {
+	if ($title_pointer !== $required_headers) {
 		Throw New MyException (
 			'Error al cargar el archivo. Los encabezados no son los correctos.'
 		);
 	}
+}
+
+function mapFields($title_pointer) {
+	$map = [];
+	foreach ($title_pointer as $title) {
+		$map[$title] = null;	
+	}
+
+	return $map;
 }
