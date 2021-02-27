@@ -35,7 +35,7 @@
 //require_once(dirname(__FILE__). '/../../../config.php');
 
 require_once(dirname(__FILE__). '/../../../../config.php');
-require_once('massmanagement_lib.php');
+//require_once('massmanagement_lib.php');
 require_once('../MyException.php');
 require_once('../query.php');
 
@@ -106,11 +106,92 @@ if ( isset($_FILES['file']) || isset($_POST['idinstancia']) ) {
 			$seguimientoid = 0;
 
 			// Validación username
-			validateUsername($data[0]);
+            if (!validateUsername($data[0])) {
+                $isValidRow = false;
+            }
+            // Validación programa
+            $program = validateProgram($data[1]);
+            if (is_null($program)) {
+                $isValidRow = false;
+            }
+            // validación documento de identidad  
+            $num_doc = $data[2];
+            if (is_null($num_doc)) {
+                $isValidRow = false;
+            }
 
-			print_r($data); die();
-		
+	        if (!$isValidRow) {
+                $lc_wrong_file++;
+                $line_count++;
+                array_push($wrong_rows, $data);
+                continue;
+            }	
 		}
+        
+        if (count($wrong_rows) >= 1) {
+            
+            $filewrongname = $rootFolder.'RegistrosErroneos_'.$nombre;
+            
+            $wrongfile = fopen($filewrongname, 'w');                              
+            fprintf($wrongfile, chr(0xEF).chr(0xBB).chr(0xBF)); // feed utf-8 unicode format on
+            foreach ($wrong_rows as $row) {
+                fputcsv($wrongfile, $row);              
+            }
+            fclose($wrongfile);
+            
+            //----
+            $detailsFilename =  $rootFolder.'DetallesErrores_'.$nombre;
+            
+            $detailsFileHandler = fopen($detailsFilename, 'w');
+            fprintf($detailsFileHandler, chr(0xEF).chr(0xBB).chr(0xBF)); // feed utf-8 unicode format on
+            foreach ($detail_errors as $row) {
+                fputcsv($detailsFileHandler, $row);              
+            }
+            fclose($detailsFileHandler);
+        }
+
+        
+        if(count($success_rows) > 1){ //First row are titles
+            $arrayIdsFilename =  $rootFolder.'RegistrosExitosos_'.$nombre;
+            
+            $arrayIdsFileHandler = fopen($arrayIdsFilename, 'w');
+            fprintf($arrayIdsFileHandler, chr(0xEF).chr(0xBB).chr(0xBF)); // feed utf-8 unicode format on
+            foreach ($success_rows as $row) {
+                fputcsv($arrayIdsFileHandler, $row);              
+            }
+            fclose($arrayIdsFileHandler);
+            
+            $response = new stdClass();
+            
+            if(count($wrong_rows) > 1){
+                $response->warning = 'Archivo cargado con inconsistencias<br> Para mayor informacion descargar la carpeta con los detalles de inconsitencias.'; 
+            }else{
+                $response->success = 'Archivo cargado satisfactoriamente';
+            }
+            
+            $zipname = $zipFolfer."detalle.zip";
+            createZip($rootFolder, $zipname);
+
+            $zipname = explode("..", $zipname)[2];            
+            
+            $response->urlzip = "<a target='_blank' href='..$zipname'>Descargar detalles</a>";
+            
+            echo json_encode($response);
+            
+        }else{
+            $response = new stdClass();
+            $response->error = "No se cargo el archivo. Para mayor informacion descargar la carpeta con los detalles de inconsitencias.";
+            
+            $zipname = $zipFolfer."detalle.zip";
+            createZip($rootFolder, $zipname);
+            
+            $zipname = explode("..", $zipname)[2];
+
+            $response->urlzip = "<a target='_blank': href='..$zipname'>Descargar detalles</a>";
+            
+            echo json_encode($response);
+        }
+
 	
 	} catch(MyException $ex) {
 		$msj = new stdClass();
@@ -119,18 +200,35 @@ if ( isset($_FILES['file']) || isset($_POST['idinstancia']) ) {
 		fclose($handle);
 	}
 }
-
+/**
+ * Makes sure username field is filled with valid data.
+ */
 function validateUsername($username) {
 	
 	if (isset($username)) {
 		$user = get_user_by_username($username);
 		if (is_null($user)) {
-			$isValidRow = false;
 			array_push($detail_errors, $line_count, $lc_wrong_file, 1, 'username', 'No existe usuario asociado al username ' . $username);
+            return false;
 		}
 	} else {
 		Throw New MyException('El campo username es obligatorio.');
 	}
+}
+
+function validateProgram($program_code) {
+
+    // If there's another function that does this, please use it.
+    // -- -- --
+    global $DB;
+    try {
+        $sql = "SELECT id FROM {talentospilos_programa} WHERE cod_univale=$program_code";
+        $result = $DB->get_record_sql($sql);
+    } catch (Exception ex) {
+       Throw New MyException($ex->getMessage()); 
+    }
+
+    return $result->cod_univalle;
 }
 
 function validateHeaders($title_pointer) {

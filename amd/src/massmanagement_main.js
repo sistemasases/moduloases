@@ -128,7 +128,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($,
 							'Error con el servidor, por favor inténtelo nuevamente',
 							'error'
 						);
-						console.error(msj);
+						console.log(msj);
                         $('#response').html("");
                         var val = $('#selector').val();
                         addHelpMessage(val);
