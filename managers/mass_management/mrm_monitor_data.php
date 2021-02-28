@@ -38,6 +38,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
 //require_once('massmanagement_lib.php');
 require_once('../MyException.php');
 require_once('../query.php');
+require_once('../monitor_profile/monitor_profile_lib.php');
 
 
 if ( isset($_FILES['file']) || isset($_POST['idinstancia']) ) {
@@ -97,16 +98,18 @@ if ( isset($_FILES['file']) || isset($_POST['idinstancia']) ) {
 		array_push($success_rows, $title_pointer);
 		
 		validateHeaders($title_pointer);
-		$mappedFields = mapFields($title_pointer);
+		//$mappedFields = mapFields($title_pointer);
 
 		// Iterar linea a linea sobre el .csv
+        $dataobjects = [];
 		while ($data = fgetcsv($handle, 0, ",")) {
 			
 			$isValidRow = true;
 			$seguimientoid = 0;
 
 			// Validación username
-            if (!validateUsername($data[0])) {
+            $id_user = validateUsername($data[0]);
+            if (!$id_user) {
                 $isValidRow = false;
             }
             // Validación programa
@@ -125,12 +128,32 @@ if ( isset($_FILES['file']) || isset($_POST['idinstancia']) ) {
                 $line_count++;
                 array_push($wrong_rows, $data);
                 continue;
+            } else {
+                $new_monitor = mapFields($title_pointer, $data);
+                unset($new_monitor['programa']);
+                unset($new_monitor['username']);
+
+                $new_monitor['id_programa'] = $program;
+                $new_monitor['id_moodle_user'] = $id_user;
+                
+                // prepare array for in-bulk db update
+                array_push($dataobjects, (object)$new_monitor);
+
+                $result = monitor_is_active($new_monitor['id_moodle_user']);
+                
+                if ($result) {
+                    array_push($success_rows, $data);
+                } else {
+                    array_push($wrong_rows, $data);
+                    $lc_wrong_file++;
+                } 
+                $line_count++;
             }	
 		}
         
-        if (count($wrong_rows) >= 1) {
+        if (count($wrong_rows) > 1) {
             
-            $filewrongname = $rootFolder.'RegistrosErroneos_'.$nombre;
+            $filewrongname = $rootFolder.'RegistrosErroneos_'.$filename;
             
             $wrongfile = fopen($filewrongname, 'w');                              
             fprintf($wrongfile, chr(0xEF).chr(0xBB).chr(0xBF)); // feed utf-8 unicode format on
@@ -140,7 +163,7 @@ if ( isset($_FILES['file']) || isset($_POST['idinstancia']) ) {
             fclose($wrongfile);
             
             //----
-            $detailsFilename =  $rootFolder.'DetallesErrores_'.$nombre;
+            $detailsFilename =  $rootFolder.'DetallesErrores_'.$filename;
             
             $detailsFileHandler = fopen($detailsFilename, 'w');
             fprintf($detailsFileHandler, chr(0xEF).chr(0xBB).chr(0xBF)); // feed utf-8 unicode format on
@@ -152,7 +175,10 @@ if ( isset($_FILES['file']) || isset($_POST['idinstancia']) ) {
 
         
         if(count($success_rows) > 1){ //First row are titles
-            $arrayIdsFilename =  $rootFolder.'RegistrosExitosos_'.$nombre;
+            // Do bulk update
+            create_monitor_records($dataobjects); 
+
+            $arrayIdsFilename =  $rootFolder.'RegistrosExitosos_'.$filename;
             
             $arrayIdsFileHandler = fopen($arrayIdsFilename, 'w');
             fprintf($arrayIdsFileHandler, chr(0xEF).chr(0xBB).chr(0xBF)); // feed utf-8 unicode format on
@@ -169,7 +195,7 @@ if ( isset($_FILES['file']) || isset($_POST['idinstancia']) ) {
                 $response->success = 'Archivo cargado satisfactoriamente';
             }
             
-            $zipname = $zipFolfer."detalle.zip";
+            $zipname = $zipFolder."detalle.zip";
             createZip($rootFolder, $zipname);
 
             $zipname = explode("..", $zipname)[2];            
@@ -182,7 +208,7 @@ if ( isset($_FILES['file']) || isset($_POST['idinstancia']) ) {
             $response = new stdClass();
             $response->error = "No se cargo el archivo. Para mayor informacion descargar la carpeta con los detalles de inconsitencias.";
             
-            $zipname = $zipFolfer."detalle.zip";
+            $zipname = $zipFolder."detalle.zip";
             createZip($rootFolder, $zipname);
             
             $zipname = explode("..", $zipname)[2];
@@ -210,25 +236,35 @@ function validateUsername($username) {
 		if (is_null($user)) {
 			array_push($detail_errors, $line_count, $lc_wrong_file, 1, 'username', 'No existe usuario asociado al username ' . $username);
             return false;
-		}
+        } else {
+            return $user->id;
+        }
 	} else {
 		Throw New MyException('El campo username es obligatorio.');
 	}
 }
 
-function validateProgram($program_code) {
+function validateProgram($program_code, $id_sede = null) {
+
+    if (is_null($id_sede)) {
+        $id_sede = 1;
+    }
 
     // If there's another function that does this, please use it.
     // -- -- --
     global $DB;
     try {
-        $sql = "SELECT id FROM {talentospilos_programa} WHERE cod_univale=$program_code";
+        $sql =
+            "SELECT id 
+            FROM {talentospilos_programa}
+            WHERE id_sede=$id_sede  
+            AND cod_univalle=$program_code";
         $result = $DB->get_record_sql($sql);
-    } catch (Exception ex) {
+    } catch (Exception $ex) {
        Throw New MyException($ex->getMessage()); 
     }
 
-    return $result->cod_univalle;
+    return $result->id;
 }
 
 function validateHeaders($title_pointer) {
@@ -252,10 +288,12 @@ function validateHeaders($title_pointer) {
 	}
 }
 
-function mapFields($title_pointer) {
+function mapFields($title_pointer, $data) {
 	$map = [];
+    $i = 0;
 	foreach ($title_pointer as $title) {
-		$map[$title] = null;	
+		$map[$title] = $data[$i];	
+        $i++;
 	}
 
 	return $map;
