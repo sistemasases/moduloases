@@ -286,6 +286,7 @@
         margin-top: 6px;
         position: relative;
         cursor: pointer;
+        display: none;
     }
 
     #span-icon-save-profile:hover{
@@ -302,6 +303,8 @@
         margin-top: 6px;
         margin-left: 3px;
         margin-right: 0px;
+        display: none;
+
     }
 
     #span-icon-cancel-edit:hover{

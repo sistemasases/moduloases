@@ -31,11 +31,23 @@
         padding-left: 1.5em;
     }
 
-    .slider.round {
-        border: 1px solid gray;
-        cursor: default;
-    }
-    
+
+	.activo, .inactivo {
+		background-image: url('./images/ui-icons_777620_256x240.png');
+		background-repeat: no-repeat;
+		display: inline-block;
+		height: 15px;
+		width: 15px;
+	}
+
+	.activo {
+		background-position: -209px -192px;
+	}
+
+	.inactivo {
+		background-position: -33px -193px;
+	}
+
     .select2-container .select2-selection--single {
         height: 3em;
         border-radius: 0 0 0px 0px;

@@ -1962,6 +1962,27 @@ function get_status_program_for_profile_aditional($id_ases_user){
     return $array_result;
 }
 
+/**
+ * Get the student codes
+ *
+ * @see get_student_codes()
+ * @param $document
+ * @return object array with student codes.
+ */
+function get_student_codes($document){
+
+    global $DB;
+
+    $sql_query = "SELECT username AS code
+                  FROM {user} AS U
+                  INNER JOIN {talentospilos_user_extended} AS UE on U.id = UE.id_moodle_user
+                  INNER JOIN {talentospilos_usuario} AS usuario on UE.id_ases_user = usuario.id
+                  WHERE usuario.num_doc = '$document'";
+    
+    $student_codes = $DB->get_records_sql($sql_query);
+
+    return $student_codes;
+ }
 
 /**
  * Retorna el conjunto de posibles tipos de documento de identidad para un estudiante en particular
