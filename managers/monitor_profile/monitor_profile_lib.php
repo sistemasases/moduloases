@@ -176,7 +176,7 @@ function get_all_practs_of_prof(int $instance_id, int $prof_id)
  * @param int $monitor_moodle_id : ID moodle del monitor
  * @return true sí el monitor está activo | false sino.
  */
-function monitor_is_active(int $monitor_moodle_id, int $instance_id)
+function monitor_is_active(int $monitor_moodle_id, int $instance_id=450299)
 {
     global $DB;
     global $CURRENT_PERIOD;
@@ -489,6 +489,39 @@ function update_monitor_records(stdClass $data)
         return false;
     }
 }
+
+/**
+ * Crea varios registros en la tabla de monitores.
+ * Usado por ../mass_management/mrm_monitor_data.php.
+ *
+ * @param array $dataobjects -> arreglo con los datos del registro nuevo.
+ *
+ * @return true, si la operación fue exitosa, null de lo contrario.
+ * @throws Exception, si ocurrieron problemas en la operación.
+ *
+ * Esta función no pretende añadir monitores al modulo.
+ * Se encarga de crear un registros nuevos en la tabla de monitores
+ * para almacenar los datos personales de monitores que ya se encontraban
+ * en el modulo pero sin registro previo en talentospilos_monitores.
+ */
+function create_monitor_records(array $dataobjects)
+{
+    global $DB;
+    global $MONITORS_TABLENAME;
+
+    try {
+        $result = $DB->insert_records(substr($MONITORS_TABLENAME, 4), $dataobjects);
+
+    } catch (Exception $ex) {
+       Throw New Exception($ex); 
+    }
+
+    if (isset($result)) {
+        return $result;
+    }
+    return null;
+}
+
 
 /**
  * Retorna el jefe de un monitor durante un período específico.
