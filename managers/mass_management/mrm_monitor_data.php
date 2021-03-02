@@ -145,6 +145,7 @@ if ( isset($_FILES['file']) || isset($_POST['idinstancia']) ) {
                     array_push($success_rows, $data);
                 } else {
                     array_push($wrong_rows, $data);
+                    array_push($detail_errors, [$line_count, $lc_wrong_file, 'Error verificando información', 'Error verificando información', 'El monitor no está activo']);
                     $lc_wrong_file++;
                 } 
                 $line_count++;
