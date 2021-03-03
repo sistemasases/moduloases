@@ -22,8 +22,15 @@
                     <h2 id="monitor_fullname">{{fullname}}</h2>
 
                     <div class="ases-row">
-                        <span class="ases-col-lg-5">{{plan}}</span>
-                        <span class="ases-col-lg-5">{{email}}</span>
+                        
+                        <div class="ases-col-lg-4">
+                            <h6>Programa académico</h6>
+                            <b class="program">{{plan}}</b>
+                        </div>
+                        <div class="ases-col-lg-5">
+                            <h6>Correo institucional</h6>
+                            <em>{{email}}</em>
+                        </div>
                        
                         {{#edit_monitor_profile}}
                         <span id="span-icon-edit" class="ases-col-xs-1 ases-col-sm-1 ases-col-md-1 ases-col-lg-1 tooltip-v1" 
@@ -47,7 +54,7 @@
                         <div class="ases-col-xs-offset-2 ases-col-sm-3 ases-col-md-2 ases-col-lg-2">
                             
                             {{#activo}}
-							<div class="estado-div">
+							<div class="estado-div" style="color:#19a61e">
 								<span class="activo"></span> 
                             	<b>ACTIVO</b>
 							</div>
@@ -55,7 +62,7 @@
                             {{/activo}}
 
                             {{#inactivo}}
-							<div class="estado-div">
+							<div class="estado-div" style="color:#c42f2f">
 								<span class="inactivo"></span>
 								<b>INÁCTIVO</b>
 							</div>
@@ -65,7 +72,7 @@
                         </div>
 
                         <span id="span-jefe" class="ases-col-xs-12 ases-col-sm-12 ases-col-md-7 ases-col-lg-6 ases-col-lg-offset-1">
-                           Jefe actual: <b>{{jefe}}</b>
+                           PROFESIONAL: <b>{{jefe}}</b>
                         </span>
 
                     </div>

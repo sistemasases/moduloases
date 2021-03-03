@@ -38,10 +38,12 @@ require_once('../managers/menu_options.php');
 require_once('../managers/monitor_assignments/monitor_assignments_lib.php');
 require_once('../managers/monitor_profile/monitor_profile_lib.php');
 require_once('../classes/AsesUser.php');
+require_once('../classes/Sede.php');
 
 include "../lib.php";
 include "../classes/output/monitor_profile_page.php";
 include "../classes/output/renderer.php";
+
 
 module_loader('periods');
 
@@ -120,6 +122,10 @@ if ($monitor_code != 0){
     $data->phone2 = $monitor_info->telefono2;
     $data->num_doc = $monitor_info->num_doc; 
     $data->pdf_cuenta_banco = $monitor_info->pdf_cuenta_banco;
+
+
+
+
     $data->pdf_acuerdo_conf = $monitor_info->pdf_acuerdo_conf;
     $data->pdf_doc = $monitor_info->pdf_doc;
     $data->pdf_d10 = $monitor_info->pdf_d10;
@@ -147,8 +153,18 @@ if ($monitor_code != 0){
     $data->plan = "No registra programa académico";
     if ($monitor_info->id_programa > 0) {
         $program_obj = get_program($monitor_info->id_programa);
-        $data->plan = ($program_obj->nombre) . ' ' . ($program_obj->jornada);
+        $program_sede = Sede::get_one_by(array(Sede::ID=>$program_obj->id_sede)); 
+        $data->plan = ($program_obj->nombre) . ' - ' . ($program_sede->nombre);
     } 
+
+    // Verificar prefijo http
+    foreach ($data as $key => $value) {
+        if (substr($key,0, 3) === 'pdf') {
+            if (preg_match('/(^http:\/\/)|/(^https:\/\/)', $value) == 0) {
+                $data->$key = 'https://' . $value;
+            }
+        } 
+    }
 
 } else {
     $monitor_code = -1;
