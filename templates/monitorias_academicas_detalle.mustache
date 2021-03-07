@@ -2,9 +2,12 @@
     {{> block_ases/side_menu}}
     <div class="ases-container" >
     <div>
-
+    <span id="monitor_id" style="display:none">{{monitor_id}}</span>
+    <span id="materia_id" style="display:none">{{materia_id}}</span>
+    <span id="dia" style="display:none">{{dia}}</span>
+    <span id="hora" style="display:none">{{hora}}</span>
     <span>
-    <table id="datos-monitoria" >
+    <table id="datos-monitoria">
     <tr><td colspan="2"><h3 style="color: #777">SESIONES PROGRAMADAS</h3></td></tr>
     <tr><td><h2>Monitoría:</h2></td><td><h2>{{ materia }}</h2><td></tr>
     <tr><td><h3>Encargado/a:</h3></td><td><h3>{{ monitor }}</h3><td></tr>
@@ -12,8 +15,8 @@
     </table>
     
     <div style="float: right;display:inline;vertical-align:top">
-    <button class="dt-button buttons-print" id="anadir_monitoria">Programar más sesiones...</button>
-    <button class="dt-button buttons-print" id="anadir_monitoria">Editar...</button>
+    <button class="dt-button buttons-print" id="programar_sesiones">Programar más sesiones...</button>
+    <button class="dt-button buttons-print" id="modificar_monitoria">Editar...</button>
     </div>
     </span>
     
@@ -27,6 +30,7 @@
     </form>
     </div>
     <br>
+    <div id="debug"></div>
     <div class="ases-row">
     <div id="div_table"  ></div>
     </div>
