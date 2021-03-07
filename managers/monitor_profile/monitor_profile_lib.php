@@ -249,7 +249,10 @@ function monitor_load_bosses_tab(int $monitor_moodle_id, int $instance_id) {
     $table_html = 
         "<table id='table_boss'>
             <tr>
-                <th>Período</th><th>Jefe (Prácticante)</th><th>Jefe (Profesional)</th>
+                <th>Período</th>
+                <th>Jefe (Prácticante)</th>
+                <th>Jefe (Profesional)</th>
+                <th>Fichas realizadas</th>
             </tr>";
     foreach ($active_periods as $period) {
         $period_id = $period->id;
@@ -270,9 +273,12 @@ function monitor_load_bosses_tab(int $monitor_moodle_id, int $instance_id) {
         
         //$period->jefe = $profesional_name;
         $table_html .= 
-            "<tr>
+            "<tr id='$period_id'>
                 <td>".$period_nombre."</td><td>".$practicant_name."</td>
                 <td>".$profesional_name."</td>
+                <td id='count-$period_id'>
+                    <button class='ases-btn ases-danger' id='btn-consulta-fichas-$period_id' type='button'>Consultar</button>
+                </td>
             </tr>";
     }
     $table_html .= "</table>";
@@ -581,13 +587,23 @@ function make_select_active_periods($moodle_id, $instance_id) {
 /**
  *  Realiza un select con los monitores de la instancia ASES
  * */
-function make_select_monitors($monitors) {
-
-    $html = "<select id='select-monitores' style='width:100%'> <option selected=Selected>Seleccione un monitor</option>";
+function make_select_monitors($monitors, $selected_mon=null) {
+    
+    
+    $html = "<select id='select-monitores' style='width:100%'> ";
+    if (is_null($selected_mon)) {
+        $html .= "<option selected=Selected>Seleccione un monitor</option>"; 
+    } else {
+        $selected = $selected_mon->username . " " . $selected_mon->firstname . " " . $selected_mon->lastname;
+        $html .= "<option selected=Selected>$selected</option>"; 
+    }
 
     foreach($monitors as $monitor) {
         $monitor_name = $monitor->username . " " . $monitor->firstname . " " . $monitor->lastname;
-        $html .= "<option value='$monitor_name'>$monitor_name</option>";
+
+        if ($monitor_name !== $selected) {
+            $html .= "<option value='$monitor_name'>$monitor_name</option>";   
+        }
     }
 
     $html .= "</select>";

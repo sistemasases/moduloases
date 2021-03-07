@@ -6,20 +6,12 @@
         
         <div class="ases-container" id="monitor-header-container">
             
-            <div class="ases-row" id="div-header-profile">
-                <div id="div-select-monitor" class="ases-col-lg-12">
-                    {{{select}}}
-                    <p id="mon_id" hidden>{{mon_id}}</p>
-                </div>
-            </div>
-
-            <div id="div-hr" class="ases-row">
-                <hr class="hr-general-tab-fields">
-            </div>
-
             <div class="ases-row" id="div-nombre-foto">
                 <div id="div-monitor-fullname" class="ases-col-xs-12 ases-col-sm-12 ases-col-lg-9">
-                    <h2 id="monitor_fullname">{{fullname}}</h2>
+                    <div id="div-select-monitor" class="ases-col-lg-12">
+                        {{{select}}}
+                    </div>
+                    <p id="mon_id" hidden>{{mon_id}}</p>
 
                     <div class="ases-row">
                         
@@ -71,10 +63,13 @@
 
                         </div>
 
-                        <span id="span-jefe" class="ases-col-xs-12 ases-col-sm-12 ases-col-md-7 ases-col-lg-6 ases-col-lg-offset-1">
+                        <span id="span-jefe" class="ases-col-xs-12 ases-col-sm-12 ases-col-md-7 ases-col-lg-5">
                            PROFESIONAL: <b>{{jefe}}</b>
                         </span>
 
+                        <span id="span-jefe" class="ases-col-xs-12 ases-col-sm-12 ases-col-md-7 ases-col-lg-5">
+                           PRACTICANTE: <b>{{jefe_pract}}</b>
+                        </span>
                     </div>
 
                 </div>
@@ -96,15 +91,10 @@
 
                         {{#monitor_view_history_boss_tab}}
                         <li id="boss_history_li">
-                            <a href="#history_boss_tab" data-toggle="ases-pill">HISTORICO JEFES</a>
+                            <a href="#history_boss_tab" data-toggle="ases-pill">HISTORICOS</a>
                         </li>
                         {{/monitor_view_history_boss_tab}}
 		                
-                        {{#monitor_view_trackings_tab}}
-                        <li id="trackings_li">
-                            <a href="#trackings_tab" data-toggle="ases-pill">HISTORICO FICHAS</a>
-                        </li>
-			            {{/monitor_view_trackings_tab}}
                     </ul>
                 </div>
             </div>
@@ -113,7 +103,6 @@
                 <!-- Logic for tabs -->
                 <div class="ases-tab-content clearfix">
                     {{#monitor_view_general_tab}} {{> block_ases/monitor_view_general_tab}} {{/monitor_view_general_tab}}
-                    {{#monitor_view_trackings_tab}} {{> block_ases/monitor_view_trackings_tab}} {{/monitor_view_trackings_tab}}
                 </div>
             </div>
     </form>

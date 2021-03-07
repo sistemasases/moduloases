@@ -36,6 +36,10 @@
         border: 1px solid #93B793;
         background-color: #93B793;
     }
+    
+    li.ases-active {
+        background-color: #cd1f32; 
+    }
 
 	.activo, .inactivo {
 		background-image: url('./images/ui-icons_777620_256x240.png');
@@ -56,6 +60,10 @@
     .select2-container .select2-selection--single {
         height: 3em;
         border-radius: 0 0 0px 0px;
+    }
+
+    .select2-container {
+        margin: 1em 0 1em -1.1em !important;
     }
 
     #div-monitor-fullname, #div-correo-institucional {

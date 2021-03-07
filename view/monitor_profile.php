@@ -85,21 +85,7 @@ if ($rol == 'sistemas') {
     $data->user_logged = $user;
 }
 
-switch ($rol) {
-    
-case "sistemas":
-    $data->select = make_select_monitors(get_all_monitors($block_id));
-    break;
-case "practicante_ps":
-    $data->select = make_select_monitors( get_all_monitors_pract($block_id, $user->id) );
-    break;
-case "profesional_ps":
-    $data->select = make_select_monitors( get_all_monitors_prof($block_id, $user->id) );
-    break;
-case "monitor_ps":
-    //$data->select = make_select_monitors( get_monitor($user->id) );
-    $monitor_code = $user->username;
-}
+
 $cohorts_select = \cohort_lib\get_html_cohorts_select($block_id);
 $data->cohorts_select = $cohorts_select;
 
@@ -118,13 +104,11 @@ if ($monitor_code != 0){
     $data->id_moodle = $monitor->id;
     $data->email = $monitor->email;
     $data->fullname = $monitor->username . " " . $monitor->firstname . " " . $monitor->lastname;
+    //$data->select = make_select_monitors(get_all_monitors($block_id), $data->fullname);
     $data->phone1 = $monitor_info->telefono1;
     $data->phone2 = $monitor_info->telefono2;
     $data->num_doc = $monitor_info->num_doc; 
     $data->pdf_cuenta_banco = $monitor_info->pdf_cuenta_banco;
-
-
-
 
     $data->pdf_acuerdo_conf = $monitor_info->pdf_acuerdo_conf;
     $data->pdf_doc = $monitor_info->pdf_doc;
@@ -133,16 +117,18 @@ if ($monitor_code != 0){
     $data->profile_image =  get_mon_HTML_profile_img($contextblock->id, $monitor->id );
     $data->select_periods = make_select_active_periods($monitor->id, $block_id);
     $data->jefe = "No registra";
+    $data->jefe_pract = "No registra";
 
     $estado = monitor_is_active($monitor->id, $block_id);
     if ($estado) {
         $data->activo=true;
         $mon_pract = user_management_get_boss($monitor->id, $block_id, core_periods_get_current_period()->id); 
-	$jefe = user_management_get_boss($mon_pract->id, $block_id, core_periods_get_current_period()->id); 
+	    $jefe = user_management_get_boss($mon_pract->id, $block_id, core_periods_get_current_period()->id); 
 
         if (isset($jefe->id)) {
             $nombre = $jefe->firstname ." ". $jefe->lastname;
             $data->jefe = $nombre; 
+            $data->jefe_pract = $mon_pract->firstname . " ". $mon_pract->lastname;
         } 
 
     } else {
@@ -165,8 +151,40 @@ if ($monitor_code != 0){
             }
         } 
     }
+    
+    switch ($rol) {
+        
+    case "sistemas":
+        $data->select = make_select_monitors(get_all_monitors($block_id), $monitor );
+        break;
+    case "practicante_ps":
+        $data->select = make_select_monitors( get_all_monitors_pract($block_id, $user->id), $monitor );
+        break;
+    case "profesional_ps":
+        $data->select = make_select_monitors( get_all_monitors_prof($block_id, $user->id), $monitor );
+        break;
+    case "monitor_ps":
+        //$data->select = make_select_monitors( get_monitor($user->id) );
+        $monitor_code = $user->username;
+    }
+
 
 } else {
+    switch ($rol) {
+        
+    case "sistemas":
+        $data->select = make_select_monitors(get_all_monitors($block_id));
+        break;
+    case "practicante_ps":
+        $data->select = make_select_monitors( get_all_monitors_pract($block_id, $user->id) );
+        break;
+    case "profesional_ps":
+        $data->select = make_select_monitors( get_all_monitors_prof($block_id, $user->id) );
+        break;
+    case "monitor_ps":
+        //$data->select = make_select_monitors( get_monitor($user->id) );
+        $monitor_code = $user->username;
+    }
     $monitor_code = -1;
 }
 
