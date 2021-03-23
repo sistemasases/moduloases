@@ -604,25 +604,25 @@ define([
                         e.preventDefault();
                     });
 					
-					// Campos deprecados.
-					const deprecatedFields = [
-						'relacion_pareja',
-						'composicion_familiar',
-						'influencia',
-						'aspec_academicos',
-						'estra_academicas',
-						'inter_autoe_ocupacional',
-						'carac_socioeconomicas',
-						'icetex',
-						'oferta_servicios',
-						'induccion',
-						'vida_universitaria',
-						'retor_ciuda_origen'
-					];
+				    // Campos deprecados.
+				    const deprecatedFields = [
+					    'relacion_pareja',
+					    'composicion_familiar',
+					    'influencia',
+					    'aspec_academicos',
+					    'estra_academicas',
+					    'inter_autoe_ocupacional',
+					    'carac_socioeconomicas',
+					    'icetex',
+					    'oferta_servicios',
+					    'induccion',
+					    'vida_universitaria',
+					    'retor_ciuda_origen'
+				    ];
 
-					deprecatedFields.forEach( fieldValue => {
-						$(`input[value=${fieldValue}]`).parent().css("display", "none")
-					});
+				    deprecatedFields.forEach( fieldValue => {
+				    	$(`input[value=${fieldValue}]`).parent().css("display", "none")
+				    });
                 });
             }
 
