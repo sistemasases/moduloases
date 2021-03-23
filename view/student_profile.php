@@ -70,7 +70,7 @@ $title = "Ficha estudiante";
 $pagetitle = $title;
 $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
-$student_code = (string)optional_param('student_code', 0, PARAM_TEXT);
+$student_code = optional_param('student_code', '0', PARAM_TEXT);
 
 require_login($courseid, false);
 
@@ -108,7 +108,7 @@ $rol = lib_get_rol_name_ases($USER->id, $blockid);
 $html_profile_image = "";
 $id_user_moodle_ = null;
 $ases_student = null;
-if ($student_code != 0) {
+if ($student_code != '0') {
 
     $ases_student = get_ases_user_by_code($student_code);
     $student_id = $ases_student->id;

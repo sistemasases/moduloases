@@ -53,7 +53,7 @@ global $USER;
 // Set up the page
 $course_id = required_param('courseid', PARAM_INT);
 $block_id = required_param('instanceid', PARAM_INT);
-$monitor_code = (string)optional_param('monitor_code', 0, PARAM_TEXT);
+$monitor_code = optional_param('monitor_code', '0', PARAM_TEXT);
 
 require_login($course_id, false);
 
@@ -97,7 +97,7 @@ $coursenode = $PAGE->navigation->find($course_id, navigation_node::TYPE_COURSE);
 $blocknode = navigation_node::create('Pérfil del monitor', $url, null, 'block', $block_id);
 $coursenode->add_node($blocknode);
 
-if ($monitor_code != 0){
+if ($monitor_code != '0'){
     // Recolección de la información básica del monitor.
     $monitor = search_user($monitor_code);
     $monitor_info = get_monitor($monitor->id);
