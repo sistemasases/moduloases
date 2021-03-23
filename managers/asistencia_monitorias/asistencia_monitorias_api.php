@@ -100,6 +100,37 @@ if(isset($input->function) && isset($input->params)) {
         } else {
             return_with_code(-6);
         }
+    } else if($function == 'modificar_monitoria') {
+        $params = $input->params;
+        if(count($params) == 5) {
+            // dia, hora, materia, monitor, id monitoria
+            $dia = $params[0];
+            $hora = $params[1];
+            $materia = $params[2];
+            $monitor_id = $params[3];
+            $id_monitoria = $params[4];
+
+            if($dia >= 0 && $dia <= 6 && is_string($hora)) {
+
+                $result = modificar_monitoria($dia, $hora, $materia, $monitor_id, $id_monitoria);
+
+                if($result){
+                    echo json_encode(
+                        array(
+                            "status_code" => 0,
+                            "message" => "Éxito",
+                            "data_response" => $result
+                        )
+                    );
+                } else {
+                    return_with_code(-5);
+                }
+            } else {
+                return_with_code(-2);
+            }
+        } else {
+            return_with_code(-6);
+        }
     } else if($function == 'get_tabla_sesiones') {
         $params = $input->params;
         if(count($params) == 3) {
@@ -108,6 +139,30 @@ if(isset($input->function) && isset($input->params)) {
             $hasta = $params[2];
 
             $result = get_tabla_sesiones($id, $desde, $hasta);
+
+                if($result){
+                    echo json_encode(
+                        array(
+                            "status_code" => 0,
+                            "message" => "Éxito",
+                            "data_response" => $result
+                        )
+                    );
+                } else {
+                    return_with_code(-5);
+                }
+        } else {
+            return_with_code(-6);
+        }
+    } else if($function == 'programar_sesiones') {
+        $params = $input->params;
+        if(count($params) == 4) {
+            $id = $params[0];
+            $dia = $params[1];
+            $desde = $params[2];
+            $hasta = $params[3];
+
+            $result = programar_sesiones($id, $dia, date_create_from_format("Ymd",formatear_fecha_legible_a_int($desde)), formatear_fecha_legible_a_int($hasta));
 
                 if($result){
                     echo json_encode(
@@ -228,7 +283,55 @@ if(isset($input->function) && isset($input->params)) {
         } else {
             return_with_code(-6);
         }
+    } else if($function == 'cargar_grupos'){
+        $result = cargar_grupos($input->params[0]);
+        $grupo_seleccionado = cargar_grupo_seleccionado();
+            if($result){
+                echo json_encode(
+                    array(
+                        "status_code" => 0,
+                        "message" => "Success",
+                        "data_response" => $result,
+                        "seleccionado" => $grupo_seleccionado
+                    )
+                );
+            }else{
+                echo json_encode(
+                    array(
+                        "status_code" => 0,
+                        "message" => "Results may be empty",
+                        "data_response" => $result,
+                        
+                    )
+                );
+            }
+            
+} else if($function == 'actualizar_config') {
+    $params = $input->params;
+    if(count($params) == 1) {
+        $grupo = $params[0];
+
+        if(is_int($grupo)) {
+
+            $result = actualizar_config($grupo);
+
+            if($result){
+                echo json_encode(
+                    array(
+                        "status_code" => 0,
+                        "message" => "Éxito",
+                    )
+                );
+            } else {
+                return_with_code(-5);
+            }
+        } else {
+            return_with_code(-2);
+        }
     } else {
+        return_with_code(-6);
+    }
+}else {
         return_with_code(-4);
     }
 } else {

@@ -1,7 +1,7 @@
-<div id="anadir-formulario" style="display: block">
+<div id="anadir-formulario" style="display: block; padding: 15px 10px 15px 50px;">
 <form id="form_anadir">
 <div style="display: flex">
-          <label class="input-anadir">
+          <label class="input-anadir"  style="width:16%">
                   <h3>Dia de la semana</h3>
                   <select name="dia" class="campo-anadir">
                       <option selected="true" value=0 >Lunes</option>
@@ -12,7 +12,7 @@
                       <option value=5>Sábado</option>
                       <option value=6>Domingo</option>
                   </select></label>
-          <label class="input-anadir">
+          <label class="input-anadir" style="width:13%">
                   <h3>Hora de inicio</h3>
                   <div><select id="hora_inicio1" class="campo-anadir">
                       <option>1:00</option>
@@ -28,12 +28,12 @@
                       <option>11:00</option>
                       <option>12:00</option>
                   </select>
-                  <select name="hora_inicio2" class="campo-anadir">
+                  <select id="hora_inicio2" class="campo-anadir">
                       <option selected="true">AM</option>
                       <option>PM</option>
                   </select></div>
           </label>
-          <label class="input-anadir">
+          <label class="input-anadir" style="width:10%">
                   <h3>Hora final</h3>
                   <div><select id="hora_final1" class="campo-anadir">
                       <option>1:00</option>
@@ -58,13 +58,13 @@
                   <h3>Materia *</h3>
                   <select id="materia" class="campo-anadir" style="width:100%" required><option></option></select>
           </label>
-          <label class="input-anadir" style="width:40%">
+          <label class="input-anadir" style="width:37%">
                   <h3>Monitor *</h3>
                   <select id="monitor" class="campo-anadir" style="width:100%" required><option></option></select>
         </label>
   
   </div>
-        <label class="input-anadir" style="padding-bottom:8px!important"><input type="checkbox" id="programar_monitorias_chckbx" checked>
+        <label id="input-programar-monitorias-checkbox" class="input-anadir" style="padding-bottom:8px!important"><input type="checkbox" id="programar_monitorias_chckbx" checked>
         Programar sesiones de esta monitoria automáticamente</label>
 
 <label id="seleccionar-fecha-anadir"> Programar sesiones semanalmente hasta 
