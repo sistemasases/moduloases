@@ -176,7 +176,7 @@ function get_all_practs_of_prof(int $instance_id, int $prof_id)
  * @param int $monitor_moodle_id : ID moodle del monitor
  * @return true sí el monitor está activo | false sino.
  */
-function monitor_is_active(int $monitor_moodle_id, int $instance_id)
+function monitor_is_active(int $monitor_moodle_id, int $instance_id=450299)
 {
     global $DB;
     global $CURRENT_PERIOD;
@@ -249,7 +249,10 @@ function monitor_load_bosses_tab(int $monitor_moodle_id, int $instance_id) {
     $table_html = 
         "<table id='table_boss'>
             <tr>
-                <th>Período</th><th>Jefe (Prácticante)</th><th>Jefe (Profesional)</th>
+                <th>Período</th>
+                <th>Jefe (Prácticante)</th>
+                <th>Jefe (Profesional)</th>
+                <th>Fichas realizadas</th>
             </tr>";
     foreach ($active_periods as $period) {
         $period_id = $period->id;
@@ -270,9 +273,12 @@ function monitor_load_bosses_tab(int $monitor_moodle_id, int $instance_id) {
         
         //$period->jefe = $profesional_name;
         $table_html .= 
-            "<tr>
+            "<tr id='$period_id'>
                 <td>".$period_nombre."</td><td>".$practicant_name."</td>
                 <td>".$profesional_name."</td>
+                <td id='count-$period_id'>
+                    <button class='ases-btn ases-danger' id='btn-consulta-fichas-$period_id' type='button'>Consultar</button>
+                </td>
             </tr>";
     }
     $table_html .= "</table>";
@@ -491,6 +497,39 @@ function update_monitor_records(stdClass $data)
 }
 
 /**
+ * Crea varios registros en la tabla de monitores.
+ * Usado por ../mass_management/mrm_monitor_data.php.
+ *
+ * @param array $dataobjects -> arreglo con los datos del registro nuevo.
+ *
+ * @return true, si la operación fue exitosa, null de lo contrario.
+ * @throws Exception, si ocurrieron problemas en la operación.
+ *
+ * Esta función no pretende añadir monitores al modulo.
+ * Se encarga de crear un registros nuevos en la tabla de monitores
+ * para almacenar los datos personales de monitores que ya se encontraban
+ * en el modulo pero sin registro previo en talentospilos_monitores.
+ */
+function create_monitor_records(array $dataobjects)
+{
+    global $DB;
+    global $MONITORS_TABLENAME;
+
+    try {
+        $result = $DB->insert_records(substr($MONITORS_TABLENAME, 4), $dataobjects);
+
+    } catch (Exception $ex) {
+       Throw New Exception($ex); 
+    }
+
+    if (isset($result)) {
+        return $result;
+    }
+    return null;
+}
+
+
+/**
  * Retorna el jefe de un monitor durante un período específico.
  *
  * @param int $monitor_moodle_id
@@ -548,13 +587,23 @@ function make_select_active_periods($moodle_id, $instance_id) {
 /**
  *  Realiza un select con los monitores de la instancia ASES
  * */
-function make_select_monitors($monitors) {
-
-    $html = "<select id='select-monitores' style='width:100%'> <option selected=Selected>Seleccione un monitor</option>";
+function make_select_monitors($monitors, $selected_mon=null) {
+    
+    
+    $html = "<select id='select-monitores' style='width:100%'> ";
+    if (is_null($selected_mon)) {
+        $html .= "<option selected=Selected>Seleccione un monitor</option>"; 
+    } else {
+        $selected = $selected_mon->username . " " . $selected_mon->firstname . " " . $selected_mon->lastname;
+        $html .= "<option selected=Selected>$selected</option>"; 
+    }
 
     foreach($monitors as $monitor) {
         $monitor_name = $monitor->username . " " . $monitor->firstname . " " . $monitor->lastname;
-        $html .= "<option value='$monitor_name'>$monitor_name</option>";
+
+        if ($monitor_name !== $selected) {
+            $html .= "<option value='$monitor_name'>$monitor_name</option>";   
+        }
     }
 
     $html .= "</select>";

@@ -28,6 +28,26 @@ define(['jquery'], function($) {
                 $('.id_practicante').find('input').val( $("#dphpforms_practicing_id").data("info") );
                 $('.id_profesional').find('input').val( $("#dphpforms_professional_id").data("info") );
                 $('.username').find('input').val( $("#dphpforms_username").data("info") );
+                
+				// Campos deprecados.
+				const deprecatedFields = [
+				    'relacion_pareja',
+					'composicion_familiar',
+					'influencia',
+					'aspec_academicos',
+					'estra_academicas',
+					'inter_autoe_ocupacional',
+					'carac_socioeconomicas',
+					'icetex',
+					'oferta_servicios',
+					'induccion',
+					'vida_universitaria',
+					'retor_ciuda_origen'
+				];
+
+				deprecatedFields.forEach( fieldValue => {
+					$(`input[value=${fieldValue}]`).parent().css("display", "none")
+				});
 
             });
 

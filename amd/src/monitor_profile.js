@@ -38,7 +38,7 @@ define(['jquery',
             var monitorId = $("#id_moodle")[0].value;
 
             $("#boss_history_li").one('click', {tab_name: 'history_boss'}, load_tabs);
-            $("#trackings_li").one('click', mon_trackings.init([monitorId, parameters.instanceid]));
+            //$("#trackings_li").one('click', mon_trackings.init([monitorId, parameters.instanceid]));
             
             $('[data-toggle="tooltip"]').tooltip();
 
@@ -294,6 +294,7 @@ define(['jquery',
                                 case "history_boss":
                                     $("#general_tab").removeClass("ases-tab-active");
                                     $("#"+tabName+"_tab").addClass("ases-tab-active");
+                                    mon_trackings.init([monitorId, parameters.instanceid]);
                                     break;
                             }
                         },

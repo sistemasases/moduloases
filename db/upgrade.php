@@ -7,7 +7,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $dbman = $DB->get_manager();
     $result = true;
 
-    if ($oldversion < 2021022019010) {
+    if ($oldversion < 2021032313380) {
 
       
     //     // ************************************************************************************************************
@@ -4166,14 +4166,6 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->create_table($table);
         }
 
-        // ACTUALIZACIÓN SE AÑADE CAMPO PDF_ACUERDO_CONF a la tabla {talentospilos_monitores} 
-        // VERSION: 2020103117040//
-
-        if (!$dbman->field_exists($table, $field_pdf_acuerdo)) {
-            $dbman->add_field($table, $field_pdf_acuerdo);
-        }
-
-
         // ACTUALIZACIÓN 2020112316010, SE AÑADEN CAMPOS DE INFORMACIÓN GENERAL DEL MONITOR
         // - Email alternátivo
         // - Telefono 1
@@ -4212,9 +4204,50 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->add_field($table, $field_pdf_acuerdo);
         }
 
+        /* ////////////////////////////////////////////////////////////////////////////////////////////////
+		 * Actualización para el aplicativo de monitorías academicas: 
+         * En {talentospilos_asis_monitoria} inscripción, añadidos asignatura_a_consultar y tematica_a_consultar
+         * Eliminación del campo telefono en la tabla de inscripción
+         * Eliminación del campo pdf_acuerdo_conf de talentospilos_asis_monitoria, que fue agregado por error
+         * 
+		 * Joan Sebastian Betancourt. VERSION: 2021032313380
+		 */
 
+        // Define field asignatura_a_consultar to be added to talentospilos_asis_monitoria.
+        $table = new xmldb_table('talentospilos_asis_monitoria');
+        $field = new xmldb_field('asignatura_a_consultar', XMLDB_TYPE_TEXT, null, null, null, null, null, 'eliminado');
 
-        upgrade_block_savepoint(true, 2021022019010, 'ases');
+        // Conditionally launch add field asignatura_a_consultar.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field tematica_a_consultar to be added to talentospilos_asis_monitoria.
+        $table = new xmldb_table('talentospilos_asis_monitoria');
+        $field = new xmldb_field('tematica_a_consultar', XMLDB_TYPE_TEXT, null, null, null, null, null, 'asignatura_a_consultar');
+
+        // Conditionally launch add field tematica_a_consultar.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field telefono to be dropped from talentospilos_asis_monitoria.
+        $table = new xmldb_table('talentospilos_asis_monitoria');
+        $field = new xmldb_field('telefono');
+
+        // Conditionally launch drop field telefono.
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        $field = new xmldb_field('pdf_acuerdo_conf');
+
+        // Conditionally launch drop field asistente.
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        upgrade_block_savepoint(true, 2021032313380, 'ases');
 
 
        
