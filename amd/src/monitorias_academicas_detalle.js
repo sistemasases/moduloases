@@ -341,6 +341,7 @@ define(['jquery',
                     async: true,
                     success: function( template ){
                         gmm.generate_modal("modal_fomulario_programar", "Programar sesiones de monitoría", template, null, function(){gmm.show_modal(".modal_fomulario_programar")});
+                        $(".modal_fomulario_programar").find(".general_modal_content").width("40%")
                     },
                     error: function(){
                         console.log( "../templates/monitorias_academicas_programar.mustache cannot be reached." );
@@ -358,6 +359,7 @@ define(['jquery',
                     });
 
                     $("#form_programar").submit(function (e) {
+                        loading_indicator.show();
                         e.preventDefault()
                         let desde = $("#programar_desde").val();
                         console.log(desde)
@@ -380,10 +382,11 @@ define(['jquery',
                                     url: "../managers/asistencia_monitorias/asistencia_monitorias_api.php",
                                     dataType: "json",
                                     success: function(msg) {
+                                        loading_indicator.hide();
                                         location.reload()
                                     },
                                     error : function(msg) {
-                                        swal('Error!', msg, 'error')
+                                        swal('Error!', msg.responseText, 'error')
                                         $("#debug").html(msg.responseText);
                                     },
                                 });
