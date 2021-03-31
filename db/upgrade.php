@@ -7,7 +7,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $dbman = $DB->get_manager();
     $result = true;
 
-    if ($oldversion < 2021032313380) {
+    if ($oldversion < 2021033114160) {
 
       
     //     // ************************************************************************************************************
@@ -4247,10 +4247,44 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->drop_field($table, $field);
         }
 
-        upgrade_block_savepoint(true, 2021032313380, 'ases');
+        /* #################################################################################
+         * ACTUALIZACIÓN: 2021033114160
+         * Se añade la tabla talentospilos_tipo_periodo y se añade el campo id_tipo_periodo
+         * a talentospilos_semestre, para soportar la regionalización del plugin.
+         * #################################################################################
+         */
+        // Define field id to be added to talentospilos_tipo_periodo.
+        $table = new xmldb_table('talentospilos_tipo_periodo');
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+
+        $table->add_field('id_instancia', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null, 'id');
+
+        // Define key tipo_periodo_instancia_fk (foreign) to be added to talentospilos_tipo_periodo.
+        $table->add_key('tipo_periodo_instancia_fk', XMLDB_KEY_FOREIGN, ['id_instancia'], 'block_instances', ['id']);
+        $table->add_field('descripcion', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null, 'id_instancia');
+
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Define field id_tipo_periodo to be added to talentospilos_semestre.
+        $table = new xmldb_table('talentospilos_semestre');
+        $field = new xmldb_field('id_tipo_periodo', XMLDB_TYPE_INTEGER, '10', null, null, null, '1', 'fecha_fin');
+
+        // Conditionally launch add field id_tipo_periodo.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $key = new xmldb_key('fk_tipo_periodo', XMLDB_KEY_FOREIGN, ['id_tipo_periodo'], 'talentospilos_tipo_periodo', ['id']);
+        // Launch add key fk_tipo_periodo.
+        $dbman->add_key($table, $key);
 
 
-       
+        upgrade_block_savepoint(true, 2021033114160, 'ases');
+
+
         return $result;
 
     }
