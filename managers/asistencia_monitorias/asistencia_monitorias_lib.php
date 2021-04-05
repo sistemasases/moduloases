@@ -482,7 +482,7 @@ function get_proxima_sesion_de_monitoria($monitoria_id){
                 AND sesion.fecha >= $hoy
             ORDER BY fecha ASC 
             LIMIT 2";
-            // sesion.id_monitoria = $monitoria_id AND
+
     $sesiones = array_values($DB->get_records_sql($sql));
     $proxima_sesion = $sesiones[0];
     if($sesiones[0]->fecha == $hoy){
@@ -587,4 +587,35 @@ function modificar_celular_de_usuario($id, $celular){
         //error_log(var_export($user, true));
         return $DB->update_record('user', $user, $bulk=false);
     } 
+}
+
+function cargar_asistentes_de_sesion($id){
+    global $DB;
+    // El programa/dependencia es un campo adicional agregado por la universidad a moodle, y está definido en la tabla mdl_user_info_field.
+    // Al 27/03/2021 ese campo tiene id 1. Si por alguna razón llegara a cambiar, actualizar la siguiente variable:
+    $id_field_programa = 1;
+    $sql = "SELECT 
+                inscripcion.id AS id,
+                inscripcion.asiste AS asistencia,
+                estudiante.idnumber AS codigo,
+                estudiante.firstname AS nombres,
+                estudiante.lastname AS apellidos,
+                info_adicional.programa AS programa,
+                estudiante.email AS correo,
+                estudiante.phone1 AS celular,
+                inscripcion.asignatura_a_consultar AS asignatura,
+                inscripcion.tematica_a_consultar AS tematica
+            FROM {talentospilos_asis_monitoria} inscripcion
+                INNER JOIN {user} estudiante
+                ON inscripcion.asistente = estudiante.id
+                    INNER JOIN 
+                        (SELECT userid, data AS programa FROM {user_info_data} 
+                            WHERE fieldid = $id_field_programa) info_adicional
+                    ON info_adicional.userid = estudiante.id
+            WHERE 
+                inscripcion.sesion = $id
+                AND inscripcion.eliminado IS DISTINCT FROM 1";
+    $results = array_values($DB->get_records_sql($sql));
+    error_log(var_export($results, true));
+    return $results;
 }

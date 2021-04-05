@@ -87,7 +87,8 @@ define(['jquery',
                                 url: "../managers/asistencia_monitorias/asistencia_monitorias_api.php",
                                 dataType: "json",
                                 success: function(msg) {
-                                    consultar_sesiones_por_fecha();    
+                                    consultar_sesiones_por_fecha();
+                                    init_despues_de_tabla();
                                 },
                                 error : function(msg) {
                                     swal('Error!', msg, 'error')
@@ -95,6 +96,105 @@ define(['jquery',
                                 },
                             });
                         }
+                    });
+                });
+                // ver estudiantes inscritos en esa sesion
+                $(".estudiantes").click(function (e) {
+                    loading_indicator.show();
+                    let fecha = $(e.target).parent().parent().parent().find("td")[0].innerHTML;
+                    // config de la dataTable
+                    let columnas = [
+                        {"title" : "Asiste?",                 "name": "asistenciaCheck","data": "asistenciaCheck",   "width": "3%"},
+                        {"title" : "Código",                    "name": "codigo",       "data": "codigo",       "width": "8%"},
+                        {"title" : "Nombres",                   "name": "nombres",      "data": "nombres",      "width": "20%"},
+                        {"title" : "Apellidos",                 "name": "apellidos",    "data": "apellidos",    "width": "20%"},
+                        {"title" : "Programa/Dependencia",      "name": "programa",     "data": "programa",     "width": "10%"},
+                        {"title" : "Correo electrónico",        "name": "correo",       "data": "correo",       "width": "15%"},
+                        {"title" : "Celular",                   "name": "celular",      "data": "celular",      "width": "5%"},
+                        {"title" : "Asignatura a consultar",    "name": "asignatura",   "data": "asignatura",   "width": "20%"},
+                        {"title" : "Temática a consultar",      "name": "tematica",     "data": "tematica",     "width": "20%"},
+                    ];
+                    let datosTabla = {
+                        "ordering": false,
+                        "columns" : columnas,
+                        "select": "false",
+                        "fixedHeader": {
+                          "header": true,
+                          "footer": true
+                        },
+                        "language": {
+                          "search": "Buscar:",
+                          "oPaginate": {
+                            "sFirst": "Primero",
+                            "sLast": "Último",
+                            "sNext": "Siguiente",
+                            "sPrevious": "Anterior"
+                          },
+                          "sProcessing": "Procesando...",
+                          "sLengthMenu": "Mostrar _MENU_ registros",
+                          "sZeroRecords": "No se encontraron resultados",
+                          "sEmptyTable": "Ningún dato disponible",
+                          "sInfo": "Mostrando del _START_ al _END_ de _TOTAL_",
+                          "sInfoEmpty": " 0 registros",
+                          "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                          "sInfoPostFix": "",
+                          "sSearch": "Buscar:",
+                          "sUrl": "",
+                          "sInfoThousands": ",",
+                          "sLoadingRecords": "Cargando...",
+                          "oAria": {
+                            "sSortAscending": ": Ordenar ascendente",
+                            "sSortDescending": ": Ordenar descendente"
+                          }
+                        },
+                        "dom": "lifrtpB",
+                        "buttons": [
+                          {
+                            "extend": "print",
+                            "text": "Imprimir"
+                          },
+                          {
+                            "extend": "csvHtml5",
+                            "text": "CSV"
+                          },
+                          {
+                            "extend": "excel",
+                            "text": "Excel",
+                            "className": "buttons-excel",
+                            "filename": "Export excel",
+                            "extension": ".xls"
+                          }
+                        ]
+                      } 
+                    // consultar los inscritos en la db
+
+                    $.when($.ajax({
+                        type: "POST",
+                        data: JSON.stringify({
+                            "function": 'cargar_asistentes_de_sesion',
+                            "params": e.target.id,
+                        }),
+                        url: "../managers/asistencia_monitorias/asistencia_monitorias_api.php",
+                        dataType: "json",
+                        error: function(msg) {
+                            console.log("Error consulta BD asistentes monitorias academicas");
+                            $("#debug").html(msg.responseText);
+                        }
+                    })).done((msg) =>{
+                        // añadir checkbox a columna de asiste
+                        msg.data_response.forEach((asistente) => asistente.asistenciaCheck = `<div style="vertical-align: middle;text-align: center;"><input type="checkbox" class="check-asistio" id="${asistente.id}" ${parseInt(asistente.asistencia) ? "checked" : ""}></div>`);
+                        // mostrar modal
+                        gmm.generate_modal("modal_estudiantes_inscritos", `Asistentes inscritos a ${$('#nombre_monitoria').html()}, ${$('#horario_semanal').html()}, ${fecha}  `, '<table id="asistentes_sesion" class="stripe row-border order-column" cellspacing="0" width="100%"><thead> </thead></table>', null, 
+                        function(){  
+                            datosTabla.data = msg.data_response;
+                            $("#asistentes_sesion").DataTable(datosTabla);
+                            // set up de listeners para check de asistencia
+                            $(".check-asistio").change(function(e) {
+                                e.target.id
+                            })
+                            gmm.show_modal(".modal_estudiantes_inscritos");
+                            loading_indicator.hide();
+                        });
                     });
                 });
             },
