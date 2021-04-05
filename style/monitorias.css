@@ -112,3 +112,7 @@
 .config-icon:hover{
     color: #555;
 }
+
+.check-asistio{
+    transform: scale(1.5);
+}

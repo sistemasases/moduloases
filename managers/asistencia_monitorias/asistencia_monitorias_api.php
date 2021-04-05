@@ -274,7 +274,27 @@ if(isset($input->function) && isset($input->params)) {
             } else {
                 return_with_code(-2);
             }
-    } else if($function == 'eliminar_sesion') {
+    } else if($function == 'cargar_asistentes_de_sesion') {
+        $id = intval($input->params);
+            if(is_int($id)) {
+
+                $result = cargar_asistentes_de_sesion($id);
+
+                if($result){
+                    echo json_encode(
+                        array(
+                            "status_code" => 0,
+                            "message" => "Éxito",
+                            "data_response" => $result
+                        )
+                    );
+                } else {
+                    return_with_code(-5);
+                }
+            } else {
+                return_with_code(-2);
+            }
+    }else if($function == 'eliminar_sesion') {
         $id = intval($input->params);
             if(is_int($id)) {
 
