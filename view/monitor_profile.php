@@ -38,10 +38,12 @@ require_once('../managers/menu_options.php');
 require_once('../managers/monitor_assignments/monitor_assignments_lib.php');
 require_once('../managers/monitor_profile/monitor_profile_lib.php');
 require_once('../classes/AsesUser.php');
+require_once('../classes/Sede.php');
 
 include "../lib.php";
 include "../classes/output/monitor_profile_page.php";
 include "../classes/output/renderer.php";
+
 
 module_loader('periods');
 
@@ -51,7 +53,7 @@ global $USER;
 // Set up the page
 $course_id = required_param('courseid', PARAM_INT);
 $block_id = required_param('instanceid', PARAM_INT);
-$monitor_code = (string)optional_param('monitor_code', 0, PARAM_TEXT);
+$monitor_code = optional_param('monitor_code', '0', PARAM_TEXT);
 
 require_login($course_id, false);
 
@@ -83,21 +85,7 @@ if ($rol == 'sistemas') {
     $data->user_logged = $user;
 }
 
-switch ($rol) {
-    
-case "sistemas":
-    $data->select = make_select_monitors(get_all_monitors($block_id));
-    break;
-case "practicante_ps":
-    $data->select = make_select_monitors( get_all_monitors_pract($block_id, $user->id) );
-    break;
-case "profesional_ps":
-    $data->select = make_select_monitors( get_all_monitors_prof($block_id, $user->id) );
-    break;
-case "monitor_ps":
-    //$data->select = make_select_monitors( get_monitor($user->id) );
-    $monitor_code = $user->username;
-}
+
 $cohorts_select = \cohort_lib\get_html_cohorts_select($block_id);
 $data->cohorts_select = $cohorts_select;
 
@@ -109,17 +97,19 @@ $coursenode = $PAGE->navigation->find($course_id, navigation_node::TYPE_COURSE);
 $blocknode = navigation_node::create('Pérfil del monitor', $url, null, 'block', $block_id);
 $coursenode->add_node($blocknode);
 
-if ($monitor_code != 0){
+if ($monitor_code != '0'){
     // Recolección de la información básica del monitor.
     $monitor = search_user($monitor_code);
     $monitor_info = get_monitor($monitor->id);
     $data->id_moodle = $monitor->id;
     $data->email = $monitor->email;
     $data->fullname = $monitor->username . " " . $monitor->firstname . " " . $monitor->lastname;
+    //$data->select = make_select_monitors(get_all_monitors($block_id), $data->fullname);
     $data->phone1 = $monitor_info->telefono1;
     $data->phone2 = $monitor_info->telefono2;
     $data->num_doc = $monitor_info->num_doc; 
     $data->pdf_cuenta_banco = $monitor_info->pdf_cuenta_banco;
+
     $data->pdf_acuerdo_conf = $monitor_info->pdf_acuerdo_conf;
     $data->pdf_doc = $monitor_info->pdf_doc;
     $data->pdf_d10 = $monitor_info->pdf_d10;
@@ -127,16 +117,18 @@ if ($monitor_code != 0){
     $data->profile_image =  get_mon_HTML_profile_img($contextblock->id, $monitor->id );
     $data->select_periods = make_select_active_periods($monitor->id, $block_id);
     $data->jefe = "No registra";
+    $data->jefe_pract = "No registra";
 
     $estado = monitor_is_active($monitor->id, $block_id);
     if ($estado) {
         $data->activo=true;
         $mon_pract = user_management_get_boss($monitor->id, $block_id, core_periods_get_current_period()->id); 
-	$jefe = user_management_get_boss($mon_pract->id, $block_id, core_periods_get_current_period()->id); 
+	    $jefe = user_management_get_boss($mon_pract->id, $block_id, core_periods_get_current_period()->id); 
 
         if (isset($jefe->id)) {
             $nombre = $jefe->firstname ." ". $jefe->lastname;
             $data->jefe = $nombre; 
+            $data->jefe_pract = $mon_pract->firstname . " ". $mon_pract->lastname;
         } 
 
     } else {
@@ -147,10 +139,52 @@ if ($monitor_code != 0){
     $data->plan = "No registra programa académico";
     if ($monitor_info->id_programa > 0) {
         $program_obj = get_program($monitor_info->id_programa);
-        $data->plan = ($program_obj->nombre) . ' ' . ($program_obj->jornada);
+        $program_sede = Sede::get_one_by(array(Sede::ID=>$program_obj->id_sede)); 
+        $data->plan = ($program_obj->nombre) . ' - ' . ($program_sede->nombre);
     } 
 
+    // Verificar prefijo http
+    foreach ($data as $key => $value) {
+        if (substr($key,0, 3) === 'pdf') {
+            if (preg_match('/(^http:\/\/)|/(^https:\/\/)', $value) == 0) {
+                $data->$key = 'https://' . $value;
+            }
+        } 
+    }
+    
+    switch ($rol) {
+        
+    case "sistemas":
+        $data->select = make_select_monitors(get_all_monitors($block_id), $monitor );
+        break;
+    case "practicante_ps":
+        $data->select = make_select_monitors( get_all_monitors_pract($block_id, $user->id), $monitor );
+        break;
+    case "profesional_ps":
+        $data->select = make_select_monitors( get_all_monitors_prof($block_id, $user->id), $monitor );
+        break;
+    case "monitor_ps":
+        //$data->select = make_select_monitors( get_monitor($user->id) );
+        $monitor_code = $user->username;
+    }
+
+
 } else {
+    switch ($rol) {
+        
+    case "sistemas":
+        $data->select = make_select_monitors(get_all_monitors($block_id));
+        break;
+    case "practicante_ps":
+        $data->select = make_select_monitors( get_all_monitors_pract($block_id, $user->id) );
+        break;
+    case "profesional_ps":
+        $data->select = make_select_monitors( get_all_monitors_prof($block_id, $user->id) );
+        break;
+    case "monitor_ps":
+        //$data->select = make_select_monitors( get_monitor($user->id) );
+        $monitor_code = $user->username;
+    }
     $monitor_code = -1;
 }
 

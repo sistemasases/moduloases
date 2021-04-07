@@ -1,0 +1,133 @@
+{{#data}}
+    <div class="container">
+    {{#hay_inscritas}}
+    <h1>Monitorias inscritas</h1>
+    <p> Estás registrado para asistir a las siguientes monitorias: </p>
+    <table class="display dataTable" role="grid" style="width:100%">
+    <thead><tr role="row">
+        <th>Día</th>
+        <th>Fecha</th>
+        <th>Horario</th>
+        <th>Monitoría</th>
+        <th>Monitor encargado</th>
+        <th>Asignatura a consultar</th>
+        <th>Temática a consultar</th>
+        <th></th>
+    </tr><thead>
+    <tbody>
+    {{#inscritas}}
+    <tr><td>{{dia}}</td>
+    <td>{{fecha}}</td>
+    <td>{{horario}}</td>
+    <td>{{materia}}</td>
+    <td>{{nombre_encargado}} {{apellido_encargado}} ({{correo_encargado}})</td>
+    <td>{{asignatura}}</td>
+    <td>{{tematica}}</td>
+    <td><span val={{id}} class="glyphicon glyphicon-trash config-icon eliminar-inscripcion"></span></td>
+    </tr>
+    {{/inscritas}}
+    </tbody>
+    </table>
+
+    <p style="margin-top:10px">El monitor encargado te contactará para concretar los detalles de la monitoría.</p>
+    {{/hay_inscritas}}
+
+
+
+    <h1>Monitorias disponibles para inscribirte</h1>
+    <p> La estrategia ASES te ofrece ayuda académica a través de monitorias por previa inscripción. Para registrarte, da clic encima de la monitoría que te interese.</p>
+    <div class="container">
+        <div class="row">
+            <div class="col"> 
+                <h3>Lunes</h3>
+                <ul>
+                {{#lunes}}
+                <li><a class="link_inscripcion_monitoria" id="{{id}}" href="#">{{hora}} {{materia}}</a></li>
+                {{/lunes}}
+                </ul>
+            </div>
+            <div class="col"> <h3><h3>Martes</h3>
+                <ul>
+                {{#martes}}
+                <li><a class="link_inscripcion_monitoria" id="{{id}}"  href="#">{{hora}} {{materia}}</a></li>
+                {{/martes}}
+                </ul></h3></div>
+            <div class="col"> <h3>Miércoles</h3>
+                <ul>
+                {{#miercoles}}
+                <li><a class="link_inscripcion_monitoria" id="{{id}}"  href="#">{{hora}} {{materia}}</a></li>
+                {{/miercoles}}
+                </ul></div>
+        </div>
+        <div class="row">
+            <div class="col"> <h3>Jueves</h3>
+                <ul>
+                {{#jueves}}
+                <li><a class="link_inscripcion_monitoria" id="{{id}}"  href="#">{{hora}} {{materia}}</a></li>
+                {{/jueves}}
+                </ul></div>
+            <div class="col"> <h3>Viernes</h3>
+                <ul>
+                {{#viernes}}
+                <li><a class="link_inscripcion_monitoria" id="{{id}}"  href="#">{{hora}} {{materia}}</a></li>
+                {{/viernes}}
+                </ul> </div>
+            <div class="col"> <h3>Sábado</h3>
+                <ul>
+                {{#sabado}}
+                <li><a class="link_inscripcion_monitoria" id="{{id}}" href="#">{{hora}} {{materia}}</a></li>
+                {{/sabado}}
+                </ul></div>
+        </div>
+        <div id="debug"></div>
+    </div>
+
+
+    <h2>Tus datos de contacto </h2>
+    <ul>
+        <li><b>Correo electrónico:</b> {{correo}}</li>
+        <li><b>Número del Teléfono Celular:</b> <div id="mostrar-celular" style="display:inline"> <span id="celular">{{celular}}</span> 
+            <span id="editar-celular" style="margin-left:6px" class="glyphicon glyphicon-pencil config-icon"></span></div>
+            <!-- el JS de onkeypress valida que la input solo sean números -->
+        <div id="edicion-celular" style="display:none"><input id="campo-celular" type="tel" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" class="form-control" style="width: 15%;display:inline" placeholder="{{celular}}"> 
+            <span id="cancelar-editar-celular" style="margin-left:6px" class="glyphicon glyphicon-remove config-icon"></span>
+                <span id="guardar-editar-celular" style="margin-left:6px" class="glyphicon glyphicon-floppy-disk config-icon"></span> </div>
+        </li>
+    </ul>
+    <p style="margin-top:10px"> Los monitores encargados de las monitorías académicas intentarán contactarte por estos medios. Por favor asegurate que estén correctos y tengas acceso a ellos.</p>
+
+
+
+
+    
+<!-- HTML para el modal de inscripción -->
+
+<div id="content-modal-inscripcion" style="display:none">
+    <form id="form-inscripcion" class="container w-100 m-3">
+        <div class="row">
+            <div class="form-group col-sm">
+                <label for="monitoria"> Monitoría:</label>
+                <input type="text" readonly class="form-control-plaintext" id="monitoria">
+            </div>
+            <div class="form-group col-sm">
+                <label for="fecha-monitoria"> Fecha de la próxima sesión: </label>
+                <input type="text" readonly class="form-control-plaintext" id="fecha-monitoria">
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-sm">
+                <label for="asignatura">Nombre de la asignatura a consultar:</label>
+                <input type="text" name="asignatura" id="asignatura" class="form-control" placeholder="Ej. &quot;Cálculo 3&quot, &quot;Física II&quot, &quot;Química General&quot">
+            </div>
+            <div class="form-group col-sm">
+                <label for="tematica">Temática a consultar: </label>
+                <textarea name="tematica" id="tematica" class="form-control" placeholder="Ej. &quot;Derivadas parciales&quot, &quot;Ley de Gauss&quot, &quot;Estequiometría&quot"></textarea>
+            </div>
+        </div>
+        <div style="display: flex">
+            <button type="submit" class="dt-button buttons-print">Inscribirse</button>
+            <button type="button" class="dt-button" id="cancelar-inscripcion-btn">Cancelar</button>
+        </div>
+    </form>
+    </div>
+{{/data}}

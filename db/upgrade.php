@@ -7,7 +7,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $dbman = $DB->get_manager();
     $result = true;
 
-    if ($oldversion < 2021022019010) {
+    if ($oldversion < 2021033114160) {
 
       
     //     // ************************************************************************************************************
@@ -4166,14 +4166,6 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->create_table($table);
         }
 
-        // ACTUALIZACIÓN SE AÑADE CAMPO PDF_ACUERDO_CONF a la tabla {talentospilos_monitores} 
-        // VERSION: 2020103117040//
-
-        if (!$dbman->field_exists($table, $field_pdf_acuerdo)) {
-            $dbman->add_field($table, $field_pdf_acuerdo);
-        }
-
-
         // ACTUALIZACIÓN 2020112316010, SE AÑADEN CAMPOS DE INFORMACIÓN GENERAL DEL MONITOR
         // - Email alternátivo
         // - Telefono 1
@@ -4212,12 +4204,87 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->add_field($table, $field_pdf_acuerdo);
         }
 
+        /* ////////////////////////////////////////////////////////////////////////////////////////////////
+		 * Actualización para el aplicativo de monitorías academicas: 
+         * En {talentospilos_asis_monitoria} inscripción, añadidos asignatura_a_consultar y tematica_a_consultar
+         * Eliminación del campo telefono en la tabla de inscripción
+         * Eliminación del campo pdf_acuerdo_conf de talentospilos_asis_monitoria, que fue agregado por error
+         * 
+		 * Joan Sebastian Betancourt. VERSION: 2021032313380
+		 */
+
+        // Define field asignatura_a_consultar to be added to talentospilos_asis_monitoria.
+        $table = new xmldb_table('talentospilos_asis_monitoria');
+        $field = new xmldb_field('asignatura_a_consultar', XMLDB_TYPE_TEXT, null, null, null, null, null, 'eliminado');
+
+        // Conditionally launch add field asignatura_a_consultar.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field tematica_a_consultar to be added to talentospilos_asis_monitoria.
+        $table = new xmldb_table('talentospilos_asis_monitoria');
+        $field = new xmldb_field('tematica_a_consultar', XMLDB_TYPE_TEXT, null, null, null, null, null, 'asignatura_a_consultar');
+
+        // Conditionally launch add field tematica_a_consultar.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field telefono to be dropped from talentospilos_asis_monitoria.
+        $table = new xmldb_table('talentospilos_asis_monitoria');
+        $field = new xmldb_field('telefono');
+
+        // Conditionally launch drop field telefono.
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        $field = new xmldb_field('pdf_acuerdo_conf');
+
+        // Conditionally launch drop field asistente.
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        /* #################################################################################
+         * ACTUALIZACIÓN: 2021033114160
+         * Se añade la tabla talentospilos_tipo_periodo y se añade el campo id_tipo_periodo
+         * a talentospilos_semestre, para soportar la regionalización del plugin.
+         * #################################################################################
+         */
+        // Define field id to be added to talentospilos_tipo_periodo.
+        $table = new xmldb_table('talentospilos_tipo_periodo');
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+
+        $table->add_field('id_instancia', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null, 'id');
+
+        // Define key tipo_periodo_instancia_fk (foreign) to be added to talentospilos_tipo_periodo.
+        $table->add_key('tipo_periodo_instancia_fk', XMLDB_KEY_FOREIGN, ['id_instancia'], 'block_instances', ['id']);
+        $table->add_field('descripcion', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null, 'id_instancia');
+
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Define field id_tipo_periodo to be added to talentospilos_semestre.
+        $table = new xmldb_table('talentospilos_semestre');
+        $field = new xmldb_field('id_tipo_periodo', XMLDB_TYPE_INTEGER, '10', null, null, null, '1', 'fecha_fin');
+
+        // Conditionally launch add field id_tipo_periodo.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $key = new xmldb_key('fk_tipo_periodo', XMLDB_KEY_FOREIGN, ['id_tipo_periodo'], 'talentospilos_tipo_periodo', ['id']);
+        // Launch add key fk_tipo_periodo.
+        $dbman->add_key($table, $key);
 
 
-        upgrade_block_savepoint(true, 2021022019010, 'ases');
+        upgrade_block_savepoint(true, 2021033114160, 'ases');
 
 
-       
         return $result;
 
     }

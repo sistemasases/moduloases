@@ -12,4 +12,4 @@ vendor/latitude/latitude/src/functions.php
 test.txt
 npm-debug.log
 asescli.py
-/commands
+/commands/*
