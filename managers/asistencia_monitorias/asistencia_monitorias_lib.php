@@ -616,6 +616,23 @@ function cargar_asistentes_de_sesion($id){
                 inscripcion.sesion = $id
                 AND inscripcion.eliminado IS DISTINCT FROM 1";
     $results = array_values($DB->get_records_sql($sql));
-    error_log(var_export($results, true));
+    //error_log(var_export($results, true));
     return $results;
+}
+
+function registrar_asistencia_a_asistente($id_asistente){
+    global $DB;
+    $sql = "SELECT * FROM {talentospilos_asis_monitoria} WHERE id = '$id_asistente'";
+    $asistencia = $DB->get_record_sql($sql);
+    if($asistencia){
+        $asistencia->asiste = !$asistencia->asiste;
+        if($asistencia->id == 0){
+            trigger_error('ASES Notificacion: actualizar monitoria en la BD con id 0');
+            return -1;
+        }
+        $DB->update_record('talentospilos_asis_monitoria', $asistencia, $bulk=false);
+        return 1;
+    }else{
+        return -1;
+    }
 }

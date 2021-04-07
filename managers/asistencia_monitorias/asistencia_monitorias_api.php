@@ -279,18 +279,13 @@ if(isset($input->function) && isset($input->params)) {
             if(is_int($id)) {
 
                 $result = cargar_asistentes_de_sesion($id);
-
-                if($result){
-                    echo json_encode(
+                echo json_encode(
                         array(
                             "status_code" => 0,
                             "message" => "Éxito",
                             "data_response" => $result
                         )
-                    );
-                } else {
-                    return_with_code(-5);
-                }
+                );
             } else {
                 return_with_code(-2);
             }
@@ -313,7 +308,20 @@ if(isset($input->function) && isset($input->params)) {
             } else {
                 return_with_code(-2);
             }
-    }  else if($function == 'modificar_celular_de_usuario') {
+    }else if($function == 'registrar_asistencia_a_asistente') {
+        $id = $input->params;
+        $result = registrar_asistencia_a_asistente($id);
+        if($result){
+            echo json_encode(
+                array(
+                    "status_code" => 0,
+                    "message" => "Éxito",
+                )
+            );
+        } else {
+            return_with_code(-5);
+        }
+    } else if($function == 'modificar_celular_de_usuario') {
         $params = $input->params;
         if(count($params) == 2) {
             // id, numero de celular

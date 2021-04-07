@@ -167,7 +167,7 @@ define(['jquery',
                         ]
                       } 
                     // consultar los inscritos en la db
-
+                    console.log("1")
                     $.when($.ajax({
                         type: "POST",
                         data: JSON.stringify({
@@ -181,6 +181,7 @@ define(['jquery',
                             $("#debug").html(msg.responseText);
                         }
                     })).done((msg) =>{
+                        console.log("2")
                         // añadir checkbox a columna de asiste
                         msg.data_response.forEach((asistente) => asistente.asistenciaCheck = `<div style="vertical-align: middle;text-align: center;"><input type="checkbox" class="check-asistio" id="${asistente.id}" ${parseInt(asistente.asistencia) ? "checked" : ""}></div>`);
                         // mostrar modal
@@ -189,9 +190,23 @@ define(['jquery',
                             datosTabla.data = msg.data_response;
                             $("#asistentes_sesion").DataTable(datosTabla);
                             // set up de listeners para check de asistencia
-                            $(".check-asistio").change(function(e) {
-                                e.target.id
-                            })
+                            $(".check-asistio").change(function(c) {
+                                // niega el valor que esté guardado: si registra asistencia, se la quita, y si no registra asistencia, se la pone
+                                $.ajax({
+                                    type: "POST",
+                                    data: JSON.stringify({
+                                        "function": 'registrar_asistencia_a_asistente',
+                                        "params": c.target.id,
+                                    }),
+                                    url: "../managers/asistencia_monitorias/asistencia_monitorias_api.php",
+                                    dataType: "json",
+                                    error: function(msg) {
+                                        console.log("Error edicion BD asistentes monitorias academicas");
+                                        $("#debug").html(msg.responseText);
+                                    }    
+                                });
+                                console.log("3")
+                            });
                             gmm.show_modal(".modal_estudiantes_inscritos");
                             loading_indicator.hide();
                         });
