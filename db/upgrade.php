@@ -7,7 +7,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $dbman = $DB->get_manager();
     $result = true;
 
-    if ($oldversion < 2021032313380) {
+    if ($oldversion < 2021041719080) {
 
       
     //     // ************************************************************************************************************
@@ -4247,10 +4247,42 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->drop_field($table, $field);
         }
 
-        upgrade_block_savepoint(true, 2021032313380, 'ases');
+        /* #####################################################################################
+         * ACTUALIZACIÓN 2021041719080
+         * Se modifica el modelo de las tablas para regionalización
+         * del plugin. S. Cortés
+         * ####################################################################################
+         */
+        $table = new xmldb_table('talentospilos_semestre');
+        $field = new xmldb_field('id_tipo_periodo', XMLDB_TYPE_INTEGER, '10', null, null, null, '1', 'fecha_fin');
+        
+        $key = new xmldb_key('fk_tipo_periodo', XMLDB_KEY_FOREIGN, ['id_tipo_periodo'], 'talentospilos_tipo_periodo', ['id']);
+        $dbman->drop_key($table, $key);
+
+        // Se elimina campo innecesario id_tipo_periodo de la tabla semestre
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        
+        // Se añaden en su lugar campo y fk id_instancia a la tabla semestre
+        $field = new xmldb_field('id_instancia', XMLDB_TYPE_INTEGER, '10', null, null, null, '1', 'fecha_fin');
+        
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $table->add_key('periodo_instancia_fk', XMLDB_KEY_FOREIGN, ['id_instancia'], 'block_instances', ['id']);
+        
+        // Se elimina tabla innecesaria tipo_periodo
+        $table = new xmldb_table('talentospilos_tipo_periodo');
+        
+        if ($dbman->table_exists($table)) {
+            $dbman->drop_table($table);
+        }
+
+        upgrade_block_savepoint(true, 2021041719080, 'ases');
 
 
-       
         return $result;
 
     }

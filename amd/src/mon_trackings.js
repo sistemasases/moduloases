@@ -20,25 +20,32 @@ define(['jquery',
             var moodleID = dataInit[0];
             var instanceID = dataInit[1];
 
-            $("#btn-consulta-fichas").on('click', function () {
-                if ( $("#total-count-row").length ) {
-                    $("#total-count-row").remove();
+            $("button[id^='btn-consulta-fichas-']").on('click', function () {
+                if ( $(this).hasClass('ases-info')) {
+                    $(this).next().remove();
+                    $(this).next().slideUp(500);
+                    $(this).removeClass('ases-info');
+                    $(this).addClass('ases-danger');
+                    $(this).html('Consultar');
+                } else {
+                    const path = event.path || event.composedPath();
+                    trackingsCount(moodleID, instanceID, path[2].id);
+                    $(this).html('Ocultar');
+                    $(this).removeClass('ases-danger');
+                    $(this).addClass('ases-info');
                 }
-
-                let periodID = $("#select-periods").val();
-                trackingsCount(moodleID, instanceID, periodID);
             });
 
-            $( document ).ajaxStart(function() {
-                loading_indicator.show();
-            }).ajaxStop(function() {
-                loading_indicator.hide();
-            });
+            //$( document ).ajaxStart(function() {
+            //    loading_indicator.show();
+            //}).ajaxStop(function() {
+            //    loading_indicator.hide();
+            //});
         }
     };
 
-    function trackingsCount(moodleID, instanceID, periodID) {
-
+    function trackingsCount(moodleID, instanceID, periodID, appendLocation) {
+        loading_indicator.show();
         $.ajax({
             type: "POST",
             dataType: "json",
@@ -59,10 +66,14 @@ define(['jquery',
                         async: "false",
                         success: function (template) {
                             let divToAppend = $(mustache.render(template, result.data_response));
-                            $("#ases-container-tracking").append(divToAppend);
+                            $(`#count-${periodID}`).append(divToAppend).hide();
+                            $(`#count-${periodID}`).slideDown(500);
                         },
                         error: function() {
                             console.log('Cannot reach template.');
+                        },
+                        complete: function() {
+                            loading_indicator.hide();
                         }
                     });
                 }
@@ -80,5 +91,6 @@ define(['jquery',
             },
 
         });
+
     }
 });

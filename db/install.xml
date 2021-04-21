@@ -146,9 +146,11 @@
         <FIELD NAME="nombre" TYPE="char" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="fecha_inicio" TYPE="datetime" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="fecha_fin" TYPE="datetime" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="id_instancia" TYPE="int" NOTNULL="false" LENGTH="10" SEQUENCE="false" />
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="periodo_instancia_fk" TYPE="foreign" FIELDS="id_instancia" REFTABLE="block_instances" REFFIELDS="id" />
       </KEYS>
     </TABLE>
     <TABLE NAME="talentospilos_academica" COMMENT="Registra la información académica de un estudiante">

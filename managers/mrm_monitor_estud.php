@@ -1,7 +1,7 @@
 <?php
 require_once(dirname(__FILE__). '/../../../config.php');
-require_once('MyException.php');
-require_once('query.php');
+require_once('../MyException.php');
+//require_once('query.php');
 
 if( isset($_FILES['file']) || isset($_POST['idinstancia'])){
     try {
