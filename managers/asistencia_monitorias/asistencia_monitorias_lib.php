@@ -556,7 +556,7 @@ function cargar_inscripciones_de_usuario($id_usuario){
                 ORDER BY sesion.fecha ASC";
     
     $results = $DB->get_records_sql($sql);
-    error_log(var_export($results, true));
+   //error_log(var_export($results, true));
     foreach($results as $result) {
         $result->dia = array("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo")[$result->dia_numero];
         $result->fecha = formatear_fecha_int_a_legible($result->fecha);
@@ -641,4 +641,26 @@ function registrar_asistencia_a_asistente($id_asistente){
     }else{
         return -1;
     }
+}
+
+function get_asignaturas_matriculadas_por_usuario($id_user){
+    global $DB;
+    return $DB->get_records_sql(
+        "SELECT curso.id, 
+                curso.fullname AS asignatura, 
+                curso.shortname
+        FROM {user} estudiante
+            INNER JOIN {user_enrolments} estudiantes_matriculas
+                ON estudiante.id = estudiantes_matriculas.userid
+            INNER JOIN {enrol} matricula
+                ON estudiantes_matriculas.enrolid = matricula.id
+            INNER JOIN {course} curso
+                ON matricula.courseid = curso.id
+        WHERE estudiante.id = $id_user 
+            AND matricula.status = 0 
+            "
+            ."AND curso.id NOT IN (SELECT course FROM {course_completions} cc WHERE cc.userid = $id_user)"
+            ."ORDER BY matricula.timecreated DESC"
+    );
+
 }

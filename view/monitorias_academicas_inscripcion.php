@@ -104,6 +104,9 @@ $data->sabado = array_values(array_filter($monitorias,function($m){return $m->di
 $data->inscritas = array_values(cargar_inscripciones_de_usuario($USER->id));
 $data->hay_inscritas = count($data->inscritas) > 0;
 
+// asignaturas que el usuario tiene matriculadas
+$data->asignaturas_matriculadas = array_values(get_asignaturas_matriculadas_por_usuario($USER->id));
+$data->userid= $USER->id;
 // TEST DATA
 
 //$data->hay_inscritas = true;
