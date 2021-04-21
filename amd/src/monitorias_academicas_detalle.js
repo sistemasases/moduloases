@@ -66,8 +66,9 @@ define(['jquery',
                 $("#programar_sesiones").click(this.mostrar_programar_sesiones);
             },
             construir_tabla: construir_tabla,
-            init_despues_de_tabla: function (){
+            init_despues_de_tabla: function (es_profesional){
                 // cancelar sesion
+                if(es_profesional)
                 $(".dt-button.buttons-print.eliminar").click(function (e) {
                     let fecha = $(e.target).parent().parent().parent().find("td")[0].innerHTML;
                     swal({
@@ -98,6 +99,7 @@ define(['jquery',
                         }
                     });
                 });
+                else $(".dt-button.buttons-print.eliminar").toggle();
                 // ver estudiantes inscritos en esa sesion
                 $(".estudiantes").click(function (e) {
                     loading_indicator.show();

@@ -4,7 +4,7 @@ require_once dirname(__FILE__) . '/../../../../config.php';
 
 global $DB;
 
-function get_tabla_monitorias($course_id, $block_id){
+function get_tabla_monitorias($course_id, $block_id, $id_monitor = ""){
     global $DB;
     $sql_query = "SELECT monitoria.id AS id, 
                         dia, 
@@ -18,6 +18,7 @@ function get_tabla_monitorias($course_id, $block_id){
                     INNER JOIN {talentospilos_mate_monitoria} materia
                     ON monitoria.materia = materia.id)
                 WHERE monitoria.eliminado IS DISTINCT FROM 1";
+    if($id_monitor) $sql_query .= "AND monitoria.monitor = $id_monitor";
     $result_query = $DB->get_records_sql($sql_query);
     $result_to_return = array();
     foreach($result_query as $result){
@@ -105,6 +106,11 @@ function get_tabla_monitorias($course_id, $block_id){
     return $data_to_table;
 }
 
+function es_monitor($user_id){
+    global $DB;
+    $id_grupo = cargar_grupo_seleccionado()->id_number;
+    return $DB->record_exists("groups_members", array('groupid' => $id_grupo, 'userid'=> $user_id));
+}
 
 function cargar_materias(){
     global $DB;

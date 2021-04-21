@@ -69,12 +69,14 @@ $PAGE->requires->css('/blocks/ases/style/monitorias.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/monitorias_academicas_detalle','init');
 
+$data->es_profesional = !es_monitor($id_current_user);
+
 $params = new stdClass();
 // inicialmente mostrar sesiones programadas desde hoy hasta infinito
 $params->sesiones = get_tabla_sesiones($monitoria_id, (new DateTime())->format("Ymd"), 99999999);
 $params->monitoria = $datos_monitoria;
 $PAGE->requires->js_call_amd('block_ases/monitorias_academicas_detalle','construir_tabla', $params);
-$PAGE->requires->js_call_amd('block_ases/monitorias_academicas_detalle','init_despues_de_tabla');
+$PAGE->requires->js_call_amd('block_ases/monitorias_academicas_detalle','init_despues_de_tabla', array($data->es_profesional));
 $output = $PAGE->get_renderer('block_ases');
 $monitoria_page = new \block_ases\output\monitoria_page($data);
 

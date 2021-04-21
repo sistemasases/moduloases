@@ -59,11 +59,20 @@ $PAGE->requires->css('/blocks/ases/style/monitorias.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/monitorias_academicas','init');
 
-$monitorias = get_tabla_monitorias($course_id, $block_id);
+$monitor_id = "";
+$data->es_profesional = true;
+$es_monitor = es_monitor($id_current_user);
+if($es_monitor){ 
+    $monitor_id = $id_current_user;
+    $data->nombre_monitor = $USER->lastname." ".$USER->firstname;
+    $data->es_profesional = false;
+}
+
+$monitorias = get_tabla_monitorias($course_id, $block_id, $monitor_id);
 $params = new stdClass();
 $params->table = $monitorias;
 $PAGE->requires->js_call_amd('block_ases/monitorias_academicas','cargar_monitorias_default', $params);
-$PAGE->requires->js_call_amd('block_ases/monitorias_academicas','continuar_setup_inicial');
+$PAGE->requires->js_call_amd('block_ases/monitorias_academicas','continuar_setup_inicial', array($es_monitor));
 $output = $PAGE->get_renderer('block_ases');
 $monitorias_page = new \block_ases\output\monitorias_page($data);
 

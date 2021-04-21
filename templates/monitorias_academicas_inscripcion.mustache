@@ -116,12 +116,33 @@
         </div>
         <div class="row">
             <div class="form-group col-sm">
-                <label for="asignatura">Nombre de la asignatura a consultar:</label>
-                <input type="text" name="asignatura" id="asignatura" class="form-control" placeholder="Ej. &quot;Cálculo 3&quot, &quot;Física II&quot, &quot;Química General&quot">
+                <label for="asignatura">Asignatura a consultar:</label>
+
+                <select id="asignatura" class="form-control">
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                </select>
             </div>
             <div class="form-group col-sm">
                 <label for="tematica">Temática a consultar: </label>
                 <textarea name="tematica" id="tematica" class="form-control" placeholder="Ej. &quot;Derivadas parciales&quot, &quot;Ley de Gauss&quot, &quot;Estequiometría&quot"></textarea>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-sm">
+                <label for="tematica">Nombre de la asignatura a consultar: </label>
+                <textarea name="nombre-asignatura" id="nombre-asignatura" class="form-control" placeholder="Ej. &quot;Cálculo III&quot, &quot;Fisica 2&quot, &quot;Estequiometría&quot"></textarea>
+            </div>
+            <div class="form-group col-sm">
+                <label for="tematica">Temática a consultar: </label>
+                <textarea name="tematica" id="tematica" class="form-control" placeholder="Ej. &quot;Derivadas parciales&quot, &quot;Ley de Gauss&quot, &quot;Estequiometría&quot"></textarea>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-sm form-check">
+            <label for="seguir-inscribiendo" class="form-check-label"><input type="checkbox" class="form-check-label" id="seguir-inscribiendo">
+                Inscribirme a esta monitoría automáticamente cada 8 días</label>
             </div>
         </div>
         <div style="display: flex">

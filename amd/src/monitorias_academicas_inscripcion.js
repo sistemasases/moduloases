@@ -9,15 +9,23 @@
  */
 
  define(['jquery','block_ases/_general_modal_manager','block_ases/loading_indicator','block_ases/sweetalert'], function($, gmm, loading_indicator, sweetalert){
-     var USER = {};
+    var USER = {};
     return {
         set_user : (id, email, phone) => USER = {id, email, phone},
         p : () => console.log(USER),
         init : function(){
+            this.p();
             loading_indicator.show();
             // Setup: Modal de inscripción a monitoría
             $(".link_inscripcion_monitoria").click(function(e){
                 e.preventDefault();
+                if(!USER.phone){
+                    swal(
+                        {title:"Por favor, ingresa tu teléfono",
+                        text: "Antes de inscribirte a una monitoría requerimos que ingreses tu número de telefono celular. Puedes hacerlo en la sección \"Tus datos de contacto\".",
+                        icon: "warning"});
+                    return;
+                }
                 loading_indicator.show();
                 // cargar cuándo es la próxima monitoría
                 $.when($.ajax({
@@ -54,7 +62,9 @@
                         let id_asistente = USER.id;
                         let asignatura_a_consultar = $(".modal_fomulario_inscripcion").find("#asignatura").val();
                         let tematica_a_consultar = $(".modal_fomulario_inscripcion").find("#tematica").val();
-
+                        let profesor = $(".modal_fomulario_inscripcion").find("#profesor").val();
+                        let seguir_inscribiendo = $(".modal_fomulario_inscripcion").find("#seguir_inscribiendo").prop("checked");
+                        
                         $.ajax({
                             type: "POST",
                             data: JSON.stringify({
@@ -127,35 +137,38 @@
                 });
                                 });
             // Setup: editar numero de telefono celular
-            $("#editar-celular").click(function (e) {
-                $("#mostrar-celular").hide();
-                $("#edicion-celular").attr( "style", "display: inline");
-                $("#campo-celular").attr("placeholder", $("#celular").html());
-            });
-            function terminarDeEditar(e){
-                $("#edicion-celular").hide();
-                $("#mostrar-celular").show();
+            {$("#editar-celular").click(function (e) {
+                    $("#mostrar-celular").hide();
+                    $("#edicion-celular").attr( "style", "display: inline");
+                    $("#campo-celular").attr("placeholder", $("#celular").html());
+                });
+                function terminarDeEditar(e){
+                    $("#edicion-celular").hide();
+                    $("#mostrar-celular").show();
+                }
+                $("#cancelar-editar-celular").click(terminarDeEditar);
+                $("#guardar-editar-celular").click(function (e) {
+                    // guardar el numero celular en la bd
+                    console.log($("#campo-celular").val());
+                    $.when($.ajax({
+                        type: "POST",
+                        data: JSON.stringify({
+                                "function": 'modificar_celular_de_usuario',
+                                "params": [USER.id, $("#campo-celular").val()],
+                            }),
+                        url: "../managers/asistencia_monitorias/asistencia_monitorias_api.php",
+                        dataType: "json",
+                        error: function(msg) {
+                            $("#debug").html(msg);
+                        },
+                        success: function(msg) {
+                            USER.phone = $("#campo-celular").val();
+                            console.log(msg)
+                        }})).done(terminarDeEditar);
+                        $("#celular").html($("#campo-celular").val());
+                });
             }
-            $("#cancelar-editar-celular").click(terminarDeEditar);
-            $("#guardar-editar-celular").click(function (e) {
-                // guardar el numero celular en la bd
-                console.log($("#campo-celular").val());
-                $.when($.ajax({
-                    type: "POST",
-                    data: JSON.stringify({
-                            "function": 'modificar_celular_de_usuario',
-                            "params": [USER.id, $("#campo-celular").val()],
-                        }),
-                    url: "../managers/asistencia_monitorias/asistencia_monitorias_api.php",
-                    dataType: "json",
-                    error: function(msg) {
-                        $("#debug").html(msg);
-                    },
-                    success: function(msg) {
-                        console.log(msg)
-                    }})).done(terminarDeEditar);
-                    $("#celular").html($("#campo-celular").val());
-            });
+
             loading_indicator.hide();
         }
     }

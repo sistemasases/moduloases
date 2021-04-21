@@ -52,8 +52,9 @@ define(['jquery',
             $("#div_table").fadeIn(500).append('<table id="tableResult" class="stripe row-border order-column" cellspacing="0" width="100%"><thead> </thead></table>');
             $("#tableResult").DataTable(data);
         },
-        continuar_setup_inicial : function(){
-            $(".dt-button.buttons-print.eliminar").click(eliminar_monitoria);
+        continuar_setup_inicial : function(es_monitor){
+            if(es_monitor) $(".dt-button.buttons-print.eliminar").toggle();
+            else $(".dt-button.buttons-print.eliminar").click(eliminar_monitoria);
         }
         
     }
