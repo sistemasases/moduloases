@@ -7,7 +7,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $dbman = $DB->get_manager();
     $result = true;
 
-    if ($oldversion < 2021041719080) {
+    if ($oldversion < 2021042120260) {
 
       
     //     // ************************************************************************************************************
@@ -4280,7 +4280,72 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->drop_table($table);
         }
 
-        upgrade_block_savepoint(true, 2021041719080, 'ases');
+        /* ////////////////////////////////////////////////////////////////////////////////////////////////
+		 * Actualización para el aplicativo de monitorías academicas: 
+         * En talentospilos_asis_monitoria, añadidos nombre_asignatura_a_consultar y prof_asignatura_a_consultar
+         * Cambio del tipo de dato de talentospilos_asis_monitoria.asignatura_a_consultar a integer
+         * Cambio del tipo de dato de talentospilos_asis_monitoria.asiste a integer
+         * 
+		 * Joan Sebastian Betancourt. VERSION: 2021042110000
+		 */
+
+        // Define field nombre_asignatura_a_consultar to be added to talentospilos_asis_monitoria.
+        $table = new xmldb_table('talentospilos_asis_monitoria');
+        $field = new xmldb_field('nombre_asignatura_a_consultar', XMLDB_TYPE_TEXT, null, null, null, null, null, 'asignatura_a_consultar');
+
+        // Conditionally launch add field nombre_asignatura_a_consultar.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field prof_asignatura_a_consultar to be added to talentospilos_asis_monitoria.
+        $table = new xmldb_table('talentospilos_asis_monitoria');
+        $field = new xmldb_field('prof_asignatura_a_consultar', XMLDB_TYPE_TEXT, null, null, null, null, null, 'nombre_asignatura_a_consultar');
+        
+        // Conditionally launch add field prof_asignatura_a_consultar.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field asignatura_a_consultar to be dropped from talentospilos_asis_monitoria.
+        $table = new xmldb_table('talentospilos_asis_monitoria');
+        $field = new xmldb_field('asignatura_a_consultar');
+
+        // Conditionally launch drop field asignatura_a_consultar.
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        // Define field asignatura_a_consultar to be added to talentospilos_asis_monitoria.
+        $table = new xmldb_table('talentospilos_asis_monitoria');
+        $field = new xmldb_field('asignatura_a_consultar', XMLDB_TYPE_INTEGER, '10', null, null, null, '1', 'eliminado');
+
+        // Conditionally launch add field asignatura_a_consultar.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field asignatura_a_consultar to be dropped from talentospilos_asis_monitoria.
+        $table = new xmldb_table('talentospilos_asis_monitoria');
+        $field = new xmldb_field('asiste');
+
+        // Conditionally launch drop field asiste.
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        // Define field asiste to be added to talentospilos_asis_monitoria.
+        $table = new xmldb_table('talentospilos_asis_monitoria');
+        $field = new xmldb_field('asiste', XMLDB_TYPE_INTEGER, '10', null, null, null, '1', 'eliminado');
+
+        // Conditionally launch add field asiste.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // ////////////////////////////////////////////////////////////////////////////////////////////////
+
+        upgrade_block_savepoint(true, 2021042120260, 'ases');
 
 
         return $result;

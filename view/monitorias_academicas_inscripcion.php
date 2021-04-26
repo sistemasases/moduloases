@@ -73,7 +73,7 @@ $PAGE->requires->css('/blocks/ases/style/jquery.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/buttons.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/jqueryui.css', true);
 
-$PAGE->requires->css('/blocks/ases/style/monitorias.css', true);
+$PAGE->requires->css('/blocks/ases/style/monitorias_academicas.css', true);
 
 //$PAGE->requires->js_call_amd('block_ases/monitorias_academicas_detalle','init');
 
@@ -101,20 +101,13 @@ $data->jueves = array_values(array_filter($monitorias,function($m){return $m->di
 $data->viernes = array_values(array_filter($monitorias,function($m){return $m->dia == 4;}));
 $data->sabado = array_values(array_filter($monitorias,function($m){return $m->dia == 5;}));
 
+// sesiones en las que el usuario está inscrito
 $data->inscritas = array_values(cargar_inscripciones_de_usuario($USER->id));
 $data->hay_inscritas = count($data->inscritas) > 0;
 
 // asignaturas que el usuario tiene matriculadas
 $data->asignaturas_matriculadas = array_values(get_asignaturas_matriculadas_por_usuario($USER->id));
 $data->userid= $USER->id;
-// TEST DATA
-
-//$data->hay_inscritas = true;
-
-//$data->inscritas = array(array("id"=>"2", "dia"=>"Martes", "horario"=>"9:00AM - 1:00PM","fecha"=>"01/03/21","materia"=>"Física","encargado"=>"JOAN SEBASTIAN BETANCOURT ARIAS (3218831760)","asignatura"=>"Fundamentos de física III","tematica"=>"las cosas se caen auxilio"),
-//array("id"=>"2","dia"=>"Jueves", "horario"=>"12:00AM - 3:00PM","fecha"=>"04/03/21","materia"=>"Química","encargado"=>"ALEXANDER VON HUMBOLDT (3548423154)","asignatura"=>"Química organica","tematica"=>"cómo las cosas vivas hacen cosas??"),
-//array("id"=>"2","dia"=>"Martes", "horario"=>"9:00AM - 1:00PM","fecha"=>"01/03/21","materia"=>"Matemática Fundamental, Cálculo, Álgebra Lineal, Ecuaciones Diferenciales","encargado"=>"JOAN SEBASTIAN BETANCOURT ARIAS (joan.betancourt@correounivalle.edu.co)","asignatura"=>"Calculo I","tematica"=>"no me enseñaron a factorizar en el colegio")
-//);
 
 $PAGE->requires->js_call_amd('block_ases/monitorias_academicas_inscripcion','set_user', array($USER->id, $USER->email, $USER->phone1));
 $PAGE->requires->js_call_amd('block_ases/monitorias_academicas_inscripcion','init');

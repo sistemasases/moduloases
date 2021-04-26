@@ -102,15 +102,20 @@ if(isset($input->function) && isset($input->params)) {
         }
     }  else if($function == 'anadir_asistente_a_sesion_de_monitoria') {
         $params = $input->params;
-        if(count($params) == 4) {
-            // id_sesion, id_asistente, asignatura_a_consultar, tematica_a_consultar
+        if(count($params) == 8) {
+            // id_sesion, id_asistente, asignatura_a_consultar, nombre_asignatura, profesor, tematica_a_consultar, seguir_inscribiendo, id_monitoria
             $sesion = $params[0];
             $asistente = $params[1];
             $asignatura_a_consultar = $params[2];
-            $tematica_a_consultar = $params[3];
-
-            $result = anadir_asistente_a_sesion_de_monitoria($sesion, $asistente, $asignatura_a_consultar, $tematica_a_consultar);
-
+            $nombre_asignatura = $params[3];
+            $profesor = $params[4];
+            $tematica_a_consultar = $params[5];
+            $seguir_inscribiendo = $params[6];
+            $id_monitoria = $params[7];
+            if($seguir_inscribiendo) // si usuario marcó "Inscribirme a esta monitoría automáticamente cada 8 días", inscribir a todas las sesiones de la monitoría que haya programadas
+            $result = anadir_asistente_a_todas_las_sesiones_de_monitoria($id_monitoria, $asistente, $asignatura_a_consultar, $nombre_asignatura, $profesor, $tematica_a_consultar);
+            else $result = anadir_asistente_a_sesion_de_monitoria($sesion, $asistente, $asignatura_a_consultar, $nombre_asignatura, $profesor, $tematica_a_consultar);
+            // si no, inscribir solo a esa sesion
                 if($result){
                     echo json_encode(
                         array(

@@ -18,16 +18,159 @@ define(['jquery',
     'block_ases/jqueryui',
     'block_ases/loading_indicator',
     'block_ases/sweetalert',
-    'extras'
+    'extras',
+    'core/ajax'
 ],
     function ($, dataTables, buttons, html5, flash, print,  gmm, select2, jqueryui, loading_indicator, sweetalert, extras) {
+        const monitoria_id = (new URLSearchParams(window.location.search)).get("monitoriaid");
+        var es_profesional = false;
         function construir_tabla(data){
             $("#div_table").html('');
             $("#div_table").fadeIn(500).append('<table id="tableResult" class="stripe row-border order-column" cellspacing="0" width="100%"><thead> </thead></table>');
             $("#tableResult").DataTable(data);
         }
-        const monitoria_id = (new URLSearchParams(window.location.search)).get("monitoriaid");
+        function init_despues_de_tabla(){
+            // cancelar sesion
+            if(es_profesional)
+            $(".dt-button.buttons-print.eliminar").click(function (e) {
+                let fecha = $(e.target).parent().parent().parent().find("td")[0].innerHTML;
+                swal({
+                    title: 'Cancelar sesión',
+                    text: "¿Deseas cancelar la sesión programada el "+fecha+"?",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Eliminar'
+                }, function (isConfirmed) {
+                    if (isConfirmed) {
+                        $.ajax({
+                            type: "POST",
+                            data: JSON.stringify({
+                                "function": 'eliminar_sesion',
+                                "params": e.target.id,
+                            }),
+                            url: "../managers/asistencia_monitorias/asistencia_monitorias_api.php",
+                            dataType: "json",
+                            success: function(msg) {
+                                consultar_sesiones_por_fecha(e);
+                                init_despues_de_tabla();
+                            },
+                            error : function(msg) {
+                                swal('Error!', msg, 'error')
+                                console.log(msg)
+                            },
+                        });
+                    }
+                });
+            });
+            else $(".dt-button.buttons-print.eliminar").toggle();
+            // ver estudiantes inscritos en esa sesion
+            $(".estudiantes").click(function (e) {
+                loading_indicator.show();
+                let fecha = $(e.target).parent().parent().parent().find("td")[0].innerHTML;
+                let titulo = `Asistentes inscritos a ${$('#nombre_monitoria').html()}, ${$('#horario_semanal').html()}, ${fecha}`;
+                // config de la dataTable
+                let columnas = [
+                    {"title" : "Asiste?",                 "name": "asistenciaCheck","data": "asistenciaCheck",   "width": "3%"},
+                    {"title" : "Código",                    "name": "codigo",       "data": "codigo",       "width": "8%"},
+                    {"title" : "Nombres",                   "name": "nombres",      "data": "nombres",      "width": "10%"},
+                    {"title" : "Apellidos",                 "name": "apellidos",    "data": "apellidos",    "width": "10%"},
+                    {"title" : "Programa/Dependencia",      "name": "programa",     "data": "programa",     "width": "10%"},
+                    {"title" : "Categoría",                 "name": "categoria",    "data": "categoria",     "width": "7%"},
+                    {"title" : "Correo electrónico",        "name": "correo",       "data": "correo",       "width": "13%"},
+                    {"title" : "Celular",                   "name": "celular",      "data": "celular",      "width": "5%"},
+                    {"title" : "Asignatura a consultar",    "name": "asignatura",   "data": "asignatura",   "width": "17%"},
+                    {"title" : "Temática a consultar",      "name": "tematica",     "data": "tematica",     "width": "17%"}
+                ];
+                let datosTabla = {
+                    "ordering": false,
+                    "columns" : columnas,
+                    "autoWidth": false,
+                    "select": "false",
+                    "fixedHeader": {
+                      "header": true,
+                      "footer": true
+                    },
+                    "language": {
+                      "search": "Buscar:",
+                      "oPaginate": {
+                        "sFirst": "Primero",
+                        "sLast": "Último",
+                        "sNext": "Siguiente",
+                        "sPrevious": "Anterior"
+                      },
+                      "sProcessing": "Procesando...",
+                      "sLengthMenu": "Mostrar _MENU_ registros",
+                      "sZeroRecords": "No se encontraron resultados",
+                      "sEmptyTable": "Ningún dato disponible",
+                      "sInfo": "Mostrando del _START_ al _END_ de _TOTAL_",
+                      "sInfoEmpty": " 0 registros",
+                      "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                      "sInfoPostFix": "",
+                      "sSearch": "Buscar:",
+                      "sUrl": "",
+                      "sInfoThousands": ",",
+                      "sLoadingRecords": "Cargando...",
+                      "oAria": {
+                        "sSortAscending": ": Ordenar ascendente",
+                        "sSortDescending": ": Ordenar descendente"
+                      }
+                    },
+                    "dom": "lifrtpB",
+                    "buttons": [
+                      {
+                        "extend": "print",
+                        "text": "Imprimir",
+                        "title" : titulo
+                      },
+                      {
+                        "extend": "csvHtml5",
+                        "text": "CSV"
+                      },
+                      {
+                        "extend": "excel",
+                        "text": "Excel",
+                        "className": "buttons-excel",
+                        "filename": "Export excel",
+                        "extension": ".xls"
+                      }
+                    ]
+                  } 
+                // consultar los inscritos en la db
+                $.when($.ajax({
+                    type: "POST",
+                    data: JSON.stringify({
+                        "function": 'cargar_asistentes_de_sesion',
+                        "params": e.target.id,
+                    }),
+                    url: "../managers/asistencia_monitorias/asistencia_monitorias_api.php",
+                    dataType: "json",
+                    error: function(msg) {
+                        console.log("Error consulta BD asistentes monitorias academicas");
+                        $("#debug").html(msg.responseText);
+                    }
+                })).done((msg) =>{
+                    
+                    msg.data_response.forEach((asistente) => {
+                        // añadir checkbox a columna de asiste
+                        asistente.asistenciaCheck = `<div style="vertical-align: middle;text-align: center;">${parseInt(asistente.asistencia) ? '<span  class="glyphicon glyphicon-ok config-icon verde">' : ""}</div>`;
+                        // añadir nombre profesor a asignatura a consultar
+                        asistente.asignatura += " ("+(asistente.profesor.trim() || "PROF. NO ENCONTRADO") +")";
+                        // forzar linebreak en correo para que esa columna no sea tan ancha
+                        asistente.correo = `<span style="word-break: break-all;">${asistente.correo}</span>`;
+                    });
+                    // mostrar modal
+                    gmm.generate_modal("modal_estudiantes_inscritos", titulo, '<table id="asistentes_sesion" class="stripe row-border order-column" cellspacing="0" width="100%"><thead> </thead></table>', null, 
+                    function(){  
+                        datosTabla.data = msg.data_response;
+                        $("#asistentes_sesion").DataTable(datosTabla);
+                        gmm.show_modal(".modal_estudiantes_inscritos");
+                        loading_indicator.hide();
+                    });
+                });
+            });
+        }
         return {
+            set_es_profesional : (es) => es_profesional = es,
             init: function () {
                  // datepickers
                 $.datepicker.setDefaults({
@@ -66,155 +209,7 @@ define(['jquery',
                 $("#programar_sesiones").click(this.mostrar_programar_sesiones);
             },
             construir_tabla: construir_tabla,
-            init_despues_de_tabla: function (es_profesional){
-                // cancelar sesion
-                if(es_profesional)
-                $(".dt-button.buttons-print.eliminar").click(function (e) {
-                    let fecha = $(e.target).parent().parent().parent().find("td")[0].innerHTML;
-                    swal({
-                        title: 'Cancelar sesión',
-                        text: "¿Deseas cancelar la sesión programada el "+fecha+"?",
-                        type: 'warning',
-                        showCancelButton: true,
-                        confirmButtonText: 'Eliminar'
-                    }, function (isConfirmed) {
-                        if (isConfirmed) {
-                            $.ajax({
-                                type: "POST",
-                                data: JSON.stringify({
-                                    "function": 'eliminar_sesion',
-                                    "params": e.target.id,
-                                }),
-                                url: "../managers/asistencia_monitorias/asistencia_monitorias_api.php",
-                                dataType: "json",
-                                success: function(msg) {
-                                    consultar_sesiones_por_fecha();
-                                    init_despues_de_tabla();
-                                },
-                                error : function(msg) {
-                                    swal('Error!', msg, 'error')
-                                    console.log(msg)
-                                },
-                            });
-                        }
-                    });
-                });
-                else $(".dt-button.buttons-print.eliminar").toggle();
-                // ver estudiantes inscritos en esa sesion
-                $(".estudiantes").click(function (e) {
-                    loading_indicator.show();
-                    let fecha = $(e.target).parent().parent().parent().find("td")[0].innerHTML;
-                    // config de la dataTable
-                    let columnas = [
-                        {"title" : "Asiste?",                 "name": "asistenciaCheck","data": "asistenciaCheck",   "width": "3%"},
-                        {"title" : "Código",                    "name": "codigo",       "data": "codigo",       "width": "8%"},
-                        {"title" : "Nombres",                   "name": "nombres",      "data": "nombres",      "width": "20%"},
-                        {"title" : "Apellidos",                 "name": "apellidos",    "data": "apellidos",    "width": "20%"},
-                        {"title" : "Programa/Dependencia",      "name": "programa",     "data": "programa",     "width": "10%"},
-                        {"title" : "Correo electrónico",        "name": "correo",       "data": "correo",       "width": "15%"},
-                        {"title" : "Celular",                   "name": "celular",      "data": "celular",      "width": "5%"},
-                        {"title" : "Asignatura a consultar",    "name": "asignatura",   "data": "asignatura",   "width": "20%"},
-                        {"title" : "Temática a consultar",      "name": "tematica",     "data": "tematica",     "width": "20%"},
-                    ];
-                    let datosTabla = {
-                        "ordering": false,
-                        "columns" : columnas,
-                        "select": "false",
-                        "fixedHeader": {
-                          "header": true,
-                          "footer": true
-                        },
-                        "language": {
-                          "search": "Buscar:",
-                          "oPaginate": {
-                            "sFirst": "Primero",
-                            "sLast": "Último",
-                            "sNext": "Siguiente",
-                            "sPrevious": "Anterior"
-                          },
-                          "sProcessing": "Procesando...",
-                          "sLengthMenu": "Mostrar _MENU_ registros",
-                          "sZeroRecords": "No se encontraron resultados",
-                          "sEmptyTable": "Ningún dato disponible",
-                          "sInfo": "Mostrando del _START_ al _END_ de _TOTAL_",
-                          "sInfoEmpty": " 0 registros",
-                          "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
-                          "sInfoPostFix": "",
-                          "sSearch": "Buscar:",
-                          "sUrl": "",
-                          "sInfoThousands": ",",
-                          "sLoadingRecords": "Cargando...",
-                          "oAria": {
-                            "sSortAscending": ": Ordenar ascendente",
-                            "sSortDescending": ": Ordenar descendente"
-                          }
-                        },
-                        "dom": "lifrtpB",
-                        "buttons": [
-                          {
-                            "extend": "print",
-                            "text": "Imprimir"
-                          },
-                          {
-                            "extend": "csvHtml5",
-                            "text": "CSV"
-                          },
-                          {
-                            "extend": "excel",
-                            "text": "Excel",
-                            "className": "buttons-excel",
-                            "filename": "Export excel",
-                            "extension": ".xls"
-                          }
-                        ]
-                      } 
-                    // consultar los inscritos en la db
-                    console.log("1")
-                    $.when($.ajax({
-                        type: "POST",
-                        data: JSON.stringify({
-                            "function": 'cargar_asistentes_de_sesion',
-                            "params": e.target.id,
-                        }),
-                        url: "../managers/asistencia_monitorias/asistencia_monitorias_api.php",
-                        dataType: "json",
-                        error: function(msg) {
-                            console.log("Error consulta BD asistentes monitorias academicas");
-                            $("#debug").html(msg.responseText);
-                        }
-                    })).done((msg) =>{
-                        console.log("2")
-                        // añadir checkbox a columna de asiste
-                        msg.data_response.forEach((asistente) => asistente.asistenciaCheck = `<div style="vertical-align: middle;text-align: center;"><input type="checkbox" class="check-asistio" id="${asistente.id}" ${parseInt(asistente.asistencia) ? "checked" : ""}></div>`);
-                        // mostrar modal
-                        gmm.generate_modal("modal_estudiantes_inscritos", `Asistentes inscritos a ${$('#nombre_monitoria').html()}, ${$('#horario_semanal').html()}, ${fecha}  `, '<table id="asistentes_sesion" class="stripe row-border order-column" cellspacing="0" width="100%"><thead> </thead></table>', null, 
-                        function(){  
-                            datosTabla.data = msg.data_response;
-                            $("#asistentes_sesion").DataTable(datosTabla);
-                            // set up de listeners para check de asistencia
-                            $(".check-asistio").change(function(c) {
-                                // niega el valor que esté guardado: si registra asistencia, se la quita, y si no registra asistencia, se la pone
-                                $.ajax({
-                                    type: "POST",
-                                    data: JSON.stringify({
-                                        "function": 'registrar_asistencia_a_asistente',
-                                        "params": c.target.id,
-                                    }),
-                                    url: "../managers/asistencia_monitorias/asistencia_monitorias_api.php",
-                                    dataType: "json",
-                                    error: function(msg) {
-                                        console.log("Error edicion BD asistentes monitorias academicas");
-                                        $("#debug").html(msg.responseText);
-                                    }    
-                                });
-                                console.log("3")
-                            });
-                            gmm.show_modal(".modal_estudiantes_inscritos");
-                            loading_indicator.hide();
-                        });
-                    });
-                });
-            },
+            init_despues_de_tabla: init_despues_de_tabla,
             mostrar_modificar_monitoria : function(){
                 // cargar mustache
             $.when($.ajax({
@@ -232,9 +227,9 @@ define(['jquery',
                             console.log( "../templates/monitorias_academicas_anadir.mustache cannot be reached." );
                         }
                     })).done(() =>{
-
-                    listar_materias_select();
-                      listar_monitores_select();
+                        
+                        listar_materias_select();
+                        listar_monitores_select();
                         attach_listeners_botones();
                 
 
@@ -250,6 +245,9 @@ define(['jquery',
                 $("#hora_final1").val(hora[3]);
                 $("#hora_final2").val(hora[4]);
                 $("select[name='dia']").val(parseInt($("#dia").html())).change();
+
+                // bloquear el select de día para que no lo puedan cambiar
+                $("select[name='dia']").attr('disabled', 'disabled');
 
             });
             
@@ -406,7 +404,6 @@ define(['jquery',
                     $("#form_anadir").submit(function(e){
                         e.preventDefault();
                         loading_indicator.show();
-                        var dia = $("select[name='dia']").val();
                         var hora = $("#hora_inicio1 option:selected").text()+" "+$("#hora_inicio2 option:selected").text()+ " - "+ $("#hora_final1 option:selected").text()+" "+$("#hora_final2 option:selected").text();
                         var materia = $('#materia').find(':selected').first().val();
                         var monitor = $('#monitor').find(':selected').first().val();
@@ -415,7 +412,7 @@ define(['jquery',
                             type: "POST",
                             data: JSON.stringify({
                                 "function": 'modificar_monitoria',
-                                "params": [dia, hora, materia, monitor, monitoria_id],
+                                "params": [ hora, materia, monitor, monitoria_id],
                             }),
                             url: "../managers/asistencia_monitorias/asistencia_monitorias_api.php",
                             dataType: "json",
@@ -525,6 +522,7 @@ define(['jquery',
         loading_indicator.show();
             var desde = formatear_date_a_int(e ? $("#fecha_desde").datepicker("getDate") : new Date());
             var hasta = formatear_date_a_int(e ? $("#fecha_hasta").datepicker("getDate") : new Date(8640000000000000)); // máxima fecha disponible en JS
+            console.log(desde.toString()+" "+hasta.toString());
         $.ajax({
             type: "POST",
             data: JSON.stringify({
@@ -536,9 +534,10 @@ define(['jquery',
             success: function(msg) {
                 loading_indicator.hide();
                 construir_tabla(msg.data_response);
+                init_despues_de_tabla();
             },
             error: function(msg) {
-                console.log("Error insercion bd de monitoria en backend");
+                console.log("Error consulta bd de sesiones en backend");
                 $("#debug").html(msg.responseText);
             }
         });

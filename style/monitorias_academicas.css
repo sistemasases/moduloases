@@ -103,10 +103,17 @@
     color: #555;
 }
 
-.config-icon{
+.config-icon {
     display:inline;
     font-size: 20px;
+}
+
+.gris {
     color: rgb(177, 177, 177);
+}
+
+.verde {
+    color: rgb(112, 194, 101);
 }
 
 .config-icon:hover{

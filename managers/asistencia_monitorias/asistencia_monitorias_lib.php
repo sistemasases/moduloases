@@ -1,6 +1,7 @@
 <?php
 
 require_once dirname(__FILE__) . '/../../../../config.php';
+require_once dirname(__FILE__) . '/../../../../course/lib.php';
 
 global $DB;
 
@@ -87,11 +88,15 @@ function get_tabla_monitorias($course_id, $block_id, $id_monitor = ""){
         "buttons"=>array(
             array(
                 "extend"=>'print',
-                "text"=>'Imprimir'
+                "text"=>'Imprimir',
+                "title" => 'Monitorias académicas semanales activas',
+                "exportOptions"=>array( "columns" => array("materia:name","dia:name","hora:name","firstname_mon:name","lastname_mon:name"))
             ),
             array(
                 "extend"=>'csvHtml5',
-                "text"=>'CSV'
+                "text"=>'CSV',
+                "title" => 'Monitorias académicas semanales activas',
+                "exportOptions"=>array( "columns" => array("materia:name","dia:name","hora:name","firstname_mon:name","lastname_mon:name"))
             ),
             array(
                 "extend" => "excel",
@@ -193,6 +198,11 @@ function eliminar_monitoria($id){
             return -1;
         }
         $DB->update_record('talentospilos_monitoria', $monitoria, $bulk=false);
+        // eliminar sesiones programadas
+        foreach($DB->get_records('talentospilos_sesi_monitoria', array("id_monitoria"=>$id)) as $sesion){
+            $sesion->eliminado = true;
+            $DB->update_record('talentospilos_sesi_monitoria', $sesion, $bulk=false);
+        }
         return 1;
     }else{
         return -1;
@@ -290,14 +300,19 @@ function get_tabla_sesiones($monitoria_id, $desde, $hasta){
     //$desde y $hasta deben ser int con formato de fecha int
     global $DB;
     $sql = "SELECT  sesion.id AS id, 
-                    sesion.fecha AS fecha 
+                    sesion.fecha AS fecha,
+                    COUNT(asistentes.id) AS asistentes
             FROM {talentospilos_sesi_monitoria} sesion 
+                INNER JOIN {talentospilos_asis_monitoria} asistentes
+                    ON asistentes.sesion = sesion.id       
             WHERE 
                 sesion.id_monitoria = $monitoria_id 
                 AND sesion.eliminado IS DISTINCT FROM 1
                 AND sesion.fecha >= $desde
                 AND sesion.fecha <= $hasta
-            ORDER BY fecha ASC";
+            GROUP BY sesion.id
+            ORDER BY fecha ASC
+           ";
     $sesiones = $DB->get_records_sql($sql);
     $result_to_return = array();
     $ints_para_ordenar = array();
@@ -310,8 +325,14 @@ function get_tabla_sesiones($monitoria_id, $desde, $hasta){
     }
     // fecha, botones
     $columns = array();
-    array_push($columns, array("title"=>"Fecha", "name"=>"fecha", "data"=>"fecha", "width"=>"40%"));
-    array_push($columns, array("title"=>"", "name"=>"botones", "data"=>"botones", "width"=>"60%"));
+    array_push($columns, array("title"=>"Fecha", "name"=>"fecha", "data"=>"fecha", "width"=>"55%"));
+    array_push($columns, array("title"=>"Total de inscritos", "name"=>"asistentes", "data"=>"asistentes", "width"=>"15%"));
+    array_push($columns, array("title"=>"", "name"=>"botones", "data"=>"botones", "width"=>"30%"));
+
+    // datos monitoria para titulo
+    $datos_monitoria = get_monitoria_by_id($monitoria_id);
+    $titulo = $datos_monitoria->materia.", ".$datos_monitoria->dia . ", " . $datos_monitoria->hora." por ". $datos_monitoria->lastname_mon . " " . $datos_monitoria->firstname_mon.
+    "\n: Sesiones programadas desde ".formatear_fecha_int_a_legible($desde).($hasta != 99999999 ? " hasta ".formatear_fecha_int_a_legible($hasta) : "");
 
     $data_to_table = array(
         "ordering" => false,
@@ -352,11 +373,15 @@ function get_tabla_sesiones($monitoria_id, $desde, $hasta){
         "buttons"=>array(
             array(
                 "extend"=>'print',
-                "text"=>'Imprimir'
+                "text"=>'Imprimir',
+                "title"=> $titulo,
+                "exportOptions"=>array( "columns" => array("fecha:name","asistentes:name"))
             ),
             array(
                 "extend"=>'csvHtml5',
-                "text"=>'CSV'
+                "text"=>'CSV',
+                "title"=> $titulo,
+                "exportOptions"=>array( "columns" => array("fecha:name","asistentes:name"))
             ),
             array(
                 "extend" => "excel",
@@ -374,7 +399,7 @@ function get_tabla_sesiones($monitoria_id, $desde, $hasta){
 function cargar_monitores($instancia){
     global $DB;
     $id_grupo = cargar_grupo_seleccionado()->id_number;
-    $query = "  SELECT  user_m.id AS id,
+    $query = "  SELECT DISTINCT user_m.id AS id,
                         user_m.firstname AS nombre, 
                         user_m.lastname AS apellido
                 FROM    {user} user_m 
@@ -508,9 +533,13 @@ function get_proxima_sesion_de_monitoria($monitoria_id){
     return $proxima_sesion;
 }
 
-function anadir_asistente_a_sesion_de_monitoria($sesion, $id_asistente, $asignatura_a_consultar, $tematica_a_consultar){
+function anadir_asistente_a_sesion_de_monitoria($sesion, $id_asistente, $asignatura_a_consultar, $nombre_asignatura, $profesor, $tematica_a_consultar){
+    // Aquí es la inscripción a sesión, no el registro de asistencia
     global $DB;
     $asistente = new stdClass();
+    $tabla = 'talentospilos_asis_monitoria';
+    // revisar si inscripcion ya existe
+    if($DB->record_exists($tabla, array('asistente' => $id_asistente, 'sesion' => $sesion, 'eliminado' => 0))) return 1;
     $asistente->sesion = $sesion;
     // talvez me equivoqué nombrando este campo como "asistente". 
     // Este campo es una llave foranea a mdl_user, es el id del usuario de moodle que va a asistir a la monitoria
@@ -518,25 +547,44 @@ function anadir_asistente_a_sesion_de_monitoria($sesion, $id_asistente, $asignat
     $asistente->fecha_inscripcion = (new DateTime())->format("Ymd"); // hoy, en el formato custom especificado arriba
     $asistente->asignatura_a_consultar = $asignatura_a_consultar;
     $asistente->tematica_a_consultar = $tematica_a_consultar;
-    $asistente->asiste = false;
+    $asistente->prof_asignatura_a_consultar = $profesor;
+    $asistente->nombre_asignatura_a_consultar = $nombre_asignatura;
+    $asistente->asiste = 0;
     $asistente->eliminado = false;
-
-    return $DB->insert_record('talentospilos_asis_monitoria', $asistente, $returnid=false, $bulk=false);    
+    //error_log(var_export($asistente, true));
+    return $DB->insert_record($tabla, $asistente, $returnid=false, $bulk=false);    
 }
 
 function cargar_inscripciones_de_usuario($id_usuario){
     global $DB;
+    // se muestran las inscripciones del estudiante para las sesiones que esten programdas hoy o después de hoy.
     $hoy = (new DateTime())->format("Ymd");
     $sql =    "SELECT
                    inscripcion.id AS id,
+                   monitoria.id AS monitoria_id,
                    monitoria.dia AS dia_numero,
                    sesion.fecha AS fecha, 
                    monitoria.hora AS horario,
                    materia.nombre AS materia, 
-                   monitor_encargado.firstname AS nombre_encargado, 
+                   (CASE WHEN sesion.fecha = $hoy THEN 1 ELSE 0 END) AS es_hoy,". // columna que tiene 1 si la fecha programada para cada sesion es hoy y 0 si no, para mostrar el boton de confirmar asistencia al estudiante
+                   "monitor_encargado.firstname AS nombre_encargado, 
                    monitor_encargado.lastname AS apellido_encargado,
                    monitor_encargado.email AS correo_encargado,
-                   inscripcion.asignatura_a_consultar AS asignatura,
+                   (CASE WHEN inscripcion.asignatura_a_consultar = -1 THEN inscripcion.nombre_asignatura_a_consultar
+                        ELSE curso.fullname 
+                    END) AS asignatura,". 
+                   /*
+                   *  ///// SOBRE ASIGNATURA A CONSULTAR ///// 
+                   * Esta columna debe tener el nombre de la asignatura a consultar que puso el estudiante en la inscripción.
+                   * Existen dos opciones: El estudiante se inscribió seleccionando una de las asignaturas que tiene matriculadas en el campus, 
+                   * o seleccionó "Otra ..." y escribió el mismo el nombre de la materia.
+                   * inscripcion.asignatura_a_consultar tiene el id del course en el primer caso, pero si se seleccionó "Otra ..." se guarda -1.
+                   * En ese caso el nombre de la asignatura no está en otra tabla (curso) si no que está en inscripcion.nombre_asignatura_a_consultar.
+                   * El -1 no tendría match como id en la tabla course, por eso se usa un LEFT JOIN más abajo.
+                   * No sé si es lo correcto o lo más claro, pero no me pagan lo suficiente para preocuparme. Mis disculpas para el que le toque trabajar con esto. 
+                   * Sebastian Betancourt, 21 abr 21
+                   * */
+                   " 
                    inscripcion.tematica_a_consultar AS tematica
                 FROM {talentospilos_asis_monitoria} inscripcion
                     INNER JOIN {talentospilos_sesi_monitoria} sesion
@@ -547,21 +595,28 @@ function cargar_inscripciones_de_usuario($id_usuario){
                             ON monitoria.materia = materia.id
                                 INNER JOIN {user} monitor_encargado
                                 ON monitoria.monitor = monitor_encargado.id
+                    LEFT JOIN {course} curso
+                        ON inscripcion.asignatura_a_consultar = curso.id
                 WHERE 
                     inscripcion.asistente = $id_usuario 
                     AND (inscripcion.eliminado IS DISTINCT FROM 1)
                     AND (sesion.eliminado IS DISTINCT FROM 1)
                     AND (monitoria.eliminado IS DISTINCT FROM 1)
                     AND (sesion.fecha >= $hoy)
-                ORDER BY sesion.fecha ASC";
+                ORDER BY sesion.fecha ASC
+                ";
     
-    $results = $DB->get_records_sql($sql);
-   //error_log(var_export($results, true));
-    foreach($results as $result) {
-        $result->dia = array("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo")[$result->dia_numero];
-        $result->fecha = formatear_fecha_int_a_legible($result->fecha);
-    }
-    return $results;
+    $inscripciones = array_values($DB->get_records_sql($sql));
+    $result = array();
+    $monitorias = array(); // se registra que monitorias tienen inscripcion para mostrar una sola inscripción por monitoria
+    foreach($inscripciones as $inscripcion) 
+        if(!in_array($inscripcion->monitoria_id, $monitorias)){
+            $inscripcion->dia = array("Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo")[$inscripcion->dia_numero];    
+            $inscripcion->fecha = formatear_fecha_int_a_legible($inscripcion->fecha);
+            array_push($monitorias, $inscripcion->monitoria_id);
+            array_push($result, $inscripcion);
+        }
+    return $result;
 }
 
 function eliminar_asistencia($id){
@@ -609,33 +664,63 @@ function cargar_asistentes_de_sesion($id){
                 info_adicional.programa AS programa,
                 estudiante.email AS correo,
                 estudiante.phone1 AS celular,
-                inscripcion.asignatura_a_consultar AS asignatura,
-                inscripcion.tematica_a_consultar AS tematica
-            FROM {talentospilos_asis_monitoria} inscripcion
+                inscripcion.tematica_a_consultar AS tematica,
+                (CASE WHEN inscripcion.asignatura_a_consultar = -1 THEN inscripcion.nombre_asignatura_a_consultar
+                        ELSE curso.fullname 
+                    END) AS asignatura,
+                (CASE WHEN inscripcion.asignatura_a_consultar = -1 THEN inscripcion.prof_asignatura_a_consultar
+                        ELSE CONCAT(profesor.nombres, ' ', profesor.apellidos)
+                    END) AS profesor, " // Para entender por qué uso CASE WHEN en estas dos ultimas columnas, buscar explicacion arriba titulada "SOBRE ASIGNATURA A CONSULTAR"
+              ."COALESCE(cohorte.nombre, 'REGULAR') AS categoria" // cohorte, y si no tiene, 'REGULAR'
+          ." FROM {talentospilos_asis_monitoria} inscripcion
                 INNER JOIN {user} estudiante
-                ON inscripcion.asistente = estudiante.id
-                    INNER JOIN 
-                        (SELECT userid, data AS programa FROM {user_info_data} 
-                            WHERE fieldid = $id_field_programa) info_adicional
+                    ON inscripcion.asistente = estudiante.id
+                INNER JOIN 
+                    (SELECT userid, data AS programa FROM {user_info_data} 
+                        WHERE fieldid = ?) info_adicional
                     ON info_adicional.userid = estudiante.id
-            WHERE 
-                inscripcion.sesion = $id
-                AND inscripcion.eliminado IS DISTINCT FROM 1";
-    $results = array_values($DB->get_records_sql($sql));
+                LEFT JOIN  {course} curso 
+                    ON inscripcion.asignatura_a_consultar = curso.id" // Left join porque la misma razón que en la query de cargar_inscripciones_de_usuario.
+                ." LEFT JOIN (SELECT c.instanceid AS instancia, prof.firstname AS nombres, prof.lastname AS apellidos
+                                FROM {context} c
+                                INNER JOIN {role_assignments} ra ON ra.contextid = c.id
+                                INNER JOIN {role} rol ON ra.roleid = rol.id
+                                INNER JOIN {user} prof ON ra.userid = prof.id
+                            WHERE c.contextlevel = 50" // 50 es el nivel del contexto "course"
+                            ." AND ra.roleid = 3" // 3 es el id del rol editingteacher
+                            ." AND rol.id < 5
+                            ORDER BY ra.timemodified DESC) profesor
+                    ON profesor.instancia = curso.id" // Usuario que tenga rol editingteacher (es decir, el profesor). Left join por si hay cursos sin profesor definido, ORDER BY timemodified DESC para que el primer usuario en haber figurado como editing teacher sea el elegido
+                ." LEFT JOIN (SELECT membic.userid AS userid, cohort.name AS nombre
+                                FROM {cohort_members} membic 
+                                INNER JOIN {talentospilos_user_extended} utpe ON utpe.id_moodle_user = membic.userid
+                                INNER JOIN {cohort} cohort ON membic.cohortid=cohort.id) cohorte 
+                    ON cohorte.userid = estudiante.id" // Cohorte, si el estudiante figura como talentospilos_user
+                ." WHERE 
+                inscripcion.sesion = ?
+                AND inscripcion.eliminado IS DISTINCT FROM 1
+                ORDER BY (CASE inscripcion.asiste WHEN 0 THEN 999999 ELSE inscripcion.asiste END) ASC";
+                // Ordenar en orden ascendente de inscripcion, para que los primeros en inscribirse estén primero (en asistencia se guarda la hora en la que se confirmó la asistencia)
+                // Pero si es 0 es porque todavía no se ha registrado la asistencia, entonces dejar de ultimo
+    $results = array_values($DB->get_records_sql($sql, array($id_field_programa, $id)));
     //error_log(var_export($results, true));
     return $results;
 }
+
 
 function registrar_asistencia_a_asistente($id_asistente){
     global $DB;
     $sql = "SELECT * FROM {talentospilos_asis_monitoria} WHERE id = '$id_asistente'";
     $asistencia = $DB->get_record_sql($sql);
     if($asistencia){
-        $asistencia->asiste = !$asistencia->asiste;
+        // El valor antes de confirmar la asistencia es 0. Se registra la hora en que se registró la asistencia como un entero ordenable. 
+        // Por ejemplo, las 8:03:15 PM se registra como 200315
+        $asistencia->asiste = (new DateTime())->format("His");
         if($asistencia->id == 0){
             trigger_error('ASES Notificacion: actualizar monitoria en la BD con id 0');
             return -1;
         }
+        error_log(var_export($asistencia, true));
         $DB->update_record('talentospilos_asis_monitoria', $asistencia, $bulk=false);
         return 1;
     }else{
@@ -645,10 +730,8 @@ function registrar_asistencia_a_asistente($id_asistente){
 
 function get_asignaturas_matriculadas_por_usuario($id_user){
     global $DB;
-    return $DB->get_records_sql(
-        "SELECT curso.id, 
-                curso.fullname AS asignatura, 
-                curso.shortname
+    $asignaturas_todas = $DB->get_records_sql(
+        "SELECT curso.*
         FROM {user} estudiante
             INNER JOIN {user_enrolments} estudiantes_matriculas
                 ON estudiante.id = estudiantes_matriculas.userid
@@ -658,9 +741,38 @@ function get_asignaturas_matriculadas_por_usuario($id_user){
                 ON matricula.courseid = curso.id
         WHERE estudiante.id = $id_user 
             AND matricula.status = 0 
-            "
-            ."AND curso.id NOT IN (SELECT course FROM {course_completions} cc WHERE cc.userid = $id_user)"
-            ."ORDER BY matricula.timecreated DESC"
+            ORDER BY matricula.timecreated DESC"
     );
+    // FILTRAR MATERIAS SOLO QUE ESTEN EN PROGRESO (MATRICULADAS)
+    //error_log(var_export($asignaturas_todas, true));
+    $result = array();
+    foreach($asignaturas_todas as $asignatura){
+        $asignatura->estado = course_classify_for_timeline($asignatura);
+        //error_log(var_export($asignatura, true));
+        if(course_classify_for_timeline($asignatura) == 'inprogress'){
+            //error_log(var_export($asignatura, true));
+            array_push($result, array('id' => $asignatura->id, 'asignatura' => $asignatura->fullname));
+        }
+    }
+    //error_log(var_export($result, true));
+    return $result;
+}
 
+function anadir_asistente_a_todas_las_sesiones_de_monitoria($id_monitoria, $asistente, $asignatura_a_consultar, $nombre_asignatura, $profesor, $tematica_a_consultar){
+    global $DB;
+    // Se cargarán todas las sesiones programdas de $id_monitoria, y se inscribirá al asistente a todas ellas
+    $hoy = (new DateTime())->format("Ymd");
+    $sesiones = array_keys($DB->get_records_sql("SELECT  sesion.id
+                                        FROM {talentospilos_sesi_monitoria} sesion 
+                                        WHERE sesion.id_monitoria = $id_monitoria 
+                                        AND sesion.eliminado IS DISTINCT FROM 1
+                                        AND sesion.fecha >= $hoy
+                                        ORDER BY sesion.fecha ASC"));
+    error_log(var_export($sesiones, true));
+    // La primera sesion de $sesiones será la sesión más próxima a hoy, y solo en a esa se le inscribirá con tematica_a_consultar
+    $result = anadir_asistente_a_sesion_de_monitoria($sesiones[0], $asistente, $asignatura_a_consultar, $nombre_asignatura, $profesor, $tematica_a_consultar);
+    // Para las otras sesiones no habrá $tematica_a_consultar, porque no quiero poner la misma temática para todas las sesiones
+    for($i = 1; $i < count($sesiones); ++$i) 
+        $result &= anadir_asistente_a_sesion_de_monitoria($sesiones[$i], $asistente, $asignatura_a_consultar, $nombre_asignatura, $profesor, "");
+    return $result;
 }

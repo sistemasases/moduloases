@@ -55,7 +55,7 @@ $PAGE->requires->css('/blocks/ases/style/jquery.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/buttons.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/jqueryui.css', true);
 
-$PAGE->requires->css('/blocks/ases/style/monitorias.css', true);
+$PAGE->requires->css('/blocks/ases/style/monitorias_academicas.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/monitorias_academicas','init');
 

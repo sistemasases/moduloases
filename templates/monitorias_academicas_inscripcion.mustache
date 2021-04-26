@@ -12,7 +12,7 @@
         <th>Monitor encargado</th>
         <th>Asignatura a consultar</th>
         <th>Temática a consultar</th>
-        <th></th>
+        <th style="width:8%"></th>
     </tr><thead>
     <tbody>
     {{#inscritas}}
@@ -23,13 +23,13 @@
     <td>{{nombre_encargado}} {{apellido_encargado}} ({{correo_encargado}})</td>
     <td>{{asignatura}}</td>
     <td>{{tematica}}</td>
-    <td><span val={{id}} class="glyphicon glyphicon-trash config-icon eliminar-inscripcion"></span></td>
+    <td class="text-right">{{#es_hoy}} <span val={{id}} title="Registrar asistencia" class="glyphicon glyphicon-log-in config-icon verde confirmar-asistencia"> {{/es_hoy}} </span><span val={{id}} title="Cancelar inscripción" class="glyphicon glyphicon-trash config-icon gris eliminar-inscripcion"></span></td>
     </tr>
     {{/inscritas}}
     </tbody>
     </table>
 
-    <p style="margin-top:10px">El monitor encargado te contactará para concretar los detalles de la monitoría.</p>
+    <p style="margin-top:10px">El monitor encargado te contactará para concretar los detalles de la monitoría. El día de la monitoría, recuerda registrar tu asistencia cuando entres, dando click en el botón <span class="glyphicon glyphicon-log-in verde confirmar-asistencia"></span>. El monitor antenderá las dudas únicamente de las perosonas que registren su asistencia, y lo hará en el orden en que los estudiantes se registraron.</p>
     {{/hay_inscritas}}
 
 
@@ -87,11 +87,11 @@
     <ul>
         <li><b>Correo electrónico:</b> {{correo}}</li>
         <li><b>Número del Teléfono Celular:</b> <div id="mostrar-celular" style="display:inline"> <span id="celular">{{celular}}</span> 
-            <span id="editar-celular" style="margin-left:6px" class="glyphicon glyphicon-pencil config-icon"></span></div>
+            <span id="editar-celular" style="margin-left:6px" class="glyphicon glyphicon-pencil config-icon gris"></span></div>
             <!-- el JS de onkeypress valida que la input solo sean números -->
-        <div id="edicion-celular" style="display:none"><input id="campo-celular" type="tel" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" class="form-control" style="width: 15%;display:inline" placeholder="{{celular}}"> 
-            <span id="cancelar-editar-celular" style="margin-left:6px" class="glyphicon glyphicon-remove config-icon"></span>
-                <span id="guardar-editar-celular" style="margin-left:6px" class="glyphicon glyphicon-floppy-disk config-icon"></span> </div>
+        <div id="edicion-celular" style="display:none"><input id="campo-celular" type="tel" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" class="form-control" style="width: 15%;display:inline" placeholder="{{celular}}" value="{{celular}}"> 
+            <span id="cancelar-editar-celular" style="margin-left:6px" class="glyphicon glyphicon-remove config-icon gris"></span>
+                <span id="guardar-editar-celular" style="margin-left:6px" class="glyphicon glyphicon-floppy-disk config-icon verde"></span> </div>
         </li>
     </ul>
     <p style="margin-top:10px"> Los monitores encargados de las monitorías académicas intentarán contactarte por estos medios. Por favor asegurate que estén correctos y tengas acceso a ellos.</p>
@@ -117,13 +117,11 @@
         <div class="row">
             <div class="form-group col-sm">
                 <label for="asignatura">Asignatura a consultar:</label>
-
                 <select id="asignatura" class="form-control">
                         {{#asignaturas_matriculadas}}
                         <option value="{{id}}">{{asignatura}}</option>
                         {{/asignaturas_matriculadas}}
-                        <option value="-1">Otra ...</option>
-                        <option>{{userid}}</option>
+                        <option value="-1"><b>Otra ...</b></option>
                 </select>
             </div>
             <div class="form-group col-sm">
@@ -143,7 +141,7 @@
         </div>
         <div class="row">
             <div class="form-group col-sm form-check">
-            <label for="seguir-inscribiendo" class="form-check-label"><input type="checkbox" class="form-check-label" id="seguir-inscribiendo">
+            <label class="form-check-label"><input type="checkbox" class="form-check-label" id="seguir-inscribiendo">
                 Inscribirme a esta monitoría automáticamente cada 8 días</label>
             </div>
         </div>
