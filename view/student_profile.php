@@ -225,7 +225,7 @@ if ($student_code != '0') {
 
     $record->estamento = $ases_student->estamento;
     $record->colegio = $ases_student->colegio;
-    $record->name_current_semester = core_periods_get_current_period()->nombre;
+    $record->name_current_semester = core_periods_get_current_period($blockid)->nombre;
     $record->academic_programs = $academic_programs;
     $record->student_cohorts = $student_cohorts;
 
@@ -542,7 +542,7 @@ if ($student_code != '0') {
 
     // Estado ASES
 
-    $id_current_semester = core_periods_get_current_period()->id;
+    $id_current_semester = core_periods_get_current_period($blockid)->id;
     $last_monitor_assignment = monitor_assignments_get_last_monitor_student_assignment($student_id, $blockid);
     $id_instance_last_assignment = $last_monitor_assignment->id_instancia;
     $id_semester_last_assignment = $last_monitor_assignment->id_semestre;
@@ -607,9 +607,9 @@ if ($student_code != '0') {
 
     $record->id_dphpforms_creado_por = $USER->id;
 
-    $monitor_object = get_assigned_monitor($student_id);
-    $trainee_object = get_assigned_pract($student_id);
-    $professional_object = get_assigned_professional($student_id);
+    $monitor_object = get_assigned_monitor($student_id, $blockid);
+    $trainee_object = get_assigned_pract($student_id, $blockid);
+    $professional_object = get_assigned_professional($student_id, $blockid);
 
     $flag_with_assignation = false;
 
@@ -875,7 +875,7 @@ $url_update_user_image           = new moodle_url("/blocks/ases/view/edit_user_i
 $record->update_profile_image_url = $url_update_user_image;
 
 // periods_lib.php contains get_current_semester()
-$record->current_semester = core_periods_get_current_period()->id;
+$record->current_semester = core_periods_get_current_period($blockid)->id;
 
 $stud_mon_prac_prof = user_management_get_stud_mon_prac_prof( $record->ases_student_code, $record->instance, $record->current_semester );
 $record->monitor_id = $stud_mon_prac_prof->monitor->id;

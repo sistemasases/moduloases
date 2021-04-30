@@ -7,7 +7,7 @@
  * @license   	http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-const VERSION = 1; //Current version.
+const VERSION = 2; //Current version (adds support for regionalization).
 
 require_once( __DIR__ . "/../../../../config.php");
 require_once( __DIR__ . "/../module_loader.php");
@@ -25,8 +25,8 @@ require_once( __DIR__ . "/v" . VERSION . "/entrypoint.php");
  * 
  * @return  stdClass | null Return the last period.
  */
-function core_periods_get_current_period(){
-    return periods_get_current_period();
+function core_periods_get_current_period(int $instance_id ){
+    return periods_get_current_period($instance_id);
 }
 
 /**
@@ -62,8 +62,8 @@ function core_periods_get_period_by_id( int $period_id ){
  * 
  * @return stdClass Period object
  */
-function core_periods_get_period_by_name(string $period_name){
-    return periods_get_period_by_name($period_name);
+function core_periods_get_period_by_name(string $period_name, int $instance_id){
+    return periods_get_period_by_name($period_name, $instance_id);
 }
 
 /**
@@ -76,8 +76,8 @@ function core_periods_get_period_by_name(string $period_name){
  * 
  * @return array List of periods.
  */
-function core_periods_get_all_periods(){
-    return periods_get_all_periods();
+function core_periods_get_all_periods(int $instance_id){
+    return periods_get_all_periods( $instance_id );
 }
 
 /**
@@ -90,8 +90,8 @@ function core_periods_get_all_periods(){
  * 
  * @return stdClass Last period.
  */
-function core_periods_get_last_period(){
-    return periods_get_last_period();
+function core_periods_get_last_period(int $instance_id){
+    return periods_get_last_period($instance_id);
 }
 
 
@@ -127,8 +127,8 @@ function core_periods_check_if_exist( int $period_id ){
  * @return Period object
  * @throws Exception if there's no period between the given interval.
  */
-function core_periods_get_period_by_date( $fecha_inicio, $fecha_fin, $relax_query=false ){
-	return periods_get_period_by_date( $fecha_inicio, $fecha_fin, $relax_query );
+function core_periods_get_period_by_date( $fecha_inicio, $fecha_fin, $relax_query=false, $instance_id ){
+	return periods_get_period_by_date( $fecha_inicio, $fecha_fin, $relax_query, $instance_id );
 }
 
 /**
@@ -158,7 +158,7 @@ function core_periods_update_period( $period_info, $period_id ){
  * @return stdClass of new period.
  * @throws Exception if there is already a period with the given name.
  */
-function core_periods_create_period( $nombre, $fecha_inicio, $fecha_fin ){
-	return periods_create_period($nombre, $fecha_inicio, $fecha_fin);
+function core_periods_create_period( $nombre, $fecha_inicio, $fecha_fin, $instance_id ){
+	return periods_create_period($nombre, $fecha_inicio, $fecha_fin, $instance_id);
 }
 ?>

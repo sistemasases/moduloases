@@ -1292,20 +1292,20 @@ function get_tracking_group_by_semester($id_ases = null, $tracking_type, $id_sem
         $last_semestre = false;
         $first_semester = false;
         
-        $sql_query = "SELECT * FROM {talentospilos_semestre}";
+        $sql_query = "SELECT * FROM {talentospilos_semestre} WHERE id_instancia=$id_instance";
         
         if($id_semester != null){
-            $sql_query .= " WHERE id = ".$id_semester;
+            $sql_query .= " AND id = ".$id_semester;
         }else{
             // TO DO: $id_ases should not reach this as null
             if($id_ases == null){
                 return 1;
             }else{
                 $userid = $DB->get_record_sql("SELECT id_moodle_user AS userid FROM {talentospilos_user_extended} WHERE id_ases_user = $id_ases AND tracking_status=1");
-                $firstsemester = get_id_first_semester($userid->userid);
-                $lastsemestre = get_id_last_semester($userid->userid);
+                $firstsemester = get_id_first_semester($userid->userid, $id_instance);
+                $lastsemestre = get_id_last_semester($userid->userid, $id_instance);
 
-                $sql_query .= " WHERE id >=".$firstsemester . " AND fecha_inicio < '2017-12-31 00:00:00'";
+                $sql_query .= " AND id >=".$firstsemester . " AND fecha_inicio < '2017-12-31 00:00:00'";
             }
 
         }
@@ -1370,9 +1370,10 @@ function get_tracking_group_by_semester($id_ases = null, $tracking_type, $id_sem
  * 
  * @see get_id_first_semester($id)
  * @param $id --> student id
+ * @param $id_instance --> instance id
  * @return string --> first semester id
  */
-function get_id_first_semester($id){
+function get_id_first_semester($id, $id_instance){
     try {
         global $DB;
         
@@ -1398,7 +1399,7 @@ function get_id_first_semester($id){
             $timecreated = $courses->min;
         }
 
-        $sql_query = "select id, nombre ,fecha_inicio::DATE, fecha_fin::DATE from {talentospilos_semestre} ORDER BY fecha_fin ASC;";
+        $sql_query = "select id, nombre ,fecha_inicio::DATE, fecha_fin::DATE from {talentospilos_semestre} WHERE id_instancia=$id_instance ORDER BY fecha_fin ASC;";
         
         $semesters = $DB->get_records_sql($sql_query);
         
@@ -1424,13 +1425,14 @@ function get_id_first_semester($id){
  * Returns an array of semesters of a student
  *
  * @param $username_student --> moodle student username
+ * @param $instance_id --> moodle course instance id
  * @return array --> stdClass object representing semesters of a student
  */
-function get_semesters_stud($id_first_semester){
+function get_semesters_stud($id_first_semester, $instance_id){
      
     global $DB;
      
-    $sql_query = "SELECT id, nombre, fecha_inicio::DATE, fecha_fin::DATE FROM {talentospilos_semestre} WHERE id >= $id_first_semester ORDER BY {talentospilos_semestre}.fecha_inicio DESC";
+    $sql_query = "SELECT id, nombre, fecha_inicio::DATE, fecha_fin::DATE FROM {talentospilos_semestre} WHERE id_instancia=$instance_id AND id >= $id_first_semester ORDER BY {talentospilos_semestre}.fecha_inicio DESC";
      
     $result_query = $DB->get_records_sql($sql_query);
      
@@ -1455,12 +1457,13 @@ function compare_date($fecha_inicio, $fecha_fin, $fecha_comparar){
   * 
   * @see get_id_last_semester($idmoodle)
   * @param $idmoodle --> moodle student id
+  * @param $instance_id --> moodle course instance id
   * @return string|boolean --> string containing the last semster id or false in case there weren't semesters related with the student
   */
- function get_id_last_semester($idmoodle){
+ function get_id_last_semester($idmoodle, $instance_id){
 
-     $id_first_semester = get_id_first_semester($idmoodle);
-     $semesters = get_semesters_stud($id_first_semester);
+     $id_first_semester = get_id_first_semester($idmoodle, $instance_id);
+     $semesters = get_semesters_stud($id_first_semester, $instance_id);
      if($semesters){
         return  $semesters[0]->id;
      }else{
@@ -2359,14 +2362,15 @@ function student_profile_process_tracking(&$array_of_trackings, $tracking) {
  * @desc Constructs the peer tracking of an student.
  *          This is the latest version.
  * @param $id_ases string -> ASES student id
+ * @param $instance_id int -> ID de la instancia
  * @return array
  */
-function student_profile_get_peer_tracking($id_ases){
+function student_profile_get_peer_tracking($id_ases, $instance_id){
 
     $peer_tracking_v3 = [];
     $trackings_out_of_range = [];
 
-    $periods = core_periods_get_all_periods();
+    $periods = core_periods_get_all_periods($instance_id);
     $number_of_periods = count($periods);
     $id_period = $number_of_periods;
 
@@ -3078,7 +3082,7 @@ function student_profile_load_socioed_tab($id_ases, $id_block){
     $actions = authenticate_user_view($id_user, $id_block);
     $record = $actions;
 
-    $record->peer_tracking_v3 = student_profile_get_peer_tracking($id_ases);
+    $record->peer_tracking_v3 = student_profile_get_peer_tracking($id_ases, $id_block);
     $record->peer_tracking_v3_string = json_encode($record->peer_tracking_v3);
     $record->peer_tracking = student_profile_get_html_peer_tracking($id_ases, $id_block);
 

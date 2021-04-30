@@ -28,14 +28,14 @@
 	require_once(dirname(__FILE__).'/../../core/module_loader.php');
 
 	module_loader("periods");
-	if(isset($_POST['load']) && $_POST['load'] == 'loadSemester'){
+	if(isset($_POST['load']) && isset($_POST['instance']) && $_POST['load'] == 'loadSemester'){
 		$columns = array();
 		array_push($columns, array("title"=>"Código", "name"=>"id", "data"=>"id"));
 		array_push($columns, array("title"=>"Nombre", "name"=>"nombre", "data"=>"nombre"));
 		array_push($columns, array("title"=>"Fecha de Inicio", "name"=>"fecha_inicio", "data"=>"fecha_inicio"));
 		array_push($columns, array("title"=>"Fecha de Finalización", "name"=>"fecha_fin", "data"=>"fecha_fin"));
 		
-		$all_periods = core_periods_get_all_periods();
+		$all_periods = core_periods_get_all_periods($_POST['instance']);
 		setlocale(LC_TIME, "es_CO");
 
 		foreach ( $all_periods as $period ){

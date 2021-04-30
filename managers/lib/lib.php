@@ -137,11 +137,11 @@ function isMonOrPract($USER)
  * @param $id --> user moodle id
  * @return string --> containing user role
  */
-function get_role_ases($id)
+function get_role_ases($id, $instance_id)
 {
     global $DB;
 
-    $semestre = core_periods_get_current_period();
+    $semestre = core_periods_get_current_period($instance_id);
     $id_semestre = $semestre->id;
 
     $query_role = "SELECT rol.nombre_rol  FROM {talentospilos_rol} rol INNER JOIN {talentospilos_user_rol} uRol ON rol.id = uRol.id_rol WHERE uRol.id_usuario = $id AND uRol.id_semestre = $id_semestre";
@@ -167,7 +167,7 @@ function lib_get_rol_name_ases($user_id, $instance_id, $semester_id = null )
     global $DB;
 
     if( !$semester_id ){
-        $semester_id = core_periods_get_current_period()->id;
+        $semester_id = core_periods_get_current_period($instance_id)->id;
     }
 
     $query_role = "SELECT rol.nombre_rol  
@@ -356,7 +356,7 @@ function get_all_student($instance_id)
 {
     global $DB;
 
-    $semestre = core_periods_get_current_period();
+    $semestre = core_periods_get_current_period($instance_id);
     $id_semestre = $semestre->id;
 
     $query = "SELECT DISTINCT user_moodle.username, user_moodle.firstname, user_moodle.lastname
