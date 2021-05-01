@@ -1450,7 +1450,8 @@ function dphpformsV2_validate_xquery( $query ){
                 }
 
                 if( $asType === "array" ){
-                    if( count( $asField[1] ) < 1 ){
+                    //error_log("Variable dphpforms asFields: ".var_export($asField, true));
+                    if( count( $asField[0] ) < 1 ){
                         
                         return [
                             "status_code" => -1,
