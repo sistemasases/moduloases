@@ -1423,8 +1423,12 @@ function dphpformsV2_validate_xquery( $query ){
             }
         }
          
-        //Validation if the selected fields exist.
+        // COMMENTED: bloque comentado porque el soporte para selected fields nunca se implementó, por lo que query nunca trae la propiedad selectedFields.
+        /* 
+        // Validation if the selected fields exist.
+        error_log("Variable dphpforms query: ".var_export($query, true));
         foreach( $query->selectedFields as $selectedField ){
+
             if( !in_array( $selectedField, $list_fields_alias ) ){
                  return [
                      "status_code" => -1,
@@ -1432,7 +1436,7 @@ function dphpformsV2_validate_xquery( $query ){
                      "data_response" => ""
                  ];
             }
-        }
+        } */
 
         //Validation if the asFields fields exist.
         foreach( $query->asFields as $asField ){
