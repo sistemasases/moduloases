@@ -434,6 +434,16 @@ function create_menu_options($userid, $blockid, $courseid)
                 $academic_options['Monitorias académicas'] = $menu_options;
             }
 
+            if($function == 'test') {
+                $url = new moodle_url("/blocks/ases/view/test.php", array(
+                    'courseid' => $courseid,
+                    'instanceid' => $blockid
+                ));
+
+                $menu_options = '<a id="menu_monitorias" class="menu_a" href= "' . $url . '">test</a>';
+                $soc_ed_options['test'] = $menu_options;
+            }
+
         }
 
         //ORDENA
