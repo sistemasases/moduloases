@@ -207,19 +207,19 @@ function make_select_ficha($id, $rol, $student_code, $instance_id, $actions){
     if(property_exists($actions, 'search_assigned_students_sp')){
         if ($rol == 'profesional_ps') {
 
-            $asign .= process_info_assigned_students(get_asigned_by_profesional($id), $student_code);
+            $asign .= process_info_assigned_students(get_asigned_by_profesional($id, $instance_id), $student_code);
     
         } elseif ($rol == 'practicante_ps') {
     
-            $asign .= process_info_assigned_students(get_asigned_by_practicante($id), $student_code);
+            $asign .= process_info_assigned_students(get_asigned_by_practicante($id, $instance_id), $student_code);
     
         } elseif ($rol == 'monitor_ps') {
     
-            $asign .= process_info_assigned_students(get_asigned_by_monitor($id), $student_code);
+            $asign .= process_info_assigned_students(get_asigned_by_monitor($id, $instance_id), $student_code);
     
         }elseif ($rol == 'director_prog') {
     
-            $asign .= process_info_assigned_students(get_asigned_by_dir_prog($id), $student_code);   
+            $asign .= process_info_assigned_students(get_asigned_by_dir_prog($id, $instance_id), $student_code);   
             
         }
     }elseif(property_exists($actions, 'search_student_sp')) {
@@ -236,14 +236,15 @@ function make_select_ficha($id, $rol, $student_code, $instance_id, $actions){
  *
  * @see get_asigned_by_monitor($id)
  * @param $id --> monitor id
+ * @param $instance_id --> instance id
  * @return  Array --> with every stdClass student
  */
 
-function get_asigned_by_monitor($id)
+function get_asigned_by_monitor($id, $instance_id)
 {
     global $DB;
 
-    $semestre = core_periods_get_current_period();
+    $semestre = core_periods_get_current_period($instance_id);
     $id_semestre = $semestre->id;
 
     $query = "SELECT user_moodle.username, user_moodle.firstname, user_moodle.lastname
@@ -262,14 +263,15 @@ function get_asigned_by_monitor($id)
  *
  * @see get_asigned_by_practicante($id)
  * @param $id --> practicant id
+ * @param $instance_id --> instance id
  * @return array --> with every student
  */
 
-function get_asigned_by_practicante($id)
+function get_asigned_by_practicante($id, $instance_id)
 {
     global $DB;
 
-    $semestre = core_periods_get_current_period();
+    $semestre = core_periods_get_current_period($instance_id);
     $id_semestre = $semestre->id;
 
     $query = "SELECT rol.id_usuario
@@ -293,14 +295,15 @@ function get_asigned_by_practicante($id)
  *
  * @see get_asigned_by_profesional($id)
  * @param $id --> professional id
+ * @param $instance_id --> instance id
  * @return array --> with every student
  */
 
-function get_asigned_by_profesional($id)
+function get_asigned_by_profesional($id, $instance_id)
 {
     global $DB;
 
-    $semestre = core_periods_get_current_period();
+    $semestre = core_periods_get_current_period($instance_id);
     $id_semestre = $semestre->id;
 
     $query = "SELECT rol.id_usuario
@@ -322,13 +325,14 @@ function get_asigned_by_profesional($id)
  *
  * @see get_asigned_by_dir_prog($id)
  * @param $id --> dirrector id
+ * @param $instance_id --> instance id
  * @return array --> with every student
  */
-function get_asigned_by_dir_prog($id)       
+function get_asigned_by_dir_prog($id, $instance_id)       
 {
     global $DB;
 
-    $semestre = core_periods_get_current_period();
+    $semestre = core_periods_get_current_period($instance_id);
     $id_semestre = $semestre->id;
 
     $query_program = "SELECT id_programa FROM {talentospilos_user_rol} WHERE id_usuario = $id AND id_semestre = $id_semestre";

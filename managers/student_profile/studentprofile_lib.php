@@ -3105,7 +3105,7 @@ function student_profile_load_socioed_tab($id_ases, $id_block){
  * @param $id_ases string -> ASES student id
  * @return Object
  */
-function student_profile_load_academic_tab($id_ases){
+function student_profile_load_academic_tab($id_ases, $instance_id){
 
     $record = new stdClass();
 
@@ -3133,7 +3133,7 @@ function student_profile_load_academic_tab($id_ases){
     $record->estimulos = $estimulos;
 
     //Current semester
-    $html_academic_table = get_grades_courses_student_last_semester($id_user_moodle);
+    $html_academic_table = get_grades_courses_student_last_semester($id_user_moodle, $instance_id);
     $record->academic_semester_act = $html_academic_table;
 
     //historic academic

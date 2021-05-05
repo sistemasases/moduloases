@@ -278,10 +278,11 @@ function recalculate_totals($notas, $categs, $porcentajes){
  *****************************
 **/
 
+//@deprecated
 function get_role_user($id_moodle, $idinstancia)
 {
     global $DB;
-    $current_semester = core_periods_get_current_period(); 
+    $current_semester = core_periods_get_current_period($idinstancia); 
     $sql_query = "select nombre_rol, rol.id as rolid from {talentospilos_user_rol} as ur inner join {talentospilos_rol} as rol on rol.id = ur.id_rol where  ur.estado = 1 AND ur.id_semestre =".$current_semester->id."  AND id_usuario = ".$id_moodle." AND id_instancia =".$idinstancia.";";
     return $DB->get_record_sql($sql_query);
 }

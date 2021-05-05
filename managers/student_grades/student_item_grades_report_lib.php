@@ -65,7 +65,7 @@ function get_losed_and_aproved_item_grades($id_instancia, $semestre = null) {
     global $DB;
 
     if(!$semestre) {
-    	$inicio_periodo_actual = (core_periods_get_current_period())->fecha_inicio;    
+    	$inicio_periodo_actual = (core_periods_get_current_period($id_instancia))->fecha_inicio;    
     	$semestre = substr($inicio_periodo_actual,0,4) . substr($inicio_periodo_actual, 5, 2);
     }
 
@@ -278,11 +278,11 @@ function get_student_item_grades_sumary_report_item($student_id, $course_id) {
 
 }
 
-function get_student_item_grades_sumary_report($student_id, $semestre = null) {
+function get_student_item_grades_sumary_report($student_id, $semestre = null, $instance_id) {
     $report_items = array();
 
     if(!$semestre) {
-        $semestre_object = core_periods_get_current_period();
+        $semestre_object = core_periods_get_current_period($instance_id);
         $sem = $semestre_object->nombre;
         $anio = substr($sem,0,4);
 

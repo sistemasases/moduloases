@@ -60,7 +60,7 @@ function get_info_monitor($id_moodle)
 function get_unreviewed_trackings($monitorid, $instanceid)
 {
     global $DB;
-    $current_semester = core_periods_get_current_period();
+    $current_semester = core_periods_get_current_period($instanceid);
     
     $fecha_inicio = strtotime($current_semester->fecha_inicio);
     $fecha_fin = strtotime($current_semester->fecha_fin);

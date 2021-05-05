@@ -38,7 +38,7 @@ require_once( $CFG->dirroot.'/blocks/ases/managers/user_management/user_manageme
 
 function students_no_trackings_get_students_count_trackings_normal( $instance_id ){      
 
-    $id_semester = core_periods_get_current_period()->id;
+    $id_semester = core_periods_get_current_period($instance_id)->id;
     $interval_semester = core_periods_get_period_by_id($id_semester);
     $list_inicio = explode(" ", $interval_semester->fecha_inicio);
     $list_fin = explode(" ", $interval_semester->fecha_fin);
@@ -79,8 +79,8 @@ function students_no_trackings_get_students_count_trackings_normal( $instance_id
 
 function students_no_trackings_get_students_count_trackings_non_attendance( $instance_id ){      
 
-    $id_semester = core_periods_get_current_period()->id;
-    $interval_semester = get_semester_interval($id_semester);
+    $id_semester = core_periods_get_current_period($instance_id)->id;
+    $interval_semester = core_periods_get_period_by_id($id_semester);
     
     $list_inicio = explode(" ", $interval_semester->fecha_inicio);
     $list_fin = explode(" ", $interval_semester->fecha_fin);
@@ -124,7 +124,7 @@ function students_no_trackings_get_students_count_trackings_non_attendance( $ins
 
 function get_students_with_trackings( $instance_id ){      
 
-    $semestre = core_periods_get_current_period();
+    $semestre = core_periods_get_current_period($instance_id);
     $idMaxSemester = $semestre->id;   
     $intervalSemester = core_periods_get_period_by_id($idMaxSemester);
     
@@ -170,7 +170,7 @@ function get_students_with_trackings( $instance_id ){
 
 function get_students_with_non_attendance_trackings( $instance_id ){ 
 
-    $semestre = core_periods_get_current_period();
+    $semestre = core_periods_get_current_period($instance_id);
     $idMaxSemester = $semestre->id;   
     $intervalSemester = core_periods_get_period_by_id($idMaxSemester);
     
@@ -220,7 +220,7 @@ function get_array_students_with_trackings_count( $instance_id ){
 
     global $DB;   
 
-    $semestre = core_periods_get_current_period();
+    $semestre = core_periods_get_current_period($instance_id);
     $idMaxSemester = $semestre->id;
     $monitorias = monitor_assignments_get_monitors_students_relationship_by_instance_n_semester( $instance_id, $idMaxSemester );
 

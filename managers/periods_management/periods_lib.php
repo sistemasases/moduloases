@@ -18,12 +18,18 @@
 /**
  * Estrategia ASES
  *
+ * @deprecated
  * @author     Juan Pablo Moreno Muñoz
  * @author     Jeison Cardona Gómez
  * @package    block_ases
  * @copyright  2017 Juan Pablo Moreno Muñoz <moreno.juan@correounivalle.edu.co>
  * @copyright  2019 Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @deprecated
+ */
+/**
+ * This lib is to not be used in any place.
+ * Pleace @see core/periods/periods.php
  */
 
 require_once(dirname(__FILE__). '/../../../../config.php');
@@ -53,8 +59,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  * @param string $start_date With postgres fortmat YYYY-MM-DD
  * @param string $end_date With postgres fortmat YYYY-MM-DD
  * @return int $to_return id_semester
- * @deprecated Refactorizar llamados a esta función.
- * @todo Refactor last call.
+ * @deprecated 
  */
 
 function periods_management_get_current_semester_by_apprx_interval( $start_date, $end_date ){
@@ -111,9 +116,8 @@ function get_current_semester_start(){
  * Función que retorna la fecha de inicio del semestre actual en el formato #AÑO#MES
  * @see get_current_semester_start()
  * @return cadena de texto que representa la fecha de inicio del semestre actual con formato procesado
- * @deprecated Refactorizar llamados a esta función.
+ * @deprecated 
  *
- * @todo ask, this function is used on a BIG sql query @see course_and_teacher_report_lib loc48
  */
 function get_current_semester_processed(){
     $current_period = core_periods_get_current_period();
@@ -133,7 +137,6 @@ function get_current_semester_processed(){
  * @return object that represents the current semester.
  * @return null if are no semesters registered.
  * @deprecated @see core_periods_get_current_period on core/periods/periods.php
- * @todo check if there aren't more calls to this function.
  */
  
 function periods_get_current_semester(){
@@ -158,7 +161,6 @@ function periods_get_current_semester(){
  * @param $id ---> semester's id
  * @return object that represents the semester 
  * @deprecated
- * @todo delete this function, no other calls to it.
  */
  
  function get_semester_interval($id){

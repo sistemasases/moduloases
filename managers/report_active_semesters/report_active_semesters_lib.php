@@ -46,7 +46,7 @@ use function student_lib\get_active_semesters;
  */
 function _get_semesters_names_after_cohort($id_instance, $ases_cohort_id, $include_current_semester = false) {
     $date_format = 'Y-m-d';
-    $current_semester = core_periods_get_current_period();
+    $current_semester = core_periods_get_current_period($id_instance);
     $cohort_id_number = '';
     $current_semester_name = $current_semester->nombre;
 
@@ -62,7 +62,7 @@ function _get_semesters_names_after_cohort($id_instance, $ases_cohort_id, $inclu
     $cohort_start_date_string = \cohort_lib\get_date_string_from_mdl_cohort_id_number($cohort_id_number);
 
     //$semesters = Semestre::get_semesters_later_than($cohort_start_date_string, -1, false, $date_format);
-	  $semesters = core_periods_get_period_by_date($cohort_start_date_string, null ,true); 
+	  $semesters = core_periods_get_period_by_date($cohort_start_date_string, null ,true, $id_instance); 
 
     $semester_names = array_map(
         function( $period ) {

@@ -28,22 +28,27 @@ require_once $CFG->dirroot . '/grade/querylib.php';
 require_once $CFG->dirroot . '/grade/report/user/lib.php';
 require_once $CFG->dirroot . '/grade/lib.php';
 require_once (__DIR__ . '/../course/course_lib.php');
+require_once (__DIR__ . '/../../core/module_loader.php');
+
+module_loader('periods');
 
 /**
  * Returns an html wiht courses and grades for a student in the last semester
  *
  * @see get_grades_courses_student_last_semester($id_student)
  * @param $id_student --> id from {user}
+ * @param $instance_id --> instance id from {block_instances}
  * @return string html courses
  */
 
-function get_grades_courses_student_last_semester($id_student)
+function get_grades_courses_student_last_semester($id_student, $instance_id)
 {
 
     global $DB;
 
-    $query_semestre = "SELECT nombre FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
-    $sem = $DB->get_record_sql($query_semestre)->nombre;
+    //$query_semestre = "SELECT nombre FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
+    //$sem = $DB->get_record_sql($query_semestre)->nombre;
+    $sem = core_periods_get_current_period($instance_id)->nombre;
 
     $año = substr($sem, 0, 4);
 
@@ -186,8 +191,9 @@ function get_historical_semesters_by_student($id_student)
         $semester->json_materias = $register->json_materias;
 
         //search semester name
-        $query_semestre = "SELECT nombre FROM {talentospilos_semestre} WHERE id = $id_semester";
-        $semester_name = $DB->get_record_sql($query_semestre)->nombre;
+        //$query_semestre = "SELECT nombre FROM {talentospilos_semestre} WHERE id = $id_semester";
+        //$semester_name = $DB->get_record_sql($query_semestre)->nombre;
+        $semester_name = core_periods_get_period_by_id($id_semester)->nombre;
 
         //search program name
         $query_program = "SELECT nombre FROM {talentospilos_programa} WHERE id = $id_programa";

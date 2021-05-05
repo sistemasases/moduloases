@@ -44,7 +44,7 @@ require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib
 function studentsWithLoses($instance){
 	global $DB;
 
-	$semestre = core_periods_get_current_period();
+	$semestre = core_periods_get_current_period($instance);
     $sem = $semestre->nombre;
 
     $año = substr($sem,0,4);
@@ -286,19 +286,20 @@ function get_courses_report($user_id){
  * Function that returns a course with all its information given the course id and the id of the logged user
  * @param $course_id
  * @param $user_id
+ * @param $instance_id
  * @return object --> Representing the course
  */
 
-function get_info_course_for_reports($course_id, $user_id){
+function get_info_course_for_reports($course_id, $user_id, $instance_id){
     global $DB;
 
-	$semestre_object = core_periods_get_current_period();
+	$semestre_object = core_periods_get_current_period($instance_id);
 	$id_semestre = $semestre_object->id;
 
 
     $intersect = "";
 
-    $user_role = get_role_ases($user_id);
+    $user_role = lib_get_rol_name_ases($user_id, $instance_id);
 
     if($user_role == "monitor_ps"){
 
