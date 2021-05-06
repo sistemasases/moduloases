@@ -668,7 +668,7 @@ function general_attendance($programa, $semestre)
  * @see attendance_by_course()
  * @return array de objetos con las faltas justificas e injustificadas de un estudiante por curso matriculado
  */
-function attendance_by_course($code_student)
+function attendance_by_course($code_student, $instance_id)
 {
     global $DB;
     
@@ -677,7 +677,7 @@ function attendance_by_course($code_student)
     $sql_query = "SELECT id FROM {user} WHERE username LIKE '$code_student%'";
     $id_user_moodle = $DB->get_record_sql($sql_query);
     
-    $sql_query = "SELECT id FROM {talentospilos_semestre} WHERE nombre ='".core_periods_get_current_period()->nombre."';";
+    $sql_query = "SELECT id FROM {talentospilos_semestre} WHERE nombre ='".core_periods_get_current_period($instance_id)->nombre."';";
     $id_current_semester = $DB->get_record_sql($sql_query);
     
     $sql_query = "SELECT fecha_inicio::DATE FROM {talentospilos_semestre} WHERE id = $id_current_semester->id";
@@ -771,7 +771,7 @@ function attendance_by_course($code_student)
  * @return array de objetos con las faltas justificas e injustificadas de un estudiante por semestre cursado exceptuando el actual
  * 
  */
- function attendance_by_semester($code_student) 
+ function attendance_by_semester($code_student, $instance_id) 
  {
     global $DB;
     
@@ -780,7 +780,7 @@ function attendance_by_course($code_student)
     $sql_query = "SELECT id FROM {user} WHERE username LIKE '$code_student%'";
     $id_user_moodle = $DB->get_record_sql($sql_query);
     
-    $sql_query = "SELECT id FROM {talentospilos_semestre} WHERE nombre='".core_periods_get_current_period()->nombre."';";
+    $sql_query = "SELECT id FROM {talentospilos_semestre} WHERE nombre='".core_periods_get_current_period($instance_id)->nombre."';";
     $id_current_semester = $DB->get_record_sql($sql_query);
 
     $sql_query = "SELECT coursesSemester.semesterid AS idsemester, coursesSemester.semestersname AS semestername, COUNT({attendance_statuses}.description) AS injustifiedabsence 
