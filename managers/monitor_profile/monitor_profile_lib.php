@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Ases block
+ * Librería del monitor, usuada por la view ficha de monitores.
  *
  * @author      David Santiago Cortés 
  * @package     block_ases
@@ -31,7 +31,7 @@ require_once(__DIR__ . "/../pilos_tracking/v2/pilos_tracking_lib.php");
 module_loader("periods");
 
 $MONITORS_TABLENAME = $GLOBALS[ 'CFG' ]->prefix . "talentospilos_monitores";
-$CURRENT_PERIOD = core_periods_get_current_period()->id;
+
 
 /**
  * Checks if a user has the monitor_ps role assigned
@@ -179,7 +179,7 @@ function get_all_practs_of_prof(int $instance_id, int $prof_id)
 function monitor_is_active(int $monitor_moodle_id, int $instance_id=450299)
 {
     global $DB;
-    global $CURRENT_PERIOD;
+    $current_period = core_periods_get_current_period($instance_id);
 
     if ($monitor_moodle_id <= 0) {
         Throw New Exception('ID del mónitor es inválido', -1);
@@ -192,7 +192,7 @@ function monitor_is_active(int $monitor_moodle_id, int $instance_id=450299)
         AND id_instancia=$instance_id
         AND id_jefe IS NOT NULL
         AND id_rol=4
-        AND id_semestre=$CURRENT_PERIOD";
+        AND id_semestre=$current_period->id";
     
     $result = $DB->get_record_sql( $query );
 

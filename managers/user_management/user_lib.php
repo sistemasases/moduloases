@@ -412,10 +412,11 @@ function drop_student_of_monitor($monitor, $student)
  * @see dropStudentofMonitor($monitor, $student)
  * @param $monitor [string] username en moodle del ususario del monitor 
  * @param $student [string] username en moodle del usuario studiante
+ * @param $instance_id [int] instancia del periodo
  * @return boolean
  **/
 
-function dropStudentofMonitor($monitor, $student)
+function dropStudentofMonitor($monitor, $student, $instance_id)
 {
     global $DB;
     
@@ -430,7 +431,7 @@ function dropStudentofMonitor($monitor, $student)
     $studentid = get_ases_user_by_code($student);
     
     
-    $semestre_act = core_periods_get_current_period();
+    $semestre_act = core_periods_get_current_period($instance_id);
     
     if ($studentid) {
         //where clause
@@ -450,14 +451,15 @@ function dropStudentofMonitor($monitor, $student)
  * @see changeMonitor($oldMonitor, $newMonitor)
  * @param $oldMonitor  current student's monitor 
  * @param $newMonitor  new student's monitor
+ * @param int  $instance_id  instancia del período
  * @return boolean
  **/
-function changeMonitor($oldMonitor, $newMonitor)
+function changeMonitor($oldMonitor, $newMonitor, $instance_id)
 {
     global $DB;
     
     try {
-        $lastsemester = core_periods_get_current_period();
+        $lastsemester = core_periods_get_current_period($instance_id);
         
         $sql_query = "SELECT  id from {talentospilos_monitor_estud} where id_semestre=" . $lastsemester->id . " and id_monitor =" . $oldMonitor;
         $result    = $DB->get_records_sql($sql_query);
@@ -673,7 +675,7 @@ function manage_role_profesional_ps($username, $role, $professional, $idinstanci
         $id_current_role = $DB->get_record_sql($sql_query);
         pg_query("COMMIT") or die("Transaction commit failed\n");
         
-        $id_current_semester = core_periods_get_current_period();
+        $id_current_semester = core_periods_get_current_period((int) $idinstancia);
         
         if (empty($id_current_role)) {
             
@@ -715,7 +717,7 @@ function manage_role_profesional_ps($username, $role, $professional, $idinstanci
                 pg_query("BEGIN") or die("Could not start transaction\n");
                 if ($id_current_role->nombre_rol == 'monitor_ps') {
                     
-                    $lastsemester = core_periods_get_last_period();
+                    $lastsemester = core_periods_get_last_period((int)$idinstancia);
                     $whereclause  = "id_semestre =" . $lastsemester->id . " and  id_monitor = " . $object_user->id;
                     $DB->delete_records_select('talentospilos_monitor_estud', $whereclause);
                 }
@@ -761,7 +763,7 @@ function update_program_director($username, $role, $id_instance, $status = 1, $i
 
         $current_role = $DB->get_record_sql($sql_query);
 
-        $id_current_semester = core_periods_get_current_period();
+        $id_current_semester = core_periods_get_current_period((int)$id_instance);
 
         if (empty($current_role)) {
             
@@ -898,7 +900,7 @@ function checking_role($username, $idinstancia)
     $sql_query      = "SELECT id FROM {user} WHERE username = '$username'";
     $id_moodle_user = $DB->get_record_sql($sql_query);
     
-    $semestre = core_periods_get_current_period();
+    $semestre = core_periods_get_current_period($idinstancia);
     
     $sql_query  = "SELECT ur.id_rol as id_rol , r.nombre_rol as nombre_rol, ur.id as id, ur.id_usuario, ur.estado FROM {talentospilos_user_rol} ur INNER JOIN {talentospilos_rol} r ON r.id = ur.id_rol WHERE ur.id_usuario = " . $id_moodle_user->id . " and ur.id_semestre = " . $semestre->id . " and ur.id_instancia=" . $idinstancia . ";";
     $role_check = $DB->get_record_sql($sql_query);

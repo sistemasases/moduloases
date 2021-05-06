@@ -42,9 +42,10 @@ if(isset($_POST['type'])&&$_POST['type']=="assign_student")
     $role =get_role_id('practicante_ps')->id;
     $practicant = $_POST['practicant'];
     $monitor = $_POST['monitor'];
-    $semester = core_periods_get_current_period()->id;
-    $student_username= $_POST['student'];
     $instance = $_POST['instance'];
+    $semester = core_periods_get_current_period($instance)->id;
+    $student_username= $_POST['student'];
+
 
 
     $sql_query = "SELECT id FROM {talentospilos_user_rol} WHERE id_rol = '$role' and id_usuario='$practicant' and estado=1 and id_semestre='$semester' and id_jefe='$USER->id' and id_instancia='$instance'";

@@ -663,14 +663,14 @@ function secure_assign_role_to_user_previous_system( $user_id, $role, $singulari
     }
     
     if( !isset($singularizer['id_semestre']) ){
-        $singularizer['id_semestre'] = core_periods_get_current_period()->id;
+        $singularizer['id_semestre'] = core_periods_get_current_period( $singularizer['id_instancia'] )->id;
     }
 
     if( !_core_user_assigned_in_previous_system( $user_id, $role, $singularizer ) ){
     	global $DB_PREFIX;
             
         $manager = get_db_manager();
-        $period_id = ( isset($singularizer['id_semestre']) ? $singularizer['id_semestre'] : core_periods_get_current_period()->id );
+        $period_id = ( isset($singularizer['id_semestre']) ? $singularizer['id_semestre'] : core_periods_get_current_period( $singularizer['id_instancia'] )->id );
             
         $tablename = $DB_PREFIX . "talentospilos_user_rol";
         $params = [ 
@@ -737,7 +737,7 @@ function secure_remove_role_to_user( $user_id, $role, $start_datetime, $executed
     }
     
     if( !isset($singularizer['id_semestre']) ){
-        $singularizer['id_semestre'] = core_periods_get_current_period()->id;
+        $singularizer['id_semestre'] = core_periods_get_current_period( $singularizer['id_instancia'] )->id;
     }
     
     $inherited_role = _core_security_check_inherited_role($role);
@@ -851,7 +851,7 @@ function secure_remove_role_from_user_previous_system( $user_id, $role, $singula
     }
     
     if( !isset($singularizer['id_semestre']) ){
-        $singularizer['id_semestre'] = core_periods_get_current_period()->id;
+        $singularizer['id_semestre'] = core_periods_get_current_period( $singularizer['id_instancia'] )->id;
     }
 
     $assignation = _core_user_assigned_in_previous_system( $user_id, $role, $singularizer );
@@ -859,7 +859,7 @@ function secure_remove_role_from_user_previous_system( $user_id, $role, $singula
     	global $DB_PREFIX;
             
         $manager = get_db_manager();
-        $period_id = ( isset($singularizer['id_semestre']) ? $singularizer['id_semestre'] : core_periods_get_current_period()->id );
+        $period_id = ( isset($singularizer['id_semestre']) ? $singularizer['id_semestre'] : core_periods_get_current_period( $singularizer['id_instancia'] )->id );
             
         $tablename = $DB_PREFIX . "talentospilos_user_rol";
         $params = [ 

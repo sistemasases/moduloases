@@ -177,13 +177,14 @@ function get_loses_by_student($username){
  * Function that given a logged user id, returns an array of the courses with enrolled users in an instance.
  * @see get_courses_for_report($user_id)
  * @param $user_id -> ID of the logged user
+ * @param int $instance_id -> instace ID para identificar el periodo actual en get_courses_for_report
  * @return array 
  */
 
-function get_courses_for_report($user_id){
+function get_courses_for_report($user_id, $instance_id){
     global $DB;
     
-    $semestre_object = core_periods_get_current_period();
+    $semestre_object = core_periods_get_current_period($instance_id);
     $sem = $semestre_object->nombre;
     $id_semestre = $semestre_object->id;
     $año = substr($sem,0,4);
@@ -257,10 +258,11 @@ function get_courses_for_report($user_id){
  * Function that given a logged user id, returns an array of the courses with enrolled users in an instance.
  * @see get_courses_for_report($user_id)
  * @param $user_id -> ID of the logged user
+ * @param int $instance_id -> instace ID para identificar el periodo actual en get_courses_for_report
  * @return array 
  */
-function get_courses_report($user_id){
-	$courses = get_courses_for_report($user_id);
+function get_courses_report($user_id, $instance_id){
+	$courses = get_courses_for_report($user_id, $instance_id);
 
 	$string_html = "<table id = 'courses'>
 						<thead>

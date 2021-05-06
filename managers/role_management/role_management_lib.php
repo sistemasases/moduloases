@@ -4,7 +4,9 @@ require_once(dirname(__FILE__). '/../../../../config.php');
 require_once(dirname(__FILE__).'/../periods_management/periods_lib.php');
 require_once(dirname(__FILE__).'/../user_management/user_lib.php');
 require_once(dirname(__FILE__).'/../MyException.php');
+require_once(dirname(__FILE__).'/../../core/module_loader.php');
 
+module_loader('periods');
 
 
 /**
@@ -355,8 +357,7 @@ function monitor_student_assignment($username_monitor, $array_students, $idinsta
     $sql_query = "SELECT id FROM {talentospilos_rol} WHERE nombre_rol='$role';";
     $id_role = $DB->get_record_sql($sql_query);
     
-    $sql_query ="select max(id) as id from {talentospilos_semestre};";
-    $id_semester = $DB->get_record_sql($sql_query);
+    $id_semester = core_periods_get_current_period($idinstancia)->id;
     
     $array = new stdClass;
     $id_boss = null;

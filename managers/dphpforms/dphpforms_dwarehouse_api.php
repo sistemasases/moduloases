@@ -273,7 +273,7 @@
             //Example of loadF: get_tipo_form valid: 
             //data: get_tipo_form   params: id_registro_respuesta_form
           
-            if( count($_POST['params']) == 3  ){
+            if( count($_POST['params']) == 4  ){
             $params = $_POST['params'];
 
             //Get 'tipo_form' 	FROM table mdl_talentospilos_df_formularios switch params
@@ -282,7 +282,8 @@
             $accion_record     = $params[1];
             $record_dwarehouse= json_decode($params[2]);
             $local_alias_campo = "indefinido"; //Se inicializa como "indefinido" por si existe algún formulario al que no se le de soporte o no cumpla con las caracteristicas fundamentales
-
+            
+            $instance_id = $params[3];
             //Asigna local_alias del campo con enunciado "id_estudiante", según tipo de formulario.
             //Si se implementa un nuevo tipo de formulario, consulte el local_alias del campo con enunciado "id_estudiante", y agregue aquí. 
             switch ($alias_formulario->tipo_formulario) {
@@ -313,7 +314,7 @@
             if( $alias_formulario->tipo_formulario != "seguimiento_grupal" && $local_alias_campo != "indefinido"){
                 //Buscar por id ases retornado de value_student_id el usuario moodle con tracking status 1, retornar username
                 //Traer datos para url. Dentro del método llamado existe otro método a utilizar
-                $student_data = getDataToUrl($value_student_id);
+                $student_data = getDataToUrl($value_student_id, (int)$instance_id);
 
             }else  if($alias_formulario->tipo_formulario == "seguimiento_grupal" && $local_alias_campo != "indefinido"){
                 //Buscar cada uno por codigo de value_student_id  el usuario moodle con tracking status 1, retornar username
