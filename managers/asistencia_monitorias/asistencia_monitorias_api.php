@@ -100,6 +100,55 @@ if(isset($input->function) && isset($input->params)) {
         } else {
             return_with_code(-6);
         }
+    }  else if($function == 'anadir_asistente_a_sesion_de_monitoria') {
+        $params = $input->params;
+        if(count($params) == 8) {
+            // id_sesion, id_asistente, asignatura_a_consultar, nombre_asignatura, profesor, tematica_a_consultar, seguir_inscribiendo, id_monitoria
+            $sesion = $params[0];
+            $asistente = $params[1];
+            $asignatura_a_consultar = $params[2];
+            $nombre_asignatura = $params[3];
+            $profesor = $params[4];
+            $tematica_a_consultar = $params[5];
+            $seguir_inscribiendo = $params[6];
+            $id_monitoria = $params[7];
+            if($seguir_inscribiendo) // si usuario marcó "Inscribirme a esta monitoría automáticamente cada 8 días", inscribir a todas las sesiones de la monitoría que haya programadas
+            $result = anadir_asistente_a_todas_las_sesiones_de_monitoria($id_monitoria, $asistente, $asignatura_a_consultar, $nombre_asignatura, $profesor, $tematica_a_consultar);
+            else $result = anadir_asistente_a_sesion_de_monitoria($sesion, $asistente, $asignatura_a_consultar, $nombre_asignatura, $profesor, $tematica_a_consultar);
+            // si no, inscribir solo a esa sesion
+                if($result){
+                    echo json_encode(
+                        array(
+                            "status_code" => 0,
+                            "message" => "Éxito",
+                            "data_response" => $result
+                        )
+                    );
+                } else {
+                    return_with_code(-5);
+                }
+        } else {
+            return_with_code(-6);
+        }
+    } else if($function == 'eliminar_asistencia') {
+        $id = intval($input->params);
+            if(is_int($id)) {
+
+                $result = eliminar_asistencia($id);
+
+                if($result){
+                    echo json_encode(
+                        array(
+                            "status_code" => 0,
+                            "message" => "Éxito",
+                        )
+                    );
+                } else {
+                    return_with_code(-5);
+                }
+            } else {
+                return_with_code(-2);
+            }
     } else if($function == 'modificar_monitoria') {
         $params = $input->params;
         if(count($params) == 5) {
@@ -211,7 +260,41 @@ if(isset($input->function) && isset($input->params)) {
             } else {
                 return_with_code(-2);
             }
-    } else if($function == 'eliminar_sesion') {
+    } else if($function == 'get_proxima_sesion_de_monitoria') {
+        $id = intval($input->params);
+            if(is_int($id)) {
+
+                $result = get_proxima_sesion_de_monitoria($id);
+
+                if($result){
+                    echo json_encode(
+                        array(
+                            "status_code" => 0,
+                            "message" => $result
+                        )
+                    );
+                } else {
+                    return_with_code(-5);
+                }
+            } else {
+                return_with_code(-2);
+            }
+    } else if($function == 'cargar_asistentes_de_sesion') {
+        $id = intval($input->params);
+            if(is_int($id)) {
+
+                $result = cargar_asistentes_de_sesion($id);
+                echo json_encode(
+                        array(
+                            "status_code" => 0,
+                            "message" => "Éxito",
+                            "data_response" => $result
+                        )
+                );
+            } else {
+                return_with_code(-2);
+            }
+    }else if($function == 'eliminar_sesion') {
         $id = intval($input->params);
             if(is_int($id)) {
 
@@ -230,7 +313,48 @@ if(isset($input->function) && isset($input->params)) {
             } else {
                 return_with_code(-2);
             }
-    } else if($function == 'anadir_materia') {
+    }else if($function == 'registrar_asistencia_a_asistente') {
+        $id = $input->params;
+        $result = registrar_asistencia_a_asistente($id);
+        if($result){
+            echo json_encode(
+                array(
+                    "status_code" => 0,
+                    "message" => "Éxito",
+                )
+            );
+        } else {
+            return_with_code(-5);
+        }
+    } else if($function == 'modificar_celular_de_usuario') {
+        $params = $input->params;
+        if(count($params) == 2) {
+            // id, numero de celular
+            $id = intval($params[0]);
+            $celular = $params[1];
+
+            if(is_int($id)) {
+
+                $result = modificar_celular_de_usuario($id, $celular);
+
+                if($result){
+                    echo json_encode(
+                        array(
+                            "status_code" => 0,
+                            "message" => "Éxito",
+                            "data_response" => $result
+                        )
+                    );
+                } else {
+                    return_with_code(-5);
+                }
+            } else {
+                return_with_code(-2);
+            }
+        } else {
+            return_with_code(-6);
+        }
+    }else if($function == 'anadir_materia') {
         $params = $input->params;
         if(count($params) == 1) {
             // materia
