@@ -923,3 +923,4 @@ and mdl_talentospilos_semestre.nombre = '2018B';
 
 
 -- Fin de consulta monitor, estudiante y jefe practicante
+ -- hola
