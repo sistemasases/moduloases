@@ -7,6 +7,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $dbman = $DB->get_manager();
     $result = true;
 
+
     if ($oldversion < 2021042120260) {
 
       
