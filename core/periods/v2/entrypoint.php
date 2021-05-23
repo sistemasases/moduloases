@@ -159,19 +159,15 @@ function periods_get_period_by_date($fecha_inicio, $fecha_fin, $relax_query=fals
  * @param int Instance id
  * @return array List of periods.
  */
-function periods_get_all_periods( int $instance_id=null ):array
+function periods_get_all_periods( $instance_id='NULL' ):array
 {
     global $DB;
     global $PERIODS_TABLENAME; 
 
     $periods_before_2019B = periods_get_period_by_date('2015-02-19', '2020-07-31', true);
 
-    $query = "SELECT * FROM $PERIODS_TABLENAME";
+    $query = "SELECT * FROM $PERIODS_TABLENAME WHERE id_instancia = $instance_id";
 
-    (is_null($instance_id)) 
-        ? $query .= " WHERE id_instancia = NULL"
-        : $query .= " WHERE id_instancia = $instance_id"; 
-    
     $periods = $DB->get_records_sql( $query );
 
     $all_periods = array_merge($periods_before_2019B, $periods);
