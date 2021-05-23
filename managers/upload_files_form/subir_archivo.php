@@ -627,6 +627,7 @@ if (isset($_FILES['csv_file'])) {
                 $record->nombre = $data[0];
                 $record->fecha_inicio = $data[1];
                 $record->fecha_fin = $data[2];
+                $record->id_instancia = $data[3];
                 $DB->insert_record('talentospilos_semestre', $record);
             }
             $respuesta = 1;

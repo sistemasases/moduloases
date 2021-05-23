@@ -64,6 +64,9 @@ function periods_get_period_by_id( int $period_id ):stdClass
 
 /**
  * Returns a period given its name and instance id.
+ * Since periods before (including) 2019B does not have an instanceid,
+ * additional checks takes place.
+ *
  * @author David S. Cortés - <david.cortes@correounivalle.edu.co>
  * @since 2.0.0
  *
@@ -71,7 +74,7 @@ function periods_get_period_by_id( int $period_id ):stdClass
  * @param int $instance_id 
  * @return bool, true if there's a period with given name, false otherwise. 
  */
-function periods_get_period_by_name($period_name, int $instance_id)
+function periods_get_period_by_name($period_name, $instance_id)
 {
     global $DB;
     global $PERIODS_TABLENAME;
@@ -79,13 +82,19 @@ function periods_get_period_by_name($period_name, int $instance_id)
     $query = "
         SELECT *
         FROM $PERIODS_TABLENAME
-        WHERE nombre = '$period_name'
-        AND id_instancia = $instance_id";
+        WHERE nombre = '$period_name' ";
+
+
+    if (str_contains($period_name, '201')) {
+        $query .= "AND id_instancia = NULL";         
+    } else {
+        $query .= "AND id_instancia = $instance_id";         
     
-    
+    }
+
     $result = $DB->get_record_sql( $query );
     
-    if( !property_exists($result, 'nombre') ) {
+    if( !property_exists($result, 'id') ) {
        return false; 
     }
     else {
@@ -107,14 +116,16 @@ function periods_get_period_by_name($period_name, int $instance_id)
  * @return stdClass
  * @throws Exception if there's no period with those dates.
  */
-function periods_get_period_by_date($fecha_inicio, $fecha_fin, $relax_query=false, $instance_id)
+function periods_get_period_by_date($fecha_inicio, $fecha_fin, $relax_query=false, $instance_id='NULL')
 {
 	global $DB;
 	global $PERIODS_TABLENAME;
 
 	$query = "SELECT * FROM $PERIODS_TABLENAME WHERE id_instancia=$instance_id AND ";
 
-	$fecha_fin = date('Y-m-d');
+    if (is_null($fecha_fin)) {
+	    $fecha_fin = date('Y-m-d');
+    }
 
 	if( $relax_query ){
 		$query .= "fecha_inicio >= '$fecha_inicio' AND fecha_fin <= '$fecha_fin'";
@@ -139,6 +150,8 @@ function periods_get_period_by_date($fecha_inicio, $fecha_fin, $relax_query=fals
 
 /** 
  * Function that return all periods under a given instance.
+ * Todos los periodos antes del 2019-2 no tienen instancia, por ende
+ * deben hacerse dos consultas a la tabla unidas con el operador UNION.
  * 
  * @author David S. Cortés <david.cortes@correounivalle.edu.co>
  * @since 2.0.0
@@ -151,13 +164,18 @@ function periods_get_all_periods( int $instance_id=null ):array
     global $DB;
     global $PERIODS_TABLENAME; 
 
+    $periods_before_2019B = periods_get_period_by_date('2015-02-19', '2020-07-31', true);
+
     $query = "SELECT * FROM $PERIODS_TABLENAME";
 
     (is_null($instance_id)) 
         ? $query .= " WHERE id_instancia = NULL"
-        : $query .= " WHERE id_instancia = $instance_id";      
+        : $query .= " WHERE id_instancia = $instance_id"; 
     
-    return $DB->get_records_sql( $query );
+    $periods = $DB->get_records_sql( $query );
+
+    $all_periods = array_merge($periods_before_2019B, $periods);
+    return $all_periods;
 }
 
 /**

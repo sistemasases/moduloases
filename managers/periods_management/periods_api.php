@@ -65,9 +65,12 @@
              * for this reason, the input param only can be equal in quantity to one.
              * */
             
-            if( count( $input->params ) == 2 ){
+            if( count( $input->params ) == 3 ){
 
                 // Order of params
+                // [0] -> Start date
+                // [1] -> End date
+                // [2] -> Instance id
                 /**
                  * The starting_date value only can be date.
                  * The ending_date value only can be date.
@@ -79,7 +82,7 @@
                         array(
                             "status_code" => 0,
                             "error_message" => "",
-                            "data_response" => core_periods_get_period_by_date( $input->params[0], $input->params[1], true )
+                            "data_response" => core_periods_get_period_by_date( $input->params[0], $input->params[1], true, $input->params[2] )
                         )
                     );
                     

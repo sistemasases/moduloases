@@ -45,6 +45,10 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($,
 
                 formData.append('file', $('#archivo')[0].files[0]);
 
+                const instancia = window.location.href.split('instance_id=')[1];
+
+                formData.append('instanceid', instancia);
+
                 var controler = $('#selector').val() + '_processing.php';
 
                 $.ajax({
