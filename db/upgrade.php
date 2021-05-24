@@ -7,8 +7,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $dbman = $DB->get_manager();
     $result = true;
 
-
-    if ($oldversion < 2021042120260) {
+    if ($oldversion < 22021042120260) {
 
       
     //     // ************************************************************************************************************
@@ -4346,7 +4345,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
         // ////////////////////////////////////////////////////////////////////////////////////////////////
 
-        upgrade_block_savepoint(true, 2021042120260, 'ases');
+        upgrade_block_savepoint(true, 22021042120260, 'ases');
 
 
         return $result;
