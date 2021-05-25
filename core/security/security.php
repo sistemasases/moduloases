@@ -8,8 +8,7 @@
  */
 
 //General configuration
-//if (!defined('VERSION')) define('VERSION', 1);
-//const VERSION = 1; //Current version.
+const SEC_VERSION = 1; //Current version.
 
 require_once( __DIR__ . "/../../../../config.php");
 require_once( __DIR__ . "/../module_loader.php");
@@ -24,7 +23,7 @@ const CORE_PREFIX = "core_secure_render"; // example: {{#core_secure_render_bloc
  * a parallel way */
 const SUPPORT_TO_PREVIOUS_SYSTEM = TRUE;
 
-require_once( __DIR__ . "/v1/entrypoint.php");
+require_once( __DIR__ . "/v" . SEC_VERSION . "/entrypoint.php");
 
 /**
  * Function that given a function name, array of arguments, context, user id, singularizations and time, 

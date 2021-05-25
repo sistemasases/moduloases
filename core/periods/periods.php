@@ -3,18 +3,19 @@
  * @package		block_ases
  * @subpackage	core.periods
  * @author 		Jeison Cardona Gómez
+ * @author 	    David S. Cortés	
  * @copyright 	(C) 2019 Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @license   	http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-//const VERSION = 2; //Current version (adds support for regionalization).
+const PERIODS_VERSION = 2; //Current version (adds support for regionalization).
 
 require_once( __DIR__ . "/../../../../config.php");
 require_once( __DIR__ . "/../module_loader.php");
 
 global $PERIODS_TABLENAME;
 $PERIODS_TABLENAME = $GLOBALS[ 'CFG' ]->prefix . "talentospilos_semestre";
-require_once( __DIR__ . "/v2/entrypoint.php");
+require_once( __DIR__ . "/v" . PERIODS_VERSION . "/entrypoint.php");
 
 /**
  * Interface to periods_get_current_period
