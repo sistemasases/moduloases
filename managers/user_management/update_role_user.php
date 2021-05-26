@@ -190,7 +190,7 @@ else if(isset($_POST['changeMonitor']) && isset($_POST['oldUser']) && isset($_PO
         update_role_monitor_ps($newUser->username, 'monitor_ps', array(), null,$_POST['idinstancia'], 1);
 
         //list of students in charge is updated
-        changeMonitor($oldUser->id,  $newUser->id );
+        changeMonitor($oldUser->id,  $newUser->id, (int)$_POST['idinstancia'] );
 
         //disable old user
         update_role_monitor_ps($oldUser->username, 'monitor_ps', array(), null,$_POST['idinstancia'], 0);
@@ -198,7 +198,7 @@ else if(isset($_POST['changeMonitor']) && isset($_POST['oldUser']) && isset($_PO
 
     }else{
         //list of students in charge is updated
-        changeMonitor($oldUser->id,  $newUser->id );
+        changeMonitor($oldUser->id,  $newUser->id, (int)$_POST['idinstancia'] );
 
         //disable old user
         update_role_monitor_ps($oldUser->username, 'monitor_ps', array(), null,$_POST['idinstancia'], 0);

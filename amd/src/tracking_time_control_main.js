@@ -90,6 +90,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
 
                 var url      = window.location.href;     // Returns full URL
                 var monitorid = url.split('monitorid=');
+                const instanceid = url.split('instanceid=');
 
 
                 if(init === undefined){
@@ -107,7 +108,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/datatables', 'block_ases/s
                     data: {
                         initial_hour: init,
                         final_hour: fin,
-                        monitorid: monitorid[1] 
+                        monitorid: monitorid[1],
+                        instanceid = instanceid
                     },
 
                     success: function(msg) {

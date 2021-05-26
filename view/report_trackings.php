@@ -103,8 +103,8 @@ $globalArregloGrupal =[];
 $table="";
 $table_periods="";
 
-$periods = get_semesters();
-$semester_id = core_periods_get_current_period()->id;
+$periods = core_periods_get_all_periods($blockid);
+$semester_id = core_periods_get_current_period($blockid)->id;
 
 // Getting last semester date range 
 $intervalo_fechas[0] = reset($periods)->fecha_inicio;
@@ -130,11 +130,11 @@ if($usernamerole=='monitor_ps'){
 
     // Get peer trackings that a monitor has done and show it in a toggle.
     $students_by_monitor=get_students_of_monitor($monitor_id,$blockid);
-    $table.=render_monitor_new_form($students_by_monitor);
+    $table.=render_monitor_new_form($students_by_monitor, null, $blockid);
 
     // Get grupal trackings that a monitor has done and show it in a toggle.
     $array_groupal_trackings_dphpforms =get_tracking_grupal_monitor_current_semester($monitor_id,$intervalo_fechas[2]);
-    $table.=render_groupal_tracks_monitor_new_form($array_groupal_trackings_dphpforms,$monitor_id);
+    $table.=render_groupal_tracks_monitor_new_form($array_groupal_trackings_dphpforms,$monitor_id, $blockid);
 
 
 }elseif($usernamerole=='practicante_ps'){

@@ -3,18 +3,19 @@
  * @package		block_ases
  * @subpackage	core.periods
  * @author 		Jeison Cardona Gómez
+ * @author 	    David S. Cortés	
  * @copyright 	(C) 2019 Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @license   	http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-const VERSION = 1; //Current version.
+const PERIODS_VERSION = 2; //Current version (adds support for regionalization).
 
 require_once( __DIR__ . "/../../../../config.php");
 require_once( __DIR__ . "/../module_loader.php");
 
 global $PERIODS_TABLENAME;
 $PERIODS_TABLENAME = $GLOBALS[ 'CFG' ]->prefix . "talentospilos_semestre";
-require_once( __DIR__ . "/v" . VERSION . "/entrypoint.php");
+require_once( __DIR__ . "/v" . PERIODS_VERSION . "/entrypoint.php");
 
 /**
  * Interface to periods_get_current_period
@@ -22,11 +23,12 @@ require_once( __DIR__ . "/v" . VERSION . "/entrypoint.php");
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
  * @see periods_get_current_period(...) in entrypoint.php
+ * @param int $instance_id
  * 
  * @return  stdClass | null Return the last period.
  */
-function core_periods_get_current_period(){
-    return periods_get_current_period();
+function core_periods_get_current_period(int $instance_id ){
+    return periods_get_current_period($instance_id);
 }
 
 /**
@@ -56,14 +58,15 @@ function core_periods_get_period_by_id( int $period_id ){
  * 
  * @see periods_get_period_by_name(...) in entrypoint.php
  *  
- * @param integer $period_name Period name.
+ * @param string $period_name Period name.
+ * @param int $instance_id Instance id belonging to the period.
  * 
  * @throws Exception If doesn't exist a period with the given name.
  * 
  * @return stdClass Period object
  */
-function core_periods_get_period_by_name(string $period_name){
-    return periods_get_period_by_name($period_name);
+function core_periods_get_period_by_name($period_name, $instance_id){
+    return periods_get_period_by_name($period_name, $instance_id);
 }
 
 /**
@@ -73,11 +76,12 @@ function core_periods_get_period_by_name(string $period_name){
  * @since 1.0.0
  * 
  * @see periods_get_all_periods(...) in entrypoint.php
+ * @param string $instance_id Instance beloging to the periods
  * 
  * @return array List of periods.
  */
-function core_periods_get_all_periods(){
-    return periods_get_all_periods();
+function core_periods_get_all_periods($instance_id){
+    return periods_get_all_periods( $instance_id );
 }
 
 /**
@@ -86,12 +90,14 @@ function core_periods_get_all_periods(){
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
  * 
+ * @param int $instance_id
+ *
  * @see periods_get_last_period(...) in entrypoint.php
  * 
  * @return stdClass Last period.
  */
-function core_periods_get_last_period(){
-    return periods_get_last_period();
+function core_periods_get_last_period($instance_id){
+    return periods_get_last_period($instance_id);
 }
 
 
@@ -123,12 +129,13 @@ function core_periods_check_if_exist( int $period_id ){
  * @param time/string $fecha_fin
  * @param bool $relax_query. If set to true, the function returns all periods
  * between the start and end date. If set to false, it will return an exact match.
+ * @param string $instance_id Instance beloging to the periods.
  *
  * @return Period object
  * @throws Exception if there's no period between the given interval.
  */
-function core_periods_get_period_by_date( $fecha_inicio, $fecha_fin, $relax_query=false ){
-	return periods_get_period_by_date( $fecha_inicio, $fecha_fin, $relax_query );
+function core_periods_get_period_by_date( $fecha_inicio, $fecha_fin, $relax_query=false, $instance_id='NULL' ){
+	return periods_get_period_by_date( $fecha_inicio, $fecha_fin, $relax_query, $instance_id );
 }
 
 /**
@@ -158,7 +165,7 @@ function core_periods_update_period( $period_info, $period_id ){
  * @return stdClass of new period.
  * @throws Exception if there is already a period with the given name.
  */
-function core_periods_create_period( $nombre, $fecha_inicio, $fecha_fin ){
-	return periods_create_period($nombre, $fecha_inicio, $fecha_fin);
+function core_periods_create_period( $nombre, $fecha_inicio, $fecha_fin, $instance_id ){
+	return periods_create_period($nombre, $fecha_inicio, $fecha_fin, $instance_id);
 }
 ?>

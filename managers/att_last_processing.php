@@ -9,7 +9,7 @@ array_push($columns, array("title"=>"Faltas injustificadas", "name"=>"injustifie
 array_push($columns, array("title"=>"Faltas justificadas", "name"=>"justifiedabsence", "data"=>"justifiedabsence"));
 array_push($columns, array("title"=>"Total faltas", "name"=>"total", "data"=>"total"));
 
-if(isset($_POST['dat']))
+if(isset($_POST['dat']) && isset($_POST['instance']))
 {
     $data = array(
                 "bsort" => false,
@@ -30,7 +30,7 @@ if(isset($_POST['dat']))
 
                 ),
                 "columns" => $columns,
-                "data"=> attendance_by_semester($_POST['dat']),
+                "data"=> attendance_by_semester($_POST['dat'], $_POST['instance']),
                 "language" => 
                  array(
                     "search"=> "Buscar:",

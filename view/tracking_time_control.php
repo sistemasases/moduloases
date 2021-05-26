@@ -66,7 +66,7 @@ $data->monitor=$monitor_name;
 $data->menu = $menu_option;
 
 
-            $current_semester = core_periods_get_current_period();
+            $current_semester = core_periods_get_current_period($blockid);
             $initial_hour=strtotime($current_semester->fecha_inicio);
             $final_hour=strtotime($current_semester->fecha_fin);
             $default=true;

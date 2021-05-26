@@ -113,7 +113,7 @@ function get_cohorts_by_idnumber($id_number){
      } else if (property_exists($actions, 'search_assigned_students_agr')) {
 
          $user_id = $USER->id;
-         $id_current_semester = core_periods_get_current_period()->id;
+         $id_current_semester = core_periods_get_current_period($instance_id)->id;
          $sql_query = "SELECT roles.nombre_rol, user_role.id_programa 
                           FROM {talentospilos_user_rol} AS user_role 
                                                     INNER JOIN {talentospilos_rol} AS roles ON user_role.id_rol = roles.id
@@ -127,7 +127,7 @@ function get_cohorts_by_idnumber($id_number){
                  $conditions_query_directors = " WHERE ases_students.id_academic_program = $user_role->id_programa";
                  $conditions_query_assigned = " AND ases_students.student_id IN (SELECT id_estudiante AS student_id
                                       FROM {talentospilos_monitor_estud} 
-                                WHERE id_semestre = " . core_periods_get_current_period()->id . " AND id_instancia = $instance_id)";
+                                WHERE id_semestre = " . core_periods_get_current_period($instance_id)->id . " AND id_instancia = $instance_id)";
 
                  $where_user = $conditions_query_directors.$conditions_query_assigned;
                  break;
@@ -696,7 +696,7 @@ function get_not_assign_students($general_fields=null, $conditions, $academic_fi
         $user_id = $USER->id;
 
         $instance= $instance_id;
-        $id_current_semester = core_periods_get_current_period()->id;
+        $id_current_semester = core_periods_get_current_period($instance)->id;
         $sql_query = "SELECT roles.nombre_rol, user_role.id_programa 
                       FROM {talentospilos_user_rol} AS user_role 
                                                 INNER JOIN {talentospilos_rol} AS roles ON user_role.id_rol = roles.id
@@ -789,7 +789,7 @@ function get_ases_report($general_fields=null,
     global $DB, $USER;
 
     $actions = $USER->actions;
-    $id_current_semester = core_periods_get_current_period()->id;
+    $id_current_semester = core_periods_get_current_period($instance_id)->id;
 
     $conditions[1] = 'TODOS';
 
@@ -1201,7 +1201,7 @@ function get_ases_report($general_fields=null,
                 $conditions_query_directors = " ases_students.id_academic_program = $user_role->id_programa";
                 $conditions_query_assigned = " AND ases_students.student_id IN (SELECT id_estudiante AS student_id
                                   FROM {talentospilos_monitor_estud} 
-                            WHERE id_semestre = ". core_periods_get_current_period()->id ." AND id_instancia = $instance_id)";
+                            WHERE id_semestre = ". core_periods_get_current_period($instance_id)->id ." AND id_instancia = $instance_id)";
 
                 $where_clause .= $conditions_query_directors.$conditions_query_assigned;
 
@@ -1399,7 +1399,7 @@ function get_professionals_by_instance($instance_id){
                                   FROM {talentospilos_rol}
                                   WHERE nombre_rol = 'profesional_ps')
                         AND id_instancia = $instance_id
-                        AND id_semestre =". core_periods_get_current_period()->id
+                        AND id_semestre =". core_periods_get_current_period($instance_id)->id
                         ."ORDER BY fullname";
 
     $result = $DB->get_records_sql($sql_query);
@@ -1433,7 +1433,7 @@ function get_practicing_by_instance($instance_id){
                                   FROM {talentospilos_rol}
                                   WHERE nombre_rol = 'practicante_ps')
                         AND id_instancia = $instance_id
-                        AND id_semestre =". core_periods_get_current_period()->id
+                        AND id_semestre =". core_periods_get_current_period($instance_id)->id
                         ."ORDER BY fullname";
 
     $result = $DB->get_records_sql($sql_query);
@@ -1466,7 +1466,7 @@ function get_monitors_by_instance($instance_id){
                                   FROM {talentospilos_rol}
                                   WHERE nombre_rol = 'monitor_ps')
                         AND id_instancia = $instance_id
-                        AND id_semestre =". core_periods_get_current_period()->id
+                        AND id_semestre =". core_periods_get_current_period($instance_id)->id
                   ."ORDER BY fullname";
 
     $result = $DB->get_records_sql($sql_query);

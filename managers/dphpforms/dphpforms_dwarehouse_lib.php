@@ -391,14 +391,15 @@ function  get_tipo_form($id_registro_respuesta_form)
  * Function that load username and firstname data switch id_ases
  * @see getDataToUrlByIdAses($id_ases_student)
  * @param $id_ases_student---> id_ases_user
+ * @param $instance_id---> Instancia del semestre a consultar 
  * @return array
  **/
 
-function  getDataToUrlByIdAses($id_ases_student)
+function  getDataToUrlByIdAses($id_ases_student, $instance_id)
 {
     global $DB; 
 
-    $current_semester = core_periods_get_current_period()->id;
+    $current_semester = core_periods_get_current_period($instance_id)->id;
 
                 $sql_query = "   SELECT url_data.id_instancia AS instanceid, url_data.username, url_data.firstname, url_data.lastname, _context.instanceid AS courseid
                 FROM mdl_context AS _context
@@ -442,16 +443,17 @@ function  getIdAses($username){
  * Iterate array to operate with data
  * @see getDataToUrl($students)
  * @param $students---> id_ases_user 
+ * @param $instance_id---> instancia del periodo 
  * @return array Students data to url
  **/
 
-function getDataToUrl($students){
+function getDataToUrl($students, $instance_id){
 
     $array_students = [];
     foreach ($students as $student){
         //Se reciben los id_ases a buscar.
         //Se realiza la busquedad por cada id_ases recibido 
-        $data = getDataToUrlByIdAses($student);
+        $data = getDataToUrlByIdAses($student, $instance_id);
         if(count($data) != 0){
             array_push($array_students, $data );
         }

@@ -29,9 +29,9 @@
 
 	module_loader("periods");
 
-	if(isset($_POST['op']) && isset($_POST['name']) && isset($_POST['beginning']) && isset($_POST['ending']) && $_POST['op'] == 'createSemester'){
+	if(isset($_POST['op']) && isset($_POST['instance']) && isset($_POST['name']) && isset($_POST['beginning']) && isset($_POST['ending']) && $_POST['op'] == 'createSemester'){
 
-		$create = core_periods_create_period($_POST['name'], $_POST['beginning'], $_POST['ending']);
+		$create = core_periods_create_period($_POST['name'], $_POST['beginning'], $_POST['ending'], $_POST['instance']);
 
 		echo "El registro se realizó con éxito";	
 

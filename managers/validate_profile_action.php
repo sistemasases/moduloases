@@ -114,7 +114,7 @@ function get_id_rol($userid, $blockid)
 {
     global $DB;
 
-    $current_semester = core_periods_get_current_period();
+    $current_semester = core_periods_get_current_period($blockid);
     $sql_query = "SELECT id_rol FROM {talentospilos_user_rol} WHERE id_usuario=$userid AND id_instancia=$blockid AND id_semestre=$current_semester->id  and estado=1";
     $consulta = $DB->get_record_sql($sql_query);
 
