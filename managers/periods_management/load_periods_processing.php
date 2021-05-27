@@ -42,6 +42,7 @@
           		$all_periods[$period->id]->fecha_inicio = strftime("%d %B %Y", strtotime($all_periods[$period->id]->fecha_inicio));
           		$all_periods[$period->id]->fecha_fin = strftime("%d %B %Y", strtotime($all_periods[$period->id]->fecha_fin));                             
      		}
+        array_pop($all_periods); // La manipulación que hace el foreach añade un elemento extra, acá se elimina.
 		$all_periods = array_reverse($all_periods);
 
 		$data = array(
