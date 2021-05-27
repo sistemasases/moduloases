@@ -15,7 +15,7 @@
  * @param int $instance_id Period's instance id
  * @return  stdClass | null Return the last period.
  */
-function periods_get_current_period( int $instance_id  ){
+function periods_get_current_period( $instance_id  ){
 
     global $DB;
     global $PERIODS_TABLENAME;

@@ -12,6 +12,6 @@
      * David S. Cortés
      */
 
-    $plugin->version= 22021042120260;
+    $plugin->version=  22021042120260;
 
     $plugin->requires = 2010112400;

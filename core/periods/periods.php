@@ -27,7 +27,7 @@ require_once( __DIR__ . "/v" . PERIODS_VERSION . "/entrypoint.php");
  * 
  * @return  stdClass | null Return the last period.
  */
-function core_periods_get_current_period(int $instance_id ){
+function core_periods_get_current_period( $instance_id ){
     return periods_get_current_period($instance_id);
 }
 
