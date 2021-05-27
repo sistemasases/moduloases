@@ -116,24 +116,30 @@ function periods_get_period_by_name($period_name, $instance_id)
  * @return stdClass
  * @throws Exception if there's no period with those dates.
  */
-function periods_get_period_by_date($fecha_inicio, $fecha_fin, $relax_query=false, $instance_id='NULL')
+function periods_get_period_by_date($fecha_inicio, $fecha_fin, $relax_query=false, $instance_id=null)
 {
 	global $DB;
 	global $PERIODS_TABLENAME;
 
-	$query = "SELECT * FROM $PERIODS_TABLENAME WHERE id_instancia=$instance_id AND ";
+	$query = "SELECT * FROM $PERIODS_TABLENAME "; 
+    if (is_null($instance_id)) {
+       $query .= "WHERE id_instancia is NULL "; 
+    } else {
+        $query .= "WHERE id_instancia = $instance_id ";  
+    }
+
 
     if (is_null($fecha_fin)) {
 	    $fecha_fin = date('Y-m-d');
     }
 
 	if( $relax_query ){
-		$query .= "fecha_inicio >= '$fecha_inicio' AND fecha_fin <= '$fecha_fin'";
+		$query .= "AND fecha_inicio >= '$fecha_inicio' AND fecha_fin <= '$fecha_fin'";
         
 	    $result = $DB->get_records_sql( $query );
 	}
 	else {
-		$query .= "fecha_inicio = '$fecha_inicio' AND fecha_fin = '$fecha_fin'";
+		$query .= "AND fecha_inicio = '$fecha_inicio' AND fecha_fin = '$fecha_fin'";
         
         $result = $DB->get_record_sql( $query );
         
@@ -163,15 +169,22 @@ function periods_get_all_periods( $instance_id='NULL' ):array
 {
     global $DB;
     global $PERIODS_TABLENAME; 
+    
+    try {
+    
+        $periods_before_2019B = periods_get_period_by_date('2015-02-19', '2020-07-31', true);
 
-    $periods_before_2019B = periods_get_period_by_date('2015-02-19', '2020-07-31', true);
+        $query = "SELECT * FROM $PERIODS_TABLENAME WHERE id_instancia = $instance_id";
 
-    $query = "SELECT * FROM $PERIODS_TABLENAME WHERE id_instancia = $instance_id";
+        $periods = $DB->get_records_sql( $query );
 
-    $periods = $DB->get_records_sql( $query );
+        $all_periods = array_merge($periods_before_2019B, $periods);
+        
+        return $all_periods;
 
-    $all_periods = array_merge($periods_before_2019B, $periods);
-    return $all_periods;
+    } catch(Exception $ex) {
+        throw new Exception($ex->getMessage()); 
+    }
 }
 
 /**
