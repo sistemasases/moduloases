@@ -303,4 +303,9 @@ class renderer extends plugin_renderer_base {
         $data = $page->export_for_template($this);
         return parent::render_from_template('block_ases/monitorias_academicas_detalle', $data);
     }
+
+    public function render_monitorias_academicas_inscripcion_page($page){
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('block_ases/monitorias_academicas_inscripcion', $data);
+    }
 }

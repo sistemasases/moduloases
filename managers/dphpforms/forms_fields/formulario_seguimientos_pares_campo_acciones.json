@@ -96,15 +96,15 @@
         },
         {
             "enunciado": "Rem. Directores de programa",
-            "identificador": "c_rem_int_uni_desarrollo_humano_promocion_socioeconomica",
-            "valor": "c_rem_int_uni_desarrollo_humano_promocion_socioeconomica",
+            "identificador": "c_rem_int_uni_directores_de_programa",
+            "valor": "c_rem_int_uni_directores_de_programa",
             "posicion": "9",
             "title": "El monitor acompaña o solicita al estudiante realizar trámites o buscar apoyo con el Director de su Programa Académico."
         },
         {
             "enunciado": "Rem. Grupos de la Universidad",
-            "identificador": "c_rem_int_uni_desarrollo_humano_promocion_socioeconomica",
-            "valor": "c_rem_int_uni_desarrollo_humano_promocion_socioeconomica",
+            "identificador": "c_rem_int_uni_grupos_de_la_universidad",
+            "valor": "c_rem_int_uni_grupos_de_la_universidad",
             "posicion": "12",
             "title": "Invitación a la participación en los grupos Culturales, Académicos, Recreativos, Políticos, Espirituales y Deportivos que existen en la Universidad."
         },

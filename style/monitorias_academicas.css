@@ -103,12 +103,23 @@
     color: #555;
 }
 
-#config-icon{
+.config-icon {
     display:inline;
     font-size: 20px;
+}
+
+.gris {
     color: rgb(177, 177, 177);
 }
 
-#config-icon:hover{
+.verde {
+    color: rgb(112, 194, 101);
+}
+
+.config-icon:hover{
     color: #555;
+}
+
+.check-asistio{
+    transform: scale(1.5);
 }
