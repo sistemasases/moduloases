@@ -1,9 +1,10 @@
 details {
-    width: 85%;
+    width: inherit;
     border: 1px solid #aaa;
     border-radius: 4px;
     margin-bottom: 2%;
     padding: 1%;
+    margin-left: 0.6%;
 }
 
 details > summary {
