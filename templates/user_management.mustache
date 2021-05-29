@@ -1,15 +1,24 @@
 {{#data}}
 {{> block_ases/side_menu}}
-<div class="container">
-<div class="row">
+<div class="ases-container">
+<div class="ases-row">
 <h2>GESTIÓN DE USUARIOS</h2>
 <hr/>
+</div>
 {{{message}}}
-   {{#search_user_um}}
-    {{> block_ases/um_search_users}}
-   {{/search_user_um}}
-   {{#view_users_um}}
-    {{> block_ases/um_view_users}}
-   {{/view_users_um}}
+        {{#search_user_um}}
+        <details id="menus" class="ases-row">
+            <summary>Asignación y actualización de roles</summary>
+                {{> block_ases/um_search_users}}
+        </details>
+        {{/search_user_um}}
+
+        {{#view_users_um}}
+         <details class="ases-row">
+            <summary>Lista de usuarios</summary>
+                {{> block_ases/um_view_users}}
+         </details>
+        {{/view_users_um}}
+   </details>
 </div>
 {{/data}}
