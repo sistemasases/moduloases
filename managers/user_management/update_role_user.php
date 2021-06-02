@@ -25,6 +25,9 @@
 
 require_once(dirname(__FILE__).'/../role_management/role_management_lib.php');
 require_once(dirname(__FILE__).'/user_lib.php');
+require_once(dirname(__FILE__).'../../core/module_loader.php');
+
+module_loader('security');
 
 if(isset($_POST['role']) && isset($_POST['username'])){
 
@@ -132,6 +135,10 @@ if(isset($_POST['role']) && isset($_POST['username'])){
             }
     }else{
         $success =  update_role_user($_POST['username'], $_POST['role'],$_POST['idinstancia']);
+
+        if ($_POST['security']) {
+
+        }
 
         switch($success){
             case 1:

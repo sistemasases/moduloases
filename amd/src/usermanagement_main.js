@@ -494,12 +494,15 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                             },
                         });
                     } else {
+                        // Revisa si el checkbox (Usar sistema de seguridad) está habilitado
+                        // Por ahora solo se checkea cuando el rol es sistemas.
                         $.ajax({
                             type: "POST",
                             data: {
                                 role: dataRole,
                                 username: dataUsername,
-                                idinstancia: getIdinstancia()
+                                idinstancia: getIdinstancia(),
+                                security: $('#checkbox-security').is(":checked")
                             },
                             url: "../managers/user_management/update_role_user.php",
                             success: function(msg) {

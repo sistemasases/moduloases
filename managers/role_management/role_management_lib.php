@@ -371,7 +371,7 @@ function monitor_student_assignment($username_monitor, $array_students, $idinsta
     }
     $array->id_usuario = $id_user_moodle->id;
     $array->estado = $state;
-    $array->id_semestre = $id_semester->id;
+    $array->id_semestre = $id_semester;
     $array->id_jefe = $id_boss;
     $array->id_instancia = $idinstancia;
     $array->id_programa = $id_academic_program;
@@ -389,17 +389,17 @@ function monitor_student_assignment($username_monitor, $array_students, $idinsta
             $DB->delete_records_select('talentospilos_usuario_prof',$whereclause);
         } 
         
-        
         $array->id = $checkrole->id;
-        if($array->id == 0){
-            trigger_error('ASES Notificacion: actualizar user_roll en la BD con id 0');
+        if ($array->id == 0) {
+            trigger_error('ASES Notificacion: actualizar user_rol en la BD con id 0');
             $update_record = false;
-        }else{
-        $update_record = $DB->update_record('talentospilos_user_rol', $array);
+        } else {
+            $update_record = $DB->update_record('talentospilos_user_rol', $array);
         }
-        if($update_record){
+
+        if ($update_record) {
             $result = 3;
-        }else{
+        } else {
             $result = 4;
         }
     }else{
