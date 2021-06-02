@@ -81,7 +81,6 @@ $data->academic_program_select = $academic_programs_options;
 
 $data->table = $table_courseuseres;
 $data->menu = $menu_option;
-$PAGE->requires->js_call_amd('block_ases/usermanagement_main', 'init');
 
 // Nav configuration
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
@@ -99,8 +98,6 @@ $PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
 $PAGE->requires->css('/blocks/ases/style/user_management.css', true);
 $PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/aaspect.min.css', true);
-//$PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.css', true);
-//$PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/round-about_pilos.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/forms_pilos.css', true);
@@ -114,6 +111,9 @@ $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables.m
 $PAGE->requires->css('/blocks/ases/js/DataTables-1.10.12/css/jquery.dataTables_themeroller.css', true);
 $PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
+
+$PAGE->requires->js_call_amd('block_ases/usermanagement_main', 'init');
+
 $output = $PAGE->get_renderer('block_ases');
 $index_page = new \block_ases\output\user_management_page($data);
 

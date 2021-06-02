@@ -20,6 +20,13 @@
                         <option value="ninguno" selected>Ninguno</option>
                      </select>
                   </li>
+                  <li class="assignment_li checkbox" id="check-security">
+                   <label>
+                    <input type="checkbox" id="check-security">
+                       Replicar en el sistema de seguridad (marcar solo si es el usuario desarrollador). 
+                    </label>
+                  </li>
+
                   <li class="assignment_li ases-form-group" style="display:none;" id="boss_li">
                      <label for="boss_select">Jefe</label>
                      <select name="boss_select" id="boss_select" class="ases-form-control">
@@ -60,7 +67,7 @@
             {{!--end form_prof_type--}}
             <div class="assignment_li ases-form-group ases-col-lg-12">
                {{#update_role_um}}
-               <button class="submit btn-form" type="submit" id="ok-button">Aceptar</button>
+               <button class="submit btn-form" type="button" id="ok-button">Aceptar</button>
                {{/update_role_um}}
                <button class="submit btn-form " type="button" id="cancel-button">Cancelar</button>
             </div>
