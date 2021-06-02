@@ -499,6 +499,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                         $.ajax({
                             type: "POST",
                             data: {
+                                uid: userData.id,
                                 role: dataRole,
                                 username: dataUsername,
                                 idinstancia: getIdinstancia(),

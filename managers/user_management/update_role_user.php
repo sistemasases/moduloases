@@ -25,7 +25,7 @@
 
 require_once(dirname(__FILE__).'/../role_management/role_management_lib.php');
 require_once(dirname(__FILE__).'/user_lib.php');
-require_once(dirname(__FILE__).'../../core/module_loader.php');
+require_once(dirname(__FILE__).'/../../core/module_loader.php');
 
 module_loader('security');
 
@@ -134,10 +134,19 @@ if(isset($_POST['role']) && isset($_POST['username'])){
                 break;
             }
     }else{
-        $success =  update_role_user($_POST['username'], $_POST['role'],$_POST['idinstancia']);
 
-        if ($_POST['security']) {
 
+        if ($_POST['security'] && $_POST['role'] == 'sistemas') {
+            $singularizer = ["id_instancia" => $_POST['idinstancia']];
+            $success = core_secure_assign_role_to_user(
+                $_POST['uid'],
+                $_POST['role'],
+                date("Y-m-d H:i:s"),
+                strtotime('2038-01-19'),
+                $singularizer
+            );
+        } else {
+            $success =  update_role_user($_POST['username'], $_POST['role'],$_POST['idinstancia']);
         }
 
         switch($success){

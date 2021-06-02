@@ -568,11 +568,11 @@ function secure_assign_role_to_user( $user_id, $role, $start_datetime = NULL, $e
     }else{
         if( ($start_datetime >= $end_datetime) ){ return null; }
     }   
+
     $_user = get_db_records( "user", ['id' => $user_id] );
-    //TODO: Descomentar la siguiente linea una vez se tenga completamente implementado el
-    //nuevo sistema de seguridad en el modulo.
     $_role = _core_security_get_role( $role ); // Rol at the master system (Secutiry Core)
-    if( $_user ){
+
+    if( $_user && $_role ){
        
         if( is_null(_core_security_get_user_rol( $user_id, $start_datetime, $singularizer )) ){
                 
