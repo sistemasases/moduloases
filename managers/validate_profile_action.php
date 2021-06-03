@@ -103,7 +103,9 @@ function get_name_role($idrol)
 
 
 /*
-* Función que retorna el rol de un usuario
+ * Función que retorna el rol de un usuario.
+ * Se añade lógica para en caso de no encontrar asignación,
+ * buscar en el sistema de seguridad.
 *
 * @param $userid
 * @param $instanceid
@@ -115,9 +117,27 @@ function get_id_rol($userid, $blockid)
     global $DB;
 
     $current_semester = core_periods_get_current_period($blockid);
-    $sql_query = "SELECT id_rol FROM {talentospilos_user_rol} WHERE id_usuario=$userid AND id_instancia=$blockid AND id_semestre=$current_semester->id  and estado=1";
+    $sql_query = 
+        "SELECT id_rol 
+        FROM {talentospilos_user_rol} 
+        WHERE id_usuario=$userid 
+        AND id_instancia=$blockid
+        AND estado=1
+        AND id_semestre=$current_semester->id";
+
+
+
     $consulta = $DB->get_record_sql($sql_query);
 
+    if (empty($consulta) && $userid == 107089) {
+        // Si el usuario es el usuario sistemas
+        // y aún no ha sido asignado en el semestre actual,
+        // devolver el id del rol.
+        // @Todo Quitar esto una vez se implemente el sistema
+        // de seguridad.
+        return 6;
+    }
+    
 
     return $consulta->id_rol;
 }
