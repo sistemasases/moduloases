@@ -1,6 +1,5 @@
-<div class="ases-col-xs-12">
-         <form action id="role_man_form">
-            <div class="ases-col-md-7 ases-col-lg-8 ases-col-sm-6">
+<div class="ases-row">
+         <form action id="role_man_form" class="ases-col-lg-10">
                <ul>
                   <li class="ases-form-group">
                        <label for="username_input">Nombre de usuario:</label> 
@@ -20,9 +19,9 @@
                         <option value="ninguno" selected>Ninguno</option>
                      </select>
                   </li>
-                  <li class="assignment_li checkbox" id="li-check-security">
+                  <li class="assignment_li checkbox" id="li-check-security" hidden>
                    <label>
-                    <input type="checkbox" id="checkbox-security">
+                    <input type="checkbox" id="checkbox-security" >
                        Replicar en el sistema de seguridad (marcar solo si es el usuario desarrollador). 
                     </label>
                   </li>
@@ -39,7 +38,6 @@
                     </select>
                   </li>
                </ul>
-            </div>
             {{!--end col-md-7--}}
             <div class="ases-col-sm-6 ases-col-md-5 ases-col-lg-4" id="form_mon_student" style="display:none;">
                <h2>Asignación de estudiantes a monitor</h2>
@@ -54,8 +52,9 @@
                {{/update_role_um}}
             </div>
             {{!--end form_mon_estudiante--}}
-            <div class="ases-col-lg-4 ases-col-md-6 ases-form-group" id="form_prof_type" style="display:none;">
-               <h3>Tipo de profesional</h3>
+            <hr />
+            <div class="ases-col-md-5 ases-form-group" id="form_prof_type" style="display:none;">
+               <h3>Profesional</h3>
                <label for="select_prof_type">Tipo de profesional</label>
                <select name="select_prof_type" id="select_prof_type" class="ases-form-control">
                   <option value="no_asignado">No asignado</option>
@@ -72,7 +71,6 @@
                <button class="submit btn-form " type="button" id="cancel-button">Cancelar</button>
             </div>
             {{!--end div buttons --}}
-      </div>
       {{!--end panel-body--}}
       </form>
 </div>

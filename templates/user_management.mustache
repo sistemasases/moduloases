@@ -7,14 +7,14 @@
 </div>
 {{{message}}}
         {{#search_user_um}}
-        <details id="menus" class="ases-row">
+        <details id="menus" class="ases-col-lg-10">
             <summary>Asignación y actualización de roles</summary>
                 {{> block_ases/um_search_users}}
         </details>
         {{/search_user_um}}
 
         {{#view_users_um}}
-         <details class="ases-row">
+         <details id="lista-usuarios" class="ases-col-lg-10">
             <summary id="list-users-panel">Lista de usuarios</summary>
                 {{> block_ases/um_view_users}}
          </details>
