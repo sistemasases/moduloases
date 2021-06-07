@@ -336,7 +336,11 @@ function update_record_act($act){
   
  if( !$DB->record_exists("talentospilos_act_simultanea",array('actividad'=> $act_M))){
      $act->actividad  = $act_M;
+     if($act->id == 0){
+        trigger_error('ASES Notificacion: actualizar act en la BD con id 0');
+    }else{
     $DB->update_record("talentospilos_act_simultanea", $act);
+    }
  }
 
 }
@@ -391,7 +395,11 @@ function update_record_genero($genero){
   
  if( !$DB->record_exists("talentospilos_identidad_gen",array('genero'=> $genero_M))){
      $genero->genero  = $genero_M;
+     if($genero->id == 0){
+        trigger_error('ASES Notificacion: actualizar genero en la BD con id 0');
+    }else{
     $DB->update_record("talentospilos_identidad_gen", $genero);
+    }
  }
 
 }
@@ -553,7 +561,10 @@ function  get_act_simultaneas()
    
             $result_cv_update = false;
         } else{
-   
+            if($obj_updatable_moodle->id == 0){
+                trigger_error('ASES Notificacion: actualizar email en la BD con id 0');
+                return false;
+            }
             $result_cv_update = $DB->update_record('user', $obj_updatable_moodle);
         }
     }else {
@@ -701,6 +712,10 @@ function save_reason_dropout_ases($code_student, $reason, $observation){
 
     if($exists) {
         $record->id = $exists->id;
+        if($record->id == 0){
+            trigger_error('ASES Notificacion: actualizar retiro en la BD con id 0');
+            return 0;
+        }
         $result = $DB->update_record('talentospilos_retiros', $record);
     }
     else {
@@ -887,7 +902,7 @@ function get_tracking_current_semesterV3($criterio,$student_id, $semester_id,$in
 
     }else{
 
-        $interval = get_semester_interval($semester_id);
+        $interval = core_periods_get_period_by_id($semester_id);
         $fecha_inicio = getdate(strtotime($interval->fecha_inicio));
         $fecha_fin = getdate(strtotime($interval->fecha_fin));
     }
@@ -1024,7 +1039,7 @@ function get_tracking_current_semesterV2($criterio,$student_id, $semester_id,$in
 
     }else{
 
-        $interval = get_semester_interval($semester_id);
+        $interval = core_periods_get_period_by_id($semester_id);
         $fecha_inicio = getdate(strtotime($interval->fecha_inicio));
         $fecha_fin = getdate(strtotime($interval->fecha_fin));
     }
@@ -1103,7 +1118,7 @@ function get_tracking_current_semester($criterio,$student_id, $semester_id,$inte
         $ano_semester  = $fecha_inicio['year'];
 
     }else{
-        $interval = get_semester_interval($semester_id);
+        $interval = core_periods_get_period_by_id($semester_id);
         $fecha_inicio = getdate(strtotime($interval->fecha_inicio));
         $fecha_fin = getdate(strtotime($interval->fecha_fin));
         $ano_semester  = $fecha_inicio['year'];
@@ -1277,17 +1292,22 @@ function get_tracking_group_by_semester($id_ases = null, $tracking_type, $id_sem
         $last_semestre = false;
         $first_semester = false;
         
-        $sql_query = "SELECT * FROM {talentospilos_semestre}";
+        $sql_query = "SELECT * FROM {talentospilos_semestre} WHERE id_instancia=$id_instance";
         
         if($id_semester != null){
-            $sql_query .= " WHERE id = ".$id_semester;
+            $sql_query .= " AND id = ".$id_semester;
         }else{
-            $userid = $DB->get_record_sql("SELECT id_moodle_user AS userid FROM {talentospilos_user_extended} WHERE id_ases_user = $id_ases AND tracking_status=1");
-            $firstsemester = get_id_first_semester($userid->userid);
-            $lastsemestre = get_id_last_semester($userid->userid);
-    
-            $sql_query .= " WHERE id >=".$firstsemester . " AND fecha_inicio < '2017-12-31 00:00:00'";
-            
+            // TO DO: $id_ases should not reach this as null
+            if($id_ases == null){
+                return 1;
+            }else{
+                $userid = $DB->get_record_sql("SELECT id_moodle_user AS userid FROM {talentospilos_user_extended} WHERE id_ases_user = $id_ases AND tracking_status=1");
+                $firstsemester = get_id_first_semester($userid->userid, $id_instance);
+                $lastsemestre = get_id_last_semester($userid->userid, $id_instance);
+
+                $sql_query .= " AND id >=".$firstsemester . " AND fecha_inicio < '2017-12-31 00:00:00'";
+            }
+
         }
         $sql_query.=" order by fecha_inicio DESC";
     
@@ -1350,9 +1370,10 @@ function get_tracking_group_by_semester($id_ases = null, $tracking_type, $id_sem
  * 
  * @see get_id_first_semester($id)
  * @param $id --> student id
+ * @param $id_instance --> instance id
  * @return string --> first semester id
  */
-function get_id_first_semester($id){
+function get_id_first_semester($id, $id_instance){
     try {
         global $DB;
         
@@ -1378,7 +1399,7 @@ function get_id_first_semester($id){
             $timecreated = $courses->min;
         }
 
-        $sql_query = "select id, nombre ,fecha_inicio::DATE, fecha_fin::DATE from {talentospilos_semestre} ORDER BY fecha_fin ASC;";
+        $sql_query = "select id, nombre ,fecha_inicio::DATE, fecha_fin::DATE from {talentospilos_semestre} WHERE id_instancia=$id_instance ORDER BY fecha_fin ASC;";
         
         $semesters = $DB->get_records_sql($sql_query);
         
@@ -1404,13 +1425,14 @@ function get_id_first_semester($id){
  * Returns an array of semesters of a student
  *
  * @param $username_student --> moodle student username
+ * @param $instance_id --> moodle course instance id
  * @return array --> stdClass object representing semesters of a student
  */
-function get_semesters_stud($id_first_semester){
+function get_semesters_stud($id_first_semester, $instance_id){
      
     global $DB;
      
-    $sql_query = "SELECT id, nombre, fecha_inicio::DATE, fecha_fin::DATE FROM {talentospilos_semestre} WHERE id >= $id_first_semester ORDER BY {talentospilos_semestre}.fecha_inicio DESC";
+    $sql_query = "SELECT id, nombre, fecha_inicio::DATE, fecha_fin::DATE FROM {talentospilos_semestre} WHERE id_instancia=$instance_id AND id >= $id_first_semester ORDER BY {talentospilos_semestre}.fecha_inicio DESC";
      
     $result_query = $DB->get_records_sql($sql_query);
      
@@ -1435,12 +1457,13 @@ function compare_date($fecha_inicio, $fecha_fin, $fecha_comparar){
   * 
   * @see get_id_last_semester($idmoodle)
   * @param $idmoodle --> moodle student id
+  * @param $instance_id --> moodle course instance id
   * @return string|boolean --> string containing the last semster id or false in case there weren't semesters related with the student
   */
- function get_id_last_semester($idmoodle){
+ function get_id_last_semester($idmoodle, $instance_id){
 
-     $id_first_semester = get_id_first_semester($idmoodle);
-     $semesters = get_semesters_stud($id_first_semester);
+     $id_first_semester = get_id_first_semester($idmoodle, $instance_id);
+     $semesters = get_semesters_stud($id_first_semester, $instance_id);
      if($semesters){
         return  $semesters[0]->id;
      }else{
@@ -1466,8 +1489,12 @@ function save_tracking_peer($object_tracking){
     if($object_tracking->id != ""){
 
         unset($object_tracking->id_monitor);
+        if($object_tracking->id == 0){
+            trigger_error('ASES Notificacion: actualizar retiro en la BD con id 0');
+        }else{
         $result = $DB->update_record('talentospilos_seguimiento', $object_tracking);
         $result_insertion_tracking = -1;  // This variable value indicates it wasn't an insertion but an update
+        }
     }else{
         // Inserts track
         unset($object_tracking->id);
@@ -1517,14 +1544,23 @@ function save_tracking_peer($object_tracking){
             $object_risk_individual->id_usuario = $object_tracking->id_estudiante_ases;
             $object_risk_individual->id_riesgo = $id_individual_risk;
             $object_risk_individual->calificacion_riesgo = (int)$object_tracking->individual_riesgo;
-            $DB->update_record('talentospilos_riesg_usuario', $object_risk_individual);
+            if($object_risk_individual->id == 0){
+                trigger_error('ASES Notificacion: actualizar riesgo en la BD con id 0');
+            }else{
+                $DB->update_record('talentospilos_riesg_usuario', $object_risk_individual);
+            }
         }
     }else{
         $object_risk_individual = new stdClass();
         $object_risk_individual->id_usuario = $object_tracking->id_estudiante_ases;
         $object_risk_individual->id_riesgo = $id_individual_risk;
         $object_risk_individual->calificacion_riesgo = 0;
-        $DB->insert_record('talentospilos_riesg_usuario', $object_risk_individual);
+        // Bandaid fix
+        // id_usuario sometimes reaches as 0
+        if($object_risk_individual->id_usuario != 0 && $object_risk_individual->id_usuario != null){
+            $DB->insert_record('talentospilos_riesg_usuario', $object_risk_individual);
+        }
+
     }
         
 
@@ -1542,14 +1578,23 @@ function save_tracking_peer($object_tracking){
             $object_risk_familiar->id_usuario = $object_tracking->id_estudiante_ases;
             $object_risk_familiar->id_riesgo = $id_familiar_risk;
             $object_risk_familiar->calificacion_riesgo = (int)$object_tracking->familiar_riesgo;
-            $DB->update_record('talentospilos_riesg_usuario', $object_risk_familiar);
+            if($object_risk_familiar->id == 0){
+                trigger_error('ASES Notificacion: actualizar riesgo en la BD con id 0');
+            }else{
+                $DB->update_record('talentospilos_riesg_usuario', $object_risk_familiar);
+            }
         }
     }else{
         $object_risk_familiar = new stdClass();
         $object_risk_familiar->id_usuario = $object_tracking->id_estudiante_ases;
         $object_risk_familiar->id_riesgo = $id_familiar_risk;
         $object_risk_familiar->calificacion_riesgo = 0;
-        $DB->insert_record('talentospilos_riesg_usuario', $object_risk_familiar);
+        // Bandaid fix
+        // id_usuario sometimes reaches as 0
+        if($object_risk_familiar->id_usuario != 0 && $object_risk_familiar->id_usuario != null){
+            $DB->insert_record('talentospilos_riesg_usuario', $object_risk_familiar);
+        }
+
     }
 
     // {estudiante_riesgo - académico} relation id
@@ -1567,14 +1612,22 @@ function save_tracking_peer($object_tracking){
             $object_risk_academic->id_usuario = $object_tracking->id_estudiante_ases;
             $object_risk_academic->id_riesgo = $id_academic_risk;
             $object_risk_academic->calificacion_riesgo = (int)$object_tracking->academico_riesgo;
-            $DB->update_record('talentospilos_riesg_usuario', $object_risk_academic);
+            if($object_risk_academic->id == 0){
+                trigger_error('ASES Notificacion: actualizar riesgo en la BD con id 0');
+            }else{
+                $DB->update_record('talentospilos_riesg_usuario', $object_risk_academic);
+            }
         }
     }else{
         $object_risk_academic = new stdClass();
         $object_risk_academic->id_usuario = $object_tracking->id_estudiante_ases;
         $object_risk_academic->id_riesgo = $id_academic_risk;
         $object_risk_academic->calificacion_riesgo = 0;
-        $DB->insert_record('talentospilos_riesg_usuario', $object_risk_academic);
+        // Bandaid fix
+        // id_usuario sometimes reaches as 0
+        if($object_risk_academic->id_usuario != 0 && $object_risk_academic->id_usuario != null){
+            $DB->insert_record('talentospilos_riesg_usuario', $object_risk_academic);
+        }
     }
 
     // {estudiante_riesgo - económico} relation id
@@ -1592,14 +1645,21 @@ function save_tracking_peer($object_tracking){
             $object_risk_economic->id_usuario = $object_tracking->id_estudiante_ases;
             $object_risk_economic->id_riesgo = $id_economic_risk;
             $object_risk_economic->calificacion_riesgo = (int)$object_tracking->economico_riesgo;
+            if($object_risk_economic->id == 0){
+                trigger_error('ASES Notificacion: actualizar riesgo en la BD con id 0');
+            }else{
             $DB->update_record('talentospilos_riesg_usuario', $object_risk_economic);
+            }
         }
     }else{
         $object_risk_economic = new stdClass();
         $object_risk_economic->id_usuario = $object_tracking->id_estudiante_ases;
         $object_risk_economic->id_riesgo = $id_economic_risk;
         $object_risk_economic->calificacion_riesgo = 0;
-        $DB->insert_record('talentospilos_riesg_usuario', $object_risk_economic);
+        if($object_risk_economic->id_usuario != 0 && $object_risk_economic->id_usuario != null){
+            $DB->insert_record('talentospilos_riesg_usuario', $object_risk_economic);
+        }
+
     }
 
     // {estudiante_riesgo vida universitaria} relation id
@@ -1617,14 +1677,20 @@ function save_tracking_peer($object_tracking){
             $object_risk_life->id_usuario = $object_tracking->id_estudiante_ases;
             $object_risk_life->id_riesgo = $id_life_u_risk;
             $object_risk_life->calificacion_riesgo = (int)$object_tracking->vida_uni_riesgo;
+            if($object_risk_life->id == 0){
+                trigger_error('ASES Notificacion: actualizar riesgo en la BD con id 0');
+            }else{
             $DB->update_record('talentospilos_riesg_usuario', $object_risk_life);
+            }
         }
     }else{
         $object_risk_life = new stdClass();
         $object_risk_life->id_usuario = $object_tracking->id_estudiante_ases;
         $object_risk_life->id_riesgo = $id_life_u_risk;
         $object_risk_life->calificacion_riesgo = 0;
-        $DB->insert_record('talentospilos_riesg_usuario', $object_risk_life);
+        if($object_risk_life->id_usuario != 0 && $object_risk_life->id_usuario != null){
+            $DB->insert_record('talentospilos_riesg_usuario', $object_risk_life);
+        }
     }
 
 
@@ -1663,7 +1729,12 @@ function delete_tracking_peer($id_tracking){
     $object_updatable->id = $id_tracking;
     $object_updatable->status = 0;
 
+    if($object_updatable->id == 0){
+        trigger_error('ASES Notificacion: actualizar riesgo en la BD con id 0');
+        $result_query = false;
+    }else{
     $result_query = $DB->update_record('talentospilos_seguimiento', $object_updatable);
+    }
 
     if($result_query){
         $msg_result->title = "Éxito";
@@ -1718,8 +1789,11 @@ function save_status_icetex($id_status, $id_student, $id_reason=null, $observati
         $object_updatable = new stdClass();
         $object_updatable->id = $id_student;
         $object_updatable->observacion = $user_observations;
-
-        $DB->update_record('talentospilos_usuario', $object_updatable);
+        if($object_updatable->id == 0){
+            trigger_error('ASES Notificacion: actualizar observaciones usuario en la BD con id 0');
+        }else{
+            $DB->update_record('talentospilos_usuario', $object_updatable);
+        }
     }
 
     $result_insertion = $DB->insert_record('talentospilos_est_est_icetex', $object_status);
@@ -1891,6 +1965,27 @@ function get_status_program_for_profile_aditional($id_ases_user){
     return $array_result;
 }
 
+/**
+ * Get the student codes
+ *
+ * @see get_student_codes()
+ * @param $document
+ * @return object array with student codes.
+ */
+function get_student_codes($document){
+
+    global $DB;
+
+    $sql_query = "SELECT username AS code
+                  FROM {user} AS U
+                  INNER JOIN {talentospilos_user_extended} AS UE on U.id = UE.id_moodle_user
+                  INNER JOIN {talentospilos_usuario} AS usuario on UE.id_ases_user = usuario.id
+                  WHERE usuario.num_doc = '$document'";
+    
+    $student_codes = $DB->get_records_sql($sql_query);
+
+    return $student_codes;
+ }
 
 /**
  * Retorna el conjunto de posibles tipos de documento de identidad para un estudiante en particular
@@ -1963,14 +2058,21 @@ function update_tracking_status($id_ases_user, $id_academic_program){
     foreach($array_reg_user_extended as $reg){
         $record->id = $reg->id;
         $record->tracking_status = 0;
-
+        if($record->id == 0){
+            trigger_error('ASES Notificacion: actualizar usuario en la BD con id 0');
+        }else{
         $DB->update_record('talentospilos_user_extended', $record);
+        }
     }
 
     $record->id = $id_reg_user_extended;
     $record->tracking_status = 1;
-
+    if($record->id == 0){
+        trigger_error('ASES Notificacion: actualizar usuario en la BD con id 0');
+        $result = false;
+    }else{
     $result = $DB->update_record('talentospilos_user_extended', $record);
+    }
 
     return $result;
 }
@@ -2087,9 +2189,11 @@ function save_profile($form, $option1, $option2, $live_with){
         //an id is assigned to update
         $obj_updatable->id = $id_ases;
 
-        $sql_query = "SELECT observacion FROM {talentospilos_usuario} WHERE id = $id_ases";
+        $sql_query = "SELECT observacion, json_detalle FROM {talentospilos_usuario} WHERE id = $id_ases";
 
-        $observations = $DB->get_record_sql($sql_query)->observacion;
+        $result = $DB->get_record_sql($sql_query);
+        $observations = $result->observacion;
+        $json_detalle = json_decode($result->json_detalle);
 
         //Agregar campos nuevos
 
@@ -2136,6 +2240,9 @@ function save_profile($form, $option1, $option2, $live_with){
             $obj_updatable->id_identidad_gen = $genero;
         }
 
+        $json_detalle->tratamiento_datos_personales_doc = $obj_updatable->link_doc_dtddp;
+        $obj_updatable->json_detalle = json_encode($json_detalle);
+
         $obj_updatable->vive_con = $live_with;
         $obj_updatable->id_estado_civil = $estado_civil;
         $obj_updatable->id_pais = $pais;
@@ -2163,7 +2270,12 @@ function save_profile($form, $option1, $option2, $live_with){
 
         $obj_updatable_moodle->email = $email;
 
-        $result = $DB->update_record('talentospilos_usuario', $obj_updatable);
+        if($obj_updatable->id == 0){
+            trigger_error('ASES Notificacion: actualizar usuario en la BD con id 0');
+            $result= false;
+        }else{
+            $result = $DB->update_record('talentospilos_usuario', $obj_updatable);
+        }
 
         $result_cv_update = studentprofile_update_email_moodle($obj_updatable_moodle);
 
@@ -2250,14 +2362,15 @@ function student_profile_process_tracking(&$array_of_trackings, $tracking) {
  * @desc Constructs the peer tracking of an student.
  *          This is the latest version.
  * @param $id_ases string -> ASES student id
+ * @param $instance_id int -> ID de la instancia
  * @return array
  */
-function student_profile_get_peer_tracking($id_ases){
+function student_profile_get_peer_tracking($id_ases, $instance_id){
 
     $peer_tracking_v3 = [];
     $trackings_out_of_range = [];
 
-    $periods = core_periods_get_all_periods();
+    $periods = core_periods_get_all_periods($instance_id);
     $number_of_periods = count($periods);
     $id_period = $number_of_periods;
 
@@ -2969,7 +3082,7 @@ function student_profile_load_socioed_tab($id_ases, $id_block){
     $actions = authenticate_user_view($id_user, $id_block);
     $record = $actions;
 
-    $record->peer_tracking_v3 = student_profile_get_peer_tracking($id_ases);
+    $record->peer_tracking_v3 = student_profile_get_peer_tracking($id_ases, $id_block);
     $record->peer_tracking_v3_string = json_encode($record->peer_tracking_v3);
     $record->peer_tracking = student_profile_get_html_peer_tracking($id_ases, $id_block);
 
@@ -2992,7 +3105,7 @@ function student_profile_load_socioed_tab($id_ases, $id_block){
  * @param $id_ases string -> ASES student id
  * @return Object
  */
-function student_profile_load_academic_tab($id_ases){
+function student_profile_load_academic_tab($id_ases, $instance_id){
 
     $record = new stdClass();
 
@@ -3020,7 +3133,7 @@ function student_profile_load_academic_tab($id_ases){
     $record->estimulos = $estimulos;
 
     //Current semester
-    $html_academic_table = get_grades_courses_student_last_semester($id_user_moodle);
+    $html_academic_table = get_grades_courses_student_last_semester($id_user_moodle, $instance_id);
     $record->academic_semester_act = $html_academic_table;
 
     //historic academic

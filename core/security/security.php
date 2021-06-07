@@ -8,7 +8,7 @@
  */
 
 //General configuration
-const VERSION = 1; //Current version.
+const SEC_VERSION = 1; //Current version.
 
 require_once( __DIR__ . "/../../../../config.php");
 require_once( __DIR__ . "/../module_loader.php");
@@ -23,7 +23,7 @@ const CORE_PREFIX = "core_secure_render"; // example: {{#core_secure_render_bloc
  * a parallel way */
 const SUPPORT_TO_PREVIOUS_SYSTEM = TRUE;
 
-require_once( __DIR__ . "/v" . VERSION . "/entrypoint.php");
+require_once( __DIR__ . "/v" . SEC_VERSION . "/entrypoint.php");
 
 /**
  * Function that given a function name, array of arguments, context, user id, singularizations and time, 
@@ -364,6 +364,20 @@ function core_secure_update_action( $call, string $name = NULL, string $descript
  */
 function core_secure_find_key( string $explicit_hexed_rule = NULL ){
     return secure_find_key( $explicit_hexed_rule );
+}
+
+/**
+ * Interface to secure_generate_image
+ * 
+ * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
+ * @since 1.0.0
+ *
+ * @see  secure_generate_image( ... ) in entrypoint.php
+ * 
+ * @return string BLOBbase64.
+ */
+function core_secure_generate_image( int $value, int $height = 4, $total_pos = 80, $step_size = 10, $separator_size = 2 ){
+    return secure_generate_image( $value, $height, $total_pos, $step_size, $separator_size );
 }
 
 ?>

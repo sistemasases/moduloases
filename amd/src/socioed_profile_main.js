@@ -11,6 +11,8 @@ define(['jquery'], function($) {
     return {
 
         init: function() {
+            
+            const params = get_url_parameters(document.location.search)
 
             var student_code = $('#dphpforms_ases_student_code').attr('data-info');
 
@@ -28,10 +30,31 @@ define(['jquery'], function($) {
                 $('.id_practicante').find('input').val( $("#dphpforms_practicing_id").data("info") );
                 $('.id_profesional').find('input').val( $("#dphpforms_professional_id").data("info") );
                 $('.username').find('input').val( $("#dphpforms_username").data("info") );
+                
+				// Campos deprecados.
+				const deprecatedFields = [
+				    'relacion_pareja',
+					'composicion_familiar',
+					'influencia',
+					'aspec_academicos',
+					'estra_academicas',
+					'inter_autoe_ocupacional',
+					'carac_socioeconomicas',
+					'icetex',
+					'oferta_servicios',
+					'induccion',
+					'vida_universitaria',
+					'retor_ciuda_origen'
+				];
+
+				deprecatedFields.forEach( fieldValue => {
+					$(`input[value=${fieldValue}]`).parent().css("display", "none")
+				});
 
             });
 
             $('#button_primer_acercamiento').on('click', function() {
+                console.log('EHDHieidhi');
 
                 var creado_por = $('#current_user_id').val();
 
@@ -42,8 +65,11 @@ define(['jquery'], function($) {
             });
 
             $('#button_actualizar_primer_acercamiento').click(function(){
+                console.log('dheihdiehie')
                 $('div').removeClass('regla_incumplida');
-                $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id=primer_acercamiento&record_id=" + $(this).attr('data-record-id'), function( data ) {
+
+
+                $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id=primer_acercamiento&instance_id="+params.instanceid+"&record_id=" + $(this).attr('data-record-id'), function( data ) {
                     $("#primer_acercamiento_form").html("");
                     $('#primer_acercamiento_form').append( data );
                     $('#modal_primer_acercamiento').fadeIn(300);
@@ -67,5 +93,19 @@ define(['jquery'], function($) {
             });
         }
     };
+
+    function get_url_parameters(page) {
+        // This function is anonymous, is executed immediately and
+        // the return value is assigned to QueryString!
+        var query_string = [];
+        var query = document.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            query_string[pair[0]] = pair[1];
+        }
+
+        return query_string;
+    }
 });
 

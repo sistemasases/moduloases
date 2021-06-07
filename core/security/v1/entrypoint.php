@@ -242,12 +242,11 @@ function secure_render( &$data, $user_id = null, $singularizations = null, $time
 		}else{
 
 			if( _core_security_user_exist( $user_id ) ){
-
 				$user_rol = _core_security_get_user_rol( $user_id, $time_context, $singularizations );
 				
 				if( $user_rol ){
 
-					$actions_type = _core_security_get_actions_types();
+					$actions_type = _core_security_get_action_type();
 					$type_id = null;
 					foreach ($actions_type as $key => $type) {
 						if( $type['alias'] == "front" ){
@@ -257,10 +256,10 @@ function secure_render( &$data, $user_id = null, $singularizations = null, $time
 					}
 					$actions = _core_security_get_role_actions( $user_rol['id_rol'], $type_id );
 					foreach ($actions as $key => $action) {
-						$alias_action = $action['alias'];
+						$alias_action = 'core_secure_render_'.$action['alias'];
 						$data->$alias_action = true;
 					}
-
+					
 				}else{
 					return array(
 						'status' => -1,
@@ -457,7 +456,10 @@ function secure_remove_call( $alias, $user_id ){
         }
         
         if( $user ){
-            
+            if($action['id']== 0){
+                trigger_error('ASES Notificacion: actualizar usuario en la BD con id 0');
+                return 0;
+            }
             $tablename = $DB_PREFIX . "talentospilos_acciones";
             $params = [ $action['id'] ];
             $query = "UPDATE $tablename SET eliminado = 1, fecha_hora_eliminacion = 'now()', id_usuario_eliminador = $user_id "
@@ -559,26 +561,26 @@ function secure_create_role( $alias, $father_role = -1, $name = NULL, $descripti
  * @return integer|NULL 1 if okay, null if  assignation already exist.
  */
 function secure_assign_role_to_user( $user_id, $role, $start_datetime = NULL, $end_datetime = NULL, $singularizer = NULL, $use_alternative_interval = false, $alternative_interval = NULL ){
-
+	
     if( ( $use_alternative_interval === false && $start_datetime === NULL ) ||
         ( $use_alternative_interval === false && $end_datetime === NULL ) ){
         return null;
     }else{
         if( ($start_datetime >= $end_datetime) ){ return null; }
-    }
+    }   
 
     $_user = get_db_records( "user", ['id' => $user_id] );
     $_role = _core_security_get_role( $role ); // Rol at the master system (Secutiry Core)
-      
-    if( $_user && $_role ){
-     
-        if( is_null(_core_security_get_user_rol( $user_id, $start_datetime, $singularizer )) ){
 
+    if( $_user && $_role ){
+       
+        if( is_null(_core_security_get_user_rol( $user_id, $start_datetime, $singularizer )) ){
+                
         	if( SUPPORT_TO_PREVIOUS_SYSTEM ){
             
 	            //Validation if the role exist at the previous system role
 	            if ( _core_security_get_previous_system_role( $_role['alias'] ) ){
-	                /*Asignar en sistema previo*/
+			    /*Asignar en sistema previo*/
 	                secure_assign_role_to_user_previous_system( $user_id, $_role['alias'], $singularizer);
 	            }
 	            
@@ -591,8 +593,12 @@ function secure_assign_role_to_user( $user_id, $role, $start_datetime = NULL, $e
             
             //Valid format
             $use_alternative_interval = ( $use_alternative_interval ? 1 : 0 );
-            $alternative_interval = ( is_null($alternative_interval) ? NULL : json_encode($alternative_interval) );
+            $alternative_interval = ( is_null($alternative_interval) ? NULL : $alternative_interval );
             $singularizer = ( is_null($singularizer) ? NULL : json_encode($singularizer) );
+            
+            if( $use_alternative_interval === 1 ){
+                _core_security_solve_alternative_interval($alternative_interval);
+            }
             
             $tablename = $DB_PREFIX . "talentospilos_usuario_rol";
             $params = [ $user_id, $_role['id'], date( $date_format, $start_datetime),  date( $date_format, $end_datetime), $alternative_interval, $use_alternative_interval, $singularizer ];
@@ -659,14 +665,14 @@ function secure_assign_role_to_user_previous_system( $user_id, $role, $singulari
     }
     
     if( !isset($singularizer['id_semestre']) ){
-        $singularizer['id_semestre'] = core_periods_get_current_period()->id;
+        $singularizer['id_semestre'] = core_periods_get_current_period( $singularizer['id_instancia'] )->id;
     }
 
     if( !_core_user_assigned_in_previous_system( $user_id, $role, $singularizer ) ){
     	global $DB_PREFIX;
             
         $manager = get_db_manager();
-        $period_id = ( isset($singularizer['id_semestre']) ? $singularizer['id_semestre'] : core_periods_get_current_period()->id );
+        $period_id = ( isset($singularizer['id_semestre']) ? $singularizer['id_semestre'] : core_periods_get_current_period( $singularizer['id_instancia'] )->id );
             
         $tablename = $DB_PREFIX . "talentospilos_user_rol";
         $params = [ 
@@ -733,7 +739,7 @@ function secure_remove_role_to_user( $user_id, $role, $start_datetime, $executed
     }
     
     if( !isset($singularizer['id_semestre']) ){
-        $singularizer['id_semestre'] = core_periods_get_current_period()->id;
+        $singularizer['id_semestre'] = core_periods_get_current_period( $singularizer['id_instancia'] )->id;
     }
     
     $inherited_role = _core_security_check_inherited_role($role);
@@ -785,8 +791,12 @@ function secure_remove_role_to_user( $user_id, $role, $start_datetime, $executed
             $executed_by,
             $assignation_in_master_system['id']
         ];
+        if($assignation_in_master_system['id']== 0){
+            trigger_error('ASES Notificacion: actualizar usuario en la BD con id 0');
+        }else{
         $query = "UPDATE $tablename SET eliminado = $1, fecha_hora_eliminacion = $2, id_usuario_eliminador = $3 WHERE id = $4";
-    	$manager( $query, $params, $extra = null );
+        $manager( $query, $params, $extra = null );
+        }
     }
     
     if( $remove_previous_system ){
@@ -843,7 +853,7 @@ function secure_remove_role_from_user_previous_system( $user_id, $role, $singula
     }
     
     if( !isset($singularizer['id_semestre']) ){
-        $singularizer['id_semestre'] = core_periods_get_current_period()->id;
+        $singularizer['id_semestre'] = core_periods_get_current_period( $singularizer['id_instancia'] )->id;
     }
 
     $assignation = _core_user_assigned_in_previous_system( $user_id, $role, $singularizer );
@@ -851,7 +861,7 @@ function secure_remove_role_from_user_previous_system( $user_id, $role, $singula
     	global $DB_PREFIX;
             
         $manager = get_db_manager();
-        $period_id = ( isset($singularizer['id_semestre']) ? $singularizer['id_semestre'] : core_periods_get_current_period()->id );
+        $period_id = ( isset($singularizer['id_semestre']) ? $singularizer['id_semestre'] : core_periods_get_current_period( $singularizer['id_instancia'] )->id );
             
         $tablename = $DB_PREFIX . "talentospilos_user_rol";
         $params = [ 
@@ -859,6 +869,10 @@ function secure_remove_role_from_user_previous_system( $user_id, $role, $singula
             $assignation['id'], 
             $period_id
         ];
+        if($assignation['id']== 0){
+            trigger_error('ASES Notificacion: actualizar usuario_rol en la BD con id 0');
+            return 0;
+        }
         $query = "UPDATE $tablename SET estado = $1 WHERE id = $2 AND id_semestre = $3";
     	return $manager( $query, $params, $extra = null );
     }
@@ -1002,7 +1016,10 @@ function secure_remove_role( $role, int $exceuted_by )
         $manager = get_db_manager();                                            // Security core database manager.
         $tablename = $DB_PREFIX . "talentospilos_roles";                        // Moodle tablename with Moodle prefix. Ex. mdl_talentospilos_usuario
         $params = [ $db_role['id'],  1, "now()", $exceuted_by ];                // [0] Role id. [1] Status: 1 = Removed. [2] Time when it was removed. [3] User id that makes the acction
-            
+        if( $db_role['id']== 0){
+            trigger_error('ASES Notificacion: actualizar roles en la BD con id 0');
+            return 0;
+        }    
         $query = "UPDATE $tablename " .                                          // Query to remove in a logical way the record from the Database. See $param var.
             "SET eliminado = $2, " .                                            // Existence status, 0 = exist, 1 = no exist. See $param var.
             "   fecha_hora_eliminacion = $3, ".                                 // Time when was removed. See $param var.
@@ -1102,7 +1119,10 @@ function secure_remove_call_role( $call, $role, int $exec_by )
         $manager = get_db_manager();                                            // Security core database manager.
         $tablename = $DB_PREFIX . "talentospilos_roles_acciones";               // Moodle tablename with Moodle prefix. Ex. mdl_talentospilos_usuario
         $params = [ $obj_role['id'], $obj_action['id'],  1, "now()", $exec_by ];// [0] Role id. [1] Action ID. [2] Status: 1 = Removed. [3] Time when it was removed. [4] User id that makes the acction
-            
+        if( $obj_role['id']== 0){
+            trigger_error('ASES Notificacion: actualizar roles en la BD con id 0');
+            return 0;
+        }  
         $query = "UPDATE $tablename " .                                         // Query to remove in a logical way the record from the Database. See $param var.
             "SET eliminado = $3, " .                                            // Existence status, 0 = exist, 1 = no exist. See $param var.
             "   fecha_hora_eliminacion = $4, ".                                 // Time when was removed. See $param var.
@@ -1172,7 +1192,10 @@ function secure_update_role( $role, string $name = NULL, string $description = N
     $manager = get_db_manager();                                                // Security core database manager.
     $tablename = $DB_PREFIX . "talentospilos_roles";                            // Moodle tablename with Moodle prefix. Ex. mdl_talentospilos_usuario
     $params = [ $db_role['id'], $new_name, $new_description ];                  // [0] Role id. [1] New role name. [2] New role description.
-            
+    if( $db_role['id']== 0){
+        trigger_error('ASES Notificacion: actualizar roles en la BD con id 0');
+        return 0;
+    }        
     $query = "UPDATE $tablename " .                                             // Query to update a given role in the Database. See $param var.
         "SET nombre = $2, " .                                                   // New name.
         "   descripcion = $3 ".                                                 // New description.
@@ -1243,7 +1266,10 @@ function secure_update_action( $call, string $name = NULL, string $description =
     $manager = get_db_manager();                                                // Security core database manager.
     $tablename = $DB_PREFIX . "talentospilos_acciones";                         // Moodle tablename with Moodle prefix. Ex. mdl_talentospilos_usuario
     $params = [ $db_call['id'], $new_name, $new_description, $new_log ];        // [0] Action id. [1] New action name. [2] New action description. [3] New log configuration.
-            
+    if( $db_call['id']== 0){
+        trigger_error('ASES Notificacion: actualizar accion en la BD con id 0');
+        return 0;
+    }         
     $query = "UPDATE $tablename " .                                             // Query to update a given action in the Database. See $param var.
         "SET nombre = $2, " .                                                   // New name.
         "   descripcion = $3, ".                                                // New description.
@@ -1312,5 +1338,96 @@ function secure_find_key( string $explicit_hexed_rule = NULL ): string
     }
     
 }
+
+function _calculate_pos_location( $current_pos, $total_pos = 80, $step_size = 10, $separator_size = 2 ): array
+{
+    $step_start = ( ($step_size + $separator_size) * ( ( $total_pos - 1 ) - $current_pos ) );
+    return [ $step_start, $step_start + $step_size ];
+}
+
+function _calculate_list_pos(int $value, int $total_pos = 80): array {
+   
+    if ($value < 0) {
+        return [];
+    }
+
+    $pos_list = [];
+
+    for ($i = ($total_pos - 1); $i >= 0; $i--) {
+        
+        $pos_value = pow(2, $i);
+        if ($value >= 0 ) {
+            if ($pos_value <= $value){
+                array_push($pos_list, $i);
+                $value -= $pos_value;
+            }
+        } else {
+            break;
+        }
+        
+    }
+
+    return $pos_list;
+}
+
+function _add_separadors(&$img, $total_pos, $color, $step_size = 10, $separator_size = 2) {
+    
+    $pos = 0;
+    for ($i = 0; $i < $total_pos; $i++) {
+
+        imageline(
+                $img,
+                $pos + $step_size,                                              // Inicio Izquierda
+                2.5,                                                            // Altura Izquierda
+                $pos + $step_size + $separator_size,                            // Final Izquierda
+                2.5,                                                            // Altura Izquierda
+                $color
+        );
+
+        $pos += $step_size + $separator_size;
+    }
+    
+}
+
+function secure_generate_image( int $value, int $height = 4, $total_pos = 80, $step_size = 10, $separator_size = 2 ) :string
+{
+    $list_pos           = _calculate_list_pos( $value, $total_pos );
+    
+    $width              =  ($step_size + $separator_size) * $total_pos;
+
+    $img                = imagecreate( $width, $height );
+    imagecolorallocate( $img, 255, 255, 255 );
+    
+    $line_colour        = imagecolorallocate( $img, 0, 0, 0 );
+    $separator_color    = imagecolorallocate($img, 194, 194, 194);
+    
+    imagesetthickness ( $img, $width );
+
+    _add_separadors( $img, $total_pos, $separator_color, $step_size, $separator_size );
+    
+    foreach($list_pos as $_pos) {
+
+        $pos = _calculate_pos_location( $_pos, $total_pos, $step_size, $separator_size );
+
+        imageline(
+                $img,
+                $pos[0],                                                        // Inicio Izquierda
+                2.5,                                                            // Altura Izquierda
+                $pos[1],                                                        // Final Izquierda
+                2.5,                                                            // Altura Izquierda
+                $line_colour
+        );
+        
+    }
+
+    
+    $path = "/tmp/" . generate_random_string( 15 ) . ".png";
+    imagepng( $img, $path );
+    $data = file_get_contents($path);
+    return base64_encode($data);
+    
+}
+
+
 
 ?>

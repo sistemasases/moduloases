@@ -45,6 +45,10 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($,
 
                 formData.append('file', $('#archivo')[0].files[0]);
 
+                const instancia = window.location.href.split('instance_id=')[1];
+
+                formData.append('instanceid', instancia);
+
                 var controler = $('#selector').val() + '_processing.php';
 
                 $.ajax({
@@ -105,6 +109,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($,
                 var selector = $('#selector').val();
                 $('#informacion').empty();
                 switch (selector) {
+                    case 'matricula':
+                        $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información de carga histórico académico</h4><br><strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul> <li>codigo_estudiante</li> <li>codigo_programa</li> <li>codigo_asignatura</li> <li>nombre_asignatura</li> <li>semestre</li> </ul> </div>');
+                        break;
                     case 'academic':
                         $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información de carga histórico académico</h4><br><strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul> <li>codigo_estudiante</li> <li>semestre</li> <li>programa</li> <li>promedio_semestre</li> <li>promedio_acumulado</li> </ul> </p><p>Columnas extras aceptadas: <ul> <li>numero_bajo</li> <li>puesto_estimulo</li> <li>fecha_cancelacion</li> </ul> </p></div>');
                         break;

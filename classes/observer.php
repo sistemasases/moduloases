@@ -63,7 +63,15 @@ class block_ases_observer
         $alerta->id_user_registra = $event->userid;
         $alerta->nota = $event->other['finalgrade'];
         $alerta->fecha = $today;
-        if ($alerta->id_user_registra != -1 and $alerta->nota < 3 and self::isASES($alerta->id_estudiante)) {
+
+        $query = "SELECT *
+                  FROM {talentospilos_alertas_academ}
+                  WHERE id_estudiante = $alerta->id_estudiante AND id_item = $alerta->id_item
+                  LIMIT 1";
+
+        $exists = $DB->get_record_sql($query);
+
+        if (!$exists and $alerta->id_user_registra != -1 and $alerta->nota < 3 and self::isASES($alerta->id_estudiante)) {
             $succes = $DB->insert_record('talentospilos_alertas_academ', $alerta);
         }
 

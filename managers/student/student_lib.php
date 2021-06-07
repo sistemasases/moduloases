@@ -205,6 +205,15 @@ class ActiveSemestersReportField {
 
     }
 
+    public function is_egresado(): bool {
+        if($this->egresado){
+            return true;
+        }else {
+            return false;
+        }
+
+    }
+
     public function list_active_careers($semester): string{
         $lista = '';
         foreach($this->semestres_activos as $semestre){
@@ -230,7 +239,7 @@ class ActiveSemestersReportField {
 
 function get_active_semesters($id_instance, $cohort_id, $include_current_semester = false) {
     $semester_is_canceled = 'SI';
-    $current_semester = \get_current_semester();
+    $current_semester = \core_periods_get_current_period($id_instance);
     $current_semester_name = $current_semester->nombre;
     $active_semesters_report_fields = array();
     $students_with_active_semesters  = get_active_semesters_db($id_instance, $cohort_id);

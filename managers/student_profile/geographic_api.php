@@ -30,10 +30,10 @@ date_default_timezone_set('America/Bogota');
 
 $input = json_decode(file_get_contents("php://input"));
 
-if(isset($input->func) && isset($input->params)) {
+if(isset($input->function) && isset($input->params)) {
 
     //Saves the student's geographic information
-    if ($input->func == 'save_geographic_info') {
+    if ($input->function == 'save_geographic_info') {
 
         /**
          * id_ases: String
@@ -72,11 +72,11 @@ if(isset($input->func) && isset($input->params)) {
             $nivel_riesgo = (int) $nivel_riesgo;
 
             //Validations of each parameter
-            if (is_string($id_ases) && is_float($latitude) && is_float($longitude) &&
-                is_string($neighborhood) && is_int($duration) && is_int($distance) &&
-                is_string($address) && is_string($city) && is_string($observaciones) &&
-                is_bool($vive_lejos) && is_bool($vive_zona_riesgo) && is_bool($nativo) &&
-                is_int($nivel_riesgo)) {
+            if(isset($id_ases) && is_string($id_ases) &&  is_numeric($latitude) && 
+                is_numeric($longitude) && is_string($neighborhood) && is_int($duration) && 
+                is_int($distance) && is_string($address) && is_string($city) && 
+                is_string($observaciones) && is_bool($vive_lejos) && is_bool($vive_zona_riesgo) && 
+                is_bool($nativo) && is_int($nivel_riesgo)) {
 
                 $vive_lejos = ($vive_lejos) ? 1 : 0;
                 $vive_zona_riesgo = ($vive_zona_riesgo) ? 1 : 0;

@@ -25,19 +25,30 @@
  */
 
 	require_once(dirname(__FILE__). '/../../../../config.php');
-	require_once('periods_lib.php');
+	require_once(dirname(__FILE__).'/../../core/module_loader.php');
 
-	if(isset($_POST['load']) && $_POST['load'] == 'loadSemester'){
+	module_loader("periods");
+	if(isset($_POST['load']) && isset($_POST['instance']) && $_POST['load'] == 'loadSemester'){
 		$columns = array();
 		array_push($columns, array("title"=>"Código", "name"=>"id", "data"=>"id"));
 		array_push($columns, array("title"=>"Nombre", "name"=>"nombre", "data"=>"nombre"));
 		array_push($columns, array("title"=>"Fecha de Inicio", "name"=>"fecha_inicio", "data"=>"fecha_inicio"));
 		array_push($columns, array("title"=>"Fecha de Finalización", "name"=>"fecha_fin", "data"=>"fecha_fin"));
+		
+		$all_periods = core_periods_get_all_periods($_POST['instance']);
+		setlocale(LC_TIME, "es_CO");
+
+		foreach ( $all_periods as $period ){
+          		$all_periods[$period->id]->fecha_inicio = strftime("%d %B %Y", strtotime($all_periods[$period->id]->fecha_inicio));
+          		$all_periods[$period->id]->fecha_fin = strftime("%d %B %Y", strtotime($all_periods[$period->id]->fecha_fin));                             
+     		}
+        array_pop($all_periods); // La manipulación que hace el foreach añade un elemento extra, acá se elimina.
+		$all_periods = array_reverse($all_periods);
 
 		$data = array(
 					"bsort" => false,
 					"columns" => $columns,
-					"data" => get_all_semesters_table(),
+					"data" => $all_periods,
 					"language" => 
                 	 array(
                     	"search"=> "Buscar:",

@@ -1,5 +1,8 @@
 <?php
 require_once (dirname(__FILE__) . '/../../../config.php');
+require_once (dirname(__FILE__) . '/../core/module_loader.php');
+
+module_loader('security');
 
 require_once ('periods_management/periods_lib.php');
 
@@ -43,24 +46,30 @@ if (isset($_POST['nombre']) && isset($_POST['descripcion']) && isset($_POST['id_
   else
 if (isset($_POST['nombre_perfil']) && isset($_POST['descripcion_perfil']))
   {
-  $record = new stdClass;
-  $record->nombre_rol = $_POST['nombre_perfil'];
-  $record->descripcion = $_POST['descripcion_perfil'];
-  $sql_query = "SELECT * FROM {talentospilos_rol} WHERE nombre_rol = '" . $record->nombre_rol . "'";
-  $perfil = $DB->get_record_sql($sql_query);
-  $repetido = false;
-  if ($perfil->nombre_rol)
-    {
-    $repetido = true;
-    echo "Ya existe un rol con este nombre, escoja otro nombre";
-    }
+    $record = new stdClass;
+    $record->nombre_rol = $_POST['nombre_perfil'];
+    $record->descripcion = $_POST['descripcion_perfil'];
+  
+    if ($_POST['security']) {
+        core_secure_create_role($_POST['nombre_perfil'], -1, $_POST['nombre_perfil'], $_POST['descripcion_perfil']);
+        echo "Perfil creado correctamente en el sistema de seguridad";
+    } else {
+        $sql_query = "SELECT * FROM {talentospilos_rol} WHERE nombre_rol = '" . $record->nombre_rol . "'";
+        $perfil = $DB->get_record_sql($sql_query);
+        $repetido = false;
+        
+        if ($perfil->nombre_rol) {
+            $repetido = true;
+            echo "Ya existe un rol con este nombre, escoja otro nombre";
+        }
 
-  if (!$repetido)
-    {
-    $DB->insert_record('talentospilos_rol', $record, true);
-    echo "Perfil creado exitosamente";
-    }
+        if (!$repetido) {
+            $DB->insert_record('talentospilos_rol', $record, true);
+            echo "Perfil creado exitosamente";
+        }
   }
+
+}
   else
 if (isset($_POST['profiles_user']) && isset($_POST['users']) && isset($_POST['instance']))
   {
@@ -74,7 +83,7 @@ if (isset($_POST['profiles_user']) && isset($_POST['users']) && isset($_POST['in
     $record->id_perfil = $profile;
     $record->id_usuario = $user_moodle->id;
     $record->estado = true;
-    $record->id_semestre = get_current_semester()->max;
+    $record->id_semestre = core_periods_get_current_period($_POST['instance'])->id;
     $record->id_jefe = false;
     $record->id_instancia = $_POST['instance'];
     $DB->insert_record('talentospilos_usuario_perfil', $record, true);

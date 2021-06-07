@@ -1,0 +1,125 @@
+.universo {
+    padding: 10px 200px 75px 200px;
+    margin: auto;
+}
+
+.campo-anadir{
+    height: 30px!important;
+    font-size: 13px;
+}
+
+.input-anadir{
+    padding: 15px 15px 15px 15px!important;
+    display: inline-block;
+    font-size: 15px;
+}
+
+.opcion-select{
+    position: relative;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.boton-eliminar-materia,
+.icono-agregar-materia {
+    margin-left: auto;
+    width: 17px;
+    height: 14px;
+    opacity: 0;
+}
+.select2-results__option--highlighted .boton-eliminar-materia, 
+.select2-results__option--highlighted .icono-agregar-materia{
+    opacity: 0.3;
+}
+
+.boton-eliminar-materia:hover {
+    opacity: 1!important;
+}
+.boton-eliminar-materia:before, 
+.boton-eliminar-materia:after,
+.icono-agregar-materia:before, 
+.icono-agregar-materia:after {
+    position: absolute;
+    margin-left: 0.615em;
+    content: ' ';
+    height: 1em;
+    width: 2px;
+    background-color: #333;
+}
+.boton-eliminar-materia:before {
+    transform: rotate(45deg);
+}
+.boton-eliminar-materia:after {
+    transform: rotate(-45deg);
+}
+
+.icono-agregar-materia:before {
+    transform: rotate(90deg);
+}
+
+#seleccionar-fecha-anadir{
+    display:flex;
+    align-items: center;
+    padding:0px 10px 20px 45px;
+    width: 35%;
+}
+
+#datos-monitoria {
+    display : inline;
+}
+
+#datos-monitoria h2, 
+#datos-monitoria h3, 
+#datos-monitoria tr,
+#datos-monitoria td {
+    margin: 5px;
+}
+
+#datos-monitoria h2 {
+    line-height:30px;
+}
+
+#datos-monitoria h3 {
+    line-height:20px;
+}
+
+.flecha {
+    border: solid rgba(73, 73, 73, 0.514);
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    margin-left: 5px;
+}
+
+.abajo {
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}
+
+#desplegar-filtrar{
+    font-weight: bold;
+    color: #555;
+}
+
+.config-icon {
+    display:inline;
+    font-size: 20px;
+}
+
+.gris {
+    color: rgb(177, 177, 177);
+}
+
+.verde {
+    color: rgb(112, 194, 101);
+}
+
+.config-icon:hover{
+    color: #555;
+}
+
+.check-asistio{
+    transform: scale(1.5);
+}

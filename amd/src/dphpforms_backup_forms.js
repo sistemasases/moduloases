@@ -282,7 +282,8 @@ define([
 
                     //GENERACIÓN DE HTML DE URL(S) QUE DIRIGEN A FICHA DE ESTUDIANTE(S)
 
-                    getDataToUrl(json_to_compare.id_registro_respuesta_form, accion_record, json_to_compare);
+                    const instanceId = window.location.href.split('instanceid=')[1]
+                    getDataToUrl(json_to_compare.id_registro_respuesta_form, accion_record, json_to_compare, instanceId);
 
 
                 }
@@ -922,12 +923,13 @@ define([
                 return html_to_keys;
             }
 
-            function getDataToUrl(id_registro_respuesta_form, accion_record, record_dwarehouse) {
+            function getDataToUrl(id_registro_respuesta_form, accion_record, record_dwarehouse, instance_id) {
 
                 let param = [];
                 param.push(id_registro_respuesta_form);
                 param.push(accion_record);
                 param.push(JSON.stringify(record_dwarehouse));
+                param.push(instance_id)
 
 
                 $.ajax({

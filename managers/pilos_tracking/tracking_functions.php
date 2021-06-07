@@ -25,6 +25,7 @@
  */
 
 require_once( 'pilos_tracking_lib.php' );
+require_once( dirname(__FILE__) . '/../../core/module_loader.php');
 require_once( dirname(__FILE__) . '/../lib/student_lib.php' );
 require_once( dirname(__FILE__) . '/../dphpforms/dphpforms_get_record.php' );
 require_once( dirname(__FILE__) . '/../../core/cache/cache.php' );
@@ -34,6 +35,7 @@ require_once( dirname(__FILE__) . '/../dphpforms/v2/dphpforms_lib.php' );
 require_once( dirname(__FILE__) . '/../monitor_assignments/monitor_assignments_lib.php' );
 require_once( dirname(__FILE__) . '/../pilos_tracking/v2/pilos_tracking_lib.php' );
 
+module_loader("periods");
 
 /**
  * Get the toggle of the monitor with the follow-ups of each student with the implementation of the new form
@@ -44,14 +46,14 @@ require_once( dirname(__FILE__) . '/../pilos_tracking/v2/pilos_tracking_lib.php'
  *
  */
 
-function render_monitor_new_form($students_by_monitor, $period = null)
+function render_monitor_new_form($students_by_monitor, $period = null, $instance_id)
 {
     $panel = "";
     foreach($students_by_monitor as $student) {
         $student_code = get_user_moodle($student->id_estudiante);//Get user moodle by ases id
 
         $ases_student_code = $student->id_estudiante;
-        $current_semester = get_current_semester();
+        $current_semester = core_periods_get_current_period($instance_id);
         $fullname = $student_code->firstname . " " .  $student_code->lastname;
 
         $panel.= "<a data-toggle='collapse' data-container='student$ases_student_code' data-username='$ases_student_code' data-asesid='$ases_student_code' class='student collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#student$ases_student_code'>
@@ -114,13 +116,13 @@ function aux_create_groupal_toggle($monitor_id)
  *
  */
 
-function render_groupal_tracks_monitor_new_form($groupal_tracks, $monitor_id, $period = null)
+function render_groupal_tracks_monitor_new_form($groupal_tracks, $monitor_id, $period = null, $instance_id)
 {
     $panel = "";
     foreach($groupal_tracks as $student) {
-        $current_semester = get_current_semester();
+        $current_semester = core_periods_get_current_period($instance_id);
         if ($period == null) {
-            $monitor_trackings = get_tracking_grupal_monitor_current_semester($monitor_id, $current_semester->max);
+            $monitor_trackings = get_tracking_grupal_monitor_current_semester($monitor_id, $current_semester->id);
         }
         else {
             $monitor_trackings = get_tracking_grupal_monitor_current_semester($monitor_id, $period);
@@ -145,7 +147,7 @@ function render_practicant_new_form($monitors_of_pract, $instance, $period = nul
 {
     $panel = "";
     $practicant_counting = [];
-    $current_semester = get_current_semester();
+    $current_semester = core_periods_get_current_period($instance);
     foreach($monitors_of_pract as $monitor) {
         $monitor_id = $monitor->id_usuario;
         $students_by_monitor = get_students_of_monitor($monitor_id, $instance);
@@ -190,7 +192,7 @@ function render_professional_new_form($practicant_of_prof, $instance, $period = 
 {
     $panel = "";
     $practicant_counting = [];
-    $current_semester = get_current_semester();
+    $current_semester = core_periods_get_current_period($instance);
     foreach($practicant_of_prof as $practicant) {
         
         $panel.= "<div class='panel panel-default'>";
@@ -425,7 +427,7 @@ function auxiliary_specific_counting($user_kind, $user_id, $semester, $instance)
         foreach($practicant_of_prof as $practicant) {
             $practicant_id = $practicant->id_usuario;
             $monitors_of_pract = get_monitors_of_pract($practicant_id, $instance);
-            $profesional_counting = calculate_specific_counting('PROFESIONAL', $monitors_of_pract, $semester->max, $instance);
+            $profesional_counting = calculate_specific_counting('PROFESIONAL', $monitors_of_pract, $semester->id, $instance);
             $counting_advice = new stdClass();
             $counting_advice->code = $practicant->username;
             $counting_advice->html="<h6><p class='text-right'><strong class='subpanel'>RP :</strong><label class='review_prof'>".$profesional_counting[0]."</label> - <strong class='subpanel'> N RP: </strong><label class='not_review_prof'>".$profesional_counting[1]."</label> - <strong class='subpanel'>TOTAL:</strong><label class='total_prof'>".($profesional_counting[0]+$profesional_counting[1])."</label></p><p class='text-right'><strong class='subpanel'>Rp :</strong><label class='review_pract'>".$profesional_counting[2]."</label> - <strong class='subpanel'> N Rp: </strong><label class='not_review_pract'>".$profesional_counting[3]."</label> - <strong class='subpanel'>TOTAL:</strong><label class='total_pract'>".($profesional_counting[2]+$profesional_counting[3])."</label></p></h6>";
@@ -435,7 +437,7 @@ function auxiliary_specific_counting($user_kind, $user_id, $semester, $instance)
         $monitors_of_pract = get_monitors_of_pract($user_id, $instance);
         foreach($monitors_of_pract as $monitor) {
             $monitor_id = $monitor->id_usuario;
-            $practicant_counting = calculate_specific_counting("PRACTICANTE", $monitor, $semester->max, $instance);
+            $practicant_counting = calculate_specific_counting("PRACTICANTE", $monitor, $semester->id, $instance);
             $counting_advice = new stdClass();
             $counting_advice->code = $monitor->username;
             $counting_advice->html = "<h6><p class='text-right'><strong class='subpanel'>RP :</strong><label class='review_prof'>" . $practicant_counting[0] . "</label> - <strong class='subpanel'> N RP: </strong><label class='not_review_prof'>" . $practicant_counting[1] . "</label> - <strong class='subpanel'>TOTAL:</strong><label class='total_prof'>" . ($practicant_counting[0] + $practicant_counting[1]) . "</label></p><p class='text-right'><strong class='subpanel'>Rp :</strong><label class='review_pract'>" . $practicant_counting[2] . "</label> - <strong class='subpanel'> N Rp: </strong><label class='not_review_pract'>" . $practicant_counting[3] . "</label> - <strong class='subpanel'>TOTAL:</strong><label class='total_pract'>" . ($practicant_counting[2] + $practicant_counting[3]) . "</label></p></h6>";
@@ -478,7 +480,7 @@ function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instanc
             
             try{
                 
-                cache_generator( $semester->max, $instance  );
+                cache_generator( $semester->id, $instance  );
             
                 $value = json_decode(core_cache_get_value( $cache_prefix . $user_id ));
 
@@ -510,8 +512,8 @@ function auxiliary_specific_countingV2($user_kind, $user_id, $semester, $instanc
     $fecha_inicio = null;
     $fecha_fin = null;
 
-    $semester_id = $semester->max;
-    $interval = get_semester_interval($semester->max);
+    $semester_id = $semester->id;
+    $interval = core_periods_get_period_by_id($semester->id); //period object.
     $fecha_inicio = getdate(strtotime($interval->fecha_inicio));
     $fecha_fin = getdate(strtotime($interval->fecha_fin));
 
@@ -1100,7 +1102,7 @@ function get_peer_trackings_by_monitor($pares, $grupal, $codigoMonitor, $noMonit
     $fecha_epoch = [];
     $fecha_epoch[0] = strtotime($fechas[0]);
     $fecha_epoch[1] = strtotime($fechas[1]);
-    $semestre_periodo = get_current_semester_byinterval($fechas[0], $fechas[1]);
+    $semestre_periodo = core_periods_get_period_by_date($fechas[0], $fechas[1], false, $instanceid); //<-- stdClass
     $monitorstudents = get_seguimientos_monitor($codigoMonitor, $instanceid, $fecha_epoch, $semestre_periodo);
     return $monitorstudents;
 }

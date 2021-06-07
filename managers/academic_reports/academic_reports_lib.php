@@ -30,7 +30,7 @@
 require_once(__DIR__ . '/../../../../config.php');
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
-require_once $CFG->dirroot.'/blocks/ases/managers/grade_categories/grader_lib.php';
+require_once $CFG->dirroot.'/blocks/ases/managers/grade_categories/customgrader_lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib.php'; 
 
 
@@ -44,7 +44,7 @@ require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib
 function studentsWithLoses($instance){
 	global $DB;
 
-	$semestre = get_current_semester();
+	$semestre = core_periods_get_current_period($instance);
     $sem = $semestre->nombre;
 
     $año = substr($sem,0,4);
@@ -177,15 +177,16 @@ function get_loses_by_student($username){
  * Function that given a logged user id, returns an array of the courses with enrolled users in an instance.
  * @see get_courses_for_report($user_id)
  * @param $user_id -> ID of the logged user
+ * @param int $instance_id -> instace ID para identificar el periodo actual en get_courses_for_report
  * @return array 
  */
 
-function get_courses_for_report($user_id){
+function get_courses_for_report($user_id, $instance_id){
     global $DB;
     
-    $semestre_object = get_current_semester();
+    $semestre_object = core_periods_get_current_period($instance_id);
     $sem = $semestre_object->nombre;
-    $id_semestre = $semestre_object->max;
+    $id_semestre = $semestre_object->id;
     $año = substr($sem,0,4);
 
     if(substr($sem,4,1) == 'A'){
@@ -257,10 +258,11 @@ function get_courses_for_report($user_id){
  * Function that given a logged user id, returns an array of the courses with enrolled users in an instance.
  * @see get_courses_for_report($user_id)
  * @param $user_id -> ID of the logged user
+ * @param int $instance_id -> instace ID para identificar el periodo actual en get_courses_for_report
  * @return array 
  */
-function get_courses_report($user_id){
-	$courses = get_courses_for_report($user_id);
+function get_courses_report($user_id, $instance_id){
+	$courses = get_courses_for_report($user_id, $instance_id);
 
 	$string_html = "<table id = 'courses'>
 						<thead>
@@ -286,19 +288,20 @@ function get_courses_report($user_id){
  * Function that returns a course with all its information given the course id and the id of the logged user
  * @param $course_id
  * @param $user_id
+ * @param $instance_id
  * @return object --> Representing the course
  */
 
-function get_info_course_for_reports($course_id, $user_id){
+function get_info_course_for_reports($course_id, $user_id, $instance_id){
     global $DB;
 
-	$semestre_object = get_current_semester();
-	$id_semestre = $semestre_object->max;
+	$semestre_object = core_periods_get_current_period($instance_id);
+	$id_semestre = $semestre_object->id;
 
 
     $intersect = "";
 
-    $user_role = get_role_ases($user_id);
+    $user_role = lib_get_rol_name_ases($user_id, $instance_id);
 
     if($user_role == "monitor_ps"){
 

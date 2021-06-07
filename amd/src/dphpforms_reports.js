@@ -576,11 +576,12 @@ define([
                         function(){}
                     );
                 }else{
+                    let instance_id = $("#dphpforms-instance-id").data("instance-id");
 
                     $.ajax({
                         type: "POST",
                         url: "../managers/periods_management/periods_api.php",
-                        data: JSON.stringify({ "function": "get_current_semester_by_apprx_interval", "params": [ start_date, end_date ] }),
+                        data: JSON.stringify({ "function": "core_periods_get_period_by_date", "params": [ start_date, end_date, instance_id ] }),
                         contentType: "application/json; charset=utf-8",
                         dataType: "json",
                         async: false,  

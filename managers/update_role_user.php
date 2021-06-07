@@ -95,7 +95,7 @@ if(isset($_POST['role']) && isset($_POST['username'])){
     }
   }
 }else if(isset($_POST['deleteStudent']) && isset($_POST['student']) && isset($_POST['username'])){
-    echo dropStudentofMonitor($_POST['username'], $_POST['student']);
+    echo dropStudentofMonitor($_POST['username'], $_POST['student'], $_POST['idinstancia']);
 }else if(isset($_POST['changeMonitor']) && isset($_POST['oldUser']) && isset($_POST['newUser']) && isset($_POST['idinstancia']) ){
   
   try{
@@ -116,7 +116,7 @@ if(isset($_POST['role']) && isset($_POST['username'])){
     update_role_monitor_ps($newUser->username, 'monitor_ps', array(), null,$_POST['idinstancia'], 1);
     
     //se actualizan el listado de estduiantes a cargo
-    changeMonitor($oldUser->id,  $newUser->id );
+    changeMonitor($oldUser->id,  $newUser->id, (int)$_POST['idinstancia'] );
     
     //se deshabilita el viejo ususario
     update_role_monitor_ps($oldUser->username, 'monitor_ps', array(), null,$_POST['idinstancia'], 0);

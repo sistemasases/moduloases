@@ -28,11 +28,13 @@
  */
 
 require_once dirname(__FILE__) . '/../../../../config.php';
+require_once dirname(__FILE__).'/../../core/module_loader.php';
 
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/v2/dphpforms_lib.php';
 require_once (__DIR__. '/../../classes/TrackingStatus.php');
 
+module_loader("periods");
 /**
  * Obtains an user object given user id from {talentospilos_usuario} table
  *
@@ -342,18 +344,19 @@ SQL;
  *
  * @see get_assigned_monitor($id_student)
  * @param $id_student --> student id on {talentospilos_usuario} table
+ * @param $instance_id --> instance id on {talentospilos_semestre} table
  * @return array Containing the information
  */
-function get_assigned_monitor($id_student)
+function get_assigned_monitor($id_student, $instance_id)
 {
 
     global $DB;
 
-    $object_current_semester = get_current_semester();
+    $object_current_semester = core_periods_get_current_period($instance_id);
 
     $sql_query = "SELECT id_monitor 
                   FROM {talentospilos_monitor_estud} 
-                  WHERE id_estudiante = ".$id_student." AND id_semestre = ".$object_current_semester->max.";";
+                  WHERE id_estudiante = ".$id_student." AND id_semestre = ".$object_current_semester->id.";";
 
     $result = $DB->get_record_sql($sql_query);    
     
@@ -384,20 +387,21 @@ function get_assigned_monitor($id_student)
  *
  * @see get_assigned_pract($id_student)
  * @param $id_student --> student id on {talentospilos_usuario} table
+ * @param $instance_id --> instance id
  * @return array Containing the information
  */
-function get_assigned_pract($id_student)
+function get_assigned_pract($id_student, $instance_id)
 {
 
     global $DB;
 
-    $object_current_semester = get_current_semester();
+    $object_current_semester = core_periods_get_current_period($instance_id);
 
-    $sql_query = "SELECT id_monitor FROM {talentospilos_monitor_estud} WHERE id_estudiante =" . $id_student . " AND id_semestre = " . $object_current_semester->max . ";";
+    $sql_query = "SELECT id_monitor FROM {talentospilos_monitor_estud} WHERE id_estudiante =" . $id_student . " AND id_semestre = " . $object_current_semester->id . ";";
     $id_monitor = $DB->get_record_sql($sql_query)->id_monitor;
 
     if ($id_monitor) {
-        $sql_query = "SELECT id_jefe FROM {talentospilos_user_rol} WHERE id_usuario = " . $id_monitor . " AND id_semestre = " . $object_current_semester->max . ";";
+        $sql_query = "SELECT id_jefe FROM {talentospilos_user_rol} WHERE id_usuario = " . $id_monitor . " AND id_semestre = " . $object_current_semester->id . ";";
         $id_trainee = $DB->get_record_sql($sql_query)->id_jefe;
 
         if ($id_trainee) {
@@ -461,23 +465,24 @@ SQL;
  *
  * @see get_assigned_professional($id_student)
  * @param $id_student --> student id on {talentospilos_usuario} table
+ * @param $instance_id --> instance id on {talentospilos_semestre} table
  * @return array Containing the information
  */
-function get_assigned_professional($id_student)
+function get_assigned_professional($id_student, $instance_id)
 {
 
     global $DB;
 
-    $object_current_semester = get_current_semester();
+    $object_current_semester = core_periods_get_current_period($instance_id);
 
-    $sql_query = "SELECT id_monitor FROM {talentospilos_monitor_estud} WHERE id_estudiante =" . $id_student . " AND id_semestre = " . $object_current_semester->max . ";";
+    $sql_query = "SELECT id_monitor FROM {talentospilos_monitor_estud} WHERE id_estudiante =" . $id_student . " AND id_semestre = " . $object_current_semester->id . ";";
     $id_monitor = $DB->get_record_sql($sql_query);
 
     if ($id_monitor) {
 
         $sql_query = "SELECT id_jefe
                       FROM {talentospilos_user_rol}
-                      WHERE id_usuario = $id_monitor->id_monitor AND id_semestre = $object_current_semester->max";
+                      WHERE id_usuario = $id_monitor->id_monitor AND id_semestre = $object_current_semester->id";
 
         $id_trainee = $DB->get_record_sql($sql_query)->id_jefe;
 
@@ -485,7 +490,7 @@ function get_assigned_professional($id_student)
 
             $sql_query = "SELECT id_jefe
                           FROM {talentospilos_user_rol}
-                          WHERE id_usuario = $id_trainee AND id_semestre = $object_current_semester->max;";
+                          WHERE id_usuario = $id_trainee AND id_semestre = $object_current_semester->id;";
 
             $id_professional = $DB->get_record_sql($sql_query)->id_jefe;
 
@@ -545,8 +550,11 @@ function get_full_user($id)
 {
     global $DB;
 
-    $sql_query = "SELECT * FROM {user} WHERE id= " . $id;
-    $user = $DB->get_record_sql($sql_query);
+    //TO DO: $id sometimes reaches this point as empty
+    if($id != null) {
+        $sql_query = "SELECT * FROM {user} WHERE id= " . $id;
+        $user = $DB->get_record_sql($sql_query);
+    }else return 1;
 
     return $user;
 }
@@ -611,8 +619,12 @@ function update_status_program($program_id, $status, $student_id){
     $object_updatable = new stdClass();
     $object_updatable->id = $id_register;
     $object_updatable->program_status = $status;
-
+    if($object_updatable->id == 0){
+        trigger_error('ASES Notificacion: actualizar academic program status en la BD con id 0');
+        $result = false;
+    }else{
     $result = $DB->update_record('talentospilos_user_extended', $object_updatable);
+    }
 
     if($result){
         return array(
@@ -692,7 +704,7 @@ function student_lib_get_full_risk_status( $ases_id ){
      */
     $get_semester = function( $_date ){
 
-        $semesters = periods_management_get_all_semesters();
+        $semesters = core_periods_get_all_periods(); 
 
         foreach ($semesters as $key => $semester) {
 
@@ -721,7 +733,7 @@ function student_lib_get_full_risk_status( $ases_id ){
      */
     $get_next_semesters = function( $_date ){
 
-        $semesters = periods_management_get_all_semesters();
+        $semesters = core_periods_get_all_periods();
         $to_return = [];
 
         foreach ($semesters as $key => $semester) {

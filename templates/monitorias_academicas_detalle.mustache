@@ -1,0 +1,38 @@
+{{#data}}
+    {{> block_ases/side_menu}}
+    <div class="ases-container" >
+    <div>
+    <span id="monitor_id" style="display:none">{{monitor_id}}</span>
+    <span id="materia_id" style="display:none">{{materia_id}}</span>
+    <span id="dia" style="display:none">{{dia}}</span>
+    <span id="hora" style="display:none">{{hora}}</span>
+    <span>
+    <table id="datos-monitoria">
+    <tr><td colspan="2"><h3 style="color: #777">SESIONES PROGRAMADAS</h3></td></tr>
+    <tr><td><h2>Monitoría:</h2></td><td><h2 id="nombre_monitoria">{{ materia }}</h2><td></tr>
+    <tr><td><h3>Encargado/a:</h3></td><td><h3>{{ monitor }}</h3><td></tr>
+    <tr><td><h3>Horario semanal:</h3></td><td><h3 id="horario_semanal">{{ horario }}</h3><td></tr>
+    </table>
+    
+    <div style="float: right;display:inline;vertical-align:top">
+    {{#es_profesional}}<button class="dt-button buttons-print" id="programar_sesiones">Programar más sesiones...</button>
+    <button class="dt-button buttons-print" id="modificar_monitoria">Editar...</button>    {{/es_profesional}}
+    </div>
+    </span>
+    
+    <div style="margin:20px 0px 10px 10px">
+    <a id="desplegar-filtrar">Consultar sesiones antigüas <i id="flecha" class="flecha abajo"></i></a>
+    <form id="rango-fechas-sesiones" style="display:none;margin-left:30px"> Mostrar sesiones desde
+    <input type="text" id="fecha_desde" name="fecha_desde" style="width: 12em;margin:2px 2px 4px 6px" placeholder="Seleccionar fecha ..." autocomplete="off" required>
+     hasta 
+     <input type="text" id="fecha_hasta" name="fecha_hasta" style="width: 12em;margin:2px 2px 4px 6px" placeholder="Seleccionar fecha ..." autocomplete="off" required></label>
+    <button type="submit" id="filtrar-fecha" class="dt-button" style="vertical-align:middle; margin-left:10px" >Consultar</button>
+    </form>
+    </div>
+    <br>
+    <div id="debug"></div>
+    <div class="ases-row">
+    <div id="div_table"  ></div>
+    </div>
+    
+{{/data}}

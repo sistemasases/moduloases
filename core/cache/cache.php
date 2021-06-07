@@ -7,7 +7,7 @@
  * @license   	http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-const VERSION = 1; //Current version.
+const CACHE_VERSION = 1; //Current version.
 const TABLE_SCHEMA = "public";
 
 require_once( __DIR__ . "/../../../../config.php");
@@ -15,7 +15,7 @@ require_once( __DIR__ . "/../module_loader.php");
 
 global $DB_PREFIX;
 $DB_PREFIX = $GLOBALS[ 'CFG' ]->prefix;
-require_once( __DIR__ . "/v" . VERSION . "/entrypoint.php");
+require_once( __DIR__ . "/v" . CACHE_VERSION . "/entrypoint.php");
 
 /* Interface function
  * 

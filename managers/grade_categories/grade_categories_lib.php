@@ -32,12 +32,14 @@
 // Queries from module grades record (registro de notas)
 
 require_once(__DIR__ . '/../../../../config.php');
+require_once(__DIR__ . '/../../core/module_loader.php');
 require_once $CFG->libdir.'/gradelib.php';
 require_once $CFG->dirroot.'/grade/lib.php';
 require_once $CFG->dirroot.'/grade/report/user/lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php'; 
 require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib.php'; 
 
+module_loader("periods");
 
 ///******************************************///
 ///*** Get info grade_categories methods ***///
@@ -55,9 +57,9 @@ require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib
 function get_courses_pilos($instanceid){
     global $DB;
 
-    $semestre = get_current_semester_processed();
-
-    //print_r($semestre);
+    
+    $inicio_periodo_actual = (core_periods_get_current_period($instanceid))->fecha_inicio;    
+    $semestre = substr($inicio_periodo_actual,0,4) . substr($inicio_periodo_actual, 5, 2);
     $query_courses = "
         SELECT DISTINCT curso.id,
                         curso.fullname,

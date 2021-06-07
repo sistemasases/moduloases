@@ -5,6 +5,8 @@ require_once(dirname(__FILE__).'/../lib/lib.php');
 require_once(dirname(__FILE__).'/../lib/student_lib.php');
 require_once(dirname(__FILE__).'/../user_management/user_lib.php');
 require_once(dirname(__FILE__).'/../cohort/cohort_lib.php');
+require_once(dirname(__FILE__).'/../monitor_assignments/monitor_assignments_lib.php');
+require_once(dirname(__FILE__).'/../periods_management/periods_lib.php' ); 
 
 /**
  * Función que recupera riesgos 
@@ -49,6 +51,8 @@ function get_cohorts_by_idnumber($id_number){
  */
 
  function subconsultaGraficReport($ases_status, $icetex_status, $instance_id){
+     global $DB, $USER;
+
     $sub_query = "";
 
     //Se filtra a los estudiantes activos en ASES    
@@ -99,6 +103,90 @@ function get_cohorts_by_idnumber($id_number){
                     ";
     }
 
+
+     $actions = $USER->actions;
+
+     if (property_exists($actions, 'search_all_students_agr')) {
+
+         $where_user = "";
+
+     } else if (property_exists($actions, 'search_assigned_students_agr')) {
+
+         $user_id = $USER->id;
+         $id_current_semester = core_periods_get_current_period($instance_id)->id;
+         $sql_query = "SELECT roles.nombre_rol, user_role.id_programa 
+                          FROM {talentospilos_user_rol} AS user_role 
+                                                    INNER JOIN {talentospilos_rol} AS roles ON user_role.id_rol = roles.id
+                          WHERE user_role.id_semestre = $id_current_semester AND user_role.estado = 1 AND user_role.id_usuario = $user_id";
+
+         $user_role = $DB->get_record_sql($sql_query);
+
+         switch ($user_role->nombre_rol) {
+             case 'director_prog':
+
+                 $conditions_query_directors = " WHERE ases_students.id_academic_program = $user_role->id_programa";
+                 $conditions_query_assigned = " AND ases_students.student_id IN (SELECT id_estudiante AS student_id
+                                      FROM {talentospilos_monitor_estud} 
+                                WHERE id_semestre = " . core_periods_get_current_period($instance_id)->id . " AND id_instancia = $instance_id)";
+
+                 $where_user = $conditions_query_directors.$conditions_query_assigned;
+                 break;
+
+             case 'profesional_ps':
+
+                 $sub_query_ps_staff = " INNER JOIN {talentospilos_monitor_estud} AS monitor_student ON monitor_student.id_estudiante = ases_students.student_id
+                                        INNER JOIN (SELECT t_monitor_practicante.id_monitor, t_monitor_practicante.id_practicante, t_practicante_profesional.id_profesional
+                                              FROM
+                                                (SELECT id_usuario AS id_monitor, id_jefe AS id_practicante 
+                                                FROM {talentospilos_user_rol} AS user_rol
+                                                    INNER JOIN {talentospilos_rol} AS rol ON user_rol.id_rol = rol.id
+                                                WHERE rol.nombre_rol = 'monitor_ps' AND user_rol.id_semestre = $id_current_semester AND user_rol.id_instancia = $instance_id) AS t_monitor_practicante
+                                                INNER JOIN
+                                                (SELECT id_usuario AS id_practicante, id_jefe AS id_profesional
+                                                FROM {talentospilos_user_rol} AS user_rol
+                                                    INNER JOIN {talentospilos_rol} AS rol ON user_rol.id_rol = rol.id
+                                                WHERE rol.nombre_rol = 'practicante_ps' AND user_rol.id_semestre = $id_current_semester AND user_rol.id_instancia = $instance_id) AS t_practicante_profesional
+                                                ON t_monitor_practicante.id_practicante = t_practicante_profesional.id_practicante) AS t_monitor_practicante_profesional
+                                    ON t_monitor_practicante_profesional.id_monitor = monitor_student.id_monitor";
+
+                 $where_clause = " WHERE t_monitor_practicante_profesional.id_profesional = $user_id AND monitor_student.id_semestre = $id_current_semester ";
+
+                 $where_user = $sub_query_ps_staff.$where_clause;
+                 break;
+
+             case 'practicante_ps':
+
+                 $sub_query_ps_staff = " INNER JOIN {talentospilos_monitor_estud} AS monitor_student ON monitor_student.id_estudiante = ases_students.student_id
+                                        INNER JOIN (SELECT id_usuario AS id_monitor, id_jefe AS id_practicante 
+                                                    FROM {talentospilos_user_rol} AS user_rol
+                                                        INNER JOIN {talentospilos_rol} AS rol ON user_rol.id_rol = rol.id
+                                                    WHERE rol.nombre_rol = 'monitor_ps' AND user_rol.id_semestre = $id_current_semester AND user_rol.id_instancia = $instance_id) AS t_monitor_practicante
+                                        ON t_monitor_practicante.id_monitor = monitor_student.id_monitor";
+
+                 $where_clause = " WHERE t_monitor_practicante.id_practicante = $user_id AND monitor_student.id_semestre = $id_current_semester";
+
+                 $where_user = $sub_query_ps_staff.$where_clause;
+
+                 break;
+
+
+             case 'monitor_ps':
+
+                 $query_monitors = " INNER JOIN {talentospilos_monitor_estud} AS monitor_student ON monitor_student.id_estudiante = ases_students.student_id";
+                 $where_clause = " WHERE monitor_student.id_monitor = $user_id AND monitor_student.id_semestre = $id_current_semester";
+
+                 $where_user = $query_monitors.$where_clause;
+
+                 break;
+
+             default:
+                 break;
+         }
+
+     }
+
+    $sub_query = $sub_query.$where_user;
+
     return $sub_query;
  }
 
@@ -114,6 +202,8 @@ function get_cohorts_by_idnumber($id_number){
  */
 
  function condicionCohorte($cohorte, $instance_id, $program_status){
+
+     global $USER;
 
      $sql_where = "";
 
@@ -166,6 +256,7 @@ function getGraficSex($cohorte, $ases_status, $icetex_status, $program_status, $
                         (SELECT 
                             moodle_user.username,
                             ases_user.id AS student_id,
+                            user_extended.id_academic_program,
                             program_statuses.nombre AS program_status,
                             CASE WHEN ases_user.sexo = '1' THEN 'Masculino'
                               WHEN ases_user.sexo = '2' THEN 'Femenino'
@@ -180,7 +271,7 @@ function getGraficSex($cohorte, $ases_status, $icetex_status, $program_status, $
                             INNER JOIN {talentospilos_usuario} AS ases_user ON ases_user.id = user_extended.id_ases_user
                             INNER JOIN {talentospilos_estad_programa} AS program_statuses ON program_statuses.id = user_extended.program_status 
                             $sql_where
-                            GROUP BY moodle_user.username, student_id, ases_user.sexo, program_statuses.nombre) AS ases_students $subconsulta_filtros) AS subquery
+                            GROUP BY moodle_user.username, student_id, user_extended.id_academic_program, ases_user.sexo, program_statuses.nombre) AS ases_students $subconsulta_filtros ) AS subquery
                     GROUP BY nombre
                     ORDER BY cantidad DESC               
                 ";
@@ -221,6 +312,7 @@ function getGraficAge($cohorte, $ases_status, $icetex_status, $program_status, $
                         (SELECT 
                             moodle_user.username,
                             ases_user.id AS student_id,
+                            user_extended.id_academic_program,
                             EXTRACT(YEAR FROM age(ases_user.fecha_nac)) AS edad,
                             program_statuses.nombre AS program_status
                             FROM {cohort} AS cohort
@@ -233,7 +325,7 @@ function getGraficAge($cohorte, $ases_status, $icetex_status, $program_status, $
                             $sql_where
                             AND EXTRACT(YEAR FROM age(ases_user.fecha_nac)) > 10
                             AND EXTRACT(YEAR FROM age(ases_user.fecha_nac)) < 70
-                            GROUP BY moodle_user.username, student_id, edad, program_statuses.nombre) AS ases_students  $subconsulta_filtros) AS subquery
+                            GROUP BY moodle_user.username, student_id, user_extended.id_academic_program, edad, program_statuses.nombre) AS ases_students  $subconsulta_filtros ) AS subquery
                     GROUP BY nombre
                     ORDER BY cantidad DESC";
 
@@ -255,13 +347,13 @@ function getGraficAge($cohorte, $ases_status, $icetex_status, $program_status, $
  * @param $cohorte
  * @return Array 
  */
-function getGraficPrograma($cohorte, $ases_status, $icetex_status, $program_status, $instance_id){
-    global $DB;
+function getGraficPrograma($cohorte, $ases_status, $icetex_status, $program_status, $instance_id)
+{
+    global $DB, $USER;
 
     $sql_where = condicionCohorte($cohorte, $instance_id, $program_status);
     $subconsulta_filtros = subconsultaGraficReport($ases_status, $icetex_status, $instance_id);
 
-    
     $sql_query = " SELECT nombre_programa AS nombre, COUNT(*) AS cantidad FROM
 
                     (SELECT DISTINCT 
@@ -288,9 +380,7 @@ function getGraficPrograma($cohorte, $ases_status, $icetex_status, $program_stat
                     GROUP BY nombre
                     ORDER BY cantidad DESC";
 
-
     $result_query = $DB->get_records_sql($sql_query);
-
     $result_to_return = array();
 
     foreach($result_query as $result){
@@ -379,6 +469,7 @@ function getGraficCondExcepcion($cohorte, $ases_status, $icetex_status, $program
                         (SELECT 
                                 moodle_user.username,
                                 ases_user.id AS student_id,
+                                user_extended.id_academic_program,
                                 ases_user.id_cond_excepcion,
                                 program_statuses.nombre AS program_status
                                 FROM {cohort} AS cohort
@@ -389,9 +480,9 @@ function getGraficCondExcepcion($cohorte, $ases_status, $icetex_status, $program
                                 INNER JOIN {talentospilos_usuario} AS ases_user ON ases_user.id = user_extended.id_ases_user
                                 INNER JOIN {talentospilos_estad_programa} AS program_statuses ON program_statuses.id = user_extended.program_status 
                                 $sql_where
-                                GROUP BY moodle_user.username, student_id, ases_user.id_cond_excepcion, program_statuses.nombre) AS ases_students
+                                GROUP BY moodle_user.username, student_id, user_extended.id_academic_program, ases_user.id_cond_excepcion, program_statuses.nombre) AS ases_students
                         INNER JOIN {talentospilos_cond_excepcion} AS cond_excepcion ON ases_students.id_cond_excepcion = cond_excepcion.id 
-                        $subconsulta_filtros) AS subquery
+                        $subconsulta_filtros ) AS subquery
                     GROUP BY nombre, alias
                     ORDER BY cantidad DESC";
 
@@ -437,6 +528,7 @@ function getGraficRiesgos($cohorte, $ases_status, $icetex_status, $program_statu
                     (SELECT 
                           moodle_user.username,
                           ases_user.id AS student_id,
+                          user_extended.id_academic_program,
                           riesg_usuario.calificacion_riesgo,
                           riesgo.nombre AS nombre_riesgo,
                           riesgo.id AS id_riesgo
@@ -604,7 +696,7 @@ function get_not_assign_students($general_fields=null, $conditions, $academic_fi
         $user_id = $USER->id;
 
         $instance= $instance_id;
-        $id_current_semester = get_current_semester()->max;
+        $id_current_semester = core_periods_get_current_period($instance)->id;
         $sql_query = "SELECT roles.nombre_rol, user_role.id_programa 
                       FROM {talentospilos_user_rol} AS user_role 
                                                 INNER JOIN {talentospilos_rol} AS roles ON user_role.id_rol = roles.id
@@ -697,7 +789,7 @@ function get_ases_report($general_fields=null,
     global $DB, $USER;
 
     $actions = $USER->actions;
-    $id_current_semester = get_current_semester()->max;
+    $id_current_semester = core_periods_get_current_period($instance_id)->id;
 
     $conditions[1] = 'TODOS';
 
@@ -882,34 +974,38 @@ function get_ases_report($general_fields=null,
                                      program_statuses.nombre, 
                                      user_extended.id_academic_program) AS ases_students";
     }
-
+    
     // Subconsutlas relacionadas con los campos de estado
     if($statuses_fields){
         foreach($statuses_fields as $status_field){
             switch(explode(".", $status_field)[1]){
                 case 'ases_status_student':
-
+                    
                     $select_clause .= $status_field.", ";
+                    $monitorias = monitor_assignments_get_monitors_students_relationship_by_instance_n_semester( $instance_id, $id_current_semester );
 
-                    $sub_query_status .= " LEFT JOIN (SELECT current_ases_status.id_ases_student AS id_ases_student,
-                                                        CASE WHEN historic_ases_statuses.nombre = 'seguimiento' THEN 'SEGUIMIENTO'
-                                                             WHEN historic_ases_statuses.nombre = 'sinseguimiento' THEN 'SIN SEGUIMIENTO'
-                                                             ELSE 'N.R.' 
-                                                        END AS ases_status_student
-                                                      FROM
-                                                        (SELECT student_ases_status.id_estudiante AS id_ases_student,
-                                                                MAX(student_ases_status.fecha) AS fecha
-                                                        FROM {talentospilos_est_estadoases} AS student_ases_status
-                                                        WHERE id_instancia = $instance_id
-                                                        GROUP BY student_ases_status.id_estudiante) AS current_ases_status
-                                                      INNER JOIN
-                                                      (SELECT student_ases_status.id_estudiante, 
-                                                            student_ases_status.fecha, ases_statuses.nombre
-                                                      FROM {talentospilos_est_estadoases} AS student_ases_status
-                                                            INNER JOIN {talentospilos_estados_ases} AS ases_statuses ON ases_statuses.id = student_ases_status.id_estado_ases) AS historic_ases_statuses
-                                                      ON (historic_ases_statuses.id_estudiante = current_ases_status.id_ases_student AND historic_ases_statuses.fecha = current_ases_status.fecha)
-                                                      ) AS ases_status ON ases_status.id_ases_student = ases_students.student_id";
+                    //Condition to get the students who do have a monitor assigned on the current semester
+                    $monitorias_condition = " IN (";
+
+                    foreach($monitorias as $monitoria){                 
+                        $monitorias_condition .="'". $monitoria->id_estudiante . "', ";
+                    }   
+
+                    $monitorias_condition.= ")";    
+                    $monitorias_condition = str_replace("', )", "') ", $monitorias_condition);   
+
+
+                    $sub_query_status .= " LEFT JOIN (SELECT usuario.id AS id_ases_student,
+                                                    CASE WHEN usuario.id $monitorias_condition THEN 'ACTIVO'
+                                                        ELSE 'INACTIVO'
+                                                    END AS ases_status_student
+                                                    FROM {user} AS userm
+                                                    INNER JOIN {talentospilos_user_extended} AS user_ext  ON user_ext.id_moodle_user= userm.id
+                                                    INNER JOIN  {talentospilos_usuario} AS usuario ON id_ases_user = usuario.id
+                                                    WHERE tracking_status = 1 ) AS ases_status ON ases_status.id_ases_student = ases_students.student_id
+                                                    ";                    
                     break;
+                    
                 case 'icetex_status_student':
 
                     $select_clause .= $status_field.", ";
@@ -930,9 +1026,20 @@ function get_ases_report($general_fields=null,
                                                         ON (historic_icetex_statuses.id_estudiante = current_icetex_status.id_ases_student AND historic_icetex_statuses.fecha = current_icetex_status.fecha)) AS icetex_status ON icetex_status.id_ases_student = ases_students.student_id";
                     break;
                 case 'program_status':
+                    $id_last_semester = strval(intval($id_current_semester) - 1);
+                    
 
-                    $select_clause .= $status_field.", ";
+                    $select_clause .="COALESCE(".$status_field.", 'INACTIVO') AS program_status, ";
 
+                    $sub_query_status .= " LEFT JOIN (SELECT id_estudiante AS id_ases_student, 
+                                            CASE WHEN cancel.fecha_cancelacion IS NULL THEN 'ACTIVO'
+                                                ELSE 'SEMESTRE CANCELADO' 
+                                            END AS program_status
+                                            FROM {talentospilos_history_academ} AS history
+                                            LEFT JOIN {talentospilos_history_cancel} AS cancel
+                                            ON history.id = cancel.id_history
+                                            WHERE history.id_semestre = $id_last_semester) AS current_program_status
+                                            ON current_program_status.id_ases_student = ases_students.student_id";
                     break;
             }
         }
@@ -991,6 +1098,16 @@ function get_ases_report($general_fields=null,
                                                 INNER JOIN {talentospilos_history_estim} AS history_stim ON history_stim.id_history = academic_history.id
                                             GROUP BY academic_history.id_estudiante
                                             ) AS history_estim ON history_estim.id_estudiante = ases_students.student_id";
+                    break;
+                //condicion_excepcion_code
+                case 'condicion_excepcion':
+                    $select_clause .= $field.', ';
+                    $sub_query_academic .= " LEFT JOIN (SELECT ases_user.id AS id_estudiante, cond_excepcion.condicion_excepcion AS condicion
+                                                FROM {talentospilos_usuario} AS ases_user
+                                                INNER JOIN {talentospilos_cond_excepcion} AS cond_excepcion ON ases_user.id_cond_excepcion = cond_excepcion.id                                                
+                                                WHERE cond_excepcion.condicion_excepcion <> 'Ninguna de las anteriores'
+                                                ) AS cond_excepcion ON cond_excepcion.id_estudiante = ases_students.student_id
+                                                ";
                     break;
             }
             
@@ -1084,7 +1201,7 @@ function get_ases_report($general_fields=null,
                 $conditions_query_directors = " ases_students.id_academic_program = $user_role->id_programa";
                 $conditions_query_assigned = " AND ases_students.student_id IN (SELECT id_estudiante AS student_id
                                   FROM {talentospilos_monitor_estud} 
-                            WHERE id_semestre = ". get_current_semester()->max ." AND id_instancia = $instance_id)";
+                            WHERE id_semestre = ". core_periods_get_current_period($instance_id)->id ." AND id_instancia = $instance_id)";
 
                 $where_clause .= $conditions_query_directors.$conditions_query_assigned;
 
@@ -1093,7 +1210,6 @@ function get_ases_report($general_fields=null,
                 $result_query = $DB->get_records_sql($sql_query);
 
                 break;
-
             case 'profesional_ps':
 
                 $sub_query_ps_staff = " INNER JOIN {talentospilos_monitor_estud} AS monitor_student ON monitor_student.id_estudiante = ases_students.student_id
@@ -1113,7 +1229,7 @@ function get_ases_report($general_fields=null,
 
                 $where_clause .= " t_monitor_practicante_profesional.id_profesional = $user_id AND monitor_student.id_semestre = $id_current_semester";
 
-                $sql_query = $select_clause.$from_clause.$subquery_cohort.$sub_query_status.$sub_query_academic.$sub_query_icetex_status.$sub_query_assignment_fields.$sub_query_ps_staff.$where_clause;
+                $sql_query = $select_clause.$from_clause.$subquery_cohort.$sub_query_status.$sub_query_academic.$sub_query_assignment_fields.$sub_query_ps_staff.$where_clause;
 
                 $result_query = $DB->get_records_sql($sql_query);
                 
@@ -1283,7 +1399,7 @@ function get_professionals_by_instance($instance_id){
                                   FROM {talentospilos_rol}
                                   WHERE nombre_rol = 'profesional_ps')
                         AND id_instancia = $instance_id
-                        AND id_semestre =". get_current_semester()->max
+                        AND id_semestre =". core_periods_get_current_period($instance_id)->id
                         ."ORDER BY fullname";
 
     $result = $DB->get_records_sql($sql_query);
@@ -1317,7 +1433,7 @@ function get_practicing_by_instance($instance_id){
                                   FROM {talentospilos_rol}
                                   WHERE nombre_rol = 'practicante_ps')
                         AND id_instancia = $instance_id
-                        AND id_semestre =". get_current_semester()->max
+                        AND id_semestre =". core_periods_get_current_period($instance_id)->id
                         ."ORDER BY fullname";
 
     $result = $DB->get_records_sql($sql_query);
@@ -1350,7 +1466,7 @@ function get_monitors_by_instance($instance_id){
                                   FROM {talentospilos_rol}
                                   WHERE nombre_rol = 'monitor_ps')
                         AND id_instancia = $instance_id
-                        AND id_semestre =". get_current_semester()->max
+                        AND id_semestre =". core_periods_get_current_period($instance_id)->id
                   ."ORDER BY fullname";
 
     $result = $DB->get_records_sql($sql_query);
@@ -1763,6 +1879,21 @@ function getGeographicReport($cohorte, $instance_id){
 
 
  }
+
+function get_exception_conditions(){
+
+    global $DB;
+
+    $result = array();
+
+    $sql_query = "SELECT alias AS name, condicion_excepcion AS value
+                    FROM {talentospilos_cond_excepcion} AS cond
+                    WHERE cond.condicion_excepcion <> 'Ninguna de las anteriores'";
+
+    $result = $DB->get_records_sql($sql_query);    
+
+    return $result;
+}
 
 
 

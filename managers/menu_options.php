@@ -72,11 +72,17 @@ function create_menu_options($userid, $blockid, $courseid)
                                 </button>
                                 <div class="dropdown-content">';
     $discapacity_options = array();
+    $communications_dropdown = '<div id="communications_dropdown" class="dropdown">
+                                  <button class="dropbtn">Comunicaciones <i class="fa fa-caret-down"></i>
+                                  </button>
+                                <div class="dropdown-content">';
+
+    $communications_options = array();
     $menu_return = "";
     $id_role = get_id_rol($userid, $blockid);
      
     if($id_role != ""){
-        $functions = get_functions_by_role_id($id_role);        
+        $functions = get_functions_by_role_id($id_role);
 
         foreach ($functions as $function) {
 
@@ -209,6 +215,16 @@ function create_menu_options($userid, $blockid, $courseid)
                 $menu_options = '<a id="menu_student_profile" href= "' . $url . '"> Ficha de estudiantes </a>';
                 $soc_ed_options['Ficha de estudiantes'] = $menu_options;
 
+            }
+
+            if ($function == 'monitor_profile') {
+                $url = new moodle_url("/blocks/ases/view/monitor_profile.php", array(
+                    'courseid' => $courseid,
+                    'instanceid' => $blockid,
+                ));
+
+                $menu_options = '<a id="menu_monitor_profile" href="' .$url .'"> Ficha de monitores </a>';
+                $soc_ed_options['Ficha de monitores'] = $menu_options;
             }
 
             if ($function == 'upload_files_form') {
@@ -398,6 +414,26 @@ function create_menu_options($userid, $blockid, $courseid)
 
             }
 
+            if($function == 'ases_communications') {
+                $url = new moodle_url("/blocks/ases/view/communications.php", array(
+                    'courseid' => $courseid,
+                    'instanceid' => $blockid
+                ));
+
+                $menu_options = '<a id="menu_comunicaciones" class="menu_a" href= "' . $url . '">Comunicaciones ASES</a>';
+                $communications_options['Comunicaciones'] = $menu_options;
+            }
+
+            if($function == 'monitorias_academicas') {
+                $url = new moodle_url("/blocks/ases/view/monitorias_academicas.php", array(
+                    'courseid' => $courseid,
+                    'instanceid' => $blockid
+                ));
+
+                $menu_options = '<a id="menu_monitorias" class="menu_a" href= "' . $url . '">Monitorias académicas</a>';
+                $academic_options['Monitorias académicas'] = $menu_options;
+            }
+
         }
 
         //ORDENA
@@ -444,6 +480,15 @@ function create_menu_options($userid, $blockid, $courseid)
             }
             $discapacity_dropdown .= $dropdown_close_tags;
             $menu_return .= $discapacity_dropdown;
+        }
+
+        if (sizeof($communications_options) > 0) {
+            ksort($communications_options);
+            foreach ($communications_options as $value) {
+                $communications_dropdown .= $value;
+            }
+            $communications_dropdown .= $dropdown_close_tags;
+            $menu_return .= $communications_dropdown;
         }
     }
 

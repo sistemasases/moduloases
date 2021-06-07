@@ -191,7 +191,10 @@ function update($instance, $table_name=null) {
     $table_name = normalize_table_name($table_name, PLUGIN_TABLES_PREFIX);
     if(!property_exists($instance, 'id')) {
         return false;
-    } else {
+    } else if($instance->id == 0){
+        trigger_error('ASES Notificacion: actualizar instance en la BD con id 0');
+        return 0;
+    }else{
         return $DB->update_record($table_name, $instance);
     }
 }
@@ -212,9 +215,12 @@ function call_db_function($func_name, ...$args) {
 
     global $functs_than_need_table_rename, $talentospilos_classes;
     $class_name = normalize_class_name($args[0]);
-    if(in_array($func_name, $functs_than_need_table_rename) && in_array($class_name, $talentospilos_classes)) {
+    if(is_array($functs_than_need_table_rename)){
+        if(in_array($func_name, $functs_than_need_table_rename) && in_array($class_name, $talentospilos_classes)) {
 
-        require_once (__DIR__."./../classes/".$class_name.".php");
+            require_once (__DIR__."./../classes/".$class_name.".php");
+        }
     }
+   
     return call_user_func_array(__NAMESPACE__ . "\\" . $func_name, $args);
 }
