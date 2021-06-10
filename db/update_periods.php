@@ -16,6 +16,6 @@ $sql =
     SET id_instancia=$1
     WHERE fecha_inicio >=$2";
 
-$params = [450299,'2020-08-14'];
+$params = [450299,'2020-08-01']; // Fecha de inicio del semestre 2020A
 
 $DB->execute($sql, $params);

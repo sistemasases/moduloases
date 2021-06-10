@@ -54,7 +54,6 @@ define(['jquery'], function($) {
             });
 
             $('#button_primer_acercamiento').on('click', function() {
-                console.log('EHDHieidhi');
 
                 var creado_por = $('#current_user_id').val();
 
@@ -65,7 +64,6 @@ define(['jquery'], function($) {
             });
 
             $('#button_actualizar_primer_acercamiento').click(function(){
-                console.log('dheihdiehie')
                 $('div').removeClass('regla_incumplida');
 
 
