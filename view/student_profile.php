@@ -50,10 +50,13 @@ require_once '../managers/dphpforms/dphpforms_records_finder.php';
 require_once '../managers/dphpforms/dphpforms_get_record.php';
 require_once '../managers/user_management/user_management_lib.php';
 require_once '../managers/monitor_assignments/monitor_assignments_lib.php';
-require_once '../managers/periods_management/periods_lib.php';
+//require_once '../managers/periods_management/periods_lib.php';
 require_once '../classes/AsesUser.php';
 require_once '../classes/mdl_forms/user_image_form.php';
+require_once '../core/module_loader.php';
 include '../lib.php';
+
+module_loader('periods');
 
 global $PAGE;
 global $USER;
@@ -100,7 +103,7 @@ $record = $actions;
 
 // Security system, blocks defined on mustache files won't show if there is no call to core_secure_render
 // @see core_secure_render on core/security/security.php
-core_secure_render($record, $USER->id);
+//core_secure_render($record, $USER->id);
 
 $data_init = array();
 

@@ -198,7 +198,7 @@ function get_courses_for_report($user_id, $instance_id){
 
 	$intersect = "";
 	
-	$user_role = get_role_ases($user_id);
+	$user_role = get_role_ases($user_id, $instance_id);
 
 	if($user_role == "monitor_ps"){
 
