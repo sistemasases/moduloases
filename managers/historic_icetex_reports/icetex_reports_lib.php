@@ -51,9 +51,9 @@ function get_array_students_with_resolution($no_res_bool){
 								THEN res_students.codigo_resolucion
                     END AS codigo_resolucion,
                     CASE WHEN ( (academic_students.fecha_cancel IS NULL AND academic_students.promedio_semestre IS NOT NULL) 
-                                    AND status_icetex.nombre_estado LIKE '5%')
+                                AND res_students.monto_estudiante != '0')
                                 THEN '-ACTIVO'
-                        WHEN (academic_students.promedio_semestre IS NULL OR status_icetex.nombre_estado LIKE '3%' 
+                        WHEN (academic_students.promedio_semestre IS NULL OR res_students.monto_estudiante = '0' 
                                     OR status_icetex.nombre_estado IS NULL)
                                 THEN '-INACTIVO'
                     END AS est_ice_sra
