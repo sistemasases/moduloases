@@ -2,34 +2,32 @@
 /**
  * @package	block_ases
  * @subpackage	core.periods
- * @author 	Jeison Cardona Gómez
- * @copyright 	(C) 2019 Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
+ * @author 	David Santiago Cortés
+ * @copyright 	(C) 2021 David S. Cortés <david.cortes@correounivalle.edu.co>
  * @license   	http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /**
- * Function that return the current (last by end date) period
- * @author  Jeison CArdona Gomez <jeison.cardona@correounivalle.edu.co>
- * @since  1.0.0
+ * Function that return the current (last by end date) period according to its instanceid field.
+ * If no instace_id is given then NULL or 450299 assumed.
+ * @author  David Santiago Cortés <david.cortes@correounivalle.edu.co>
+ * @since  2.0.0
+ * @param int $instance_id Period's instance id
  * @return  stdClass | null Return the last period.
  */
-function periods_get_current_period(){
+function periods_get_current_period( $instance_id  ){
 
     global $DB;
     global $PERIODS_TABLENAME;
     
     $query  ="
-        SELECT 
-            *
-        FROM 
-            $PERIODS_TABLENAME
-        ORDER BY 
-            fecha_fin DESC 
-        LIMIT 1";
+            SELECT * FROM $PERIODS_TABLENAME 
+            WHERE id_instancia=$instance_id
+            ORDER BY fecha_fin DESC
+            LIMIT 1";
     
     $result = $DB->get_record_sql( $query );
     return ( isset($result->id) ? $result : null );
-
 }
 
 
@@ -65,14 +63,18 @@ function periods_get_period_by_id( int $period_id ):stdClass
 }
 
 /**
- * Returns a period given its name.
- * @author David S. Cortés - <david.cortes@correounivalle.edu.co>
- * @since 1.0.0
+ * Returns a period given its name and instance id.
+ * Since periods before (including) 2019B does not have an instanceid,
+ * additional checks takes place.
  *
- * @param string $period_name 
+ * @author David S. Cortés - <david.cortes@correounivalle.edu.co>
+ * @since 2.0.0
+ *
+ * @param string $period_name
+ * @param int $instance_id 
  * @return bool, true if there's a period with given name, false otherwise. 
  */
-function periods_get_period_by_name($period_name)
+function periods_get_period_by_name($period_name, $instance_id)
 {
     global $DB;
     global $PERIODS_TABLENAME;
@@ -80,10 +82,19 @@ function periods_get_period_by_name($period_name)
     $query = "
         SELECT *
         FROM $PERIODS_TABLENAME
-        WHERE nombre = '$period_name'";
+        WHERE nombre = '$period_name' ";
+
+
+    if (str_contains($period_name, '201')) {
+        $query .= "AND id_instancia = NULL";         
+    } else {
+        $query .= "AND id_instancia = $instance_id";         
     
+    }
+
     $result = $DB->get_record_sql( $query );
-    if( !property_exists($result, 'nombre') ) {
+    
+    if( !property_exists($result, 'id') ) {
        return false; 
     }
     else {
@@ -98,31 +109,39 @@ function periods_get_period_by_name($period_name)
  *
  * @param time $fecha_inicio
  * @param time $fecha_fin	
+ * @param int $instance_id. Period's instance
  * @param bool $relax_query. If set to true, the function returns all periods
  * between the start and end date. If set to false, it will return an exact match.
  *
  * @return stdClass
  * @throws Exception if there's no period with those dates.
  */
-function periods_get_period_by_date($fecha_inicio, $fecha_fin, $relax_query=false)
+function periods_get_period_by_date($fecha_inicio, $fecha_fin, $relax_query=false, $instance_id=null)
 {
 	global $DB;
 	global $PERIODS_TABLENAME;
 
-	$query = "SELECT * FROM $PERIODS_TABLENAME WHERE ";
+	$query = "SELECT * FROM $PERIODS_TABLENAME "; 
+    if (is_null($instance_id)) {
+       $query .= "WHERE id_instancia is NULL "; 
+    } else {
+        $query .= "WHERE id_instancia = $instance_id ";  
+    }
+
 
     if (is_null($fecha_fin)) {
 	    $fecha_fin = date('Y-m-d');
     }
 
-
 	if( $relax_query ){
-		$query .= "fecha_inicio >= '$fecha_inicio' AND fecha_fin <= '$fecha_fin'";
+		$query .= "AND fecha_inicio >= '$fecha_inicio' AND fecha_fin <= '$fecha_fin'";
+        
 	    $result = $DB->get_records_sql( $query );
 	}
-	else{
-		$query .= "fecha_inicio = '$fecha_inicio' AND fecha_fin = '$fecha_fin'";
-	    $result = $DB->get_record_sql( $query );
+	else {
+		$query .= "AND fecha_inicio = '$fecha_inicio' AND fecha_fin = '$fecha_fin'";
+        
+        $result = $DB->get_record_sql( $query );
         
         if( !property_exists($result, 'id') ) {
 		    throw new Exception ( 
@@ -136,38 +155,56 @@ function periods_get_period_by_date($fecha_inicio, $fecha_fin, $relax_query=fals
 }
 
 /** 
- * Function that return all periods.
+ * Function that return all periods under a given instance.
+ * Todos los periodos antes del 2019-2 no tienen instancia, por ende
+ * deben hacerse dos consultas a la tabla unidas con el operador UNION.
  * 
- * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
- * @since 1.0.0
+ * @author David S. Cortés <david.cortes@correounivalle.edu.co>
+ * @since 2.0.0
  * 
+ * @param int Instance id
  * @return array List of periods.
  */
-function periods_get_all_periods():array
+function periods_get_all_periods( $instance_id='NULL' ):array
 {
     global $DB;
     global $PERIODS_TABLENAME; 
-
-    $query = "SELECT * FROM $PERIODS_TABLENAME";
     
-    return $DB->get_records_sql( $query );
+    try {
+    
+        $periods_before_2019B = periods_get_period_by_date('2015-02-19', '2020-07-31', true);
+
+        $query = "SELECT * FROM $PERIODS_TABLENAME WHERE id_instancia = $instance_id";
+
+        $periods = $DB->get_records_sql( $query );
+
+        $all_periods = array_merge($periods_before_2019B, $periods);
+        
+        return $all_periods;
+
+    } catch(Exception $ex) {
+        throw new Exception($ex->getMessage()); 
+    }
 }
 
 /**
- * Function that return the last period in the database.
+ * Function that return the last period in the database under a certain
+ * instance.
  * 
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @since 1.0.0
  * 
  * @return stdClass Last period. 
  */
-function periods_get_last_period():stdClass
+function periods_get_last_period( int $instance_id ):stdClass
 {
     global $DB;
     global $PERIODS_TABLENAME;
     
-    $query = "SELECT * 
-        FROM $PERIODS_TABLENAME
+    $query = "
+        SELECT * 
+        FROM $PERIODS_TABLENAME 
+        WHERE id_instancia = $instance_id
         ORDER BY fecha_fin DESC LIMIT 1";
     
     return $DB->get_record_sql( $query );
@@ -191,7 +228,6 @@ function periods_check_if_exist( int $period_id ): bool
     } catch (Exception $exc) {
         return false;
     }
-    
 }
 
 /**
@@ -238,23 +274,24 @@ function periods_update_period( $period_info, $period_id ){
  * @return stdClass with new period.
  * @throws Exception if there is an existing period with the same name.
  */
-function periods_create_period( $nombre, $fecha_inicio, $fecha_fin ){
+function periods_create_period( $nombre, $fecha_inicio, $fecha_fin, $instance_id ){
 	global $DB;
 	global $PERIODS_TABLENAME;
 
 	try {
-		if( !periods_get_period_by_name($nombre) ){
+		if( !periods_get_period_by_name($nombre, $instance_id) ){
 			$new_period = new stdClass();
 			$new_period->nombre = $nombre;
 			$new_period->fecha_inicio = $fecha_inicio;
 			$new_period->fecha_fin = $fecha_fin;
+            $new_period->id_instancia = $instance_id;
 
 			$result = $DB->insert_record(substr($PERIODS_TABLENAME, 4), $new_period);
 
 			return $result;
 		}
 		else {
-			Throw new Exception("Ya existe periodo con ese nombre", -1);
+			Throw new Exception("Ya existe periodo con ese nombre en la instancia dada", -1);
 		}
 	}
 	catch ( Exception $ex ){

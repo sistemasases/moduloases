@@ -9,7 +9,7 @@
     //Hace falta validar que el perfil este en el periodo actual
     function get_perfil_usuario($id_moodle, $id_instancia){
         global $DB;
-        $current_semester = core_periods_get_current_period(); 
+        $current_semester = core_periods_get_current_period($id_instancia); 
        
         $sql_query = "SELECT * FROM {talentospilos_perfil} WHERE id IN (
                         SELECT id_perfil FROM {talentospilos_usuario_perfil} 
@@ -65,23 +65,6 @@
         return $current_semester;
     }
 
-    /**
-     * Función que retorna la fecha de inicio del semestre actual en el formato #AÑO#MES
-     * @see get_current_semester_start()
-     * @return cadena de texto que representa la fecha de inicio del semestre actual con formato procesado
-     * @deprecated
-     */
-    function get_current_semester_processed(){
-        $sem = core_periods_get_current_period();
-        $semestre = $sem->fecha_inicio;
-
-        $año = substr($semestre,0,4);
-        $mes = substr($semestre,5,2);
-
-        $semestre = $año.$mes;
-
-        return $semestre;
-    }
     
     /**
      * Retorna el id de talentos a partir del id de moodle

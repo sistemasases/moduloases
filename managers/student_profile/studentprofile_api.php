@@ -57,7 +57,7 @@ if(isset($input->function) && isset($input->params)) {
                         $result = student_profile_load_socioed_tab($id_ases, $id_instance);
                         break;
                     case 'academic':
-                        $result = student_profile_load_academic_tab($id_ases);
+                        $result = student_profile_load_academic_tab($id_ases, $id_instance);
                         break;
                     case 'geographic':
                         $result = student_profile_load_geographic_tab($id_ases);

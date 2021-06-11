@@ -93,6 +93,14 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
 
                 });
 
+                $("#add-security").on('click', function() {
+                    /**
+                     * Se añade el rol a las tablas utilizadas por
+                     * el core de seguridad.
+                     */
+                    crearPerfil(true);
+                })
+
 
                 $("#assign_user_profile").on('click', function () {
                     asignarUsuarioPerfil(instance);
@@ -218,12 +226,15 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
 
 
             /**
-             * Crea un ajax para llamar la accion que guarda el nuevo perfil en la base de datos
+             * Crea un ajax para llamar la accion que guarda el nuevo perfil en la base de datos.
+             *
+             * Se adecua para poder crear roles en las tablas que utliza el core de seguridad.
              * @param Nombre
              * @param Descripcion
+             * @param {boolean} security
              */
 
-            function crearPerfil() {
+            function crearPerfil(security = false) {
                 var nombre = $("#nombre_perfil").val().trim();
                 var descripcion = $("#descripcion_perfil").val().trim();
                 var msj = "";
@@ -248,7 +259,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                         type: "POST",
                         data: {
                             nombre_perfil: nombre,
-                            descripcion_perfil: descripcion
+                            descripcion_perfil: descripcion,
+                            security: security
                         },
                         url: "../managers/ActionCreateAction.php",
                         async: false,
