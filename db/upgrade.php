@@ -5,17 +5,6 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     global $CFG;
     $dbman = $DB->get_manager();
-    $result = true;
-    $sql = 
-        "UPDATE mdl_talentospilos_semestre
-        SET id_instancia=$1
-        WHERE fecha_inicio >=$2";
-    
-    $params = [450299,'2020-08-01']; // Fecha de inicio del semestre 2020A
-    
-    $DB->execute($sql, $params);
-
-    
 
     if ($oldversion < 22021052715150) {
 
