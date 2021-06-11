@@ -40,7 +40,7 @@ function get_array_students_with_resolution($no_res_bool){
     $sql_query = "SELECT row_number() over(), spp_students.id_ases_user, spp_students.cohorte, spp_students.num_doc, substring(spp_students.username from 0 for 8) AS codigo, 
                     spp_students.lastname, spp_students.firstname, spp_students.nombre_semestre, res_students.codigo_resolucion,
                     res_students.monto_estudiante, academic_students.fecha_cancel, academic_students.promedio_semestre, status_icetex.nombre_estado,
-                    CASE WHEN ( academic_students.fecha_cancel IS NULL AND spp_students.nombre_semestre = '2021A')
+                    CASE WHEN ( academic_students.fecha_cancel IS NULL AND spp_students.nombre_semestre = (SELECT nombre FROM {talentospilos_semestre} WHERE id = (SELECT max(id) FROM {talentospilos_semestre})))
                                 THEN '-ACTIVO'
                         WHEN (academic_students.fecha_cancel IS NULL AND academic_students.promedio_semestre IS NOT NULL)
                                 THEN '-ACTIVO'
