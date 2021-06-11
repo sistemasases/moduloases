@@ -40,9 +40,11 @@ function get_array_students_with_resolution($no_res_bool){
     $sql_query = "SELECT row_number() over(), spp_students.id_ases_user, spp_students.cohorte, spp_students.num_doc, substring(spp_students.username from 0 for 8) AS codigo, 
                     spp_students.lastname, spp_students.firstname, spp_students.nombre_semestre, res_students.codigo_resolucion,
                     res_students.monto_estudiante, academic_students.fecha_cancel, academic_students.promedio_semestre, status_icetex.nombre_estado,
-                    CASE WHEN (academic_students.fecha_cancel IS NULL AND academic_students.promedio_semestre IS NOT NULL)
+                    CASE WHEN ( academic_students.fecha_cancel IS NULL AND spp_students.nombre_semestre = '2021A')
                                 THEN '-ACTIVO'
-                        WHEN (academic_students.promedio_semestre IS NULL)
+                        WHEN (academic_students.fecha_cancel IS NULL AND academic_students.promedio_semestre IS NOT NULL)
+                                THEN '-ACTIVO'
+                        WHEN (academic_students.promedio_semestre IS NULL OR academic_students.fecha_cancel IS NOT NULL)
                                 THEN '-INACTIVO'		
                     END AS program_status,
                     CASE WHEN (res_students.codigo_resolucion IS NULL)
@@ -50,22 +52,20 @@ function get_array_students_with_resolution($no_res_bool){
 						WHEN (res_students.codigo_resolucion IS NOT NULL)
 								THEN res_students.codigo_resolucion
                     END AS codigo_resolucion,
-                    CASE WHEN ( (academic_students.fecha_cancel IS NULL AND academic_students.promedio_semestre IS NOT NULL) 
-                                AND res_students.monto_estudiante != '0')
+                    CASE WHEN ( res_students.monto_estudiante != '0' AND res_students.codigo_resolucion IS NOT NULL)
                                 THEN '-ACTIVO'
-                        WHEN (academic_students.promedio_semestre IS NULL OR res_students.monto_estudiante = '0' 
-                                    OR status_icetex.nombre_estado IS NULL)
+                        WHEN ( res_students.monto_estudiante = '0' OR res_students.codigo_resolucion IS NULL)
                                 THEN '-INACTIVO'
                     END AS est_ice_sra
                 FROM
-                (SELECT user_extended.id_ases_user, moodle_user.lastname, moodle_user.firstname, cohorts.idnumber, semestre.id AS id_semestre, semestre.nombre AS nombre_semestre, 
+                (SELECT user_extended.id_ases_user, moodle_user.lastname, moodle_user.firstname, cohorts.idnumber, semestre.id AS id_semestre, semestre.nombre AS nombre_semestre,
                     usuario.num_doc, moodle_user.username, substring(cohorts.idnumber from 0 for 5) AS cohorte
                 FROM {cohort_members} AS members
                 INNER JOIN {cohort} AS cohorts ON members.cohortid = cohorts.id
                 INNER JOIN {talentospilos_user_extended} AS user_extended ON user_extended.id_moodle_user = members.userid
                 INNER JOIN {talentospilos_usuario} AS usuario ON usuario.id = user_extended.id_ases_user
                 INNER JOIN {user} AS moodle_user ON moodle_user.id = user_extended.id_moodle_user
-                CROSS JOIN {talentospilos_semestre} AS semestre 
+                CROSS JOIN {talentospilos_semestre} AS semestre
                 WHERE (cohorts.idnumber LIKE 'SPP%' OR cohorts.idnumber LIKE 'SPEX%') AND user_extended.tracking_status = 1) AS spp_students 
 
                 LEFT JOIN 
