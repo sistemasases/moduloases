@@ -134,7 +134,7 @@ if($usernamerole=='monitor_ps'){
 
     // Get grupal trackings that a monitor has done and show it in a toggle.
     $array_groupal_trackings_dphpforms =get_tracking_grupal_monitor_current_semester($monitor_id,$intervalo_fechas[2]);
-    $table.=render_groupal_tracks_monitor_new_form($array_groupal_trackings_dphpforms,$monitor_id, $blockid);
+    $table.=render_groupal_tracks_monitor_new_form($array_groupal_trackings_dphpforms,$monitor_id, null, $blockid);
 
 
 }elseif($usernamerole=='practicante_ps'){
