@@ -28,9 +28,9 @@ require_once('tracking_time_control_functions.php');
 require_once dirname(__FILE__) .'/../periods_management/periods_lib.php';
 
 
-    if (isset($_POST['initial_hour'])&&isset($_POST['final_hour'])){
+    if (isset($_POST['initial_hour']) && isset($_POST['final_hour']) && isset($_POST['instanceid'])){
         if($_POST['initial_hour']==0 && $_POST['final_hour']==0){
-            $current_semester =core_periods_get_current_period();
+            $current_semester =core_periods_get_current_period($_POST['instanceid']);
             $initial_hour=$current_semester->fecha_inicio;
             $final_hour=$current_semester->fecha_fin;
 

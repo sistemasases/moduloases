@@ -50,10 +50,13 @@ require_once '../managers/dphpforms/dphpforms_records_finder.php';
 require_once '../managers/dphpforms/dphpforms_get_record.php';
 require_once '../managers/user_management/user_management_lib.php';
 require_once '../managers/monitor_assignments/monitor_assignments_lib.php';
-require_once '../managers/periods_management/periods_lib.php';
+//require_once '../managers/periods_management/periods_lib.php';
 require_once '../classes/AsesUser.php';
 require_once '../classes/mdl_forms/user_image_form.php';
+require_once '../core/module_loader.php';
 include '../lib.php';
+
+module_loader('periods');
 
 global $PAGE;
 global $USER;
@@ -100,7 +103,7 @@ $record = $actions;
 
 // Security system, blocks defined on mustache files won't show if there is no call to core_secure_render
 // @see core_secure_render on core/security/security.php
-core_secure_render($record, $USER->id);
+//core_secure_render($record, $USER->id);
 
 $data_init = array();
 
@@ -192,42 +195,40 @@ if ($student_code != '0') {
 
     //Faculty name foreach academic program
 
-    $faculty_name = '';
-    $program_time = '';
 
     $record->id_moodle = $id_user_moodle;
     $record->id_ases = $student_id;
     $record->email_moodle = $user_moodle->email_moodle;
     $record->age = substr($ases_student->age, 0, 2);
-    foreach ($academic_programs as $program){
-        if($program->tracking_status == 1){
+    
+    $num_doc = $ases_student->num_doc;
+    $student_codes = get_student_codes($num_doc);
+    foreach($academic_programs as $program) {
+        $cod_programa = $program->cod_univalle;
+        foreach($student_codes as $codes){
+            $moodle_username = $codes->code;
+            $student_program = substr($moodle_username,-4);
+            if($cod_programa == $student_program){
+                $cod_programa = $moodle_username;
+                break;
+            }      
+        }
+
+        if($program->tracking_status == 1) {
             $sede = $program->nombre_sede;
-            $cod_programa = $program->cod_univalle;
             $nombre_programa = $program->nombre_programa;
             $program->nombre_sede = "<b>".$sede."</b>";
             $program->cod_univalle = "<b>".$cod_programa."</b>";
             $program->nombre_programa = "<b>".$nombre_programa."</b>";
-
-            $faculty_name .= $program->cod_univalle ."-" .$program->nombre_facultad .  "<br>";
-            $program_time .= $program->cod_univalle ."-" .$program->jornada  . "<br>";
-            $name_program = $program->nombre_programa."-".$program->cod_univalle;
-
             $record->cod_programa_activo = $cod_programa;
-            break;
-        }else {
-            $faculty_name .= $program->cod_univalle ."-" .$program->nombre_facultad .  "<br>";
-            $program_time .= $program->cod_univalle ."-" .$program->jornada  . "<br>";
+        }else{
+            $program->cod_univalle = $cod_programa;
         }
-
     }
 
     $record->estamento = $ases_student->estamento;
     $record->colegio = $ases_student->colegio;
-
-    $record->name_program = $name_program;
-    $record->faculty_name = $faculty_name;
-    $record->name_program_time = $program_time;
-    $record->name_current_semester = core_periods_get_current_period()->nombre;
+    $record->name_current_semester = core_periods_get_current_period($blockid)->nombre;
     $record->academic_programs = $academic_programs;
     $record->student_cohorts = $student_cohorts;
 
@@ -260,7 +261,7 @@ if ($student_code != '0') {
     $record->emailpilos = $ases_student->emailpilos;
     $record->attendant = $ases_student->acudiente;
     $record->attendant_tel = $ases_student->tel_acudiente;
-    $record->num_doc = $ases_student->num_doc;
+    $record->num_doc = $num_doc;
     $record->json_detalle_discapacity  =$ases_student->json_detalle;
 
 
@@ -544,7 +545,7 @@ if ($student_code != '0') {
 
     // Estado ASES
 
-    $id_current_semester = core_periods_get_current_period()->id;
+    $id_current_semester = core_periods_get_current_period($blockid)->id;
     $last_monitor_assignment = monitor_assignments_get_last_monitor_student_assignment($student_id, $blockid);
     $id_instance_last_assignment = $last_monitor_assignment->id_instancia;
     $id_semester_last_assignment = $last_monitor_assignment->id_semestre;
@@ -609,9 +610,9 @@ if ($student_code != '0') {
 
     $record->id_dphpforms_creado_por = $USER->id;
 
-    $monitor_object = get_assigned_monitor($student_id);
-    $trainee_object = get_assigned_pract($student_id);
-    $professional_object = get_assigned_professional($student_id);
+    $monitor_object = get_assigned_monitor($student_id, $blockid);
+    $trainee_object = get_assigned_pract($student_id, $blockid);
+    $professional_object = get_assigned_professional($student_id, $blockid);
 
     $flag_with_assignation = false;
 
@@ -877,7 +878,7 @@ $url_update_user_image           = new moodle_url("/blocks/ases/view/edit_user_i
 $record->update_profile_image_url = $url_update_user_image;
 
 // periods_lib.php contains get_current_semester()
-$record->current_semester = core_periods_get_current_period()->id;
+$record->current_semester = core_periods_get_current_period($blockid)->id;
 
 $stud_mon_prac_prof = user_management_get_stud_mon_prac_prof( $record->ases_student_code, $record->instance, $record->current_semester );
 $record->monitor_id = $stud_mon_prac_prof->monitor->id;

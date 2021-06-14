@@ -32,13 +32,14 @@ require_once '../historic_management/historic_icetex_lib.php';
 
 module_loader("periods");
 
-if (isset($_FILES['file'])) {
+if (isset($_FILES['file']) && isset($_FILES['instandeid'])) {
 
     try {
         global $DB;
         $record = new stdClass();
 
         $archivo = $_FILES['file'];
+        $instancia = $_FILES['instanceid'];
         $extension = pathinfo($archivo['name'], PATHINFO_EXTENSION);
         date_default_timezone_set("America/Bogota");
         $nombre = $archivo['name'];
@@ -113,7 +114,7 @@ if (isset($_FILES['file'])) {
             $nombre_semestre = $data[$associativeTitles['nombre_semestre']];
             if ($nombre_semestre != '') {
 
-                $id_semestre = (core_periods_get_period_by_name($nombre_semestre))->id;
+                $id_semestre = (core_periods_get_period_by_name($nombre_semestre, $instancia))->id;
                 if (!$id_semestre) {
                     $isValidRow = false;
                     array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['nombre_semestre'] + 1), 'nombre_semestre', 'No existe ningun semestre registrado con el nombre: ' . $nombre_semestre]);

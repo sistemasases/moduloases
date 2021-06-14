@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-
-<XMLDB PATH="blocks/ases/db" VERSION="20201123" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
-
+<XMLDB PATH="blocks/ases/db" VERSION="20210527" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -148,9 +146,11 @@
         <FIELD NAME="nombre" TYPE="char" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="fecha_inicio" TYPE="datetime" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="fecha_fin" TYPE="datetime" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="id_instancia" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="periodo_instancia_fk" TYPE="foreign" FIELDS="id_instancia" REFTABLE="block_instances" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
     <TABLE NAME="talentospilos_academica" COMMENT="Registra la información académica de un estudiante">
@@ -1281,6 +1281,8 @@
         <FIELD NAME="telefono" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="asiste" TYPE="binary" NOTNULL="false" SEQUENCE="false" COMMENT="verdadero si y solo si el estudiante asistio"/>
         <FIELD NAME="eliminado" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="asignatura_a_consultar" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="tematica_a_consultar" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

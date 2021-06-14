@@ -32,6 +32,7 @@ function periods_get_current_period(){
 
 }
 
+
 /**
  * Function that return a period by ID.
  * @author Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
@@ -66,6 +67,7 @@ function periods_get_period_by_id( int $period_id ):stdClass
 /**
  * Returns a period given its name.
  * @author David S. Cortés - <david.cortes@correounivalle.edu.co>
+ * @since 1.0.0
  *
  * @param string $period_name 
  * @return bool, true if there's a period with given name, false otherwise. 
@@ -109,7 +111,10 @@ function periods_get_period_by_date($fecha_inicio, $fecha_fin, $relax_query=fals
 
 	$query = "SELECT * FROM $PERIODS_TABLENAME WHERE ";
 
-	$fecha_fin = date('Y-m-d');
+    if (is_null($fecha_fin)) {
+	    $fecha_fin = date('Y-m-d');
+    }
+
 
 	if( $relax_query ){
 		$query .= "fecha_inicio >= '$fecha_inicio' AND fecha_fin <= '$fecha_fin'";

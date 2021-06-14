@@ -25,6 +25,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables','block_
 			dropDownAutoWidth: true,
 
 			});
+            
+            var params = get_url_parameters(document.location.search);
 
 			$(document).ready(function() {
 				$(".assignment_li").css({ display: 'none' });
@@ -59,7 +61,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables','block_
 			});
 
 			$("#save-button").on('click', function() {
-				createPeriod();
+				createPeriod(params['instanceid']);
 				$("#new_semester_name").val(" ");
 				$("#new_beginning_date").val(" ");
 				$("#new_ending_date").val(" ");
@@ -72,7 +74,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables','block_
 			});
 
 			$("#list-periods-panel").on('click', function(){
-				loadPeriods();
+				loadPeriods(params['instanceid']);
 			});
 
 		});
@@ -188,10 +190,10 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables','block_
 	 * @desc Loads a period values on a table. Current processing on load_periods_processing.php
 	 * @return {void}
 	 */
-	function loadPeriods(){
+	function loadPeriods(instanceId){
 		$.ajax({
 			type: "POST",
-			data: {load: 'loadSemester'},
+			data: {load: 'loadSemester', instance: instanceId},
 			url: "../managers/periods_management/load_periods_processing.php",
 			success: function(msg){
 				$("#div_periods").empty();
@@ -213,7 +215,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables','block_
 	 * @desc Creates a period obtaining values from html. Current processing on load_periods_processing.php
 	 * @return {void}
 	 */
-	function createPeriod(){
+	function createPeriod(instanceId){
 		var newSemesterName = $("#new_semester_name").val();
 		var newBeginningDate = $("#new_beginning_date").val();
 		var newEndingDate = $("#new_ending_date").val();
@@ -234,7 +236,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables','block_
 		}else{
 			$.ajax({
 				type: "POST",
-				data: {op: 'createSemester' , name: newSemesterName, beginning: newBeginningDate, ending: newEndingDate},
+				data: {op: 'createSemester', instance: instanceId , name: newSemesterName, beginning: newBeginningDate, ending: newEndingDate},
 				url: "../managers/periods_management/create_period_processing.php",
 				success: function(msg){
 
@@ -257,6 +259,20 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables','block_
 			});
 		}
 	}
+    
+    function get_url_parameters(page) {
+        // This function is anonymous, is executed immediately and
+        // the return value is assigned to QueryString!
+        var query_string = [];
+        var query = document.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            query_string[pair[0]] = pair[1];
+        }
+
+        return query_string;
+    }
 
 
 	/**

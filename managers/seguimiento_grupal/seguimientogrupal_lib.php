@@ -94,7 +94,7 @@ function get_tracking_grupal_monitor_current_semester($monitor_id, $semester_id)
 
 function get_grupal_students($id_monitor, $idinstancia){
     global $DB;
-    $semestre_act = core_periods_get_current_period();
+    $semestre_act = core_periods_get_current_period($idinstancia);
 
     $sql_query="SELECT *  FROM {user} AS userm 
     INNER JOIN {talentospilos_user_extended} as user_ext  ON user_ext.id_moodle_user= userm.id
@@ -119,7 +119,7 @@ function get_grupal_students($id_monitor, $idinstancia){
  
 function get_tracking_by_monitor($id_monitor, $id_seg= null, $tipo, $idinstancia){
     global $DB;
-    $current_semester = core_periods_get_current_period();
+    $current_semester = core_periods_get_current_period($idinstancia);
 
     //$sql_query="SELECT seg.id as id_seg, to_timestamp(fecha) as fecha_formato,*  from {talentospilos_seguimiento} seg  where seg.id_monitor = ".$id_monitor." AND seg.tipo = '".$tipo."' AND seg.id_instancia=".$idinstancia." AND (fecha between ".strtotime($semester_interval->fecha_inicio)." and ".strtotime($semester_interval->fecha_fin).") AND status<>0 ORDER BY fecha_formato DESC;";
     $sql_query = "
@@ -345,7 +345,7 @@ function getSeguimientoOrderBySemester($id_est = null, $tipo,$idsemester = null,
 function get_role_user($id_moodle, $idinstancia)
 {
     global $DB;
-    $current_semester = core_periods_get_current_period(); 
+    $current_semester = core_periods_get_current_period($idinstancia); 
     $sql_query = "select nombre_rol, rol.id as rolid from {talentospilos_user_rol} as ur inner join {talentospilos_rol} as rol on rol.id = ur.id_rol where  ur.estado = 1 AND ur.id_semestre =".$current_semester->id."  AND id_usuario = ".$id_moodle." AND id_instancia =".$idinstancia.";";
     return $DB->get_record_sql($sql_query);
 }

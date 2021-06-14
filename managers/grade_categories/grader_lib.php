@@ -61,7 +61,7 @@ function get_info_course($id_curso)
               INNER JOIN {user_enrolments} userenrol ON (enrole.id = userenrol.enrolid
                                                            AND usuario.id = userenrol.userid)
               WHERE cont.contextlevel = 50
-                AND rol.roleid = 3
+                AND (rol.roleid = 3 or rol.roleid = 30)
                 AND cursoP.id = $id_curso
               ORDER BY userenrol.timecreated ASC
               LIMIT 1) AS subc";

@@ -46,14 +46,14 @@ module_loader("periods");
  *
  */
 
-function render_monitor_new_form($students_by_monitor, $period = null)
+function render_monitor_new_form($students_by_monitor, $period = null, $instance_id)
 {
     $panel = "";
     foreach($students_by_monitor as $student) {
         $student_code = get_user_moodle($student->id_estudiante);//Get user moodle by ases id
 
         $ases_student_code = $student->id_estudiante;
-        $current_semester = core_periods_get_current_period();
+        $current_semester = core_periods_get_current_period($instance_id);
         $fullname = $student_code->firstname . " " .  $student_code->lastname;
 
         $panel.= "<a data-toggle='collapse' data-container='student$ases_student_code' data-username='$ases_student_code' data-asesid='$ases_student_code' class='student collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#student$ases_student_code'>
@@ -116,11 +116,11 @@ function aux_create_groupal_toggle($monitor_id)
  *
  */
 
-function render_groupal_tracks_monitor_new_form($groupal_tracks, $monitor_id, $period = null)
+function render_groupal_tracks_monitor_new_form($groupal_tracks, $monitor_id, $period = null, $instance_id)
 {
     $panel = "";
     foreach($groupal_tracks as $student) {
-        $current_semester = core_periods_get_current_period();
+        $current_semester = core_periods_get_current_period($instance_id);
         if ($period == null) {
             $monitor_trackings = get_tracking_grupal_monitor_current_semester($monitor_id, $current_semester->id);
         }
@@ -147,7 +147,7 @@ function render_practicant_new_form($monitors_of_pract, $instance, $period = nul
 {
     $panel = "";
     $practicant_counting = [];
-    $current_semester = core_periods_get_current_period();
+    $current_semester = core_periods_get_current_period($instance);
     foreach($monitors_of_pract as $monitor) {
         $monitor_id = $monitor->id_usuario;
         $students_by_monitor = get_students_of_monitor($monitor_id, $instance);
@@ -192,7 +192,7 @@ function render_professional_new_form($practicant_of_prof, $instance, $period = 
 {
     $panel = "";
     $practicant_counting = [];
-    $current_semester = core_periods_get_current_period();
+    $current_semester = core_periods_get_current_period($instance);
     foreach($practicant_of_prof as $practicant) {
         
         $panel.= "<div class='panel panel-default'>";
@@ -1102,7 +1102,7 @@ function get_peer_trackings_by_monitor($pares, $grupal, $codigoMonitor, $noMonit
     $fecha_epoch = [];
     $fecha_epoch[0] = strtotime($fechas[0]);
     $fecha_epoch[1] = strtotime($fechas[1]);
-    $semestre_periodo = core_periods_get_period_by_date($fechas[0], $fechas[1]); //<-- stdClass
+    $semestre_periodo = core_periods_get_period_by_date($fechas[0], $fechas[1], false, $instanceid); //<-- stdClass
     $monitorstudents = get_seguimientos_monitor($codigoMonitor, $instanceid, $fecha_epoch, $semestre_periodo);
     return $monitorstudents;
 }

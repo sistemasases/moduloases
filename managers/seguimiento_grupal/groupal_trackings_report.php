@@ -184,7 +184,7 @@ function load_trackings_by_monitor(){
 
     if(isset($_POST['idinstancia']) ){
 
-        $current_semester = core_periods_get_current_period();
+        $current_semester = core_periods_get_current_period($_POST['idinstancia']);
         $result = get_tracking_grupal_monitor_current_semester($USER->id,$current_semester->id);
         $render_trackings= render_monitor_groupal_trackings($result);
   

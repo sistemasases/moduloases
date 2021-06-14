@@ -25,8 +25,9 @@ define(['jquery',
             init: function () {
                 // adjuntar listeners
                 $(document).on('click', '#anadir_monitoria', iniciar_agregar_monitoria);
+                $(document).on('click', '#config-icon', mostrar_config);
                 // localizacion
-                 //// datepicker
+                //// datepicker
                 $.datepicker.setDefaults({
                     closeText: "Cerrar",
                     prevText: "&#x3C;Ant",
@@ -36,7 +37,7 @@ define(['jquery',
                     "julio","agosto","septiembre","octubre","noviembre","diciembre" ],
                     monthNamesShort: [ "ene","feb","mar","abr","may","jun",
                     "jul","ago","sep","oct","nov","dic" ],
-                    dayNames: [ "domingo","lunes","martes","miércoles","jueves","viernes","sábado" ],
+                    dayNames: ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"],
                     dayNamesShort: [ "dom","lun","mar","mié","jue","vie","sáb" ],
                     dayNamesMin: [ "D","L","M","X","J","V","S" ],
                     weekHeader: "Sm",
@@ -44,17 +45,96 @@ define(['jquery',
                     isRTL: false,
                     showMonthAfterYear: false,
                     yearSuffix: "" });
-
+                    
                 },
         cargar_monitorias_default: function(data){
             $("#div_table").html('');
             $("#div_table").fadeIn(500).append('<table id="tableResult" class="stripe row-border order-column" cellspacing="0" width="100%"><thead> </thead></table>');
             $("#tableResult").DataTable(data);
         },
-        continuar_setup_inicial : function(){
-            $(".dt-button.buttons-print.eliminar").click(eliminar_monitoria);
+        continuar_setup_inicial : function(es_monitor){
+            if(es_monitor) $(".dt-button.buttons-print.eliminar").toggle();
+            else $(".dt-button.buttons-print.eliminar").click(eliminar_monitoria);
         }
         
+    }
+
+    function mostrar_config(){
+        // cargar mustache
+        $.when($.ajax({
+            url: "../templates/monitorias_academicas_config.mustache",
+            data: null,
+            dataType: "text",
+            async: true,
+            success: function( template ){
+                let html_to_load = template;
+                //Crear JSON con general_modal_manager
+                gmm.generate_modal("modal_config", "Configuración", html_to_load, null, function(){gmm.show_modal(".modal_config")});
+            },
+            error: function(){
+                console.log( "../templates/monitorias_academicas_config.mustache cannot be reached." );
+            }
+        })).done(() => {        
+        // cargar lista de todos los grupos de moodle que pertenezcan al curso
+        $.ajax({
+            type: "POST",
+            data: JSON.stringify({
+                "function": 'cargar_grupos',
+                "params": [extras.getUrlParams(document.location.search).courseid],
+            }),
+            url: "../managers/asistencia_monitorias/asistencia_monitorias_api.php",
+            dataType: "json",
+            success: function(msg) {
+                //$("#div_table").html(msg.responseText);
+                var grupos = $.map(msg.data_response, function(a) {return {"id" : a.id, "text" : a.nombre}});
+                $('#grupos').select2({
+                    "data" : grupos,
+                    "placeholder": "Seleccionar grupo"
+                });
+                $('#grupos').val(msg.seleccionado.id_number).change();
+            },
+            error: function(msg) {
+                    console.log("Error consulta BD grupo");
+                    console.log(msg);
+                    $("#debug").html(msg.responseText);
+                }
+            });
+            
+            // cancelar
+            $("#cancel_config").click(() => {$(".general_modal_close").first().click()});
+
+            // guardar 
+            $("#form_config").submit(function(e){
+                e.preventDefault();
+                loading_indicator.show();
+                var grupo = $("select[name='grupo']").val();
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({
+                        "function": 'actualizar_config',
+                        "params": [parseInt(grupo)]
+                    }),
+                    url: "../managers/asistencia_monitorias/asistencia_monitorias_api.php",
+                    dataType: "json",
+                    success: function(msg) {
+                        loading_indicator.hide();
+                        $(".general_modal_close").first().click();
+                        if(msg.status_code != 0) {
+                            swal(
+                                    'Error!',
+                                    'Oops!: ' + msg.data_response,
+                                    'error'
+                                );
+                            console.log(msg);
+                        }
+                    },
+                    error: function(msg) {
+                        console.log("Error update bd de config en backend");
+                        $("#debug").html(msg.responseText);
+                    }
+                });
+            });
+        });
     }
 
     function iniciar_agregar_monitoria(){
@@ -75,6 +155,7 @@ define(['jquery',
                 }
             });
     function mostrar_agregar_monitoria(){
+
         listar_materias_select();
         listar_monitores_select();
         attach_listeners_botones();
@@ -102,7 +183,6 @@ define(['jquery',
                 success: function(msg) {
                     //$("#div_table").html(msg.responseText);
                     var materias = $.map(msg.data_response, function(a) {return {"id" : a.id, "text" : a.nombre}});
-                    console.log(materias);
                     $('#materia').select2({
                         "data" : materias,
                         "placeholder": "Seleccionar materia",
@@ -305,7 +385,6 @@ define(['jquery',
             confirmButtonText: 'Eliminar'
         }, function (isConfirmed) {
             if (isConfirmed) {
-                console.log(e.target.id)
                 $.ajax({
                     type: "POST",
                     data: JSON.stringify({

@@ -11,7 +11,7 @@ function executeAttendance(){
 function createAttendanceCourse(code){
        $.ajax({
         type: "POST",
-        data: {dat: code},
+        data: {dat: code, instance: window.location.href.split('instanceid=')[1]},
         url: "../managers/att_course_processing.php",
         success: function(msg)
         {
@@ -31,7 +31,7 @@ function createAttendanceCourse(code){
 function createAttendanceLast(code){
     var table = $.ajax({
         type:"POST",
-        data: {dat: code},
+        data: {dat: code, instance: window.location.href.split('instanceid=')[1]},
         url: "../managers/att_last_processing.php",
         success: function(msg)
         {

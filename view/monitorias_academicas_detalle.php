@@ -42,10 +42,15 @@ $coursenode->add_node($blocknode);
 $data = new stdClass();
 $menu_option = create_menu_options($id_current_user, $block_id, $course_id);
 $datos_monitoria = get_monitoria_by_id($monitoria_id);
+
 $data->menu = $menu_option;
 $data->materia = $datos_monitoria->materia;
 $data->monitor = $datos_monitoria->lastname_mon . " " . $datos_monitoria->firstname_mon;
 $data->horario = $datos_monitoria->dia . ", " . $datos_monitoria->hora;
+$data->materia_id = $datos_monitoria->materia_id;
+$data->monitor_id = $datos_monitoria->monitor_id;
+$data->dia = $datos_monitoria->dia_numero;
+$data->hora = $datos_monitoria->hora;
 $page_title = "Monitoría ".$datos_monitoria->materia." por ". $datos_monitoria->lastname_mon . " " . $datos_monitoria->firstname_mon;
 
 $PAGE->set_url($url);
@@ -55,22 +60,28 @@ $PAGE->set_heading($page_title);
 $PAGE->requires->css('/blocks/ases/style/aaspect.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
-//$PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
+$PAGE->requires->css('/blocks/ases/js/select2/css/select2.css', true);
 $PAGE->requires->css('/blocks/ases/style/bootstrap.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/jquery.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/buttons.dataTables.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/jqueryui.css', true);
 
-$PAGE->requires->css('/blocks/ases/style/monitorias.css', true);
+$PAGE->requires->css('/blocks/ases/style/monitorias_academicas.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/monitorias_academicas_detalle','init');
+
+$data->es_profesional = !es_monitor($id_current_user);
+if($id_current_user != $datos_monitoria->monitor_id && !$data->es_profesional){
+    redirect(new moodle_url('/my'), "No estás autorizado para ver esa monitoría. Esta violación de seguridad será informada a un responsable.", 1);
+}
 
 $params = new stdClass();
 // inicialmente mostrar sesiones programadas desde hoy hasta infinito
 $params->sesiones = get_tabla_sesiones($monitoria_id, (new DateTime())->format("Ymd"), 99999999);
 $params->monitoria = $datos_monitoria;
 $PAGE->requires->js_call_amd('block_ases/monitorias_academicas_detalle','construir_tabla', $params);
-$PAGE->requires->js_call_amd('block_ases/monitorias_academicas_detalle','init_despues_de_tabla');
+$PAGE->requires->js_call_amd('block_ases/monitorias_academicas_detalle','set_es_profesional', array($data->es_profesional));
+$PAGE->requires->js_call_amd('block_ases/monitorias_academicas_detalle','init_despues_de_tabla', array());
 $output = $PAGE->get_renderer('block_ases');
 $monitoria_page = new \block_ases\output\monitoria_page($data);
 

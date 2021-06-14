@@ -119,11 +119,14 @@ if ($monitor_code != '0'){
     $data->jefe = "No registra";
     $data->jefe_pract = "No registra";
 
+    // Se revisa si el monitor visitado está activo en el semestre actual
     $estado = monitor_is_active($monitor->id, $block_id);
+
+    // Si está activo entonces se deben traer sus jefes (practicante y profesional) y meterlos en $data
     if ($estado) {
         $data->activo=true;
-        $mon_pract = user_management_get_boss($monitor->id, $block_id, core_periods_get_current_period()->id); 
-	    $jefe = user_management_get_boss($mon_pract->id, $block_id, core_periods_get_current_period()->id); 
+        $mon_pract = user_management_get_boss($monitor->id, $block_id, core_periods_get_current_period($block_id)->id); 
+	    $jefe = user_management_get_boss($mon_pract->id, $block_id, core_periods_get_current_period($block_id)->id); 
 
         if (isset($jefe->id)) {
             $nombre = $jefe->firstname ." ". $jefe->lastname;
