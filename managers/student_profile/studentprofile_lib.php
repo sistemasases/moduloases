@@ -1383,6 +1383,8 @@ function get_id_first_semester($id, $id_instance){
         $year_string = substr($result->username, 0, 2);
         $date_start = strtotime('01-01-20'.$year_string);
 
+        if (!$date_start) throw new Exception('Error formando fecha de inicio con año ' . $year_string);
+
         if(!$result) throw new Exception('error al consultar fecha de creación');
         
         $timecreated = $result->timecreated;
