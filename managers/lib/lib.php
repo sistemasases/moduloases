@@ -283,7 +283,7 @@ function get_asigned_by_practicante($id, $instance_id)
     $result = $DB->get_records_sql($query);
 
     foreach ($result as $id_mon) {
-        $students = array_merge($students, get_asigned_by_monitor($id_mon->id_usuario));
+        $students = array_merge($students, get_asigned_by_monitor($id_mon->id_usuario, $instance_id));
     }
     return $students;
 }
