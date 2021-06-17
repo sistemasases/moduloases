@@ -126,7 +126,7 @@ if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get
     $students_by_monitor = get_students_of_monitor($monitor_id->id, $_POST['instance']);
     $array = render_monitor_new_form($students_by_monitor, null, $_POST['instance']);
     $array_groupal_trackings_dphpforms = get_tracking_grupal_monitor_current_semester($monitor_id->id, $current_semester->id);
-    $array.= render_groupal_tracks_monitor_new_form($array_groupal_trackings_dphpforms, $monitor_id->id, $_POST['instance']);
+    $array.= render_groupal_tracks_monitor_new_form($array_groupal_trackings_dphpforms, $monitor_id->id, null, $_POST['instance']);
 
     echo json_encode($array);
 }

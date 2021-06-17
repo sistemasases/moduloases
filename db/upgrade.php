@@ -5,19 +5,8 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     global $CFG;
     $dbman = $DB->get_manager();
-    $result = true;
-    $sql = 
-        "UPDATE mdl_talentospilos_semestre
-        SET id_instancia=$1
-        WHERE fecha_inicio >=$2";
-    
-    $params = [450299,'2020-08-01']; // Fecha de inicio del semestre 2020A
-    
-    $DB->execute($sql, $params);
 
-    
-
-    if ($oldversion < 22021052715150) {
+    if ($oldversion < 22021061519170) {
 
       
     //     // ************************************************************************************************************
@@ -4362,21 +4351,33 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
          * VERSION: (2)2021052715150
          */
         // Changing the default of field id_instancia on table talentospilos_semestre to drop it.
-        $table = new xmldb_table('talentospilos_semestre');
-        $field = new xmldb_field('id_instancia', XMLDB_TYPE_INTEGER, '10', null, null, null, '1', 'fecha_fin');
-        
-        if ($dbman->field_exists($table, $field)) {
-            $dbman->drop_field($table, $field);
-        }
-        
-        $field = new xmldb_field('id_instancia', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'fecha_fin');
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
+        //$table = new xmldb_table('talentospilos_semestre');
+        //$field = new xmldb_field('id_instancia', XMLDB_TYPE_INTEGER, '10', null, null, null, '1', 'fecha_fin');
+        //
+        //if ($dbman->field_exists($table, $field)) {
+        //    $dbman->drop_field($table, $field);
+        //}
+        //
+        //$field = new xmldb_field('id_instancia', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'fecha_fin');
+        //if (!$dbman->field_exists($table, $field)) {
+        //    $dbman->add_field($table, $field);
+        //}
 
         /**************************************************************/
 
-        upgrade_block_savepoint(true, 22021052715150, 'ases');
+        /*****************************************
+         * ACTUALIZACIÓN INYECCION CAMBIO ROL SEDE REGIONALES
+         * VERSION: 22021061518500
+         * David S. Cortés
+         * Corregimos el rol asigando a sistemas la instancia de regionales
+         */
+        $table = new xmldb_table('talentospilos_user_rol');
+        $dataobject = new stdClass();
+        $dataobject->id = 2813; 
+        $dataobject->id_rol = 6;
+        $DB->update_record('talentospilos_user_rol', $dataobject );
+
+        upgrade_block_savepoint(true, 22021061519170, 'ases');
 
 
         return $result;

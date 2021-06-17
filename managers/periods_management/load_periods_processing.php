@@ -37,12 +37,12 @@
 		
 		$all_periods = core_periods_get_all_periods($_POST['instance']);
 		setlocale(LC_TIME, "es_CO");
+        
+		foreach ( $all_periods as $key => $period ){
+          		$all_periods[$key]->fecha_inicio = strftime("%d %B %Y", strtotime($all_periods[$key]->fecha_inicio));
+          		$all_periods[$key]->fecha_fin = strftime("%d %B %Y", strtotime($all_periods[$key]->fecha_fin));                             
+        }
 
-		foreach ( $all_periods as $period ){
-          		$all_periods[$period->id]->fecha_inicio = strftime("%d %B %Y", strtotime($all_periods[$period->id]->fecha_inicio));
-          		$all_periods[$period->id]->fecha_fin = strftime("%d %B %Y", strtotime($all_periods[$period->id]->fecha_fin));                             
-     		}
-        array_pop($all_periods); // La manipulación que hace el foreach añade un elemento extra, acá se elimina.
 		$all_periods = array_reverse($all_periods);
 
 		$data = array(

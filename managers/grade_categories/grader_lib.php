@@ -168,7 +168,7 @@ function update_grades_moodle($userid, $itemid, $finalgrade, $courseid)
 
     if ($grade_item->update_final_grade($userid, $finalgrade, 'gradebook', false, FORMAT_MOODLE)) {
         if ($finalgrade < 3) {
-            return send_email_alert($userid, $itemid, $finalgrade, $courseid);
+            //return send_email_alert($userid, $itemid, $finalgrade, $courseid);
         } else {
             $resp = new stdClass;
             $resp->nota = true;
