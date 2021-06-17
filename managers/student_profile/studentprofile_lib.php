@@ -1357,7 +1357,6 @@ function get_tracking_group_by_semester($id_ases = null, $tracking_type, $id_sem
         $object_seguimientos =  new stdClass();
         
         $object_seguimientos->semesters_segumientos = $array_semesters_seguimientos;
-        print_r($object_seguimientos); die(); 
         return $object_seguimientos;
     }else{
         return null;
