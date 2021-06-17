@@ -1292,7 +1292,7 @@ function get_tracking_group_by_semester($id_ases = null, $tracking_type, $id_sem
         $last_semestre = false;
         $first_semester = false;
         
-        $sql_query = "SELECT * FROM {talentospilos_semestre} WHERE id_instancia=$id_instance";
+        $sql_query = "SELECT * FROM {talentospilos_semestre} WHERE id_instancia=$id_instance OR id_instancia IS NULL";
         
         if($id_semester != null){
             $sql_query .= " AND id = ".$id_semester;
@@ -1319,12 +1319,11 @@ function get_tracking_group_by_semester($id_ases = null, $tracking_type, $id_sem
             $counter = 0;
     
             $sql_query ="select * from {talentospilos_semestre} where id = ".$lastsemestre;
-            $lastsemestreinfo = $DB->get_record_sql($sql_query);
+            $lastsemestreinfo = core_periods_get_period_by_id($lastsemestre);
             
             foreach ($semesters as $semester){
                 
                 if($lastsemestreinfo && (strtotime($semester->fecha_inicio) <= strtotime($lastsemestreinfo->fecha_inicio))){ //Gets info from semesters the student is registered
-                
                     $semester_object = new stdClass;
                     
                     $semester_object->id_semester = $semester->id;
@@ -1358,7 +1357,6 @@ function get_tracking_group_by_semester($id_ases = null, $tracking_type, $id_sem
         $object_seguimientos =  new stdClass();
         
         $object_seguimientos->semesters_segumientos = $array_semesters_seguimientos;
-        
         return $object_seguimientos;
     }else{
         return null;
@@ -1383,8 +1381,10 @@ function get_id_first_semester($id, $id_instance){
         $year_string = substr($result->username, 0, 2);
         $date_start = strtotime('01-01-20'.$year_string);
 
+        if (!$date_start) throw new Exception('Error formando fecha de inicio con año ' . $year_string);
+
         if(!$result) throw new Exception('error al consultar fecha de creación');
-        
+
         $timecreated = $result->timecreated;
         
         if($timecreated <= 0){
@@ -1399,10 +1399,10 @@ function get_id_first_semester($id, $id_instance){
             $timecreated = $courses->min;
         }
 
-        $sql_query = "select id, nombre ,fecha_inicio::DATE, fecha_fin::DATE from {talentospilos_semestre} WHERE id_instancia=$id_instance ORDER BY fecha_fin ASC;";
-        
-        $semesters = $DB->get_records_sql($sql_query);
-        
+        //$sql_query = "select id, nombre ,fecha_inicio::DATE, fecha_fin::DATE from {talentospilos_semestre} WHERE id_instancia=$id_instance ORDER BY fecha_fin ASC;";
+        //
+        //$semesters = $DB->get_records_sql($sql_query);
+        $semesters = core_periods_get_all_periods($id_instance); 
         $id_first_semester = 0; 
 
         foreach ($semesters as $semester){
@@ -1411,8 +1411,7 @@ function get_id_first_semester($id, $id_instance){
             date_add($fecha_inicio, date_interval_create_from_date_string('-60 days'));
             
             if((strtotime($fecha_inicio->format('Y-m-d')) <= $timecreated) && ($timecreated <= strtotime($semester->fecha_fin))){
-                
-                return $semester->id;
+                return ($semester->id)+1; // El arreglo $semesters empieza con indice 0
             }
         }
 
@@ -1432,8 +1431,14 @@ function get_semesters_stud($id_first_semester, $instance_id){
      
     global $DB;
      
-    $sql_query = "SELECT id, nombre, fecha_inicio::DATE, fecha_fin::DATE FROM {talentospilos_semestre} WHERE id_instancia=$instance_id AND id >= $id_first_semester ORDER BY {talentospilos_semestre}.fecha_inicio DESC";
-     
+    $sql_query = 
+        "SELECT id, nombre, fecha_inicio, fecha_fin 
+        FROM {talentospilos_semestre} 
+        WHERE id_instancia=$instance_id 
+        OR id_instancia IS NULL
+        AND id >= $id_first_semester 
+        ORDER BY fecha_inicio DESC";
+
     $result_query = $DB->get_records_sql($sql_query);
      
     $semesters_array = array();
