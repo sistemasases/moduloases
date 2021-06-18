@@ -31,6 +31,9 @@ require_once(dirname(__FILE__) . '/../lib/student_lib.php');
 require_once(dirname(__FILE__) . '/../role_management/role_management_lib.php');
 require_once(dirname(__FILE__) . '/user_management_lib.php');
 require_once(dirname(__FILE__) . '/../monitor_assignments/monitor_assignments_lib.php');
+require_once(dirname(__FILE__) . '/../../core/module_loader.php');
+
+module_loader('periods');
 
 /**
  * Function that verifies if an user has a role assigned
@@ -361,14 +364,23 @@ function get_professionals($id = null, $idinstancia)
 function get_users_role($idinstancia)
 {
     global $DB;
+    $current_period = core_periods_get_current_period($idinstancia);
+
     $array       = Array();
-    $sql_query   = "SELECT {user}.id, {user}.username, {user}.firstname, {user}.lastname, {talentospilos_rol}.nombre_rol FROM {talentospilos_user_rol} INNER JOIN {user} ON {talentospilos_user_rol}.id_usuario = {user}.id 
-                                INNER JOIN {talentospilos_rol} ON {talentospilos_user_rol}.id_rol = {talentospilos_rol}.id INNER JOIN {talentospilos_semestre} s ON  s.id = {talentospilos_user_rol}.id_semestre 
-                                WHERE {talentospilos_user_rol}.estado = 1 AND {talentospilos_user_rol}.id_instancia=" . $idinstancia . " AND s.id = (SELECT MAX(id) FROM {talentospilos_semestre});";
+    $sql_query   = 
+        "SELECT {user}.id, {user}.username, {user}.firstname, {user}.lastname, {talentospilos_rol}.nombre_rol 
+        FROM {talentospilos_user_rol} 
+        INNER JOIN {user} 
+            ON {talentospilos_user_rol}.id_usuario = {user}.id 
+        INNER JOIN {talentospilos_rol} 
+            ON {talentospilos_user_rol}.id_rol = {talentospilos_rol}.id INNER JOIN {talentospilos_semestre} s ON  s.id = {talentospilos_user_rol}.id_semestre 
+        WHERE {talentospilos_user_rol}.estado = 1 AND {talentospilos_user_rol}.id_instancia=" . $idinstancia . " AND s.id = $current_period->id";
+
     $users_array = $DB->get_records_sql($sql_query);
     
     foreach ($users_array as $user) {
-        $user->button = "<a id = \"delete_user\"  ><span  id=\"" . $user->id . "\" class=\"red glyphicon glyphicon-remove\"></span></a>";
+        //$user->button = "<a id = delete_user$user->id ><span  id=\"" . $user->id . "\" class=\"red glyphicon glyphicon-remove\"></span></a>";
+        $user->button = "<span class=delete_user id=$user->id > </span>";
         array_push($array, $user);
     }
     return $array;
