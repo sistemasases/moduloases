@@ -5,6 +5,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     global $DB;
     global $CFG;
     $dbman = $DB->get_manager();
+    $result = true;
 
     if ($oldversion < 22021061519170) {
 
@@ -4367,15 +4368,15 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
         /*****************************************
          * ACTUALIZACIÓN INYECCION CAMBIO ROL SEDE REGIONALES
-         * VERSION: 22021061518500
+         * VERSION: 220210615191700
          * David S. Cortés
          * Corregimos el rol asigando a sistemas la instancia de regionales
          */
-        $table = new xmldb_table('talentospilos_user_rol');
-        $dataobject = new stdClass();
-        $dataobject->id = 2813; 
-        $dataobject->id_rol = 6;
-        $DB->update_record('talentospilos_user_rol', $dataobject );
+        //$table = new xmldb_table('talentospilos_user_rol');
+        //$dataobject = new stdClass();
+        //$dataobject->id = 2813; 
+        //$dataobject->id_rol = 6;
+        //$DB->update_record('talentospilos_user_rol', $dataobject );
 
         upgrade_block_savepoint(true, 22021061519170, 'ases');
 

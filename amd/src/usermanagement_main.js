@@ -138,11 +138,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                 });
 
 
-                $('#div_users').on('click', '#delete_user', function() {
+                $('#div_users').on('click', 'span.delete_user', function() {
 
                     var table = $("#div_users #tableUsers").DataTable();
                     var td = $(this).parent();
-                    var childrenid = $(this).children('span').attr('id');
+                    var childrenid = td.children('span').attr('id');
                     var colIndex = table.cell(td).index().column;
 
                     var username = table.cell(table.row(td).index(), 0).data();
