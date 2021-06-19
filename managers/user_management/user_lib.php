@@ -49,8 +49,7 @@ function verify_user_assign($username,$instancia){
     $sql_query = "SELECT * FROM {user} WHERE username ='$username';";
     $object_user = $DB->get_record_sql($sql_query);
 
-    $query_semestre = "SELECT * FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
-    $object_semester = $DB->get_record_sql($query_semestre);
+    $object_semester = core_periods_get_current_period($idinstancia); 
 
 
     $sql_query_user = "SELECT * from mdl_talentospilos_user_rol where id_instancia='$instancia' and id_usuario='$object_user->id' and id_semestre='$object_semester->id' and estado=0";
@@ -77,8 +76,8 @@ function get_students($instanceid)
     
     //the program which is associated with the instance is consulted
 
-    $query_semestre = "SELECT nombre FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
-    $sem = $DB->get_record_sql($query_semestre)->nombre;
+
+    $sem = core_periods_get_current_period($instanceid)->nombre;
     
     $año = substr($sem, 0, 4);
     
@@ -518,14 +517,14 @@ function actualiza_rol_practicante($username, $role, $idinstancia, $state = 1, $
     $sql_query = "SELECT id FROM {talentospilos_rol} WHERE nombre_rol='$role';";
     $id_role   = $DB->get_record_sql($sql_query);
     
-    $sql_query   = "select max(id) as id from {talentospilos_semestre};";
-    $id_semester = $DB->get_record_sql($sql_query);
+    //$sql_query   = "select max(id) as id from {talentospilos_semestre};";
+    $current_semester = core_periods_get_current_period($idinstancia);
 
     $array = new stdClass;
     $array->id_rol       = $id_role->id;
     $array->id_usuario   = $id_user_moodle->id;
     $array->estado       = $state;
-    $array->id_semestre  = $id_semester->id;
+    $array->id_semestre  = $current_semester->id;
     if($id_boss =='ninguno'){
         $id_boss=null;
         $array->id_jefe = null;
@@ -602,11 +601,10 @@ function update_role_monitor_ps($username, $role, $array_students, $boss, $idins
     $sql_query = "SELECT id FROM {user} WHERE username ='$username';";
     $id_moodle = $DB->get_record_sql($sql_query);
 
-    //current semester's id is consulted
-    $sql_query = "select max(id) as id_semestre from {talentospilos_semestre};";
-    $semestre  = $DB->get_record_sql($sql_query);
+    //current semester is consulted
+    $semestre  = core_periods_get_current_period($idinstancia);
     
-    $sql_query     = "SELECT rol.id as id, rol.nombre_rol as nombre_rol, ur.id as id_user_rol, id_usuario FROM {talentospilos_user_rol} ur INNER JOIN {talentospilos_rol} rol ON rol.id = ur.id_rol  WHERE id_usuario = " . $id_moodle->id . " and id_semestre =" . $semestre->id_semestre . " AND ur.id_instancia=" . $idinstancia . ";";
+    $sql_query     = "SELECT rol.id as id, rol.nombre_rol as nombre_rol, ur.id as id_user_rol, id_usuario FROM {talentospilos_user_rol} ur INNER JOIN {talentospilos_rol} rol ON rol.id = ur.id_rol  WHERE id_usuario = " . $id_moodle->id . " and id_semestre =" . $semestre->id . " AND ur.id_instancia=" . $idinstancia . ";";
     $id_rol_actual = $DB->get_record_sql($sql_query);
     
     
@@ -618,7 +616,7 @@ function update_role_monitor_ps($username, $role, $array_students, $boss, $idins
     $object_role->id_rol       = $id_role->id;
     $object_role->id_usuario   = $id_moodle->id;
     $object_role->estado       = $state;
-    $object_role->id_semestre  = $semestre->id_semestre;
+    $object_role->id_semestre  = $semestre->id;
     if($boss =='ninguno'){
      $id_boss=null;
      $object_role->id_jefe = null;
@@ -681,13 +679,21 @@ function manage_role_profesional_ps($username, $role, $professional, $idinstanci
         $sql_query   = "SELECT * FROM {user} WHERE username ='$username';";
         $object_user = $DB->get_record_sql($sql_query);
         
+        $id_current_semester = core_periods_get_current_period($idinstancia);
+        
         // Current role
         pg_query("BEGIN") or die("Could not start transaction\n");
-        $sql_query       = "SELECT id_rol, nombre_rol FROM {talentospilos_user_rol} ur INNER JOIN {talentospilos_rol} r ON r.id = ur.id_rol WHERE id_usuario = " . $object_user->id . " AND ur.id_instancia=" . $idinstancia . " AND  id_semestre = (SELECT max(id) FROM {talentospilos_semestre});";
+        $sql_query = 
+            "SELECT id_rol, nombre_rol 
+            FROM {talentospilos_user_rol} ur 
+            INNER JOIN {talentospilos_rol} r ON r.id = ur.id_rol 
+            WHERE id_usuario = " . $object_user->id . 
+            " AND ur.id_instancia=" . $idinstancia . 
+            " AND  id_semestre = $id_current_semester->id";
+
         $id_current_role = $DB->get_record_sql($sql_query);
         pg_query("COMMIT") or die("Transaction commit failed\n");
         
-        $id_current_semester = core_periods_get_current_period((int) $idinstancia);
         
         if (empty($id_current_role)) {
             
@@ -767,22 +773,24 @@ function update_program_director($username, $role, $id_instance, $status = 1, $i
         $sql_query   = "SELECT * FROM {user} WHERE username ='$username';";
         $object_user = $DB->get_record_sql($sql_query);
 
+        $current_semester = core_periods_get_current_period($id_instance);
+
         $sql_query = "SELECT id_rol, nombre_rol 
                       FROM {talentospilos_user_rol} AS user_role 
                       INNER JOIN {talentospilos_rol} AS t_role ON t_role.id = user_role.id_rol 
                       WHERE id_usuario = $object_user->id AND user_role.id_instancia= $id_instance 
-                                                          AND id_semestre = (SELECT max(id) FROM {talentospilos_semestre})";
+                                                          AND id_semestre = $current_semester->id";
 
         $current_role = $DB->get_record_sql($sql_query);
 
-        $id_current_semester = core_periods_get_current_period((int)$id_instance);
+
 
         if (empty($current_role)) {
             
             // Start db transaction
             pg_query("BEGIN") or die("Could not start transaction\n");
             
-            $result = assign_role_user($username, $role, 1, $id_current_semester->id, $id_instance, null, $id_academic_program);
+            $result = assign_role_user($username, $role, 1, $current_semester->id, $id_instance, null, $id_academic_program);
 
             // End db transaction
             pg_query("COMMIT") or die("Transaction commit failed\n");
@@ -791,7 +799,7 @@ function update_program_director($username, $role, $id_instance, $status = 1, $i
             // Start db transaction
             pg_query("BEGIN") or die("Could not start transaction\n");
 
-            $result = update_role_user($username, $role, $id_instance, 1, $id_current_semester, null, $id_academic_program);
+            $result = update_role_user($username, $role, $id_instance, 1, $current_semester, null, $id_academic_program);
             
             // End db transaction
             pg_query("COMMIT") or die("Transaction commit failed\n");
