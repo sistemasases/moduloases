@@ -1411,7 +1411,7 @@ function get_id_first_semester($id, $id_instance){
             date_add($fecha_inicio, date_interval_create_from_date_string('-60 days'));
             
             if((strtotime($fecha_inicio->format('Y-m-d')) <= $timecreated) && ($timecreated <= strtotime($semester->fecha_fin))){
-                return ($semester->id)+1; // El arreglo $semesters empieza con indice 0
+                return ($semester->id);
             }
         }
 
