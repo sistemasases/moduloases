@@ -172,7 +172,7 @@ if(isset($_POST['role']) && isset($_POST['username'])){
             }
     }
 }else if(isset($_POST['deleteStudent']) && isset($_POST['student']) && isset($_POST['username'])){
-    echo dropStudentofMonitor($_POST['username'], $_POST['student']);
+    echo dropStudentofMonitor($_POST['username'], $_POST['student'], $_POST['idinstancia']);
 
 }else if(isset($_POST['deleteMonitorWithoutStudents'])&&isset($_POST['oldUser']) && isset($_POST['idinstancia'])){
         //disable old user
