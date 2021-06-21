@@ -58,7 +58,7 @@ function get_courses_pilos($instanceid){
     global $DB;
 
     
-    $inicio_periodo_actual = (core_periods_get_current_period())->fecha_inicio;    
+    $inicio_periodo_actual = (core_periods_get_current_period($instanceid))->fecha_inicio;    
     $semestre = substr($inicio_periodo_actual,0,4) . substr($inicio_periodo_actual, 5, 2);
     $query_courses = "
         SELECT DISTINCT curso.id,

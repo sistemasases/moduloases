@@ -39,10 +39,10 @@
         return dphpforms_generate_html_updater($id_completed_form, $rol, $record_id);
     };
 
-    if( isset($_GET['form_id']) && isset($_GET['record_id']) ){
+    if( isset($_GET['form_id']) && isset($_GET['record_id']) && isset($_GET['instance_id']) ){
 
         global $USER;
-        $rol = get_role_ases($USER->id);
+        $rol = lib_get_rol_name_ases($USER->id, $_GET['instance_id']);
         echo dphpforms_render_updater($_GET['form_id'], $rol, $_GET['record_id']);
     }
 

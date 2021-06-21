@@ -535,6 +535,7 @@ function loadPsicosocialInfo(idStudent) {
         type: "POST",
         data: {
             idStudent: idStudent,
+            instance: getUrlParams(document.location.search).instanceid, 
             fun: 'get_professional'
         },
         url: "../managers/get_info_psicosocial.php",
@@ -553,6 +554,7 @@ function loadPsicosocialInfo(idStudent) {
         type: "POST",
         data: {
             idStudent: idStudent,
+            instance: getUrlParams(document.location.search).instanceid,
             fun: 'get_practicante'
         },
         url: "../managers/get_info_psicosocial.php",
@@ -571,6 +573,7 @@ function loadPsicosocialInfo(idStudent) {
         type: "POST",
         data: {
             idStudent: idStudent,
+            instance: getUrlParams(document.location.search).instanceid, 
             fun: 'get_monitor'
         },
         url: "../managers/get_info_psicosocial.php",

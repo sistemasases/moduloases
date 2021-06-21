@@ -344,14 +344,15 @@ SQL;
  *
  * @see get_assigned_monitor($id_student)
  * @param $id_student --> student id on {talentospilos_usuario} table
+ * @param $instance_id --> instance id on {talentospilos_semestre} table
  * @return array Containing the information
  */
-function get_assigned_monitor($id_student)
+function get_assigned_monitor($id_student, $instance_id)
 {
 
     global $DB;
 
-    $object_current_semester = core_periods_get_current_period();
+    $object_current_semester = core_periods_get_current_period($instance_id);
 
     $sql_query = "SELECT id_monitor 
                   FROM {talentospilos_monitor_estud} 
@@ -386,14 +387,15 @@ function get_assigned_monitor($id_student)
  *
  * @see get_assigned_pract($id_student)
  * @param $id_student --> student id on {talentospilos_usuario} table
+ * @param $instance_id --> instance id
  * @return array Containing the information
  */
-function get_assigned_pract($id_student)
+function get_assigned_pract($id_student, $instance_id)
 {
 
     global $DB;
 
-    $object_current_semester = core_periods_get_current_period();
+    $object_current_semester = core_periods_get_current_period($instance_id);
 
     $sql_query = "SELECT id_monitor FROM {talentospilos_monitor_estud} WHERE id_estudiante =" . $id_student . " AND id_semestre = " . $object_current_semester->id . ";";
     $id_monitor = $DB->get_record_sql($sql_query)->id_monitor;
@@ -463,14 +465,15 @@ SQL;
  *
  * @see get_assigned_professional($id_student)
  * @param $id_student --> student id on {talentospilos_usuario} table
+ * @param $instance_id --> instance id on {talentospilos_semestre} table
  * @return array Containing the information
  */
-function get_assigned_professional($id_student)
+function get_assigned_professional($id_student, $instance_id)
 {
 
     global $DB;
 
-    $object_current_semester = core_periods_get_current_period();
+    $object_current_semester = core_periods_get_current_period($instance_id);
 
     $sql_query = "SELECT id_monitor FROM {talentospilos_monitor_estud} WHERE id_estudiante =" . $id_student . " AND id_semestre = " . $object_current_semester->id . ";";
     $id_monitor = $DB->get_record_sql($sql_query);

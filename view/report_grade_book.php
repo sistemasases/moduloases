@@ -76,7 +76,7 @@ $output = $PAGE->get_renderer('block_ases');
 
 
 //Carga de informacion a mostrar
-$curso = get_info_course_for_reports($id_course, $USER->id);
+$curso = get_info_course_for_reports($id_course, $USER->id, $blockid);
 $htmlTable = $curso->header_categories;
 $students = "<div id = 'students-pilos' hidden> ";
 foreach($curso->estudiantes as $student){

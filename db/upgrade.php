@@ -7,7 +7,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $dbman = $DB->get_manager();
     $result = true;
 
-    if ($oldversion < 2021042120260) {
+    if ($oldversion < 22021061519170) {
 
       
     //     // ************************************************************************************************************
@@ -4344,8 +4344,41 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         }
 
         // ////////////////////////////////////////////////////////////////////////////////////////////////
+        
+        /*************************************************************
+         * ACTUALIZACIÓN TABLA PERIODOS
+         * Se cambia el valor por defecto del campo id_instancia de 1 a NULL
+         * David S. Cortes
+         * VERSION: (2)2021052715150
+         */
+        // Changing the default of field id_instancia on table talentospilos_semestre to drop it.
+        //$table = new xmldb_table('talentospilos_semestre');
+        //$field = new xmldb_field('id_instancia', XMLDB_TYPE_INTEGER, '10', null, null, null, '1', 'fecha_fin');
+        //
+        //if ($dbman->field_exists($table, $field)) {
+        //    $dbman->drop_field($table, $field);
+        //}
+        //
+        //$field = new xmldb_field('id_instancia', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'fecha_fin');
+        //if (!$dbman->field_exists($table, $field)) {
+        //    $dbman->add_field($table, $field);
+        //}
 
-        upgrade_block_savepoint(true, 2021042120260, 'ases');
+        /**************************************************************/
+
+        /*****************************************
+         * ACTUALIZACIÓN INYECCION CAMBIO ROL SEDE REGIONALES
+         * VERSION: 220210615191700
+         * David S. Cortés
+         * Corregimos el rol asigando a sistemas la instancia de regionales
+         */
+        //$table = new xmldb_table('talentospilos_user_rol');
+        //$dataobject = new stdClass();
+        //$dataobject->id = 2813; 
+        //$dataobject->id_rol = 6;
+        //$DB->update_record('talentospilos_user_rol', $dataobject );
+
+        upgrade_block_savepoint(true, 22021061519170, 'ases');
 
 
         return $result;

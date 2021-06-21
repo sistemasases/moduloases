@@ -5,6 +5,8 @@
     if(isset($_POST['dat']) && isset($_POST['idinstancia']))
     {
         global $DB;
+        print_r($_POST['dat']);
+        die();
 
         $sql_query = "SELECT id, firstname, lastname, username, email FROM {user} WHERE username = '".$_POST['dat']."';";
         $info_user = $DB->get_record_sql($sql_query);

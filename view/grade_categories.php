@@ -92,7 +92,7 @@ $output = $PAGE->get_renderer('block_ases');
 
 
 // Loading information to show
-$rol = get_role_ases($USER->id);
+$rol = lib_get_rol_name_ases($USER->id, $blockid);
 $courses = get_courses_pilos($blockid);
 
 if($rol == 'sistemas' || $rol == 'academico'){

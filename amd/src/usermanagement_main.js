@@ -13,7 +13,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
 
     return {
         init: function() {
-
             $('#collapse_div').removeClass('hidden');
 
             $("#users").select2({
@@ -31,9 +30,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                 dropdownAutoWidth: true,
             });
 
-
-            $(document).ready(function() {
-
                 var roleLoaded = false;
 
                 $('#academic_program_li').css({
@@ -46,6 +42,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                 $("#form_mon_student").css({
                     display: 'none'
                 });
+
+                // Variable que contendrá los datos del usuario consultado
+                // Esto se hace para no depender de lo que devuelva la petición
+                // ajax a search_user.php
+                var userData;
 
                 $("#search_button").on('click', function() {
 
@@ -60,18 +61,26 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
 
                 $("#ok-button").on('click', function() {
                     var rolchanged = $('#role_select').val();
-                    userLoad(null, function(msg) {
-
-                        if (msg.rol == 'monitor_ps' && msg.rol != rolchanged) {
-                            var currentUser = new Array();
-                            currentUser.id = $('#user_id').val();
-                            currentUser.username = $("#users").val();
-                            valdateStudentMonitor(currentUser, false);
-                        } else {
-                                updateRolUser();
-                                load_users();
-                        }
-                    });
+                    if (userData.rol == 'monitor_ps' && userData.rol != rolchanged) {
+                        var currentUser = new Array();
+                        currentUser.id = $('#user_id').val();
+                        currentUser.username = $("#users").val();
+                        valdateStudentMonitor(currentUser, false);
+                     } else {
+                        updateRolUser();
+                        load_users();
+                     }
+                    //userLoad(null, function(msg) {
+                    //    if (msg.rol == 'monitor_ps' && msg.rol != rolchanged) {
+                    //        var currentUser = new Array();
+                    //        currentUser.id = $('#user_id').val();
+                    //        currentUser.username = $("#users").val();
+                    //        valdateStudentMonitor(currentUser, false);
+                    //    } else {
+                    //            updateRolUser();
+                    //            load_users();
+                    //    }
+                    //});
 
                 });
                 $("#cancel-button").on('click', function() {
@@ -129,11 +138,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                 });
 
 
-                $('#div_users').on('click', '#delete_user', function() {
+                $('#div_users').on('click', 'span.delete_user', function() {
 
                     var table = $("#div_users #tableUsers").DataTable();
                     var td = $(this).parent();
-                    var childrenid = $(this).children('span').attr('id');
+                    var childrenid = td.children('span').attr('id');
                     var colIndex = table.cell(td).index().column;
 
                     var username = table.cell(table.row(td).index(), 0).data();
@@ -178,7 +187,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
 
                 });
 
-            });
+
+            //$(document).ready(function() {
+
+
+            //});
 
             $("body").on("click", ".eliminar_add_fields", function(e) { //click en eliminar campo
                     var count = $("#contenedor_add_fields div").length + 1;
@@ -260,6 +273,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                     },
                     url: "../managers/user_management/search_user.php",
                     success: function(msg) {
+                        userData = JSON.parse(JSON.stringify(msg));
 
                         if (callback) {
                             callback(msg);
@@ -480,12 +494,16 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                             },
                         });
                     } else {
+                        // Revisa si el checkbox (Usar sistema de seguridad) está habilitado
+                        // Por ahora solo se checkea cuando el rol es sistemas.
                         $.ajax({
                             type: "POST",
                             data: {
+                                uid: userData.id,
                                 role: dataRole,
                                 username: dataUsername,
-                                idinstancia: getIdinstancia()
+                                idinstancia: getIdinstancia(),
+                                security: $('#checkbox-security').is(":checked")
                             },
                             url: "../managers/user_management/update_role_user.php",
                             success: function(msg) {
@@ -494,6 +512,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                             dataType: "text",
                             cache: "false",
                             error: function(msg) {
+                                console.log(msg);
                                 swal("Error", "Ha ocurrido un error", "error")
                             },
                         });
@@ -706,7 +725,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                     data: data,
                     url: "../managers/user_management/usermanagement_report.php",
                     success: function(msg) {
-                        //console.log(msg);
                         //deleteMonitor(username,msg);
                         if (msg.rows != 0) {
                             var data = msg.content;

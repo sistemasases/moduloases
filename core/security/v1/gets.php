@@ -349,7 +349,7 @@ function _core_user_assigned_in_previous_system( $user_id, $role, $singularizer 
 
     $obj_role = _core_security_get_previous_system_role( $role );
     
-    $period_id = ( isset($singularizer['id_semestre']) ? $singularizer['id_semestre'] : core_periods_get_current_period()->id );
+    $period_id = ( isset($singularizer['id_semestre']) ? $singularizer['id_semestre'] : core_periods_get_current_period( $singularizer['id_instancia'] )->id );
     $where = 
     	" id_instancia = " . $singularizer['id_instancia'] . 
     	" AND id_rol = " . $obj_role['id'] . 

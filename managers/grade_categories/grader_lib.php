@@ -61,7 +61,7 @@ function get_info_course($id_curso)
               INNER JOIN {user_enrolments} userenrol ON (enrole.id = userenrol.enrolid
                                                            AND usuario.id = userenrol.userid)
               WHERE cont.contextlevel = 50
-                AND rol.roleid = 3
+                AND (rol.roleid = 3 or rol.roleid = 30)
                 AND cursoP.id = $id_curso
               ORDER BY userenrol.timecreated ASC
               LIMIT 1) AS subc";
@@ -168,7 +168,7 @@ function update_grades_moodle($userid, $itemid, $finalgrade, $courseid)
 
     if ($grade_item->update_final_grade($userid, $finalgrade, 'gradebook', false, FORMAT_MOODLE)) {
         if ($finalgrade < 3) {
-            return send_email_alert($userid, $itemid, $finalgrade, $courseid);
+            //return send_email_alert($userid, $itemid, $finalgrade, $courseid);
         } else {
             $resp = new stdClass;
             $resp->nota = true;
