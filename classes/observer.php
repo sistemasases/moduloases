@@ -27,14 +27,14 @@ require_once $CFG->dirroot . '/blocks/ases/managers/lib/student_lib.php';
 
 
 class block_ases_observer
-{   
+{
     /**
      * Verify if a \core\event\user_graded event is launched
      *
      * @see user_graded(\core\event\user_graded $event)
      * @param $event --> event launched
      *
-     * @return void 
+     * @return void
      */
     public static function user_graded(\core\event\user_graded $event)
     {
@@ -43,13 +43,13 @@ class block_ases_observer
     }
 
     /**
-     * Collects the information of the throwing event and if the note is less than 3 and the student belongs to ASES 
+     * Collects the information of the throwing event and if the note is less than 3 and the student belongs to ASES
      * it keeps a record in the table 'talentospilos_alertas_academ' and sends the mail with the alert
      *
      * @see _process_event($event)
      * @param $event --> event launched
      *
-     * @return void 
+     * @return void
      */
     protected static function process_event($event)
     {
@@ -76,7 +76,7 @@ class block_ases_observer
         }
 
         if ($succes) {
-            self::send_email_alert($alerta->id_estudiante, $alerta->id_item, $alerta->nota, $event->courseid);
+            //self::send_email_alert($alerta->id_estudiante, $alerta->id_item, $alerta->nota, $event->courseid);
         }
     }
 
