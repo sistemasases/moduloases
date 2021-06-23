@@ -1205,7 +1205,7 @@ function send_email_alert($userid, $itemid, $grade, $courseid)
     $user_ases = get_adds_fields_mi($userid);
     $id_tal = $user_ases->idtalentos;
 
-    //$monitor = get_assigned_monitor($id_tal);
+    $monitor = get_assigned_monitor($id_tal);
     $nombre_monitor = $monitor->firstname . " " . $monitor->lastname;
     $saludo_mon = "Estimado monitor $nombre_monitor<br><br>";
 

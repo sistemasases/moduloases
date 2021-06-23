@@ -76,7 +76,7 @@ class block_ases_observer
         }
 
         if ($succes) {
-            //self::send_email_alert($alerta->id_estudiante, $alerta->id_item, $alerta->nota, $event->courseid);
+            self::send_email_alert($alerta->id_estudiante, $alerta->id_item, $alerta->nota, $event->courseid);
         }
     }
 
@@ -182,7 +182,7 @@ class block_ases_observer
         $user_ases = get_adds_fields_mi($userid);
         $id_tal = $user_ases->idtalentos;
 
-        //$monitor = get_assigned_monitor($id_tal);
+        $monitor = get_assigned_monitor($id_tal);
         $nombre_monitor = $monitor->firstname . " " . $monitor->lastname;
         $saludo_mon = "Estimado monitor $nombre_monitor<br><br>";
 
