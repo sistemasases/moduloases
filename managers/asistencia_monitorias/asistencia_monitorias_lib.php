@@ -303,7 +303,7 @@ function get_tabla_sesiones($monitoria_id, $desde, $hasta){
                     sesion.fecha AS fecha,
                     COUNT(asistentes.id) AS asistentes
             FROM {talentospilos_sesi_monitoria} sesion 
-                INNER JOIN {talentospilos_asis_monitoria} asistentes
+                LEFT JOIN {talentospilos_asis_monitoria} asistentes
                     ON asistentes.sesion = sesion.id       
             WHERE 
                 sesion.id_monitoria = $monitoria_id 
@@ -392,7 +392,6 @@ function get_tabla_sesiones($monitoria_id, $desde, $hasta){
             )
         )
     );
-
     return $data_to_table;
 }
 
