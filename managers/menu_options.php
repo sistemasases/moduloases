@@ -425,6 +425,12 @@ function create_menu_options($userid, $blockid, $courseid)
             }
 
             if($function == 'monitorias_academicas') {
+                // página de inscripción
+                $url_inscripcion = '<a id="menu_monitorias" class="menu_a" href= "' 
+                                    .new moodle_url("/blocks/ases/view/monitorias_academicas_inscripcion.php", array())
+                                    . '">Inscripción a monitorias académicas</a>';
+                $academic_options['Inscripción a monitorias académicas'] = $url_inscripcion;
+                // pagina de administracion
                 $url = new moodle_url("/blocks/ases/view/monitorias_academicas.php", array(
                     'courseid' => $courseid,
                     'instanceid' => $blockid
