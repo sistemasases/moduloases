@@ -89,14 +89,14 @@ function periods_management_get_current_semester_by_apprx_interval( $start_date,
  * @return object that represents the current semester
  */
  
- function get_current_semester(){
-     
-     global $DB;
-
-     $sql_query = "SELECT id AS max, nombre FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
-     $current_semester = $DB->get_record_sql($sql_query);
-     return $current_semester;
- }
+// function get_current_semester(){
+//     
+//     global $DB;
+//
+//     $sql_query = "SELECT id AS max, nombre FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
+//     $current_semester = $DB->get_record_sql($sql_query);
+//     return $current_semester;
+// }
 
 /**
  * Función que retorna la fecha de inicio del semestre actual
@@ -105,12 +105,12 @@ function periods_management_get_current_semester_by_apprx_interval( $start_date,
  * @deprecated Refactorizar llamados a esta función.
  * @todo delete this function, no other calls to it.
  */
-function get_current_semester_start(){
-    global $DB;
-    $sql_query = "SELECT fecha_inicio AS fecha FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
-    $current_semester = $DB->get_record_sql($sql_query);
-    return $current_semester;
-}
+//function get_current_semester_start(){
+//    global $DB;
+//    $sql_query = "SELECT fecha_inicio AS fecha FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
+//    $current_semester = $DB->get_record_sql($sql_query);
+//    return $current_semester;
+//}
 
 
  /**

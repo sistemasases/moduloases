@@ -445,7 +445,7 @@ define([
                 $('.div').removeClass('regla_incumplida');
                 $("#body_editor").html("");
                 loading_indicator.show();
-                $.get("../managers/dphpforms/dphpforms_forms_core.php?form_id=&record_id=" + record_id + "&instance_id="+instance_id, function (data) {
+                $.get("../managers/dphpforms/dphpforms_forms_core.php?form_id="+form_id+"&record_id=" + record_id + "&instance_id="+instance_id, function (data) {
                     loading_indicator.hide();
 
                     if (form_id == 'seguimiento_grupal') {

@@ -282,7 +282,7 @@ function get_array_students_with_trackings_count( $instance_id ){
     
     foreach($students as $student){
         
-        //$monitor_object = get_assigned_monitor($student->id);
+        $monitor_object = get_assigned_monitor($student->id, $instance_id);
         $tracking_team =  user_management_get_stud_mon_prac_prof( $student->id, $instance_id, $idMaxSemester );
         $monitor_object = $tracking_team->monitor;
         $trainee_object = $tracking_team->practicing;

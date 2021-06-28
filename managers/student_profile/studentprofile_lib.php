@@ -1399,11 +1399,9 @@ function get_id_first_semester($id, $id_instance){
             $timecreated = $courses->min;
         }
 
-        //$sql_query = "select id, nombre ,fecha_inicio::DATE, fecha_fin::DATE from {talentospilos_semestre} WHERE id_instancia=$id_instance ORDER BY fecha_fin ASC;";
-        //
         //$semesters = $DB->get_records_sql($sql_query);
         $semesters = core_periods_get_all_periods($id_instance); 
-        $id_first_semester = 0; 
+        $id_first_semester = 1; 
 
         foreach ($semesters as $semester){
             $fecha_inicio = new DateTime($semester->fecha_inicio);
@@ -1411,9 +1409,16 @@ function get_id_first_semester($id, $id_instance){
             date_add($fecha_inicio, date_interval_create_from_date_string('-60 days'));
             
             if((strtotime($fecha_inicio->format('Y-m-d')) <= $timecreated) && ($timecreated <= strtotime($semester->fecha_fin))){
-                return ($semester->id)+1; // El arreglo $semesters empieza con indice 0
+                return ($semester->id);
+            }
+
+            if ($semester->id == 1) {
+                if (!(strtotime($fecha_inicio->format('Y-m-d')) <= $timecreated) && $timecreated <= strtotime($semester->fecha_fin)) {
+                    return 1;
+                } 
             }
         }
+
 
     }catch(Exeption $e){
         return "Error en la consulta primer semestre";
@@ -1430,6 +1435,9 @@ function get_id_first_semester($id, $id_instance){
 function get_semesters_stud($id_first_semester, $instance_id){
      
     global $DB;
+    if (is_null($id_first_semester) || is_null($instance_id)) {
+        Throw new Exception('Uno o varios argumentos son nulos.');
+    }
      
     $sql_query = 
         "SELECT id, nombre, fecha_inicio, fecha_fin 

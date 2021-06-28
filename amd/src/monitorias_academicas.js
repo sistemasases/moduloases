@@ -53,8 +53,10 @@ define(['jquery',
             $("#tableResult").DataTable(data);
         },
         continuar_setup_inicial : function(es_monitor){
-            if(es_monitor) $(".dt-button.buttons-print.eliminar").toggle();
-            else $(".dt-button.buttons-print.eliminar").click(eliminar_monitoria);
+            if(es_monitor) {
+                $(".dt-button.buttons-print.eliminar").toggle();
+                $("#config-icon").toggle();
+        } else $(".dt-button.buttons-print.eliminar").click(eliminar_monitoria);
         }
         
     }
