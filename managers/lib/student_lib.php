@@ -654,6 +654,10 @@ function get_student_monitor($id_ases_user, $id_semester, $id_instance)
 
     global $DB;
 
+    if (is_null($id_ases_user)) {
+        Throw New Exception('Empty id supplied as student id in function get_student_monitor');
+    }
+
     $sql_query = "SELECT id_monitor FROM {talentospilos_monitor_estud} WHERE id_estudiante =$id_ases_user AND  id_instancia=$id_instance AND id_semestre =$id_semester";
     $id_monitor = $DB->get_record_sql($sql_query)->id_monitor;
 
