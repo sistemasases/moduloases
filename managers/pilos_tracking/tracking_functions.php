@@ -56,7 +56,7 @@ function render_monitor_new_form($students_by_monitor, $period = null, $instance
         $current_semester = core_periods_get_current_period($instance_id);
         $fullname = $student_code->firstname . " " .  $student_code->lastname;
 
-        $panel.= "<a data-toggle='collapse' data-container='student$ases_student_code' data-username='$ases_student_code' data-asesid='$ases_student_code' class='student collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#student$ases_student_code'>
+        $panel.= "<a data-toggle='collapse' data-container='student$ases_student_code' data-username='$student_code->username' data-asesid='$ases_student_code' class='student collapsed btn btn-danger btn-univalle btn-card collapsed' data-parent='#accordion_students' style='text-decoration:none' href='#student$ases_student_code'>
                     <div class='panel-heading heading_students_tracking'>
                         <div class='row'>
                             <div class='col-xs-12 col-sm-12 col-md-6 col-lg-6'>

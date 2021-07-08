@@ -439,13 +439,21 @@ define([
                 });
             }
 
+            // Esta función se encarga de cargar un formulario dinámico
+            // para ser actualizado (editable)
+            //
+            // form_id -> Tipo de formulario (seguimiento_grupal o seguimiento_pares)
+            // record_id -> id del formulario en la BD
+            // instance_id -> instancia a la que pertenece
+            // 
+            // NOTA: La url en la petición GET puede parecer que tenga un error
+            // cerca al parametro form_id, esto es intencional, NO modificar.
             function load_record_updater(form_id, record_id, instance_id) {
-
 
                 $('.div').removeClass('regla_incumplida');
                 $("#body_editor").html("");
                 loading_indicator.show();
-                $.get("../managers/dphpforms/dphpforms_forms_core.php?form_id="+form_id+"&record_id=" + record_id + "&instance_id="+instance_id, function (data) {
+                $.get("../managers/dphpforms/dphpforms_forms_core.php?form_id=&record_id=" + record_id + "&instance_id="+instance_id, function (data) {
                     loading_indicator.hide();
 
                     if (form_id == 'seguimiento_grupal') {
