@@ -233,13 +233,20 @@
           {{/view_academic_tab_sp}} {{#view_geographic_tab_sp}}
           <li id="geographic_li">
             <a href="#geographic_tab" data-toggle="tab">GEOGRÁFICO</a>
-          </li>{{/view_geographic_tab_sp}}{{#view_others_tab_sp}}
+          </li>{{/view_geographic_tab_sp}}
+        
+
+          {{#view_others_tab_sp}}
           <li id="tracing_others_li">
             <a href="#tracing_others_tab" data-toggle="tab">CARACTERIZACIÓN</a>
-          </li>{{/view_others_tab_sp}}{{#view_tracking_discapacity_tab_sp}}
-          <li id="discapacity_tracking_li">
-            <a href="#discapacity_tracking_tab" data-toggle="tab">AJUSTES RAZONABLES</a>
-          </li>{{/view_tracking_discapacity_tab_sp}}
+          </li>
+          {{/view_others_tab_sp}}
+
+       
+            <li id="discapacity_tracking_li">
+              <a href="#view_discapacity_tracking_tab" data-toggle="tab">AJUSTES RAZONABLES</a>
+            </li>
+       
         </ul>
         <div class="tab-content clearfix ">
           {{#view_general_tab_sp}} {{> block_ases/view_general_tab_sp}} {{/view_general_tab_sp}}

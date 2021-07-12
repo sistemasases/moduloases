@@ -13,3 +13,4 @@ test.txt
 npm-debug.log
 asescli.py
 /commands/*
+.rgignore
