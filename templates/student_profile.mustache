@@ -226,6 +226,8 @@
           <li id="socioed_li">
             <a href="#socioed_tab" data-toggle="tab">SOCIOEDUCATIVO</a>
           </li>
+        
+  
           {{/view_socioed_tab_sp}} {{#view_academic_tab_sp}}
           <li id="academic_li">
             <a href="#academic_tab" data-toggle="tab">ACADÉMICO</a>
@@ -235,17 +237,19 @@
             <a href="#geographic_tab" data-toggle="tab">GEOGRÁFICO</a>
           </li>{{/view_geographic_tab_sp}}
         
+          {{#show_discapacity}}
+            {{#view_others_tab_sp}}
+            <li id="tracing_others_li">
+              <a href="#tracing_others_tab" data-toggle="tab">CARACTERIZACIÓN</a>
+            </li>
+            {{/view_others_tab_sp}}
+          {{/show_discapacity}} 
 
-          {{#view_others_tab_sp}}
-          <li id="tracing_others_li">
-            <a href="#tracing_others_tab" data-toggle="tab">CARACTERIZACIÓN</a>
-          </li>
-          {{/view_others_tab_sp}}
-
-       
+          {{#show_discapacity}}
             <li id="discapacity_tracking_li">
               <a href="#view_discapacity_tracking_tab" data-toggle="tab">AJUSTES RAZONABLES</a>
             </li>
+          {{/show_discapacity}} 
        
         </ul>
         <div class="tab-content clearfix ">
@@ -834,6 +838,7 @@
   </div>
 </div>
 <!-- End modal retiro-->
+
 <script>
 
   var ctx_individual = document.getElementById("myChart_individual").getContext('2d');
