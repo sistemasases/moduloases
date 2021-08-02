@@ -55,7 +55,7 @@ class cohort_lib {
     public static function get_cohorts_for_user($mdl_username) {
         global $DB;
 
-        $sql = "SELECT mdl_c.id,  mdl_c.contextid, mdl_c.idnumber, name  
+        $sql = "SELECT mdl_c.id,  mdl_c.contextid, mdl_c.idnumber, ases_c.id_instancia, name  
         FROM {cohort} AS mdl_c 
             INNER JOIN 
             {talentospilos_inst_cohorte} AS ases_c 
