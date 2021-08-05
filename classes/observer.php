@@ -183,6 +183,7 @@ class block_ases_observer
         $id_tal = $user_ases->idtalentos;
 
         $user_cohorts = cohort_lib::get_cohorts_for_user($user_moodle->username); 
+        print_r($user_cohorts); die(); // DONOTCOMMIT))
         $user_instance = $user_cohorts[0]->id_instancia;
 
         $monitor = get_assigned_monitor($id_tal, $user_instance);
