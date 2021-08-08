@@ -22,8 +22,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die();
+require_once(__DIR__ . '/../managers/lib/cohort_lib.php');
 require_once dirname(__FILE__) . '/../../../config.php';
 require_once $CFG->dirroot . '/blocks/ases/managers/lib/student_lib.php';
+
 
 
 class block_ases_observer
@@ -183,8 +185,25 @@ class block_ases_observer
         $id_tal = $user_ases->idtalentos;
 
         $user_cohorts = cohort_lib::get_cohorts_for_user($user_moodle->username); 
-        print_r($user_cohorts); die(); // DONOTCOMMIT))
         $user_instance = $user_cohorts[0]->id_instancia;
+
+        if (count($user_cohorts) > 1) {
+            $instances = array_column($user_cohorts, 'id_instancia');
+            if (in_array(450299, $instances)) {
+                $user_instance = 450299; 
+            } else {
+                /**
+                 * Si no hay cohorte con instancia ASES-CALI se devuelve
+                 * la instancia de la primera cohorte donde se encuentre monitor.
+                 */
+                foreach($instances as $instance) {
+                   $mon = get_assigned_monitor($id_tal, $instance);
+                   if (!empty($mon)) {
+                       $user_instance = $instance;
+                   }
+                }
+            }
+        }
 
         $monitor = get_assigned_monitor($id_tal, $user_instance);
         $nombre_monitor = $monitor->firstname . " " . $monitor->lastname;
