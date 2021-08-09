@@ -148,6 +148,7 @@
             );
             array_push($respuestas, $tmp);
         }
+        //print_r($respuestas); die(); // DONOTCOMMIT))
         
         $global_respuestas = array();
         $checkboxes_scripts = null;
@@ -176,6 +177,9 @@
             foreach ($respuestas as $key => $value) {
                 $id_campo_DB = (string) $value['id_pregunta_formulario'];
                 $id_campo_DB_form = (string) $id_campo;
+                //if ($id_campo_DB == 13 || $id_campo_DB == 12) {
+                //    print_r($id_campo_DB_form); die(); // DONOTCOMMIT))
+                //}
                 
                 if($id_campo_DB == $id_campo_DB_form){
                     $valor = $value['respuesta'];
