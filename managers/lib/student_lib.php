@@ -537,7 +537,20 @@ function get_risk_by_student($id_student)
 
     return $array_risk;
 }
+/**
+ * Gets a moodle user object given his code
+ *
+ * @see get_user($code)
+ * @param $code --> student username on {user} table
+ * @return object representing the user
+ */
+function get_user($code){
+    global $DB;
+    $sql_query = "SELECT * FROM {user} WHERE username LIKE '" . $code . "%';";
+    $user = $DB->get_record_sql($sql_query);
 
+    return $user;
+}
 /**
  * Gets a moodle user object given his id
  *

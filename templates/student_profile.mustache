@@ -1,3 +1,4 @@
+
 {{#data}} {{> block_ases/side_menu}} {{{message}}}
 <div class="container">
   <div id="custom_metadata" data-view-name="student_profile"></div>
@@ -15,7 +16,7 @@
   <div id="cod_programa_activo" data-info="{{cod_programa_activo}}" style="display:none;"></div>
   <div id="risk_graphic_info" data-info="" style="display:none;"></div>
   <input type="text" class="hide" id="current_user_id" value="{{id_dphpforms_creado_por}}"/>
-
+  
   <form id="ficha_estudiante">
 
     <input type="text" class="hide" id="id_ases" name="id_ases" value="{{id_ases}}" />
@@ -44,7 +45,7 @@
         <div class="row" id="row-general-fields">
 
           <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 div_general_fields" id="div_doc_type">
-            <select name="tipo_doc" class="form-control" id="tipo_doc" name="tipo_doc" disabled>
+            <select name="tipo_doc" class="form-control" id="i_tipo_doc" name="tipo_doc" disabled>
               {{#document_type}}
               <option value="{{nombre}}" {{selected}}>{{nombre}}</option>
               {{/document_type}}
@@ -435,6 +436,11 @@
   </div>
 </div>
 <!-- end primer acercamiento -->
+
+
+<!--Modal registro-->
+
+
 
 <!-- Modal Seguimiento pares-->
 <div class="mymodal" id="modal_peer_tracking" name="modal_pares">

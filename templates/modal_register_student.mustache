@@ -1,0 +1,2180 @@
+
+{{#js}}
+require(
+  [
+    'block_ases/student_new_register',
+  ], function(student_new_register){
+      student_new_register.init();
+  });  
+{{/js}}
+<!-- Modal -->
+<head>
+<link rel="stylesheet" href="../style/student_profile.css">
+<link rel="stylesheet" href="../style/smart_wizard.min.css">
+<link rel="stylesheet" href="../style/smart_wizard_theme_dots.min.css">
+</head>
+<div  style="overflow: scroll;" class="modal" id="modalExample" tabindex="-1" aria-labelledby="modalExampleLabel" aria-hidden="true">
+    <div class="modal-pruebas modal-largo">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalExampleLabel">Registro para el acompañamiento</h5>
+          <button type="button" class="close closer"  aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div id="smartwizard">
+            <ul>
+                <li><a href="#step-1">Secciòn 1<br /><small>Datos personales</small></a></li>
+                <li><a href="#step-2">Secciòn 2<br /><small>Datos socio-econòmicos</small></a></li>
+                <li><a href="#step-3">Secciòn 3<br /><small>Datos acadèmicos</small></a></li>
+                <li><a href="#step-4">Secciòn 4<br /><small>Percepciòn de discapacidad</small></a></li>
+                <li><a href="#step-5">Secciòn 5<br /><small>Caracterìsticas de la condiciòn de salud</small></a></li>
+                <li><a href="#step-6">Secciòn 6<br /><small>Acceso a servicios de salud</small></a></li>
+            </ul>
+            <div>
+                <!--Info personal-->
+                <div class="ml-4" id="step-1">
+                
+                  <div class="row mt-4">
+                    <div class="col-md-6">
+                      <small class="font-weight-bold">Còdigo estudiante</small>
+                      <input  type="text" id="codigo_estudiantil" class="input_fields_general_tab" placeholder="Còdigo del estudiante" required> 
+                    </div>
+                  </div>
+
+                  <hr>
+                  <div class="row mt-4">
+                    <div class="col-md-6">
+                      <small class="font-weight-bold">Tipo de documento</small>
+                      <div class="">
+                        <select  id="s_tipo_documento" class="custom-select select-registro"></select>
+                        <input name="tipo_doc" id="tipo_doc" type="number" hidden>
+                      </div>     
+                    </div>
+
+                    <div class="col-md-6">             
+                        <small class="font-weight-bold">Nùmero de documento</small>
+                        <input name="num_doc" id="num_doc" type="text" class="input_fields_general_tab" placeholder="documento" required> 
+                    </div>
+
+                  </div>
+                  <hr>
+                    <div class="row mt-4">
+  
+                      <div class="col-md-6">
+                        <small class="font-weight-bold">Nombre</small>
+                        <input  id="nombre" type="text" class="mb-4 input_fields_general_tab" placeholder="Nombre" required> 
+                        
+                        <small class="font-weight-bold">Apellido</small>
+                        <input  id="apellido" type="text" class="input_fields_general_tab" placeholder="Apellido" required> 
+                      
+                      </div>
+  
+                      <div class="col-md-6">
+                        <small class="font-weight-bold">Fecha Nacimiento</small>
+                        <input name="fecha_nac" id="fecha_nac" type="date" class="mb-4 input_fields_general_tab" placeholder="Fecha nacimiento" required> 
+                       
+                        <small class="font-weight-bold">Edad</small>
+                        <input  id="edad" type="number" class="input_fields_general_tab" placeholder="edad" required> 
+                       
+                      </div>           
+                    </div>
+  
+                    <hr>
+                    <div class="row mt-4">
+                      <div class="col-md-6">
+                        <small class="font-weight-bold">Tipo documento ingreso</small>
+                        <div class=""> 
+                          <select  id="s_tipo_documento_ingreso" class="custom-select  select-registro"></select>
+                          <input name="tipo_doc_ini" id="tipo_doc_ini" type="number" hidden>
+                        </div>
+                      </div>
+                        
+                      <div  class="col-md-6">
+                        <small class="font-weight-bold">Documento ingreso</small>
+                        <div class="">   
+                          <input name="num_doc_ini" id="num_doc_ini" type="text" class="input_fields_general_tab" placeholder="Documento de ingreso" required> 
+                        </div> 
+                      </div>
+                    </div>
+  
+                    <hr>
+                    <div class="row mt-4">
+                      
+                      <div class="col-md-4">
+                        <h5 class="font-weight-bold">Lugar procedencia</h5>
+  
+                        <small class="font-weight-bold">Ciudad</small>
+                        <div class="mb-3">
+                          <select id="select_ciudad_nacimiento" class="custom-select  select-registro"></select>
+                          <input name="id_ciudad_nac" id="id_ciudad_nac" type="number" hidden>
+                        </div>
+  
+                        <small class="font-weight-bold">Paìs</small>
+                        <div class="mb-3">
+                          <select id="select_pais_nacimiento" class="custom-select  select-registro"></select>
+                          <input name="id_pais_nac" id="id_pais_nac" type="number" hidden>
+                        </div>
+  
+                        <small class="font-weight-bold">Direcciòn procedencia</small>
+                        <div class="mb-3">   
+                          <input name="dir_ini" id="dir_ini" type="text" class="input_fields_general_tab" placeholder="Direcciòn procedencia" required> 
+                        </div>
+    
+                        <small class="font-weight-bold">Barrio procedencia</small>
+                        <div>   
+                          <select id="select_barrio_procedencia" class="custom-select  select-registro"></select>
+                          <input name="barrio_ini" id="barrio_ini" type="text" hidden>
+                        </div>
+  
+                      </div>
+                     
+                    
+                
+                      <div class="col-md-4">
+                        <h5 class="font-weight-bold">Lugar residencia</h5>
+                        <small class="font-weight-bold">Direcciòn residencia</small>
+                        <div class="mb-3">
+                          <input name="direccion_res" type="text" id="direccion_res" class="input_fields_general_tab" placeholder="Direccion de residencia" required> 
+                        </div>
+  
+                        <small class="font-weight-bold">Barrio residencia</small>
+                        <div class="mb-3">
+                          <select class="custom-select select-registro" name="" id="select_barrio"></select>
+                          <input name="barrio_res" id="barrio_res" type="number" hidden>
+                        </div>
+  
+                        <small class="font-weight-bold">Ciudad residencia</small>
+                        <div class="mb-3">
+                          <select class="custom-select  select-registro" name="" id="select_ciudad"></select>
+                          <input name="id_ciudad_res" id="id_ciudad_res" type="number" hidden>
+                        </div>
+  
+                        <small class="font-weight-bold">Paìs residencia</small>
+                        <div class="mb-3">
+                          <select class="custom-select  select-registro" name="" id="select_pais_res"></select>
+                          <input name="id_pais_res" id="id_pais_res" type="number" hidden>
+                        </div>
+  
+                      </div>
+  
+                      <div class="mt-5 col-md-4">
+                        
+                        <small class="font-weight-bold ml-4">Celular</small>
+                        <div class="col mb-3">
+                          <input name="celular" id="celular" type="text" class="input_fields_general_tab" placeholder="Nùmero de celular" required> 
+                        </div>
+  
+                        <small class="font-weight-bold ml-4">Telèfono residencia</small>
+                        <div class="col mb-3">
+                          <input name="tel_res" type="tel" id="tel_res" class="input_fields_general_tab" placeholder="Telèfono de residencia" required> 
+                        </div>
+  
+                        <small class="font-weight-bold ml-4">Telèfono procedencia</small>
+                        <div class="col mb-3">   
+                          <input name="tel_ini" id="tel_ini" type="tel" class="input_fields_general_tab" placeholder="Telèfono de procedencia" required> 
+                        </div>
+  
+                      </div>
+  
+                      
+                    </div>
+                    <hr>
+                    <div class="row mt-4">
+                      <div class="col-md-4">
+                        <small class="font-weight-bold">Contacto de emergencia 1</small>
+                        <input type="text" name="" id="" class="input_fields_general_tab">
+                         
+                        <small class="font-weight-bold">Parentesco</small>
+                        <input type="text" class="input_fields_general_tab">
+                      </div>
+  
+                      <div class="col-md-4">
+                        <small class="font-weight-bold">Contacto de emergencia 1</small>
+                        <input type="text" name="" id="" class="input_fields_general_tab">
+  
+                        <small class="font-weight-bold">Parentesco</small>
+                        <input type="text" class="input_fields_general_tab">
+                      </div>
+  
+                      <div class="col-md-4">
+                        <small class="font-weight-bold">Email</small>
+                        <input name="emailpilos" id="emailpilos" type="email" class="input_fields_general_tab" placeholder="email" required> 
+                      </div>
+                    </div>
+                    <hr>
+  
+                    <div class="row mt-3">
+                      <div class="col-md-4">
+                      <small class="font-weight-bold">Condiciòn de excepciòn</small>
+                        <div class="">
+                            <select id="s_excepcion" class="custom-select  select-registro"></select>
+                            <input id="id_cond_excepcion" name="id_cond_excepcion" type="number" hidden>
+                        </div> 
+                      </div>
+  
+                    </div>
+  
+                    <hr>
+                    <div class="row mt-4">
+                      <div class="col-md-4">
+                      <small class="font-weight-bold">Actividades simultàneas</small>
+                        <div>
+                          <select name="s_act_simultanea" id="s_act_simultanea" class="custom-select"></select>
+                        </div>
+                      </div>
+                    </div>
+  
+                    <hr>
+                    <div class="row mt-4">
+                      <div id="set-sexo" class="col-md-4">
+                        <small class="font-weight-bold">Sexo</small>
+                        <div class="">
+                          <select id="select_sexo" class="custom-select  select-registro"></select>
+                          <input id="i_sexo" name="sexo" type="number" hidden>
+                        </div>
+  
+                        <div class="">
+                          <input name="sexo" type="radio" class="otro">
+                          <small>Otro</small>
+                        </div>
+  
+                        <div class="" hidden>
+                          <small>¿Cuàl?</small>
+                          <input type="text" class="input_fields_general_tab">
+                        </div>
+                      </div>
+  
+                      <div id="set-identidad-gen" class="col-md-4">
+                        <small class="font-weight-bold">Identidad de gènero</small>
+                        <div> 
+                          <select id="select_genero" class="custom-select  select-registro"></select>
+                          <input name="id_identidad_gen" id="id_identidad_gen" type="number" hidden>
+                        </div>
+  
+                        <div class="">
+                          <input name="identidad_genero" type="radio" class="otro">
+                          <small>Otro</small>
+                        </div>
+  
+                        <div class="" hidden>
+                          <small>¿Cuàl?</small>
+                          <input type="text" class="input_fields_general_tab">
+                        </div>
+                      </div>
+  
+                      <!--Se cargan las opciones de manera plana(temporalmente), se debe crear la lògica desde la db 
+                        y cargarlas con el script loadSelector
+                      -->
+                      <div id="set-orientacion" class="col-md-4">
+                        <small class="font-weight-bold">Orientaciòn sexual</small>
+                        <div class="">
+                          <select name="" id="" class="custom-select">
+                            <option value="1">Lesbiana</option>
+                            <option value="2">Gay</option>
+                            <option value="3">Bisexual</option>
+                            <option value="4">Pansexual</option>
+                            <option value="5">Heterosexual</option>
+                            <option value="6">Prefiero no decirlo</option>
+                          </select>
+                          <input type="text" hidden>
+                        </div>
+  
+                        <div class="">
+                          <input name="orientacion_sexual" type="radio" class="otro">
+                          <small>Otro</small>
+                        </div>
+  
+                        <div class="" hidden>
+                          <small>¿Cuàl?</small>
+                          <input type="text" class="input_fields_general_tab">
+                        </div>
+                      </div>
+                    </div>
+                    <hr>
+  
+                    <div class="row mt-4">
+                      <div class="col-md-4">
+                        <small class="font-weight-bold">Autoreconocimiento ètnico</small>
+                        <div> 
+                          <select id="select_etnia" class="custom-select  select-registro"></select>
+                          <input name="id_etnia" id="id_etnia" type="number" hidden>
+                        </div>
+                      </div>
+                    </div>
+  
+                    <hr>
+                    <div class="row mt-4">
+                      <div class="col-md-4">
+                        <small class="font-weight-bold">Estado civil</small>
+                        <div class="">
+                          <select id="select_estado_civil" class="custom-select  select-registro"></select>
+                          <input id="id_estado_civil" name="id_estado_civil" type="number" hidden>
+                      </div>
+                      </div>
+                    </div>
+                    
+                    <hr>
+                    <div class="row mt-4">
+                      <div class="col-md-6">
+                        <small class="font-weight-bold">Deportes que practica</small>
+                        <input id="deportes_tag" class="input_fields_general_tab" type="text" placeholder="Deportes que pratica">
+                        <div id="tags_deportes"></div>
+                      </div>
+  
+                      <div class="col-md-6">
+                        <small class="font-weight-bold">Actividades que realiza en su tiempo libre</small>
+                        <input id="tiempo_libre" class="input_fields_general_tab" type="text" placeholder="Actividades tiempo libre">
+                        <div id="tags_tiempo_libre"></div>
+                      </div>
+                    </div>
+  
+                    <hr>
+                    <div class="row mt-4">
+                      <div class="col-md-4">
+                      <small class="font-weight-bold">Otros acompañamientos</small>
+                        <div class="">
+                          <select class="custom-select  select-registro"  id="select_acompañamientos"></select>
+                          <input id="acompañamientos" type="number" hidden>
+                        </div>
+                      </div>
+                    </div>               
+                </div>
+  
+                <!--Datos economicos -->
+                <div id="step-2">
+                    <div class="row mt-4">
+                      <div class="col-md-4">
+                        <small class="justify-content-center font-weight-bold">
+                          Estrato socio-econòmico de acuerdo con el recibo
+                          de servicios pùblicos de su vivienda es:
+                        </small>
+                        <input type="number" class="input_fields_general_tab">
+                      </div>
+  
+                      <div id="set-permanencia" class="col-md-4">
+                        <small class="font-weight-bold">¿Còmo sostiene su permanecia en la universidad?</small>
+  
+                        <div class="col">
+                          <input name="option" type="radio">
+                          <small>Ingresos propios</small>
+                        </div>
+                        <div class="col">
+                          <input name="option" type="radio">
+                          <small>Ingresos Familiares</small>
+                        </div>
+                        <div class="col">
+                          <input name="option" type="radio" class="otro">
+                          <small>otro</small>
+                        </div>
+                        <div class="col" hidden>
+                          <small>¿Cuàl?</small>
+                          <input type="text" class="input_fields_general_tab">
+                        </div>
+                        
+                      </div> 
+                      <div id="set-beca" class="col-md-4">
+                        <small class="font-weight-bold">Recibe alguna beca, subsidio, pensiòn, indemnizaciòn, incapacidad temporal:</small>
+  
+                        <div class="col">
+                          <input name="beca" type="radio" class="otro">
+                          <small>Si</small>
+                        </div>
+                        <div class="col" hidden>
+                          <small>¿Cuàl/es?</small>
+                          <input type="text" class="input_fields_general_tab">
+                          <small>¿Cuànto?</small>
+                          <input type="text" class="input_fields_general_tab">
+                        </div>
+                        <div class="col">
+                          <input name="beca" type="radio">
+                          <small>No</small>
+                        </div>
+                      </div> 
+                    </div>
+                    
+                    <hr>
+                    <div class="row mt-4">
+                      <div class="col-md-4">
+                        <small class="font-weight-bold">¿Requiere materiales durante su carrera?</small>
+                        <div class="col mb-3">
+                          <input name="materiales" type="radio">
+                          <small>Si</small>
+                          <input name="materiales" type="radio">
+                          <small>No</small>
+                          <input name="materiales" type="radio">
+                          <small>No sabe</small>
+                        </div>
+                      
+  
+                      
+                      <small class="mt-3 font-weight-bold">¿Cuàl es el valor aproximado en materiales, durante un semestre?</small>
+                      <div class="col">
+                        <input name="valor_materiales" type="radio">
+                        <small>Desde $0 a $50.000</small>
+                      </div>
+                      <div class="col">
+                        <input name="valor_materiales" type="radio">
+                        <small>Desde $100.000 a $200.000</small>
+                      </div>
+                      <div class="col">
+                        <input name="valor_materiales" type="radio">
+                        <small>Desde $200.000 a $300.000</small>
+                      </div>
+                      <div class="col">
+                        <input name="valor_materiales" type="radio">
+                        <small>Desde $300.000 a $500.000</small>
+                      </div>
+                      <div class="col">
+                        <input name="valor_materiales" type="radio">
+                        <small>Desde $500.000 a $1.000.000</small>
+                      </div>
+                      <div class="col">
+                        <input name="valor_materiales" type="radio">
+                        <small>Superiores a $1.000.000</small>
+                      </div>
+                    </div>
+                      
+                    <div id="set-desplazamiento" class="col-md-4">
+                      <small class="font-weight-bold">Para desplezarse a la universidad usted:</small>
+  
+                      <div class="col">
+                        <input name="option" type="radio">
+                        <small>Paga transporte privado</small>
+                      </div>
+                      <div class="col">
+                        <input name="option" type="radio">
+                        <small>Paga transporte pùblico</small>
+                      </div>
+                      <div class="col">
+                        <input name="option" type="radio">
+                        <small>Tiene transporte propio</small>
+                      </div>
+                      <div class="col">
+                        <input name="option" type="radio" class="otro">
+                        <small>Otro</small>
+                      </div>
+                      <div class="col" hidden>
+                        <small>¿Cuàl?</small>
+                        <input type="text" class="input_fields_general_tab">
+                      </div>
+  
+                      <small class="text-justify font-weight-bold">¿Cuàl es el valor aproximado para el transporte, durante un semestre?</small>
+                      <div class="col">
+                        <small>Valor</small>
+                        <input type="text" class="input_fields_general_tab">
+                      </div>
+  
+                    </div>
+  
+                    <div class="col-md-4">
+                      <small class="text-justify font-weight-bold">
+                        ¿Cuàl es el valor aproximado en sostenimiento (alimentaciòn,
+                        arriendo, servicios pùblicos, incluido internet, entre otros),
+                        durante un semestre?
+                      </small>
+                      <div class="col">
+                        <input name="sostenimiento" type="radio">
+                        <small>Desde $0 a $50.000</small>
+                      </div>
+                      <div class="col">
+                        <input name="sostenimiento" type="radio">
+                        <small>Desde $100.000 a $200.000</small>
+                      </div>
+                      <div class="col">
+                        <input name="sostenimiento" type="radio">
+                        <small>Desde $200.000 a $300.000</small>
+                      </div>
+                      <div class="col">
+                        <input name="sostenimiento" type="radio">
+                        <small>Desde $300.000 a $500.000</small>
+                      </div>
+                      <div class="col">
+                        <input name="sostenimiento" type="radio">
+                        <small>Desde $500.000 a $1.000.000</small>
+                      </div>
+                      <div class="col">
+                        <input name="sostenimiento" type="radio">
+                        <small>Superiores a $1.000.000</small>
+                      </div>
+  
+                    </div>
+  
+                  </div>
+                  <hr>
+                  <div class="row mt-4">
+                    <div class="col-md-4">
+                      <small class="font-weight-bold">Actualmente vive:</small>
+                      <div class="col">
+                        <input name="vive" type="radio">
+                        <small>Solo(a)</small>
+                      </div>
+                      <div class="col">
+                        <input name="vive" type="radio">
+                        <small>Acompañado(a)</small>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-4">
+                      <small class="font-weight-bold">Describa el parentesco con quièn vive actualmente:</small>
+                      <button id="add_person_r" class="btn btn-link">Agregar persona</button>
+                      <table id="table_familia" class="table">
+                        <tbody></tbody>
+                      </table> 
+                    </div>
+  
+                    <div class="col-md-4">
+                        <small class="font-weight-bold">Cantidad hijos</small>
+                        <input name="hijos" id="hijos" type="number" class="input_fields_general_tab" placeholder="Cantidad hijos" required> 
+                    </div>
+                  </div>
+  
+                  <hr>
+                  <h5 class="font-weight-bold text-center">Informaciòn de la Madre(si aplica)</h5>
+  
+                  <div class="row mt-4">
+                    <div class="col-md-4">
+                      <small class="font-weight-bold">Màximo nivel educativo alcanzado</small>
+                      <div class="col">
+                        <input name="madre_educacion" type="radio">
+                        <small>Primaria incompleta</small>
+                      </div>
+                      <div class="col">
+                        <input name="madre_educacion" type="radio">
+                        <small>Primaria completa</small>
+                      </div>
+                      <div class="col">
+                        <input name="madre_educacion" type="radio">
+                        <small>Secundaria incompleta</small>
+                      </div>
+                      <div class="col">
+                        <input name="madre_educacion" type="radio">
+                        <small>Secundaria completa</small>
+                      </div>
+                      <div class="col">
+                        <input name="madre_educacion" type="radio">
+                        <small>Tècnico -tecnològico</small>
+                      </div>
+                      <div class="col">
+                        <input name="madre_educacion" type="radio">
+                        <small>Profesional</small>
+                      </div>
+                      <div class="col">
+                        <input name="madre_educacion" type="radio">
+                        <small>Especializaciòn</small>
+                      </div>
+                      <div class="col">
+                        <input name="madre_educacion" type="radio">
+                        <small>Maestrìa</small>
+                      </div>
+                      <div class="col">
+                        <input name="madre_educacion" type="radio">
+                        <small>Doctorado</small>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-4">
+                      <small class="font-weight-bold">Profesiòn u oficio</small>
+                      <input type="text" class="input_fields_general_tab">
+  
+                      <small class="font-weight-bold">Cargo actual(si aplica)</small>
+                      <input type="text" class="input_fields_general_tab">
+  
+                      <small class="font-weight-bold">Nota</small>
+                      <input type="text" class="input_fields_general_tab">
+                    </div>
+  
+                    <div class="col-md-4">
+                      <small class="font-weight-bold">Situaciòn laboral</small>
+                      <div class="col">
+                        <input name="madre_laboral" type="radio">
+                        <small>Trabajo remunerado (asalariado/a)</small>
+                      </div>
+                      <div class="col">
+                        <input  name="madre_laboral" type="radio">
+                        <small>Trabajo por su propia cuenta (independiente)</small>
+                      </div>
+                      <div class="col">
+                        <input  name="madre_laboral" type="radio">
+                        <small>Trabajo no remunerado</small>
+                      </div>
+                      <div class="col">
+                        <input  name="madre_laboral" type="radio">
+                        <small>Responsable de tareas domèsticas</small>
+                      </div>
+                      <div class="col">
+                        <input  name="madre_laboral" type="radio">
+                        <small>Jubilado/a</small>
+                      </div>
+                      <div class="col">
+                        <input  name="madre_laboral" type="radio">
+                        <small>Desempleado/a por motivo de salud</small>
+                      </div>
+                      <div class="col">
+                        <input  name="madre_laboral" type="radio">
+                        <small>Desempleado/a por otros motivos</small>
+                      </div>
+                      <div class="col">
+                        <input  name="madre_laboral" type="radio">
+                        <small>Pensionado por discapacidad</small>
+                      </div>
+                    </div>
+                  </div>
+  
+                  <hr>
+                  <h5 class="font-weight-bold text-center">Informaciòn del padre(si aplica)</h5>
+  
+                  <div class="row mt-4">
+                    <div class="col-md-4">
+                      <small class="font-weight-bold">Màximo nivel educativo alcanzado</small>
+                      <div class="col">
+                        <input name="padre_educacion" type="radio">
+                        <small>Primaria incompleta</small>
+                      </div>
+                      <div class="col">
+                        <input name="padre_educacion" type="radio">
+                        <small>Primaria completa</small>
+                      </div>
+                      <div class="col">
+                        <input name="padre_educacion" type="radio">
+                        <small>Secundaria incompleta</small>
+                      </div>
+                      <div class="col">
+                        <input name="padre_educacion" type="radio">
+                        <small>Secundaria completa</small>
+                      </div>
+                      <div class="col">
+                        <input name="padre_educacion" type="radio">
+                        <small>Tècnico -tecnològico</small>
+                      </div>
+                      <div class="col">
+                        <input name="padre_educacion" type="radio">
+                        <small>Profesional</small>
+                      </div>
+                      <div class="col">
+                        <input name="padre_educacion" type="radio">
+                        <small>Especializaciòn</small>
+                      </div>
+                      <div class="col">
+                        <input name="padre_educacion" type="radio">
+                        <small>Maestrìa</small>
+                      </div>
+                      <div class="col">
+                        <input name="padre_educacion" type="radio">
+                        <small>Doctorado</small>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-4">
+                      <small class="font-weight-bold">Profesiòn u oficio</small>
+                      <input type="text" class="input_fields_general_tab">
+  
+                      <small class="font-weight-bold">Cargo actual(si aplica)</small>
+                      <input type="text" class="input_fields_general_tab">
+  
+                      <small class="font-weight-bold">Nota</small>
+                      <input type="text" class="input_fields_general_tab">
+                    </div>
+  
+                    <div class="col-md-4">
+                      <small class="font-weight-bold">Situaciòn laboral</small>
+                      <div class="col">
+                        <input name="padre_laboral" type="radio">
+                        <small>Trabajo remunerado (asalariado/a)</small>
+                      </div>
+                      <div class="col">
+                        <input name="padre_laboral" type="radio">
+                        <small>Trabajo por su propia cuenta (independiente)</small>
+                      </div>
+                      <div class="col">
+                        <input name="padre_laboral" type="radio">
+                        <small>Trabajo no remunerado</small>
+                      </div>
+                      <div class="col">
+                        <input name="padre_laboral" type="radio">
+                        <small>Responsable de tareas domèsticas</small>
+                      </div>
+                      <div class="col">
+                        <input name="padre_laboral" type="radio">
+                        <small>Jubilado/a</small>
+                      </div>
+                      <div class="col">
+                        <input name="padre_laboral" type="radio">
+                        <small>Desempleado/a por motivo de salud</small>
+                      </div>
+                      <div class="col">
+                        <input name="padre_laboral" type="radio">
+                        <small>Desempleado/a por otros motivos</small>
+                      </div>
+                      <div class="col">
+                        <input name="padre_laboral" type="radio">
+                        <small>Pensionado por discapacidad</small>
+                      </div>
+                    </div>
+                  </div>
+  
+                  <hr>
+                  <h5 class="font-weight-bold text-center">Informaciòn de otros familiares que se hayan hecho a Cargo
+                    en caso diferente a los anteriores:
+                  </h5>
+  
+                  <div class="row mt-4">
+                    <div class="col-md-4">
+                      <small class="font-weight-bold">Màximo nivel educativo alcanzado</small>
+                      <div class="col">
+                        <input name="otros_educacion" type="radio">
+                        <small>Primaria incompleta</small>
+                      </div>
+                      <div class="col">
+                        <input name="otros_educacion" type="radio">
+                        <small>Primaria completa</small>
+                      </div>
+                      <div class="col">
+                        <input name="otros_educacion" type="radio">
+                        <small>Secundaria incompleta</small>
+                      </div>
+                      <div class="col">
+                        <input name="otros_educacion" type="radio">
+                        <small>Secundaria completa</small>
+                      </div>
+                      <div class="col">
+                        <input name="otros_educacion" type="radio">
+                        <small>Tècnico -tecnològico</small>
+                      </div>
+                      <div class="col">
+                        <input name="otros_educacion" type="radio">
+                        <small>Profesional</small>
+                      </div>
+                      <div class="col">
+                        <input name="otros_educacion" type="radio">
+                        <small>Especializaciòn</small>
+                      </div>
+                      <div class="col">
+                        <input name="otros_educacion" type="radio">
+                        <small>Maestrìa</small>
+                      </div>
+                      <div class="col">
+                        <input name="otros_educacion" type="radio">
+                        <small>Doctorado</small>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-4">
+                      <small class="font-weight-bold">Profesiòn u oficio</small>
+                      <input type="text" class="input_fields_general_tab">
+  
+                      <small class="font-weight-bold">Cargo actual(si aplica)</small>
+                      <input type="text" class="input_fields_general_tab">
+  
+                      <small class="font-weight-bold">Nota</small>
+                      <input type="text" class="input_fields_general_tab">
+                    </div>
+  
+                    <div class="col-md-4">
+                      <small class="font-weight-bold">Situaciòn laboral</small>
+                      <div class="col">
+                        <input name="otros_laboral" type="radio">
+                        <small>Trabajo remunerado (asalariado/a)</small>
+                      </div>
+                      <div class="col">
+                        <input name="otros_laboral" type="radio">
+                        <small>Trabajo por su propia cuenta (independiente)</small>
+                      </div>
+                      <div class="col">
+                        <input name="otros_laboral" type="radio">
+                        <small>Trabajo no remunerado</small>
+                      </div>
+                      <div class="col">
+                        <input name="otros_laboral" type="radio">
+                        <small>Responsable de tareas domèsticas</small>
+                      </div>
+                      <div class="col">
+                        <input name="otros_laboral" type="radio">
+                        <small>Jubilado/a</small>
+                      </div>
+                      <div class="col">
+                        <input name="otros_laboral" type="radio">
+                        <small>Desempleado/a por motivo de salud</small>
+                      </div>
+                      <div class="col">
+                        <input name="otros_laboral" type="radio">
+                        <small>Desempleado/a por otros motivos</small>
+                      </div>
+                      <div class="col">
+                        <input name="otros_laboral" type="radio">
+                        <small>Pensionado por discapacidad</small>
+                      </div>
+                    </div>
+                  </div>
+  
+                  <hr>
+                  <h5 class="font-weight-bold text-center">Proyecto de vida</h5>
+                  <div class="row mt-4">
+                    <div class="col-md-4">
+                      <small class="font-weight-bold">¿Què le motivo el ingreso a su carrera?</small>
+                      <textarea name="" id="" cols="30" rows="5"></textarea>
+                    </div>
+                    <div class="col-md-4">
+                      <small class="font-weight-bold">¿Cuàles son sus expectativas en esta carrera?</small>
+                      <textarea name="" id="" cols="30" rows="5"></textarea>
+                    </div>
+                    <div class="col-md-4">
+                      <small class="font-weight-bold">¿Cuàles son sus expectativas de graduarse?</small>
+                      <textarea name="" id="" cols="30" rows="5"></textarea>
+                    </div>
+                  </div>
+                </div>
+  
+                  
+  
+  
+                <!--Datos acadèmicos-->
+                <div id="step-3">
+                  <div class="row mt-4">
+                    <div class="col-md-6">
+                      <small class="font-weight-bold">Sede</small><br>
+                      <select name="" id="select_sede" class="custom-select"></select>
+                    </div>
+  
+                    <div class="col-md-6">
+                      <small class="font-weight-bold">Programa acadèmico</small>
+                      <select class="custom-select  select-registro" id="select_programa"></select><br>
+                      <input  id="programa" type="number" hidden>
+                    </div>
+                  </div>
+  
+                  <hr>
+                  <div class="row mt-4">
+                    <div class="col-md-6">              
+                    <small class="font-weight-bold">Semestre actual</small>
+                      <input type="text" class="input_fields_general_tab">
+  
+                      <small class="font-weight-bold">Jornada</small>
+  
+                      <div class="col">
+                        <input name="jornada" type="radio">
+                        <small>Diurna</small>
+                      </div>
+  
+                      <div class="col">
+                        <input name="jornada" type="radio">
+                        <small>Nocturna</small>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-6">
+                      <small class="font-weight-bold">
+                        Año de ingreso por primera vez a la Universidad como estudiante(dd/mm/AAAA)
+                      </small>
+                      <input name="anio_ingreso" id="anio_ingreso" type="date" class="input_fields_general_tab">
+  
+  
+                      <small class="font-weight-bold">Puntaje ICFES</small>
+                      <input name="puntaje_icfes" id="icfes" class="input_fields_general_tab" type="text" placeholder="Puntaje icfes" required>
+                    </div>
+                  </div>
+  
+                  <hr>
+                  <div class="row mt-4">
+                    <div class="col-md-12">
+                      <small class="text-center font-weight-bold">Si ha ingresado varias veces relaciones los años y los programas
+                        acadèmicos:
+                      </small>
+                     <table class="table">
+                       <thead>
+                         <tr>
+                           <th><small class="font-weight-bold">Año</small></th>
+                           <th><small class="font-weight-bold">Programa acadèmico</small></th>
+                           <th><small class="font-weight-bold">Motivo</small></th>
+                         </tr>
+                       </thead>
+  
+                       <tbody>
+                         <tr>
+                           <td><input type="text" class="input_fields_general_tab"></td>
+                           <td><select id="s_programa_1" class="custom-select  select-registro"></select></td>
+                           <td><select class="custom-select">
+                             <option value="">Bajos acadèmicos</option>
+                             <option value="">Condiciòn de salud</option>
+                             <option value="">Fallecimiento</option>
+                             <option value="">Condiciòn econòmica</option>
+                             <option value="">Condiciòn de programa acadèmico</option>
+                             <option value="">Cambio de instituciòn educativa</option>
+                             <option value="">Cambio de ciudad</option>
+                             <option value="">Retiro voluntario</option>
+                             <option value="">Prefiero no decirlo</option>
+                           </select></td>
+                         </tr>
+                         <tr>
+                          <td><input type="text" class="input_fields_general_tab"></td>
+                          <td><select id="s_programa_2" class="custom-select  select-registro" ></select></td>
+                          <td><select class="custom-select">
+                            <option value="">Bajos acadèmicos</option>
+                            <option value="">Condiciòn de salud</option>
+                            <option value="">Fallecimiento</option>
+                            <option value="">Condiciòn econòmica</option>
+                            <option value="">Condiciòn de programa acadèmico</option>
+                            <option value="">Cambio de instituciòn educativa</option>
+                            <option value="">Cambio de ciudad</option>
+                            <option value="">Retiro voluntario</option>
+                            <option value="">Prefiero no decirlo</option>
+                          </select></td>
+                        </tr>
+                        <tr>
+                          <td><input type="text" class="input_fields_general_tab"></td>
+                          <td><select  id="s_programa_3" class="custom-select  select-registro"></select></td>
+                          <td><select class="custom-select">
+                            <option value="">Bajos acadèmicos</option>
+                            <option value="">Condiciòn de salud</option>
+                            <option value="">Fallecimiento</option>
+                            <option value="">Condiciòn econòmica</option>
+                            <option value="">Condiciòn de programa acadèmico</option>
+                            <option value="">Cambio de instituciòn educativa</option>
+                            <option value="">Cambio de ciudad</option>
+                            <option value="">Retiro voluntario</option>
+                            <option value="">Prefiero no decirlo</option>
+                          </select></td>
+                        </tr>
+                        <tr>
+                          <td><input type="text" class="input_fields_general_tab"></td>
+                          <td><select id="s_programa_4" class="custom-select  select-registro"></select></td>
+                          <td><select class="custom-select">
+                            <option value="">Bajos acadèmicos</option>
+                            <option value="">Condiciòn de salud</option>
+                            <option value="">Fallecimiento</option>
+                            <option value="">Condiciòn econòmica</option>
+                            <option value="">Condiciòn de programa acadèmico</option>
+                            <option value="">Cambio de instituciòn educativa</option>
+                            <option value="">Cambio de ciudad</option>
+                            <option value="">Retiro voluntario</option>
+                            <option value="">Prefiero no decirlo</option>
+                          </select></td>
+                        </tr>
+                       </tbody>
+                     </table>
+                    </div>
+                    
+                  </div>
+  
+                  <hr>
+                  <h5 class="text-center font-weight-bold">Estudios realizados</h5>
+                  <small class="font-weight-bold">Educaciòn media de egreso:</small>
+                  <div class="font-weight-bold row mt-5">
+                    
+                   <div class="col-md-6 mt-4">
+                     <small class="font-weight-bold">
+                       Nombre de la instituciòn
+                     </small>
+                     <input type="text" class="mb-5 input_fields_general_tab">
+  
+                     <small class="font-weight-bold">Tìtulo obtenido</small>
+                     <input type="text" class="mb-5 input_fields_general_tab">
+  
+                     <small class="font-weight-bold">Tipo de instituciòn</small>
+                     
+                       <input name="tipo_institucion" type="radio">
+                       <small>Pùblica</small>
+                       <input name="tipo_institucion" type="radio">
+                       <small>Privada</small>
+                       <input name="tipo_institucion" type="radio">
+                       <small>Mixto</small>
+                     
+                   </div>
+                   <div class="col-md-6">
+                     <small class="font-weight-bold">Relacione las dificultades y los apoyos que se presentaron en la instituciòn educativa
+                       y/o familia para su permanencia y egreso
+                     </small>
+                     <table class="table">
+                      <thead>
+                        <tr>
+                          <th><small class="font-weight-bold">Dificultad</small></th>
+                          <th><small class="font-weight-bold">Apoyo</small></th>
+                        </tr>
+                      </thead>
+  
+                      <tbody>
+                        <tr>
+                          <td><input type="text" class="input_fields_general_tab"></td>
+                          <td><input type="text" class="input_fields_general_tab"></td>
+                        </tr>
+  
+                        <tr>
+                          <td><input type="text" class="input_fields_general_tab"></td>
+                          <td><input type="text" class="input_fields_general_tab"></td>
+                        </tr>
+  
+                        <tr>
+                          <td><input type="text" class="input_fields_general_tab"></td>
+                          <td><input type="text" class="input_fields_general_tab"></td>
+                        </tr>
+                      </tbody>
+                     </table>
+                   </div>
+                  </div>
+  
+                  <small class="font-weight-bold">Educaciòn superior de egreso (Niveles Tècnico Profesional, Tecnològico, 
+                    Profesional, especializaciòn, maestrìa, doctorado, posdoctorado):</small>
+                  <div class="font-weight-bold row mt-4">
+                    <div class="col-md-6 mt-4">
+                      <small class="font-weight-bold">
+                        Nombre de la instituciòn
+                      </small>
+                      <input type="text" class="mb-5 input_fields_general_tab">
+   
+                      <small class="font-weight-bold">Tìtulo obtenido</small>
+                      <input type="text" class="mb-5 input_fields_general_tab">
+   
+                      <small class="font-weight-bold">Tipo de instituciòn</small>
+                      
+                        <input name="tipo_institucion" type="radio">
+                        <small>Pùblica</small>
+                        <input name="tipo_institucion" type="radio">
+                        <small>Privada</small>
+                        <input name="tipo_institucion" type="radio">
+                        <small>Mixto</small>
+                      
+                    </div>
+                    <div class="col-md-6">
+                      <small class="font-weight-bold">Relacione las dificultades y los apoyos que se presentaron en la instituciòn educativa
+                        y/o familia para su permanencia y egreso
+                      </small>
+                      <table class="table">
+                       <thead>
+                         <tr>
+                           <th><small class="font-weight-bold">Dificultad</small</th>
+                           <th><small class="font-weight-bold">Apoyo</small></th>
+                         </tr>
+                       </thead>
+   
+                       <tbody>
+                         <tr>
+                           <td><input type="text" class="input_fields_general_tab"></td>
+                           <td><input type="text" class="input_fields_general_tab"></td>
+                         </tr>
+   
+                         <tr>
+                           <td><input type="text" class="input_fields_general_tab"></td>
+                           <td><input type="text" class="input_fields_general_tab"></td>
+                         </tr>
+   
+                         <tr>
+                           <td><input type="text" class="input_fields_general_tab"></td>
+                           <td><input type="text" class="input_fields_general_tab"></td>
+                         </tr>
+                       </tbody>
+                      </table>
+                    </div>
+                   </div>
+  
+                   <hr>
+                   <h5 class="text-center font-weight-bold">Estudios paralelos</h5>
+                   <small class="font-weight-bold">Instituciones de estudio actual(adicional a su carrera)</small>
+                   <div class="row mt-4">
+                    <div class="col-md-6 mt-4">
+                      <small class="font-weight-bold">
+                        Nombre de la instituciòn
+                      </small>
+                      <input type="text" class="mb-5 input_fields_general_tab">
+   
+                      <small class="font-weight-bold">Tìtulo obtenido</small>
+                      <input type="text" class="mb-5 input_fields_general_tab">
+   
+                      <small class="font-weight-bold">Tipo de instituciòn</small>
+                      
+                        <input name="tipo_institucion" type="radio">
+                        <small>Pùblica</small>
+                        <input name="tipo_institucion" type="radio">
+                        <small>Privada</small>
+                        <input name="tipo_institucion" type="radio">
+                        <small>Mixto</small>
+                      
+                    </div>
+                    <div class="col-md-6">
+                      <small class="font-weight-bold">Relacione las dificultades y los apoyos que se presentaron en la instituciòn educativa
+                         y/o familia para su permanencia y egreso
+                      </small>
+                      <table class="table">
+                       <thead>
+                         <tr>
+                           <th><small class="font-weight-bold">Dificultad</small></th>
+                           <th><small class="font-weight-bold">Apoyo</small></th>
+                         </tr>
+                       </thead>
+   
+                       <tbody>
+                         <tr>
+                           <td><input type="text" class="input_fields_general_tab"></td>
+                           <td><input type="text" class="input_fields_general_tab"></td>
+                         </tr>
+   
+                         <tr>
+                           <td><input type="text" class="input_fields_general_tab"></td>
+                           <td><input type="text" class="input_fields_general_tab"></td>
+                         </tr>
+   
+                         <tr>
+                           <td><input type="text" class="input_fields_general_tab"></td>
+                           <td><input type="text" class="input_fields_general_tab"></td>
+                         </tr>
+                       </tbody>
+                      </table>
+                    </div>
+                   </div>
+  
+                   <hr>
+                   <div class="row mt-4">
+                    <div class="col-md-6">
+                      <small class="font-weight-bold">Periodo acadèmico de ingreso al proyecto de Discapacidad e incluciòn:</small>
+                      <input type="date" class="input_fields_general_tab">
+                    </div>
+  
+                    <div class="col-md-4">
+                      <small class="font-weight-bold">Observaciones adicionales:</small>
+                      <textarea name="" id="" cols="60" rows="5"></textarea>
+                    </div>
+                   </div>
+                </div>
+                
+                  
+  
+                <!--Discapacidad-->
+                <div id="step-4">
+                  
+                  <div class="row mt-4">
+                    <div class="col-md-6">
+                      <small class="font-weight-bold">Considera que presenta actualmente(mùltiple respuesta)</small>
+  
+                      <div class="col">
+                        <input type="checkbox">
+                        <small>Algùn tipo de Discapacidad</small>
+                      </div>
+                      <div class="col">
+                        <input type="checkbox">
+                        <small>Alguna limitaciòn para desempeñar actividades</small>
+                      </div>
+                      <div class="col">
+                        <input type="checkbox">
+                        <small>Alguna restricciòn para participar</small>
+                      </div>
+                      <div class="col">
+                        <input type="checkbox">
+                        <small>Ninguna de las anteriores</small>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-4">
+                      <small class="font-weight-bold">¿Por què?</small>
+                      <textarea name="" id="" cols="60" rows="5"></textarea>
+                    </div>
+                  </div>
+  
+                  <div class="row mt-4">
+                    <div class="col-md-6">
+                      <small class="font-weight-bold">Discapacidad</small>
+                      <div>
+                        <select class="custom-select  select-registro"  id="discapacidad"></select>
+                        <input name="id_discapacidad" id="id_discapacidad" type="number" hidden>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-6">
+                      <small class="font-weight-bold">Ayuda discapacidad</small> 
+                      <input name="ayuda_disc" id="ayuda_disc" class="input_fields_general_tab" type="text" placeholder="Ayuda discapacidad" required>
+                    </div>
+                  </div>
+                </div>
+  
+                <div id="step-5">
+                  <div class="row mt-4">
+                    <div class="col-md-6">
+                      <small class="font-weight-bold">¿Cuenta con uno o màs diagnòsticos de su condiciòn de salud?</small>
+  
+                      <div class="mb-3 col">
+                        <input name="diagnosticos" type="radio">
+                        <small>No</small>
+  
+                        <input name="diagnosticos" type="radio">
+                        <small>Si</small>
+                      </div>
+  
+                      <small class="font-weight-bold">Si la respuesta fue negativa, refiera ¿Por què no cuenta con este diagnòstico?</small>
+                      <input type="text" class="input_fields_general_tab">
+  
+                      <small class="font-weight-bold">Entrega documentos soporte</small>
+                      <div class="col">
+                        <input name="documentos_soporte"  type="radio">
+                        <small>Si</small>
+  
+                        <input name="documentos_soporte" type="radio">
+                        <small>No</small>
+                      </div>
+  
+                    </div>
+  
+                    <div class="col-md-6">
+                      <small class="font-weight-bold">¿Cuàl(es) es(son) el(los) diagnòsticos?</small>
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th><small class="font-weight-bold">Fecha</small></th>
+                            <th><small class="font-weight-bold">Especialidad mèdica</small></th>
+                          </tr>
+                        </thead>
+  
+                        <tbody>
+                          <tr>
+                            <td><input type="date" class="input_fields_general_tab"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+  
+                          <tr>
+                            <td><input type="date" class="input_fields_general_tab"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+  
+                          <tr>
+                            <td><input type="date" class="input_fields_general_tab"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+  
+                  </div>
+  
+                  <hr>
+                  <div class="row mt-4">
+                    <div id="set-salud" class="col-md-6">
+  
+                      <small class="font-weight-bold">
+                        ¿Cuàl de las siguientes circuntancias corresponden a su condiciòn de salud?
+                      </small>
+  
+                      <div class="col">
+                        <input name="option" type="radio">
+                        <small>Enfermedad general</small>
+                      </div>
+                      <div class="col">
+                        <input name="option" type="radio">
+                        <small>Enfermedad general de orden genètico</small>
+                      </div>
+                      <div class="col">
+                        <input name="option" type="radio">
+                        <small>Enfermedad general de orden hereditario</small>
+                      </div>
+                      <div class="col">
+                        <input name="option" type="radio">
+                        <small>Accidente</small>
+                      </div>
+                      <div class="col">
+                        <input name="option" type="radio">
+                        <small>Consumo de sustancias psicoactivas</small>
+                      </div>
+                      <div class="col">
+                        <input name="option" type="radio">
+                        <small>Vìctimas de violencias</small>
+                      </div>
+                      <div class="col">
+                        <input name="option" type="radio">
+                        <small>Victima de conflicto armado</small>
+                      </div>
+                      <div class="col">
+                        <input name="option" type="radio" class="otro">
+                        <small>Otra</small>
+                      </div>
+  
+                      <div class="col" hidden>
+                        <small>¿Cuàl?</small>
+                        <input type="text" class="input_fields_general_tab">
+                      </div>
+  
+                    </div>
+  
+                    <div class="col-md-6">
+                      <small class="font-weight-bold">Relato de estudiante sobre su condiciòn de salud(hechos antes de aquirirla,
+                        durante y posterior)</small>
+                      <textarea name="" id="" cols="60" rows="5"></textarea>
+                    </div>
+                  </div>
+                  <hr>
+  
+                  <div class="row mt-4">
+                    <div class="col-md-4">
+                      <small class="font-weight-bold">¿Toma algùn medicamento?</small>
+                      <div class="col">
+                        <input name="medicamento" type="radio">
+                        <small>Si</small>
+  
+                        <input name="medicamento" type="radio">
+                        <small>No</small>
+                      </div>
+                    </div>
+                    
+                    <div class="col-md-8">
+                      <small class="font-weight-bold">Si la respuesta anterior fue afirmativa responda:</small>
+                      <small class="font-weight-bold">Rutina medicamentos(detallar informaciòn por cada medicamento)</small>
+                      
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th><small class="font-weight-bold">Nombre del/los medicamentos</small></th>
+                            <th><small class="font-weight-bold">Horarios de ingesta</small></th>
+                            <th><small class="font-weight-bold">Efectos secundarios experimentados</small></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+  
+                  <hr>
+                  <div class="row mt-4">
+                    <div class="col-md-4">
+                      <small class="font-weight-bold">Relacione si ha tenido cambios de tratamiento</small>
+                      <div class="col">
+                        <input name="cambio_tratamiento" type="radio">
+                        <small>Si</small>
+  
+                        <input name="cambio_tratamiento" type="radio">
+                        <small>No</small>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-4">
+                      <small class="font-weight-bold">Si la respuesta anterior fue afirmativa responda</small><br>
+                      
+                      <small>¿Cuàntas veces lo ha hecho?</small>
+                      <input type="text" class="input_fields_general_tab">
+  
+                      <small>Describa las razones del cambio de tratamiento</small>
+                      <input type="text" class="input_fields_general_tab">
+                    </div>
+                    <div class="col-md-4">
+                      <small class="font-weight-bold">Observaciones</small>
+                      <textarea name="" id="" cols="30" rows="5"></textarea>
+                    </div>
+                  </div>
+  
+                  <hr>
+                  <div class="row mt-4">
+                    <div class="col-md-4">
+                      <small class="font-weight-bold">
+                        ¿Està en el registro de localizaciòn de personas con discapacidad de algùn municipio?
+                      </small>
+                      <div class="col">
+                        <input name="localizacipn_discapacidad" type="radio">
+                        <small>Si</small>
+  
+                        <input name="localizacipn_discapacidad" type="radio">
+                        <small>No</small>
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <small class="font-weight-bold">
+                        Si la respuesta anterior fue afirmitiva responda:
+                      </small>
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <td><small class="font-weight-bold">Municipio</small></td>
+                            <td><small class="font-weight-bold">Departamento</small></td>
+                            <td><small class="font-weight-bold">Fecha</small></td>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="col-md-4">
+                      <small class="font-weight-bold">Entrega documentos:</small>
+                      <div class="col">
+                        <input name="entrega_documentos" type="radio">
+                        <small>Si</small>
+  
+                        <input name="entrega_documentos" type="radio">
+                        <small>No</small>
+                      </div>
+  
+                      <input type="file" class="input_fields_general_tab">
+                    </div>
+                  </div>
+  
+                  <hr>
+                  <div class="row mt-4">
+                    <div class="col-md-4">
+                      <small class="font-weight-bold">Tiene certificado de discapacidad:</small>
+                        <div class="col">
+                          <input name="certificado_discapacidad" type="radio">
+                          <small>Si</small>
+  
+                          <input name="certificado_discapacidad" type="radio">
+                          <small>No</small>
+                        </div>         
+                    </div>
+  
+                    <div id="set-certificado-discapacidad" class="col-md-4">
+                      <small class="font-weight-bold">Si la respuesta anterior fue afirmativa responda:</small><br>
+                      <small class="font-weight-bold">Tipo</small>
+  
+                      <div class="col">
+                        <input name="option" type="radio">
+                        <small>Cognitiva</small>
+                      </div>
+                      <div class="col">
+                        <input name="option" type="radio">
+                        <small>Psicosocial</small>
+                      </div>
+                      <div class="col">
+                        <input name="option" type="radio">
+                        <small>Fìsica</small>
+                      </div>
+                      <div class="col">
+                        <input name="option" type="radio">
+                        <small>Sensortial</small>
+                      </div>
+                      <div class="col">
+                        <input name="option" type="radio">
+                        <small>Mùltiple</small>
+                      </div>
+                      <div class="col">
+                        <input name="option" type="radio" class="otro">
+                        <small>Otra</small>  
+                      </div>    
+  
+                      <div class="col" hidden>
+                        <small>¿Cuàl?</small>
+                        <input type="text" class="input_fields_general_tab">
+                      </div>  
+                    </div>
+  
+                    <div class="col-md-4">
+                      <small class="font-weight-bold">Entidad que emite el certificado</small>
+                      <input type="text" class="input_fields_general_tab">
+  
+                      <small class="font-weight-bold">Fecha</small>
+                      <input type="date" class="input_fields_general_tab">
+  
+                      <small class="font-weight-bold">Entrega documentos soporte</small>
+                      <div class="col mb-3">
+                        <input name="documentos_soporte" type="radio">
+                        <small>Si</small>
+  
+                        <input name="documentos_soporte" type="radio">
+                        <small>No</small>
+                      </div>
+  
+                      <input type="file" class="input_fields_general_tab">
+                    </div>
+                  </div>
+  
+                  <hr>
+                  <div class="row mt-4">
+                    <div class="col-md-4">
+                      <small class="font-weight-bold">¿Tiene certificado de invalidez?</small>
+                      <div class="col">
+                        <input name="certificado_invalidez" type="radio">
+                        <small>Si</small>
+  
+                        <input name="certificado_invalidez" type="radio">
+                        <small>No</small>
+  
+                        <input name="certificado_invalidez" type="radio">
+                        <small>No aplica</small>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <small class="font-weight-bold">Si la respuesta anterior fue afirmitiva responda</small>
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th><small class="font-weight-bold">Tipo de certificado de invalidez</small></th>
+                            <th><small class="font-weight-bold">¿Què porcentaje?</small</th>
+                            <th><small class="font-weight-bold">Entidad que emite el certificado</small></th>
+                            <th><small class="font-weight-bold">Fecha</small</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                            <td><input type="date" class="input_fields_general_tab"></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="col-md-2">
+                      <small class="font-weight-bold">Entrega documentos soporte</small>
+                      <div class="col">
+                        <input name="documento_soporte" type="radio">
+                        <small>Si</small>
+  
+                        <input name="documento_soporte" type="radio">
+                        <small>No</small>
+                      </div>
+                    </div>
+                  </div>
+  
+                  <hr>
+                  <div class="row mt-4">
+                    <div class="col-md-12">
+                      <small class="font-weight-bold">¿De los siguientes òrganos y/o sistemas, ¿Cuàles presentan alguan condiciòn
+                        de salud a tener en cuenta?</small>
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th><small class="font-weight-bold">Estructuras</small></th>
+                            <th><small class="font-weight-bold">Si</small></th>
+                            <th><small class="font-weight-bold">Cuàl</small></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>Sistema nervioso -(central y perifèrico)</td>
+                            <td><input name="estructura" type="radio"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                          <tr>
+                            <td>Ojos</td>
+                            <td><input name="estructura" type="radio"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                          <tr>
+                            <td>Oìdos</td>
+                            <td><input name="estructura" type="radio"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                          <tr>
+                            <td>Relacionadas con la voz y el habla(Nariz, boca, laringe y otras)</td>
+                            <td><input name="estructura" type="radio"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                          <tr>
+                            <td>Sistema cardiovascular, inmunològico y respiratorio</td>
+                            <td><input name="estructura" type="radio"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                          <tr>
+                            <td>Sistema digestivo metabòlico y endocrino</td>
+                            <td><input name="estructura" type="radio"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                          <tr>
+                            <td>Sistema genitourinario y reproductor</td>
+                            <td><input name="estructura" type="radio"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                          <tr>
+                            <td>Relacionadas con el movimiento (cabeza, brazos, piernas,manos, pies)</td>
+                            <td><input name="estructura" type="radio"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                          <tr>
+                            <td>Piel y estructuras relacionadas</td>
+                            <td><input name="estructura" type="radio"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                          <tr>
+                            <td>Otras estructuras relacionadas ¿Cuàl?</td>
+                            <td><input name="estructura" type="radio"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+  
+                  <hr>
+                  <div class="row mt-4">
+                    <div class="col-md-12">
+                      <small class="font-weight-bold">¿De las siguientes funciones en cuales presenta usted dificultad permanente?</small>
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th><small class="font-weight-bold">Funciones</small></th>
+                            <th><small class="font-weight-bold">Si</small></th>
+                            <th><small class="font-weight-bold">Cuàl</small></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>Mentales (globales* y especìficas**)</td>
+                            <td><input name="funciones" type="radio"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                          <tr>
+                            <td>Sensoriales de la visiòn</td>
+                            <td><input name="funciones" type="radio"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                          <tr>
+                            <td>Sensoriales de la audiciòn</td>
+                            <td><input name="funciones" type="radio"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                          <tr>
+                            <td>Voz y habla</td>
+                            <td><input name="funciones" type="radio"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                          <tr>
+                            <td>Cardiovasculares, inmunològicas y respiratorias</td>
+                            <td><input name="funciones" type="radio"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                          <tr>
+                            <td>Digestivas metabòlicas y endocrinas</td>
+                            <td><input name="funciones"  type="radio"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                          <tr>
+                            <td>Genitourinarias y reproductoras</td>
+                            <td><input name="funciones" type="radio"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                          <tr>
+                            <td>Musculoesquelèticas y relaciones con el movimiento</td>
+                            <td><input name="funciones" type="radio"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                          <tr>
+                            <td>Piel y estructuras relacionadas</td>
+                            <td><input name="funciones" type="radio"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                          <tr>
+                            <td>Otras estructuras relacionadas ¿Cuàl?</td>
+                            <td><input name="funciones" type="radio"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                        </tbody>
+  
+                        <tfoot>
+                          <tr>
+                            <td><small class="font-weight-bold">Funciones mentales globales:</small><small>Cociencia, la energìa y los impulsos</small></td>
+                            <td><small class="font-weight-bold">Funciones mentales globales:</small><small>Memoria, lenguaje y càlculo mental</small></td>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+                  </div>
+  
+                  <hr>
+                  <div class="row mt-4">
+                    <div id="set-participacion" class="col-md-6">
+                    <small class="font-weight-bold">Frente a una òptima participaciòn estudiantil en la vida universitaria* ,
+                      ¿Què aspecto considera usted que dificulta esta particiàciòn?</small>
+                      <div class="col">
+                        <input name="option" type="radio">
+                        <small>Condiciòn de salud</small>
+                      </div>
+                      <div class="col">
+                        <input name="option" type="radio">
+                        <small>Desempeño en algùn tipo de actividad</small>
+                      </div>
+                      <div class="col">
+                        <input name="option" type="radio">
+                        <small>Caracterìsticas de la infraestructura fìsica y tecnològica</small>
+                      </div>
+                      <div class="col">
+                        <input name="option" type="radio">
+                        <small>Interacciones con directivas univeristarias, docentes</small>
+                      </div>
+                      <div class="col">
+                        <input name="option" type="radio">
+                        <small>Interacciones con compañeros y amigos</small>
+                      </div>
+                      <div class="col">
+                        <input name="option" type="radio">
+                        <small>Estrategias metodològicas, pedagògicas y didàcticas</small>
+                      </div>
+                      <div class="col">
+                        <input name="option" type="radio" class="otro">
+                        <small>Otro</small>
+                      </div>
+                      <div class="col" hidden>
+                        <small>¿Cuàl?</small>
+                        <input type="text" class="input_fields_general_tab" >
+                      </div>
+                      <div class="col">
+                        <input name="option" type="radio">
+                        <small>Condiciòn de salud</small>
+                      </div>
+                    </div>  
+  
+                    <div class="col-md-6">
+                      <small class="font-weight-bold">Amplie su respuesta</small>
+                      <textarea name="" id="" cols="60" rows="5"></textarea>
+                    </div>
+                  </div>
+                  
+                  <hr>
+                  <div class="row mt-4">
+                    <div class="col-md-6">
+                      <small class="font-weight-bold">Participaciòn estudiantil en la vida universitaria</small>
+                      <textarea name="" id="" cols="60" rows="5"></textarea>
+                    </div>
+                    <div id="set-apoyo" class="col-md-6">
+                      <small class="font-weight-bold">Su principal red de apoyo para la participaciòn estudiantil en la vida universitaria es:</small>
+                      <div class="col">
+                        <input name="option" type="radio">
+                        <small>Amigos/as</small>
+                      </div>
+                      <div class="col">
+                        <input name="option" type="radio">
+                        <small>Pareja</small>
+                      </div>
+                      <div class="col">
+                        <input name="option" type="radio">
+                        <small>Familia</small>
+                      </div>
+                      <div class="col">
+                        <input name="option" type="radio">
+                        <small>Docentes</small>
+                      </div>
+                      <div class="col">
+                        <input name="option" type="radio">
+                        <small>Monitorias</small>
+                      </div>
+                      <div class="col">
+                        <input name="option" type="radio">
+                        <small>Profesionales de salud</small>
+                      </div>
+                      <div class="col">
+                        <input name="option" type="radio">
+                        <small>Ninguna</small>
+                      </div>
+                      <div class="col">
+                        <input name="option" type="radio" class="otro">
+                        <small>Otra</small>
+                      </div>
+  
+                      <div class="col" hidden>
+                        <small>¿Cuàl?</small>
+                        <input type="text" class="input_fields_general_tab">
+                      </div>
+                    </div>
+                  </div>
+  
+                  <hr>
+                  <div class="row mt-4">
+                    <div class="col-md-6">
+                      <small class="font-weight-bold">¿Participa de alguna organizaciòn o asociaciòn con otras personas con discapacidad?</small>
+                      <div class="col">
+                        <input name="asociacion" type="radio">
+                        <small>Si</small>
+                        <input name="asociacion" type="radio">
+                        <small>No</small>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-6">
+                      <small class="font-weight-bold">¿Cuàl?</small>
+                      <input type="text" class="input_fields_general_tab">
+                    </div>
+                  </div>
+                  
+                  <hr>
+                  <div class="row mt-4">
+                    <div class="col-md-6">
+                      <small class="font-weight-bold">¿Ha recibido algùn tipo de apoyo por su discapacidad(condiciòn de salud,
+                        pariticpaciòn en actividades, accesibilidad, entre otras)?</small>
+                        <div class="col">
+                          <input name="apoyo_discapacidad" type="radio">
+                          <small>Si</small>
+  
+                          <input name="apoyo_discapacidad" type="radio">
+                          <small>No</small>
+                        </div>
+                    </div>
+  
+                    <div class="col-md-6">
+                      <small class="font-weight-bold">Si la respuesta anterior fue afirmativa, relacioa las instituciones y
+                        los apoyos que le han brindado por su discapacidad (condiciòn de salud, participaciòn en actividades,
+                        accesibilidad, entre otras)
+                      </small>
+  
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th><small class="font-weight-bold">Nombre de la instituciòn</small></th>
+                            <th><small class="font-weight-bold">Tipo de apoyo</small></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                          <tr>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                          <tr>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+  
+                </div>
+  
+                <div id="step-6">
+                  <div class="row mt-4">
+                    <div class="col-md-4">
+                      <small class="font-weight-bold">¿Se encuentra vinculado(a) a algùn règimen de salud?</small>
+                      <div class="col">
+                        <input name="vinculacion" type="radio">
+                        <small>Si</small>
+                        <input type="radio">
+                        <small name="vinculacion">No</small>
+                      </div>
+  
+                      <small class="font-weight-bold">Si la respuesta anterior fue afirmitiva marque la opciòn que corresponda</small>
+                      <input type="text" class="input_fields_general_tab">
+                    </div>
+  
+                    <div class="col-md-4">
+                      <small class="font-weight-bold">Si la respuesta anterior fue afirmativa, marque la opciòn que corresponda</small>
+                      <div class="col">
+                        <small>Règimen contributivo</small>
+                        <input name="contributivo" type="radio">
+                        <small>Si</small>
+                        <input name="contributivo" type="radio">
+                        <small>No</small>
+  
+                        <div class="col">
+                          <input name="o_contributivo" type="radio">
+                          <small>Contribuyente</small>
+                        </div>
+                        <div class="col">
+                          <input name="o_contributivo" type="radio">
+                          <small>Beneficiario/a</small>
+                        </div>
+                      </div>
+  
+                      <div class="col mt-3">
+                        <small>Règimen subsidiado</small>
+                        <input name="subsidiado" type="radio">
+                        <small>Si</small>
+                        <input name="subsidiado" type="radio">
+                        <small>No</small>
+                      </div>
+  
+                      <div class="col mt-3">
+                        <small>Règimen especial</small>
+                        <input name="especial" type="radio">
+                        <small>Si</small>
+                        <input name="especial" type="radio">
+                        <small>No</small>
+  
+                        <div class="col">
+                          <input name="o_especial" type="radio">
+                          <small>Magisterio (docentes)</small>
+                        </div>
+                        <div class="col">
+                          <input name="o_especial" type="radio">
+                          <small>Fuerzas militares</small>
+                        </div>
+                        <div class="col">
+                          <input name="o_especial" type="radio">
+                          <small>Policìa Nacional</small>
+                        </div>
+                        <div class="col">
+                          <input name="o_especial" type="radio">
+                          <small>Ecopetrol</small>
+                        </div>
+                        <div class="col">
+                          <input name="o_especial" type="radio">
+                          <small>Universidades Pùblicas</small>
+                        </div>
+                      </div>
+                      
+                    </div>
+                    <div class="col-md-4">
+                      <small class="font-weight-bold">Nombre de la Empresa Pres(EPS)</small>
+                      <input type="text" class="input_fields_general_tab">
+                    </div>
+                  </div>
+  
+                  <hr>
+                  <div class="row mt-4">
+                    <div class="col-md-4">
+                      <small class="font-weight-bold">¿Esta registrado(a) en el SISBEN?</small>
+                      <div class="col">
+                        <input name="sisben" type="radio">
+                        <small>Si</small>
+                        <input name="sisben" type="radio">
+                        <small>No</small>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-4">
+                      <small class="font-weight-bold">Si la respuesta anterior fue afirmativa responda:</small>
+  
+                      <div class="col">
+                        <input name="grupos" type="radio">
+                        <small>GRUPO A: pobreza extrema (poblaciòn con menor capacidad de generaciòn de ingresos)</small>
+                      </div>
+  
+                      <div class="col">
+                        <input name="grupos" type="radio">
+                        <small>GRUPO B: pobreza moderada (poblaciòn con mayor capacidad de generar ingresos que los dle grupo A)</small>
+                      </div>
+  
+                      <div class="col">
+                        <input name="grupos" type="radio">
+                        <small>GRUPO C: vulnerable (poblaciòn en riesgo de caer en pobreza)</small>
+                      </div>
+  
+                      <div class="col">
+                        <input name="grupos"type="radio">
+                        <small>GRUPO D: poblaciòn no porbre, no vulnerable</small>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-4">
+                      <small class="font-weight-bold">Observaciones</small><br>
+                      <textarea name="" id="" cols="40" rows="5"></textarea>
+                    </div>
+                  </div>
+  
+                  <hr>
+                  <h5 class="text-center font-weight-bold">Servicios adicionales:</h5>
+                  <div class="row mt-4">
+                    <div class="col-md-4">
+                      <small>
+                        ¿Cuenta con un servicio de salud prepagada?
+                      </small>
+                      <div class="col mb-3">
+                        <input name="salud-pre"  type="radio">
+                        <small>Si</small>
+                        <input name="salud-pre" type="radio">
+                        <small>No</small>
+                      </div>
+                      <small>Nombre del instituciòn</small>
+                      <input type="text" class="input_fields_general_tab">
+                    </div>
+  
+                    <div class="col-md-4">
+                      <small>¿Cuenta con un servicio de plan complementario?</small>
+                      <div class="col mb-3">
+                        <input name="plan_com" type="radio">
+                        <small>Si</small>
+                        <input name="plan_com" type="radio">
+                        <small>No</small>
+                      </div>
+                      <small>Nombre del instituciòn</small>
+                      <input type="text" class="input_fields_general_tab">
+                    </div>
+  
+                    <div class="col-md-4">
+                      <small>¿Cuenta con un servicio de salud estudiantil?</small>
+                      <div class="col mb-3">
+                        <input name="servicio_estudiantil" type="radio">
+                        <small>Si</small>
+                        <input name="servicio_estudiantil" type="radio">
+                        <small>No</small>
+                      </div>
+                      <small>Nombre del instituciòn</small>
+                      <input type="text" class="input_fields_general_tab">
+                    </div>
+                  </div>
+  
+                  <hr>
+                  <h5 class="font-weight-bold">Actualmente usted es usuario(a) de los servicios de:</h5>
+                  <div class="row mt-4">
+                    <div class="col-md-12">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th><small class="font-weight-bold">Servicio</small></th>
+                            <th><small class="font-weight-bold">Entidad Prestadora del servicio</small></th>
+                            <th><small class="font-weight-bold">Frecuencia</small></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>
+                              <input name="servicio_salud" type="radio">
+                              <small>Medicina general</small>
+                            </td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <input name="servicio_salud" type="radio">
+                              <small>Psiquiatrìa</small>
+                            </td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <input name="servicio_salud" type="radio">
+                              <small>Neuropsicologìa</small>
+                            </td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <input name="servicio_salud" type="radio">
+                              <small>Psicologìa</small>
+                            </td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <input name="servicio_salud" type="radio">
+                              <small>Optometrìa</small>
+                            </td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <input name="servicio_salud" type="radio">
+                              <small>Oftamologìa</small>
+                            </td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <input name="servicio_salud" type="radio">
+                              <small>Endocrinologìa</small>
+                            </td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <input name="servicio_salud" type="radio">
+                              <small>Neurologìa</small>
+                            </td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <input name="servicio_salud" type="radio">
+                              <small>Fisiatrìa</small>
+                            </td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <input name="servicio_salud" type="radio">
+                              <small>Traumatologìa</small>
+                            </td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <input name="servicio_salud" type="radio">
+                              <small>Ortopedia</small>
+                            </td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <input name="servicio_salud" type="radio">
+                              <small>Fisioterapia</small>
+                            </td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <input name="servicio_salud" type="radio">
+                              <small>Fonoaudiologìa</small>
+                            </td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <input name="servicio_salud" type="radio">
+                              <small>Terapia ocupacional</small>
+                            </td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <input name="servicio_salud" type="radio">
+                              <small>Trabajo social</small>
+                            </td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <input name="servicio_salud" type="radio">
+                              <small>Terapias alternativas</small>
+                            </td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                            <td><input type="text" class="input_fields_general_tab"></td>
+                          </tr>
+                        </tbody>
+                        <tfoot>
+                          <tr>
+                            <td><small class="font-weight-bold">Otra:</small><small>¿Cuàl?</small>
+                            <input type="text" class="input_fields_general_tab">
+                            </td>
+                          </tr>
+                        </tfoot>
+                      </table>
+                    </div>
+                  </div>
+  
+                  <hr>
+                  <div class="row mt-4">
+                    <div class="col-md-6">
+                      <small class="font-weight-bold">CONCLUSIÒN DE LA JORNADA DE LA CARACTERIZACIÒN</small>
+                      <textarea name="" id="" cols="60" rows="5"></textarea>
+                    </div>
+                    <div class="col-md-6">
+                      <small class="font-weight-bold">ACUERDO DE PRÒXIMA REUNIÒN PARA REVISIÒN DE APOYOS Y ELABORACIÒN DE JUSTES RAZONABLES</small>
+                      <input type="date" class="input_fields_general_tab">
+  
+                      <small class="font-weight-bold">Hora</small>
+                      <input type="text" class="input_fields_general_tab">
+                    </div>
+                  </div>
+  
+                  <div class="row mt-4">
+                    <div class="col-md-6">
+                      <small class="font-weight-bold">Documento tratamiento de datos personales</small> 
+                      <input name="json_detalle" id="documento_tratamiento" type="text" class="input_fields_general_tab" placeholder="Documento tratamiento de datos personales" required> 
+                    </div>
+                  </div>
+  
+                  <button id="guardar_info" class="btn btn-success mt-3">Guardar</button>
+                </div>
+               
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>

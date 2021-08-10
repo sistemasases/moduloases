@@ -22,7 +22,8 @@ define(['jquery',
     'block_ases/academic_profile_main',
     'block_ases/socioed_profile_main',
     'block_ases/geographic_main',
-    'block_ases/discapacity_tracking_main'], function ($, bootstrap, d3, sweetalert, jqueryui, select2, Chart, mustache, loading_indicator, academic, socioed, geographic, discapacity_tracking) {
+    'block_ases/discapacity_tracking_main',
+], function ($, bootstrap, d3, sweetalert, jqueryui, select2, Chart, mustache, loading_indicator, academic, socioed, geographic, discapacity_tracking) {
 
     return {
         init: function (data_init) {
@@ -39,6 +40,10 @@ define(['jquery',
             var cod_facultad = cod_programa_activo[1];
             var latLng_student_campus = (cod_facultad === '6' || cod_facultad === '8')?LATLNG_CAMPUS_SANFER:LATLNG_CAMPUS_MELENDEZ;
 
+         
+         
+           
+           // createDataTable($("#table_prueba"), columns,dataset)
             // Agrega iframe para Google Maps
             if (ciudad_est == 'CALI') {
 
@@ -48,6 +53,9 @@ define(['jquery',
 
                 document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination="+latLng_student_campus.lat()+","+latLng_student_campus.lng()+"&mode=driving'></iframe>";
             }
+
+
+           
 
             $('#field_doc_dtddp').hide();
 
@@ -87,6 +95,7 @@ define(['jquery',
                 $("#mapa").appendTo("#movableMap");
             });
 
+             
             //Carga una determinada pestaña
 
             //Eliminar fila de una tabla
@@ -105,6 +114,8 @@ define(['jquery',
                     $(this).attr("title", proptitle);
                 }
             });
+
+           
 
             /**
              * Funcion para añadir una nueva fila en la tabla
@@ -145,6 +156,8 @@ define(['jquery',
                 load_student(student_code);
             });
 
+        
+
             // Manage statuses
             for (var i = 0, len = data_init.length; i < len; i++) {
                 $('#select-' + data_init[i].academic_program_id + ' option[value=' + data_init[i].program_status + ']').attr('selected', true);
@@ -156,6 +169,9 @@ define(['jquery',
                 }
             }
 
+       
+           
+            
             var current_tracking_status = "";
 
             // ******* Manage edition ******
@@ -184,6 +200,7 @@ define(['jquery',
                 if(status_ases == "seguimiento")
                     self.update_status_ases(parameters);
             });
+              
 
             switch (parameters.tab) {
                 case "socioed_tab":
@@ -198,6 +215,7 @@ define(['jquery',
                     panel_collapse.removeClass('in');
                     break;
             }
+
 
             var modal_peer_tracking = $('#modal_peer_tracking');
 
@@ -246,7 +264,7 @@ define(['jquery',
                         alert(data);
                     },
                     error: function (data) {
-                        loading_indicator.hide();
+                        loading_indi2cator.hide();
                         console.log(data)
                     }
                 });
@@ -667,13 +685,13 @@ define(['jquery',
                 $('#tip-save').show();
                 $('#span-icon-cancel-edit').show();
                 $('#tip-cancel').show();
-                $('#tipo_doc').prop('disabled', false);
+                $('#i_tipo_doc').prop('disabled', false);
                 $('#num_doc').prop('readonly', false);
                 $('#email').prop('readonly', false);
                 $('#icetex_status').prop('disabled', false);
                 $('#pais').prop('disabled', false);
                 $('#genero').prop('disabled', false);
-                $('#sexo').prop('disabled', false);
+                $('#s_sexo').prop('disabled', false);
                 $('#cond_excepcion').prop('disabled', false);
                 $('#act_simultanea').prop('disabled', false);
                 $('#etnia').prop('disabled', false);
@@ -681,7 +699,7 @@ define(['jquery',
                 $('#otro_genero').prop('disabled', false);
                 $('#otro_genero').prop('required', false);
                 $('#otro_act_simultanea').prop('required', false);
-                $('#estado_civil').prop('disabled', false);
+                $('#s_estado_civil').prop('disabled', false);
                 $('#observacion').prop('readonly', false);
                 $('.select_statuses_program').prop('disabled', false);
                 $('#field_doc_dtddp').show();
@@ -1036,16 +1054,16 @@ define(['jquery',
             $('#tip-save').hide();
             $('#span-icon-edit').show();
             $('#tip-edit').show();
-            $('#tipo_doc').prop('disabled', true);
+            $('#i_tipo_doc').prop('disabled', true);
             $('#num_doc').prop('readonly', true);
             $('#email').prop('readonly', true);
             $('#icetex_status').prop('disabled', true);
             $('#genero').prop('disabled', true);
-            $('#sexo').prop('disabled', true);
+            $('#s_sexo').prop('disabled', true);
             $('#cond_excepcion').prop('disabled', true);
             $('#act_simultanea').prop('disabled', true);
             $('#etnia').prop('disabled', true);
-            $('#estado_civil').prop('disabled', true);
+            $('#s_estado_civil').prop('disabled', true);
             $('#pais').prop('disabled', true);
             $('#observacion').prop('readonly', true);
             $('.select_statuses_program').prop('disabled', true);
@@ -1366,6 +1384,8 @@ define(['jquery',
             }
         });
     }
+
+  
 
     function save_ases_status() {
         var data = new Array();
@@ -2034,6 +2054,8 @@ define(['jquery',
             });
         }
     }
+    
+   
 
     function load_student(code_student) {
 

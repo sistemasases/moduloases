@@ -961,6 +961,9 @@ $PAGE->requires->css('/blocks/ases/style/discapacity_tab.css', true);
 $PAGE->requires->css('/blocks/ases/style/others_tab.css', true);
 $PAGE->requires->css('/blocks/ases/style/switch.css', true);
 $PAGE->requires->css('/blocks/ases/style/fontawesome550.min.css', true);
+
+
+
 //Pendiente para cambiar el idioma del nombre del archivo junto con la estructura de
 //su nombramiento.
 $PAGE->requires->css('/blocks/ases/style/creadorFormulario.css', true);
