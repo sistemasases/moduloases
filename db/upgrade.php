@@ -4388,7 +4388,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
          */
 
         
-         $table = new xmldb_table('mdl_talentospilos_otros_acom');
+         $table = new xmldb_table('talentospilos_otros_acom');
          $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
          $table->add_field('acompanamiento', XMLDB_TYPE_CHAR, '60', null, XMLDB_NOTNULL, null, null);
          $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
@@ -4405,7 +4405,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
              }
         }
     
-         //Inserts para anexar la funcionalidad al menù
+         //Inserts para anexar la funcionalidad (registrar estudiante)al menù
 
          $funcionalidad = new stdClass();
          $funcionalidad->nombre_func = "student_new_register";
