@@ -367,6 +367,13 @@ function create_menu_options($userid, $blockid, $courseid)
 
             }
 
+            
+            if($function == 'student_new_register'){
+            
+                $menu_options = '<a  role="button" id="mostrar" data-toggle="modal">Registar nuevo estudiante</a>';
+                $discapacity_options['Registar'] = $menu_options;
+            }
+
             if ($function == 'incidents_manager') {
                 $url = new moodle_url("/blocks/ases/view/ases_incidents.php", array(
                     'courseid' => $courseid,

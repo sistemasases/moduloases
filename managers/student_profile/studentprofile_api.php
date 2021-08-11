@@ -34,7 +34,9 @@ $input = json_decode(file_get_contents("php://input"));
 if(isset($input->function) && isset($input->params)) {
 
     $function = $input->function;
-
+    $params = $input->params;
+    //Loads Select
+    
     //Loads tabs of student profile
     if($function == 'load_tabs') {
 
@@ -124,7 +126,84 @@ if(isset($input->function) && isset($input->params)) {
         } else {
             return_with_code(-6);
         }
-    } else if($function == 'save_icetex_status') {
+    } else if($function == 'get_otros_acompañamientos'){
+        
+            $result = get_otros_acompañamientos();
+            echo json_encode($result);
+        
+    }else if($function == 'get_cond_excepcion'){
+
+            $result = get_cond_excepcion();
+            echo json_encode($result);
+
+    }else if($function == 'get_estados_civiles'){
+
+            $result = get_estados_civiles();
+            echo json_encode($result);
+
+    }else if($function == 'get_sex_options'){
+
+            $result = get_sex_options();
+            echo json_encode($result);
+
+    }else if($function == 'get_generos'){
+
+            $result = get_generos();
+            echo json_encode($result);
+
+    }else if($function == 'get_act_simultaneas'){
+
+            $result = get_act_simultaneas();
+            echo json_encode($result);
+
+    }else if($function == 'get_etnias'){
+
+            $result = get_etnias();
+            echo json_encode($result);
+
+    }else if($function == 'get_paises'){
+
+            $result = get_paises();
+            echo json_encode($result);
+            
+    }else if($function == 'get_sedes'){
+            
+            $result = get_sedes();
+            echo json_encode($result);
+
+    }else if($function == 'get_document_types'){
+            $result = get_document_types();
+            echo json_encode($result);
+
+    }else if($function == 'get_discapacities'){ 
+            $result = get_discapacities();
+            echo json_encode($result);
+
+    }else if($function == 'get_barrios'){
+            $result = get_barrios();
+            echo json_encode($result);
+
+    }else if($function == 'get_ciudades'){
+            $result = get_ciudades();
+            echo json_encode($result);
+    }else if($function == 'get_programas_academicos'){
+            $result = get_programas_academicos();
+            echo json_encode($result);
+    }else if($function == 'save_data'){
+            $data = $params[0];
+            $deportes = $params[1];
+            $f = $params[2];
+            $programa = $params[3];
+            $id_moodle = $params[4];
+            
+            $result = save_data($data,$deportes,$f, $programa, $id_moodle);
+            
+            echo json_encode($result);
+    }else if($function == 'get_user'){ 
+
+            $result=get_user($params);
+            echo json_encode($result);       
+    }else if($function == 'save_icetex_status') {
 
         /**
          * [0] => id_ases: string

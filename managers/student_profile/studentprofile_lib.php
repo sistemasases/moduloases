@@ -273,6 +273,67 @@ function get_cond_excepcion()
 
 
 /**
+ * Get Barrios
+ *
+ * @see get_barrios()
+ * @return object --> with barrios
+ */
+function get_barrios(){
+    global $DB; 
+   $sql_query = "SELECT id, nombre, cod_comuna FROM {talentospilos_barrios} ORDER BY nombre ASC ";
+   return $DB->get_records_sql($sql_query);
+}
+
+/**
+ * Get Ciudades
+ *
+ * @see get_ciudades()
+ * @return object --> with ciudades
+ */
+function get_ciudades(){
+    global $DB; 
+   $sql_query = "SELECT  id, nombre FROM {talentospilos_municipio} ORDER BY nombre ASC ";
+   return $DB->get_records_sql($sql_query);
+}
+
+/**
+ * Get programas academicos
+ *
+ * @see get_programas_academicos()
+ * @return object --> with programas academicos
+ */
+function get_programas_academicos(){
+    global $DB; 
+   $sql_query = "SELECT cod_univalle as id, nombre FROM {talentospilos_programa} ORDER BY nombre ASC ";
+   return $DB->get_records_sql($sql_query);
+}
+
+
+/** 
+ * Get Otros acompañamientos
+ * 
+ * @see get_otros_acompañamientos()
+ * @return object -> with OTROS ACOMPAÑAMIENTOS information
+ */
+function get_otros_acompañamientos(){
+    global $DB;
+    $sql_query = "SELECT * FROM {talentospilos_otros_acom}";
+    return $DB->get_records_sql($sql_query);
+}
+
+/** 
+ * Get list discapacidades
+ * 
+ * @see get_discapacities
+ * @return object -> with discapacidades information
+ */
+function get_discapacities(){
+    global $DB;
+    $sql_query = "SELECT  id, nombre FROM {talentospilos_discap_men}";
+    return $DB->get_records_sql($sql_query);
+}
+
+/**
  * Get Condición de excepción segun id
  *
  * @see get_cond()
@@ -297,7 +358,18 @@ function get_estados_civiles()
     $sql_query = "SELECT * FROM {talentospilos_estado_civil}";
     return $DB->get_records_sql($sql_query);
 }
+/**
+ * Get sedes registradas
+ * 
+ * @see get_sedes()
+ * @return object --> with Sede information
+ */
 
+ function get_sedes(){
+     global $DB;
+     $sql_query = "SELECT id, nombre FROM {talentospilos_sede}";
+     return $DB->get_records_sql($sql_query);
+ }
 /**
  * Get paises registrados
  *
@@ -502,6 +574,8 @@ function  get_act_simultaneas()
    $sql_query = "SELECT * FROM {talentospilos_act_simultanea}";
    return $DB->get_records_sql($sql_query);
 }
+
+
  
 /**
  * Gets a set of ICETEX status
@@ -1999,6 +2073,18 @@ function get_student_codes($document){
 
     return $student_codes;
  }
+/**
+ * Retorna el conjunto de posibles tipos de documento de identidad
+ *
+ * @see get_document_types()
+ * @return object array with document types
+ */
+function get_document_types(){
+    global $DB;
+    $sql_query = "SELECT *
+    FROM {talentospilos_tipo_documento}";
+    return $DB->get_records_sql($sql_query);
+}
 
 /**
  * Retorna el conjunto de posibles tipos de documento de identidad para un estudiante en particular
@@ -2088,6 +2174,51 @@ function update_tracking_status($id_ases_user, $id_academic_program){
     }
 
     return $result;
+}
+
+
+/**
+ * Insert filed on {talentospilos_usuario} table
+ * 
+ * 
+ * @see save_data($data)
+ * @param $data --> Array containing the fields to Insert
+ * @return object in a json format
+ */
+function save_data($data, $deportes, $f, $programa, $id_moodle){
+    global $DB;
+
+    $student_object = new stdClass();
+    $student_extended = new stdClass();
+    for($i = 0; $i < count($data); $i++){
+
+        $name = $data[$i]->name;
+        $value = $data[$i]->value;
+
+        $student_object->$name = $value;
+
+    }
+  
+    
+    
+    $student_object->actividades_ocio_deporte = $deportes;
+    $student_object->vive_con = $f;
+    $student_object->grupo = 1;
+    $student_object->estado = "ACTIVO";
+    $student_object->estado_ases = "ACTIVO";
+    $student_object->observacion = "";
+
+    $res = $DB->insert_record('talentospilos_usuario', $student_object);
+
+    $student_extended->id_moodle_user = $id_moodle;
+    $student_extended->id_ases_user = $res;
+    $student_extended->id_academic_program = 1;
+    $student_extended->tracking_status = 1;
+    $student_extended->program_status = 1;
+
+   // $result = $DB->insert_record('talentospilos_user_extended', $student_extended);
+        
+    return 1;
 }
 
 /**

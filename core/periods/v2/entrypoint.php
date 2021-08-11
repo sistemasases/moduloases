@@ -72,7 +72,7 @@ function periods_get_period_by_id( int $period_id ):stdClass
  *
  * @param string $period_name
  * @param int $instance_id 
- * @return bool, true if there's a period with given name, false otherwise. 
+ * @return object 
  */
 function periods_get_period_by_name($period_name, $instance_id)
 {
@@ -85,21 +85,13 @@ function periods_get_period_by_name($period_name, $instance_id)
         WHERE nombre = '$period_name' ";
 
 
-    if (str_contains($period_name, '201')) {
-        $query .= "AND id_instancia = NULL";         
-    } else {
+    if (strpos($period_name, '202') !== false) {
         $query .= "AND id_instancia = $instance_id";         
-    
-    }
+    } 
 
     $result = $DB->get_record_sql( $query );
     
-    if( !property_exists($result, 'id') ) {
-       return false; 
-    }
-    else {
-        return $result;
-    }
+    return $result;
 }
 
 /**
@@ -134,7 +126,10 @@ function periods_get_period_by_date($fecha_inicio, $fecha_fin, $relax_query=fals
     }
 
 	if( $relax_query ){
-		$query .= "AND fecha_inicio >= '$fecha_inicio' AND fecha_fin <= '$fecha_fin'";
+        $query .= 
+            "AND fecha_inicio >= '$fecha_inicio' 
+            AND fecha_fin <= '$fecha_fin'
+            ORDER BY fecha_fin";
         
 	    $result = $DB->get_records_sql( $query );
 	}
@@ -155,9 +150,16 @@ function periods_get_period_by_date($fecha_inicio, $fecha_fin, $relax_query=fals
 }
 
 /** 
- * Function that return all periods under a given instance.
  * Todos los periodos antes del 2019-2 no tienen instancia, por ende
- * deben hacerse dos consultas a la tabla unidas con el operador UNION.
+ * la forma de traer todos los periodos sin que hayan duplicados es la sgte:
+ *
+ * - Traer todos los períodos que no tienen instancia (del 2019B para atrás)
+ * - Traer todos los periodos del 2020A en adelante con la instancia proporcionada.
+ * - Unir ambos resultados con array_merge.
+ *
+ * El parametro $instance_id lo dejé opcional por si en algún momento algún miembro
+ * del equipo necesita o quiere usar la función y ver absolutamente todos los periodos.
+ * Esto solo para temas de debugging.
  * 
  * @author David S. Cortés <david.cortes@correounivalle.edu.co>
  * @since 2.0.0
@@ -171,10 +173,15 @@ function periods_get_all_periods( $instance_id='NULL' ):array
     global $PERIODS_TABLENAME; 
     
     try {
-    
-        $periods_before_2019B = periods_get_period_by_date('2015-02-19', '2020-07-31', true);
+        
+        $p2019b = periods_get_period_by_name('2019B', $instance_id); 
+        $p2015a = periods_get_period_by_name('2015A', $instance_id);
+        $periods_before_2019B = periods_get_period_by_date($p2015a->fecha_inicio, $p2019b->fecha_fin, true);
 
-        $query = "SELECT * FROM $PERIODS_TABLENAME WHERE id_instancia = $instance_id";
+        $query = 
+            "SELECT * FROM $PERIODS_TABLENAME 
+            WHERE id_instancia = $instance_id
+            ORDER BY fecha_fin";
 
         $periods = $DB->get_records_sql( $query );
 

@@ -187,7 +187,7 @@ if (isset($_POST['type']) && $_POST['type'] == "consulta_sistemas" && isset($_PO
                 $students_by_monitor = get_students_of_monitor($id_person, $id_instance);
                 $html = render_monitor_new_form($students_by_monitor, $intervalos->id, $id_instance);
                 $array_groupal_trackings_dphpforms = get_tracking_grupal_monitor_current_semester($id_person, $intervalos->id);
-                $html.= render_groupal_tracks_monitor_new_form($array_groupal_trackings_dphpforms, $id_person, $_POST['instance']);
+                $html.= render_groupal_tracks_monitor_new_form($array_groupal_trackings_dphpforms, $id_person, null, $_POST['instance']);
                 }
               else
             if ($usernamerole == 'practicante_ps')

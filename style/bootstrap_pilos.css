@@ -5965,6 +5965,13 @@ button.close {
   overflow-x: hidden;
   overflow-y: auto;
 }
+
+.modal-pruebas{
+  position: relative;
+  width: 100%;
+  margin: 10px;
+}
+
 .modal-dialog {
   position: relative;
   width: auto;
@@ -6054,6 +6061,13 @@ button.close {
     width: 900px;
   }
 }
+
+@media (min-width: 992px) {
+  .modal-largo {
+    width: 1200px;
+  }
+}
+
 .tooltip {
   position: absolute;
   z-index: 1070;
