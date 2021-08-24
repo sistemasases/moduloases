@@ -379,7 +379,7 @@
             
             $(document).ready(function(){
                 load_counters();
-                $("select").trigger( "change" );
+                $(".asign-select-filter").trigger( "change" );
             });
 
             $(document).on( 'click', '.practicant_item', function() {
@@ -709,7 +709,7 @@
                 
             });
 
-            $("select").change(function(){
+            $(".asign-select-filter").change(function(){
 
                 var user_type = $(this).attr("data-id").split("_")[0]; // i.e monitor_faculty => monitor
                 var filter_type = $(this).attr("data-id").split("_")[1]; // i.e monitor_faculty => faculty

@@ -19,7 +19,7 @@
                 <hr class="hr-title">
                 <span>Total estudiantes acompañados ASES: ( <span class="total_counter">0</span> )</span><br><br>
                 <span>Profesional:&nbsp;</span>
-                <select id="select-professional" data-id="professional_selector" name="" {{#not_sistemas}} disabled {{/not_sistemas}} >
+                <select id="select-professional" class="asign-select-filter" data-id="professional_selector" name="" {{#not_sistemas}} disabled {{/not_sistemas}} >
                     {{#not_sistemas}} 
                     <option value="" data-id="{{#user_logged}}{{id}}{{/user_logged}}" data-username="{{#user_logged}}{{username}}{{/user_logged}}" selected="selected"  data-fullname="{{#user_logged}}{{fullname}}{{/user_logged}}">
                         {{#user_logged}}{{fullname}}{{/user_logged}} - ( 0 )
@@ -40,7 +40,7 @@
                 <span class="column-title">Monitores</span>
                 <hr class="hr-title">
                 <span>Facultad:</span>
-                <select id="select-monitor-faculty" class="select-faculty" data-id="monitor_faculty" name="" >
+                <select id="select-monitor-faculty" class="select-faculty asign-select-filter" data-id="monitor_faculty" name="" >
                     <option value="" data-id-facultad="-1" alt="TODOS">TODOS</option>
                     {{#monitors_faculty}}
                     {{#.}}
@@ -49,7 +49,7 @@
                     {{/monitors_faculty}}
                 </select>&nbsp;
                 <span>Programa:</span>
-                <select id="select-monitor-program" class="select-program" data-id="monitor_program" name="" >
+                <select id="select-monitor-program" class="select-program asign-select-filter" data-id="monitor_program" name="" >
                     <option value="" data-cod-programa="-1" alt="TODOS">TODOS</option>
                     {{#monitors_programs}}
                     {{#.}}
@@ -70,7 +70,7 @@
                 <span class="column-title">Estudiantes</span>
                 <hr class="hr-title">
                 <span>Facultad:</span>
-                <select id="select-student-faculty" class="select-faculty" data-id="student_faculty" name="" >
+                <select id="select-student-faculty" class="select-faculty asign-select-filter" data-id="student_faculty" name="" >
                     <option value="" data-id-facultad="-1" alt="TODOS">TODOS</option>
                     {{#students_faculty}}
                     {{#.}}
@@ -79,7 +79,7 @@
                     {{/students_faculty}}
                 </select>&nbsp;
                 <span>Programa:</span>
-                <select id="select-student-program" class="select-program" data-id="student_program" name="" >
+                <select id="select-student-program" class="select-program asign-select-filter" data-id="student_program" name="" >
                     <option value="" data-cod-programa="-1" alt="TODOS">TODOS</option>
                     {{#students_programs}}
                     {{#.}}
@@ -174,7 +174,7 @@
                 </div>
                 <div class="modal-body">
                 Se van a transferir los estudiantes del monitor <strong id="old_monitor_name" >AAAAA BBBBBBB CCCCCC</strong> al monitor:
-                <select name="" id="transfer-monitor-list" placeholder="Seleccione un monitor">
+                <select name="" id="transfer-monitor-list" class="asign-select-filter" placeholder="Seleccione un monitor">
                     <option value="" disabled selected>Seleccione un monitor</option>
                     <option value="">b</option>
                     <option value="">c</option>
