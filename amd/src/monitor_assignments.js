@@ -635,7 +635,12 @@
                 var name_original_monitor = $(this).parent().data("name");
                 var id_old_monitor = $(this).parent().data("id");
 
-                $('#modalTransfer').modal('show');
+                // Este metodo no funciona cuando se importa JQuery dos
+                // veces en un archivo, no fue posible llegar al fondo
+                // de esta doble importación, por ende el modal se muestra usando
+                // data-toggle y data-target en monitor_assigments.mustache.
+                // 2021/08/24
+                //$('#modalTransfer').modal('show');
                 $("#old_monitor_name").text(name_original_monitor);
                 
                 var options = '<option value="" disabled selected>Seleccione un monitor</option>\n';

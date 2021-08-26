@@ -124,7 +124,7 @@
                     <div class="item-text">
                         {{fullname}} - <span class="username">{{username}}</span> - ( <span class="asignation_counter">0</span> )
                     </div>
-                    <div class="item-right-button transfer oculto-tranferir" data-toggle="tooltip" title="Transferir las asignaciones a otro monitor.">
+                    <div class="item-right-button transfer oculto-tranferir" data-toggle="modal" data-target="#modalTransfer" title="Transferir las asignaciones a otro monitor.">
                         <span class="glyphicon glyphicon-transfer"></span>
                     </div>
                 </div>
@@ -163,7 +163,7 @@
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="modalTransfer" tabindex="-1" role="dialog" aria-labelledby="modalTransferTitle" aria-hidden="true">
+    <div class="modal fade popup" id="modalTransfer" tabindex="-1" role="dialog" aria-labelledby="modalTransferTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
