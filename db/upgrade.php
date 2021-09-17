@@ -4387,7 +4387,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
          * ####################################################################################
          */
 
-        
+        /*
          $table = new xmldb_table('talentospilos_otros_acom');
          $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
          $table->add_field('acompanamiento', XMLDB_TYPE_CHAR, '60', null, XMLDB_NOTNULL, null, null);
@@ -4432,7 +4432,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
          $permisos_rol_dis->id_accion = $id_accion;
 
          $id_dis = $DB->insert_record('talentospilos_permisos_rol', $permisos_rol_dis);
-
+        */
     
     
         upgrade_block_savepoint(true, 22021071314240, 'ases');

@@ -49,13 +49,13 @@ require(
                       <small class="font-weight-bold">Tipo de documento</small>
                       <div class="">
                         <select  id="s_tipo_documento" class="custom-select select-registro"></select>
-                        <input name="tipo_doc" id="tipo_doc" type="number" hidden>
+                        <input name="tipo_doc" id="tipo_doc" type="number" class="talentospilos_usuario" hidden>
                       </div>     
                     </div>
 
                     <div class="col-md-6">             
                         <small class="font-weight-bold">Nùmero de documento</small>
-                        <input name="num_doc" id="num_doc" type="text" class="input_fields_general_tab" placeholder="documento" required> 
+                        <input name="num_doc" id="num_doc" type="text" class="input_fields_general_tab talentospilos_usuario" placeholder="documento" required> 
                     </div>
 
                   </div>
@@ -73,8 +73,9 @@ require(
   
                       <div class="col-md-6">
                         <small class="font-weight-bold">Fecha Nacimiento</small>
-                        <input name="fecha_nac" id="fecha_nac" type="date" class="mb-4 input_fields_general_tab" placeholder="Fecha nacimiento" required> 
+                        <input name="fecha_nac" id="fecha_nac" type="date" class="mb-4 input_fields_general_tab talentospilos_usuario" placeholder="Fecha nacimiento" required> 
                        
+                        <!--Debe Ser Calculable-->
                         <small class="font-weight-bold">Edad</small>
                         <input  id="edad" type="number" class="input_fields_general_tab" placeholder="edad" required> 
                        
@@ -87,14 +88,14 @@ require(
                         <small class="font-weight-bold">Tipo documento ingreso</small>
                         <div class=""> 
                           <select  id="s_tipo_documento_ingreso" class="custom-select  select-registro"></select>
-                          <input name="tipo_doc_ini" id="tipo_doc_ini" type="number" hidden>
+                          <input name="tipo_doc_ini" id="tipo_doc_ini" class="talentospilos_usuario" type="number" hidden>
                         </div>
                       </div>
                         
                       <div  class="col-md-6">
                         <small class="font-weight-bold">Documento ingreso</small>
                         <div class="">   
-                          <input name="num_doc_ini" id="num_doc_ini" type="text" class="input_fields_general_tab" placeholder="Documento de ingreso" required> 
+                          <input name="num_doc_ini" id="num_doc_ini" type="text" class="input_fields_general_tab talentospilos_usuario" placeholder="Documento de ingreso" required> 
                         </div> 
                       </div>
                     </div>
@@ -104,30 +105,28 @@ require(
                       
                       <div class="col-md-4">
                         <h5 class="font-weight-bold">Lugar procedencia</h5>
-  
-                        <small class="font-weight-bold">Ciudad</small>
-                        <div class="mb-3">
-                          <select id="select_ciudad_nacimiento" class="custom-select  select-registro"></select>
-                          <input name="id_ciudad_nac" id="id_ciudad_nac" type="number" hidden>
-                        </div>
-  
-                        <small class="font-weight-bold">Paìs</small>
-                        <div class="mb-3">
-                          <select id="select_pais_nacimiento" class="custom-select  select-registro"></select>
-                          <input name="id_pais_nac" id="id_pais_nac" type="number" hidden>
-                        </div>
-  
                         <small class="font-weight-bold">Direcciòn procedencia</small>
                         <div class="mb-3">   
-                          <input name="dir_ini" id="dir_ini" type="text" class="input_fields_general_tab" placeholder="Direcciòn procedencia" required> 
+                          <input name="dir_ini" id="dir_ini" type="text" class="input_fields_general_tab talentospilos_usuario" placeholder="Direcciòn procedencia" required> 
                         </div>
-    
+
                         <small class="font-weight-bold">Barrio procedencia</small>
                         <div>   
                           <select id="select_barrio_procedencia" class="custom-select  select-registro"></select>
-                          <input name="barrio_ini" id="barrio_ini" type="text" hidden>
+                          <input name="barrio_ini" id="barrio_ini" type="text" class="talentospilos_usuario" hidden>
                         </div>
   
+                        <small class="font-weight-bold">Ciudad procedencia</small>
+                        <div class="mb-3">
+                          <select id="select_ciudad_nacimiento" class="custom-select  select-registro"></select>
+                          <input name="id_ciudad_ini" id="id_ciudad_ini" type="number" class="talentospilos_usuario" hidden>
+                        </div>
+  
+                        <small class="font-weight-bold">Paìs procedencia</small>
+                        <div class="mb-3">
+                          <select id="select_pais_nacimiento" class="custom-select  select-registro"></select>
+                          <input name="id_pais" id="id_pais" type="number" class="talentospilos_usuario" hidden>
+                        </div>
                       </div>
                      
                     
@@ -136,19 +135,19 @@ require(
                         <h5 class="font-weight-bold">Lugar residencia</h5>
                         <small class="font-weight-bold">Direcciòn residencia</small>
                         <div class="mb-3">
-                          <input name="direccion_res" type="text" id="direccion_res" class="input_fields_general_tab" placeholder="Direccion de residencia" required> 
+                          <input name="direccion_res" type="text" id="direccion_res" class="input_fields_general_tab talentospilos_usuario" placeholder="Direccion de residencia" required> 
                         </div>
   
                         <small class="font-weight-bold">Barrio residencia</small>
                         <div class="mb-3">
                           <select class="custom-select select-registro" name="" id="select_barrio"></select>
-                          <input name="barrio_res" id="barrio_res" type="number" hidden>
+                          <input name="barrio_res" id="barrio_res" type="number" class="talentospilos_usuario" hidden>
                         </div>
   
                         <small class="font-weight-bold">Ciudad residencia</small>
                         <div class="mb-3">
                           <select class="custom-select  select-registro" name="" id="select_ciudad"></select>
-                          <input name="id_ciudad_res" id="id_ciudad_res" type="number" hidden>
+                          <input name="id_ciudad_res" id="id_ciudad_res" type="number" class="talentospilos_usuario" hidden>
                         </div>
   
                         <small class="font-weight-bold">Paìs residencia</small>
@@ -163,28 +162,31 @@ require(
                         
                         <small class="font-weight-bold ml-4">Celular</small>
                         <div class="col mb-3">
-                          <input name="celular" id="celular" type="text" class="input_fields_general_tab" placeholder="Nùmero de celular" required> 
+                          <input name="celular" id="celular" type="text" class="input_fields_general_tab talentospilos_usuario" placeholder="Nùmero de celular" required> 
                         </div>
   
                         <small class="font-weight-bold ml-4">Telèfono residencia</small>
                         <div class="col mb-3">
-                          <input name="tel_res" type="tel" id="tel_res" class="input_fields_general_tab" placeholder="Telèfono de residencia" required> 
+                          <input name="tel_res" type="tel" id="tel_res" class="input_fields_general_tab talentospilos_usuario" placeholder="Telèfono de residencia" required> 
                         </div>
   
                         <small class="font-weight-bold ml-4">Telèfono procedencia</small>
                         <div class="col mb-3">   
-                          <input name="tel_ini" id="tel_ini" type="tel" class="input_fields_general_tab" placeholder="Telèfono de procedencia" required> 
+                          <input name="tel_ini" id="tel_ini" type="tel" class="input_fields_general_tab talentospilos_usuario" placeholder="Telèfono de procedencia" required> 
                         </div>
-  
+
+                        <small class="font-weight-bold ml-4">Email</small>
+                        <div class="col mb-3">
+                          <input name="emailpilos" id="emailpilos" type="email" class="input_fields_general_tab talentospilos_usuario" placeholder="email" required> 
+                        </div>
                       </div>
-  
-                      
+   
                     </div>
                     <hr>
                     <div class="row mt-4">
                       <div class="col-md-4">
                         <small class="font-weight-bold">Contacto de emergencia 1</small>
-                        <input type="text" name="" id="" class="input_fields_general_tab">
+                        <input type="text" name="tel_acudiente" id="tel_acudiente" class="input_fields_general_tab talentospilos_usuario">
                          
                         <small class="font-weight-bold">Parentesco</small>
                         <input type="text" class="input_fields_general_tab">
@@ -198,10 +200,6 @@ require(
                         <input type="text" class="input_fields_general_tab">
                       </div>
   
-                      <div class="col-md-4">
-                        <small class="font-weight-bold">Email</small>
-                        <input name="emailpilos" id="emailpilos" type="email" class="input_fields_general_tab" placeholder="email" required> 
-                      </div>
                     </div>
                     <hr>
   
@@ -210,7 +208,7 @@ require(
                       <small class="font-weight-bold">Condiciòn de excepciòn</small>
                         <div class="">
                             <select id="s_excepcion" class="custom-select  select-registro"></select>
-                            <input id="id_cond_excepcion" name="id_cond_excepcion" type="number" hidden>
+                            <input id="id_cond_excepcion" name="id_cond_excepcion" class="talentospilos_usuario" type="number" hidden>
                         </div> 
                       </div>
   
@@ -221,7 +219,8 @@ require(
                       <div class="col-md-4">
                       <small class="font-weight-bold">Actividades simultàneas</small>
                         <div>
-                          <select name="s_act_simultanea" id="s_act_simultanea" class="custom-select"></select>
+                          <select name="s_act_simultanea" id="s_act_simultanea" class="custom-select select-registro"></select>
+                          <input name="id_act_simultanea" id="id_act_simultanea" class="talentospilos_usuario" type="number" hidden>
                         </div>
                       </div>
                     </div>
@@ -232,7 +231,7 @@ require(
                         <small class="font-weight-bold">Sexo</small>
                         <div class="">
                           <select id="select_sexo" class="custom-select  select-registro"></select>
-                          <input id="i_sexo" name="sexo" type="number" hidden>
+                          <input id="i_sexo" name="sexo" type="number" class="talentospilos_usuario" hidden>
                         </div>
   
                         <div class="">
@@ -250,7 +249,7 @@ require(
                         <small class="font-weight-bold">Identidad de gènero</small>
                         <div> 
                           <select id="select_genero" class="custom-select  select-registro"></select>
-                          <input name="id_identidad_gen" id="id_identidad_gen" type="number" hidden>
+                          <input name="id_identidad_gen" id="id_identidad_gen" class="talentospilos_usuario" type="number" hidden>
                         </div>
   
                         <div class="">
@@ -299,7 +298,7 @@ require(
                         <small class="font-weight-bold">Autoreconocimiento ètnico</small>
                         <div> 
                           <select id="select_etnia" class="custom-select  select-registro"></select>
-                          <input name="id_etnia" id="id_etnia" type="number" hidden>
+                          <input name="id_etnia" id="id_etnia" class="talentospilos_usuario" type="number" hidden>
                         </div>
                       </div>
                     </div>
@@ -310,7 +309,7 @@ require(
                         <small class="font-weight-bold">Estado civil</small>
                         <div class="">
                           <select id="select_estado_civil" class="custom-select  select-registro"></select>
-                          <input id="id_estado_civil" name="id_estado_civil" type="number" hidden>
+                          <input id="id_estado_civil" name="id_estado_civil" class="talentospilos_usuario" type="number" hidden>
                       </div>
                       </div>
                     </div>
@@ -335,7 +334,7 @@ require(
                       <div class="col-md-4">
                       <small class="font-weight-bold">Otros acompañamientos</small>
                         <div class="">
-                          <select class="custom-select  select-registro"  id="select_acompañamientos"></select>
+                          <select class="custom-select "  id="select_acompañamientos"></select>
                           <input id="acompañamientos" type="number" hidden>
                         </div>
                       </div>
@@ -350,27 +349,27 @@ require(
                           Estrato socio-econòmico de acuerdo con el recibo
                           de servicios pùblicos de su vivienda es:
                         </small>
-                        <input type="number" class="input_fields_general_tab">
+                        <input name="estrato" id="estrato" type="number" class="input_fields_general_tab talentospilos_usuario">
                       </div>
   
                       <div id="set-permanencia" class="col-md-4">
                         <small class="font-weight-bold">¿Còmo sostiene su permanecia en la universidad?</small>
   
                         <div class="col">
-                          <input name="option" type="radio">
+                          <input id="r_ingresos_propios" value="1" name="permanencia" type="radio">
                           <small>Ingresos propios</small>
                         </div>
                         <div class="col">
-                          <input name="option" type="radio">
+                          <input id="r_ingresos_familiares" value="2" name="permanencia" type="radio">
                           <small>Ingresos Familiares</small>
                         </div>
                         <div class="col">
-                          <input name="option" type="radio" class="otro">
+                          <input id="r_ingresos_otro" name="permanencia" value="3" type="radio" class="otro">
                           <small>otro</small>
                         </div>
                         <div class="col" hidden>
                           <small>¿Cuàl?</small>
-                          <input type="text" class="input_fields_general_tab">
+                          <input id="i_ingresos_otro" type="text" class="input_fields_general_tab">
                         </div>
                         
                       </div> 
@@ -378,7 +377,7 @@ require(
                         <small class="font-weight-bold">Recibe alguna beca, subsidio, pensiòn, indemnizaciòn, incapacidad temporal:</small>
   
                         <div class="col">
-                          <input name="beca" type="radio" class="otro">
+                          <input id="r_beca_si" value="1" name="beca" type="radio" class="otro">
                           <small>Si</small>
                         </div>
                         <div class="col" hidden>
@@ -388,50 +387,50 @@ require(
                           <input type="text" class="input_fields_general_tab">
                         </div>
                         <div class="col">
-                          <input name="beca" type="radio">
+                          <input id="r_beca_no" name="beca" value="0" type="radio">
                           <small>No</small>
                         </div>
                       </div> 
                     </div>
                     
                     <hr>
-                    <div class="row mt-4">
+                    <div id="row_materiales" class="row mt-4">
                       <div class="col-md-4">
                         <small class="font-weight-bold">¿Requiere materiales durante su carrera?</small>
-                        <div class="col mb-3">
-                          <input name="materiales" type="radio">
+                        <div id="set-materiales" class="col mb-3">
+                          <input name="materiales" id="r_materiales_si" value="1" type="radio">
                           <small>Si</small>
-                          <input name="materiales" type="radio">
+                          <input name="materiales" id="r_materiales_no" value="0" type="radio">
                           <small>No</small>
-                          <input name="materiales" type="radio">
+                          <input name="materiales" id="r_materiales_no_sabe" value="2" type="radio">
                           <small>No sabe</small>
                         </div>
                       
   
                       
                       <small class="mt-3 font-weight-bold">¿Cuàl es el valor aproximado en materiales, durante un semestre?</small>
-                      <div class="col">
-                        <input name="valor_materiales" type="radio">
+                      <div id="set-valor-materiales" class="col">
+                        <input name="valor_materiales" id="r_mat_valor_1" value="1"  type="radio">
                         <small>Desde $0 a $50.000</small>
                       </div>
                       <div class="col">
-                        <input name="valor_materiales" type="radio">
+                        <input name="valor_materiales" id="r_mat_valor_2" value="2"  type="radio">
                         <small>Desde $100.000 a $200.000</small>
                       </div>
                       <div class="col">
-                        <input name="valor_materiales" type="radio">
+                        <input name="valor_materiales" id="r_mat_valor_3" value="3"  type="radio">
                         <small>Desde $200.000 a $300.000</small>
                       </div>
                       <div class="col">
-                        <input name="valor_materiales" type="radio">
+                        <input name="valor_materiales" id="r_mat_valor_4" value="4"  type="radio">
                         <small>Desde $300.000 a $500.000</small>
                       </div>
                       <div class="col">
-                        <input name="valor_materiales" type="radio">
+                        <input name="valor_materiales" id="r_mat_valor_5" value="5"  type="radio">
                         <small>Desde $500.000 a $1.000.000</small>
                       </div>
                       <div class="col">
-                        <input name="valor_materiales" type="radio">
+                        <input name="valor_materiales" id="r_mat_valor_6" value="6"  type="radio">
                         <small>Superiores a $1.000.000</small>
                       </div>
                     </div>
@@ -440,15 +439,15 @@ require(
                       <small class="font-weight-bold">Para desplezarse a la universidad usted:</small>
   
                       <div class="col">
-                        <input name="option" type="radio">
+                        <input name="option" id="r_trans_privado" value="1" type="radio">
                         <small>Paga transporte privado</small>
                       </div>
                       <div class="col">
-                        <input name="option" type="radio">
+                        <input name="option" id="r_trans_publico" value="1" type="radio">
                         <small>Paga transporte pùblico</small>
                       </div>
                       <div class="col">
-                        <input name="option" type="radio">
+                        <input name="option" id="r_trans_propio" value="1" type="radio">
                         <small>Tiene transporte propio</small>
                       </div>
                       <div class="col">
@@ -457,45 +456,45 @@ require(
                       </div>
                       <div class="col" hidden>
                         <small>¿Cuàl?</small>
-                        <input type="text" class="input_fields_general_tab">
+                        <input type="text" id="i_trans_otro" class="input_fields_general_tab">
                       </div>
   
                       <small class="text-justify font-weight-bold">¿Cuàl es el valor aproximado para el transporte, durante un semestre?</small>
                       <div class="col">
                         <small>Valor</small>
-                        <input type="text" class="input_fields_general_tab">
+                        <input type="text" id="i_valor_semestre" class="input_fields_general_tab">
                       </div>
   
                     </div>
   
-                    <div class="col-md-4">
+                    <div id="set-sostenimiento" class="col-md-4">
                       <small class="text-justify font-weight-bold">
                         ¿Cuàl es el valor aproximado en sostenimiento (alimentaciòn,
                         arriendo, servicios pùblicos, incluido internet, entre otros),
                         durante un semestre?
                       </small>
                       <div class="col">
-                        <input name="sostenimiento" type="radio">
+                        <input name="sostenimiento" id="r_sostenimiento_1" value="1" type="radio">
                         <small>Desde $0 a $50.000</small>
                       </div>
                       <div class="col">
-                        <input name="sostenimiento" type="radio">
+                        <input name="sostenimiento" id="r_sostenimiento_1" value="2" type="radio">
                         <small>Desde $100.000 a $200.000</small>
                       </div>
                       <div class="col">
-                        <input name="sostenimiento" type="radio">
+                        <input name="sostenimiento" id="r_sostenimiento_1" value="3" type="radio">
                         <small>Desde $200.000 a $300.000</small>
                       </div>
                       <div class="col">
-                        <input name="sostenimiento" type="radio">
+                        <input name="sostenimiento" id="r_sostenimiento_1" value="4" type="radio">
                         <small>Desde $300.000 a $500.000</small>
                       </div>
                       <div class="col">
-                        <input name="sostenimiento" type="radio">
+                        <input name="sostenimiento" id="r_sostenimiento_1" value="5" type="radio">
                         <small>Desde $500.000 a $1.000.000</small>
                       </div>
                       <div class="col">
-                        <input name="sostenimiento" type="radio">
+                        <input name="sostenimiento" id="r_sostenimiento_1" value="6" type="radio">
                         <small>Superiores a $1.000.000</small>
                       </div>
   
@@ -504,14 +503,14 @@ require(
                   </div>
                   <hr>
                   <div class="row mt-4">
-                    <div class="col-md-4">
+                    <div id="set-vive" class="col-md-4">
                       <small class="font-weight-bold">Actualmente vive:</small>
                       <div class="col">
-                        <input name="vive" type="radio">
+                        <input name="vive" id="r_vive_1" value="1" type="radio">
                         <small>Solo(a)</small>
                       </div>
                       <div class="col">
-                        <input name="vive" type="radio">
+                        <input name="vive" id="r_vive_2" value="2" type="radio">
                         <small>Acompañado(a)</small>
                       </div>
                     </div>
@@ -526,97 +525,97 @@ require(
   
                     <div class="col-md-4">
                         <small class="font-weight-bold">Cantidad hijos</small>
-                        <input name="hijos" id="hijos" type="number" class="input_fields_general_tab" placeholder="Cantidad hijos" required> 
+                        <input name="hijos" id="hijos" type="number" class="input_fields_general_tab talentospilos_usuario" placeholder="Cantidad hijos" required> 
                     </div>
                   </div>
   
                   <hr>
                   <h5 class="font-weight-bold text-center">Informaciòn de la Madre(si aplica)</h5>
   
-                  <div class="row mt-4">
+                  <div id="row_madre_academic" class="row mt-4">
                     <div class="col-md-4">
                       <small class="font-weight-bold">Màximo nivel educativo alcanzado</small>
                       <div class="col">
-                        <input name="madre_educacion" type="radio">
+                        <input name="madre_educacion" id="r_madre_1" value="1" type="radio">
                         <small>Primaria incompleta</small>
                       </div>
                       <div class="col">
-                        <input name="madre_educacion" type="radio">
+                        <input name="madre_educacion" id="r_madre_2" value="2" type="radio">
                         <small>Primaria completa</small>
                       </div>
                       <div class="col">
-                        <input name="madre_educacion" type="radio">
+                        <input name="madre_educacion" id="r_madre_3" value="3" type="radio">
                         <small>Secundaria incompleta</small>
                       </div>
                       <div class="col">
-                        <input name="madre_educacion" type="radio">
+                        <input name="madre_educacion" id="r_madre_4" value="4" type="radio">
                         <small>Secundaria completa</small>
                       </div>
                       <div class="col">
-                        <input name="madre_educacion" type="radio">
+                        <input name="madre_educacion" id="r_madre_5" value="5" type="radio">
                         <small>Tècnico -tecnològico</small>
                       </div>
                       <div class="col">
-                        <input name="madre_educacion" type="radio">
+                        <input name="madre_educacion" id="r_madre_6" value="6" type="radio">
                         <small>Profesional</small>
                       </div>
                       <div class="col">
-                        <input name="madre_educacion" type="radio">
+                        <input name="madre_educacion" id="r_madre_7" value="7" type="radio">
                         <small>Especializaciòn</small>
                       </div>
                       <div class="col">
-                        <input name="madre_educacion" type="radio">
+                        <input name="madre_educacion" id="r_madre_8" value="8" type="radio">
                         <small>Maestrìa</small>
                       </div>
                       <div class="col">
-                        <input name="madre_educacion" type="radio">
+                        <input name="madre_educacion" id="r_madre_9" value="1" type="radio">
                         <small>Doctorado</small>
                       </div>
                     </div>
   
                     <div class="col-md-4">
                       <small class="font-weight-bold">Profesiòn u oficio</small>
-                      <input type="text" class="input_fields_general_tab">
+                      <input type="text" id="i_profesion_madre" class="input_fields_general_tab">
   
                       <small class="font-weight-bold">Cargo actual(si aplica)</small>
-                      <input type="text" class="input_fields_general_tab">
+                      <input type="text" id="i_cargo_madre" class="input_fields_general_tab">
   
                       <small class="font-weight-bold">Nota</small>
-                      <input type="text" class="input_fields_general_tab">
+                      <input type="text" id="i_nota_madre" class="input_fields_general_tab">
                     </div>
   
                     <div class="col-md-4">
                       <small class="font-weight-bold">Situaciòn laboral</small>
                       <div class="col">
-                        <input name="madre_laboral" type="radio">
+                        <input name="madre_laboral" id="r_laboral_madre_1" value="1" type="radio">
                         <small>Trabajo remunerado (asalariado/a)</small>
                       </div>
                       <div class="col">
-                        <input  name="madre_laboral" type="radio">
+                        <input  name="madre_laboral" id="r_laboral_madre_2" value="2"  type="radio">
                         <small>Trabajo por su propia cuenta (independiente)</small>
                       </div>
                       <div class="col">
-                        <input  name="madre_laboral" type="radio">
+                        <input  name="madre_laboral" id="r_laboral_madre_3" value="3"  type="radio">
                         <small>Trabajo no remunerado</small>
                       </div>
                       <div class="col">
-                        <input  name="madre_laboral" type="radio">
+                        <input  name="madre_laboral" id="r_laboral_madre_4" value="4"  type="radio">
                         <small>Responsable de tareas domèsticas</small>
                       </div>
                       <div class="col">
-                        <input  name="madre_laboral" type="radio">
+                        <input  name="madre_laboral" id="r_laboral_madre_5" value="5"  type="radio">
                         <small>Jubilado/a</small>
                       </div>
                       <div class="col">
-                        <input  name="madre_laboral" type="radio">
+                        <input  name="madre_laboral" id="r_laboral_madre_6" value="6"  type="radio">
                         <small>Desempleado/a por motivo de salud</small>
                       </div>
                       <div class="col">
-                        <input  name="madre_laboral" type="radio">
+                        <input  name="madre_laboral" id="r_laboral_madre_7" value="7"  type="radio">
                         <small>Desempleado/a por otros motivos</small>
                       </div>
                       <div class="col">
-                        <input  name="madre_laboral" type="radio">
+                        <input  name="madre_laboral" id="r_laboral_madre_8" value="8"  type="radio">
                         <small>Pensionado por discapacidad</small>
                       </div>
                     </div>
@@ -625,184 +624,184 @@ require(
                   <hr>
                   <h5 class="font-weight-bold text-center">Informaciòn del padre(si aplica)</h5>
   
-                  <div class="row mt-4">
+                  <div id="row_padre_academic" class="row mt-4">
                     <div class="col-md-4">
                       <small class="font-weight-bold">Màximo nivel educativo alcanzado</small>
                       <div class="col">
-                        <input name="padre_educacion" type="radio">
+                        <input name="padre_educacion" id="r_padre_1" value="1" type="radio">
                         <small>Primaria incompleta</small>
                       </div>
                       <div class="col">
-                        <input name="padre_educacion" type="radio">
+                        <input name="padre_educacion" id="r_padre_2" value="2" type="radio">
                         <small>Primaria completa</small>
                       </div>
                       <div class="col">
-                        <input name="padre_educacion" type="radio">
+                        <input name="padre_educacion" id="r_padre_3" value="3" type="radio">
                         <small>Secundaria incompleta</small>
                       </div>
                       <div class="col">
-                        <input name="padre_educacion" type="radio">
+                        <input name="padre_educacion" id="r_padre_4" value="4" type="radio">
                         <small>Secundaria completa</small>
                       </div>
                       <div class="col">
-                        <input name="padre_educacion" type="radio">
+                        <input name="padre_educacion" id="r_padre_5" value="5" type="radio">
                         <small>Tècnico -tecnològico</small>
                       </div>
                       <div class="col">
-                        <input name="padre_educacion" type="radio">
+                        <input name="padre_educacion" id="r_padre_6" value="6" type="radio">
                         <small>Profesional</small>
                       </div>
                       <div class="col">
-                        <input name="padre_educacion" type="radio">
+                        <input name="padre_educacion" id="r_padre_7" value="7" type="radio">
                         <small>Especializaciòn</small>
                       </div>
                       <div class="col">
-                        <input name="padre_educacion" type="radio">
+                        <input name="padre_educacion" id="r_padre_8" value="8" type="radio">
                         <small>Maestrìa</small>
                       </div>
                       <div class="col">
-                        <input name="padre_educacion" type="radio">
+                        <input name="padre_educacion" id="r_padre_9" value="9" type="radio">
                         <small>Doctorado</small>
                       </div>
                     </div>
   
                     <div class="col-md-4">
                       <small class="font-weight-bold">Profesiòn u oficio</small>
-                      <input type="text" class="input_fields_general_tab">
+                      <input type="text" id="i_profesion_padre" class="input_fields_general_tab">
   
                       <small class="font-weight-bold">Cargo actual(si aplica)</small>
-                      <input type="text" class="input_fields_general_tab">
+                      <input type="text" id="i_cargo_padre" class="input_fields_general_tab">
   
                       <small class="font-weight-bold">Nota</small>
-                      <input type="text" class="input_fields_general_tab">
+                      <input type="text" id="i_nota_padre" class="input_fields_general_tab">
                     </div>
   
                     <div class="col-md-4">
                       <small class="font-weight-bold">Situaciòn laboral</small>
                       <div class="col">
-                        <input name="padre_laboral" type="radio">
+                        <input name="padre_laboral" id="r_laboral_padre_1" value="1" type="radio">
                         <small>Trabajo remunerado (asalariado/a)</small>
                       </div>
                       <div class="col">
-                        <input name="padre_laboral" type="radio">
+                        <input name="padre_laboral" id="r_laboral_padre_2" value="2" type="radio">
                         <small>Trabajo por su propia cuenta (independiente)</small>
                       </div>
                       <div class="col">
-                        <input name="padre_laboral" type="radio">
+                        <input name="padre_laboral" id="r_laboral_padre_3" value="3" type="radio">
                         <small>Trabajo no remunerado</small>
                       </div>
                       <div class="col">
-                        <input name="padre_laboral" type="radio">
+                        <input name="padre_laboral" id="r_laboral_padre_4" value="4" type="radio">
                         <small>Responsable de tareas domèsticas</small>
                       </div>
                       <div class="col">
-                        <input name="padre_laboral" type="radio">
+                        <input name="padre_laboral" id="r_laboral_padre_5" value="5" type="radio">
                         <small>Jubilado/a</small>
                       </div>
                       <div class="col">
-                        <input name="padre_laboral" type="radio">
+                        <input name="padre_laboral" id="r_laboral_padre_6" value="6" type="radio">
                         <small>Desempleado/a por motivo de salud</small>
                       </div>
                       <div class="col">
-                        <input name="padre_laboral" type="radio">
+                        <input name="padre_laboral" id="r_laboral_padre_7" value="7" type="radio">
                         <small>Desempleado/a por otros motivos</small>
                       </div>
                       <div class="col">
-                        <input name="padre_laboral" type="radio">
+                        <input name="padre_laboral" id="r_laboral_padre_8" value="8" type="radio">
                         <small>Pensionado por discapacidad</small>
                       </div>
                     </div>
                   </div>
   
                   <hr>
-                  <h5 class="font-weight-bold text-center">Informaciòn de otros familiares que se hayan hecho a Cargo
+                  <h5 class="font-weight-bold text-center">Informaciòn de otros familiares que se hayan hecho Cargo
                     en caso diferente a los anteriores:
                   </h5>
   
-                  <div class="row mt-4">
+                  <div id="row_otro_academic" class="row mt-4">
                     <div class="col-md-4">
                       <small class="font-weight-bold">Màximo nivel educativo alcanzado</small>
                       <div class="col">
-                        <input name="otros_educacion" type="radio">
+                        <input name="otros_educacion" id="r_otro_1" value="1" type="radio">
                         <small>Primaria incompleta</small>
                       </div>
                       <div class="col">
-                        <input name="otros_educacion" type="radio">
+                        <input name="otros_educacion" id="r_otro_2" value="2" type="radio">
                         <small>Primaria completa</small>
                       </div>
                       <div class="col">
-                        <input name="otros_educacion" type="radio">
+                        <input name="otros_educacion" id="r_otro_3" value="3" type="radio">
                         <small>Secundaria incompleta</small>
                       </div>
                       <div class="col">
-                        <input name="otros_educacion" type="radio">
+                        <input name="otros_educacion" id="r_otro_4" value="4" type="radio">
                         <small>Secundaria completa</small>
                       </div>
                       <div class="col">
-                        <input name="otros_educacion" type="radio">
+                        <input name="otros_educacion" id="r_otro_5" value="5" type="radio">
                         <small>Tècnico -tecnològico</small>
                       </div>
                       <div class="col">
-                        <input name="otros_educacion" type="radio">
+                        <input name="otros_educacion" id="r_otro_6" value="6" type="radio">
                         <small>Profesional</small>
                       </div>
                       <div class="col">
-                        <input name="otros_educacion" type="radio">
+                        <input name="otros_educacion" id="r_otro_7" value="7" type="radio">
                         <small>Especializaciòn</small>
                       </div>
                       <div class="col">
-                        <input name="otros_educacion" type="radio">
+                        <input name="otros_educacion" id="r_otro_8" value="8" type="radio">
                         <small>Maestrìa</small>
                       </div>
                       <div class="col">
-                        <input name="otros_educacion" type="radio">
+                        <input name="otros_educacion" id="r_otro_9" value="9" type="radio">
                         <small>Doctorado</small>
                       </div>
                     </div>
   
                     <div class="col-md-4">
                       <small class="font-weight-bold">Profesiòn u oficio</small>
-                      <input type="text" class="input_fields_general_tab">
+                      <input type="text" id="i_profesion_otro" class="input_fields_general_tab">
   
                       <small class="font-weight-bold">Cargo actual(si aplica)</small>
-                      <input type="text" class="input_fields_general_tab">
+                      <input type="text" id="i_cargo_otro" class="input_fields_general_tab">
   
                       <small class="font-weight-bold">Nota</small>
-                      <input type="text" class="input_fields_general_tab">
+                      <input type="text" id="i_nota_otro" class="input_fields_general_tab">
                     </div>
   
                     <div class="col-md-4">
                       <small class="font-weight-bold">Situaciòn laboral</small>
                       <div class="col">
-                        <input name="otros_laboral" type="radio">
+                        <input name="otros_laboral" id="r_laboral_otro_1" value="1" type="radio">
                         <small>Trabajo remunerado (asalariado/a)</small>
                       </div>
                       <div class="col">
-                        <input name="otros_laboral" type="radio">
+                        <input name="otros_laboral" id="r_laboral_otro_2" value="2"  type="radio">
                         <small>Trabajo por su propia cuenta (independiente)</small>
                       </div>
                       <div class="col">
-                        <input name="otros_laboral" type="radio">
+                        <input name="otros_laboral" id="r_laboral_otro_3" value="3" type="radio">
                         <small>Trabajo no remunerado</small>
                       </div>
                       <div class="col">
-                        <input name="otros_laboral" type="radio">
+                        <input name="otros_laboral" id="r_laboral_otro_4" value="4"  type="radio">
                         <small>Responsable de tareas domèsticas</small>
                       </div>
                       <div class="col">
-                        <input name="otros_laboral" type="radio">
+                        <input name="otros_laboral" id="r_laboral_otro_5" value="5"  type="radio">
                         <small>Jubilado/a</small>
                       </div>
                       <div class="col">
-                        <input name="otros_laboral" type="radio">
+                        <input name="otros_laboral" id="r_laboral_otro_6" value="6"  type="radio">
                         <small>Desempleado/a por motivo de salud</small>
                       </div>
                       <div class="col">
-                        <input name="otros_laboral" type="radio">
+                        <input name="otros_laboral" id="r_laboral_otro_7" value="7"  type="radio">
                         <small>Desempleado/a por otros motivos</small>
                       </div>
                       <div class="col">
-                        <input name="otros_laboral" type="radio">
+                        <input name="otros_laboral" id="r_laboral_otro_8" value="8" type="radio">
                         <small>Pensionado por discapacidad</small>
                       </div>
                     </div>
@@ -813,15 +812,15 @@ require(
                   <div class="row mt-4">
                     <div class="col-md-4">
                       <small class="font-weight-bold">¿Què le motivo el ingreso a su carrera?</small>
-                      <textarea name="" id="" cols="30" rows="5"></textarea>
+                      <textarea name="" id="motivo_ingreso" cols="30" rows="5"></textarea>
                     </div>
                     <div class="col-md-4">
                       <small class="font-weight-bold">¿Cuàles son sus expectativas en esta carrera?</small>
-                      <textarea name="" id="" cols="30" rows="5"></textarea>
+                      <textarea name="" id="expecativas_carrera" cols="30" rows="5"></textarea>
                     </div>
                     <div class="col-md-4">
                       <small class="font-weight-bold">¿Cuàles son sus expectativas de graduarse?</small>
-                      <textarea name="" id="" cols="30" rows="5"></textarea>
+                      <textarea name="" id="expectativas_graduarse" cols="30" rows="5"></textarea>
                     </div>
                   </div>
                 </div>
@@ -835,30 +834,32 @@ require(
                     <div class="col-md-6">
                       <small class="font-weight-bold">Sede</small><br>
                       <select name="" id="select_sede" class="custom-select"></select>
+                      <input  id="sede" name="sede" type="number" hidden>
                     </div>
   
                     <div class="col-md-6">
                       <small class="font-weight-bold">Programa acadèmico</small>
-                      <select class="custom-select  select-registro" id="select_programa"></select><br>
-                      <input  id="programa" type="number" hidden>
+                      <select class="custom-select select-registro" id="select_programa"></select>
+                      <input  id="programa" name="programa" type="number" hidden>
                     </div>
                   </div>
   
+
                   <hr>
                   <div class="row mt-4">
                     <div class="col-md-6">              
-                    <small class="font-weight-bold">Semestre actual</small>
-                      <input type="text" class="input_fields_general_tab">
+                    <small class="font-weight-bold select-registro">Semestre actual</small>
+                      <input type="text" id="semestre_actual" name="semestre_actual" class="input_fields_general_tab">
   
                       <small class="font-weight-bold">Jornada</small>
   
                       <div class="col">
-                        <input name="jornada" type="radio">
+                        <input name="jornada" id="r_jornada_1" value="1" type="radio">
                         <small>Diurna</small>
                       </div>
   
                       <div class="col">
-                        <input name="jornada" type="radio">
+                        <input name="jornada" id="r_jornada_2" value="2" type="radio">
                         <small>Nocturna</small>
                       </div>
                     </div>
@@ -867,11 +868,11 @@ require(
                       <small class="font-weight-bold">
                         Año de ingreso por primera vez a la Universidad como estudiante(dd/mm/AAAA)
                       </small>
-                      <input name="anio_ingreso" id="anio_ingreso" type="date" class="input_fields_general_tab">
+                      <input name="anio_ingreso" id="anio_ingreso" type="number" class="input_fields_general_tab talentospilos_usuario">
   
   
                       <small class="font-weight-bold">Puntaje ICFES</small>
-                      <input name="puntaje_icfes" id="icfes" class="input_fields_general_tab" type="text" placeholder="Puntaje icfes" required>
+                      <input name="puntaje_icfes" id="icfes" class="input_fields_general_tab talentospilos_usuario" type="text" placeholder="Puntaje icfes" required>
                     </div>
                   </div>
   
@@ -892,63 +893,64 @@ require(
   
                        <tbody>
                          <tr>
-                           <td><input type="text" class="input_fields_general_tab"></td>
-                           <td><select id="s_programa_1" class="custom-select  select-registro"></select></td>
+                           <td><input type="text" id="anio_1" class="input_fields_general_tab"></td>
+                           <td><select id="s_programa_1" class="custom-select"></select></td>
+                           <!--Estas opciones deben cargarse desde la db-->
                            <td><select class="custom-select">
-                             <option value="">Bajos acadèmicos</option>
-                             <option value="">Condiciòn de salud</option>
-                             <option value="">Fallecimiento</option>
-                             <option value="">Condiciòn econòmica</option>
-                             <option value="">Condiciòn de programa acadèmico</option>
-                             <option value="">Cambio de instituciòn educativa</option>
-                             <option value="">Cambio de ciudad</option>
-                             <option value="">Retiro voluntario</option>
-                             <option value="">Prefiero no decirlo</option>
+                             <option value="1">Bajos acadèmicos</option>
+                             <option value="2">Condiciòn de salud</option>
+                             <option value="3">Fallecimiento</option>
+                             <option value="4">Condiciòn econòmica</option>
+                             <option value="5">Condiciòn de programa acadèmico</option>
+                             <option value="6">Cambio de instituciòn educativa</option>
+                             <option value="7">Cambio de ciudad</option>
+                             <option value="8">Retiro voluntario</option>
+                             <option value="9">Prefiero no decirlo</option>
                            </select></td>
                          </tr>
                          <tr>
-                          <td><input type="text" class="input_fields_general_tab"></td>
-                          <td><select id="s_programa_2" class="custom-select  select-registro" ></select></td>
+                          <td><input type="text" id="anio_2" class="input_fields_general_tab"></td>
+                          <td><select id="s_programa_2" class="custom-select" ></select></td>
                           <td><select class="custom-select">
-                            <option value="">Bajos acadèmicos</option>
-                            <option value="">Condiciòn de salud</option>
-                            <option value="">Fallecimiento</option>
-                            <option value="">Condiciòn econòmica</option>
-                            <option value="">Condiciòn de programa acadèmico</option>
-                            <option value="">Cambio de instituciòn educativa</option>
-                            <option value="">Cambio de ciudad</option>
-                            <option value="">Retiro voluntario</option>
-                            <option value="">Prefiero no decirlo</option>
+                            <option value="1">Bajos acadèmicos</option>
+                            <option value="2">Condiciòn de salud</option>
+                            <option value="3">Fallecimiento</option>
+                            <option value="4">Condiciòn econòmica</option>
+                            <option value="5">Condiciòn de programa acadèmico</option>
+                            <option value="6">Cambio de instituciòn educativa</option>
+                            <option value="7">Cambio de ciudad</option>
+                            <option value="8">Retiro voluntario</option>
+                            <option value="9">Prefiero no decirlo</option>
                           </select></td>
                         </tr>
                         <tr>
-                          <td><input type="text" class="input_fields_general_tab"></td>
-                          <td><select  id="s_programa_3" class="custom-select  select-registro"></select></td>
+                          <td><input type="text" id="anio_3" class="input_fields_general_tab"></td>
+                          <td><select  id="s_programa_3" class="custom-select"></select></td>
                           <td><select class="custom-select">
-                            <option value="">Bajos acadèmicos</option>
-                            <option value="">Condiciòn de salud</option>
-                            <option value="">Fallecimiento</option>
-                            <option value="">Condiciòn econòmica</option>
-                            <option value="">Condiciòn de programa acadèmico</option>
-                            <option value="">Cambio de instituciòn educativa</option>
-                            <option value="">Cambio de ciudad</option>
-                            <option value="">Retiro voluntario</option>
-                            <option value="">Prefiero no decirlo</option>
+                            <option value="1">Bajos acadèmicos</option>
+                            <option value="2">Condiciòn de salud</option>
+                            <option value="3">Fallecimiento</option>
+                            <option value="4">Condiciòn econòmica</option>
+                            <option value="5">Condiciòn de programa acadèmico</option>
+                            <option value="6">Cambio de instituciòn educativa</option>
+                            <option value="7">Cambio de ciudad</option>
+                            <option value="8">Retiro voluntario</option>
+                            <option value="9">Prefiero no decirlo</option>
                           </select></td>
                         </tr>
                         <tr>
-                          <td><input type="text" class="input_fields_general_tab"></td>
-                          <td><select id="s_programa_4" class="custom-select  select-registro"></select></td>
+                          <td><input type="text" id="anio_4" class="input_fields_general_tab"></td>
+                          <td><select id="s_programa_4" class="custom-select"></select></td>
                           <td><select class="custom-select">
-                            <option value="">Bajos acadèmicos</option>
-                            <option value="">Condiciòn de salud</option>
-                            <option value="">Fallecimiento</option>
-                            <option value="">Condiciòn econòmica</option>
-                            <option value="">Condiciòn de programa acadèmico</option>
-                            <option value="">Cambio de instituciòn educativa</option>
-                            <option value="">Cambio de ciudad</option>
-                            <option value="">Retiro voluntario</option>
-                            <option value="">Prefiero no decirlo</option>
+                            <option value="1">Bajos acadèmicos</option>
+                            <option value="2">Condiciòn de salud</option>
+                            <option value="3">Fallecimiento</option>
+                            <option value="4">Condiciòn econòmica</option>
+                            <option value="5">Condiciòn de programa acadèmico</option>
+                            <option value="6">Cambio de instituciòn educativa</option>
+                            <option value="7">Cambio de ciudad</option>
+                            <option value="8">Retiro voluntario</option>
+                            <option value="9">Prefiero no decirlo</option>
                           </select></td>
                         </tr>
                        </tbody>
@@ -962,22 +964,22 @@ require(
                   <small class="font-weight-bold">Educaciòn media de egreso:</small>
                   <div class="font-weight-bold row mt-5">
                     
-                   <div class="col-md-6 mt-4">
+                   <div id="div_tipo_institucion" class="col-md-6 mt-4">
                      <small class="font-weight-bold">
                        Nombre de la instituciòn
                      </small>
-                     <input type="text" class="mb-5 input_fields_general_tab">
+                     <input type="text" id="colegio" name="colegio" class="mb-5 input_fields_general_tab talentospilos_usuario">
   
                      <small class="font-weight-bold">Tìtulo obtenido</small>
-                     <input type="text" class="mb-5 input_fields_general_tab">
+                     <input type="text" id="titulo_1" class="mb-5 input_fields_general_tab">
   
                      <small class="font-weight-bold">Tipo de instituciòn</small>
                      
-                       <input name="tipo_institucion" type="radio">
+                       <input id="r_estamento_1" name="estamento" value="1" type="radio">
                        <small>Pùblica</small>
-                       <input name="tipo_institucion" type="radio">
+                       <input id="r_estamento_2" name="estamento" value="2" type="radio">
                        <small>Privada</small>
-                       <input name="tipo_institucion" type="radio">
+                       <input id="r_estamento_3" name="estamento" value="3" type="radio">
                        <small>Mixto</small>
                      
                    </div>
@@ -995,18 +997,18 @@ require(
   
                       <tbody>
                         <tr>
-                          <td><input type="text" class="input_fields_general_tab"></td>
-                          <td><input type="text" class="input_fields_general_tab"></td>
+                          <td><input id="dificultad_1" type="text" class="input_fields_general_tab"></td>
+                          <td><input id="apoyo_2" type="text" class="input_fields_general_tab"></td>
                         </tr>
   
                         <tr>
-                          <td><input type="text" class="input_fields_general_tab"></td>
-                          <td><input type="text" class="input_fields_general_tab"></td>
+                          <td><input id="dificultad_2" type="text" class="input_fields_general_tab"></td>
+                          <td><input id="apoyo_1" type="text" class="input_fields_general_tab"></td>
                         </tr>
   
                         <tr>
-                          <td><input type="text" class="input_fields_general_tab"></td>
-                          <td><input type="text" class="input_fields_general_tab"></td>
+                          <td><input id="dificultad_3" type="text" class="input_fields_general_tab"></td>
+                          <td><input id="apoyo_3" type="text" class="input_fields_general_tab"></td>
                         </tr>
                       </tbody>
                      </table>
@@ -1020,22 +1022,22 @@ require(
                       <small class="font-weight-bold">
                         Nombre de la instituciòn
                       </small>
-                      <input type="text" class="mb-5 input_fields_general_tab">
+                      <input type="text" id="colegio_superior" class="mb-5 input_fields_general_tab">
    
                       <small class="font-weight-bold">Tìtulo obtenido</small>
-                      <input type="text" class="mb-5 input_fields_general_tab">
+                      <input type="text" id="titulo_2" class="mb-5 input_fields_general_tab">
    
                       <small class="font-weight-bold">Tipo de instituciòn</small>
                       
-                        <input name="tipo_institucion" type="radio">
+                        <input id="r_estamento_superior_1" value="1" name="tipo_institucion" type="radio">
                         <small>Pùblica</small>
-                        <input name="tipo_institucion" type="radio">
+                        <input id="r_estamento_superior_2" value="2" name="tipo_institucion" type="radio">
                         <small>Privada</small>
-                        <input name="tipo_institucion" type="radio">
+                        <input id="r_estamento_superior_3" value="3" name="tipo_institucion" type="radio">
                         <small>Mixto</small>
                       
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6"> 
                       <small class="font-weight-bold">Relacione las dificultades y los apoyos que se presentaron en la instituciòn educativa
                         y/o familia para su permanencia y egreso
                       </small>
@@ -1049,18 +1051,18 @@ require(
    
                        <tbody>
                          <tr>
-                           <td><input type="text" class="input_fields_general_tab"></td>
-                           <td><input type="text" class="input_fields_general_tab"></td>
+                           <td><input id="dificultad_superior_1" type="text" class="input_fields_general_tab"></td>
+                           <td><input id="apoyo_superior_1" type="text" class="input_fields_general_tab"></td>
                          </tr>
    
                          <tr>
-                           <td><input type="text" class="input_fields_general_tab"></td>
-                           <td><input type="text" class="input_fields_general_tab"></td>
+                           <td><input id="dificultad_superior_2"  type="text" class="input_fields_general_tab"></td>
+                           <td><input id="apoyo_superior_2" type="text" class="input_fields_general_tab"></td>
                          </tr>
    
                          <tr>
-                           <td><input type="text" class="input_fields_general_tab"></td>
-                           <td><input type="text" class="input_fields_general_tab"></td>
+                           <td><input id="dificultad_superior_3"  type="text" class="input_fields_general_tab"></td>
+                           <td><input id="apoyo_superior_3"  type="text" class="input_fields_general_tab"></td>
                          </tr>
                        </tbody>
                       </table>
@@ -1075,18 +1077,18 @@ require(
                       <small class="font-weight-bold">
                         Nombre de la instituciòn
                       </small>
-                      <input type="text" class="mb-5 input_fields_general_tab">
+                      <input id="colegio_paralelo" type="text" class="mb-5 input_fields_general_tab">
    
                       <small class="font-weight-bold">Tìtulo obtenido</small>
-                      <input type="text" class="mb-5 input_fields_general_tab">
+                      <input id="titulo_paralelo" type="text" class="mb-5 input_fields_general_tab">
    
                       <small class="font-weight-bold">Tipo de instituciòn</small>
                       
-                        <input name="tipo_institucion" type="radio">
+                        <input id="estamento_paralelo_1" value="1" name="tipo_institucion" type="radio">
                         <small>Pùblica</small>
-                        <input name="tipo_institucion" type="radio">
+                        <input id="estamento_paralelo_2" value="2" name="tipo_institucion" type="radio">
                         <small>Privada</small>
-                        <input name="tipo_institucion" type="radio">
+                        <input id="estamento_paralelo_3" value="3" name="tipo_institucion" type="radio">
                         <small>Mixto</small>
                       
                     </div>
@@ -1104,18 +1106,18 @@ require(
    
                        <tbody>
                          <tr>
-                           <td><input type="text" class="input_fields_general_tab"></td>
-                           <td><input type="text" class="input_fields_general_tab"></td>
+                           <td><input id="dificultad_paralelo_1" type="text" class="input_fields_general_tab"></td>
+                           <td><input id="apoyo_paralelo_1" type="text" class="input_fields_general_tab"></td>
                          </tr>
    
                          <tr>
-                           <td><input type="text" class="input_fields_general_tab"></td>
-                           <td><input type="text" class="input_fields_general_tab"></td>
+                           <td><input id="dificultad_paralelo_2" type="text" class="input_fields_general_tab"></td>
+                           <td><input id="apoyo_paralelo_2" type="text" class="input_fields_general_tab"></td>
                          </tr>
    
                          <tr>
-                           <td><input type="text" class="input_fields_general_tab"></td>
-                           <td><input type="text" class="input_fields_general_tab"></td>
+                           <td><input id="dificultad_paralelo_3" type="text" class="input_fields_general_tab"></td>
+                           <td><input id="apoyo_paralelo_3" type="text" class="input_fields_general_tab"></td>
                          </tr>
                        </tbody>
                       </table>
@@ -1126,12 +1128,12 @@ require(
                    <div class="row mt-4">
                     <div class="col-md-6">
                       <small class="font-weight-bold">Periodo acadèmico de ingreso al proyecto de Discapacidad e incluciòn:</small>
-                      <input type="date" class="input_fields_general_tab">
+                      <input id="ingreso_dicapacidad" type="date" class="input_fields_general_tab">
                     </div>
   
                     <div class="col-md-4">
                       <small class="font-weight-bold">Observaciones adicionales:</small>
-                      <textarea name="" id="" cols="60" rows="5"></textarea>
+                      <textarea name="observacion" id="observacion_adicional" class="talentospilos_usuario" cols="60" rows="5"></textarea>
                     </div>
                    </div>
                 </div>
@@ -1173,14 +1175,14 @@ require(
                     <div class="col-md-6">
                       <small class="font-weight-bold">Discapacidad</small>
                       <div>
-                        <select class="custom-select  select-registro"  id="discapacidad"></select>
-                        <input name="id_discapacidad" id="id_discapacidad" type="number" hidden>
+                        <select id="s_discapacidad" class="custom-select select-registro"></select>
+                        <input name="id_discapacidad" id="id_discapacidad" class="talentospilos_usuario" type="number" hidden>
                       </div>
                     </div>
   
                     <div class="col-md-6">
                       <small class="font-weight-bold">Ayuda discapacidad</small> 
-                      <input name="ayuda_disc" id="ayuda_disc" class="input_fields_general_tab" type="text" placeholder="Ayuda discapacidad" required>
+                      <input name="ayuda_disc" id="ayuda_disc" class="input_fields_general_tab talentospilos_usuario" type="text" placeholder="Ayuda discapacidad" required>
                     </div>
                   </div>
                 </div>
@@ -1664,7 +1666,7 @@ require(
                         <tfoot>
                           <tr>
                             <td><small class="font-weight-bold">Funciones mentales globales:</small><small>Cociencia, la energìa y los impulsos</small></td>
-                            <td><small class="font-weight-bold">Funciones mentales globales:</small><small>Memoria, lenguaje y càlculo mental</small></td>
+                            <td><small class="font-weight-bold">Funciones mentales especìficas:</small><small>Memoria, lenguaje y càlculo mental</small></td>
                           </tr>
                         </tfoot>
                       </table>
@@ -2166,7 +2168,7 @@ require(
                   <div class="row mt-4">
                     <div class="col-md-6">
                       <small class="font-weight-bold">Documento tratamiento de datos personales</small> 
-                      <input name="json_detalle" id="documento_tratamiento" type="text" class="input_fields_general_tab" placeholder="Documento tratamiento de datos personales" required> 
+                      <input name="json_detalle" id="documento_tratamiento" type="text" class="input_fields_general_tab talentospilos_usuario" placeholder="Documento tratamiento de datos personales" required> 
                     </div>
                   </div>
   

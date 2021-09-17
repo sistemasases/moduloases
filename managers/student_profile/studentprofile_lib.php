@@ -304,7 +304,7 @@ function get_ciudades(){
  */
 function get_programas_academicos(){
     global $DB; 
-   $sql_query = "SELECT cod_univalle as id, nombre FROM {talentospilos_programa} ORDER BY nombre ASC ";
+   $sql_query = "SELECT id, nombre FROM {talentospilos_programa} ORDER BY nombre ASC ";
    return $DB->get_records_sql($sql_query);
 }
 
@@ -2206,19 +2206,19 @@ function save_data($data, $deportes, $f, $programa, $id_moodle){
     $student_object->grupo = 1;
     $student_object->estado = "ACTIVO";
     $student_object->estado_ases = "ACTIVO";
-    $student_object->observacion = "";
 
     $res = $DB->insert_record('talentospilos_usuario', $student_object);
 
     $student_extended->id_moodle_user = $id_moodle;
     $student_extended->id_ases_user = $res;
-    $student_extended->id_academic_program = 1;
+    $student_extended->id_academic_program = $programa;
     $student_extended->tracking_status = 1;
     $student_extended->program_status = 1;
 
-   // $result = $DB->insert_record('talentospilos_user_extended', $student_extended);
+    $result = $DB->insert_record('talentospilos_user_extended', $student_extended);
+   
         
-    return 1;
+    return $result;
 }
 
 /**

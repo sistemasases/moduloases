@@ -712,7 +712,7 @@ define([
                 //Prestación o ayuda  económica/beca/transporte/materiales
                 let objeto_json = {};
 
-                $("#collapse_econo input[type=checkbox]").not(".check_solvencia").each(function () {
+               $("#collapse_econo input[type=checkbox]").not(".check_solvencia").each(function () {
 
                     objeto_json.key_input = $(this).attr("id");
 
