@@ -644,8 +644,13 @@ function get_not_assign_students($general_fields=null, $conditions, $academic_fi
     $sub_query_academic = "";
 
     if($general_fields){
-        foreach($general_fields as $field){
-            $select_clause .= $field.', ';
+        foreach($general_fields as $key => $field){
+            if ($key <  (count($general_fields) - 1)) {
+                $select_clause .= $field.', ';
+            } else {
+                $select_clause .= $field.' ';
+            }
+
         }
     }
 
