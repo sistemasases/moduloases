@@ -5,10 +5,13 @@
             <div class="panel panel-default" id="panelPares">
                 <div class="panel-heading" role="tab" id="headingOne">
                     <h4 class="panel-title">
-                        <a id="seg_pares_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+    
+                       <!--  <a id="seg_pares_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">-->
+                        <a>
                             Seguimiento de Pares
                         </a>
-                    </h4>
+                    
+                     </h4>
                 </div>
                 <div id="collapseOne" class="panel-collapse collapse in form-pilos" role="tabpanel" aria-labelledby="headingOne">
                     {{#add_peer_tracking_sp}}
@@ -18,6 +21,14 @@
                              </button>-->
                         {{/add_peer_tracking_lts}}
                         <button type="button" id="button_add_v2_track" class="btn-primary">Nuevo seguimiento</button>
+                    {{/add_peer_tracking_sp}}
+                    {{#add_peer_tracking_sp}}
+                    <h4>
+                    <a>
+                         Para ver los seguimientos registrados, por favor ir al 
+                    </a>
+                    <a id="menu_report_trackings" href="https://campusvirtual.univalle.edu.co/moodle/blocks/ases/view/report_trackings.php?courseid=25643&amp;instanceid=450299"> Reporte de seguimientos </a>
+                    </h4>
                     {{/add_peer_tracking_sp}}
                     <div class="peer_trackings_v2 well well_v2" id="peer_trackings_v2" name="peer_trackings_v2">
                         {{#peer_tracking_v3}}
@@ -66,7 +77,8 @@
             <div class="panel panel-default" id="panelGrupal">
                 <div class="panel-heading" role="tab" id="headingTwo">
                     <h4 class="panel-title">
-                        <a id="seg_grupal_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                       <!-- <a id="seg_grupal_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> -->
+                        <a>
                             Seguimiento Grupal
                         </a>
                     </h4>
@@ -81,7 +93,8 @@
             <div class="panel panel-default" id="panelPrimerAcerca">
                 <div class="panel-heading" role="tab" id="headingThree">
                     <h4 class="panel-title">
-                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        <!--<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">-->
+                        <a>
                             Primer Acercamiento Profesional
                         </a>
                     </h4>
@@ -101,7 +114,8 @@
             <div class="panel panel-default" id="panelAcompSocio">
                 <div class="panel-heading" role="tab" id="headingFour">
                     <h4 class="panel-title">
-                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                         <!--<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">-->
+                        <a> 
                             Acompañamiento SocioEducativo
                         </a>
                     </h4>
@@ -118,7 +132,8 @@
             <div class="panel panel-default" id="panelSegSocio">
                 <div class="panel-heading" role="tab" id="headingFive">
                     <h4 class="panel-title">
-                        <a id="seg_socio_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                       <!-- <a id="seg_socio_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFive" aria-expanded="false" aria-controls="collapseFive">-->
+                        <a>    
                             Seguimiento SocioEducativo
                         </a>
                     </h4>

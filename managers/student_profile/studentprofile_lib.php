@@ -3225,7 +3225,7 @@ function student_profile_load_socioed_tab($id_ases, $id_block){
 
     $actions = authenticate_user_view($id_user, $id_block);
     $record = $actions;
-
+/*
     $record->peer_tracking_v3 = student_profile_get_peer_tracking($id_ases, $id_block);
     $record->peer_tracking_v3_string = json_encode($record->peer_tracking_v3);
     $record->peer_tracking = student_profile_get_html_peer_tracking($id_ases, $id_block);
@@ -3240,6 +3240,7 @@ function student_profile_load_socioed_tab($id_ases, $id_block){
     }else{
         $record->registro_primer_acercamiento = true;
     }
+    */
     return $record;
 }
 
