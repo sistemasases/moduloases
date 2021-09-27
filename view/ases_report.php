@@ -25,20 +25,21 @@
  */
 
 // Standard GPL and phpdocs
+global $CFG;
 require_once(__DIR__ . '/../../../config.php');
 require_once($CFG->libdir.'/adminlib.php');
-require_once('../managers/ases_report/asesreport_lib.php');
-require_once('../managers/instance_management/instance_lib.php');
-require_once('../managers/student_profile/studentprofile_lib.php');
-require_once('../managers/permissions_management/permissions_lib.php');
-require_once('../managers/validate_profile_action.php');
-require_once('../managers/menu_options.php');
+require_once(__DIR__ . '/../managers/ases_report/asesreport_lib.php');
+require_once(__DIR__ . '/../managers/instance_management/instance_lib.php');
+require_once(__DIR__ . '/../managers/student_profile/studentprofile_lib.php');
+require_once(__DIR__ . '/../managers/permissions_management/permissions_lib.php');
+require_once(__DIR__ . '/../managers/validate_profile_action.php');
+require_once(__DIR__ . '/../managers/menu_options.php');
 require_once(__DIR__.'/../managers/cohort/cohort_lib.php');
-include('../lib.php');
+include(__DIR__ . '/../lib.php');
 global $PAGE;
 
-include("../classes/output/ases_report_page.php");
-include("../classes/output/renderer.php");
+include(__DIR__ . "/../classes/output/ases_report_page.php");
+include(__DIR__ . "/../classes/output/renderer.php");
 
 // Set up the page.
 $pagetitle = 'Reporte general';

@@ -30,8 +30,8 @@
 require_once dirname(__FILE__) . '/../../../../config.php';
 require_once dirname(__FILE__).'/../../core/module_loader.php';
 
-require_once $CFG->dirroot.'/blocks/ases/managers/lib/lib.php';
-require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/v2/dphpforms_lib.php';
+require_once (__DIR__.'/lib.php');
+require_once (__DIR__.'/../dphpforms/v2/dphpforms_lib.php');
 require_once (__DIR__. '/../../classes/TrackingStatus.php');
 
 module_loader("periods");
@@ -352,34 +352,43 @@ function get_assigned_monitor($id_student, $instance_id)
 
     global $DB;
 
-    $object_current_semester = core_periods_get_current_period($instance_id);
+    if (is_numeric($instance_id) && is_numeric($id_student)) {
+         
+        $object_current_semester = core_periods_get_current_period($instance_id);
 
-    $sql_query = "SELECT id_monitor 
-                  FROM {talentospilos_monitor_estud} 
-                  WHERE id_estudiante = ".$id_student." AND id_semestre = ".$object_current_semester->id.";";
+        $sql_query = "SELECT id_monitor 
+                      FROM {talentospilos_monitor_estud} 
+                      WHERE id_estudiante = ".$id_student." AND id_semestre = ".$object_current_semester->id.";";
 
-    $result = $DB->get_record_sql($sql_query);    
-    
-    $monitor = $DB->get_record_sql($sql_query);
-    $id_monitor = -1;
-    if($monitor){
-        $id_monitor = $monitor->id_monitor;
-    }else{
-        return array();
-    }
+        $result = $DB->get_record_sql($sql_query);    
+        
+        $monitor = $DB->get_record_sql($sql_query);
+        $id_monitor = -1;
+        if($monitor){
+            $id_monitor = $monitor->id_monitor;
+        }else{
+            return array();
+        }
 
-    if ($id_monitor) {
+        if ($id_monitor) {
 
-        $sql_query = "SELECT id, firstname, lastname, email 
-                      FROM {user} 
-                      WHERE id = ".$id_monitor;
+            $sql_query = "SELECT id, firstname, lastname, email 
+                          FROM {user} 
+                          WHERE id = ".$id_monitor;
 
-        $monitor_object = $DB->get_record_sql($sql_query);
+            $monitor_object = $DB->get_record_sql($sql_query);
 
+        } else {
+            $monitor_object = array();
+        }
+        return $monitor_object;
     } else {
-        $monitor_object = array();
+        Throw new Exception(
+            'Invalid argument(s) instance:'. $instance_id . ' or id_student:' . $id_student
+        );
     }
-    return $monitor_object;
+
+
 }
 
 /**
@@ -395,26 +404,31 @@ function get_assigned_pract($id_student, $instance_id)
 
     global $DB;
 
-    $object_current_semester = core_periods_get_current_period($instance_id);
+    if (is_numeric($id_student) && is_numeric($instance_id)) {
+            
+        $object_current_semester = core_periods_get_current_period($instance_id);
 
-    $sql_query = "SELECT id_monitor FROM {talentospilos_monitor_estud} WHERE id_estudiante =" . $id_student . " AND id_semestre = " . $object_current_semester->id . ";";
-    $id_monitor = $DB->get_record_sql($sql_query)->id_monitor;
+        $sql_query = "SELECT id_monitor FROM {talentospilos_monitor_estud} WHERE id_estudiante =" . $id_student . " AND id_semestre = " . $object_current_semester->id . ";";
+        $monitor = $DB->get_record_sql($sql_query);
 
-    if ($id_monitor) {
-        $sql_query = "SELECT id_jefe FROM {talentospilos_user_rol} WHERE id_usuario = " . $id_monitor . " AND id_semestre = " . $object_current_semester->id . ";";
-        $id_trainee = $DB->get_record_sql($sql_query)->id_jefe;
+        if ($monitor) {
+            $sql_query = "SELECT id_jefe FROM {talentospilos_user_rol} WHERE id_usuario = " . $monitor->id_monitor . " AND id_semestre = " . $object_current_semester->id . ";";
+            $trainee = $DB->get_record_sql($sql_query);
 
-        if ($id_trainee) {
-            $sql_query = "SELECT id, firstname, lastname, email FROM {user} WHERE id = " . $id_trainee;
-            $trainee_object = $DB->get_record_sql($sql_query);
+            if ($trainee) {
+                $sql_query = "SELECT id, firstname, lastname, email FROM {user} WHERE id = " . $trainee->id_jefe;
+                $trainee_object = $DB->get_record_sql($sql_query);
+            } else {
+                $trainee_object = array();
+            }
         } else {
             $trainee_object = array();
         }
-    } else {
-        $trainee_object = array();
-    }
 
-    return $trainee_object;
+        return $trainee_object;
+    } else {
+        Throw new exception('Invalid id_student and/or instance_id');
+    }
 }
 
 /**
