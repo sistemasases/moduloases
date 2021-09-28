@@ -75,6 +75,7 @@ function get_functions_table()
 function get_functions_by_name($name)
 {
     global $DB;
+    
 
 
     $sql_query = "SELECT * FROM {talentospilos_funcionalidad} where  nombre_func='$name'";
