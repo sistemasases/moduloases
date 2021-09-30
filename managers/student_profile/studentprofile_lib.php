@@ -23,6 +23,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use function core_db\execute;
+
 require_once( dirname(__FILE__). '/../../../../config.php' );
 require_once( dirname(__FILE__). '/../../core/module_loader.php' ); 
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
@@ -2218,6 +2220,65 @@ function save_data($data, $deportes, $f, $programa, $id_moodle){
     $result = $DB->insert_record('talentospilos_user_extended', $student_extended);
    
         
+    return $result;
+}
+
+/**
+ * Insert missing fields of step2 form on {talentospilos_usuario} table
+ *
+ *
+ * @see save_profile($id_ases, $estrato, $hijos)
+ * @param $id_ases --> id del usuario a insertar los datos
+ * @param $estrato --> estrato del hogar 
+ * @param $hijos --> numero de hijos
+ * @param $vive_con --> Json containing the information of
+ *                      the people that lives with the student
+ * @return object in a json format
+ */
+
+function save_mdl_user($username, $nombre, $apellido, $emailI, $pass){
+
+    global $DB;
+    $mdl_user = new stdClass();
+    $mdl_user->auth = 'manual';
+    $mdl_user->confirmed = 1;
+    $mdl_user->mnethostid = 1;
+
+    $mdl_user->username = $username;
+    $mdl_user->firstname = $nombre;
+    $mdl_user->lastname = $apellido;
+    $mdl_user->email = $emailI;
+    $mdl_user->password = password_hash($pass, PASSWORD_DEFAULT);
+
+    $result = $DB->insert_record('user', $mdl_user);
+
+    return $result;
+}
+
+
+/**
+ * Insert missing fields of step2 form on {talentospilos_usuario} table
+ *
+ *
+ * @see save_profile($id_ases, $estrato, $hijos)
+ * @param $id_ases --> id del usuario a insertar los datos
+ * @param $estrato --> estrato del hogar 
+ * @param $hijos --> numero de hijos
+ * @param $vive_con --> Json containing the information of
+ *                      the people that lives with the student
+ * @return object in a json format
+ */
+
+function save_data_user_step2($id_ases,$estrato, $hijos){
+
+    global $DB;
+    $student_ases = new stdClass();
+    $student_ases->id = $id_ases;
+    $student_ases->hijos = $hijos;
+    $student_ases->estrato = $estrato;
+
+    $result = $DB->update_record('talentospilos_usuario', $student_ases);
+
     return $result;
 }
 

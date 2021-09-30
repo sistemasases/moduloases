@@ -7,7 +7,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $dbman = $DB->get_manager();
     $result = true;
 
-    if ($oldversion < 22021071314240) {
+    if ($oldversion < 22021090217070) {
 
       
     //     // ************************************************************************************************************
@@ -4406,7 +4406,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         }
     
          //Inserts para anexar la funcionalidad (registrar estudiante)al menù
-
+        
          $funcionalidad = new stdClass();
          $funcionalidad->nombre_func = "student_new_register";
          $funcionalidad->descripcion = "Permite registrar un nuevo estudiante a acompañar";
@@ -4432,12 +4432,12 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
          $permisos_rol_dis->id_accion = $id_accion;
 
          $id_dis = $DB->insert_record('talentospilos_permisos_rol', $permisos_rol_dis);
-        */
-    
-    
-        upgrade_block_savepoint(true, 22021071314240, 'ases');
         
-
+        
+         upgrade_block_savepoint(true, 22021090217070, 'ases');
+    */
+    
+        
         return $result;
 
     }

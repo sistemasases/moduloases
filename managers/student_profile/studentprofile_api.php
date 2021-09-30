@@ -203,7 +203,30 @@ if(isset($input->function) && isset($input->params)) {
 
             $result=get_user($params);
             echo json_encode($result);       
-    }else if($function == 'save_icetex_status') {
+    }else if($function == 'get_ases_user_id'){ 
+
+        $result=get_ases_user_id($params);
+        echo json_encode($result);       
+    }else if($function == 'get_full_user_by_code'){ 
+        $result=get_full_user_by_code($params);
+        echo json_encode($result);       
+    }else if($function == 'save_data_user_step2'){
+        $id_ases = $params[0];
+        $estrato = $params[1]; 
+        $hijos = $params[2];
+        $result=save_data_user_step2($id_ases, $estrato, $hijos);
+        echo json_encode($result);       
+    }
+    else if($function == 'save_mdl_user'){
+        $username = $params[0];
+        $nombre = $params[1]; 
+        $apellido = $params[2];
+        $emailI = $params[3];
+        $pass = $params[4];
+        $result=save_mdl_user($username, $nombre, $apellido, $emailI,$pass);
+        echo json_encode($result);       
+    }
+    else if($function == 'save_icetex_status') {
 
         /**
          * [0] => id_ases: string
