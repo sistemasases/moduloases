@@ -16,6 +16,7 @@ function xmldb_block_ases_install_recovery(){
 function xmldb_block_ases_install()
 {
 	global $DB;
+	global $CFG;
 	
 	$roles_array = array('administrativo', 'reportes', 'profesional_ps', 'monitor_ps', 'estudiante_t', 'sistemas', 'practicante_ps');
 	$descripcion_roles_array = array('Actualizar ficha', 'Rol general para directivos y demas personas que tengan permiso de lectura', 'Profesional Psicoeducativo', 'Monitor Psicoeducativo con estudiantes a cargo', 'Estudiante talentos pilos', 'Rol desarrollador','Practicante Psicoeducativo con monitores a cargo');
@@ -178,7 +179,8 @@ function xmldb_block_ases_install()
     // ** Carga de departamentos **
     // ****************************
     
-    if (!($handle = fopen("../files/departamentos.csv", 'r'))) throw new MyException("Error al cargar el archivo: 'departamentos.csv'. Es posible que el archivo se encuentre dañado");
+    $ruta_dptos = $CFG->dirroot . '/blocks/ases/files/departamentos.csv';
+    if (!($handle = fopen($ruta_dptos, 'r'))) throw new Exception("Error al cargar el archivo: $ruta_dptos Es posible que el archivo se encuentre dañado");
     
     pg_query("BEGIN") or die("No es posible iniciar la transacción en la base de datos\n");
     
@@ -203,7 +205,8 @@ function xmldb_block_ases_install()
     // ** Carga de municipios **
     // *************************
     
-    if (!($handle = fopen("../files/municipios.csv", 'r'))) throw new MyException("Error al cargar el archivo: 'departamentos.csv'. Es posible que el archivo se encuentre dañado");
+    $ruta_mnpos = $CFG->dirroot . '/blocks/ases/files/municipios.csv';
+    if (!($handle = fopen($ruta_mnpos, 'r'))) throw new Exception("Error al cargar el archivo: $ruta_mnpos Es posible que el archivo se encuentre dañado");
 
     pg_query("BEGIN") or die("No es posible iniciar la transacción en la base de datos\n");
     
@@ -244,7 +247,8 @@ function xmldb_block_ases_install()
     // ** Carga de sedes **
     // ********************
     
-    if (!($handle = fopen("../files/sede.csv", 'r'))) throw new MyException("Error al cargar el archivo: 'sede.csv'. Es posible que el archivo se encuentre dañado");
+    $ruta_sedes = $CFG->dirroot . '/blocks/ases/files/sede.csv';
+    if (!($handle = fopen($ruta_sedes, 'r'))) throw new Exception("Error al cargar el archivo: $ruta_sedes. Es posible que el archivo se encuentre dañado");
 
     pg_query("BEGIN") or die("No es posible iniciar la transacción en la base de datos\n");
     
@@ -284,7 +288,8 @@ function xmldb_block_ases_install()
     // ** Carga de facultades **
     // *************************
     
-    if (!($handle = fopen("../files/facultad.csv", 'r'))) throw new MyException("Error al cargar el archivo: 'facultad.csv'. Es posible que el archivo se encuentre dañado");
+    $ruta_facultad = $CFG->dirroot . '/blocks/ases/files/facultad.csv';
+    if (!($handle = fopen($ruta_facultad, 'r'))) throw new Exception("Error al cargar el archivo: $ruta_facultad. Es posible que el archivo se encuentre dañado");
 
     pg_query("BEGIN") or die("No es posible iniciar la transacción en la base de datos\n");
     
@@ -308,7 +313,8 @@ function xmldb_block_ases_install()
     // ** Carga de programas **
     // ************************
     
-    if (!($handle = fopen("../files/programa.csv", 'r'))) throw new MyException("Error al cargar el archivo: 'programa.csv'. Es posible que el archivo se encuentre dañado");
+    $ruta_programa = $CFG->dirroot . '/blocks/ases/files/programa.csv';
+    if (!($handle = fopen($ruta_programa, 'r'))) throw new Exception("Error al cargar el archivo: $ruta_programa. Es posible que el archivo se encuentre dañado");
 
     pg_query("BEGIN") or die("No es posible iniciar la transacción en la base de datos\n");
     
@@ -360,7 +366,8 @@ function xmldb_block_ases_install()
     // ** Carga de discapacidad **
     // ***************************
 
-    if (!($handle = fopen("../files/discapacidad.csv", 'r'))) throw new MyException("Error al cargar el archivo: 'discapacidad.csv'. Es posible que el archivo se encuentre dañado");
+    $ruta_discap = $CFG->dirroot . '/blocks/ases/files/discapacidad.csv';
+    if (!($handle = fopen($ruta_discap, 'r'))) throw new Exception("Error al cargar el archivo: $ruta_discap. Es posible que el archivo se encuentre dañado");
 
     pg_query("BEGIN") or die("No es posible iniciar la transacción en la base de datos\n");
     

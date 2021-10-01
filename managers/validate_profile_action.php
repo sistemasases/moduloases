@@ -1,7 +1,7 @@
 <?php
 require_once (dirname(__FILE__) . '/../../../config.php');
 
-require_once ('permissions_management/permissions_lib.php');
+require_once (__DIR__.'/permissions_management/permissions_lib.php');
 require_once (dirname(__FILE__) . '/periods_management/periods_lib.php');
 require_once (dirname(__FILE__) . '/../core/periods/periods.php');
 
@@ -17,20 +17,26 @@ global $USER;
 function authenticate_user_view($userid, $blockid,$vista=null)
 {
 
-    // Se obtiene la URL actual.
+    if (is_numeric($userid) && is_numeric($blockid)) {
+        
+        // Se obtiene la URL actual.
+        $function_name = 'Vista no definida';
+        if (isset($vista)) {
+            $function_name=$vista;
+        
+        } else {
+            $url = $_SERVER['REQUEST_URI'];
+            $aux_function_name = explode("/", $url);
 
-    $url = $_SERVER['REQUEST_URI'];
-    $aux_function_name = explode("/", $url);
+            // obtiene nombre de la vista actual.
 
-    // obtiene nombre de la vista actual.
+            $function_name = explode(".php", $aux_function_name[5]) [0];
+        }
 
-    $function_name = explode(".php", $aux_function_name[5]) [0];
-   
-    if($vista){
-        $function_name=$vista;
+        return get_actions_view($function_name,$userid,$blockid);
+    } else {
+        Throw new exception('Non numeric userid and/or blockid');
     }
-    return get_actions_view($function_name,$userid,$blockid);
-    
 }
 
 function get_actions_view($function_name,$userid,$blockid,$vista=null){
