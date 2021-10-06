@@ -28,7 +28,11 @@ require_once( __DIR__ . "/v" . PERIODS_VERSION . "/entrypoint.php");
  * @return  stdClass | null Return the last period.
  */
 function core_periods_get_current_period( $instance_id ){
-    return periods_get_current_period($instance_id);
+    if (is_numeric($instance_id)) {
+        return periods_get_current_period($instance_id);
+    } else {
+        Throw New Exception("Invalid instance passed: $instance_id");
+    }
 }
 
 /**
