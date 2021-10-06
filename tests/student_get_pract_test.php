@@ -31,26 +31,47 @@
 class block_ases_student_get_pract_testcase extends advanced_testcase {
     private $instance_id = 450299;
     private $student;
-
+    
+    /**
+     * Crea el estudiante a partir de datos randomicos.
+     * Se llama antes de cada test.
+     *
+     * @author David S. Cortés <david.cortes@correounivalle.edu.co>
+     */
     protected function setUp() {
         $this->student = $this->getDataGenerator()->create_user();
         $this->resetAfterTest(true);
     }
-
+    
+    /**
+     * Cuando ambos parametros son invalidos, se espera
+     * una excepción
+     * @author David S. Cortés <david.cortes@correounivalle.edu.co>
+     */
     public function test_fails_with_invalid_arguments() {
         require_once(__DIR__.'/../managers/lib/student_lib.php');
         
         $this->expectException(Exception::class);
         $result = get_assigned_pract(null, null);
     }
-
+    
+    /**
+     * Cuando el valor que se pasa como instancia es nulo, entonces
+     * también se espera que se lance una excepción.
+     * @author David S. Cortés <david.cortes@correounivalle.edu.co>
+     */
     public function test_error_when_invalid_instance() {
         require_once(__DIR__.'/../managers/lib/student_lib.php');
         
         $this->expectException(Exception::class);
         $result = get_assigned_pract($this->student->id, null);
     }
-
+    
+    /**
+     * Cuando el valor que se pasa como usuario es nulo, entonces
+     * también se espera que se lance una excepción.
+     * @author David S. Cortés <david.cortes@correounivalle.edu.co>
+     */
     public function test_error_when_invalid_user() {
         require_once(__DIR__.'/../managers/lib/student_lib.php');
         
@@ -58,6 +79,11 @@ class block_ases_student_get_pract_testcase extends advanced_testcase {
         $result = get_assigned_pract(null, $this->instance_id);
     }
 
+    /**
+     * Cuando los valores son válidos pero no existe una asignación, entonces
+     * también se espera que retorne un arreglo vacío.
+     * @author David S. Cortés <david.cortes@correounivalle.edu.co>
+     */
     public function test_returns_empty_array_when_no_assignation() {
         require_once(__DIR__.'/../managers/lib/student_lib.php');
         require_once(__DIR__.'/../core/module_loader.php');
@@ -74,6 +100,11 @@ class block_ases_student_get_pract_testcase extends advanced_testcase {
         $this->assertCount(0, $result);
     }
 
+    /**
+     * Cuando todos los valores son válidos y además existe una asignación, entonces
+     * se espera que se devuelva un objeto con la información del practicante.
+     * @author David S. Cortés <david.cortes@correounivalle.edu.co>
+     */
     public function test_returns_pract() {
         require_once(__DIR__.'/../managers/lib/student_lib.php');
         require_once(__DIR__.'/../core/module_loader.php');
