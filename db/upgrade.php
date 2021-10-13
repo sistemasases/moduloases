@@ -7,7 +7,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $dbman = $DB->get_manager();
     $result = true;
 
-    if ($oldversion < 22021090217070) {
+    if ($oldversion < 22021101101080) {
 
       
     //     // ************************************************************************************************************
@@ -4436,9 +4436,26 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         
          upgrade_block_savepoint(true, 22021090217070, 'ases');
     */
-    
-        
-        return $result;
 
+    /* #####################################################################################
+         * ACTUALIZACIÓN   22021101101080 
+         * César Becerra
+         * Se crean indices para las columnas id_formulario, id_pregunta de la tabla mdl_talentospilos_df_form_preg 
+         * con el fin de optimizar la consulta student_profile_load_socioed_tab
+         * ####################################################################################
+         */
+
+        $sql_intel= "create index IDX_talentos_df_form_preg_id_formulario on {talentospilos_df_form_preg} (id_formulario)";
+        $sql_intel2="create index IDX_talentos_df_form_preg_id_pregunta on {talentospilos_df_form_preg} (id_pregunta)";
+        $DB->execute($sql_intel);
+        $DB->execute($sql_intel2);
+
+
+
+
+
+
+        upgrade_block_savepoint(true, 22021101101080, 'ases');
+        return $result;
     }
 }
