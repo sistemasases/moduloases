@@ -22,10 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die();
-require_once(__DIR__ . '/../managers/lib/cohort_lib.php');
 require_once dirname(__FILE__) . '/../../../config.php';
 require_once (__DIR__ . '/../managers/lib/student_lib.php');
-
 
 
 class block_ases_observer
@@ -78,7 +76,7 @@ class block_ases_observer
         }
 
         if ($succes) {
-            self::send_email_alert($alerta->id_estudiante, $alerta->id_item, $alerta->nota, $event->courseid);
+            //self::send_email_alert($alerta->id_estudiante, $alerta->id_item, $alerta->nota, $event->courseid);
         }
     }
 
@@ -121,7 +119,6 @@ class block_ases_observer
      *
      * @return boolean --> true if there's a successful update, false otherwise.
      */
-
     public static function send_email_alert($userid, $itemid, $grade, $courseid)
     {
         if (!is_numeric($userid) || !is_numeric($itemid) ||

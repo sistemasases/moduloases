@@ -96,6 +96,26 @@ function get_ases_user($id)
 
     return $user;
 }
+
+/**
+ * Función que recupera los campos de usuario de la tabla {talentospilos_usuario}
+ * Gets all fields from user on {talentospilos_usuario} table
+ *
+ * @see get_ases_user_id($id)
+ * @param $id_student --> student id on {talentospilos_usuario} table
+ * @return array --> with every field
+ */
+function get_ases_user_id($id)
+{
+
+    global $DB;
+
+    $sql_query = "SELECT * FROM {talentospilos_usuario} WHERE num_doc = '$id'";
+    $user = $DB->get_record_sql($sql_query);
+
+    return $user;
+}
+
 /**
  * //THIS GOTTA CHANGE TO THE NEW MODEL
 
@@ -562,6 +582,26 @@ function get_user($code){
     global $DB;
     $sql_query = "SELECT * FROM {user} WHERE username LIKE '" . $code . "%';";
     $user = $DB->get_record_sql($sql_query);
+
+    return $user;
+}
+/**
+ * Gets a moodle user object given his id
+ *
+ * @see get_full_user_by_code($code)
+ * @param $code --> student code on {user} table
+ * @return object representing the user
+ */
+
+function get_full_user_by_code($code)
+{
+    global $DB;
+
+    //TO DO: $code sometimes reaches this point as empty
+    if($code != null) {
+        $sql_query = "SELECT * FROM {user} WHERE username LIKE '" . $code . "%';";
+        $user = $DB->get_record_sql($sql_query);
+    }else return 1;
 
     return $user;
 }

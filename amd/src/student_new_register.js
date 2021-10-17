@@ -17,6 +17,15 @@
             var input_deportes;
             var input_actividades;
             var id_moodle = "";
+            var id_ases = "";
+            //Banderas para las validaciones al guardar
+            var mdl_user, ases_user, cambios_s1 = false;
+
+            $('#pruebas').on('click', function () {
+
+                save_mdl_user();
+  
+            });
 
             //Modal controls
             $('#mostrar').on('click', function () {
@@ -93,6 +102,91 @@
                 });
 
 
+             //Funcion para obtener los datos del usuario al digitar el codigo
+             $( "#codigo_estudiantil" ).blur(function() {
+             var codeUser = $("#codigo_estudiantil").val();
+             if (codeUser === "" || codeUser === " ") {
+                 $('#nombre').val("");
+                 $('#apellido').val("");
+                 $('#emailinstitucional').val("");
+                 $('#nombre').prop("disabled",false);
+                 $('#apellido').prop("disabled",false);
+                 $('#emailinstitucional').prop("disabled",false);
+             } else {
+                 $.ajax({
+                     async: false,
+                     type: "POST",
+                     data: JSON.stringify({
+                         "function": 'get_full_user_by_code',
+                         "params": "code"+codeUser
+                     }),
+                     url: "../managers/student_profile/studentprofile_api.php",
+                     success: function(msg){
+                     var fullUser = JSON.parse(msg);
+                     if (fullUser != false) {
+                         setUserData(fullUser);
+                         ases_user = false;
+                         //$(":input").val('');
+                    }else {
+                        swal({
+                            title: "Warning",
+                            text: "Estudiante inexistente en la base de datos, ¿Esta seguro de registrar este usuario?.",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonClass: "btn-success",
+                            confirmButtonText: "Confirmar",
+                            cancelButtonText: "Cancelar",
+                            closeOnConfirm: false,
+                            closeOnCancel: false
+                          },
+                          function(isConfirm) {
+                            if (isConfirm) {
+                              swal("Confirmado","", "success");
+                              mdl_user = true;
+                              ases_user = false;
+                            } else {
+                              swal("Cancelado", "Ingresa nuevamente el codigo del estudiante", "error");
+                              $("#codigo_estudiantil").val("");
+                            }
+                          });
+                    }
+                     
+                         
+                     },
+                     error: function (msg) {
+                         swal(
+                             "Error",
+                                "Error al comunicarse con el servidor, por favor inténtelo nuevamente.",
+                                "error"
+                                );
+                            },
+
+                        });
+                    }
+            });
+            
+            function setUserData(fullUser) {
+                $('#nombre').val(fullUser.firstname);
+                $('#apellido').val(fullUser.lastname);
+                $('#emailinstitucional').val(fullUser.email);
+                $('#nombre').prop("disabled",true);
+                $('#apellido').prop("disabled",true);
+                $('#emailinstitucional').prop("disabled",true)
+            }
+            
+            $( "#fecha_nac" ).blur(function() {
+                var fecha = $('#fecha_nac').val();
+                var hoy = new Date();
+                var cumpleanos = new Date(fecha);
+                var edad = hoy.getFullYear() - cumpleanos.getFullYear();
+                var m = hoy.getMonth() - cumpleanos.getMonth();
+            
+                if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
+                    edad--;
+                }
+                $('#edad').val(edad);
+            });
+
             $(document).on('click', '.remove_fila', function () {
                     $(this).parent().parent().remove();
                 });
@@ -103,14 +197,7 @@
 
                 $(document).on('click', '#guardar_info', function () {
 
-                    //Recolectar valores de los selects
-                    var selects=$(".select-registro").map(function(){return $(this).attr("id");}).get()
-                    var inputs=$(".select-registro").map(function(){return $(this).next().attr("id")}).get()
-                    for(var i=0; i < inputs.length; i++){
-                        
-                        $("#"+inputs[i]).val($("#"+selects[i]+" option:selected").val());
-                        
-                    }
+                    getSelectValues();
                    
                     getStudent("code"+$("#codigo_estudiantil").val());
 
@@ -118,7 +205,7 @@
                     getEconomicsData();
              
                     //Funciòn para guardar la informaciòn de registro(en desarrollo)
-                   // save_data();
+                    save_data();
                 });
 
                
@@ -153,6 +240,37 @@
                     return arr;
                 }
                 
+                //Funciòn que obtiene un estudiante mediante la cedula
+                //Nota: en este caso solo retorna el id
+                function getStudentAses(code){
+                    $.ajax({
+                        async: false,
+                        type: "POST",
+                        data: JSON.stringify({
+                            "function": 'get_ases_user_id',
+                            "params": code
+                        }),
+                        url: "../managers/student_profile/studentprofile_api.php",
+                        success: function(msg){
+                        var options=JSON.parse(msg);
+
+                            handleDataAses(options.id);
+                            
+                        },
+                        error: function (msg) {
+                            swal(
+                                "Error",
+                                "Error al comunicarse con el servidor, por favor inténtelo nuevamente.",
+                                "error"
+                            );
+                        },
+
+                    });
+                }
+                //Funciòn para poder retornar desde una peticòn AJAX
+                function handleDataAses(data){
+                   id_ases = data;
+                } 
                 
                 //Funciòn que obtiene un estudiante mediante el codigo
                 //Nota: en este caso solo retorna el id
@@ -219,8 +337,32 @@
 
                 // Funciòn que recolecta los datos acadèmicos y los empaqueta en un arr
                 function getAcademidcData(){
+
+                    //Recolectar valores de los selects
+                    var selects=$(".select-academics-data").map(function(){return $(this).attr("id");}).get()
+                    var inputs=$(".select-academics-data").map(function(){return $(this).next().attr("id")}).get()
+                    for(var i=0; i < inputs.length; i++){
+                        
+                        $("#"+inputs[i]).val($("#"+selects[i]+" option:selected").val());
+                        
+                    }
+
                     var arr_academic = [];
-                    $("#sede").val();
+                    var arr_estudios_realizados = $(".estudios_realizados").serializeArray();
+                    var arr_estudios_paralelos = $(".estudios_paralelos").serializeArray();
+                    var academics_data = $(".academics_data").serializeArray();
+                    var ingresos = $(".ingresos_u").serializeArray();
+                    buildJsonObject('jornada', arr_academic);
+                    buildJsonObject('div_tipo_institucion', arr_estudios_realizados);
+                    buildJsonObject('div_tipo_institucion_superior', arr_estudios_realizados);
+                    buildJsonObject('div_tipo_institucion_paralelo', arr_estudios_paralelos);
+
+
+                    arr_academic.push(academics_data);
+                    arr_academic.push(ingresos);
+                    arr_academic.push(arr_estudios_realizados);
+                    arr_academic.push(arr_estudios_paralelos);
+                    return arr_academic;
                 }
                 // Funciòn que recolecta los datos socio-econòmicos y los empaqueta en un arr
                 function getEconomicsData(){
@@ -355,17 +497,129 @@
                 function hideAndShow(setOptions, nameRadio){
                     $("#"+setOptions).find("[name="+nameRadio+"]").on('click', function(){
                     
-                    var s=$("#"+setOptions + " .otro").parent().next();
-                    
-                    if($(this).hasClass("otro")){
-                        s.attr('hidden', false);
-                    }else{
-                        s.attr('hidden', true);
-                    }
+                        var s=$("#"+setOptions + " .otro").parent().next();
+                        
+                        if($(this).hasClass("otro")){
+                            s.attr('hidden', false);
+                        }else{
+                            s.attr('hidden', true);
+                        }
                     })
+                }
+
+                   
+                $('.talentospilos_usuario').each(function() {
+                    var elem = $(this);
+                 
+                    // Save current value of element
+                    elem.data('oldVal', elem.val());
+                 
+                    // Look for changes in the value
+                        elem.bind("propertychange change input paste", function(event){
+                           // If value has changed...
+                           if (elem.data('oldVal') != elem.val()) {
+                            // Updated stored value
+                            elem.data('oldVal', elem.val());
+                     
+                            // Do action
+                            cambios_s1 = true;
+                            console.log("cambio");
+                          }
+                        });
+                  });
+
+                
+                    
+                /*
+                Funcion que determina el cambio entre paginas
+                */    
+                $("#smartwizard").on("leaveStep", function(e, anchorObject, currentStepIndex, stepDirection, nextStepIndex) {
+                    if (stepDirection === "forward") {
+                        switch (currentStepIndex) {
+                            case 0:
+                                //Validacion para la determinar la creacion en mdl_user
+                                if (mdl_user) {
+                                    save_mdl_user();
+                                    mdl_user = false;
+                                } else {
+                                    
+                                    console.log("No creo en mdl_user ");
+                                }
+
+                                /* Validacion para determinar si es un insert o update
+                                    en la tabla talentospilos_usuario */
+                                if (!ases_user) {
+                                    getSelectValues();
+                                    getStudent("code"+$("#codigo_estudiantil").val());
+                                    save_data();
+                                    console.log("Creo en talentos pilos");
+                                    ases_user = true;
+                                    cambios_s1 = false;
+                                }else if(cambios_s1){
+                                    console.log("Actualizo");
+                                    cambios_s1 = false;
+                                }
+                            break;
+                            case 1:
+                                save_family_data();
+                                console.log("te vas del step  " + currentStepIndex + "?");
+                            break;
+                            case 2:
+
+                                console.log("te vas del step  " + currentStepIndex + "?");
+                            break;
+                            default:
+                                break;
+                        }
                     }
+                 });
 
 
+                //Funcion para recolectar valores de los selects
+                function getSelectValues(){
+                    var selects=$(".select-registro").map(function(){return $(this).attr("id");}).get()
+                    var inputs=$(".select-registro").map(function(){return $(this).next().attr("id")}).get()
+                    for(var i=0; i < inputs.length; i++){
+                        
+                        $("#"+inputs[i]).val($("#"+selects[i]+" option:selected").val());
+                        
+                    }
+                } 
+
+                function save_mdl_user() {
+                    getSelectValues();
+                    var codigo = $("#codigo_estudiantil").val();
+                    var programa = $("#programa").val();
+                    var nombre = $("#nombre").val();
+                    var apellido = $("#apellido").val();
+                    var emailI = $("#emailinstitucional").val();
+                    var username = 'code'+codigo+"-program"+programa;
+                    var pass = nombre.charAt(0)+codigo+apellido.charAt(0);
+                    pass = pass.toUpperCase();
+                    
+                    $.ajax({
+                        type: "POST",
+                        data: JSON.stringify({
+                            "function": 'save_mdl_user',
+                            "params": [username, nombre, apellido, emailI, pass]
+                        }),
+                        url: "../managers/student_profile/studentprofile_api.php",
+                        success: function(msg){
+                            id_moodle = msg;
+                        },
+                        
+                
+                        error: function (msg) {
+                            swal(
+                                "Error",
+                                "Error al comunicarse con el servidor, por favor inténtelo nuevamente.",
+                                "error"
+                            );
+                        },
+
+                    });
+                    
+                }
 
                 //Funciòn que hace una peticiòn asìncrona a la Api para el guardado, aquì se debe empaquetar en variables
                 //todos las variables a guardar del formulario
@@ -389,7 +643,36 @@
                         }),
                         url: "../managers/student_profile/studentprofile_api.php",
                         success: function(msg){
+                            console.log(msg);
+                        },
                         
+                
+                        error: function (msg) {
+                            swal(
+                                "Error",
+                                "Error al comunicarse con el servidor, por favor inténtelo nuevamente.",
+                                "error"
+                            );
+                        },
+
+                    });
+                }
+
+                function save_family_data() {
+                    var familia = buildArr($("#table_familia"));
+                    var hijos =  $("#hijos").val();
+                    var estrato = $("#estrato").val();
+                    getStudentAses($("#num_doc").val());
+                    
+                    $.ajax({
+                        type: "POST",
+                        data: JSON.stringify({
+                            "function": 'save_data_user_step2',
+                            "params": [id_ases, estrato, hijos]
+                        }),
+                        url: "../managers/student_profile/studentprofile_api.php",
+                        success: function(msg){
+                            console.log(msg);
                         },
                         
                 
