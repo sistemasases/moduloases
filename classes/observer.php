@@ -92,6 +92,10 @@ class block_ases_observer
     {
         global $DB;
 
+        if (!is_numeric($id_estudiante)) {
+            Throw new Exception('[observer] => invalid user id:'.$id_estudiante );
+        }
+
         $query = "SELECT id_ases_user
                   FROM {talentospilos_user_extended} extended
                   INNER JOIN {talentospilos_est_estadoases} estado_u ON extended.id_ases_user = estado_u.id_estudiante
