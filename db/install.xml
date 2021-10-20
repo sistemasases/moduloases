@@ -112,6 +112,7 @@
         <FIELD NAME="grupo" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="id_discapacidad" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="ayuda_disc" TYPE="char" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="estado_ases" TYPE="char" LENGTH="10" NOTNULL="true" DEFAULT="ACTIVO" SEQUENCE="false"/>
         <FIELD NAME="id_pais" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="vive_con" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="hijos" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
