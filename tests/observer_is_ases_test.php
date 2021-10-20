@@ -57,14 +57,52 @@ class observer_is_ases_testcase extends advanced_testcase
      * Tests that isASES() returns true when the provided
      * user id corresponds to an active ASES student.
      */
-    //public function test_is_ases()
-    //{
-    //    $this->resetAfterTest(true); 
+    public function test_is_ases()
+    {
+        $this->resetAfterTest(true); 
 
-    //    $student = $this->getDataGenerator()->create_user();
+        $student = $this->getDataGenerator()->create_user();
+        $this->create_test_student($student->id); 
 
-    //    $query = 
-    //        "INSERT INTO {talentospilos_user_extended}
-    //        VALUES " 
-    //}
+    }
+
+    /**
+     * This function aids test_is_ases() by creating
+     * a student, i.e: making the respective inserts into
+     * talentospilos_usuario and talentospilos_user_extended
+     */
+    private function create_test_student($user_id)
+    {
+       /**
+        * Campos obligatorios talentospilos_usuario:
+        * num_doc_ini
+        * tipo_doc_ini
+        * tipo_doc
+        * num_doc
+        * id_ciudad_ini
+        * id_ciudad_res
+        * fecha_nac
+        * id_ciudad_nac
+        * sexo
+        * estado
+        * id_discapacidad
+        * ayuda_disc
+        * estado_ases
+        */
+
+        $csv = array_map('str_getcsv', file(__DIR__ . '/fixtures/dummy-user.csv')); 
+        $dataobject = array_combine(
+            array_values($csv[0]), // Keys
+            array_values($csv[1]) // Values
+        );
+
+
+        try {
+            global $DB;
+            $DB->insert_record_raw('talentospilos_usuario', $dataobject);
+        } catch(Exception $ex) {
+            throw new exception($ex->getMessage());
+        }
+
+    }
 }
