@@ -96,6 +96,10 @@ class observer_is_ases_testcase extends advanced_testcase
             array_values($csv[1]) // Values
         );
 
+        // replace '' with NULL
+        foreach($dataobject as $i => $value) {
+            if ($value === "") $dataobject[$i] = NULL;
+        }
 
         try {
             global $DB;
