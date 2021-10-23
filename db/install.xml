@@ -732,7 +732,6 @@
         <FIELD NAME="id_ases_user" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Identificador del usuario ASES, se relaciona con la tabla {talentospilos_usuario}"/>
         <FIELD NAME="id_academic_program" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Identificador del programa acadpemico, se relaciona con la tabla {talentospilos_programa}"/>
         <FIELD NAME="tracking_status" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="Identificador de la cohorte. Se relaciona con la tabla {cohort}"/>
-        <FIELD NAME="estado_seguimiento" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="Identificador de la cohorte. Se relaciona con la tabla {cohort}"/>
         <FIELD NAME="program_status" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Campo que representa el estado del estudiante en un programa académico determinado"/>
       </FIELDS>
       <KEYS>
