@@ -61,34 +61,43 @@ class observer_is_ases_testcase extends advanced_testcase
     {
         $this->resetAfterTest(true); 
 
+        // Arrange
         $student = $this->getDataGenerator()->create_user();
         $this->create_test_student($student->id); 
 
+        $result = $this->observer->isASES($student->id);
+
+        $this->assertTrue($result);
     }
 
     /**
      * This function aids test_is_ases() by creating
      * a student, i.e: making the respective inserts into
      * talentospilos_usuario and talentospilos_user_extended
+     *
+     * @param nummeric: $user_id, the moodle user id of the 
+     * student. 
      */
     private function create_test_student($user_id)
     {
        /**
         * Campos obligatorios talentospilos_usuario:
-        * num_doc_ini
-        * tipo_doc_ini
-        * tipo_doc
-        * num_doc
-        * id_ciudad_ini
-        * id_ciudad_res
-        * fecha_nac
-        * id_ciudad_nac
-        * sexo
-        * estado
-        * id_discapacidad
-        * ayuda_disc
-        * estado_ases
         */
+        $mandatory = [
+            "num_doc_ini" => '',
+            "tipo_doc_ini" => '',
+            "tipo_doc" => '',
+            "num_doc" => '',
+            "id_ciudad_ini" => '',
+            "id_ciudad_res" => '',
+            "fecha_nac" => '',
+            "id_ciudad_nac" => '',
+            "sexo" => '',
+            "estado" => '',
+            "id_discapacidad" => '',
+            "ayuda_disc" => '',
+            "estado_ases" => ''
+        ];
 
         $csv = array_map('str_getcsv', file(__DIR__ . '/fixtures/dummy-user.csv')); 
         $dataobject = array_combine(
@@ -96,17 +105,56 @@ class observer_is_ases_testcase extends advanced_testcase
             array_values($csv[1]) // Values
         );
 
-        // replace '' with NULL
-        foreach($dataobject as $i => $value) {
-            if ($value === "") $dataobject[$i] = NULL;
-        }
+        // only use mandatory fields
+        $result = array_intersect_key($dataobject, $mandatory);
 
         try {
             global $DB;
-            $DB->insert_record_raw('talentospilos_usuario', $dataobject);
+            $id_ases_user = $DB->insert_record('talentospilos_usuario', $result);
+
+            // insert to {talentospilos_user_extended}
+            $csv2 = array_map('str_getcsv', file(__DIR__ . '/fixtures/dummy-extended-user.csv')); 
+            $dataobject2 = array_combine(
+                array_values($csv2[0]), // Keys
+                array_values($csv2[1]) // Values
+            );
+            $dataobject2['id_ases_user'] = $id_ases_user;
+            $dataobject2['id_moodle_user'] = $user_id;
+            $DB->insert_record('talentospilos_user_extended', $dataobject2);
+
+            // insert to {talentospilos_est_estadoases}
+            $csv3 = array_map('str_getcsv', file(__DIR__ . '/fixtures/dummy-estadoases.csv')); 
+            $dataobject3 = array_combine(
+                array_values($csv3[0]), // Keys
+                array_values($csv3[1]) // Values
+            );
+            $dataobject3['id_estudiante'] = $id_ases_user;
+            $dataobject3['id_estado_ases'] = $this->create_estados_ases();
+            $DB->insert_record('talentospilos_est_estadoases', $dataobject3);
+
         } catch(Exception $ex) {
             throw new exception($ex->getMessage());
         }
+    }
 
+    /**
+     * Aids create_student_ases, its job is to insert into {talentospilos_estados_ases}
+     * the tracking type "seguimiento" which isASES() checks for.
+     *
+     * @returns the id of the inserted record, null if an error ocurred.
+     */
+    private function create_estados_ases()
+    {
+        try {
+            global $DB;
+            $dataobject = [
+                "nombre" => "seguimiento",
+                "descripcion" => "Se le realiza seguimiento en la estrategia ASES"
+            ];
+            $estado_id = $DB->insert_record('talentospilos_estados_ases', $dataobject);
+            return $estado_id;
+        } catch(Exception $ex) {
+            throw new exception($ex->getMessage());
+        }
     }
 }
