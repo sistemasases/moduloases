@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="blocks/ases/db" VERSION="20210902" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
+<XMLDB PATH="blocks/ases/db" VERSION="20211023" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -107,11 +107,11 @@
         <FIELD NAME="colegio" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="estamento" TYPE="char" LENGTH="15" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="observacion" TYPE="char" LENGTH="1000" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="estado_icetex" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Llave foránea que apunta a la tabla talentospilos_estado_icetex. Indica el estado de un estudiante ante el Icetex."/>
         <FIELD NAME="estado" TYPE="char" LENGTH="10" NOTNULL="true" DEFAULT="ACTIVO" SEQUENCE="false"/>
         <FIELD NAME="grupo" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="id_discapacidad" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="ayuda_disc" TYPE="char" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="estado_ases" TYPE="char" LENGTH="10" NOTNULL="true" DEFAULT="ACTIVO" SEQUENCE="false"/>
         <FIELD NAME="id_pais" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="vive_con" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="hijos" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
@@ -732,7 +732,6 @@
         <FIELD NAME="id_ases_user" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Identificador del usuario ASES, se relaciona con la tabla {talentospilos_usuario}"/>
         <FIELD NAME="id_academic_program" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Identificador del programa acadpemico, se relaciona con la tabla {talentospilos_programa}"/>
         <FIELD NAME="tracking_status" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="Identificador de la cohorte. Se relaciona con la tabla {cohort}"/>
-        <FIELD NAME="estado_seguimiento" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="Identificador de la cohorte. Se relaciona con la tabla {cohort}"/>
         <FIELD NAME="program_status" TYPE="int" LENGTH="10" NOTNULL="false" DEFAULT="1" SEQUENCE="false" COMMENT="Campo que representa el estado del estudiante en un programa académico determinado"/>
       </FIELDS>
       <KEYS>
@@ -1299,7 +1298,7 @@
         <KEY NAME="mdl_taleacom_id_pk" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="talentospilos_otros_acom" COMMENT="Tabla donde se almacenaran los acompanamientos ">
+    <TABLE NAME="talentospilos_otros_acom" COMMENT="Tabla donde se almacenaran los acompanamientos">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="acompanamiento" TYPE="char" LENGTH="60" NOTNULL="true" SEQUENCE="false" COMMENT="Acompañamientos para los usuarios"/>
