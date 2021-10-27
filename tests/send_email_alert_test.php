@@ -17,7 +17,6 @@
  * Pruebas unitarias para la función send_email_alert dentro del observador.
  * @author David S. Cortés <david.cortes@correounivalle.edu.co>
  * @see classes/observer.php
- * @group block_ases
  */
 
 require_once(__DIR__ . '/../classes/observer.php');
