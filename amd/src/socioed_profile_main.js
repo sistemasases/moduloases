@@ -6,7 +6,10 @@
  * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define(['jquery'], function($) {
+define(['jquery',
+        'block_ases/loading_indicator',
+        'block_ases/mustache'], 
+        function($, loading_indicator, mustache) {
 
     return {
 
@@ -52,6 +55,49 @@ define(['jquery'], function($) {
 				});
 
             });
+            $('#button_carga_Hisotricos').on('click', function() {
+                var id_ases = $('#id_ases').val();
+                var id_instance = document.querySelector('#dphpforms_block_instance').dataset.info;
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({
+                        "function": 'cargar_historicos',
+                        "params": [id_ases, id_instance],
+                    }),
+                    url: "../managers/student_profile/studentprofile_api.php",
+                    success: function(msg) {
+                        if(msg.status_code == 0) {
+                            $.ajax({
+                                url: "../templates/socioed_historic.mustache",
+                                data: null,
+                                dataType: "text",
+                                async: false,
+                                success: function( template ){
+                                    loading_indicator.hide();
+                                    let tab_to_load = $(mustache.render( template, msg.data_response ));
+                                    $("#socioed_historic").append( tab_to_load );
+                                },
+                                error: function(msg) {
+                                    loading_indicator.hide();
+                                    console.log(msg);
+                                }
+                        
+                            });
+                        }else {
+                            loading_indicator.hide();
+                            console.log(msg);
+                        }
+
+                    },
+                    dataType: "json",
+                    cache: "false",
+                    error: function(msg) {
+                        loading_indicator.hide();
+                        console.log(msg);
+                    }
+                });
+            });
+
 
             $('#button_primer_acercamiento').on('click', function() {
 
