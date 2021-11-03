@@ -3304,6 +3304,30 @@ function student_profile_load_socioed_tab($id_ases, $id_block){
     */
     return $record;
 }
+/**
+ * @see student_profile_carga_historico($id_ases)
+ * @desc Gets all the social-educative information of an student
+ * @param $id_ases string -> ASES student id
+ * @param $id_block string -> Block id
+ * @return Object
+ */
+
+function student_profile_carga_historico($id_ases, $id_block){
+
+    global $USER;
+
+    $id_user = $USER->id;
+    $id_block = (int)$id_block;
+
+    $actions = authenticate_user_view($id_user, $id_block);
+    $record = $actions;
+
+    $record->peer_tracking_v3 = student_profile_get_peer_tracking($id_ases, $id_block);
+    $record->peer_tracking_v3_string = json_encode($record->peer_tracking_v3);
+    $record->peer_tracking = student_profile_get_html_peer_tracking($id_ases, $id_block);
+      
+    return $record;
+}
 
 /**
  * @see student_profile_load_academic_tab($id_ases)

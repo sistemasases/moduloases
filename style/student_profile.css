@@ -551,6 +551,10 @@
     #button_add_v2_track{
         margin-bottom: 15px;
     }
+
+    #button_carga_Hisotricos{
+        margin-bottom: 15px;
+    }
 }
 
 @media print {
