@@ -102,7 +102,13 @@ class block_ases_ases_report_testcase extends advanced_testcase {
         $DB->insert_record('talentospilos_permisos_rol', $perm);
     }
     
-     
+
+    /**
+     * Verifica que un usuario con los permisos correctos se pueda autenticar
+     * a la vista del reporte general (ases_report) 
+     *
+     * @author David S. Cortés <david.cortes@corrounivalle.edu.co>     
+     */
     public function test_user_can_view() {
         require_once(__DIR__.'/../managers/validate_profile_action.php');
         global $USER;
@@ -111,6 +117,12 @@ class block_ases_ases_report_testcase extends advanced_testcase {
         $this->assertObjectNotHasAttribute('message', $result);
     }
 
+    /**
+     * Verifica que un usuario sin los permisos correctos no se pueda autenticar
+     * a la vista del reporte general (ases_report) 
+     *
+     * @author David S. Cortés <david.cortes@corrounivalle.edu.co>     
+     */
     public function test_user_can_not_view() {
         require_once(__DIR__.'/../managers/validate_profile_action.php');
         global $USER;
@@ -119,6 +131,12 @@ class block_ases_ases_report_testcase extends advanced_testcase {
         $this->assertObjectHasAttribute('message', $result);
     }
 
+    /**
+     * Verifica que el parametro usuario sea (o no sea) numérico, cuando no lo es
+     * debe lanzarse una excepción.
+     *
+     * @author David S. Cortés <david.cortes@corrounivalle.edu.co>     
+     */
     public function test_throws_exception_with_null_user() {
         require_once(__DIR__.'/../managers/validate_profile_action.php');
         global $USER;
@@ -127,6 +145,12 @@ class block_ases_ases_report_testcase extends advanced_testcase {
         $result = authenticate_user_view(null, 450299, 'ases_report');
     }
 
+    /**
+     * Verifica que el parametro instancia sea (o no sea) numérico. Cuando no lo es
+     * debe lanzarse una excepción.
+     *
+     * @author David S. Cortés <david.cortes@corrounivalle.edu.co>     
+     */
     public function test_throws_exception_with_null_instance() {
         require_once(__DIR__.'/../managers/validate_profile_action.php');
         global $USER;

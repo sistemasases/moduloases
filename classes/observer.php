@@ -23,7 +23,7 @@
  */
 defined('MOODLE_INTERNAL') || die();
 require_once dirname(__FILE__) . '/../../../config.php';
-require_once $CFG->dirroot . '/blocks/ases/managers/lib/student_lib.php';
+require_once (__DIR__ . '/../managers/lib/student_lib.php');
 
 
 class block_ases_observer
@@ -92,6 +92,10 @@ class block_ases_observer
     {
         global $DB;
 
+        if (!is_numeric($id_estudiante)) {
+            Throw new Exception('[observer] => invalid user id:'.$id_estudiante );
+        }
+
         $query = "SELECT id_ases_user
                   FROM {talentospilos_user_extended} extended
                   INNER JOIN {talentospilos_est_estadoases} estado_u ON extended.id_ases_user = estado_u.id_estudiante
@@ -107,6 +111,7 @@ class block_ases_observer
         }
     }
 
+
     /**
      * Sends an email alert in case a student final grade is less than 3.0
      *
@@ -118,9 +123,14 @@ class block_ases_observer
      *
      * @return boolean --> true if there's a successful update, false otherwise.
      */
-
     //public static function send_email_alert($userid, $itemid, $grade, $courseid)
     //{
+    //    if (!is_numeric($userid) || !is_numeric($itemid) ||
+    //        !is_numeric($grade) || !is_numeric($courseid)) 
+    //    {
+    //        return false;
+    //    }
+
     //    global $USER;
     //    global $DB;
 
@@ -148,29 +158,25 @@ class block_ases_observer
     //    $subject = "ALERTA ACADÉMICA $nombre_estudiante";
 
     //    $curso = $DB->get_record_sql("SELECT fullname, shortname FROM {course} WHERE id = $courseid");
+    //    $curso = get_course($courseid, false);
     //    $nombre_curso = $curso->fullname . " " . $curso->shortname;
-    //    $query_teacher = "SELECT concat_ws(' ',firstname,lastname) AS fullname
-    //       FROM
-    //         (SELECT usuario.firstname,
-    //                 usuario.lastname,
-    //                 userenrol.timecreated
-    //          FROM {course} cursoP
-    //          INNER JOIN {context} cont ON cont.instanceid = cursoP.id
-    //          INNER JOIN {role_assignments} rol ON cont.id = rol.contextid
-    //          INNER JOIN {user} usuario ON rol.userid = usuario.id
-    //          INNER JOIN {enrol} enrole ON cursoP.id = enrole.courseid
-    //          INNER JOIN {user_enrolments} userenrol ON (enrole.id = userenrol.enrolid
-    //                                                       AND usuario.id = userenrol.userid)
-    //          WHERE cont.contextlevel = 50
-    //            AND rol.roleid = 3
-    //            AND cursoP.id = $courseid
-    //          ORDER BY userenrol.timecreated ASC
-    //          LIMIT 1) AS subc";
-    //    $profesor = $DB->get_record_sql($query_teacher)->fullname;
+
+    //    $teacher_result = get_course_teacher($courseid);
+    //    if (!property_exists($teacher_result, 'fullname')) {
+    //        Throw new Exception('[classes/observer.php]: No teacher for course '. $nombre_curso . ' was found.');
+    //    }
+
+    //    $profesor = $teacher_result->fullname;
+
     //    $item = $DB->get_record_sql("SELECT itemname FROM {grade_items} WHERE id = $itemid");
+    //    if (!property_exists($item, 'itemname')) {
+    //        Throw new Exception('[classes/observer.php]: No grade item with id:'. $itemid . ' was found.');
+    //    }
     //    $itemname = $item->itemname;
+
     //    $nota = number_format($grade, 2);
     //    $nom_may = strtoupper($nombre_curso);
+
     //    $titulo = "<b>ALERTA ACADÉMICA CURSO $nom_may <br> PROFESOR: $profesor</b><br> ";
     //    $mensaje = "Se le informa que se ha presentado una alerta académica del estudiante $nombre_estudiante en el curso $nombre_curso<br>
     //    El estudiante ha obtenido la siguiente calificación:<br> <br> <b>$itemname: <b> $nota <br><br>
@@ -182,8 +188,34 @@ class block_ases_observer
     //    $user_ases = get_adds_fields_mi($userid);
     //    $id_tal = $user_ases->idtalentos;
 
-    //    //$monitor = get_assigned_monitor($id_tal);
-    //    //$nombre_monitor = $monitor->firstname . " " . $monitor->lastname;
+    //    $user_cohorts = cohort_lib::get_cohorts_for_user($user_moodle->username); 
+    //    if (empty($user_cohorts)) {
+    //        return false;
+    //    }
+
+    //    $user_instance = $user_cohorts[0]->id_instancia;
+
+    //    if (count($user_cohorts) > 1) {
+    //        $instances = array_column($user_cohorts, 'id_instancia');
+    //        if (in_array(450299, $instances)) {
+    //            $user_instance = 450299; 
+    //        } else {
+    //            /**
+    //             * Si no hay cohorte con instancia ASES-CALI se devuelve
+    //             * la instancia de la primera cohorte donde se encuentre monitor.
+    //             */
+    //            foreach($instances as $instance) {
+    //               $mon = get_assigned_monitor($id_tal, $instance);
+    //               if (!empty($mon)) {
+    //                   $user_instance = $instance;
+    //                   break;
+    //               }
+    //            }
+    //        }
+    //    }
+
+    //    $monitor = get_assigned_monitor($id_tal, $user_instance);
+    //    $nombre_monitor = $monitor->firstname . " " . $monitor->lastname;
     //    $saludo_mon = "Estimado monitor $nombre_monitor<br><br>";
 
     //    $monitorToEmail = new stdClass;
@@ -208,7 +240,7 @@ class block_ases_observer
     //    } else {
     //        $resp->monitor = true;
 
-    //        $practicante = get_assigned_pract($id_tal);
+    //        $practicante = get_assigned_pract($id_tal, $user_instance);
     //        $nombre_practicante = $practicante->firstname . " " . $practicante->lastname;
     //        $saludo_prac = "Estimado practicante $nombre_practicante<br><br>";
 
@@ -234,7 +266,7 @@ class block_ases_observer
     //        } else {
     //            $resp->practicante = true;
 
-    //            $profesional = get_assigned_professional($id_tal);
+    //            $profesional = get_assigned_professional($id_tal, $user_instance);
     //            $nombre_profesional = $profesional->firstname . " " . $profesional->lastname;
     //            $saludo_prof = "Estimado profesional $nombre_profesional<br><br>";
 
@@ -267,5 +299,43 @@ class block_ases_observer
     //    return $resp;
 
     //}
+
+    /**
+     * Returns the teacher in charge of the specified
+     * course ($courseid)
+     *
+     * @author David S. Cortés <david.cortes@correounivalle.edu.co>
+     *
+     * @param $courseid -> course identifier in {course}
+     * @return stdClass with the course's info, if nothing is found, returns an empty object.
+     */
+    private function get_course_teacher($courseid)
+    {
+        $to_return = stdClass();
+        try {
+            $query_teacher = "SELECT concat_ws(' ',firstname,lastname) AS fullname
+               FROM
+                 (SELECT usuario.firstname,
+                         usuario.lastname,
+                         userenrol.timecreated
+                  FROM {course} cursoP
+                  INNER JOIN {context} cont ON cont.instanceid = cursoP.id
+                  INNER JOIN {role_assignments} rol ON cont.id = rol.contextid
+                  INNER JOIN {user} usuario ON rol.userid = usuario.id
+                  INNER JOIN {enrol} enrole ON cursoP.id = enrole.courseid
+                  INNER JOIN {user_enrolments} userenrol ON (enrole.id = userenrol.enrolid
+                                                               AND usuario.id = userenrol.userid)
+                  WHERE cont.contextlevel = 50
+                    AND rol.roleid = 3
+                    AND cursoP.id = $courseid
+                  ORDER BY userenrol.timecreated ASC
+                  LIMIT 1) AS subc";
+            $to_return = $DB->get_record_sql($query_teacher);
+        
+        } catch (Exception $ex) {
+            Throw new Exception($ex->getMessage());
+        }
+        return $to_return;
+    }
 
 }
