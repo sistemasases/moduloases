@@ -117,7 +117,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
              */
 
             function crearAccion() {
-                var nombre = $("#nombre").val().trim();
+                var nombre = $("#nombre_accion").val().trim();
                 var descripcion = $("#descripcion").val().trim();
                 var id_funcionalidad = $("#functions").val();
                 var msj = "";
