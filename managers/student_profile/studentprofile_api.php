@@ -24,8 +24,8 @@
  */
 
 require_once(dirname(__FILE__). '/../../../../config.php');
-require_once('../lib/student_lib.php');
-require_once('../student_profile/studentprofile_lib.php');
+require_once(__DIR__ . '/../lib/student_lib.php');
+require_once(__DIR__ . '/../student_profile/studentprofile_lib.php');
 
 date_default_timezone_set('America/Bogota');
 
