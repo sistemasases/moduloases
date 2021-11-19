@@ -9,8 +9,9 @@
 define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block_ases/sweetalert', 'block_ases/select2', 'block_ases/jqueryui'], function ($, bootstrap, datatables, sweetalert, select2, jqueryui) {
 
 	return {
-
+        
 		init: function () {
+
 			$("#periods").select2({
 				language: {
 
@@ -27,6 +28,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
 			});
 
 			var params = get_url_parameters(document.location.search);
+            console.log("HOLA"); //DONOTCOMMIT!
 
 			$(document).ready(function () {
 				$(".assignment_li").css({ display: 'none' });
