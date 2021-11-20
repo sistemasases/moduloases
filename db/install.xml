@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="blocks/ases/db" VERSION="20210902" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
+<XMLDB PATH="blocks/ases/db" VERSION="20211108" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -919,6 +919,7 @@
         <FIELD NAME="nivel_educ_padres" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="situa_laboral_padres" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="expectativas_laborales" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="datos_economicos_adicionales" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="id_ases_user" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
@@ -972,6 +973,7 @@
         <FIELD NAME="regimen_salud" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="servicio_salud_vinculado" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="servicios_usados" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="datos_salud_adicionales" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="id_ases_user" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
@@ -1036,6 +1038,7 @@
         <FIELD NAME="dificultades" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="observaciones" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="titulo_academico_colegio" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="datos_academicos_adicionales" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -1299,7 +1302,7 @@
         <KEY NAME="mdl_taleacom_id_pk" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="talentospilos_otros_acom" COMMENT="Tabla donde se almacenaran los acompanamientos ">
+    <TABLE NAME="talentospilos_otros_acom" COMMENT="Tabla donde se almacenaran los acompanamientos">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="acompanamiento" TYPE="char" LENGTH="60" NOTNULL="true" SEQUENCE="false" COMMENT="Acompañamientos para los usuarios"/>

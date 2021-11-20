@@ -140,6 +140,22 @@ function update_user_image_profile($mdl_user_id, $php_file) {
      return $status_ases_array;
  }
 
+ /**
+ * Gets true or false if register user_extended exist
+ *
+ * @see get_exist_economics_data()
+ * @return boolean
+ */
+ 
+function get_exist_user_extended($id_ases_user, $id_moodle){
+     
+    global $DB;
+
+    $sql_query = "SELECT * FROM {talentospilos_user_extended} WHERE id_moodle_user = '$id_moodle' AND id_ases_user = '$id_ases_user'";
+    
+    return $DB->record_exists_sql($sql_query);
+}
+
 /**
  * Gets true or false if register economics_data exist
  *
@@ -307,6 +323,18 @@ function get_ciudades(){
 function get_programas_academicos(){
     global $DB; 
    $sql_query = "SELECT id, nombre FROM {talentospilos_programa} ORDER BY nombre ASC ";
+   return $DB->get_records_sql($sql_query);
+}
+
+/**
+ * Get programas academicos
+ *
+ * @see get_programas_academicos_est()
+ * @return object --> with programas academicos
+ */
+function get_programas_academicos_est($code){
+    global $DB; 
+   $sql_query = "SELECT id, nombre FROM {talentospilos_programa} WHERE cod_univalle=" . $code . ";";
    return $DB->get_records_sql($sql_query);
 }
 
@@ -2187,11 +2215,12 @@ function update_tracking_status($id_ases_user, $id_academic_program){
  * @param $data --> Array containing the fields to Insert
  * @return object in a json format
  */
-function save_data($data, $deportes, $f, $programa, $id_moodle){
+function save_data($data, $deportes, $f, $programa, $id_moodle, $json_detalle){
     global $DB;
 
     $student_object = new stdClass();
     $student_extended = new stdClass();
+    $cohort = new stdClass();
     for($i = 0; $i < count($data); $i++){
 
         $name = $data[$i]->name;
@@ -2205,6 +2234,7 @@ function save_data($data, $deportes, $f, $programa, $id_moodle){
     
     $student_object->actividades_ocio_deporte = $deportes;
     $student_object->vive_con = $f;
+    $student_object->json_detalle = $json_detalle;
     $student_object->grupo = 1;
     $student_object->estado = "ACTIVO";
     $student_object->estado_ases = "ACTIVO";
@@ -2219,21 +2249,26 @@ function save_data($data, $deportes, $f, $programa, $id_moodle){
 
     $result = $DB->insert_record('talentospilos_user_extended', $student_extended);
    
+    $cohort->cohortid = 50;
+    $cohort->userid = $id_moodle;
+    $cohort->timeadded = time();
+
+    $result_cohort = $DB->insert_record('cohort_members', $cohort);
         
     return $result;
 }
 
 /**
- * Insert missing fields of step2 form on {talentospilos_usuario} table
+ * Crea usuario nuevo en la tabla {user} en caso de no existir
  *
  *
- * @see save_profile($id_ases, $estrato, $hijos)
- * @param $id_ases --> id del usuario a insertar los datos
- * @param $estrato --> estrato del hogar 
- * @param $hijos --> numero de hijos
- * @param $vive_con --> Json containing the information of
- *                      the people that lives with the student
- * @return object in a json format
+ * @see save_mdl_user($username, $nombre, $apellido, $emailI, $pass)
+ * @param $username --> nombre de usuario (codigo-programa)
+ * @param $nombre --> nombre usuario 
+ * @param $apellido --> apellido usuario
+ * @param $emailI --> Correo institucional
+ * @param $pass --> Contraseña
+ * @return id usuario creado
  */
 
 function save_mdl_user($username, $nombre, $apellido, $emailI, $pass){
@@ -2269,15 +2304,204 @@ function save_mdl_user($username, $nombre, $apellido, $emailI, $pass){
  * @return object in a json format
  */
 
-function save_data_user_step2($id_ases,$estrato, $hijos){
+function save_data_user_step2($id_ases,$estrato, $hijos, $familia){
 
     global $DB;
     $student_ases = new stdClass();
     $student_ases->id = $id_ases;
     $student_ases->hijos = $hijos;
     $student_ases->estrato = $estrato;
+    $student_ases->vive_con = $familia;
 
     $result = $DB->update_record('talentospilos_usuario', $student_ases);
+
+    return $result;
+}
+
+/**
+ * Insert missing fields of step3 form on {talentospilos_usuario} table
+ *
+ *
+ * @see save_data_user_step3($id_ases, $icfes)
+ * @param $id_ases --> id del usuario a insertar los datos
+ * @param $icfes --> Puntaje de icfes
+ * @return object in a json format
+ */
+
+function save_data_user_step3($id_ases, $icfes, $anio_ingreso, $colegio, $id_economics_data){
+
+    global $DB;
+    $student_ases = new stdClass();
+    $student_ases->id = $id_ases;
+    $student_ases->puntaje_icfes = $icfes;
+    $student_ases->anio_ingreso = $anio_ingreso;
+    $student_ases->colegio = $colegio;
+    $student_ases->id_economics_data = $id_economics_data;
+
+    $result = $DB->update_record('talentospilos_usuario', $student_ases);
+
+    return $result;
+}
+
+/**
+ * Insert missing fields of step3 form on {talentospilos_usuario} table
+ *
+ *
+ * @see save_data_user_step3($id_ases, $icfes)
+ * @param $id_ases --> id del usuario a insertar los datos
+ * @param $icfes --> Puntaje de icfes
+ * @return object in a json format
+ */
+
+function save_data_user_step4($id_ases, $id_disc){
+
+    global $DB;
+    $student_ases = new stdClass();
+    $student_ases->id = $id_ases;
+    $student_ases->id_discapacidad = $id_disc;
+    //$student_ases->ayuda_disc = $ayuda_disc;
+
+    $result = $DB->update_record('talentospilos_usuario', $student_ases);
+
+    return $result;
+}
+
+/**
+ * Insert fields in {talentospilos_econommics_data}
+ *
+ * @see insert_economics_data($data, $estrato, $id_ases)
+ * @param $data --> datos economicos del estudiante
+ * @param $id_ases --> id del usuario a insertar los datos
+ * @param $estrato --> estrato del hogar 
+ * @return object in a json format
+ */
+
+function insert_economics_data($data, $estrato, $id_ases){
+
+    global $DB;
+    $economics_data = new stdClass();
+    for($i = 0; $i < count($data); $i++){
+
+        if (is_array($data[$i])) {
+            $arr = $data[$i];
+            $name = $arr[0]->key_input;
+            $economics_data->$name = json_encode($data[$i]);
+        }else{
+            $name = $data[$i]->key_input;
+            if (strcmp($name, "solvencia_econo") == 0) {
+                $value = $data[$i]->val_input;
+                $economics_data->$name = $value;
+            }else if ((strcmp($name, "expectativas_laborales") == 0) || (strcmp($name, "ocupacion_padres") == 0) || (strcmp($name, "nivel_educ_padres") == 0) 
+                        || (strcmp($name, "situa_laboral_padres") == 0) || (strcmp($name, "datos_economicos_adicionales") == 0)){
+                $value = $data[$i]->val_input;
+                $economics_data->$name = json_encode($value);
+            }else if ($name != null) {
+                $economics_data->$name = json_encode($data[$i]);
+            }else {
+                $name = $data[$i]->key_input_text;
+    
+                $economics_data->$name = json_encode($data[$i]);
+            }
+        }
+
+       
+
+    }
+
+    $economics_data->estrato = $estrato;
+    $economics_data->id_ases_user = $id_ases;
+    
+
+    $result = $DB->insert_record('talentospilos_economics_data', $economics_data);
+
+    return $result;
+}
+
+/**
+ * Insert fields in {talentospilos_academics_data}
+ *
+ * @see insert_economics_data($data, $estrato, $id_ases)
+ * @param $data --> datos economicos del estudiante
+ * @param $id_ases --> id del usuario a insertar los datos
+ * @param $programa --> programa academico 
+ * @param $titulo --> titulo obtenido en el colegio
+ * @return object in a json format
+ */
+
+function insert_academics_data($data, $programa, $titulo, $observaciones, $id_ases){
+
+    global $DB;
+    $academics_data = new stdClass();
+
+    $academics_data->resolucion_programa = $programa;
+    $academics_data->id_ases_user = $id_ases;
+    $academics_data->titulo_academico_colegio = $titulo;
+    $academics_data->observaciones = $observaciones;
+
+    for($i = 0; $i < count($data); $i++){
+
+        if (is_array($data[$i])) {
+            $arr = $data[$i];
+            $name = $arr[0]->key_input;
+            $academics_data->$name = json_encode($arr[0]->val_input);
+        }
+    }
+
+    $result = $DB->insert_record('talentospilos_academics_data', $academics_data);
+
+    return $result;
+}
+
+
+/**
+ * Insert missing fields of step3 form on {talentospilos_usuario} table
+ *
+ *
+ * @see save_data_user_step3($id_ases, $icfes)
+ * @param $id_ases --> id del usuario a insertar los datos
+ * @param $icfes --> Puntaje de icfes
+ * @return object in a json format
+ */
+
+function insert_disapacity_data($json_detalle, $id_ases){
+
+    global $DB;
+    $student_ases = new stdClass();
+    $student_ases->id = $id_ases;
+    $student_ases->json_detalle = json_encode($json_detalle);
+
+    $result = $DB->update_record('talentospilos_usuario', $student_ases);
+
+    return $result;
+}
+
+/**
+ * Insert fields in {talentospilos_academics_data}
+ *
+ * @see insert_economics_data($data, $estrato, $id_ases)
+ * @param $data --> datos economicos del estudiante
+ * @param $id_ases --> id del usuario a insertar los datos
+ * @param $eps --> Eps del estudiante
+ * @return object in a json format
+ */
+
+function insert_health_service($data, $eps, $id_ases){
+
+    global $DB;
+    $save_health_service = new stdClass();
+
+    $save_health_service->servicio_salud_vinculado = $eps;
+    $save_health_service->id_ases_user = $id_ases;
+
+    for($i = 0; $i < count($data); $i++){
+
+        $name = $data[$i]->key_input;
+        $value = $data[$i]->val_input;
+        $save_health_service->$name = json_encode($value);
+    
+    }
+
+    $result = $DB->insert_record('talentospilos_health_data', $save_health_service);
 
     return $result;
 }
