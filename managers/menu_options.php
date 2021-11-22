@@ -367,6 +367,13 @@ function create_menu_options($userid, $blockid, $courseid)
 
             }
 
+            
+            //if($function == 'student_new_register'){
+            //
+            //    $menu_options = '<a  role="button" id="mostrar" data-toggle="modal">Registar nuevo estudiante</a>';
+            //    $discapacity_options['Registar'] = $menu_options;
+            //}
+
             if ($function == 'incidents_manager') {
                 $url = new moodle_url("/blocks/ases/view/ases_incidents.php", array(
                     'courseid' => $courseid,
@@ -425,6 +432,12 @@ function create_menu_options($userid, $blockid, $courseid)
             }
 
             if($function == 'monitorias_academicas') {
+                // página de inscripción
+                $url_inscripcion = '<a id="menu_monitorias" class="menu_a" href= "' 
+                                    .new moodle_url("/blocks/ases/view/monitorias_academicas_inscripcion.php", array())
+                                    . '">Inscripción a monitorias académicas</a>';
+                $academic_options['Inscripción a monitorias académicas'] = $url_inscripcion;
+                // pagina de administracion
                 $url = new moodle_url("/blocks/ases/view/monitorias_academicas.php", array(
                     'courseid' => $courseid,
                     'instanceid' => $blockid

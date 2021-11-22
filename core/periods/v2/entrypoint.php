@@ -293,7 +293,7 @@ function periods_create_period( $nombre, $fecha_inicio, $fecha_fin, $instance_id
 			$new_period->fecha_fin = $fecha_fin;
             $new_period->id_instancia = $instance_id;
 
-			$result = $DB->insert_record(substr($PERIODS_TABLENAME, 4), $new_period);
+			$result = $DB->insert_record('talentospilos_semestre', $new_period);
 
 			return $result;
 		}

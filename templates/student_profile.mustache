@@ -1,3 +1,4 @@
+
 {{#data}} {{> block_ases/side_menu}} {{{message}}}
 <div class="container">
   <div id="custom_metadata" data-view-name="student_profile"></div>
@@ -15,7 +16,7 @@
   <div id="cod_programa_activo" data-info="{{cod_programa_activo}}" style="display:none;"></div>
   <div id="risk_graphic_info" data-info="" style="display:none;"></div>
   <input type="text" class="hide" id="current_user_id" value="{{id_dphpforms_creado_por}}"/>
-
+  
   <form id="ficha_estudiante">
 
     <input type="text" class="hide" id="id_ases" name="id_ases" value="{{id_ases}}" />
@@ -44,7 +45,7 @@
         <div class="row" id="row-general-fields">
 
           <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 div_general_fields" id="div_doc_type">
-            <select name="tipo_doc" class="form-control" id="tipo_doc" name="tipo_doc" disabled>
+            <select name="tipo_doc" class="form-control" id="i_tipo_doc" name="tipo_doc" disabled>
               {{#document_type}}
               <option value="{{nombre}}" {{selected}}>{{nombre}}</option>
               {{/document_type}}
@@ -226,6 +227,8 @@
           <li id="socioed_li">
             <a href="#socioed_tab" data-toggle="tab">SOCIOEDUCATIVO</a>
           </li>
+        
+  
           {{/view_socioed_tab_sp}} {{#view_academic_tab_sp}}
           <li id="academic_li">
             <a href="#academic_tab" data-toggle="tab">ACADÉMICO</a>
@@ -233,15 +236,24 @@
           {{/view_academic_tab_sp}} {{#view_geographic_tab_sp}}
           <li id="geographic_li">
             <a href="#geographic_tab" data-toggle="tab">GEOGRÁFICO</a>
-          </li>{{/view_geographic_tab_sp}}{{#view_others_tab_sp}}
-          <li id="tracing_others_li">
-            <a href="#tracing_others_tab" data-toggle="tab">CARACTERIZACIÓN</a>
-          </li>{{/view_others_tab_sp}}{{#view_tracking_discapacity_tab_sp}}
-          <li id="discapacity_tracking_li">
-            <a href="#discapacity_tracking_tab" data-toggle="tab">AJUSTES RAZONABLES</a>
-          </li>{{/view_tracking_discapacity_tab_sp}}
+          </li>{{/view_geographic_tab_sp}}
+        
+          {{#show_discapacity}}
+            {{#view_others_tab_sp}}
+            <li id="tracing_others_li">
+              <a href="#tracing_others_tab" data-toggle="tab">CARACTERIZACIÓN</a>
+            </li>
+            {{/view_others_tab_sp}}
+          {{/show_discapacity}} 
+
+          {{#show_discapacity}}
+            <li id="discapacity_tracking_li">
+              <a href="#view_discapacity_tracking_tab" data-toggle="tab">AJUSTES RAZONABLES</a>
+            </li>
+          {{/show_discapacity}} 
+       
         </ul>
-        <div class="tab-content clearfix ">
+        <div class="tab-content clearfix">
           {{#view_general_tab_sp}} {{> block_ases/view_general_tab_sp}} {{/view_general_tab_sp}}
           {{#view_others_tab_sp}} {{> block_ases/view_others_tab_sp}} {{/view_others_tab_sp}}
         </div>
@@ -424,6 +436,11 @@
   </div>
 </div>
 <!-- end primer acercamiento -->
+
+
+<!--Modal registro-->
+
+
 
 <!-- Modal Seguimiento pares-->
 <div class="mymodal" id="modal_peer_tracking" name="modal_pares">
@@ -827,6 +844,7 @@
   </div>
 </div>
 <!-- End modal retiro-->
+
 <script>
 
   var ctx_individual = document.getElementById("myChart_individual").getContext('2d');

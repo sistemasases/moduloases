@@ -7,7 +7,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $dbman = $DB->get_manager();
     $result = true;
 
-    if ($oldversion < 22021061519170) {
+    if ($oldversion < 22021101321440) {
 
       
     //     // ************************************************************************************************************
@@ -4378,10 +4378,96 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         //$dataobject->id_rol = 6;
         //$DB->update_record('talentospilos_user_rol', $dataobject );
 
-        upgrade_block_savepoint(true, 22021061519170, 'ases');
 
 
+          /* #####################################################################################
+         * ACTUALIZACIÓN 22021071314240
+         * Se crea la tabla mdl_talentospilos_otros_acom y se puebla, ademàs de inserts necesarios para el anexo
+         * de la nueva funcionalidad(registrar un nuevo usuario_ases)
+         * ####################################################################################
+         */
+
+        /*
+         $table = new xmldb_table('talentospilos_otros_acom');
+         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+         $table->add_field('acompanamiento', XMLDB_TYPE_CHAR, '60', null, XMLDB_NOTNULL, null, null);
+         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+         
+         if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+
+            $acompanamientos = array('Ases', 'Graca', 'Etnicidad', 'Gènero', 'Campus diverso', 'Universidad saludable', 'Otros', 'Ninguno');
+            $record = new stdClass();
+    
+             for($i = 0; $i < count($acompanamientos); $i++){
+                 $record->acompanamiento = $acompanamientos[$i];
+                 $result = $DB->insert_record('talentospilos_otros_acom', $record, true);
+             }
+        }
+    
+         //Inserts para anexar la funcionalidad (registrar estudiante)al menù
+        
+         $funcionalidad = new stdClass();
+         $funcionalidad->nombre_func = "student_new_register";
+         $funcionalidad->descripcion = "Permite registrar un nuevo estudiante a acompañar";
+
+         $id_funcionalidad = $DB->insert_record('talentospilos_funcionalidad', $funcionalidad);
+         
+         $accion = new stdClass();
+         $accion->nombre_accion = "registrar";
+         $accion->descripcion = "registrar un estudiante";
+         $accion->estado = 1;
+         $accion->id_funcionalidad = $id_funcionalidad;
+
+         $id_accion = $DB->insert_record('talentospilos_accion', $accion);
+
+         $permisos_rol = new stdClass();
+         $permisos_rol->id_rol = 6;
+         $permisos_rol->id_accion = $id_accion;
+
+         $id = $DB->insert_record('talentospilos_permisos_rol', $permisos_rol);
+
+         $permisos_rol_dis = new stdClass();
+         $permisos_rol_dis->id_rol = 16;
+         $permisos_rol_dis->id_accion = $id_accion;
+
+         $id_dis = $DB->insert_record('talentospilos_permisos_rol', $permisos_rol_dis);
+        
+        
+         upgrade_block_savepoint(true, 22021090217070, 'ases');
+    */
+
+    /* #####################################################################################
+         * ACTUALIZACIÓN   22021101321440
+         * César Becerra
+         * Se crean indices para las columnas id_formulario, id_pregunta de la tabla mdl_talentospilos_df_form_preg 
+         * con el fin de optimizar la consulta student_profile_load_socioed_tab.
+         * 
+         * Tambien se hacen 4 Insert para crear los programas ADMINISTRACIÓN PÚBLICA,FINANZAS Y BANCA,ADMINISTRACIÓN TURÍSTICA
+         * y TECNOLOGÍA EN DESARROLLO DE SOFTWARE. Esto debido al error en la interfaz de subida de datos.
+         * ####################################################################################
+         */
+
+        $sql_intel= "create index IDX_talentos_df_form_preg_id_formulario on {talentospilos_df_form_preg} (id_formulario)";
+        $sql_intel2="create index IDX_talentos_df_form_preg_id_pregunta on {talentospilos_df_form_preg} (id_pregunta)";
+        $sql_INSERT1="INSERT INTO {talentospilos_programa}(codigosnies, cod_univalle, nombre, id_sede, id_facultad, jornada) VALUES (109557,3847,'ADMINISTRACIÓN PÚBLICA',1,8,'DIURNA')"; 
+        $sql_INSERT2="INSERT INTO {talentospilos_programa}(codigosnies, cod_univalle, nombre, id_sede, id_facultad, jornada) VALUES (109909,3848,'FINANZAS Y BANCA',1,8,'DIURNA')"; 
+        $sql_INSERT3="INSERT INTO {talentospilos_programa}(codigosnies, cod_univalle, nombre, id_sede, id_facultad, jornada) VALUES (109917,3849,'ADMINISTRACIÓN TURÍSTICA',1,8,'DIURNA')"; 
+        $sql_INSERT4="INSERT INTO {talentospilos_programa}(codigosnies, cod_univalle, nombre, id_sede, id_facultad, jornada) VALUES (109943,2724,'TECNOLOGÍA EN DESARROLLO DE SOFTWARE',1,7,'NOCTURNA')";
+        $DB->execute($sql_intel);
+        $DB->execute($sql_intel2);
+        $DB->execute($sql_INSERT1);
+        $DB->execute($sql_INSERT2);
+        $DB->execute($sql_INSERT3);
+        $DB->execute($sql_INSERT4);
+
+
+
+
+
+
+
+        upgrade_block_savepoint(true, 22021101321440, 'ases');
         return $result;
-
     }
 }

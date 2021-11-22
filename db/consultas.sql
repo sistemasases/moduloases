@@ -924,7 +924,6 @@ and mdl_talentospilos_semestre.nombre = '2018B';
 
 -- Fin de consulta monitor, estudiante y jefe practicante
 
-
 -- Todos los estudiantes que hacen parte del programa ASES
 
 SELECT DISTINCT

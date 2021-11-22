@@ -30,7 +30,7 @@
 
 require_once ((__DIR__) . '/../../core/module_loader.php');
 require_once dirname(__FILE__) . '/../../../../config.php';
-require_once $CFG->dirroot . '/blocks/ases/managers/periods_management/periods_lib.php';
+//require_once $CFG->dirroot . '/blocks/ases/managers/periods_management/periods_lib.php';
 
 module_loader('periods');
 module_loader('security');

@@ -363,6 +363,26 @@ if ($student_code != '0') {
 
     $record->municipio_act = student_profile_get_ciudad_res($student_id);
     $record->res_address = student_profile_get_res_address($student_id);
+/*
+    //TRAE LAS CONDICIONES DE EXCEPCIÒN
+    
+    $cond_excep= get_cond_excepcion();
+    $options_excep = '';
+    foreach($cond_excep as $cond){
+        $options_excep .=" <option value='$cond->id'>$cond->condicion_excepcion</option>"  ;
+    }  
+
+    $record->options_excep = $options_excep;
+    
+    //TRAE LOS OTROS ACOMPAÑAMIENTOS
+    $acompañamientos = get_otros_acompañamientos();
+    $options_acompañamientos = '';
+    foreach($acompañamientos as $ac){
+        $options_acompañamientos .= "<option value='$ac->id'>$ac->acompanamiento</option>" ;
+    }
+
+    $record->options_acompañamientos = $options_acompañamientos;
+   */ 
 
     //TRAE ETNIAS
     $etnias= get_etnias();
@@ -608,6 +628,7 @@ if ($student_code != '0') {
     $trainee_object = new stdClass();
     $professional_object = new stdClass();
 
+
     $record->id_dphpforms_creado_por = $USER->id;
 
     $monitor_object = get_assigned_monitor($student_id, $blockid);
@@ -841,6 +862,12 @@ if ($rol == 'dir_socioeducativo') {
 if ($rol == 'monitor_ps') {
     $record->monitor_ps = true;
 }
+
+if($rol == 'discapacidad' || $rol == 'sistemas'){
+    $record->show_discapacity = true;
+}else{
+    $record->show_discapacity = false;
+}
 /** Update user image */
 $show_html_elements_update_user_profile_image = false;
 if (isset($actions->update_user_profile_image)) {
@@ -934,6 +961,9 @@ $PAGE->requires->css('/blocks/ases/style/discapacity_tab.css', true);
 $PAGE->requires->css('/blocks/ases/style/others_tab.css', true);
 $PAGE->requires->css('/blocks/ases/style/switch.css', true);
 $PAGE->requires->css('/blocks/ases/style/fontawesome550.min.css', true);
+
+
+
 //Pendiente para cambiar el idioma del nombre del archivo junto con la estructura de
 //su nombramiento.
 $PAGE->requires->css('/blocks/ases/style/creadorFormulario.css', true);

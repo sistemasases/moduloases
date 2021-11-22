@@ -23,17 +23,19 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use function core_db\execute;
+
 require_once( dirname(__FILE__). '/../../../../config.php' );
 require_once( dirname(__FILE__). '/../../core/module_loader.php' ); 
-require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
-require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/dphpforms_forms_core.php';
-require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/v2/dphpforms_lib.php';
-require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/dphpforms_records_finder.php';
-require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/dphpforms_get_record.php';
-require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib.php';
-require_once $CFG->dirroot.'/blocks/ases/managers/validate_profile_action.php';
-require_once $CFG->dirroot.'/blocks/ases/managers/user_management/user_lib.php';
-require_once $CFG->dirroot.'/blocks/ases/managers/monitor_assignments/monitor_assignments_lib.php';
+require_once (__DIR__ .'/../lib/student_lib.php');
+require_once (__DIR__ .'/../dphpforms/dphpforms_forms_core.php');
+require_once (__DIR__ .'/../dphpforms/v2/dphpforms_lib.php');
+require_once (__DIR__ . '/../dphpforms/dphpforms_records_finder.php');
+require_once (__DIR__ . '/../dphpforms/dphpforms_get_record.php');
+require_once (__DIR__ . '/../periods_management/periods_lib.php');
+require_once (__DIR__ . '/../validate_profile_action.php');
+require_once (__DIR__ . '/../user_management/user_lib.php');
+require_once (__DIR__ . '/../monitor_assignments/monitor_assignments_lib.php');
 
 require_once("$CFG->libdir/formslib.php");
 require_once($CFG->dirroot.'/user/edit_form.php');
@@ -273,6 +275,67 @@ function get_cond_excepcion()
 
 
 /**
+ * Get Barrios
+ *
+ * @see get_barrios()
+ * @return object --> with barrios
+ */
+function get_barrios(){
+    global $DB; 
+   $sql_query = "SELECT id, nombre, cod_comuna FROM {talentospilos_barrios} ORDER BY nombre ASC ";
+   return $DB->get_records_sql($sql_query);
+}
+
+/**
+ * Get Ciudades
+ *
+ * @see get_ciudades()
+ * @return object --> with ciudades
+ */
+function get_ciudades(){
+    global $DB; 
+   $sql_query = "SELECT  id, nombre FROM {talentospilos_municipio} ORDER BY nombre ASC ";
+   return $DB->get_records_sql($sql_query);
+}
+
+/**
+ * Get programas academicos
+ *
+ * @see get_programas_academicos()
+ * @return object --> with programas academicos
+ */
+function get_programas_academicos(){
+    global $DB; 
+   $sql_query = "SELECT id, nombre FROM {talentospilos_programa} ORDER BY nombre ASC ";
+   return $DB->get_records_sql($sql_query);
+}
+
+
+/** 
+ * Get Otros acompañamientos
+ * 
+ * @see get_otros_acompañamientos()
+ * @return object -> with OTROS ACOMPAÑAMIENTOS information
+ */
+function get_otros_acompañamientos(){
+    global $DB;
+    $sql_query = "SELECT * FROM {talentospilos_otros_acom}";
+    return $DB->get_records_sql($sql_query);
+}
+
+/** 
+ * Get list discapacidades
+ * 
+ * @see get_discapacities
+ * @return object -> with discapacidades information
+ */
+function get_discapacities(){
+    global $DB;
+    $sql_query = "SELECT  id, nombre FROM {talentospilos_discap_men}";
+    return $DB->get_records_sql($sql_query);
+}
+
+/**
  * Get Condición de excepción segun id
  *
  * @see get_cond()
@@ -297,7 +360,18 @@ function get_estados_civiles()
     $sql_query = "SELECT * FROM {talentospilos_estado_civil}";
     return $DB->get_records_sql($sql_query);
 }
+/**
+ * Get sedes registradas
+ * 
+ * @see get_sedes()
+ * @return object --> with Sede information
+ */
 
+ function get_sedes(){
+     global $DB;
+     $sql_query = "SELECT id, nombre FROM {talentospilos_sede}";
+     return $DB->get_records_sql($sql_query);
+ }
 /**
  * Get paises registrados
  *
@@ -502,6 +576,8 @@ function  get_act_simultaneas()
    $sql_query = "SELECT * FROM {talentospilos_act_simultanea}";
    return $DB->get_records_sql($sql_query);
 }
+
+
  
 /**
  * Gets a set of ICETEX status
@@ -1999,6 +2075,18 @@ function get_student_codes($document){
 
     return $student_codes;
  }
+/**
+ * Retorna el conjunto de posibles tipos de documento de identidad
+ *
+ * @see get_document_types()
+ * @return object array with document types
+ */
+function get_document_types(){
+    global $DB;
+    $sql_query = "SELECT *
+    FROM {talentospilos_tipo_documento}";
+    return $DB->get_records_sql($sql_query);
+}
 
 /**
  * Retorna el conjunto de posibles tipos de documento de identidad para un estudiante en particular
@@ -2086,6 +2174,110 @@ function update_tracking_status($id_ases_user, $id_academic_program){
     }else{
     $result = $DB->update_record('talentospilos_user_extended', $record);
     }
+
+    return $result;
+}
+
+
+/**
+ * Insert filed on {talentospilos_usuario} table
+ * 
+ * 
+ * @see save_data($data)
+ * @param $data --> Array containing the fields to Insert
+ * @return object in a json format
+ */
+function save_data($data, $deportes, $f, $programa, $id_moodle){
+    global $DB;
+
+    $student_object = new stdClass();
+    $student_extended = new stdClass();
+    for($i = 0; $i < count($data); $i++){
+
+        $name = $data[$i]->name;
+        $value = $data[$i]->value;
+
+        $student_object->$name = $value;
+
+    }
+  
+    
+    
+    $student_object->actividades_ocio_deporte = $deportes;
+    $student_object->vive_con = $f;
+    $student_object->grupo = 1;
+    $student_object->estado = "ACTIVO";
+    $student_object->estado_ases = "ACTIVO";
+
+    $res = $DB->insert_record('talentospilos_usuario', $student_object);
+
+    $student_extended->id_moodle_user = $id_moodle;
+    $student_extended->id_ases_user = $res;
+    $student_extended->id_academic_program = $programa;
+    $student_extended->tracking_status = 1;
+    $student_extended->program_status = 1;
+
+    $result = $DB->insert_record('talentospilos_user_extended', $student_extended);
+   
+        
+    return $result;
+}
+
+/**
+ * Insert missing fields of step2 form on {talentospilos_usuario} table
+ *
+ *
+ * @see save_profile($id_ases, $estrato, $hijos)
+ * @param $id_ases --> id del usuario a insertar los datos
+ * @param $estrato --> estrato del hogar 
+ * @param $hijos --> numero de hijos
+ * @param $vive_con --> Json containing the information of
+ *                      the people that lives with the student
+ * @return object in a json format
+ */
+
+function save_mdl_user($username, $nombre, $apellido, $emailI, $pass){
+
+    global $DB;
+    $mdl_user = new stdClass();
+    $mdl_user->auth = 'manual';
+    $mdl_user->confirmed = 1;
+    $mdl_user->mnethostid = 1;
+
+    $mdl_user->username = $username;
+    $mdl_user->firstname = $nombre;
+    $mdl_user->lastname = $apellido;
+    $mdl_user->email = $emailI;
+    $mdl_user->password = password_hash($pass, PASSWORD_DEFAULT);
+
+    $result = $DB->insert_record('user', $mdl_user);
+
+    return $result;
+}
+
+
+/**
+ * Insert missing fields of step2 form on {talentospilos_usuario} table
+ *
+ *
+ * @see save_profile($id_ases, $estrato, $hijos)
+ * @param $id_ases --> id del usuario a insertar los datos
+ * @param $estrato --> estrato del hogar 
+ * @param $hijos --> numero de hijos
+ * @param $vive_con --> Json containing the information of
+ *                      the people that lives with the student
+ * @return object in a json format
+ */
+
+function save_data_user_step2($id_ases,$estrato, $hijos){
+
+    global $DB;
+    $student_ases = new stdClass();
+    $student_ases->id = $id_ases;
+    $student_ases->hijos = $hijos;
+    $student_ases->estrato = $estrato;
+
+    $result = $DB->update_record('talentospilos_usuario', $student_ases);
 
     return $result;
 }
@@ -3094,7 +3286,7 @@ function student_profile_load_socioed_tab($id_ases, $id_block){
 
     $actions = authenticate_user_view($id_user, $id_block);
     $record = $actions;
-
+/*
     $record->peer_tracking_v3 = student_profile_get_peer_tracking($id_ases, $id_block);
     $record->peer_tracking_v3_string = json_encode($record->peer_tracking_v3);
     $record->peer_tracking = student_profile_get_html_peer_tracking($id_ases, $id_block);
@@ -3109,6 +3301,35 @@ function student_profile_load_socioed_tab($id_ases, $id_block){
     }else{
         $record->registro_primer_acercamiento = true;
     }
+    */
+    return $record;
+}
+/**
+ * @see student_profile_carga_historico($id_ases)
+ * @desc Gets all the social-educative information of an student
+ * @param $id_ases string -> ASES student id
+ * @param $id_block string -> Block id
+ * @return Object
+ */
+
+function student_profile_carga_historico($id_ases, $id_block){
+
+    global $USER;
+
+    if (!is_numeric($id_ases)) {
+        return false;
+    }
+
+    $id_user = $USER->id;
+    $id_block = (int)$id_block;
+
+    $actions = authenticate_user_view($id_user, $id_block);
+    $record = $actions;
+
+    $record->peer_tracking_v3 = student_profile_get_peer_tracking($id_ases, $id_block);
+    $record->peer_tracking_v3_string = json_encode($record->peer_tracking_v3);
+    $record->peer_tracking = student_profile_get_html_peer_tracking($id_ases, $id_block);
+      
     return $record;
 }
 

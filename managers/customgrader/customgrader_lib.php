@@ -1205,7 +1205,10 @@ function send_email_alert($userid, $itemid, $grade, $courseid)
     $user_ases = get_adds_fields_mi($userid);
     $id_tal = $user_ases->idtalentos;
 
-    $monitor = get_assigned_monitor($id_tal);
+    $user_cohorts = cohort_lib::get_cohorts_for_user($user_moodle->username); 
+    $user_instance = $user_cohorts[0]->id_instancia;
+
+    $monitor = get_assigned_monitor($id_tal, $user_instance);
     $nombre_monitor = $monitor->firstname . " " . $monitor->lastname;
     $saludo_mon = "Estimado monitor $nombre_monitor<br><br>";
 
@@ -1231,7 +1234,7 @@ function send_email_alert($userid, $itemid, $grade, $courseid)
     } else {
         $resp->monitor = true;
 
-        $practicante = get_assigned_pract($id_tal);
+        $practicante = get_assigned_pract($id_tal, $user_instance);
         $nombre_practicante = $practicante->firstname . " " . $practicante->lastname;
         $saludo_prac = "Estimado practicante $nombre_practicante<br><br>";
 
@@ -1257,7 +1260,7 @@ function send_email_alert($userid, $itemid, $grade, $courseid)
         } else {
             $resp->practicante = true;
 
-            $profesional = get_assigned_professional($id_tal);
+            $profesional = get_assigned_professional($id_tal, $user_instance);
             $nombre_profesional = $profesional->firstname . " " . $profesional->lastname;
             $saludo_prof = "Estimado profesional $nombre_profesional<br><br>";
 
