@@ -110,7 +110,7 @@ function get_ases_user_id($id)
 
     global $DB;
 
-    $sql_query = "SELECT * FROM {talentospilos_usuario} WHERE num_doc = '$id'";
+    $sql_query = "SELECT * FROM {talentospilos_usuario} WHERE num_doc_ini = '$id'";
     $user = $DB->get_record_sql($sql_query);
 
     return $user;

@@ -217,16 +217,23 @@ if(isset($input->function) && isset($input->params)) {
     }else if($function == 'get_programas_academicos'){
             $result = get_programas_academicos();
             echo json_encode($result);
+    }else if($function == 'get_programas_academicos_est'){
+        $result = get_programas_academicos_est($params);
+        echo json_encode($result);
     }else if($function == 'save_data'){
             $data = $params[0];
             $deportes = $params[1];
             $f = $params[2];
             $programa = $params[3];
             $id_moodle = $params[4];
-            
-            $result = save_data($data,$deportes,$f, $programa, $id_moodle);
+            $json_detalle = $params[5];
+            $result = save_data($data,$deportes,$f, $programa, $id_moodle, $json_detalle);
             
             echo json_encode($result);
+    }else if($function == 'get_program'){ 
+
+        $result=get_program($params);
+        echo json_encode($result);       
     }else if($function == 'get_user'){ 
 
             $result=get_user($params);
@@ -235,6 +242,11 @@ if(isset($input->function) && isset($input->params)) {
 
         $result=get_ases_user_id($params);
         echo json_encode($result);       
+    }else if($function == 'get_exist_user_extended'){ 
+        $id = $params[0];
+        $id_moodle = $params[1]; 
+        $result=get_exist_user_extended($id, $id_moodle);
+        echo json_encode($result);       
     }else if($function == 'get_full_user_by_code'){ 
         $result=get_full_user_by_code($params);
         echo json_encode($result);       
@@ -242,7 +254,22 @@ if(isset($input->function) && isset($input->params)) {
         $id_ases = $params[0];
         $estrato = $params[1]; 
         $hijos = $params[2];
-        $result=save_data_user_step2($id_ases, $estrato, $hijos);
+        $familia = $params[3];
+        $result=save_data_user_step2($id_ases, $estrato, $hijos, $familia);
+        echo json_encode($result);       
+    }else if($function == 'save_data_user_step3'){
+        $id_ases = $params[0];
+        $icfes = $params[1];
+        $anio_ingreso = $params[2];
+        $colegio = $params[3];
+        $id_economics_data = $params[4]; 
+        $result=save_data_user_step3($id_ases, $icfes, $anio_ingreso, $colegio, $id_economics_data);
+        echo json_encode($result);       
+    }else if($function == 'save_data_user_step4'){
+        $id_ases = $params[0];
+        $id_disc = $params[1]; 
+       // $ayuda_disc = $params[2];
+        $result=save_data_user_step4($id_ases, $id_disc);
         echo json_encode($result);       
     }
     else if($function == 'save_mdl_user'){
@@ -252,6 +279,31 @@ if(isset($input->function) && isset($input->params)) {
         $emailI = $params[3];
         $pass = $params[4];
         $result=save_mdl_user($username, $nombre, $apellido, $emailI,$pass);
+        echo json_encode($result);       
+    }else if($function == 'insert_economics_data'){
+        $data = $params[0];
+        $estrato = $params[1];
+        $id_ases = $params[2];
+        $result=insert_economics_data($data, $estrato, $id_ases);
+        echo json_encode($result);       
+    }else if($function == 'insert_academics_data'){
+        $data = $params[0];
+        $programa = $params[1];
+        $titulo = $params[2];
+        $observacioes = $params[3];
+        $id_ases = $params[4];
+        $result=insert_academics_data($data, $programa, $titulo, $observacioes, $id_ases);
+        echo json_encode($result);       
+    }else if($function == 'insert_disapacity_data'){
+        $json_detalle = $params[0];
+        $id_ases = $params[1];
+        $result=insert_disapacity_data($json_detalle, $id_ases);
+        echo json_encode($result);       
+    }else if($function == 'insert_health_service'){
+        $data = $params[0];
+        $eps = $params[1];
+        $id_ases = $params[2];
+        $result=insert_health_service($data, $eps, $id_ases);
         echo json_encode($result);       
     }
     else if($function == 'save_icetex_status') {

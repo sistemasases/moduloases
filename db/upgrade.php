@@ -7,7 +7,8 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $dbman = $DB->get_manager();
     $result = true;
 
-    if ($oldversion < 22021101321440) {
+    if ($oldversion < 22021110814570) {
+
 
       
     //     // ************************************************************************************************************
@@ -4432,9 +4433,6 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
          $permisos_rol_dis->id_accion = $id_accion;
 
          $id_dis = $DB->insert_record('talentospilos_permisos_rol', $permisos_rol_dis);
-        
-        
-         upgrade_block_savepoint(true, 22021090217070, 'ases');
     */
 
     /* #####################################################################################
@@ -4462,12 +4460,43 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         $DB->execute($sql_INSERT4);
 
 
+        /* #####################################################################################
+         * ACTUALIZACIÓN 22021110814570
+         *  Dylan
+         * Se crea campos adicionales a las tablas talentospilos_economics_data, talentospilos_academics_data y talentospilos_healt_data
+         * para poder almacenar los datos nuevos del formulario
+         * ####################################################################################
+         */
 
+         // Define field datos_economicos_adicionales to be added to talentospilos_economics_data.
+         $table = new xmldb_table('talentospilos_economics_data');
+         $field = new xmldb_field('datos_economicos_adicionales', XMLDB_TYPE_TEXT, null, null, null, null, null, 'expectativas_laborales');
+ 
+         // Conditionally launch add field datos_economicos_adicionales.
+         if (!$dbman->field_exists($table, $field)) {
+             $dbman->add_field($table, $field);
+         }
+        
+        // Define field datos_academicos_adicionales to be added to talentospilos_academics_data.
+        $table = new xmldb_table('talentospilos_academics_data');
+        $field = new xmldb_field('datos_academicos_adicionales', XMLDB_TYPE_TEXT, null, null, null, null, null, 'titulo_academico_colegio');
+        
+        // Conditionally launch add field datos_academicos_adicionales.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
+        // Define field datos_salud_adicionales to be added to talentospilos_health_data.
+        $table = new xmldb_table('talentospilos_health_data');
+        $field = new xmldb_field('datos_salud_adicionales', XMLDB_TYPE_TEXT, null, null, null, null, null, 'servicios_usados');
 
+        // Conditionally launch add field datos_salud_adicionales.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
+        upgrade_block_savepoint(true, 22021110814570, 'ases');
 
-        upgrade_block_savepoint(true, 22021101321440, 'ases');
         return $result;
     }
 }
