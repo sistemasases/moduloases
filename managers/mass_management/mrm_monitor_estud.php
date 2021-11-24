@@ -28,7 +28,7 @@ require_once 'massmanagement_lib.php';
 require_once '../user_management/user_lib.php';
 require_once '../periods_management/periods_lib.php';
 
-if (isset($_FILES['file']) || isset($_POST['idinstancia'])) {
+if (isset($_FILES['file']) && isset($_POST['idinstancia'])) {
     try {
 
         $archivo = $_FILES['file'];
@@ -135,7 +135,7 @@ if (isset($_FILES['file']) || isset($_POST['idinstancia'])) {
             } else {
                 throw new MyException('El campo "username_monitor" es un campo obligatorio');
             }
-            $last_semester = core_periods_get_last_period();
+            $last_semester = core_periods_get_last_period($_POST['idinstancia']);
 
             //validating duplicity on instance
             $sql_query = "SELECT *  FROM {talentospilos_monitor_estud} where id_semestre='" . $last_semester->id . "' AND id_estudiante='" . $id_estudiante . "' AND id_instancia='" . $_POST['idinstancia'] . "'";
