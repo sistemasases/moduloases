@@ -9,6 +9,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
 
     if ($oldversion < 22021110814570) {
 
+
       
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
@@ -4432,17 +4433,40 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
          $permisos_rol_dis->id_accion = $id_accion;
 
          $id_dis = $DB->insert_record('talentospilos_permisos_rol', $permisos_rol_dis);
-        
-        
-         upgrade_block_savepoint(true, 22021090217070, 'ases');
     */
-        
+
+    /* #####################################################################################
+         * ACTUALIZACIÓN   22021101321440
+         * César Becerra
+         * Se crean indices para las columnas id_formulario, id_pregunta de la tabla mdl_talentospilos_df_form_preg 
+         * con el fin de optimizar la consulta student_profile_load_socioed_tab.
+         * 
+         * Tambien se hacen 4 Insert para crear los programas ADMINISTRACIÓN PÚBLICA,FINANZAS Y BANCA,ADMINISTRACIÓN TURÍSTICA
+         * y TECNOLOGÍA EN DESARROLLO DE SOFTWARE. Esto debido al error en la interfaz de subida de datos.
+         * ####################################################################################
+         */
+
+        $sql_intel= "create index IDX_talentos_df_form_preg_id_formulario on {talentospilos_df_form_preg} (id_formulario)";
+        $sql_intel2="create index IDX_talentos_df_form_preg_id_pregunta on {talentospilos_df_form_preg} (id_pregunta)";
+        $sql_INSERT1="INSERT INTO {talentospilos_programa}(codigosnies, cod_univalle, nombre, id_sede, id_facultad, jornada) VALUES (109557,3847,'ADMINISTRACIÓN PÚBLICA',1,8,'DIURNA')"; 
+        $sql_INSERT2="INSERT INTO {talentospilos_programa}(codigosnies, cod_univalle, nombre, id_sede, id_facultad, jornada) VALUES (109909,3848,'FINANZAS Y BANCA',1,8,'DIURNA')"; 
+        $sql_INSERT3="INSERT INTO {talentospilos_programa}(codigosnies, cod_univalle, nombre, id_sede, id_facultad, jornada) VALUES (109917,3849,'ADMINISTRACIÓN TURÍSTICA',1,8,'DIURNA')"; 
+        $sql_INSERT4="INSERT INTO {talentospilos_programa}(codigosnies, cod_univalle, nombre, id_sede, id_facultad, jornada) VALUES (109943,2724,'TECNOLOGÍA EN DESARROLLO DE SOFTWARE',1,7,'NOCTURNA')";
+        $DB->execute($sql_intel);
+        $DB->execute($sql_intel2);
+        $DB->execute($sql_INSERT1);
+        $DB->execute($sql_INSERT2);
+        $DB->execute($sql_INSERT3);
+        $DB->execute($sql_INSERT4);
+
+
         /* #####################################################################################
          * ACTUALIZACIÓN 22021110814570
+         *  Dylan
          * Se crea campos adicionales a las tablas talentospilos_economics_data, talentospilos_academics_data y talentospilos_healt_data
          * para poder almacenar los datos nuevos del formulario
          * ####################################################################################
-         
+         */
 
          // Define field datos_economicos_adicionales to be added to talentospilos_economics_data.
          $table = new xmldb_table('talentospilos_economics_data');
@@ -4472,10 +4496,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         }
 
         upgrade_block_savepoint(true, 22021110814570, 'ases');
-        */
-
 
         return $result;
-
     }
 }

@@ -24,8 +24,8 @@
  */
 
 require_once(dirname(__FILE__). '/../../../../config.php');
-require_once('../lib/student_lib.php');
-require_once('../student_profile/studentprofile_lib.php');
+require_once(__DIR__ . '/../lib/student_lib.php');
+require_once(__DIR__ . '/../student_profile/studentprofile_lib.php');
 
 date_default_timezone_set('America/Bogota');
 
@@ -92,6 +92,34 @@ if(isset($input->function) && isset($input->params)) {
         } else {
             return_with_code(-6);
         }
+    } else if($function == 'cargar_historicos'){
+         /**
+         * [0] => id_ases: string
+         * [1] => id_instance: string
+         */
+        $params = $input->params;
+        if(count($params) == 2) {
+
+            $id_ases = $params[0];
+            $id_instance = $params[1];
+
+
+            $result = student_profile_carga_historico($id_ases, $id_instance);
+            if($result != null){
+                echo json_encode(
+                    array(
+                        "status_code" => 0,
+                        "message" => "socioed information",
+                        "data_response" => $result
+                    )
+                );
+
+            } else {
+ 
+                return_with_code(-5);
+            }
+        }
+
     } else if($function == 'save_profile'){
 
         /**

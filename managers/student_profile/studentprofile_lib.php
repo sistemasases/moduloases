@@ -27,15 +27,15 @@ use function core_db\execute;
 
 require_once( dirname(__FILE__). '/../../../../config.php' );
 require_once( dirname(__FILE__). '/../../core/module_loader.php' ); 
-require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php';
-require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/dphpforms_forms_core.php';
-require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/v2/dphpforms_lib.php';
-require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/dphpforms_records_finder.php';
-require_once $CFG->dirroot.'/blocks/ases/managers/dphpforms/dphpforms_get_record.php';
-require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib.php';
-require_once $CFG->dirroot.'/blocks/ases/managers/validate_profile_action.php';
-require_once $CFG->dirroot.'/blocks/ases/managers/user_management/user_lib.php';
-require_once $CFG->dirroot.'/blocks/ases/managers/monitor_assignments/monitor_assignments_lib.php';
+require_once (__DIR__ .'/../lib/student_lib.php');
+require_once (__DIR__ .'/../dphpforms/dphpforms_forms_core.php');
+require_once (__DIR__ .'/../dphpforms/v2/dphpforms_lib.php');
+require_once (__DIR__ . '/../dphpforms/dphpforms_records_finder.php');
+require_once (__DIR__ . '/../dphpforms/dphpforms_get_record.php');
+require_once (__DIR__ . '/../periods_management/periods_lib.php');
+require_once (__DIR__ . '/../validate_profile_action.php');
+require_once (__DIR__ . '/../user_management/user_lib.php');
+require_once (__DIR__ . '/../monitor_assignments/monitor_assignments_lib.php');
 
 require_once("$CFG->libdir/formslib.php");
 require_once($CFG->dirroot.'/user/edit_form.php');
@@ -3526,6 +3526,34 @@ function student_profile_load_socioed_tab($id_ases, $id_block){
         $record->registro_primer_acercamiento = true;
     }
     */
+    return $record;
+}
+/**
+ * @see student_profile_carga_historico($id_ases)
+ * @desc Gets all the social-educative information of an student
+ * @param $id_ases string -> ASES student id
+ * @param $id_block string -> Block id
+ * @return Object
+ */
+
+function student_profile_carga_historico($id_ases, $id_block){
+
+    global $USER;
+
+    if (!is_numeric($id_ases)) {
+        return false;
+    }
+
+    $id_user = $USER->id;
+    $id_block = (int)$id_block;
+
+    $actions = authenticate_user_view($id_user, $id_block);
+    $record = $actions;
+
+    $record->peer_tracking_v3 = student_profile_get_peer_tracking($id_ases, $id_block);
+    $record->peer_tracking_v3_string = json_encode($record->peer_tracking_v3);
+    $record->peer_tracking = student_profile_get_html_peer_tracking($id_ases, $id_block);
+      
     return $record;
 }
 

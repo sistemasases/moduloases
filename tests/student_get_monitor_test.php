@@ -34,7 +34,13 @@ class block_ases_student_get_monitor_testcase extends advanced_testcase {
     private $period;
     private $instance_id = 450299;
 
-
+    /**
+     * Runs before tests.
+     * Creates all asignations required to retrieve monitor and practicant
+     * info.
+     *
+     * @author David S. Cortés <david.cortes@correounivalle.edu.co>
+     */
     protected function setUp() {
         $this->resetAfterTest(true);
 
@@ -61,29 +67,54 @@ class block_ases_student_get_monitor_testcase extends advanced_testcase {
         ];
         $DB->insert_record('talentospilos_monitor_estud', $mon_student_obj);
     }
-
+    
+    /**
+     * Verifica que con datos correctos se devuelve un objeto del monitor.
+     * Para esto se lee el objeto retornado por get_assigned_monitor y
+     * se espera que este objeto tenga un campo 'id', el cual corresponde al id del monitor.
+     *
+     * @author David S. Cortés <david.cortes@correounivalle.edu.co>
+     */
     public function test_correct_with_valid_data() {
         require_once(__DIR__.'/../managers/lib/student_lib.php');
         
         $result = get_assigned_monitor($this->student->id, $this->instance_id);
         $this->assertObjectHasAttribute('id', $result);
     }
-
+    
+    /**
+     * Cuando no existe asignación por parte del estudiante, es decir,
+     * el id del estudiante proporcionado no está matriculado en ASES.
+     * Se debe devolver un arreglo vacío, pues no hay monitor.
+     *
+     * @author David S. Cortés <david.cortes@correounivalle.edu.co>
+     */
     public function test_empty_array_when_user_does_not_exists() {
         require_once(__DIR__.'/../managers/lib/student_lib.php');
         
         $result = get_assigned_monitor(42, $this->instance_id);
         $this->assertCount(0, $result);
     }
-
+    
+    /**
+     * Cuando se proporciona un valor no numérico como instancia,
+     * se espera que se lance una excepción.
+     *
+     * @author David S. Cortés <david.cortes@correounivalle.edu.co>
+     */
     public function test_error_when_invalid_instance() {
         require_once(__DIR__.'/../managers/lib/student_lib.php');
         
         $this->expectException(Exception::class);
         $result = get_assigned_monitor($this->student->id, null);
-
     }
-
+    
+    /**
+     * Cuando se proporciona un valor no numérico como id de estudiante,
+     * se espera que se lance una excepción.
+     *
+     * @author David S. Cortés <david.cortes@correounivalle.edu.co>
+     */
     public function test_error_when_invalid_userid() {
         require_once(__DIR__.'/../managers/lib/student_lib.php');
         
@@ -92,6 +123,12 @@ class block_ases_student_get_monitor_testcase extends advanced_testcase {
 
     }
 
+    /**
+     * Cuando ambos parametros no son numéricos,
+     * se espera que se lance una excepción.
+     *
+     * @author David S. Cortés <david.cortes@correounivalle.edu.co>
+     */
     public function test_error_when_invalid_arguments() {
         require_once(__DIR__.'/../managers/lib/student_lib.php');
         
