@@ -38,7 +38,7 @@ class block_ases_student_get_pract_testcase extends advanced_testcase {
      *
      * @author David S. Cortés <david.cortes@correounivalle.edu.co>
      */
-    protected function setUp() {
+    protected function setUp(): void {
         $this->student = $this->getDataGenerator()->create_user();
         $this->resetAfterTest(true);
     }

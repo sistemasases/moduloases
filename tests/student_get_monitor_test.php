@@ -41,7 +41,7 @@ class block_ases_student_get_monitor_testcase extends advanced_testcase {
      *
      * @author David S. Cortés <david.cortes@correounivalle.edu.co>
      */
-    protected function setUp() {
+    protected function setUp(): void {
         $this->resetAfterTest(true);
 
         require_once(__DIR__.'/../core/module_loader.php');

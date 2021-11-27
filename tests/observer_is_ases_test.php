@@ -26,7 +26,7 @@ class observer_is_ases_testcase extends advanced_testcase
 
     private $observer;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->observer = new block_ases_observer();
     }
