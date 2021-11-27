@@ -27,7 +27,7 @@ class send_email_alert_testcase extends advanced_testcase
     private $sistemas;
     private $observer;
 
-    protected function setUp() 
+    protected function setUp(): void 
     {
         $this->observer = new block_ases_observer();
     } 
