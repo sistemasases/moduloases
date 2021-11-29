@@ -81,12 +81,12 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
 
 				$('#ending_date').on('click', function () {
 					var beginningDate = $('#beginning_date').val()
-					$('#beginning_date').html(convertDate(beginningDate))
+					$('#beginning_date').val(convertDate(beginningDate))
 				})
 
 				$('#beginning_date').on('click', function () {
 					var endingDate = $('#ending_date').val()
-					$('#ending_date').html(convertDate(endingDate))
+					$('#ending_date').val(convertDate(endingDate))
 				})
 
 			});
