@@ -112,6 +112,7 @@ if (isset($_POST['type']) && isset($_POST['instance']) && $_POST['type'] == "get
         $student_id = $ases_student->id;
         $current_semester = core_periods_get_current_period((int)$_POST['instance']);
         $array_peer_trackings_dphpforms = get_tracking_current_semesterV3('student',$student_code[0], $current_semester->id);
+        print_r($array_peer_trackings_dphpforms); die(); // DONOTCOMMIT))
         $array = render_student_trackingsV2($array_peer_trackings_dphpforms);
         echo json_encode($array);
 
@@ -198,7 +199,8 @@ if (isset($_POST['type']) && $_POST['type'] == "consulta_sistemas" && isset($_PO
               else
             if ($usernamerole == 'profesional_ps')
                 {
-                $practicant_of_prof = get_pract_of_prof($id_person, $id_instance);
+                $practicant_of_prof = get_pract_of_prof($id_person, $id_instance, $intervalos->id);
+                print_r(count($practicants_of_prof)); die(); // DONOTCOMMIT))
                 $html = render_professional_new_form($practicant_of_prof, $id_instance, $intervalos->id);
                 }
 

@@ -103,7 +103,6 @@ if(isset($input->function) && isset($input->params)) {
             $id_ases = $params[0];
             $id_instance = $params[1];
 
-
             $result = student_profile_carga_historico($id_ases, $id_instance);
             if($result != null){
                 echo json_encode(
