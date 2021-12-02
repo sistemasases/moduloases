@@ -18,8 +18,10 @@
  * Ases block
  *
  * @author     Iader E. García Gómez
+ * @author     Carlos M. Tovar Parra
  * @package    block_ases
  * @copyright  2018 Iader E. García <iadergg@gmail.com>
+ * @copyright  2021 Carlos M. Tovar Parra <carlos.mauricio.tovar@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -306,7 +308,7 @@ function make_html_semesters($semesters)
             if ($materias === null) {
                 $descriptions .= "NO REGISTRA MATERIAS EN ESTE SEMESTRE";
             } else {
-                $descriptions .= "<div class = 'row'> <b>
+                $descriptions .= "<div> <b>
                 <div class = 'col-md-4'>
                    MATERIA
                 </div>
@@ -319,7 +321,10 @@ function make_html_semesters($semesters)
                <div class = 'col-md-2'>
                     CREDITOS
                </div>
-                </b>
+               <div class = 'col-md-2'>
+                    CANCELA
+               </div>
+                </b><br>
             </div>";
 
                 foreach ($materias as $materia) {
@@ -327,6 +332,7 @@ function make_html_semesters($semesters)
                     if(is_float($materia->nota + 0) and $materia->nota < 3){
                         $perdida = "perdida";
                     }
+                    $cancelacion_materia=date('d-m-Y',$materia->fecha_cancelacion_materia);
                     $descriptions .= "<div class = 'row $perdida'>
                     <div class = 'col-md-4'>
                         $materia->nombre_materia
@@ -339,6 +345,9 @@ function make_html_semesters($semesters)
                     </div>
                     <div class = 'col-md-2'>
                          $materia->creditos
+                    </div>
+                    <div class = 'col-md-2'>
+                         $cancelacion_materia
                     </div>
                     
                  </div>";
