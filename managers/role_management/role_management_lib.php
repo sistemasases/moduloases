@@ -54,7 +54,6 @@ function get_pract_of_prof($id_prof, $id_instance, $period_id){
     ORDER BY fullname ASC";
 
     $practicants = $DB->get_records_sql($sql_query);
-    print_r($practicants); die(); // DONOTCOMMIT))
     return $practicants;
 }
 
