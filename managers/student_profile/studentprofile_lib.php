@@ -2580,7 +2580,6 @@ function student_profile_get_peer_tracking($id_ases, $instance_id){
     $id_period = $number_of_periods;
 
     $trackings = get_tracking_current_semesterV4($id_ases);
-    print_r($trackings); die(); // DONOTCOMMIT))
     $number_of_trackings = count($trackings);
     $id_tracking = 0;
 

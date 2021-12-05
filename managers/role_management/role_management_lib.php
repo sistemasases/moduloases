@@ -27,21 +27,17 @@ function get_boss_of_monitor_by_semester($id_monitor,$id_semester,$id_instance){
 }
 
 
+
 /**
- * Función que obtiene los practicantes de un profesional en el semestre actual
- * o en un semestre dado.
+ * Función que obtiene los practicantes de un profesional en el semestre actual.
  *
  * @see get_pract_of_prof()
  * @return object rol
  */
-function get_pract_of_prof($id_prof, $id_instance, $period_id){
-    global $DB;
+function get_pract_of_prof($id_prof,$id_instance){
+   global $DB;
 
-    if (is_null($period_id)) {
-        $current_semester = core_periods_get_current_period($id_instance);
-        $period_id = $current_semester->id;
-    }
-
+    $current_semester = core_periods_get_current_period($id_instance);
     $id_practicant = get_role_id('practicante_ps');
     $sql_query="SELECT id_usuario,users.firstname,users.lastname,id_semestre,users.username, CONCAT(users.firstname, ' ',users.lastname) AS fullname
     FROM {talentospilos_user_rol} user_rol
@@ -49,12 +45,11 @@ function get_pract_of_prof($id_prof, $id_instance, $period_id){
     WHERE user_rol.id_jefe = $id_prof 
     AND user_rol.id_rol = $id_practicant->id 
     AND user_rol.estado = 1 
-    AND user_rol.id_semestre = $period_id 
+    AND user_rol.id_semestre = $current_semester->id 
     AND user_rol.id_instancia = $id_instance
     ORDER BY fullname ASC";
 
     $practicants = $DB->get_records_sql($sql_query);
-    print_r($practicants); die(); // DONOTCOMMIT))
     return $practicants;
 }
 
