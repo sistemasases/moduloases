@@ -241,7 +241,7 @@ if (isset($_FILES['file']) && isset($_POST['idinstancia'])) {
         echo json_encode($msj);
     }
 } else {
-    echo json_encode('no entro');
+    echo json_encode('File and/or instance id missing from request.');
 }
 
 /**
@@ -254,7 +254,6 @@ if (isset($_FILES['file']) && isset($_POST['idinstancia'])) {
 
 function getAssociativeTitles($titlesPos)
 {
-
     $associativeTitles = array();
     $count = 0;
 
