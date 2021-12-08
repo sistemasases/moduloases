@@ -1,0 +1,111 @@
+[
+    {
+        "key_input":"percepcion_disca",
+        "val_input":[
+            {"key_input":"alguna_restric","val_input":"on"},
+            {"key_input_text":"desc_discap","val_input_text":"Porque me duelen las articulaciones"}
+            ]
+    },
+    {
+        "key_input":"diagnosticos",
+        "val_input":[
+            {"key_input":"diagnosticos","val_input":"1"},
+            {"key_input":"documentos_soporte","val_input":"0"},
+            {"key_input_date":"date_especialidad_1","val_input_date":"2021-12-09"},
+            {"key_input_text":"especialidad_1","val_input_text":"Esp 1"},
+            {"key_input_date":"date_especialidad_2","val_input_date":"2021-12-08"},
+            {"key_input_text":"especialidad_2","val_input_text":"Esp 2"}
+            ]
+    },
+    {
+        "key_input":"condicion_salud",
+        "val_input":[
+            {"key_input":"condicion","val_input":"0"},
+            {"key_input_text":"rel_cond_salud","val_input_text":"Dolores generales"}
+            ]
+    },
+    {
+        "key_input":"medicamentos",
+        "val_input":[
+            {"key_input":"medicamento","val_input":"1"},
+            {"key_input_text":"nom_medic","val_input_text":"Aceta, paraceta, tarrito rojo"},
+            {"key_input_text":"hora_medic","val_input_text":"8 horas, 12, horas, 24 horas"},
+            {"key_input_text":"efect_medic","val_input_text":"ninguno"}
+            ]
+    },
+    {
+        "key_input":"cambios_tratamiento",
+        "val_input":[
+            {"key_input":"cambio_tratamiento","val_input":"1"},
+            {"key_input_text":"veces_cambio","val_input_text":"3"},
+            {"key_input_text":"razones_cambio","val_input_text":"Pruebas"},
+            {"key_input_text":"obs_cambio","val_input_text":"No hau obs"}
+            ]
+    },
+    {
+        "key_input":"discapacidad_municipio",
+        "val_input":[
+            {"key_input":"localizacion_discapacidad","val_input":"1"},
+            {"key_input_text":"municipio","val_input_text":"yumbo"},
+            {"key_input_text":"departamento","val_input_text":"Valle del cauca"},
+            {"key_input_date":"fecha","val_input_date":"2021-12-19"},
+            {"key_input":"entrega_documentos","val_input":"1"},
+            {"key_input_text":"doc_localizacion","val_input_text":"C:\\fakepath\\Modificación del modelo.pdf"}
+            ]
+    },
+    {
+        "key_input":"certificado_discapacidad",
+        "val_input":[
+            {"key_input":"certificado_discapacidad","val_input":"0"}
+            ]
+    },
+    {
+        "key_input":"certificado_invalidez",
+        "val_input":[
+            {"key_input":"certificado_invalidez","val_input":"1"},
+            {"key_input_text":"tipo_certi_inv","val_input_text":"Piernas "},
+            {"key_input_text":"porcentaje_inv","val_input_text":"50%"},
+            {"key_input_text":"entidad_certi_inv","val_input_text":"Asmet "},
+            {"key_input_date":"fecha_certi_inv","val_input_date":"2021-12-04"},
+            {"key_input":"documento_soporte","val_input":"0"}
+            ]
+    },
+    {
+        "key_input":"condicion_organos",
+        "val_input":[
+            {"key_input":"ojos","val_input":"on"},
+            {"key_input_text":"cond_ojos","val_input_text":"no veo"},
+            {"key_input":"piel","val_input":"on"},
+            {"key_input_text":"cond_piel","val_input_text":"me pica"}
+            ]
+    },
+    {
+        "key_input":"dificultad_permanente",
+        "val_input":[
+            {"key_input":"mental","val_input":"on"},
+            {"key_input_text":"dif_mental","val_input_text":"esquizofrenia"},
+            {"key_input":"s_vision","val_input":"on"},
+            {"key_input_text":"dif_s_vision","val_input_text":"Me duele el parpado"}
+            ]
+    },
+    {
+        "key_input":"participacion_estudiantil",
+        "val_input":[
+            {"key_input":"participacion","val_input":"3"},
+            {"key_input_text":"text_participacion","val_input_text":"No cuenta con lo necesario la universidad"},
+            {"key_input":"apoyo_partic","val_input":"1"},
+            {"key_input_text":"text_apoyo_partic","val_input_text":"Buena"}
+            ]
+    },
+    {
+        "key_input":"organizacion_disca",
+        "val_input":[
+            {"key_input":"asociacion","val_input":"1"},
+            {"key_input_text":"cual_asoc","val_input_text":"Disca.com"}
+            ]
+    },
+    {"key_input":"apoyo_dicapacidad","val_input":[
+        {"key_input":"apoyo_discapacidad","val_input":"0"}
+        ]
+    }
+]

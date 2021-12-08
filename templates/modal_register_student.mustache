@@ -35,7 +35,11 @@ require(
             <div>
                 <!--Info personal-->
                 <div class="ml-4" id="step-1">
-
+                  <div class="row">
+                   <div class="col-md-6">
+                      <button type="button" id="pruebas" class="btn btn-success">Success</button>
+                    </div> 
+                  </div>
                   <div class="row mt-4">
                     <div class="col-md-6">
                       <small class="font-weight-bold">Código estudiante</small>
@@ -47,9 +51,9 @@ require(
                     
                   </div>
                   <div class="row mt-4">
-                    <div id="sede" class="col-md-6">
+                    <div id="sede_div" class="col-md-6">
                       <small class="font-weight-bold">Sede</small><br>
-                      <select name="" id="select_sede" class="custom-select step1"></select>
+                      <select name="" id="select_sede" class="custom-select select-academics-data step1"></select>
                       <input  id="sede" name="sede" type="number" hidden>
                     </div>
 
@@ -358,9 +362,9 @@ require(
                     <div class="row mt-4">
                       <div class="col-md-4">
                       <small class="font-weight-bold">Otros acompañamientos</small>
-                        <div class="">
-                          <select class="custom-select step1"  id="select_acompañamientos"></select>
-                          <input id="acompañamientos" type="number" hidden>
+                        <div id="otros_acomp" class="">
+                          <select class="custom-select select-registro step1"  id="select_acompañamientos"></select>
+                          <input id="acompanamientos" name="acompanamientos" type="number" hidden>
                         </div>
                       </div>
                     </div>               
@@ -1143,11 +1147,6 @@ require(
 
                 <!-- Datos discapacidad -->
                 <div id="step-5">
-                  <div class="row">
-                    <div class="col-md-6">
-                      <button type="button" id="pruebas" class="btn btn-success">Success</button>
-                    </div>
-                  </div>
                   <div id="diagnosticos" class="row mt-4">
                     <div class="col-md-6">
                       <small class="font-weight-bold">¿Cuenta con uno o más diagnósticos de su condición de salud?</small>

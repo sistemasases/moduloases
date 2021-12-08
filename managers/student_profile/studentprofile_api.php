@@ -295,9 +295,9 @@ if(isset($input->function) && isset($input->params)) {
         $result=insert_academics_data($data, $programa, $titulo, $observacioes, $id_ases);
         echo json_encode($result);       
     }else if($function == 'insert_disapacity_data'){
-        $json_detalle = $params[0];
+        $data = $params[0];
         $id_ases = $params[1];
-        $result=insert_disapacity_data($json_detalle, $id_ases);
+        $result=insert_disapacity_data($data, $id_ases);
         echo json_encode($result);       
     }else if($function == 'insert_health_service'){
         $data = $params[0];

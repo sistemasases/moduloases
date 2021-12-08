@@ -32,8 +32,11 @@
             $("#validar_codigo").prop("disabled", false);
 
             $('#pruebas').on('click', function () {
-                var prueba = getHealtData()
-                console.log(prueba);
+                
+                var a = getHealtData();
+                    
+                console.log("Data = " + JSON.stringify(a));
+
             });
 
             //Modal controls
@@ -573,7 +576,7 @@
                     buildJson('organizacion_disca', arr_insert, arr_discapacidad);
                     arr_insert = [];
 
-                    buildJsonObject('apoyo_recibido', arr_discapacidad);
+                    buildJsonObject('apoyo_recibido', arr_insert);
                     buildJson('apoyo_dicapacidad', arr_insert, arr_discapacidad);
                     arr_insert = [];
 
@@ -583,7 +586,7 @@
                 }
 
                 // Funciòn que recolecta los datos acadèmicos y los empaqueta en un arr
-                function getAcademidcData(){
+                function getAcademicsData(){
 
                     var json_insert = {};
 
@@ -1009,7 +1012,7 @@
                                   }else {
                                       if(!economics_data){
                                           save_data_user_step2();
-                                         // save_economics_data();
+                                          //save_economics_data();
                                           economics_data =true;
                                           cambios_s2 = false;
                                       }else if(cambios_s2){
@@ -1025,7 +1028,7 @@
                                   }else {
                                       if(!academics_data){
                                           save_data_user_step3();
-                                         // save_academics_data();
+                                          //save_academics_data();
                                           academics_data =true;
                                           cambios_s3 = false;
                                       }else if(cambios_s3){
@@ -1125,6 +1128,7 @@
                     buildJsonObject('otra_identidad', json_detalle);
                     buildJsonObject('otra_orientacion', json_detalle);
                     buildJsonObject('contacto_2', json_detalle);
+                    buildJsonObject('otros_acomp', json_detalle);
                     json_detalle = JSON.stringify(json_detalle);
 
                     
@@ -1212,7 +1216,7 @@
                 }
 
                 function save_academics_data(){
-                    var academics_data = getAcademidcData();
+                    var academics_data = getAcademicsData();
                     getStudentAses($("#num_doc_ini").val());
                     var programa = $("#programa").val();
                     var titulo = $("#titulo_1").val();
@@ -1240,13 +1244,13 @@
                 }
 
                 function save_discapacity_data(){
-                    var json_detalle = getHealtData();
+                    var datos_discapacidad = getHealtData();
                     getStudentAses($("#num_doc_ini").val());
                     $.ajax({
                         type: "POST",
                         data: JSON.stringify({
                             "function": 'insert_disapacity_data',
-                            "params": [json_detalle, id_ases]
+                            "params": [datos_discapacidad, id_ases]
                         }),
                         url: "../managers/student_profile/studentprofile_api.php",
                         success: function(msg){
