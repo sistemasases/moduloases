@@ -33,6 +33,7 @@
  * @throws \dml_exception
  */
 namespace cohort_lib;
+global $CFG;
 require_once(__DIR__.'/../instance_management/instance_lib.php');
 require_once (__DIR__.'/../../../../config.php');
 require_once($CFG->dirroot.'/cohort/lib.php');

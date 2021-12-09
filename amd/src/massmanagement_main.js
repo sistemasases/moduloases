@@ -97,11 +97,13 @@ define(['jquery',
                         return 0;
                 }
 
+                formData.append('function', controler);
+
                 $.ajax({
-                    url: '../managers/mass_management/' + controler,
-                    data: formData,
+                    url: '../managers/mass_management/'+controler,
+                    data: formData, 
                     type: 'POST',
-                    dataType: 'json',
+                    method: 'POST',
                     cache: false,
                     // required parameters to upload files
                     contentType: false,
@@ -109,7 +111,8 @@ define(['jquery',
                     beforeSend: function () {
                         $('#response').html("<img src='../icon/facebook.gif' />");
                     },
-                    success: function (msj) {
+                    success: function (res) {
+                        msj = JSON.parse(res);
 
                         $('#response').empty();
 
