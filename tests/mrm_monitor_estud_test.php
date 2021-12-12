@@ -18,14 +18,45 @@
  * managers/mass_role_management/mrm_monitor_estud.php
  * @author David S. Cortés <david.cortes@correounivalle.edu.co>
  */
+
+require_once(__DIR__ . '/../managers/mass_management/mrm_monitor_estud.php');
+
 class block_ases_mrm_monitor_estud_testcase extends basic_testcase 
 {
     /**
-     * Prueba para la función getAssociativeTitles()
-     */
-    public function test_titles() 
+     * Prueba que la función getAssociativeTitles() lance una excepción
+     * cuando se llama con un arreglo de titulos incorrecto.
+    */
+    public function test_bad_titles() 
     {
-        require_once(__DIR__ . '/../managers/mass_management/mrm_monitor_estud.php');
-	    $this->assertEquals(3, 1+2);
+	    $bad_titles = ["foo", "bar"];
+
+        $this->expectException(MyException::class);
+        $this->expectExceptionMessage('Error al cargar el archivo. El titulo "foo" no corresponde a alguna columna valida');
+
+        getAssociativeTitles($bad_titles);
 	}
+
+    /**
+     * Prueba que la función getAssociativeTitles() 
+     * devuelve un arreglo asociativo
+     * cuando se llama con un arreglo de titulos correcto.
+    */
+    public function test_good_titles() 
+    {
+	    $good_titles = ["username_monitor", "username_estudiante"];
+        $result = getAssociativeTitles($good_titles);
+        $this->assertArrayHasKey('username_monitor', $result);
+        $this->assertArrayHasKey('username_estudiante', $result);
+	}
+    /**
+     * Array
+    (
+        [name] => mon_estud.csv
+        [type] => text/csv
+        [tmp_name] => /tmp/phpWXCWpL
+        [error] => 0
+        [size] => 53
+    )
+     */
 }

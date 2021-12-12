@@ -44,38 +44,7 @@ function upload_assignations_file($file, $instance_id) {
 
     if (is_numeric($instance_id)) {
         try {
-    
-            $archivo = $file;
-            $extension = pathinfo($archivo['name'], PATHINFO_EXTENSION);
-    
-            $nombre = $archivo['name'];
-    
-            $rootFolder = "../../view/archivos_subidos/mrm/monitor_estud/files/";
-            $zipFolfer = "../../view/archivos_subidos/mrm/monitor_estud/comprimidos/";
-    
-            if (!file_exists($rootFolder)) {
-                mkdir($rootFolder, 0777, true);
-            }
-            if (!file_exists($zipFolfer)) {
-                mkdir($zipFolfer, 0777, true);
-            }
-    
-            //deletes everything from folders
-            deleteFilesFromFolder($rootFolder);
-            deleteFilesFromFolder($zipFolfer);
-    
-            if ($extension !== 'csv') {
-                throw new MyException("El archivo " . $archivo['name'] . " no corresponde al un archivo de tipo CSV. Por favor verifícalo");
-            }
-    
-            if (!move_uploaded_file($archivo['tmp_name'], $rootFolder . 'Original_' . $nombre)) {
-                throw new MyException("Error al cargar el archivo.");
-            }
-    
-            ini_set('auto_detect_line_endings', true);
-            if (!($handle = fopen($rootFolder . 'Original_' . $nombre, 'r'))) {
-                throw new MyException("Error al cargar el archivo " . $archivo['name'] . ". Es posible que el archivo se encuentre dañado");
-            }
+            check_file($file);
     
             global $DB;
     
@@ -259,6 +228,57 @@ function upload_assignations_file($file, $instance_id) {
     }
 }
 
+/**
+ * Performs the verification at the file level, ie: checks read/write
+ * permissions in views/arhivos_subidos and checks that the file has a
+ * .csv extension
+ * @author David S. Cortés <david.cortes@correounivalle.edu.co>
+ *
+ * @param $file. Array containing the file information in the form:
+    Array
+    (
+        [name] => example.csv
+        [type] => text/csv
+        [tmp_name] => /tmp/phpWXCWpL
+        [error] => 0
+        [size] => 53
+    )
+    * @throws exception
+    * @return void
+ */
+function check_file($file)
+{
+    $archivo = $file;
+    $extension = pathinfo($archivo['name'], PATHINFO_EXTENSION);
+    $nombre = $archivo['name'];
+     
+    $rootFolder = "../../view/archivos_subidos/mrm/monitor_estud/files/";
+    $zipFolfer = "../../view/archivos_subidos/mrm/monitor_estud/comprimidos/";
+   
+    if (!file_exists($rootFolder)) {
+        mkdir($rootFolder, 0777, true);
+    }
+    if (!file_exists($zipFolfer)) {
+        mkdir($zipFolfer, 0777, true);
+    }
+    
+    //deletes everything from folders
+    deleteFilesFromFolder($rootFolder);
+    deleteFilesFromFolder($zipFolfer);
+    
+    if ($extension !== 'csv') {
+        throw new MyException("El archivo " . $archivo['name'] . " no corresponde al un archivo de tipo CSV. Por favor verifícalo");
+    }
+    
+    if (!move_uploaded_file($archivo['tmp_name'], $rootFolder . 'Original_' . $nombre)) {
+        throw new MyException("Error al cargar el archivo.");
+    }
+    
+    ini_set('auto_detect_line_endings', true);
+    if (!($handle = fopen($rootFolder . 'Original_' . $nombre, 'r'))) {
+        throw new MyException("Error al cargar el archivo " . $archivo['name'] . ". Es posible que el archivo se encuentre dañado");
+    }
+}
 
 /**
  * Creates an associative array given a header from a CSV file
