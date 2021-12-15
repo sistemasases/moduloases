@@ -2218,7 +2218,7 @@ function update_tracking_status($id_ases_user, $id_academic_program){
 function save_data($data, $deportes, $f, $programa, $id_moodle, $json_detalle){
     global $DB;
 
-    if(!empty($data) || !empty($id_moodle) || !empty($programa)) {
+    if(!empty($data) && !empty($id_moodle) && !empty($programa)) {
         
         $student_object = new stdClass();
         $student_extended = new stdClass();
@@ -2260,7 +2260,7 @@ function save_data($data, $deportes, $f, $programa, $id_moodle, $json_detalle){
         return $result;
 
     } else {
-        Throw new Exception('error al momento de creación');
+        Throw new Exception('Error al momento de crear ases user');
     }
 }
 
@@ -2281,7 +2281,7 @@ function save_mdl_user($username, $nombre, $apellido, $emailI, $pass){
     
     if(empty($username) || empty($nombre) || empty($apellido) || empty($emailI) || empty($pass)) {
         
-        Throw new Exception('error al momento de creación');
+        Throw new Exception('Error al momento de crear user de moodle');
 
     } else {
         
@@ -2331,7 +2331,7 @@ function save_data_user_step2($id_ases,$estrato, $hijos, $familia){
     
         $result = $DB->update_record('talentospilos_usuario', $student_ases);
     } else {
-        Throw new Exception('error al momento de creación');
+        Throw new Exception('Error al momento de insertar datos del step2');
     }
     
 
@@ -2362,7 +2362,7 @@ function save_data_user_step3($id_ases, $icfes, $anio_ingreso, $colegio, $id_eco
 
     $result = $DB->update_record('talentospilos_usuario', $student_ases);
     } else {
-        Throw new Exception('error al momento de creación');
+        Throw new Exception('Error al momento de insertar datos del step3');
     }
 
     return $result;
@@ -2388,7 +2388,7 @@ function save_data_user_step4($id_ases, $id_disc){
 
     $result = $DB->update_record('talentospilos_usuario', $student_ases);
     } else {
-        Throw new Exception('error al momento de creación');
+        Throw new Exception('Error al momento de insertar datos del step4');
     }
 
     return $result;
@@ -2443,7 +2443,7 @@ function insert_economics_data($data, $estrato, $id_ases){
     
         return $result;
     }else {
-        Throw new Exception('error al momento de creación');
+        Throw new Exception('Error al momento de insertar datos economicos');
     }
 
 }
@@ -2483,7 +2483,7 @@ function insert_academics_data($data, $programa, $titulo, $observaciones, $id_as
 
         return $result;
     }else {
-            Throw new Exception('error al momento de creación');
+            Throw new Exception('Error al momento de insertar datos academicos');
         }
 }
 
@@ -2519,7 +2519,7 @@ function insert_disapacity_data($data, $id_ases){
         return $result;
         
     }else {
-        Throw new Exception('error al momento de creación');
+        Throw new Exception('Error al momento de insertar datos de discapacidad');
     }
     
 
@@ -2556,7 +2556,7 @@ function insert_health_service($data, $eps, $id_ases){
 
         return $result;
     }else {
-        Throw new Exception('error al momento de creación');
+        Throw new Exception('Error al momento de insertar datos de servicio de salud');
     }
 }
 

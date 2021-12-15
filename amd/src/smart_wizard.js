@@ -27,7 +27,7 @@ define(['jquery']);
     }
     var o = {
         selected: 0,
-        keyNavigation: !0,
+        keyNavigation: 0,
         autoAdjustHeight: !0,
         cycleSteps: !1,
         backButtonSupport: !0,
