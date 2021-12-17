@@ -32,36 +32,35 @@
             $("#validar_codigo").prop("disabled", false);
 
             $('#pruebas').on('click', function () {
-                var prueba = getHealtData()
-                console.log(prueba);
+                $(":input").val("");
+                $('#smartwizard').smartWizard("reset");
             });
 
             //Modal controls
             $('#mostrar').on('click', function () {
                 //Secciòn 1
-                loadSelector($('#select_ciudad_nacimiento'), "get_ciudades");
-                loadSelector($('#select_acompañamientos'), "get_otros_acompañamientos",);
-                loadSelector($('#s_excepcion'), "get_cond_excepcion",);
-                loadSelector($('#select_estado_civil'), "get_estados_civiles");
-                loadSelector($('#select_sexo'), 'get_sex_options');
-                loadSelector($('#select_genero'), 'get_generos');
-                loadSelector($('#s_act_simultanea'), 'get_act_simultaneas');
-                loadSelector($('#select_etnia'), 'get_etnias');
-                loadSelector($('#s_tipo_documento'), 'get_document_types');
+                loadSelector($('#id_ciudad_ini'), "get_ciudades");
+                loadSelector($('#acompanamientos'), "get_otros_acompañamientos",);
+                loadSelector($('#id_cond_excepcion'), "get_cond_excepcion",);
+                loadSelector($('#id_estado_civil'), "get_estados_civiles");
+                loadSelector($('#sexo'), 'get_sex_options');
+                loadSelector($('#id_identidad_gen'), 'get_generos');
+                loadSelector($('#id_act_simultanea'), 'get_act_simultaneas');
+                loadSelector($('#id_etnia'), 'get_etnias');
+                loadSelector($('#tipo_doc'), 'get_document_types');
                 loadSelector($('#s_discapacidad'), 'get_discapacities');
 
 
                 //Secciòn 2
-                loadSelector($('#select_pais_nacimiento'), 'get_paises');
-                loadSelector($('#select_barrio'), 'get_barrios');
-                loadSelector($('#select_ciudad'), 'get_ciudades');
+                loadSelector($('#id_pais'), 'get_paises');
+                loadSelector($('#barrio_res'), 'get_barrios');
+                loadSelector($('#id_ciudad_res'), 'get_ciudades');
                 setSelectPrograma();
 
                 //Secciòn 3
-                loadSelector($('#select_pais_res'), 'get_paises');
-                loadSelector($('#select_barrio_procedencia'), 'get_barrios');
-                loadSelector($('#select_ciudad_procedencia'), 'get_ciudades');
-                loadSelector($('#s_tipo_documento_ingreso'), 'get_document_types');
+                loadSelector($('#id_pais_res'), 'get_paises');
+                loadSelector($('#barrio_ini'), 'get_barrios');
+                loadSelector($('#tipo_doc_ini'), 'get_document_types');
                 loadSelector($('#select_sede'), 'get_sedes');
 
                 loadSelector($('#s_programa_1'), 'get_programas_academicos');
@@ -132,7 +131,7 @@
                         type: "POST",
                         data: JSON.stringify({
                             "function": 'get_user',
-                            "params": "code"+codeUser
+                            "params": codeUser
                         }),
                         url: "../managers/student_profile/studentprofile_api.php",
                         success: function(msg){
@@ -152,12 +151,14 @@
                 }
             });
 
+            /* Funcion para validar si el la consulta del usuario en la tabla mdl_user existe
+                En caso de no existir se determina si se creara un estudiante nuevo o se ingresara otro codigo*/
             function validateStudent(fullUser) {
                 if (fullUser != false) {
                     $("#step-1 :input").prop("disabled", true);
                     $("#codigo_estudiantil").prop("disabled", false);
                     $("#validar_codigo").prop("disabled", false);
-                    $("#s_tipo_documento_ingreso").prop("disabled", false); 
+                    $("#tipo_doc_ini").prop("disabled", false); 
                     $("#num_doc_ini").prop("disabled", false); 
                     $("#select_sede").prop("disabled", false); 
                     $("#select_programa").prop("disabled", false); 
@@ -192,17 +193,20 @@
                 
             }
             
+            /* Funcion para setear los datos del estudiante en caso de existir en la tabla mdl_user 
+                y cargar el programa academico al que pertenece*/
             function setUserData(fullUser) {
                 $('#nombre').val(fullUser.firstname);
                 $('#apellido').val(fullUser.lastname);
                 $('#emailinstitucional').val(fullUser.email);
                 disableMdliputs();
 
-                programs = fullUser.username.slice(fullUser.username.indexOf('m')+1);
+                programs = fullUser.username.slice(fullUser.username.indexOf('-')+1);
                 $('#select_programa').empty();
                 loadSelector($('#select_programa'), 'get_programas_academicos_est', programs);
             }
 
+            //Funcion para deshabilitar los campos o habilitar los campos de la seccion 1 del formulario
             function disableMdliputs() {
                 if (!mdl_user) {
                     $('#nombre').prop("disabled",true);
@@ -228,9 +232,11 @@
                 $('#edad').val(edad);
             });
 
-            $(document).on('click', '.remove_fila', function () {
-                    $(this).parent().parent().remove();
-                });
+            /*Funciones para añadir campos a la tabla de familia y a la tabla de ingresos a 
+                la universidad en las secciones 2 y 3 del formulario*/
+                $(document).on('click', '.remove_fila', function () {
+                        $(this).parent().parent().remove();
+                    });
 
                 $(document).on('click', '.remove_fila_ing', function () {
                     ing--;
@@ -246,13 +252,15 @@
                     addTableIng($("#table_ingresos"));
                 });
 
+                //Funciòn para guardar la informaciòn de servicios de salud
                 $(document).on('click', '#guardar_info', function () {
 
-                    //Funciòn para guardar la informaciòn de servicios de salud
                     if (!healthService) {
                         save_health_service();
                         healthService = true;
                         cambios_s6 = false;
+                        $(":input").val("");
+                        $('#smartwizard').smartWizard("reset");
                     } else if(cambios_s6) {
                         cambios_s6 = false;
                     }
@@ -269,7 +277,7 @@
                 }
 
                 var ing = 0;
-                /*Controles para el registros de Familiares*/
+                /*Controles para el registros de inresos a la universidad*/
                 function addTableIng(table){
                     let nuevaFila = "";
                     nuevaFila += '<tr><td> <input id="anio_'+ing+'" class="input_fields_general_tab ingresos_u step3" name="anio_'+ing+'"  type="text"/></td>';
@@ -293,17 +301,20 @@
                     }
                     return arr;
                 }
-
+                
+                /*Funcion para determinar si el usuario existe en la tabla talentospilos_usuario
+                    y talentospilos_user_extended mediante el numero de cedula*/
                 $( "#num_doc_ini" ).blur(function() { 
                     getStudentAses($( "#num_doc_ini" ).val());
                     $("#step-1 :input").prop("disabled", false);
                     if (id_ases != null) {
-                        getStudent("code"+$("#codigo_estudiantil").val());
+                        getStudent($("#codigo_estudiantil").val());
                         getExistUserExtended(id_ases, id_moodle);
                         if (user_extended) {
                             disableMdliputs();
                             ases_user = true;
-                            console.log("Esta en user extened - Extre la info");
+                            getStudentAses($( "#num_doc_ini" ).val(), 1);
+                            setAsesData(data_ases)
                         } else {
                             disableMdliputs();
                             console.log("no esta en user extended");
@@ -358,7 +369,7 @@
                             if (data == null) {
                                 handleIdAses(options.id);
                             } else if(data == 1) {
-                                handleDataAses(options.json_detalle);
+                                handleDataAses(options);
                             }
                             
                         },
@@ -381,8 +392,13 @@
                 //Funciòn para poder retornar desde una peticòn AJAX
                 function handleDataAses(data){
                    data_ases = data;
-                   console.log(data_ases);
                 } 
+
+                function setAsesData(data) {
+                    for(var key in data){
+                        $('#'+key).val(data[key])
+                    }
+                }
                 
                 //Funciòn que obtiene un estudiante mediante el codigo
                 //Nota: en este caso solo retorna el id
@@ -573,7 +589,7 @@
                     buildJson('organizacion_disca', arr_insert, arr_discapacidad);
                     arr_insert = [];
 
-                    buildJsonObject('apoyo_recibido', arr_discapacidad);
+                    buildJsonObject('apoyo_recibido', arr_insert);
                     buildJson('apoyo_dicapacidad', arr_insert, arr_discapacidad);
                     arr_insert = [];
 
@@ -583,7 +599,7 @@
                 }
 
                 // Funciòn que recolecta los datos acadèmicos y los empaqueta en un arr
-                function getAcademidcData(){
+                function getAcademicsData(){
 
                     var json_insert = {};
 
@@ -767,16 +783,28 @@
                             case 'radio':
                                 var o = getValue($(this));
                                 if(o.id !== ""){
-                                    json_object.key_input = $(this).attr("name");
-                                    json_object.val_input = $(this).val();
-                                    if(o.type == "text"){
-                                        json_object.key_input_text = o.id;
-                                        json_object.val_input_text = o.val;
-                                    }else if(o.type == "number"){
-                                        json_object.key_input_number = o.id;
-                                        json_object.val_input_number = o.val;
+                                    if (o.id1 != "") {
+                                        json_object.key_input = $(this).attr("name");
+                                        json_object.val_input = $(this).val();
+                                        if(o.type == "text"){
+                                            json_object.key_input_text = o.id;
+                                            json_object.val_input_text = o.val;
+                                            json_object.key_input_number = o.id1;
+                                            json_object.val_input_number = o.val1;
+                                        }
+                                        arr.push(json_object);
+                                    }else{
+                                        json_object.key_input = $(this).attr("name");
+                                        json_object.val_input = $(this).val();
+                                        if(o.type == "text"){
+                                            json_object.key_input_text = o.id;
+                                            json_object.val_input_text = o.val;
+                                        }else if(o.type == "number"){
+                                            json_object.key_input_number = o.id;
+                                            json_object.val_input_number = o.val;
+                                        }
+                                        arr.push(json_object);
                                     }
-                                    arr.push(json_object);
 
                               }else{
                                 break;
@@ -820,9 +848,15 @@
                     if(input.is(":checked")){
                         if(input.hasClass("otro")){
                             var d=input.parent().next().find('input');
+                            var d1 =input.parent().next().children('input:last');
                             o.id = d.attr('id');
                             o.val = d.val();
                             o.type = d.attr("type");
+                            if (d1.attr('id') != o.id) {
+                                o.id1 = d1.attr('id');
+                                o.val1 = d1.val();
+                                o.type1 = d1.attr("type");
+                            }
                             return o;
                         }else{
                             o.id =input.attr("name");
@@ -973,7 +1007,7 @@
                 /*
                 Funcion que determina el cambio entre paginas
                 */    
-              /*  $("#smartwizard").on("leaveStep", function(e, anchorObject, currentStepIndex, stepDirection, nextStepIndex) {
+             /*   $("#smartwizard").on("leaveStep", function(e, anchorObject, currentStepIndex, stepDirection, nextStepIndex) {
                    if (stepDirection === "forward") {
                         getSelectValues();
                         switch (currentStepIndex) {
@@ -992,7 +1026,7 @@
                                       // Validacion para determinar si es un insert o update
                                         //  en la tabla talentospilos_usuario
                                       if (!ases_user) {
-                                          getStudent("code"+$("#codigo_estudiantil").val());
+                                          getStudent($("#codigo_estudiantil").val());
                                           save_data();
                                           ases_user = true;
                                           cambios_s1 = false;
@@ -1009,7 +1043,7 @@
                                   }else {
                                       if(!economics_data){
                                           save_data_user_step2();
-                                         // save_economics_data();
+                                          save_economics_data();
                                           economics_data =true;
                                           cambios_s2 = false;
                                       }else if(cambios_s2){
@@ -1025,7 +1059,7 @@
                                   }else {
                                       if(!academics_data){
                                           save_data_user_step3();
-                                         // save_academics_data();
+                                          save_academics_data();
                                           academics_data =true;
                                           cambios_s3 = false;
                                       }else if(cambios_s3){
@@ -1057,11 +1091,12 @@
                             break;
                         }
                     }
-                 }); */
+                 }); /*
 
 
                 //Funcion para recolectar valores de los selects
                 function getSelectValues(){
+                    $('#tipo_doc').val($("#tipo_doc_ini option:selected").val())
                     var selects=$(".select-registro").map(function(){return $(this).attr("id");}).get()
                     var inputs=$(".select-registro").map(function(){return $(this).next().attr("id")}).get()
                     for(var i=0; i < inputs.length; i++){
@@ -1077,7 +1112,7 @@
                     var nombre = $("#nombre").val();
                     var apellido = $("#apellido").val();
                     var emailI = $("#emailinstitucional").val();
-                    var username = 'code'+codigo+"-program"+cod_programa;
+                    var username = ''+codigo+"-"+cod_programa;
                     var pass = nombre.charAt(0)+codigo+apellido.charAt(0);
                     pass = pass.toUpperCase();
                     
@@ -1108,6 +1143,9 @@
                 //Funciòn que hace una peticiòn asìncrona a la Api para el guardado, aquì se debe empaquetar en variables
                 //todos las variables a guardar del formulario
                 function save_data(){
+
+                    $('#num_doc').val($("#num_doc_ini").val())
+
                     var deportes = [];
                     deportes.push({name:"deportes", value:input_deportes.getArr()});
                     deportes.push({name:"actividades", value:input_actividades.getArr()});
@@ -1125,6 +1163,7 @@
                     buildJsonObject('otra_identidad', json_detalle);
                     buildJsonObject('otra_orientacion', json_detalle);
                     buildJsonObject('contacto_2', json_detalle);
+                    buildJsonObject('otros_acomp', json_detalle);
                     json_detalle = JSON.stringify(json_detalle);
 
                     
@@ -1212,7 +1251,7 @@
                 }
 
                 function save_academics_data(){
-                    var academics_data = getAcademidcData();
+                    var academics_data = getAcademicsData();
                     getStudentAses($("#num_doc_ini").val());
                     var programa = $("#programa").val();
                     var titulo = $("#titulo_1").val();
@@ -1240,13 +1279,13 @@
                 }
 
                 function save_discapacity_data(){
-                    var json_detalle = getHealtData();
+                    var datos_discapacidad = getHealtData();
                     getStudentAses($("#num_doc_ini").val());
                     $.ajax({
                         type: "POST",
                         data: JSON.stringify({
                             "function": 'insert_disapacity_data',
-                            "params": [json_detalle, id_ases]
+                            "params": [datos_discapacidad, id_ases]
                         }),
                         url: "../managers/student_profile/studentprofile_api.php",
                         success: function(msg){

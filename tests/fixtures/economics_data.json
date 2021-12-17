@@ -1,0 +1,34 @@
+[
+    {"key_input":"datos_economicos_adicionales","val_input":[
+    {"key_input":"sostenimiento","val_input":"4"},
+    {"key_input":"solvencia_econo","val_input":"3","key_input_text":"solvencia_econo_txt","val_input_text":"Trabajando"}
+    ] },
+    
+    {"key_input":"beca","val_input":"1","key_input_text":"beca_valor","val_input_text":"pilos pa, 200000"},
+    
+    [ {"key_input":"ayuda_materiales","val_input":"1"},
+    {"key_input":"valor_materiales","val_input":"5"} ],
+    
+    [{"key_input":"ayuda_transporte","val_input":"0","key_input_text":"ayuda_transporte","val_input_text":"Vuelo"},
+    {"key_input_text":"i_valor_semestre","val_input_text":"500000"}],
+    
+    {"key_input":"nivel_educ_padres","val_input":[
+    {"key_input":"madre_educacion","val_input":"2"}
+    ] },
+    
+    {"key_input":"ocupacion_padres","val_input":[
+    {"key_input_text":"i_profesion_madre","val_input_text":"Cocinera"},
+    {"key_input_text":"i_cargo_madre","val_input_text":"Cocinera"}
+    ] },
+    
+    {"key_input":"situa_laboral_padres","val_input":[
+    {"key_input":"madre_laboral","val_input":"2"}
+    ] },
+    
+    {"key_input":"expectativas_laborales","val_input":[
+    {"key_input_text":"motivo_ingreso","val_input_text":"Estudiar"},
+    {"key_input_text":"expecativas_carrera","val_input_text":"graduarme"},
+    {"key_input_text":"expectativas_graduarse","val_input_text":"Trabajar"}
+    ] }
+]
+    

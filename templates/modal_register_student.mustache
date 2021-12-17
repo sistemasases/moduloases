@@ -35,7 +35,7 @@ require(
             <div>
                 <!--Info personal-->
                 <div class="ml-4" id="step-1">
-
+                  
                   <div class="row mt-4">
                     <div class="col-md-6">
                       <small class="font-weight-bold">Código estudiante</small>
@@ -47,9 +47,9 @@ require(
                     
                   </div>
                   <div class="row mt-4">
-                    <div id="sede" class="col-md-6">
+                    <div id="sede_div" class="col-md-6">
                       <small class="font-weight-bold">Sede</small><br>
-                      <select name="" id="select_sede" class="custom-select step1"></select>
+                      <select name="" id="select_sede" class="custom-select select-academics-data step1"></select>
                       <input  id="sede" name="sede" type="number" hidden>
                     </div>
 
@@ -64,8 +64,8 @@ require(
                     <div class="col-md-6">
                         <small class="font-weight-bold">Tipo documento ingreso</small>
                         <div class=""> 
-                          <select  id="s_tipo_documento_ingreso" class="custom-select  select-registro step1"></select>
-                          <input name="tipo_doc_ini" id="tipo_doc_ini" class="talentospilos_usuario" type="number" hidden>
+                          <select  id="tipo_doc_ini" class="custom-select  select-registro step1"></select>
+                          <input name="tipo_doc_ini" id="tipo_doc_ini1" class="talentospilos_usuario" type="number" hidden>
                         </div>
                       </div>
                         
@@ -100,22 +100,21 @@ require(
                     </div>
   
                     <hr>
-                    <div class="row mt-4">
-                      <div class="col-md-6">
-                      <small class="font-weight-bold">Tipo de documento</small>
-                      <div class="">
-                        <select  id="s_tipo_documento" class="custom-select select-registro step1"></select>
-                        <input name="tipo_doc" id="tipo_doc" type="number" class="talentospilos_usuario" hidden>
-                      </div>     
-                    </div>
+                    <div class="row mt-4" hidden>
+                        <div class="col-md-6">
+                        <small class="font-weight-bold">Tipo de documento</small>
+                        <div class="">
+                          <select  id="tipo_doc" class="custom-select select-registro step1"></select>
+                          <input name="tipo_doc" id="tipo_doc1" type="number" class="talentospilos_usuario" hidden>
+                        </div>     
+                      </div>
 
-                    <div class="col-md-6">             
-                        <small class="font-weight-bold">Número de documento</small>
-                        <input name="num_doc" id="num_doc" type="text" class="input_fields_general_tab  talentospilos_usuario step1" placeholder="documento" required> 
-                    </div>
+                      <div class="col-md-6">             
+                          <small class="font-weight-bold">Número de documento</small>
+                          <input name="num_doc" id="num_doc" type="text" class="input_fields_general_tab  talentospilos_usuario step1" placeholder="documento" required> 
+                      </div>
                     </div>
   
-                    <hr>
                     <div class="row mt-4">
 
                       <div class="mt-5 col-md-4">
@@ -155,20 +154,20 @@ require(
 
                         <small class="font-weight-bold">Barrio procedencia</small>
                         <div>   
-                          <select id="select_barrio_procedencia" class="custom-select  select-registro step1"></select>
-                          <input name="barrio_ini" id="barrio_ini" type="text" class="talentospilos_usuario" hidden>
+                          <select id="barrio_ini" class="custom-select  select-registro step1"></select>
+                          <input name="barrio_ini" id="barrio_ini1" type="text" class="talentospilos_usuario" hidden>
                         </div>
   
                         <small class="font-weight-bold">Ciudad procedencia</small>
                         <div class="mb-3">
-                          <select id="select_ciudad_nacimiento" class="custom-select  select-registro step1"></select>
-                          <input name="id_ciudad_ini" id="id_ciudad_ini" type="number" class="talentospilos_usuario" hidden>
+                          <select id="id_ciudad_ini" class="custom-select  select-registro step1"></select>
+                          <input name="id_ciudad_ini" id="id_ciudad_ini1" type="number" class="talentospilos_usuario" hidden>
                         </div>
   
                         <small class="font-weight-bold">País procedencia</small>
                         <div class="mb-3">
-                          <select id="select_pais_nacimiento" class="custom-select  select-registro step1"></select>
-                          <input name="id_pais" id="id_pais" type="number" class="talentospilos_usuario" hidden>
+                          <select id="id_pais" class="custom-select  select-registro step1"></select>
+                          <input name="id_pais" id="id_pais1" type="number" class="talentospilos_usuario" hidden>
                         </div>
                       </div>
                      
@@ -183,20 +182,20 @@ require(
   
                         <small class="font-weight-bold">Barrio residencia</small>
                         <div class="mb-3">
-                          <select class="custom-select select-registro step1" name="" id="select_barrio"></select>
-                          <input name="barrio_res" id="barrio_res" type="number" class="talentospilos_usuario" hidden>
+                          <select class="custom-select select-registro step1" name="" id="barrio_res"></select>
+                          <input name="barrio_res" id="barrio_res1" type="number" class="talentospilos_usuario" hidden>
                         </div>
   
                         <small class="font-weight-bold">Ciudad residencia</small>
                         <div class="mb-3">
-                          <select class="custom-select  select-registro step1" name="" id="select_ciudad"></select>
-                          <input name="id_ciudad_res" id="id_ciudad_res" type="number" class="talentospilos_usuario" hidden>
+                          <select class="custom-select  select-registro step1" name="" id="id_ciudad_res"></select>
+                          <input name="id_ciudad_res" id="id_ciudad_res1" type="number" class="talentospilos_usuario" hidden>
                         </div>
   
                         <small class="font-weight-bold">País residencia</small>
                         <div class="mb-3">
-                          <select class="custom-select  select-registro step1" name="" id="select_pais_res"></select>
-                          <input name="id_pais_res" id="id_pais_res" type="number" hidden>
+                          <select class="custom-select  select-registro step1" name="" id="id_pais_res"></select>
+                          <input name="id_pais_res" id="id_pais_res1" type="number" hidden>
                         </div>
   
                       </div>
@@ -227,8 +226,8 @@ require(
                       <div class="col-md-4">
                       <small class="font-weight-bold">Condición de excepción</small>
                         <div class="">
-                            <select id="s_excepcion" class="custom-select  select-registro step1"></select>
-                            <input id="id_cond_excepcion" name="id_cond_excepcion" class="talentospilos_usuario" type="number" hidden required>
+                            <select id="id_cond_excepcion" class="custom-select  select-registro step1"></select>
+                            <input id="id_cond_excepcion1" name="id_cond_excepcion" class="talentospilos_usuario" type="number" hidden required>
                         </div> 
                       </div>
   
@@ -239,8 +238,8 @@ require(
                       <div class="col-md-4">
                       <small class="font-weight-bold">Actividades simultáneas</small>
                         <div>
-                          <select name="s_act_simultanea" id="s_act_simultanea" class="custom-select select-registro step1"></select>
-                          <input name="id_act_simultanea" id="id_act_simultanea" class="talentospilos_usuario" type="number" hidden>
+                          <select name="s_act_simultanea" id="id_act_simultanea" class="custom-select select-registro step1"></select>
+                          <input name="id_act_simultanea" id="id_act_simultanea1" class="talentospilos_usuario" type="number" hidden>
                         </div>
                       </div>
                     </div>
@@ -250,7 +249,7 @@ require(
                       <div id="set-sexo" class="col-md-4">
                         <small class="font-weight-bold">Sexo</small>
                         <div class="">
-                          <select id="select_sexo" class="custom-select  select-registro step1"></select>
+                          <select id="sexo" class="custom-select  select-registro step1"></select>
                           <input id="i_sexo" name="sexo" type="number" class="talentospilos_usuario" hidden>
                         </div>
   
@@ -269,8 +268,8 @@ require(
                       <div id="set-identidad-gen" class="col-md-4">
                         <small class="font-weight-bold">Identidad de género</small>
                         <div> 
-                          <select id="select_genero" class="custom-select  select-registro step1"></select>
-                          <input name="id_identidad_gen" id="id_identidad_gen" class="talentospilos_usuario" type="number" hidden>
+                          <select id="id_identidad_gen" class="custom-select  select-registro step1"></select>
+                          <input name="id_identidad_gen" id="id_identidad_gen1" class="talentospilos_usuario" type="number" hidden>
                         </div>
 
                         <div id="otra_identidad">
@@ -322,8 +321,8 @@ require(
                       <div class="col-md-4">
                         <small class="font-weight-bold">Autoreconocimiento étnico</small>
                         <div> 
-                          <select id="select_etnia" class="custom-select  select-registro step1"></select>
-                          <input name="id_etnia" id="id_etnia" class="talentospilos_usuario" type="number" hidden>
+                          <select id="id_etnia" class="custom-select  select-registro step1"></select>
+                          <input name="id_etnia" id="id_etnia1" class="talentospilos_usuario" type="number" hidden>
                         </div>
                       </div>
                     </div>
@@ -333,8 +332,8 @@ require(
                       <div class="col-md-4">
                         <small class="font-weight-bold">Estado civil</small>
                         <div class="">
-                          <select id="select_estado_civil" class="custom-select  select-registro step1"></select>
-                          <input id="id_estado_civil" name="id_estado_civil" class="talentospilos_usuario" type="number" hidden>
+                          <select id="id_estado_civil" class="custom-select  select-registro step1"></select>
+                          <input id="id_estado_civil1" name="id_estado_civil" class="talentospilos_usuario" type="number" hidden>
                       </div>
                       </div>
                     </div>
@@ -358,9 +357,9 @@ require(
                     <div class="row mt-4">
                       <div class="col-md-4">
                       <small class="font-weight-bold">Otros acompañamientos</small>
-                        <div class="">
-                          <select class="custom-select step1"  id="select_acompañamientos"></select>
-                          <input id="acompañamientos" type="number" hidden>
+                        <div id="otros_acomp" class="">
+                          <select class="custom-select select-registro step1"  id="acompanamientos"></select>
+                          <input id="acompanamientos1" name="acompanamientos" type="number" hidden>
                         </div>
                       </div>
                     </div>               
@@ -410,7 +409,9 @@ require(
                           <small>Si</small>
                         </div>
                         <div class="col" hidden>
-                          <small>¿Cuál es y Cuánto recibe?</small>
+                          <small>¿Cuál es?</small>
+                          <input type="text" id="beca" class="otros input_fields_general_tab step2">
+                          <small>¿Cuánto recibe?</small>
                           <input type="text" id="beca_valor" class="otros input_fields_general_tab step2">
                         </div>
                         <div class="col">
@@ -1143,11 +1144,6 @@ require(
 
                 <!-- Datos discapacidad -->
                 <div id="step-5">
-                  <div class="row">
-                    <div class="col-md-6">
-                      <button type="button" id="pruebas" class="btn btn-success">Success</button>
-                    </div>
-                  </div>
                   <div id="diagnosticos" class="row mt-4">
                     <div class="col-md-6">
                       <small class="font-weight-bold">¿Cuenta con uno o más diagnósticos de su condición de salud?</small>
@@ -2129,6 +2125,11 @@ require(
                   </div>
   
                   <button id="guardar_info" class="btn btn-success mt-3">Guardar</button>
+                 <!-- <div class="row">
+                   <div class="col-md-6">
+                      <button type="button" id="pruebas" class="btn btn-success">Success</button>
+                    </div> 
+                  </div> -->
                 </div>
                
             </div>

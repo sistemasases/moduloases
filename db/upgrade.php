@@ -7,7 +7,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $dbman = $DB->get_manager();
     $result = true;
 
-    if ($oldversion < 22021110814570) {
+    if ($oldversion < 22021120720220) {
 
 
       
@@ -4444,7 +4444,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
          * Tambien se hacen 4 Insert para crear los programas ADMINISTRACIÓN PÚBLICA,FINANZAS Y BANCA,ADMINISTRACIÓN TURÍSTICA
          * y TECNOLOGÍA EN DESARROLLO DE SOFTWARE. Esto debido al error en la interfaz de subida de datos.
          * ####################################################################################
-         */
+         
 
         $sql_intel= "create index IDX_talentos_df_form_preg_id_formulario on {talentospilos_df_form_preg} (id_formulario)";
         $sql_intel2="create index IDX_talentos_df_form_preg_id_pregunta on {talentospilos_df_form_preg} (id_pregunta)";
@@ -4459,14 +4459,14 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         $DB->execute($sql_INSERT3);
         $DB->execute($sql_INSERT4);
 
-
+    */
         /* #####################################################################################
          * ACTUALIZACIÓN 22021110814570
-         *  Dylan
+         * Dilan Polanco
          * Se crea campos adicionales a las tablas talentospilos_economics_data, talentospilos_academics_data y talentospilos_healt_data
          * para poder almacenar los datos nuevos del formulario
          * ####################################################################################
-         */
+         
 
          // Define field datos_economicos_adicionales to be added to talentospilos_economics_data.
          $table = new xmldb_table('talentospilos_economics_data');
@@ -4494,8 +4494,47 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
+        */
 
-        upgrade_block_savepoint(true, 22021110814570, 'ases');
+        /* #####################################################################################
+         * ACTUALIZACIÓN 22021120720220
+         * Dilan Polanco
+         * Se crea la tabla talentospilos_discapacity_dt para el almacenamiento de los datos de discapacidad de
+         * los estudiantes registrados con el formulario nuevo
+         * 
+         * ####################################################################################
+         
+
+        // Define field fields to be added to talentospilos_discapacity_dt.
+        $table = new xmldb_table('talentospilos_discapacity_dt');
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
+        $table->add_field('id_ases_user', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('percepcion_disca', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('diagnosticos', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('condicion_salud', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('medicamentos', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('cambios_tratamiento', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('discapacidad_municipio', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('certificado_discapacidad', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('certificado_invalidez', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('condicion_organos', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('dificultad_permanente', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('participacion_estudiantil', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('organizacion_disca', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('apoyo_dicapacidad', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Conditionally launch add field id.
+        if (!$dbman->table_exists($table)) {
+
+            $dbman->create_table($table);
+
+        }
+
+        */
+
+
+        upgrade_block_savepoint(true, 22021120720220, 'ases');
 
         return $result;
     }
