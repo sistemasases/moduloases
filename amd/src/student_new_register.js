@@ -1007,7 +1007,7 @@
                 /*
                 Funcion que determina el cambio entre paginas
                 */    
-             /*   $("#smartwizard").on("leaveStep", function(e, anchorObject, currentStepIndex, stepDirection, nextStepIndex) {
+                $("#smartwizard").on("leaveStep", function(e, anchorObject, currentStepIndex, stepDirection, nextStepIndex) {
                    if (stepDirection === "forward") {
                         getSelectValues();
                         switch (currentStepIndex) {
@@ -1091,7 +1091,7 @@
                             break;
                         }
                     }
-                 }); /*
+                 }); 
 
 
                 //Funcion para recolectar valores de los selects
