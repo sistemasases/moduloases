@@ -86,6 +86,16 @@ define(['jquery',
                     updateTable();
                 });
 
+                $('#exception_fields_check').on('change', function () {
+                    console.log("EXCEPCIÓN GENERAL")
+                     if ($('#exception_fields_check').prop('checked')) {
+                         $("input[name='exception_fields[]']").prop('checked', true);
+                     } else {
+                         $("input[name='exception_fields[]']").prop('checked', false);
+                     }
+                     updateTable();
+                 });
+
                 $("#conditions").on('change', function(){
                     updateTable();
                 });
@@ -108,6 +118,11 @@ define(['jquery',
                 });
                 $("input[name='assignment_fields[]']").on('change', function(){
                     updateTable();
+                });
+
+                $("input[name='exception_fields[]']").on('change', function(){
+                    console.log("EXCPECIÓN INDIVIDUAL")
+                    updateTable(); 
                 });
 
                 //Filtros de riesgos.
