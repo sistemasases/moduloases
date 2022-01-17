@@ -50,6 +50,9 @@
     function dphpforms_get_record($record_id, $alias_key, $super_su = false){
 
         global $DB;
+        if(!is_numeric( $record_id )){
+            return json_encode( array( 'record' => array() ) );
+        }
 
         $state = 'AND FR.estado = 1';
         if( $super_su ){

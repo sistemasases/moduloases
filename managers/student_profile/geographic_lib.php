@@ -38,6 +38,7 @@
  
 function get_geographic_info($id_ases){
     global $DB;
+    if(empty($id_ases)) return false;
     $sql_query = "SELECT id_usuario AS id_user, latitud AS latitude, longitud AS longitude, barrio AS neighborhood,
                   id_ciudad AS id_city, direccion AS res_address, vive_lejos AS live_far_away , vive_zona_riesgo AS live_risk_zone, nativo AS native,
                   nivel_riesgo AS risk_level, observaciones AS observations
