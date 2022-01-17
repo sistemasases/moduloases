@@ -216,7 +216,7 @@ if(isset($_POST['monitor'])&&isset($_POST['type'])&&$_POST['type']=='redirect_tr
 
 
 // param $_POST['date'] is obsolete.
-if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_POST['message_to_send']) && isset($_POST['tracking_type']) && isset($_POST['monitor_code']) && isset($_POST['date']) )
+if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_POST['message_to_send']) && isset($_POST['tracking_type']) && isset($_POST['monitor_code']) && isset($_POST['date']) && isset($_POST['instance']))
     {
 
     /*
@@ -227,6 +227,13 @@ if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_P
     $place = $_POST['place'];
     $tracking_type = $_POST['tracking_type'];
     $instance = $_POST['instance'];
+
+    if (is_numeric($instance)) {
+       $instance = intval($instance); 
+    } else {
+       throw new Exception('Instancia no numérica'); 
+    }
+
     $courseid = $_POST['courseid'];
     if ($_POST['form'] == 'new_form')
         {
@@ -243,24 +250,31 @@ if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_P
                     $date = $field['respuesta'];
                 }
             }
-            $id_moodle_student = user_management_get_full_ases_user($json['record']['alias_key']['respuesta']);
-            $id_ases_student = $json['record']['alias_key']['respuesta'];
-            $monitor_code = get_student_monitor($id_ases_student, $_POST['semester'], $_POST['instance']);
-            $practicant_code = get_boss_of_monitor_by_semester($monitor_code, $_POST['semester'], $_POST['instance']);
-            $profesional_code = get_boss_of_monitor_by_semester($practicant_code->id_jefe, $_POST['semester'], $_POST['instance']);
-            echo send_email_to_user(
-                $_POST['tracking_type'], 
-                $monitor_code, 
-                $practicant_code->id_jefe, 
-                $profesional_code->id_jefe, 
-                date("Y-m-d", strtotime($date)), 
-                $id_moodle_student->firstname . " " . $id_moodle_student->lastname, 
-                $_POST['message_to_send'], 
-                $place,
-                $instance,
-                $courseid,
-                $id_ases_student
-            );
+
+            try {
+            
+                $id_moodle_student = user_management_get_full_ases_user($json['record']['alias_key']['respuesta']);
+                $id_ases_student = $json['record']['alias_key']['respuesta'];
+                $monitor_code = get_student_monitor($id_ases_student, $_POST['semester'], $instance);
+                $practicant_code = get_boss_of_monitor_by_semester($monitor_code, $_POST['semester'], $instance);
+                $profesional_code = get_boss_of_monitor_by_semester($practicant_code->id_jefe, $_POST['semester'], $instance);
+                echo send_email_to_user(
+                    $_POST['tracking_type'], 
+                    $monitor_code, 
+                    $practicant_code->id_jefe, 
+                    $profesional_code->id_jefe, 
+                    date("Y-m-d", strtotime($date)), 
+                    $id_moodle_student->firstname . " " . $id_moodle_student->lastname, 
+                    $_POST['message_to_send'], 
+                    $place,
+                    $instance,
+                    $courseid,
+                    $id_ases_student
+                );
+            } catch (Exception $ex) {
+                return $ex->getMessage();
+            }
+
         }
     }
 

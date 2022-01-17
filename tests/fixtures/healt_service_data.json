@@ -1,0 +1,39 @@
+[
+    {
+        "key_input":"regimen_salud",
+        "val_input":[
+            {"key_input":"vinculacion","val_input":"1"},
+            {"key_input":"contributivo","val_input":"1"},
+            {"key_input":"o_contributivo","val_input":"1"},
+            {"key_input_text":"EPS","val_input_text":"Asmet Salud"}
+            ]
+    },
+    {
+        "key_input":"datos_salud_adicionales",
+        "val_input":[
+            {"key_input":"sisben","val_input":"1"},
+            {"key_input":"grupos","val_input":"2"},
+            {"key_input_text":"observ_sisben","val_input_text":"Nada"},
+            {"key_input":"salud-pre","val_input":"1"},
+            {"key_input_text":"name_salud_pre","val_input_text":"Confandi"},
+            {"key_input":"plan_com","val_input":"1"},
+            {"key_input_text":"name_plan_com","val_input_text":"Complement"},
+            {"key_input":"servicio_estudiantil","val_input":"1"},
+            {"key_input_text":"name_serv_est","val_input_text":"Serv Student"},
+            {"key_input_date":"fecha_cita","val_input_date":"2021-12-21"},
+            {"key_input_text":"hora_cita","val_input_text":"4 pm"},
+            {"key_input_text":"conclusion","val_input_text":"Todo correcto "}
+            ]
+    },
+    {
+        "key_input":"servicios_usados",
+        "val_input":[
+            {"key_input":"psiquiatria","val_input":"on"},
+            {"key_input_text":"entidad_srv_2","val_input_text":"psiquiatria"},
+            {"key_input_text":"frecuencia_2","val_input_text":"2 veces por semana"},
+            {"key_input":"ortopedia","val_input":"on"},
+            {"key_input_text":"entidad_srv_11","val_input_text":"ortopet"},
+            {"key_input_text":"frecuencia_11","val_input_text":"1 vez al mes"}
+            ]
+    }
+]

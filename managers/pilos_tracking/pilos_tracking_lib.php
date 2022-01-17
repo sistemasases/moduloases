@@ -835,7 +835,7 @@ function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigo
 
       
     }catch(Exception $ex){
-      return "Error";
+      return $ex->getMessage();
     }
   
 }

@@ -4202,7 +4202,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   }
 }
 .tab-content > .tab-pane {
-  display: none;
+  display: none !important;
 }
 .tab-content > .active {
   display: block;

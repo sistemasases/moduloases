@@ -642,10 +642,16 @@ function get_not_assign_students($general_fields=null, $conditions, $academic_fi
     $sub_query_cohort = "";
     $sub_query_status = "";
     $sub_query_academic = "";
+    
 
     if($general_fields){
-        foreach($general_fields as $field){
-            $select_clause .= $field.', ';
+        foreach($general_fields as $key => $field){
+            if ($key <  (count($general_fields) - 1)) {
+                $select_clause .= $field.', ';
+            } else {
+                $select_clause .= $field.' ';
+            }
+
         }
     }
 
@@ -784,6 +790,7 @@ function get_ases_report($general_fields=null,
                          $academic_fields=null, 
                          $statuses_fields=null, 
                          $assignment_fields=null, 
+                         $exception_fields=null,
                          $instance_id){
 
     global $DB, $USER;
@@ -803,8 +810,9 @@ function get_ases_report($general_fields=null,
 
     $sub_query_status = "";
     $sub_query_academic = "";
-     $sub_query_risks = "";
-     $sub_query_assignment_fields = "";
+    $sub_query_exception = "";
+    $sub_query_risks = "";
+    $sub_query_assignment_fields = "";
 
     // Clausula select para los campos generales del reporte ASES
     if($general_fields){
@@ -1045,13 +1053,34 @@ function get_ases_report($general_fields=null,
         }
     }
 
+    //Campos condición de excepción
+    if($exception_fields){
+        $conditions_to_select = "";
+        foreach($exception_fields as $value => $field){
+            if($value==0){
+                $conditions_to_select = "'".$field."'";
+            }
+            else{
+                $conditions_to_select .= ", '".$field."'";
+            }
+        }
+        $select_clause .= 'cond_excepcion.condicion AS condicion_excepcion, ';
+        $sub_query_exception .= " INNER JOIN (SELECT ases_user.id AS id_estudiante, cond_excepcion.condicion_excepcion AS condicion
+                                    FROM {talentospilos_usuario} AS ases_user
+                                    INNER JOIN {talentospilos_cond_excepcion} AS cond_excepcion ON ases_user.id_cond_excepcion = cond_excepcion.id                                                
+                                    WHERE cond_excepcion.condicion_excepcion IN (".$conditions_to_select.")
+                                    ) AS cond_excepcion ON cond_excepcion.id_estudiante = ases_students.student_id
+                                    ";
+        }
+        
+        
+        
+
     // Subconsultas relacionadas con los campos académicos
     if($academic_fields){
-
         $sub_query_academic .= " INNER JOIN {talentospilos_programa} AS academic_program ON academic_program.id = ases_students.id_academic_program";
         
         foreach($academic_fields as $field){
-
             switch(explode(" ", $field)[2]){
 
                 case 'cod_univalle';
@@ -1099,23 +1128,13 @@ function get_ases_report($general_fields=null,
                                             GROUP BY academic_history.id_estudiante
                                             ) AS history_estim ON history_estim.id_estudiante = ases_students.student_id";
                     break;
-                //condicion_excepcion_code
-                case 'condicion_excepcion':
-                    $select_clause .= $field.', ';
-                    $sub_query_academic .= " LEFT JOIN (SELECT ases_user.id AS id_estudiante, cond_excepcion.condicion_excepcion AS condicion
-                                                FROM {talentospilos_usuario} AS ases_user
-                                                INNER JOIN {talentospilos_cond_excepcion} AS cond_excepcion ON ases_user.id_cond_excepcion = cond_excepcion.id                                                
-                                                WHERE cond_excepcion.condicion_excepcion <> 'Ninguna de las anteriores'
-                                                ) AS cond_excepcion ON cond_excepcion.id_estudiante = ases_students.student_id
-                                                ";
-                    break;
             }
             
         }
     }
 
     $select_clause = substr($select_clause, 0, -2);
-
+    
     // Campos asignaciones personal socioeducativo
     if($assignment_fields){
 
@@ -1179,7 +1198,7 @@ function get_ases_report($general_fields=null,
 
     if(property_exists($actions, 'search_all_students_ar') || property_exists($actions, 'status_report_agr')){
         
-        $sql_query = $select_clause.$from_clause.$subquery_cohort.$sub_query_status.$sub_query_academic.$sub_query_assignment_fields;
+        $sql_query = $select_clause.$from_clause.$subquery_cohort.$sub_query_status.$sub_query_academic.$sub_query_assignment_fields.$sub_query_exception;
         $result_query = $DB->get_records_sql($sql_query);
 
     }else if(property_exists($actions, 'search_assigned_students_ar')){
@@ -1256,7 +1275,6 @@ function get_ases_report($general_fields=null,
 
                 $query_monitors = " INNER JOIN {talentospilos_monitor_estud} AS monitor_student ON monitor_student.id_estudiante = ases_students.student_id";
                 $where_clause .= " monitor_student.id_monitor = $user_id AND monitor_student.id_semestre = $id_current_semester";
-
                 $sql_query = $select_clause.$from_clause.$subquery_cohort.$sub_query_status.$sub_query_academic.$sub_query_icetex_status.$sub_query_assignment_fields.$query_monitors.$where_clause;
                 $result_query = $DB->get_records_sql($sql_query);
 
@@ -1269,13 +1287,10 @@ function get_ases_report($general_fields=null,
     }else{
         return 'El usuario no tiene permisos para listar estudiantes en el reporte ASES';
     }
-
     $result_to_return = array();
-
     foreach($result_query as $result){
         array_push($result_to_return, $result);
     }
-
     return $result_to_return;
 }
 
@@ -1310,7 +1325,7 @@ function get_default_ases_report($id_instance){
     array_push($columns, array("title"=>"Número de documento", "name"=>"num_doc", "data"=>"num_doc"));
     array_push($columns, array("title"=>"Cohorte", "name"=>"cohorts_students", "data"=>"cohorts_student"));
 
-    $default_students = get_ases_report($query_fields, $conditions, null, null, null, null, $id_instance);
+    $default_students = get_ases_report($query_fields, $conditions, null, null, null, null, null, $id_instance);
 
     $data_to_table = array(
         "bsort" => false,
@@ -1867,14 +1882,13 @@ function getGeographicReport($cohorte, $instance_id){
 
 
      $result_query = $DB->get_records_sql($sql_query);
-
+     
      $result_to_return = array();
 
      foreach($result_query as $result){
 
          array_push($result_to_return, $result);
      }
-
      return $result_to_return;
 
 

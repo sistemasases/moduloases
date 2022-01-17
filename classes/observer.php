@@ -159,16 +159,16 @@ class block_ases_observer
 
     //    $curso = $DB->get_record_sql("SELECT fullname, shortname FROM {course} WHERE id = $courseid");
     //    $curso = get_course($courseid, false);
-    //    $nombre_curso = $curso->fullname . " " . $curso->shortname;
+    //    $nombre_curso = $curso->fullname;
 
-    //    $teacher_result = get_course_teacher($courseid);
-    //    if (!property_exists($teacher_result, 'fullname')) {
-    //        Throw new Exception('[classes/observer.php]: No teacher for course '. $nombre_curso . ' was found.');
+    //    $teacher_result = self::get_course_teacher($courseid);
+    //    if (!$teacher_result) {
+    //        Throw new Exception('[classes/observer.php]: No teacher for course: '. $nombre_curso . ' was found.');
     //    }
 
     //    $profesor = $teacher_result->fullname;
 
-    //    $item = $DB->get_record_sql("SELECT itemname FROM {grade_items} WHERE id = $itemid");
+    //    $item = get_gradeitem($itemid); 
     //    if (!property_exists($item, 'itemname')) {
     //        Throw new Exception('[classes/observer.php]: No grade item with id:'. $itemid . ' was found.');
     //    }
@@ -295,9 +295,7 @@ class block_ases_observer
 
     //        }
     //    }
-
     //    return $resp;
-
     //}
 
     /**
@@ -309,10 +307,11 @@ class block_ases_observer
      * @param $courseid -> course identifier in {course}
      * @return stdClass with the course's info, if nothing is found, returns an empty object.
      */
-    private function get_course_teacher($courseid)
+    private static function get_course_teacher($courseid)
     {
-        $to_return = stdClass();
+        $to_return = [];
         try {
+            global $DB;
             $query_teacher = "SELECT concat_ws(' ',firstname,lastname) AS fullname
                FROM
                  (SELECT usuario.firstname,
@@ -337,5 +336,23 @@ class block_ases_observer
         }
         return $to_return;
     }
+    
+    /**
+     * Función auxiliar para send_email_alert.
+     * Devuelve el grade item que tiene como id
+     * $itemid
+     *
+     * @params $itemid, id del grade_item a recuperar.
+     * @return object si todo sale bien o false si no se encuentra ningún registro.
+     */
+    public function get_gradeitem($itemid)
+    {
+        global $DB;  
 
+        try {
+            return $DB->get_record_sql("SELECT itemname FROM {grade_items} WHERE id = $itemid");
+        } catch(Exception $ex) {
+            throw new Exception($ex->getMessage());
+        }
+    }
 }

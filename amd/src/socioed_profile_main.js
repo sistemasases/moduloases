@@ -96,6 +96,7 @@ define(['jquery',
                         console.log(msg);
                     }
                 });
+                $('#button_carga_Hisotricos').prop('disabled',true)
             });
 
 
