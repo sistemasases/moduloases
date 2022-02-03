@@ -1055,24 +1055,25 @@ function get_ases_report($general_fields=null,
 
     //Campos condición de excepción
     if($exception_fields){
+        $join_string = "INNER";
         $conditions_to_select = "";
+        $aux_whitout_cond = "";
         foreach($exception_fields as $value => $field){
             if($value==0){
                 $conditions_to_select = "'".$field."'";
-                $join_string = "INNER";
             }
             else{
                 $conditions_to_select .= ", '".$field."'";
-                if($value==10){
-                    $join_string = "LEFT";
-                }
+            }
+            if($field=='Ninguna de las anteriores'){
+                $aux_whitout_cond = " OR cond_excepcion.condicion_excepcion IS NULL";
             }
         }
         $select_clause .= 'cond_excepcion.condicion AS condicion_excepcion, ';
         $sub_query_exception .= " ".$join_string." JOIN (SELECT ases_user.id AS id_estudiante, cond_excepcion.condicion_excepcion AS condicion
                                     FROM {talentospilos_usuario} AS ases_user
-                                    INNER JOIN {talentospilos_cond_excepcion} AS cond_excepcion ON ases_user.id_cond_excepcion = cond_excepcion.id                                                
-                                    WHERE cond_excepcion.condicion_excepcion IN (".$conditions_to_select.")
+                                    LEFT JOIN {talentospilos_cond_excepcion} AS cond_excepcion ON ases_user.id_cond_excepcion = cond_excepcion.id                                                
+                                    WHERE cond_excepcion.condicion_excepcion IN (".$conditions_to_select.")".$aux_whitout_cond."
                                     ) AS cond_excepcion ON cond_excepcion.id_estudiante = ases_students.student_id
                                     ";
         }
