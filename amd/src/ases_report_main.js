@@ -121,7 +121,6 @@ define(['jquery',
                 });
 
                 $("input[name='exception_fields[]']").on('change', function(){
-                    console.log("EXCPECIÓN INDIVIDUAL")
                     updateTable(); 
                 });
 
