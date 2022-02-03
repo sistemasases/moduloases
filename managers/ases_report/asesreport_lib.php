@@ -1055,7 +1055,6 @@ function get_ases_report($general_fields=null,
 
     //Campos condición de excepción
     if($exception_fields){
-        $join_string = "INNER";
         $conditions_to_select = "";
         $aux_whitout_cond = "";
         foreach($exception_fields as $value => $field){
@@ -1070,7 +1069,7 @@ function get_ases_report($general_fields=null,
             }
         }
         $select_clause .= 'cond_excepcion.condicion AS condicion_excepcion, ';
-        $sub_query_exception .= " ".$join_string." JOIN (SELECT ases_user.id AS id_estudiante, cond_excepcion.condicion_excepcion AS condicion
+        $sub_query_exception .= " INNER JOIN (SELECT ases_user.id AS id_estudiante, cond_excepcion.condicion_excepcion AS condicion
                                     FROM {talentospilos_usuario} AS ases_user
                                     LEFT JOIN {talentospilos_cond_excepcion} AS cond_excepcion ON ases_user.id_cond_excepcion = cond_excepcion.id                                                
                                     WHERE cond_excepcion.condicion_excepcion IN (".$conditions_to_select.")".$aux_whitout_cond."
