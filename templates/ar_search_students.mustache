@@ -89,13 +89,8 @@
                 <div class="checkbox">
                     <input type="checkbox" name="academic_fields[]" value="low_academic_performance"> Bajos rendimiento
                 </div>
-                {{! condicion_excepcion_code }}
-                <div class="checkbox">
-                    <input type="checkbox" name="academic_fields[]" value="exception_cond"> Condición de Excepción
-                </div>
             </fieldset>
         </div>
-
         <!-- Columna de asignaciones -->
         <div class="col-sm-2 col-md-2">
             <fieldset id="assignments_check_fieldset">
@@ -106,7 +101,7 @@
                 <div class="checkbox">
                     <input type="checkbox" name="assignment_fields[]" value="training"> Practicante
                 </div>
-                <div class="">
+                <div class="checkbox">
                     <input type="checkbox" name="assignment_fields[]" value="monitor"> Monitor
                 </div>
             </fieldset>
@@ -119,7 +114,53 @@
                 {{{risks_checks}}}
             </fieldset>
         </div>
-    </div>        
+        <!-- Columna condición excepción -->
+        <div class="col-sm-2 col-md-2">
+            <fieldset id="exception_fields">
+                <legend><input type="checkbox" id="exception_fields_check"> Condición de Excepción</legend>
+                <div class="col-sm-6 col-md-6">
+                    <div class="checkbox">
+                            <input type="checkbox" name="exception_fields[]" value="IN_cond"> I.N.
+                        </div>
+                    <div class="checkbox">
+                        <input type="checkbox" name="exception_fields[]" value="MAP_cond"> M.A.P.
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" name="exception_fields[]" value="CA_cond"> C.A.
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" name="exception_fields[]" value="CU_cond"> C.U.
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" name="exception_fields[]" value="PR_cond"> P.R.
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" name="exception_fields[]" value="MPM_cond"> M.P.M.
+                    </div>
+                </div>
+                <div class="col-sm-6 col-md-6">
+                    <div class="checkbox">
+                        <input type="checkbox" name="exception_fields[]" value="DNI_cond"> D.N.I.
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" name="exception_fields[]" value="MDP_cond"> M.D.P.
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" name="exception_fields[]" value="PD_cond"> P.D.
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" name="exception_fields[]" value="VC_cond"> V.C.
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" name="exception_fields[]" value="AR_cond"> A.R.
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" name="exception_fields[]" value="NA_cond"> n/a
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
 </form>
 {{#graphic_reports_button}}
 <hr class="col-sm-12" />
@@ -136,7 +177,3 @@
 <hr class="col-sm-12" />
 <div class="col-sm-12" id="div_table">
 </div>
-
-
-
-
