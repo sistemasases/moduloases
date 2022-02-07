@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="blocks/ases/db" VERSION="20211023" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
+<XMLDB PATH="blocks/ases/db" VERSION="20211207" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -918,6 +918,7 @@
         <FIELD NAME="nivel_educ_padres" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="situa_laboral_padres" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="expectativas_laborales" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="datos_economicos_adicionales" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="id_ases_user" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
@@ -971,6 +972,7 @@
         <FIELD NAME="regimen_salud" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="servicio_salud_vinculado" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="servicios_usados" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="datos_salud_adicionales" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="id_ases_user" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
@@ -1035,6 +1037,7 @@
         <FIELD NAME="dificultades" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="observaciones" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="titulo_academico_colegio" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="datos_academicos_adicionales" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
@@ -1302,6 +1305,28 @@
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="acompanamiento" TYPE="char" LENGTH="60" NOTNULL="true" SEQUENCE="false" COMMENT="Acompañamientos para los usuarios"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="talentospilos_discapacity_dt" COMMENT="Tabla para el almacenamiento de datos de discapacidad del estudiante para el formulario nuevo">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="id_ases_user" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="percepcion_disca" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="diagnosticos" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="condicion_salud" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="medicamentos" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="cambios_tratamiento" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="disapacidad_municipio" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="certificado_discapacidad" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="certificado_invalidez" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="condicion_organos" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="dificultad_permanente" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="participacion_estudiantil" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="organizacion_disca" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="apoyo_dicapacidad" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

@@ -21,10 +21,12 @@
  * @author     Iader E. García G.
  * @author     Jeison Cardona Gómez
  * @author     Juan Pablo Castro
+ * @author     Carlos M. Tovar Parra
  * @package    block_ases
  * @copyright  2016 Iader E. García <iadergg@gmail.com>
  * @copyright  2019 Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @copyright  2019 Juan Pablo Castro <juan.castro.vasquez@correounivalle.edu.co>
+ * @copyright  2021 Carlos M. Tovar Parra <carlos.mauricio.tovar@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -363,6 +365,7 @@ if ($student_code != '0') {
 
     $record->municipio_act = student_profile_get_ciudad_res($student_id);
     $record->res_address = student_profile_get_res_address($student_id);
+    $record->neighborhood = student_profile_get_neighborhood($student_id);
 /*
     //TRAE LAS CONDICIONES DE EXCEPCIÒN
     

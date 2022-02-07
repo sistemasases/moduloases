@@ -1,5 +1,5 @@
-{{#data}}
 <body>
+    {{#data}}
     {{> block_ases/side_menu}}
     <div id="dphpforms-reports-preguntas" style="display:none;">{{{preguntas}}}</div>
     <div id="dphpforms-instance-id" data-instance-id="{{dphpforms_instance_id}}" style="display:none;"></div>
@@ -39,15 +39,27 @@
 
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                    <div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
                         <label for="">Fecha de inicio</label>
                         <input type="date" name="" id="start_date" class="form-control ajuste_fecha">
                     </div>
-                    <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                    <div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
                         <label for="">Fecha de finalización</label>
                         <input type="date" name="" id="end_date" class="form-control ajuste_fecha">
                     </div>
+                     <div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                        <label for="">Código del estudiante</label>
+                        <input type="text" name="" id="code_student_dphpforms" class="">
+                    </div>
                 </div> 
+                <!--div class="col-sm-4" id="div_cohorts">
+                    <label for="">Cohorte:  </label>
+                    {{{cohorts_checks}}}
+                </div-->
+                 <!-- Select student -->   
+        </div>
+        <!-- End select student -->
+
             </div> 
                           
             <!--<div class="row"> -->

@@ -1,18 +1,18 @@
 <div class="tab-pane" id="socioed_tab">
     <div id="peer_tracking_info" data-info="{{peer_tracking_v3_string}}" style="display:none;"></div>
-    <div id="accordion" role="tablist" aria-multiselectable="true">
+    <div id="accordion_socioed" role="tablist" aria-multiselectable="true">
         {{#view_peer_trackings_sp}}
             <div class="panel panel-default" id="panelPares">
-                <div class="panel-heading" role="tab" id="headingOne">
+                <div class="panel-heading" role="tab" id="headingOneSocioed">
                     <h4 class="panel-title">
     
-                        <a id="seg_pares_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                        <a id="seg_pares_title" class="collapsed" data-toggle="collapse" data-parent="#accordion_socioed" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                             Seguimiento de Pares
                         </a>
                     
                     </h4>
                 </div>
-                <div id="collapseOne" class="panel-collapse collapse in form-pilos" role="tabpanel" aria-labelledby="headingOne">
+                <div id="collapseOne" class="panel-collapse collapse in form-pilos" role="tabpanel" aria-labelledby="headingOneSocioed">
                     {{#add_peer_tracking_sp}}
                             <!--<button type="button" id="button_add_track" class="btn-primary">
                              Nuevo seguimiento (2017)
@@ -49,7 +49,7 @@
             <div class="panel panel-default" id="panelGrupal">
                 <div class="panel-heading" role="tab" id="headingTwo">
                     <h4 class="panel-title">
-                        <!-- <a id="seg_grupal_title" class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> -->
+                        <!-- <a id="seg_grupal_title" class="collapsed" data-toggle="collapse" data-parent="#accordion_socioed" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> -->
                         <a>
                             Seguimiento Grupal
                         </a>
@@ -65,7 +65,7 @@
             <div class="panel panel-default" id="panelPrimerAcerca">
                 <div class="panel-heading" role="tab" id="headingThree">
                     <h4 class="panel-title">
-                        <!--<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">-->
+                        <!--<a class="collapsed" data-toggle="collapse" data-parent="#accordion_socioed" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">-->
                         <a>
                             Primer Acercamiento Profesional
                         </a>
@@ -86,7 +86,7 @@
             <div class="panel panel-default" id="panelAcompSocio">
                 <div class="panel-heading" role="tab" id="headingFour">
                     <h4 class="panel-title">
-                         <!--<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">-->
+                         <!--<a class="collapsed" data-toggle="collapse" data-parent="#accordion_socioed" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">-->
                         <a> 
                             Acompañamiento SocioEducativo
                         </a>

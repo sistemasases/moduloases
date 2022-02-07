@@ -31,7 +31,7 @@ class block_ases_current_period_testcase extends advanced_testcase {
     /**
     * Crea un período antes de que inicien las pruebas
     */
-    protected function setUp() {
+    protected function setUp(): void {
         $this->resetAfterTest(true);
 
         require_once(__DIR__.'/../core/module_loader.php');

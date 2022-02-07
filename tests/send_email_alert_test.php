@@ -27,7 +27,7 @@ class send_email_alert_testcase extends advanced_testcase
     private $sistemas;
     private $observer;
 
-    protected function setUp() 
+    protected function setUp(): void 
     {
         $this->observer = new block_ases_observer();
     } 
@@ -36,19 +36,20 @@ class send_email_alert_testcase extends advanced_testcase
      * Este test verifica que la función send_email_alert
      * devuelve falso cuando alguno de los parametros no es un número
      * ni un string numérico
-     * @author David S. Cortés <david.cortes@correounivalle.edu.co>
      */
     public function test_invalid_arguments()
     {
-
         $result = $this->observer->send_email_alert('a', 'b', 'c', 'd');
         $this->assertFalse($result);
     }
 
+    /**
+     * Si el curso del estudiante no tiene un profesor asignado, se debe lanzar
+     * una excepción que contiene el mensaje 'No teacher for course:'
+     */
+    public function test_no_teacher_enrolled() {
 
-    /*public function test_no_teacher_enrolled() {
-
-        //$this->expectException(Exception::class);
+        $this->expectExceptionMessage("[classes/observer.php]: No teacher for course:");
         $this->resetAfterTest(true);
 
         $sistemas = $this->getDataGenerator()->create_user(array('username'=>'sistemas1008'));
@@ -59,14 +60,39 @@ class send_email_alert_testcase extends advanced_testcase
 
         // enrol student
         $this->getDataGenerator()->enrol_user($student->id, $course->id);
-        $teacherroleid = 3;
-        $this->getDataGenerator()->enrol_user($professor->id, $course->id, $teacherroleid);
 
         $result = $this->observer->send_email_alert(
             $student->id, 3, 2.9, $course->id
         );
-        $this->assertFalse($result);
-    
     }
+    
+    /**
+     * Si el grade item no existe en {grade_items} se espera
+     * false como respuesta.
      */
+    public function test_no_grade_item()
+    {
+        $result = $this->observer->get_gradeitem('0');
+        $this->assertFalse($result);
+    }
+
+    /**
+     * Si el grade item existe en {grade_items} se espera
+     * un objeto como respuesta.
+     */
+    public function test_correct_grade_item()
+    {
+        $this->resetAfterTest(true);
+        
+        $course = $this->getDataGenerator()->create_course();
+        $gi = $this->getDataGenerator()->create_grade_item(array('courseid' => $course->id)); 
+
+        $result = $this->observer->get_gradeitem($gi->id);
+        $this->assertIsObject($result);
+    }
+
+    //public function test_email_sent()
+    //{
+    //
+    //}
 }
