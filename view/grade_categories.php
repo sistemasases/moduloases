@@ -137,7 +137,7 @@ if($rol == 'sistemas' || $rol == 'academico'){
     
     foreach($courses as $profe => $cursos){
         
-        if($user_name == $profe){
+        if($user_name == $profe || $user_name == 'COMPONENTE SISTEMAS SER PILO PAGA') {
             $htmlTable.="<tr class='cerrado' id = 'profesor_$index' ><td style='border-right: none' id = 'profe_$index'>$profe</td><td style='border-left: none'><button style='width: 100%' class = 'desplegate'><i class='glyphicon glyphicon-chevron-left'></i></button></td></tr>";
             
             $courses_info.="<div style = 'padding-left: 15px' id = 'curso_$index'>";
