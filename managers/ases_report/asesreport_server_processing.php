@@ -137,31 +137,8 @@ if(isset($_POST['status_fields'])){
                 break;
 
             case 'icetex_status':
-
-                $icetex_statuses = get_icetex_states();
-                $set_name_inactive = true;
-
-                foreach($icetex_statuses as $status){                    
-                    
-                    switch($status->nombre){
-
-                        case 'APLAZADO':
-                        case 'EGRESADO':
-                        case 'RETIRADO':
-                            if($set_name_inactive){
-                                $option .= "<option>";
-                                $option .= "INACTIVO";
-                                $option .= "</option>";
-                                $set_name_inactive = false;
-                            }
-                            break;
-                        default:
-                            $option .= "<option>";
-                            $option .= $status->nombre;
-                            $option .= "</option>";
-                            break;
-                    }                         
-                } 
+                $option .= "<option>ACTIVO</option>";
+                $option .= "<option>INACTIVO</option>";
                 break;
             
             case 'academic_program_status':
