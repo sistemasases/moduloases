@@ -23,11 +23,9 @@ $fields_format = array(
     'email'=>'ases_students.email',
     'cellphone'=>'ases_students.celular',
     'address'=>'ases_students.direccion_res',
-    
     'program_code'=>'academic_program.cod_univalle AS cod_univalle',
     'name_program'=>'academic_program.nombre AS nombre_programa',
     'faculty'=>'faculty.nombre AS nombre_facultad',
-
     'average'=>'accum_average.promedio_acumulado AS promedio_acumulado',
     'academic_stimuli'=>'history_estim.numero_estimulos AS estimulos',
     'low_academic_performance'=>'history_bajo.numero_bajo AS bajos',
@@ -43,10 +41,10 @@ $fields_format = array(
     'PD_cond'=>'Población Desplazada. (P.D.)',
     'VC_cond'=>'Víctimas del conflicto político armado (V.C.)',
     'AR_cond'=>'Atletas de rendimiento (A.R)',
+    'NA_cond'=>'Ninguna de las anteriores',
     'ases_status'=>'ases_status.ases_status_student',
     'icetex_status'=>'icetex_status.icetex_status_student',
     'academic_program_status'=>'current_program_status.program_status',
-
     'professional'=>'assignments_query.professional',
     'training'=>'assignments_query.trainer',
     'monitor'=>'assignments_query.monitor'
@@ -139,31 +137,8 @@ if(isset($_POST['status_fields'])){
                 break;
 
             case 'icetex_status':
-
-                $icetex_statuses = get_icetex_states();
-                $set_name_inactive = true;
-
-                foreach($icetex_statuses as $status){                    
-                    
-                    switch($status->nombre){
-
-                        case 'APLAZADO':
-                        case 'EGRESADO':
-                        case 'RETIRADO':
-                            if($set_name_inactive){
-                                $option .= "<option>";
-                                $option .= "INACTIVO";
-                                $option .= "</option>";
-                                $set_name_inactive = false;
-                            }
-                            break;
-                        default:
-                            $option .= "<option>";
-                            $option .= $status->nombre;
-                            $option .= "</option>";
-                            break;
-                    }                         
-                } 
+                $option .= "<option>ACTIVO</option>";
+                $option .= "<option>INACTIVO</option>";
                 break;
             
             case 'academic_program_status':

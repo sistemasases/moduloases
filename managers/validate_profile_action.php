@@ -102,7 +102,7 @@ function get_actions_view($function_name,$userid,$blockid,$vista=null){
 function get_name_role($idrol)
 {
     global $DB;
-    if(empty($idrol))return 'sin rol';
+    if(!is_numeric($idrol))return 'sin rol';
     $sql_query = "SELECT nombre_rol FROM {talentospilos_rol} WHERE id='$idrol'";
     $consulta=$DB->get_record_sql($sql_query);
     return $consulta->nombre_rol;

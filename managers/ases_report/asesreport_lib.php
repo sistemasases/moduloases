@@ -798,7 +798,7 @@ function get_ases_report($general_fields=null,
     $actions = $USER->actions;
     $id_current_semester = core_periods_get_current_period($instance_id)->id;
 
-    $conditions[1] = 'TODOS';
+    $conditions[1] = 'TODOS';   
 
     // ********* Se arman las clausulas de la consulta sql ***********
 
@@ -1018,20 +1018,29 @@ function get_ases_report($general_fields=null,
 
                     $select_clause .= $status_field.", ";
 
-                    $sub_query_status .= " LEFT JOIN (SELECT current_icetex_status.id_ases_student AS id_ases_student, 
-                                                        CASE WHEN historic_icetex_statuses.nombre IN ('APLAZADO', 'EGRESADO', 'RETIRADO') THEN 'INACTIVO'
-                                                             ELSE historic_icetex_statuses.nombre
-                                                        END AS icetex_status_student                                                      
-                                                      FROM
-                                                        (SELECT student_icetex_status.id_estudiante AS id_ases_student,
-                                                                MAX(student_icetex_status.fecha) AS fecha
-                                                        FROM {talentospilos_est_est_icetex} AS student_icetex_status
-                                                        GROUP BY student_icetex_status.id_estudiante) AS current_icetex_status
-                                                        INNER JOIN
-                                                        (SELECT student_icetex_status.id_estudiante, student_icetex_status.fecha, icetex_statuses.nombre
-                                                        FROM {talentospilos_est_est_icetex} AS student_icetex_status
-                                                        INNER JOIN {talentospilos_estados_icetex} AS icetex_statuses ON icetex_statuses.id = student_icetex_status.id_estado_icetex) AS historic_icetex_statuses
-                                                        ON (historic_icetex_statuses.id_estudiante = current_icetex_status.id_ases_student AND historic_icetex_statuses.fecha = current_icetex_status.fecha)) AS icetex_status ON icetex_status.id_ases_student = ases_students.student_id";
+                    $sub_query_status .= " LEFT JOIN
+                    (
+                        SELECT id_ases_student, CASE WHEN TRUE THEN 'ACTIVO' END AS icetex_status_student
+                        FROM(SELECT id_estudiante AS id_ases_student
+                            FROM (({talentospilos_usuario} AS usr
+                                    LEFT JOIN {talentospilos_res_estudiante} AS res_est 
+                                    ON usr.id = res_est.id_estudiante) AS res_est_tab
+                                LEFT JOIN {talentospilos_res_icetex} res_icetex
+                                ON res_est_tab.id_resolucion=res_icetex.id) AS res_icetex_tab
+                            LEFT JOIN {talentospilos_semestre} AS sem
+                            ON res_icetex_tab.id_semestre=sem.id
+                            WHERE fecha_inicio = (SELECT MAX(fecha_inicio) FROM {talentospilos_semestre})
+                            UNION
+                            SELECT t1.id_estudiante AS id_ases_student
+                            FROM (SELECT id_estudiante
+                                FROM {talentospilos_history_academ} AS acad
+                                INNER JOIN {talentospilos_semestre} AS sem
+                                ON acad.id_semestre = (SELECT id FROM {talentospilos_semestre}
+                                                        WHERE fecha_inicio = (SELECT MAX(fecha_inicio) FROM {talentospilos_semestre}))) t1
+                            INNER JOIN (SELECT id_estudiante FROM {talentospilos_history_academ} GROUP BY id_estudiante HAVING COUNT(id_estudiante)=1) t2
+                            ON t1.id_estudiante=t2.id_estudiante) qrt
+                    )
+                    AS icetex_status ON icetex_status.id_ases_student = ases_students.student_id";
                     break;
                 case 'program_status':
                     $id_last_semester = strval(intval($id_current_semester) - 1);
@@ -1056,6 +1065,7 @@ function get_ases_report($general_fields=null,
     //Campos condición de excepción
     if($exception_fields){
         $conditions_to_select = "";
+        $aux_whitout_cond = "";
         foreach($exception_fields as $value => $field){
             if($value==0){
                 $conditions_to_select = "'".$field."'";
@@ -1063,12 +1073,15 @@ function get_ases_report($general_fields=null,
             else{
                 $conditions_to_select .= ", '".$field."'";
             }
+            if($field=='Ninguna de las anteriores'){
+                $aux_whitout_cond = " OR cond_excepcion.condicion_excepcion IS NULL";
+            }
         }
         $select_clause .= 'cond_excepcion.condicion AS condicion_excepcion, ';
         $sub_query_exception .= " INNER JOIN (SELECT ases_user.id AS id_estudiante, cond_excepcion.condicion_excepcion AS condicion
                                     FROM {talentospilos_usuario} AS ases_user
-                                    INNER JOIN {talentospilos_cond_excepcion} AS cond_excepcion ON ases_user.id_cond_excepcion = cond_excepcion.id                                                
-                                    WHERE cond_excepcion.condicion_excepcion IN (".$conditions_to_select.")
+                                    LEFT JOIN {talentospilos_cond_excepcion} AS cond_excepcion ON ases_user.id_cond_excepcion = cond_excepcion.id                                                
+                                    WHERE cond_excepcion.condicion_excepcion IN (".$conditions_to_select.")".$aux_whitout_cond."
                                     ) AS cond_excepcion ON cond_excepcion.id_estudiante = ases_students.student_id
                                     ";
         }
@@ -1201,6 +1214,7 @@ function get_ases_report($general_fields=null,
         $sql_query = $select_clause.$from_clause.$subquery_cohort.$sub_query_status.$sub_query_academic.$sub_query_assignment_fields.$sub_query_exception;
         $result_query = $DB->get_records_sql($sql_query);
 
+
     }else if(property_exists($actions, 'search_assigned_students_ar')){
 
         $user_id = $USER->id;
@@ -1289,6 +1303,9 @@ function get_ases_report($general_fields=null,
     }
     $result_to_return = array();
     foreach($result_query as $result){
+        if(property_exists($result, "icetex_status_student") AND !isset($result->icetex_status_student)){
+            $result->icetex_status_student='INACTIVO';
+        }
         array_push($result_to_return, $result);
     }
     return $result_to_return;
