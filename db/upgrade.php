@@ -7,7 +7,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $dbman = $DB->get_manager();
     $result = true;
 
-    if ($oldversion < 22021120720220) {
+    if ($oldversion < 22022031815080) {
 
 
       
@@ -4494,10 +4494,10 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-        */
+        
 
         /* #####################################################################################
-         * ACTUALIZACIÓN 22021120720220
+         * ACTUALIZACIÓN 22022031814060
          * Dilan Polanco
          * Se crea la tabla talentospilos_discapacity_dt para el almacenamiento de los datos de discapacidad de
          * los estudiantes registrados con el formulario nuevo
@@ -4530,11 +4530,10 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->create_table($table);
 
         }
-
         */
 
 
-        upgrade_block_savepoint(true, 22021120720220, 'ases');
+        upgrade_block_savepoint(true, 22022031815080, 'ases');
 
         return $result;
     }
