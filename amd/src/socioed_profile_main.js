@@ -1,4 +1,4 @@
-/**
+button_add_v2_track/**
  * Social-educative tracking
  * @module amd/src/socioed_profile_main
  * @author Jorge Eduardo Mayor Fernández
