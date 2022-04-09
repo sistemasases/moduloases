@@ -1,4 +1,4 @@
-button_add_v2_track/**
+/**
  * Social-educative tracking
  * @module amd/src/socioed_profile_main
  * @author Jorge Eduardo Mayor Fernández
@@ -74,12 +74,11 @@ define(['jquery',
                                 dataType: "text",
                                 async: false,
                                 success: function( template ){
-                                    loading_indicator.hide();
                                     let tab_to_load = $(mustache.render( template, msg.data_response ));
                                     $("#socioed_historic").append( tab_to_load );
                                 },
                                 error: function(msg) {
-                                    loading_indicator.hide();
+                                    //loading_indicator.hide();
                                     console.log(msg);
                                 }
                             });
@@ -90,7 +89,7 @@ define(['jquery',
                     dataType: "json",
                     cache: "false",
                     error: function(msg) {
-                        loading_indicator.hide();
+                        //loading_indicator.hide();
                         console.log(msg);
                     }
                 });

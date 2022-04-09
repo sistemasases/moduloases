@@ -69,6 +69,8 @@
                 loading_instances--;
                 if( loading_instances == 0 ){
                     $(".loading_indicator").hide();
+                } else {
+                    console.info(`${loading_instances} instances of loading indicator are running!`);
                 }
             }
 
