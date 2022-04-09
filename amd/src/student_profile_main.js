@@ -1138,40 +1138,6 @@ define(['jquery',
 		                })
 			            .catch(ex => console.error(ex));
                     loading_indicator.hide();
-            //        $.ajax({
-            //            url: "../templates/view_"+tab_name+"_tab_sp.mustache",
-            //            data: null,
-            //            dataType: "text",
-	    //    	async: false,
-            //            success: function( template ){
-            //                let tab_to_load = $(mustache.render( template, msg.data_response ));
-            //                $(".tab-content").append( tab_to_load );
-            //                loading_indicator.hide();
-            //                switch(tab_name){
-            //                    case 'socioed':
-            //                        //socioed.init();
-            //                        break;
-            //                    case 'academic':
-            //                        academic.init();
-            //                        break;
-            //                    case 'geographic':
-            //                        geographic.init();
-            //                        $("#mapa").appendTo("#geographic_map");
-            //                        break;
-            //                    case 'tracing_others':
-            //                        break;
-            //                    case 'discapacity_tracking':
-            //                        discapacity_tracking.init();
-            //                        break;
-            //                }
-
-            //                $("#"+tab_name+"_tab").addClass("active");
-            //            },
-            //            error: function(){
-            //                loading_indicator.hide();
-            //                console.error( "../templates/view_"+tab_name+"_tab_sp.mustache cannot be reached." );
-            //            }
-            //        });
 
                 } else {
                     loading_indicator.hide();
