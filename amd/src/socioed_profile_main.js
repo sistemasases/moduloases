@@ -98,7 +98,6 @@ define(['jquery',
                 $('#button_carga_Hisotricos').prop('disabled',true)
             });
 
-
             $('#button_primer_acercamiento').on('click', function() {
 
                 var creado_por = $('#current_user_id').val();

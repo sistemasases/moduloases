@@ -1112,10 +1112,10 @@ define(['jquery',
             url: "../managers/student_profile/studentprofile_api.php",
             success: function(msg) {
 
-            	if(msg.status_code == 0) {
-		            Templates.renderForPromise("block_ases/view_"+tab_name+"_tab_sp", msg.data_response, 'moove')
-		                .then(({html, js}) => {
-			                Templates.appendNodeContents('.tab-content', html, js);
+                if(msg.status_code == 0) {
+                    Templates.renderForPromise("block_ases/view_"+tab_name+"_tab_sp", msg.data_response, 'moove')
+                        .then(({html, js}) => {
+                            Templates.appendNodeContents('.tab-content', html, js);
                             $("#"+tab_name+"_tab").addClass("active");
 
                             switch(tab_name){
@@ -1126,19 +1126,18 @@ define(['jquery',
                                     academic.init();
                                     break;
                                 case 'geographic':
-                                   geographic.init();
-                                   $("#mapa").appendTo("#geographic_map");
-                                   break;
+                                    geographic.init();
+                                    $("#mapa").appendTo("#geographic_map");
+                                    break;
                                 case 'tracing_others':
                                     break;
                                 case 'discapacity_tracking':
                                     discapacity_tracking.init();
                                     break;
                             }
-		                })
-			            .catch(ex => console.error(ex));
+                        })
+                        .catch(ex => console.error(ex));
                     loading_indicator.hide();
-
                 } else {
                     loading_indicator.hide();
                     console.log(msg);
