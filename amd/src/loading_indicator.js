@@ -67,11 +67,10 @@
 
             var hide_loading_indicator = function(){
                 loading_instances--;
-                if( loading_instances == 0 ){
+                if( loading_instances <= 0 ){
                     $(".loading_indicator").hide();
-                } else {
-                    console.info(`${loading_instances} instances of loading indicator are running!`);
                 }
+                console.log(loading_instances);
             }
 
             return {

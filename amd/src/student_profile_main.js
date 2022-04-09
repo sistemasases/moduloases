@@ -1117,7 +1117,7 @@ define(['jquery',
                         .then(({html, js}) => {
                             Templates.appendNodeContents('.tab-content', html, js);
                             $("#"+tab_name+"_tab").addClass("active");
-
+                            loading_indicator.hide();
                             switch(tab_name){
                                 case 'socioed':
                                     socioed.init();
@@ -1144,6 +1144,7 @@ define(['jquery',
             dataType: "json",
             cache: "false",
             error: function(msg) {
+
                 console.log(msg);
             }
         });

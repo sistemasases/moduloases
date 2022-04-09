@@ -59,6 +59,7 @@ define(['jquery',
                 loading_indicator.show();
                 var id_ases = $('#id_ases').val();
                 var id_instance = document.querySelector('#dphpforms_block_instance').dataset.info;
+
                 $.ajax({
                     type: "POST",
                     data: JSON.stringify({
@@ -68,6 +69,7 @@ define(['jquery',
                     url: "../managers/student_profile/studentprofile_api.php",
                     success: function(msg) {
                         if(msg.status_code == 0) {
+                            loading_indicator.show();
                             $.ajax({
                                 url: "../templates/socioed_historic.mustache",
                                 data: null,
