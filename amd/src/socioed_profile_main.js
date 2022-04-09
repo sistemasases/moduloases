@@ -1,4 +1,4 @@
-/**
+button_add_v2_track/**
  * Social-educative tracking
  * @module amd/src/socioed_profile_main
  * @author Jorge Eduardo Mayor Fernández
@@ -56,6 +56,7 @@ define(['jquery',
 
             });
             $('#button_carga_Hisotricos').on('click', function() {
+                loading_indicator.show();
                 var id_ases = $('#id_ases').val();
                 var id_instance = document.querySelector('#dphpforms_block_instance').dataset.info;
                 $.ajax({
@@ -81,13 +82,10 @@ define(['jquery',
                                     loading_indicator.hide();
                                     console.log(msg);
                                 }
-                        
                             });
                         }else {
-                            loading_indicator.hide();
                             console.log(msg);
                         }
-
                     },
                     dataType: "json",
                     cache: "false",
@@ -96,9 +94,9 @@ define(['jquery',
                         console.log(msg);
                     }
                 });
+                loading_indicator.hide();
                 $('#button_carga_Hisotricos').prop('disabled',true)
             });
-
 
             $('#button_primer_acercamiento').on('click', function() {
 
