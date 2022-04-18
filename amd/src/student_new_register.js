@@ -76,9 +76,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                         hideAndShow("set-apoyo", "apoyo_partic");
                         hideAndShow("set-participacion", "participacion");
                         hideAndShow("set-salud", "condicion");
-                        hideAndShow('set-orientacion', "orientacion_sexual");
-                        hideAndShow('set-sexo', "sexo");
-                        hideAndShow('set-identidad-gen', "identidad_genero");
+                        hideAndShowCheckB('set-orientacion', "orientacion_sexual");
+                        hideAndShowCheckB('set-sexo', "sexo");
+                        hideAndShowCheckB('set-identidad-gen', "identidad_genero");
                         hideAndShow('set-beca', 'beca')
 
                         //Habilitar tagging 
@@ -111,46 +111,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                         lang: {
                             next: 'Continuar y Guardar',
                             previous: 'Anterior'
-                        }
-                    });
-
-
-                    //Funcion para obtener los datos del usuario al digitar el codigo
-                    $('#validar_codigo').on('click', function() {
-                        var codeUser = $("#codigo_estudiantil").val();
-                        hideAlerts('step1')
-                        if (codeUser === "" || codeUser === " ") {
-                            $('#nombre').val("");
-                            $('#apellido').val("");
-                            $('#emailinstitucional').val("");
-                            $("#step-1 :input").prop("disabled", true);
-                            $("#codigo_estudiantil").prop("disabled", false);
-                            $("#validar_codigo").prop("disabled", false);
-                            $("#limpiar_form").prop("disabled", false);
-                            setSelectPrograma();
-                        } else {
-                            $.ajax({
-                                async: false,
-                                type: "POST",
-                                data: JSON.stringify({
-                                    "function": 'get_user',
-                                    "params": codeUser
-                                }),
-                                url: "../managers/student_profile/studentprofile_api.php",
-                                success: function(msg) {
-                                    var fullUser = JSON.parse(msg);
-                                    validateStudent(fullUser);
-
-                                },
-                                error: function(msg) {
-                                    swal(
-                                        "Error",
-                                        "Error al comunicarse con el servidor, por favor inténtelo nuevamente.",
-                                        "error"
-                                    );
-                                },
-
-                            });
                         }
                     });
 
@@ -191,6 +151,61 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                         $('#select_programa').empty();
                         setSelectPrograma()
                         hideAlerts('step1')
+
+                        crearTags('deportes', [])
+                        crearTags('actividades', [])
+                    });
+
+
+                    //Funcion para obtener los datos del usuario al digitar el codigo
+                    $('#validar_codigo').on('click', function() {
+                        var codeUser = $("#codigo_estudiantil").val();
+                        hideAlerts('step1')
+
+
+                        //Ocultar campos de orientacion sexual e identidad si estan visibles
+                       var s = $("#set-identidad-gen" + " .otro").parent().next();
+                       s.attr('hidden', true);
+                       s.addClass("otros");
+                   
+                       var s = $("#set-orientacion" + " .otro").parent().next();
+                       s.attr('hidden', true);
+                       s.addClass("otros");
+
+
+                        if (codeUser === "" || codeUser === " ") {
+                            $('#nombre').val("");
+                            $('#apellido').val("");
+                            $('#emailinstitucional').val("");
+                            $("#step-1 :input").prop("disabled", true);
+                            $("#codigo_estudiantil").prop("disabled", false);
+                            $("#validar_codigo").prop("disabled", false);
+                            $("#limpiar_form").prop("disabled", false);
+                            setSelectPrograma();
+                        } else {
+                            $.ajax({
+                                async: false,
+                                type: "POST",
+                                data: JSON.stringify({
+                                    "function": 'get_user',
+                                    "params": codeUser
+                                }),
+                                url: "../managers/student_profile/studentprofile_api.php",
+                                success: function(msg) {
+                                    var fullUser = JSON.parse(msg);
+                                    validateStudent(fullUser);
+
+                                },
+                                error: function(msg) {
+                                    swal(
+                                        "Error",
+                                        "Error al comunicarse con el servidor, por favor inténtelo nuevamente.",
+                                        "error"
+                                    );
+                                },
+
+                            });
+                        }
                     });
 
                     /* Funcion para validar si el la consulta del usuario en la tabla mdl_user existe
@@ -408,12 +423,36 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                                 setAsesData(data_ases)
                             } else {
                                 disableMdliputs();
-                                console.log("no esta en user extended");
+                                $("#num_doc_ini").val("");
+                                swal(
+                                    "Waarning",
+                                    "No existe relacion entre el numero de documento y el codigo del estudiante, intentalo nuevamente.",
+                                    "warning"
+                                );
                             }
                         } else {
-                            console.log("No existe");
-                            $("#step-1 :input").prop("disabled", false);
-                            disableMdliputs();
+
+                            swal({
+                                title: "Warning",
+                                text: "Usuario inexistente en la base de datos, ¿Esta seguro de registrar este usuario?.",
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonClass: "btn-success",
+                                confirmButtonText: "Confirmar",
+                                cancelButtonText: "Cancelar",
+                                closeOnConfirm: false,
+                                closeOnCancel: false
+                            },
+                            function(isConfirm) {
+                                if (isConfirm) {
+                                    swal("Confirmado", "", "success");
+                                    $("#step-1 :input").prop("disabled", false);
+                                    disableMdliputs();
+                                } else {
+                                    swal("Cancelado", "Ingresa nuevamente el documento del estudiante", "error");
+                                    $("#num_doc_ini").val("");
+                                }
+                            });
                         }
                     });
 
@@ -1393,7 +1432,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                                     var o = getValue($(this));
                                     if (o.id !== "") {
                                         json_object.key_input = $(this).attr("id");
-                                        json_object.val_input = $(this).val();
+                                        json_object.val_input = 'on';
                                         if (o.type == "text") {
                                             json_object.key_input_text = o.id;
                                             json_object.val_input_text = o.val;
@@ -1466,6 +1505,22 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                             }
                         })
                     }
+
+                    function hideAndShowCheckB(setOptions, nameRadio) {
+                        $("#" + setOptions).find("[name=" + nameRadio + "]").on('change', function() {
+  
+                            var s = $("#" + setOptions + " .otro").parent().next();
+  
+                            if ($(this).hasClass("otro") && $(this).prop('checked')) {
+                                s.attr('hidden', false);
+                                s.removeClass("otros");
+                            } else {
+                                s.attr('hidden', true);
+                                s.addClass("otros");
+                            }
+                        })
+                    }
+ 
 
                     //Validador si hay cambios en la seccion 1 del formulario, para actualizar en la BD   
                     $('.step1').each(function() {

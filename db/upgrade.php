@@ -7,7 +7,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $dbman = $DB->get_manager();
     $result = true;
 
-    if ($oldversion < 22022031815080) {
+    if ($oldversion < 22022040517380) {
 
 
       
@@ -4466,7 +4466,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
          * Se crea campos adicionales a las tablas talentospilos_economics_data, talentospilos_academics_data y talentospilos_healt_data
          * para poder almacenar los datos nuevos del formulario
          * ####################################################################################
-         
+        */ 
 
          // Define field datos_economicos_adicionales to be added to talentospilos_economics_data.
          $table = new xmldb_table('talentospilos_economics_data');
@@ -4503,7 +4503,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
          * los estudiantes registrados con el formulario nuevo
          * 
          * ####################################################################################
-         
+         */
 
         // Define field fields to be added to talentospilos_discapacity_dt.
         $table = new xmldb_table('talentospilos_discapacity_dt');
@@ -4530,10 +4530,10 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->create_table($table);
 
         }
-        */
+        
 
 
-        upgrade_block_savepoint(true, 22022031815080, 'ases');
+        upgrade_block_savepoint(true, 22022040517380, 'ases');
 
         return $result;
     }
