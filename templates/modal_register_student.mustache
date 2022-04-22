@@ -38,7 +38,7 @@ require(
                   <div class="row mt-4">
                     <div class="col-md-6">
                       <small class="font-weight-bold">Código estudiante</small>
-                      <input  type="text" id="codigo_estudiantil" class="input_fields_general_tab" placeholder="Código del estudiante" required> 
+                      <input  type="text" id="codigo_estudiantil" class="input_fields_general_tab_modal" placeholder="Código del estudiante" required> 
                       <div class="alert alert-danger mt-2 p-1" role="alert" hidden>
                           Rellena este campo!
                       </div>
@@ -74,7 +74,7 @@ require(
                       <div  class="col-md-6">
                         <small class="font-weight-bold">Documento ingreso</small>
                         <div class="">   
-                          <input name="num_doc_ini" id="num_doc_ini" type="text" class="input_fields_general_tab talentospilos_usuario step1" placeholder="Documento de ingreso" required> 
+                          <input name="num_doc_ini" id="num_doc_ini" type="text" class="input_fields_general_tab_modal talentospilos_usuario step1" placeholder="Documento de ingreso" required> 
                           <div class="alert alert-danger mt-2 p-1 alert-s1" role="alert" hidden>
                               Rellena este campo!
                           </div>
@@ -86,13 +86,13 @@ require(
   
                       <div class="col-md-6">
                         <small class="font-weight-bold">Nombres</small>
-                        <input  id="nombre" type="text" class="mb-4 input_fields_general_tab step1" placeholder="Nombres" required> 
+                        <input  id="nombre" type="text" class="mb-4 input_fields_general_tab_modal step1" placeholder="Nombres" required> 
                         <div class="alert alert-danger mt-2 p-1 alert-s1" role="alert" hidden>
                           Rellena este campo!
                         </div>
                         
                         <small class="font-weight-bold">Apellidos</small>
-                        <input  id="apellido" type="text" class="input_fields_general_tab step1" placeholder="Apellidos" required> 
+                        <input  id="apellido" type="text" class="input_fields_general_tab_modal step1" placeholder="Apellidos" required> 
                         <div class="alert alert-danger mt-2 p-1 alert-s1" role="alert" hidden>
                           Rellena este campo!
                         </div>
@@ -100,11 +100,11 @@ require(
   
                       <div class="col-md-6">
                         <small class="font-weight-bold">Fecha Nacimiento</small>
-                        <input name="fecha_nac" id="fecha_nac" type="date" class="mb-4 input_fields_general_tab talentospilos_usuario step1" placeholder="Fecha nacimiento" required> 
+                        <input name="fecha_nac" id="fecha_nac_modal" type="date" class="mb-4 input_fields_general_tab_modal talentospilos_usuario step1" placeholder="Fecha nacimiento" required> 
                        
                        
                         <small class="font-weight-bold">Edad</small>
-                        <input  id="edad" type="number" class="input_fields_general_tab step1" placeholder="edad" disabled required> 
+                        <input  id="edad" type="number" class="input_fields_general_tab_modal step1" placeholder="edad" disabled required> 
                         <div class="alert alert-danger mt-2 p-1 alert-s1" role="alert" hidden>
                           Rellena este campo!
                         </div>
@@ -123,7 +123,7 @@ require(
 
                       <div class="col-md-6">             
                           <small class="font-weight-bold">Número de documento</small>
-                          <input name="num_doc" id="num_doc" type="text" class="input_fields_general_tab  talentospilos_usuario step1" placeholder="documento" required> 
+                          <input name="num_doc" id="num_doc_modal" type="text" class="input_fields_general_tab_modal  talentospilos_usuario step1" placeholder="documento" required> 
                       </div>
                     </div>
   
@@ -133,22 +133,22 @@ require(
                         
                         <small class="font-weight-bold ml-4">Celular</small>
                         <div class="col mb-3">
-                          <input name="celular" id="celular" type="text" class="input_fields_general_tab talentospilos_usuario step1" placeholder="Número de celular"> 
+                          <input name="celular" id="celular_modal" type="text" class="input_fields_general_tab_modal talentospilos_usuario step1" placeholder="Número de celular"> 
                         </div>
   
                         <small class="font-weight-bold ml-4">Teléfono residencia</small>
                         <div class="col mb-3">
-                          <input name="tel_res" type="tel" id="tel_res" class="input_fields_general_tab talentospilos_usuario step1" placeholder="Teléfono de residencia" > 
+                          <input name="tel_res" type="tel" id="tel_res_modal" class="input_fields_general_tab_modal talentospilos_usuario step1" placeholder="Teléfono de residencia" > 
                         </div>
   
                         <small class="font-weight-bold ml-4">Teléfono procedencia</small>
                         <div class="col mb-3">   
-                          <input name="tel_ini" id="tel_ini" type="tel" class="input_fields_general_tab talentospilos_usuario step1" placeholder="Teléfono de procedencia" > 
+                          <input name="tel_ini" id="tel_ini" type="tel" class="input_fields_general_tab_modal talentospilos_usuario step1" placeholder="Teléfono de procedencia" > 
                         </div>
 
                         <small class="font-weight-bold ml-4">Email</small>
                         <div class="col mb-3">
-                          <input name="emailpilos" id="emailpilos" type="email" class="input_fields_general_tab talentospilos_usuario step1" placeholder="Email" required> 
+                          <input name="emailpilos" id="emailpilos_modal" type="email" class="input_fields_general_tab_modal talentospilos_usuario step1" placeholder="Email" required> 
                           <div class="alert alert-danger mt-2 p-1 alert-s1" role="alert" hidden>
                             Rellena este campo!
                           </div>
@@ -162,7 +162,7 @@ require(
 
                        <small class="font-weight-bold ml-4">Email Institucional</small>
                         <div class="col mb-3">
-                          <input name="emailinstitucional" id="emailinstitucional" type="email" class="input_fields_general_tab step1" placeholder="Email Institucional" required> 
+                          <input name="emailinstitucional" id="emailinstitucional" type="email" class="input_fields_general_tab_modal step1" placeholder="Email Institucional" required> 
                           <div class="alert alert-danger mt-2 p-1 alert-s1" role="alert" hidden>
                             Rellena este campo!
                           </div>
@@ -179,7 +179,7 @@ require(
                         <h5 class="font-weight-bold">Lugar procedencia</h5>
                         <small class="font-weight-bold">Dirección procedencia</small>
                         <div class="mb-3">   
-                          <input name="dir_ini" id="dir_ini" type="text" class="input_fields_general_tab talentospilos_usuario step1" placeholder="Dirección procedencia"> 
+                          <input name="dir_ini" id="dir_ini" type="text" class="input_fields_general_tab_modal talentospilos_usuario step1" placeholder="Dirección procedencia"> 
                         </div>
 
                         <small class="font-weight-bold">Barrio procedencia</small>
@@ -207,7 +207,7 @@ require(
                         <h5 class="font-weight-bold">Lugar residencia</h5>
                         <small class="font-weight-bold">Dirección residencia</small>
                         <div class="mb-3">
-                          <input name="direccion_res" type="text" id="direccion_res" class="input_fields_general_tab talentospilos_usuario step1" placeholder="Direccion de residencia" required> 
+                          <input name="direccion_res" type="text" id="direccion_res" class="input_fields_general_tab_modal talentospilos_usuario step1" placeholder="Direccion de residencia" required> 
                           <div class="alert alert-danger mt-2 p-1 alert-s1" role="alert" hidden>
                             Rellena este campo!
                           </div>
@@ -238,18 +238,18 @@ require(
                     <div class="row mt-4">
                       <div class="col-md-4">
                         <small class="font-weight-bold">Contacto de emergencia 1 (Tel)</small>
-                        <input type="text" name="tel_acudiente" id="tel_acudiente" class="input_fields_general_tab talentospilos_usuario step1">
+                        <input type="text" name="tel_acudiente" id="tel_acudiente_modal" class="input_fields_general_tab_modal talentospilos_usuario step1">
                          
                         <small class="font-weight-bold">Parentesco</small>
-                        <input type="text" name="acudiente" id="acudiente" class="input_fields_general_tab talentospilos_usuario step1">
+                        <input type="text" name="acudiente" id="acudiente" class="input_fields_general_tab_modal talentospilos_usuario step1">
                       </div>
   
                       <div id="div_contacto_2" class="col-md-4">
                         <small class="font-weight-bold">Contacto de emergencia 2 (Tel)</small>
-                        <input type="text" name="" id="tel_cont_2" class="input_fields_general_tab step1">
+                        <input type="text" name="" id="tel_cont_2" class="input_fields_general_tab_modal step1">
   
                         <small class="font-weight-bold">Parentesco</small>
-                        <input type="text" id="contacto_2" class="input_fields_general_tab step1">
+                        <input type="text" id="contacto_2" class="input_fields_general_tab_modal step1">
                       </div>
   
                     </div>
@@ -293,7 +293,7 @@ require(
   
                         <div class="" hidden>
                           <small>¿Cuál?</small>
-                          <input type="text" class="otros input_fields_general_tab step1">
+                          <input type="text" class="otros input_fields_general_tab_modal step1">
                         </div>
                         -->
                       </div>
@@ -313,7 +313,7 @@ require(
     
                           <div class="" hidden>
                             <small>¿Cuál?</small>
-                            <input id="otra_ident" type="text" class="otros input_fields_general_tab step1">
+                            <input id="otra_ident" type="text" class="otros input_fields_general_tab_modal step1">
                           </div>
                         </div>
                       </div>
@@ -340,7 +340,7 @@ require(
     
                           <div class="" hidden>
                             <small>¿Cuál?</small>
-                            <input id="otra_orient" type="text" class="otros input_fields_general_tab step1">
+                            <input id="otra_orient" type="text" class="otros input_fields_general_tab_modal step1">
                           </div>
                         </div>
                       </div>
@@ -372,13 +372,13 @@ require(
                     <div class="row mt-4">
                       <div class="col-md-6">
                         <small class="font-weight-bold">Deportes que practica</small>
-                        <input id="deportes_tag" class="input_fields_general_tab step1" type="text" placeholder="Deportes que pratica">
+                        <input id="deportes_tag" class="input_fields_general_tab_modal step1" type="text" placeholder="Deportes que pratica">
                         <div id="tags_deportes"></div>
                       </div>
   
                       <div class="col-md-6">
                         <small class="font-weight-bold">Actividades que realiza en su tiempo libre</small>
-                        <input id="tiempo_libre" class="input_fields_general_tab step1" type="text" placeholder="Actividades tiempo libre">
+                        <input id="tiempo_libre" class="input_fields_general_tab_modal step1" type="text" placeholder="Actividades tiempo libre">
                         <div id="tags_tiempo_libre"></div>
                       </div>
                     </div>
@@ -403,7 +403,7 @@ require(
                           Estrato socio-económico de acuerdo con el recibo
                           de servicios públicos de su vivienda es:
                         </small>
-                        <input name="estrato" id="estrato" type="number" class="input_fields_general_tab step2" required>
+                        <input name="estrato" id="estrato_modal" type="number" class="input_fields_general_tab_modal step2" required>
                         <div class="alert alert-danger mt-2 p-1 alert-s2" role="alert" hidden>
                           Rellena este campo!
                         </div>
@@ -431,7 +431,7 @@ require(
                           </div>
                           <div class="col" hidden>
                             <small>¿Cuál?</small>
-                            <input id="solvencia_econo_txt" type="text" class="otros input_fields_general_tab step2">
+                            <input id="solvencia_econo_txt" type="text" class="otros input_fields_general_tab_modal step2">
                           </div>
                         </div>
                       </div> 
@@ -449,9 +449,9 @@ require(
                         </div>
                         <div class="col" hidden>
                           <small>¿Cuál es?</small>
-                          <input type="text" id="beca" class="otros input_fields_general_tab step2">
+                          <input type="text" id="beca" class="otros input_fields_general_tab_modal step2">
                           <small>¿Cuánto recibe?</small>
-                          <input type="text" id="beca_valor" class="otros input_fields_general_tab step2">
+                          <input type="text" id="beca_valor" class="otros input_fields_general_tab_modal step2">
                         </div>
                         <div class="col">
                           <input id="r_beca_no" name="beca" value="1" class="step2" type="radio">
@@ -531,14 +531,14 @@ require(
                         </div>
                         <div class="col" hidden>
                           <small>¿Cuál?</small>
-                          <input type="text" id="ayuda_transporte" class="otros step2 input_fields_general_tab">
+                          <input type="text" id="ayuda_transporte" class="otros step2 input_fields_general_tab_modal">
                         </div>
                       </div>
   
                       <small class="text-justify font-weight-bold">¿Cuál es el valor aproximado para el transporte, durante un semestre?</small>
                       <div id="set-valor-desplazamiento" class="col">
                         <small>Valor</small>
-                        <input type="text" id="i_valor_semestre" class="input_fields_general_tab step2" required>
+                        <input type="text" id="i_valor_semestre" class="input_fields_general_tab_modal step2" required>
                         <div class="alert alert-danger mt-2 p-1 alert-s2" role="alert" hidden>
                               Rellena este campo!
                             </div>
@@ -604,7 +604,7 @@ require(
   
                     <div class="col-md-4">
                         <small class="font-weight-bold">Cantidad hijos</small>
-                        <input name="hijos" id="hijos" type="number" class="input_fields_general_tab step2" placeholder="Cantidad hijos" required>
+                        <input name="hijos" id="hijos_modal" type="number" class="input_fields_general_tab_modal step2" placeholder="Cantidad hijos" required>
                         <div class="alert alert-danger mt-2 p-1 alert-s2" role="alert" hidden>
                               Rellena este campo!
                             </div> 
@@ -657,13 +657,13 @@ require(
   
                     <div id="row_madre_ocupacion" class="col-md-4">
                       <small class="font-weight-bold">Profesión u oficio</small>
-                      <input type="text" id="i_profesion_madre" name="i_profesion_madre" style="visibility: visible" class="input_fields_general_tab step2">
+                      <input type="text" id="i_profesion_madre" name="i_profesion_madre" style="visibility: visible" class="input_fields_general_tab_modal step2">
   
                       <small class="font-weight-bold">Cargo actual(si aplica)</small>
-                      <input type="text" id="i_cargo_madre" name="i_cargo_madre" class="input_fields_general_tab step2">
+                      <input type="text" id="i_cargo_madre" name="i_cargo_madre" class="input_fields_general_tab_modal step2">
   
                       <small class="font-weight-bold">Nota</small>
-                      <input type="text" id="i_nota_madre" name="i_nota_madre" class="input_fields_general_tab step2">
+                      <input type="text" id="i_nota_madre" name="i_nota_madre" class="input_fields_general_tab_modal step2">
                     </div>
   
                     <div id="row_madre_laboral" class="col-md-4">
@@ -749,13 +749,13 @@ require(
   
                     <div id="row_padre_ocupacion" class="col-md-4">
                       <small class="font-weight-bold">Profesión u oficio</small>
-                      <input type="text" id="i_profesion_padre" class="input_fields_general_tab step2">
+                      <input type="text" id="i_profesion_padre" class="input_fields_general_tab_modal step2">
   
                       <small class="font-weight-bold">Cargo actual(si aplica)</small>
-                      <input type="text" id="i_cargo_padre" class="input_fields_general_tab step2">
+                      <input type="text" id="i_cargo_padre" class="input_fields_general_tab_modal step2">
   
                       <small class="font-weight-bold">Nota</small>
-                      <input type="text" id="i_nota_padre" class="input_fields_general_tab step2">
+                      <input type="text" id="i_nota_padre" class="input_fields_general_tab_modal step2">
                     </div>
   
                     <div id="row_padre_laboral" class="col-md-4">
@@ -843,13 +843,13 @@ require(
   
                     <div id="row_otro_ocupacion" class="col-md-4">
                       <small class="font-weight-bold">Profesión u oficio</small>
-                      <input type="text" id="i_profesion_otro" class="input_fields_general_tab step2">
+                      <input type="text" id="i_profesion_otro" class="input_fields_general_tab_modal step2">
   
                       <small class="font-weight-bold">Cargo actual(si aplica)</small>
-                      <input type="text" id="i_cargo_otro" class="input_fields_general_tab step2">
+                      <input type="text" id="i_cargo_otro" class="input_fields_general_tab_modal step2">
   
                       <small class="font-weight-bold">Nota</small>
-                      <input type="text" id="i_nota_otro" class="input_fields_general_tab step2">
+                      <input type="text" id="i_nota_otro" class="input_fields_general_tab_modal step2">
                     </div>
   
                     <div id="row_otro_laboral" class="col-md-4">
@@ -916,7 +916,7 @@ require(
                     <div class="col-md-6">              
                       <div id="jornada">
                         <small class="font-weight-bold">Semestre actual</small>
-                        <input type="text" id="semestre_actual" name="semestre_actual" class="input_fields_general_tab step3" required>
+                        <input type="text" id="semestre_actual" name="semestre_actual" class="input_fields_general_tab_modal step3" required>
   
                         <small class="font-weight-bold">Jornada</small>
                         <div class="col">
@@ -934,11 +934,11 @@ require(
                       <small class="font-weight-bold">
                         Año de ingreso por primera vez a la Universidad como estudiante
                       </small>
-                      <input name="anio_ingreso" id="anio_ingreso" type="number" class="input_fields_general_tab step3" required>
+                      <input name="anio_ingreso" id="anio_ingreso" type="number" class="input_fields_general_tab_modal step3" required>
   
   
                       <small class="font-weight-bold">Puntaje ICFES</small>
-                      <input name="puntaje_icfes" id="puntaje_icfes" class="input_fields_general_tab step3" type="text" placeholder="Puntaje icfes" required>
+                      <input name="puntaje_icfes" id="puntaje_icfes_modal" class="input_fields_general_tab_modal step3" type="text" placeholder="Puntaje icfes" required>
                     </div>
                   </div>
   
@@ -975,10 +975,10 @@ require(
                      <small class="font-weight-bold">
                        Nombre de la institución
                      </small>
-                     <input type="text" id="colegio" name="colegio" class="mb-5 input_fields_general_tab talentospilos_usuario step3">
+                     <input type="text" id="colegio" name="colegio" class="mb-5 input_fields_general_tab_modal talentospilos_usuario step3">
   
                      <small class="font-weight-bold">Título obtenido</small>
-                     <input type="text" id="titulo_1" name="titulo_1" class="mb-5 input_fields_general_tab step3">
+                     <input type="text" id="titulo_1" name="titulo_1" class="mb-5 input_fields_general_tab_modal step3">
   
                      <small class="font-weight-bold">Tipo de institución</small>
                       
@@ -1004,18 +1004,18 @@ require(
   
                       <tbody>
                         <tr>
-                          <td><input id="dificultad_1" name="dificultad_1" type="text" class="input_fields_general_tab dificultades step3"></td>
-                          <td><input id="apoyo_1" name="apoyo_1" type="text" class="input_fields_general_tab dificultades step3"></td>
+                          <td><input id="dificultad_1" name="dificultad_1" type="text" class="input_fields_general_tab_modal dificultades step3"></td>
+                          <td><input id="apoyo_1" name="apoyo_1" type="text" class="input_fields_general_tab_modal dificultades step3"></td>
                         </tr>
   
                         <tr>
-                          <td><input id="dificultad_2" name="dificultad_2" type="text" class="input_fields_general_tab dificultades step3"></td>
-                          <td><input id="apoyo_2" name="apoyo_2" type="text" class="input_fields_general_tab dificultades step3"></td>
+                          <td><input id="dificultad_2" name="dificultad_2" type="text" class="input_fields_general_tab_modal dificultades step3"></td>
+                          <td><input id="apoyo_2" name="apoyo_2" type="text" class="input_fields_general_tab_modal dificultades step3"></td>
                         </tr>
   
                         <tr>
-                          <td><input id="dificultad_3" name="dificultad_3" type="text" class="input_fields_general_tab dificultades step3"></td>
-                          <td><input id="apoyo_3" name="apoyo_3" type="text" class="input_fields_general_tab dificultades step3"></td>
+                          <td><input id="dificultad_3" name="dificultad_3" type="text" class="input_fields_general_tab_modal dificultades step3"></td>
+                          <td><input id="apoyo_3" name="apoyo_3" type="text" class="input_fields_general_tab_modal dificultades step3"></td>
                         </tr>
                       </tbody>
                      </table>
@@ -1029,10 +1029,10 @@ require(
                       <small class="font-weight-bold">
                         Nombre de la institución
                       </small>
-                      <input type="text" id="colegio_superior" name="colegio_superior" class="mb-5 input_fields_general_tab step3">
+                      <input type="text" id="colegio_superior" name="colegio_superior" class="mb-5 input_fields_general_tab_modal step3">
    
                       <small class="font-weight-bold">Título obtenido</small>
-                      <input type="text" id="titulo_2" name="titulo_2" class="mb-5 input_fields_general_tab step3">
+                      <input type="text" id="titulo_2" name="titulo_2" class="mb-5 input_fields_general_tab_modal step3">
    
                       <small class="font-weight-bold">Tipo de institución</small>
                       
@@ -1058,18 +1058,18 @@ require(
    
                        <tbody>
                          <tr>
-                           <td><input id="dificultad_superior_1" name="dificultad_superior_1" type="text" class="input_fields_general_tab dificultades step3"></td>
-                           <td><input id="apoyo_superior_1" name="apoyo_superior_1" type="text" class="input_fields_general_tab dificultades step3"></td>
+                           <td><input id="dificultad_superior_1" name="dificultad_superior_1" type="text" class="input_fields_general_tab_modal dificultades step3"></td>
+                           <td><input id="apoyo_superior_1" name="apoyo_superior_1" type="text" class="input_fields_general_tab_modal dificultades step3"></td>
                          </tr>
    
                          <tr>
-                           <td><input id="dificultad_superior_2" name="dificultad_superior_2"  type="text" class="input_fields_general_tab dificultades step3"></td>
-                           <td><input id="apoyo_superior_2" name="apoyo_superior_2" type="text" class="input_fields_general_tab dificultades step3"></td>
+                           <td><input id="dificultad_superior_2" name="dificultad_superior_2"  type="text" class="input_fields_general_tab_modal dificultades step3"></td>
+                           <td><input id="apoyo_superior_2" name="apoyo_superior_2" type="text" class="input_fields_general_tab_modal dificultades step3"></td>
                          </tr>
    
                          <tr>
-                           <td><input id="dificultad_superior_3" name="dificultad_superior_3" name="dificultad_superior_3"  type="text" class="input_fields_general_tab dificultades step3"></td>
-                           <td><input id="apoyo_superior_3" name="apoyo_superior_3"  type="text" class="input_fields_general_tab dificultades step3"></td>
+                           <td><input id="dificultad_superior_3" name="dificultad_superior_3" name="dificultad_superior_3"  type="text" class="input_fields_general_tab_modal dificultades step3"></td>
+                           <td><input id="apoyo_superior_3" name="apoyo_superior_3"  type="text" class="input_fields_general_tab_modal dificultades step3"></td>
                          </tr>
                        </tbody>
                       </table>
@@ -1084,10 +1084,10 @@ require(
                       <small class="font-weight-bold">
                         Nombre de la institución
                       </small>
-                      <input id="colegio_paralelo" name="colegio_paralelo" type="text" class="mb-5 input_fields_general_tab step3">
+                      <input id="colegio_paralelo" name="colegio_paralelo" type="text" class="mb-5 input_fields_general_tab_modal step3">
    
                       <small class="font-weight-bold">Título obtenido</small>
-                      <input id="titulo_paralelo" name="titulo_paralelo" type="text" class="mb-5 input_fields_general_tab step3">
+                      <input id="titulo_paralelo" name="titulo_paralelo" type="text" class="mb-5 input_fields_general_tab_modal step3">
    
                       <small class="font-weight-bold">Tipo de institución</small>
                       
@@ -1113,18 +1113,18 @@ require(
    
                        <tbody>
                          <tr>
-                           <td><input id="dificultad_paralelo_1" name="dificultad_paralelo_1" type="text" class="input_fields_general_tab dificultades step3"></td>
-                           <td><input id="apoyo_paralelo_1" name="apoyo_paralelo_1" type="text" class="input_fields_general_tab dificultades step3"></td>
+                           <td><input id="dificultad_paralelo_1" name="dificultad_paralelo_1" type="text" class="input_fields_general_tab_modal dificultades step3"></td>
+                           <td><input id="apoyo_paralelo_1" name="apoyo_paralelo_1" type="text" class="input_fields_general_tab_modal dificultades step3"></td>
                          </tr>
    
                          <tr>
-                           <td><input id="dificultad_paralelo_2" name="dificultad_paralelo_2" type="text" class="input_fields_general_tab dificultades step3"></td>
-                           <td><input id="apoyo_paralelo_2" name="apoyo_paralelo_2" type="text" class="input_fields_general_tab dificultades step3"></td>
+                           <td><input id="dificultad_paralelo_2" name="dificultad_paralelo_2" type="text" class="input_fields_general_tab_modal dificultades step3"></td>
+                           <td><input id="apoyo_paralelo_2" name="apoyo_paralelo_2" type="text" class="input_fields_general_tab_modal dificultades step3"></td>
                          </tr>
    
                          <tr>
-                           <td><input id="dificultad_paralelo_3" name="dificultad_paralelo_3" type="text" class="input_fields_general_tab dificultades step3"></td>
-                           <td><input id="apoyo_paralelo_3" name="apoyo_paralelo_3" type="text" class="input_fields_general_tab dificultades step3"></td>
+                           <td><input id="dificultad_paralelo_3" name="dificultad_paralelo_3" type="text" class="input_fields_general_tab_modal dificultades step3"></td>
+                           <td><input id="apoyo_paralelo_3" name="apoyo_paralelo_3" type="text" class="input_fields_general_tab_modal dificultades step3"></td>
                          </tr>
                        </tbody>
                       </table>
@@ -1135,12 +1135,12 @@ require(
                    <div class="row mt-4">
                     <div id="p_ingreso" class="col-md-6">
                       <small class="font-weight-bold">Periodo académico de ingreso al proyecto de Discapacidad e inclución:</small>
-                      <input id="ingreso_dicapacidad" name="ingreso_dicapacidad" type="date" class="input_fields_general_tab step3">
+                      <input id="ingreso_dicapacidad" name="ingreso_dicapacidad" type="date" class="input_fields_general_tab_modal step3">
                     </div>
   
                     <div class="col-md-4">
                       <small class="font-weight-bold">Observaciones adicionales:</small>
-                      <textarea name="observaciones" id="observaciones" class="academics_data step3" cols="60" rows="5"></textarea>
+                      <textarea name="observaciones" id="observaciones_modal" class="academics_data step3" cols="60" rows="5"></textarea>
                     </div>
                    </div>
                 </div>
@@ -1188,7 +1188,7 @@ require(
   
                   <!--  <div class="col-md-6">
                       <small class="font-weight-bold">Ayuda discapacidad</small> 
-                      <input name="ayuda_disc" id="ayuda_disc" class="input_fields_general_tab talentospilos_usuario" type="text" placeholder="Ayuda discapacidad" required>
+                      <input name="ayuda_disc" id="ayuda_disc" class="input_fields_general_tab_modal talentospilos_usuario" type="text" placeholder="Ayuda discapacidad" required>
                     </div> -->
                   </div>
                 </div>
@@ -1208,7 +1208,7 @@ require(
                       </div>
   
                       <small class="font-weight-bold">Si la respuesta fue negativa, refiera ¿Por qué no cuenta con este diagnóstico?</small>
-                      <input type="text" id="diagnostico_extraviado" class="input_fields_general_tab step5">
+                      <input type="text" id="diagnostico_extraviado" class="input_fields_general_tab_modal step5">
   
                       <small class="font-weight-bold">Entrega documentos soporte</small>
                       <div class="col">
@@ -1233,18 +1233,18 @@ require(
   
                         <tbody>
                           <tr>
-                            <td><input id="date_especialidad_1" type="date" class="input_fields_general_tab step5"></td>
-                            <td><input id="especialidad_1" type="text" class="input_fields_general_tab step5"></td>
+                            <td><input id="date_especialidad_1" type="date" class="input_fields_general_tab_modal step5"></td>
+                            <td><input id="especialidad_1" type="text" class="input_fields_general_tab_modal step5"></td>
                           </tr>
   
                           <tr>
-                            <td><input id="date_especialidad_2" type="date" class="input_fields_general_tab step5"></td>
-                            <td><input id="especialidad_2" type="text" class="input_fields_general_tab step5"></td>
+                            <td><input id="date_especialidad_2" type="date" class="input_fields_general_tab_modal step5"></td>
+                            <td><input id="especialidad_2" type="text" class="input_fields_general_tab_modal step5"></td>
                           </tr>
   
                           <tr>
-                            <td><input id="date_especialidad_3" type="date" class="input_fields_general_tab step5"></td>
-                            <td><input id="especialidad_3" type="text" class="input_fields_general_tab step5"></td>
+                            <td><input id="date_especialidad_3" type="date" class="input_fields_general_tab_modal step5"></td>
+                            <td><input id="especialidad_3" type="text" class="input_fields_general_tab_modal step5"></td>
                           </tr>
                         </tbody>
                       </table>
@@ -1295,7 +1295,7 @@ require(
   
                       <div class="col" hidden>
                         <small>¿Cuál?</small>
-                        <input id="text_condicion" type="text" class="otros input_fields_general_tab step5">
+                        <input id="text_condicion" type="text" class="otros input_fields_general_tab_modal step5">
                       </div>
   
                     </div>
@@ -1334,9 +1334,9 @@ require(
                         </thead>
                         <tbody>
                           <tr>
-                            <td><input id="nom_medic" type="text" class="input_fields_general_tab step5"></td>
-                            <td><input id="hora_medic" type="text" class="input_fields_general_tab step5"></td>
-                            <td><input id="efect_medic" type="text" class="input_fields_general_tab step5"></td>
+                            <td><input id="nom_medic" type="text" class="input_fields_general_tab_modal step5"></td>
+                            <td><input id="hora_medic" type="text" class="input_fields_general_tab_modal step5"></td>
+                            <td><input id="efect_medic" type="text" class="input_fields_general_tab_modal step5"></td>
                           </tr>
                         </tbody>
                       </table>
@@ -1360,10 +1360,10 @@ require(
                       <small class="font-weight-bold">Si la respuesta anterior fue afirmativa responda</small><br>
                       
                       <small>¿Cuántas veces lo ha hecho?</small>
-                      <input id="veces_cambio" type="text" class="input_fields_general_tab step5">
+                      <input id="veces_cambio" type="text" class="input_fields_general_tab_modal step5">
   
                       <small>Describa las razones del cambio de tratamiento</small>
-                      <input id="razones_cambio" type="text" class="input_fields_general_tab step5">
+                      <input id="razones_cambio" type="text" class="input_fields_general_tab_modal step5">
                     </div>
                     <div class="col-md-4">
                       <small class="font-weight-bold">Observaciones</small>
@@ -1399,9 +1399,9 @@ require(
                         </thead>
                         <tbody>
                           <tr>
-                            <td><input id="municipio" type="text" class="input_fields_general_tab step5"></td>
-                            <td><input id="departamento" type="text" class="input_fields_general_tab step5"></td>
-                            <td><input id="fecha" type="date" class="input_fields_general_tab step5"></td>
+                            <td><input id="municipio" type="text" class="input_fields_general_tab_modal step5"></td>
+                            <td><input id="departamento" type="text" class="input_fields_general_tab_modal step5"></td>
+                            <td><input id="fecha" type="date" class="input_fields_general_tab_modal step5"></td>
                           </tr>
                         </tbody>
                       </table>
@@ -1416,7 +1416,7 @@ require(
                         <small>No</small>
                       </div>
   
-                      <input id="doc_localizacion" type="file" class="input_fields_general_tab">
+                      <input id="doc_localizacion" type="file" class="input_fields_general_tab_modal">
                     </div>
                   </div>
   
@@ -1464,16 +1464,16 @@ require(
   
                       <div class="col" hidden>
                         <small>¿Cuál?</small>
-                        <input id="otra_discapacidad" type="text" class="otros input_fields_general_tab step5">
+                        <input id="otra_discapacidad" type="text" class="otros input_fields_general_tab_modal step5">
                       </div>  
                     </div>
   
                     <div class="col-md-4">
                       <small class="font-weight-bold">Entidad que emite el certificado</small>
-                      <input id="entidad_certi" type="text" class="input_fields_general_tab step5">
+                      <input id="entidad_certi" type="text" class="input_fields_general_tab_modal step5">
   
                       <small class="font-weight-bold">Fecha</small>
-                      <input id="fecha_certi" type="date" class="input_fields_general_tab step5">
+                      <input id="fecha_certi" type="date" class="input_fields_general_tab_modal step5">
   
                       <small class="font-weight-bold">Entrega documentos soporte</small>
                       <div class="col mb-3">
@@ -1484,7 +1484,7 @@ require(
                         <small>No</small>
                       </div>
   
-                      <input id="certi_disca" type="file" class="input_fields_general_tab step5">
+                      <input id="certi_disca" type="file" class="input_fields_general_tab_modal step5">
                     </div>
                   </div>
   
@@ -1516,10 +1516,10 @@ require(
                         </thead>
                         <tbody>
                           <tr>
-                            <td><input id="tipo_certi_inv" type="text" class="input_fields_general_tab step5"></td>
-                            <td><input id="porcentaje_inv" type="text" class="input_fields_general_tab step5"></td>
-                            <td><input id="entidad_certi_inv" type="text" class="input_fields_general_tab step5"></td>
-                            <td><input id="fecha_certi_inv" type="date" class="input_fields_general_tab step5"></td>
+                            <td><input id="tipo_certi_inv" type="text" class="input_fields_general_tab_modal step5"></td>
+                            <td><input id="porcentaje_inv" type="text" class="input_fields_general_tab_modal step5"></td>
+                            <td><input id="entidad_certi_inv" type="text" class="input_fields_general_tab_modal step5"></td>
+                            <td><input id="fecha_certi_inv" type="date" class="input_fields_general_tab_modal step5"></td>
                           </tr>
                         </tbody>
                       </table>
@@ -1553,52 +1553,52 @@ require(
                           <tr>
                             <td>Sistema nervioso -(central y periférico)</td>
                             <td><input id="s_nervioso" name="s_nervioso" type="checkbox" class="step5"></td>
-                            <td><input id="cond_s_nervioso" type="text" class="input_fields_general_tab step5"></td>
+                            <td><input id="cond_s_nervioso" type="text" class="input_fields_general_tab_modal step5"></td>
                           </tr>
                           <tr>
                             <td>Ojos</td>
                             <td><input id="ojos" name="ojos" type="checkbox" class="step5"></td>
-                            <td><input id="cond_ojos" type="text" class="input_fields_general_tab step5"></td>
+                            <td><input id="cond_ojos" type="text" class="input_fields_general_tab_modal step5"></td>
                           </tr>
                           <tr>
                             <td>Oídos</td>
                             <td><input id="oidos" name="oidos" type="checkbox" class="step5"></td>
-                            <td><input id="cond_oidos" type="text" class="input_fields_general_tab step5"></td>
+                            <td><input id="cond_oidos" type="text" class="input_fields_general_tab_modal step5"></td>
                           </tr>
                           <tr>
                             <td>Relacionadas con la voz y el habla(Nariz, boca, laringe y otras)</td>
                             <td><input id="voz" name="voz" type="checkbox" class="step5"></td>
-                            <td><input id="cond_voz" type="text" class="input_fields_general_tab step5"></td>
+                            <td><input id="cond_voz" type="text" class="input_fields_general_tab_modal step5"></td>
                           </tr>
                           <tr>
                             <td>Sistema cardiovascular, inmunológico y respiratorio</td>
                             <td><input id="s_cardio" name="s_cardio" type="checkbox" class="step5"></td>
-                            <td><input id="cond_s_cardio" type="text" class="input_fields_general_tab step5"></td>
+                            <td><input id="cond_s_cardio" type="text" class="input_fields_general_tab_modal step5"></td>
                           </tr>
                           <tr>
                             <td>Sistema digestivo metabólico y endocrino</td>
                             <td><input id="s_digest" name="s_digest" type="checkbox" class="step5"></td>
-                            <td><input id="cond_s_digest" type="text" class="input_fields_general_tab step5"></td>
+                            <td><input id="cond_s_digest" type="text" class="input_fields_general_tab_modal step5"></td>
                           </tr>
                           <tr>
                             <td>Sistema genitourinario y reproductor</td>
                             <td><input id="s_repro" name="s_repro" type="checkbox" class="step5"></td>
-                            <td><input id="cond_s_repro" type="text" class="input_fields_general_tab step5"></td>
+                            <td><input id="cond_s_repro" type="text" class="input_fields_general_tab_modal step5"></td>
                           </tr>
                           <tr>
                             <td>Relacionadas con el movimiento (cabeza, brazos, piernas,manos, pies)</td>
                             <td><input id="movimiento" name="movimiento" type="checkbox" class="step5"></td>
-                            <td><input id="cond_movimiento" type="text" class="input_fields_general_tab step5"></td>
+                            <td><input id="cond_movimiento" type="text" class="input_fields_general_tab_modal step5"></td>
                           </tr>
                           <tr>
                             <td>Piel y estructuras relacionadas</td>
                             <td><input id="piel" name="piel" type="checkbox" class="step5"></td>
-                            <td><input id="cond_piel" type="text" class="input_fields_general_tab step5"></td>
+                            <td><input id="cond_piel" type="text" class="input_fields_general_tab_modal step5"></td>
                           </tr>
                           <tr>
                             <td>Otras estructuras relacionadas ¿Cuál?</td>
                             <td><input id="otras" name="otras" type="checkbox" class="step5"></td>
-                            <td><input id="cond_otras" type="text" class="input_fields_general_tab step5"></td>
+                            <td><input id="cond_otras" type="text" class="input_fields_general_tab_modal step5"></td>
                           </tr>
                         </tbody>
                       </table>
@@ -1621,52 +1621,52 @@ require(
                           <tr>
                             <td>Mentales (globales* y específicas**)</td>
                             <td><input id="mental" name="mental" type="checkbox" class="step5"></td>
-                            <td><input id="dif_mental" type="text" class="input_fields_general_tab step5"></td>
+                            <td><input id="dif_mental" type="text" class="input_fields_general_tab_modal step5"></td>
                           </tr>
                           <tr>
                             <td>Sensoriales de la visión</td>
                             <td><input id="s_vision" name="s_vision" type="checkbox" class="step5"></td>
-                            <td><input id="dif_s_vision" type="text" class="input_fields_general_tab step5"></td>
+                            <td><input id="dif_s_vision" type="text" class="input_fields_general_tab_modal step5"></td>
                           </tr>
                           <tr>
                             <td>Sensoriales de la audición</td>
                             <td><input id="s_audicion" name="s_audicion" type="checkbox" class="step5"></td>
-                            <td><input id="dif_s_audicion" type="text" class="input_fields_general_tab step5"></td>
+                            <td><input id="dif_s_audicion" type="text" class="input_fields_general_tab_modal step5"></td>
                           </tr>
                           <tr>
                             <td>Voz y habla</td>
                             <td><input id="voz_habla" name="voz_habla" type="checkbox" class="step5"></td>
-                            <td><input id="dif_voz_habla" type="text" class="input_fields_general_tab step5"></td>
+                            <td><input id="dif_voz_habla" type="text" class="input_fields_general_tab_modal step5"></td>
                           </tr>
                           <tr>
                             <td>Cardiovasculares, inmunológicas y respiratorias</td>
                             <td><input id="inmuno" name="inmuno" type="checkbox" class="step5"></td>
-                            <td><input id="dif_inmuno" type="text" class="input_fields_general_tab step5"></td>
+                            <td><input id="dif_inmuno" type="text" class="input_fields_general_tab_modal step5"></td>
                           </tr>
                           <tr>
                             <td>Digestivas metabólicas y endocrinas</td>
                             <td><input id="metaboli" name="metaboli"  type="checkbox" class="step5"></td>
-                            <td><input id="dif_metaboli" type="text" class="input_fields_general_tab step5"></td>
+                            <td><input id="dif_metaboli" type="text" class="input_fields_general_tab_modal step5"></td>
                           </tr>
                           <tr>
                             <td>Genitourinarias y reproductoras</td>
                             <td><input id="genit" name="genit" type="checkbox" class="step5"></td>
-                            <td><input id="dif_genit" type="text" class="input_fields_general_tab step5"></td>
+                            <td><input id="dif_genit" type="text" class="input_fields_general_tab_modal step5"></td>
                           </tr>
                           <tr>
                             <td>Musculoesqueléticas y relaciones con el movimiento</td>
                             <td><input id="musculo" name="musculo" type="checkbox" class="step5"></td>
-                            <td><input id="dif_musculo" type="text" class="input_fields_general_tab step5"></td>
+                            <td><input id="dif_musculo" type="text" class="input_fields_general_tab_modal step5"></td>
                           </tr>
                           <tr>
                             <td>Piel y estructuras relacionadas</td>
                             <td><input id="piel_estruc" name="piel_estruc" type="checkbox" class="step5"></td>
-                            <td><input id="dif_piel_estruc" type="text" class="input_fields_general_tab step5"></td>
+                            <td><input id="dif_piel_estruc" type="text" class="input_fields_general_tab_modal step5"></td>
                           </tr>
                           <tr>
                             <td>Otras estructuras relacionadas ¿Cuál?</td>
                             <td><input id="otras_est" name="otras_est" type="checkbox" class="step5"></td>
-                            <td><input id="dif_otras" type="text" class="input_fields_general_tab step5"></td>
+                            <td><input id="dif_otras" type="text" class="input_fields_general_tab_modal step5"></td>
                           </tr>
                         </tbody>
   
@@ -1715,7 +1715,7 @@ require(
                       </div>
                       <div class="col" hidden>
                         <small>¿Cuál?</small>
-                        <input id="otra_participacion" type="text" class="otros input_fields_general_tab step5" >
+                        <input id="otra_participacion" type="text" class="otros input_fields_general_tab_modal step5" >
                       </div>
                       <div class="col">
                         <input name="participacion" class="step5" value="8" type="radio">
@@ -1771,7 +1771,7 @@ require(
                       </div>
                       <div class="col" hidden>
                         <small>¿Cuál?</small>
-                        <input id="otro_apoyo_partic" type="text" class="otros input_fields_general_tab step5">
+                        <input id="otro_apoyo_partic" type="text" class="otros input_fields_general_tab_modal step5">
                       </div>
                     </div>
                   </div>
@@ -1790,7 +1790,7 @@ require(
   
                     <div class="col-md-6">
                       <small class="font-weight-bold">¿Cuál?</small>
-                      <input id="cual_asoc" type="text" class="input_fields_general_tab step5">
+                      <input id="cual_asoc" type="text" class="input_fields_general_tab_modal step5">
                     </div>
                   </div>
                   
@@ -1823,16 +1823,16 @@ require(
                         </thead>
                         <tbody>
                           <tr>
-                            <td><input id="nom_apoyI_1" type="text" class="input_fields_general_tab step5"></td>
-                            <td><input id="tipo_apoyo1" type="text" class="input_fields_general_tab step5"></td>
+                            <td><input id="nom_apoyI_1" type="text" class="input_fields_general_tab_modal step5"></td>
+                            <td><input id="tipo_apoyo1" type="text" class="input_fields_general_tab_modal step5"></td>
                           </tr>
                           <tr>
-                            <td><input id="nom_apoyI_2" type="text" class="input_fields_general_tab step5"></td>
-                            <td><input id="tipo_apoyo_2" type="text" class="input_fields_general_tab step5"></td>
+                            <td><input id="nom_apoyI_2" type="text" class="input_fields_general_tab_modal step5"></td>
+                            <td><input id="tipo_apoyo_2" type="text" class="input_fields_general_tab_modal step5"></td>
                           </tr>
                           <tr>
-                            <td><input id="nom_apoyI_3" type="text" class="input_fields_general_tab step5"></td>
-                            <td><input id="tipo_apoyo_3" type="text" class="input_fields_general_tab step5"></td>
+                            <td><input id="nom_apoyI_3" type="text" class="input_fields_general_tab_modal step5"></td>
+                            <td><input id="tipo_apoyo_3" type="text" class="input_fields_general_tab_modal step5"></td>
                           </tr>
                         </tbody>
                       </table>
@@ -1912,7 +1912,7 @@ require(
                     </div>
                     <div class="col-md-4">
                       <small class="font-weight-bold">Nombre de la Empresa Pres(EPS)</small>
-                      <input id="EPS" type="text" class="input_fields_general_tab step6">
+                      <input id="EPS" type="text" class="input_fields_general_tab_modal step6">
                     </div>
                   </div>
   
@@ -1972,7 +1972,7 @@ require(
                         <small>No</small>
                       </div>
                       <small>Nombre del institución</small>
-                      <input type="text" id="name_salud_pre" class="input_fields_general_tab step6">
+                      <input type="text" id="name_salud_pre" class="input_fields_general_tab_modal step6">
                     </div>
   
                     <div class="col-md-4">
@@ -1984,7 +1984,7 @@ require(
                         <small>No</small>
                       </div>
                       <small>Nombre del institución</small>
-                      <input type="text" id="name_plan_com" class="input_fields_general_tab step6">
+                      <input type="text" id="name_plan_com" class="input_fields_general_tab_modal step6">
                     </div>
   
                     <div class="col-md-4">
@@ -1996,7 +1996,7 @@ require(
                         <small>No</small>
                       </div>
                       <small>Nombre del institución</small>
-                      <input type="text" id="name_serv_est" class="input_fields_general_tab step6">
+                      <input type="text" id="name_serv_est" class="input_fields_general_tab_modal step6">
                     </div>
                   </div>
   
@@ -2018,134 +2018,134 @@ require(
                               <input id="medicina_general" name="medicina_general" class="step6" type="checkbox">
                               <small>Medicina general</small>
                             </td>
-                            <td><input id="entidad_srv_1" type="text" class="input_fields_general_tab step6"></td>
-                            <td><input id="frecuencia_1" type="text" class="input_fields_general_tab step6"></td>
+                            <td><input id="entidad_srv_1" type="text" class="input_fields_general_tab_modal step6"></td>
+                            <td><input id="frecuencia_1" type="text" class="input_fields_general_tab_modal step6"></td>
                           </tr>
                           <tr>
                             <td>
                               <input id="psiquiatria" name="psiquiatria" class="step6" type="checkbox">
                               <small>Psiquiatría</small>
                             </td>
-                            <td><input id="entidad_srv_2" type="text" class="input_fields_general_tab step6"></td>
-                            <td><input id="frecuencia_2" type="text" class="input_fields_general_tab step6"></td>
+                            <td><input id="entidad_srv_2" type="text" class="input_fields_general_tab_modal step6"></td>
+                            <td><input id="frecuencia_2" type="text" class="input_fields_general_tab_modal step6"></td>
                           </tr>
                           <tr>
                             <td>
                               <input id="neuropsicologia" name="neuropsicologia" class="step6" type="checkbox">
                               <small>Neuropsicología</small>
                             </td>
-                            <td><input id="entidad_srv_3" type="text" class="input_fields_general_tab step6"></td>
-                            <td><input id="frecuencia_3" type="text" class="input_fields_general_tab step6"></td>
+                            <td><input id="entidad_srv_3" type="text" class="input_fields_general_tab_modal step6"></td>
+                            <td><input id="frecuencia_3" type="text" class="input_fields_general_tab_modal step6"></td>
                           </tr>
                           <tr>
                             <td>
                               <input id="psicologia" name="psicologia" class="step6" type="checkbox">
                               <small>Psicología</small>
                             </td>
-                            <td><input id="entidad_srv_4" type="text" class="input_fields_general_tab step6"></td>
-                            <td><input  id="frecuencia_4" type="text" class="input_fields_general_tab step6"></td>
+                            <td><input id="entidad_srv_4" type="text" class="input_fields_general_tab_modal step6"></td>
+                            <td><input  id="frecuencia_4" type="text" class="input_fields_general_tab_modal step6"></td>
                           </tr>
                           <tr>
                             <td>
                               <input id="optometria" name="optometria" class="step6" type="checkbox">
                               <small>Optometría</small>
                             </td>
-                            <td><input id="entidad_srv_5" type="text" class="input_fields_general_tab step6"></td>
-                            <td><input  id="frecuencia_5" type="text" class="input_fields_general_tab step6"></td>
+                            <td><input id="entidad_srv_5" type="text" class="input_fields_general_tab_modal step6"></td>
+                            <td><input  id="frecuencia_5" type="text" class="input_fields_general_tab_modal step6"></td>
                           </tr>
                           <tr>
                             <td>
                               <input id="oftamologia" name="oftamologia" class="step6" type="checkbox">
                               <small>Oftamología</small>
                             </td>
-                            <td><input id="entidad_srv_6" type="text" class="input_fields_general_tab step6"></td>
-                            <td><input  id="frecuencia_6" type="text" class="input_fields_general_tab step6"></td>
+                            <td><input id="entidad_srv_6" type="text" class="input_fields_general_tab_modal step6"></td>
+                            <td><input  id="frecuencia_6" type="text" class="input_fields_general_tab_modal step6"></td>
                           </tr>
                           <tr>
                             <td>
                               <input id="endocrinologia" name="endocrinologia" class="step6" type="checkbox">
                               <small>Endocrinología</small>
                             </td>
-                            <td><input id="entidad_srv_7" type="text" class="input_fields_general_tab step6"></td>
-                            <td><input  id="frecuencia_7" type="text" class="input_fields_general_tab step6"></td>
+                            <td><input id="entidad_srv_7" type="text" class="input_fields_general_tab_modal step6"></td>
+                            <td><input  id="frecuencia_7" type="text" class="input_fields_general_tab_modal step6"></td>
                           </tr>
                           <tr>
                             <td>
                               <input id="neurologia" name="neurologia" class="step6" type="checkbox">
                               <small>Neurología</small>
                             </td>
-                            <td><input id="entidad_srv_8" type="text" class="input_fields_general_tab step6"></td>
-                            <td><input  id="frecuencia_8" type="text" class="input_fields_general_tab step6"></td>
+                            <td><input id="entidad_srv_8" type="text" class="input_fields_general_tab_modal step6"></td>
+                            <td><input  id="frecuencia_8" type="text" class="input_fields_general_tab_modal step6"></td>
                           </tr>
                           <tr>
                             <td>
                               <input id="fisiatria" name="fisiatria" class="step6" type="checkbox">
                               <small>Fisiatría</small>
                             </td>
-                            <td><input id="entidad_srv_9" type="text" class="input_fields_general_tab step6"></td>
-                            <td><input  id="frecuencia_9" type="text" class="input_fields_general_tab step6"></td>
+                            <td><input id="entidad_srv_9" type="text" class="input_fields_general_tab_modal step6"></td>
+                            <td><input  id="frecuencia_9" type="text" class="input_fields_general_tab_modal step6"></td>
                           </tr>
                           <tr>
                             <td>
                               <input id="traumatologia" name="traumatologia" class="step6" type="checkbox">
                               <small>Traumatología</small>
                             </td>
-                            <td><input id="entidad_srv_10" type="text" class="input_fields_general_tab step6"></td>
-                            <td><input  id="frecuencia_10" type="text" class="input_fields_general_tab step6"></td>
+                            <td><input id="entidad_srv_10" type="text" class="input_fields_general_tab_modal step6"></td>
+                            <td><input  id="frecuencia_10" type="text" class="input_fields_general_tab_modal step6"></td>
                           </tr>
                           <tr>
                             <td>
                               <input id="ortopedia" name="ortopedia" class="step6" type="checkbox">
                               <small>Ortopedia</small>
                             </td>
-                            <td><input id="entidad_srv_11" type="text" class="input_fields_general_tab step6"></td>
-                            <td><input  id="frecuencia_11" type="text" class="input_fields_general_tab step6"></td>
+                            <td><input id="entidad_srv_11" type="text" class="input_fields_general_tab_modal step6"></td>
+                            <td><input  id="frecuencia_11" type="text" class="input_fields_general_tab_modal step6"></td>
                           </tr>
                           <tr>
                             <td>
                               <input id="fisioterapia" name="fisioterapia" class="step6" type="checkbox">
                               <small>Fisioterapia</small>
                             </td>
-                            <td><input id="entidad_srv_12" type="text" class="input_fields_general_tab step6"></td>
-                            <td><input  id="frecuencia_12" type="text" class="input_fields_general_tab step6"></td>
+                            <td><input id="entidad_srv_12" type="text" class="input_fields_general_tab_modal step6"></td>
+                            <td><input  id="frecuencia_12" type="text" class="input_fields_general_tab_modal step6"></td>
                           </tr>
                           <tr>
                             <td>
                               <input id="funoaudiologia" name="funoaudiologia" class="step6" type="checkbox">
                               <small>Fonoaudiología</small>
                             </td>
-                            <td><input id="entidad_srv_13" type="text" class="input_fields_general_tab step6"></td>
-                            <td><input  id="frecuencia_13" type="text" class="input_fields_general_tab step6"></td>
+                            <td><input id="entidad_srv_13" type="text" class="input_fields_general_tab_modal step6"></td>
+                            <td><input  id="frecuencia_13" type="text" class="input_fields_general_tab_modal step6"></td>
                           </tr>
                           <tr>
                             <td>
                               <input id="t_ocupacional" name="t_ocupacional" class="step6" type="checkbox">
                               <small>Terapia ocupacional</small>
                             </td>
-                            <td><input id="entidad_srv_14" type="text" class="input_fields_general_tab step6"></td>
-                            <td><input  id="frecuencia_14" type="text" class="input_fields_general_tab step6"></td>
+                            <td><input id="entidad_srv_14" type="text" class="input_fields_general_tab_modal step6"></td>
+                            <td><input  id="frecuencia_14" type="text" class="input_fields_general_tab_modal step6"></td>
                           </tr>
                           <tr>
                             <td>
                               <input id="t_social" name="t_social" class="step6" type="checkbox">
                               <small>Trabajo social</small>
                             </td>
-                            <td><input id="entidad_srv_15" type="text" class="input_fields_general_tab step6"></td>
-                            <td><input  id="frecuencia_15" type="text" class="input_fields_general_tab step6"></td>
+                            <td><input id="entidad_srv_15" type="text" class="input_fields_general_tab_modal step6"></td>
+                            <td><input  id="frecuencia_15" type="text" class="input_fields_general_tab_modal step6"></td>
                           </tr>
                           <tr>
                             <td>
                               <input id="t_alternativas" name="t_alternativas" class="step6" type="checkbox">
                               <small>Terapias alternativas</small>
                             </td>
-                            <td><input id="entidad_srv_16" type="text" class="input_fields_general_tab step6"></td>
-                            <td><input  id="frecuencia_16" type="text" class="input_fields_general_tab step6"></td>
+                            <td><input id="entidad_srv_16" type="text" class="input_fields_general_tab_modal step6"></td>
+                            <td><input  id="frecuencia_16" type="text" class="input_fields_general_tab_modal step6"></td>
                           </tr>
                         </tbody>
                         <tfoot>
                           <tr>
                             <td><small class="font-weight-bold">Otra:</small><small>¿Cuál?</small>
-                            <input id="otro_servicio" type="text" class="input_fields_general_tab step6">
+                            <input id="otro_servicio" type="text" class="input_fields_general_tab_modal step6">
                             </td>
                           </tr>
                         </tfoot>
@@ -2161,17 +2161,17 @@ require(
                     </div>
                     <div class="col-md-6">
                       <small class="font-weight-bold">ACUERDO DE PRóXIMA REUNIóN PARA REVISIÓN DE APOYOS Y ELABORACIÓN DE JUSTES RAZONABLES</small>
-                      <input id="fecha_cita" type="date"  class="input_fields_general_tab step6">
+                      <input id="fecha_cita" type="date"  class="input_fields_general_tab_modal step6">
   
                       <small class="font-weight-bold">Hora</small>
-                      <input id="hora_cita" type="text"  class="input_fields_general_tab step6">
+                      <input id="hora_cita" type="text"  class="input_fields_general_tab_modal step6">
                     </div>
                   </div>
   
                   <div id="json_detalle" class="row mt-4">
                     <div class="col-md-6">
                       <small class="font-weight-bold">Documento tratamiento de datos personales</small> 
-                      <input name="json_detalle" id="documento_tratamiento" type="text" class="input_fields_general_tab step6 talentospilos_usuario" placeholder="Documento tratamiento de datos personales" required> 
+                      <input name="json_detalle" id="documento_tratamiento" type="text" class="input_fields_general_tab_modal step6 talentospilos_usuario" placeholder="Documento tratamiento de datos personales" required> 
                     </div>
                   </div>
   

@@ -64,11 +64,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                         loadSelector($('#tipo_doc_ini'), 'get_document_types');
                         loadSelector($('#select_sede'), 'get_sedes');
 
-                        loadSelector($('#s_programa_1'), 'get_programas_academicos');
-                        loadSelector($('#s_programa_2'), 'get_programas_academicos');
-                        loadSelector($('#s_programa_3'), 'get_programas_academicos');
-                        loadSelector($('#s_programa_4'), 'get_programas_academicos');
-
                         //controls radio
                         hideAndShow("permanencia", "solvencia_econo");
                         hideAndShow("set-desplazamiento", "ayuda_transporte");
@@ -77,7 +72,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                         hideAndShow("set-participacion", "participacion");
                         hideAndShow("set-salud", "condicion");
                         hideAndShowCheckB('set-orientacion', "orientacion_sexual");
-                        hideAndShowCheckB('set-sexo', "sexo");
+                        //hideAndShowCheckB('set-sexo', "sexo");
                         hideAndShowCheckB('set-identidad-gen', "identidad_genero");
                         hideAndShow('set-beca', 'beca')
 
@@ -140,7 +135,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                         $('#nombre').val("");
                         $('#apellido').val("");
                         $('#emailinstitucional').val("");
-                        $('#emailpilos').val("");
+                        $('#emailpilos_modal').val("");
                         unsetData("step-1")
                         unsetData("step-2")
                         unsetData("step-3")
@@ -283,8 +278,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                         $('#edad').prop("disabled", true);
                     }
 
-                    $("#fecha_nac").blur(function() {
-                        var fecha = $('#fecha_nac').val();
+                    $("#fecha_nac_modal").blur(function() {
+                        var fecha = $('#fecha_nac_modal').val();
                         calc_edad(fecha);
                     });
 
@@ -342,16 +337,16 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                     /*Controles para el registros de Familiares*/
                     function addTable(table) {
                         let nuevaFila = "";
-                        nuevaFila += '<tr><td> <input  class="input_fields_general_tab"  type="text"/></td>';
-                        nuevaFila += '<td> <input  class="input_fields_general_tab"  type="text" /></td>';
+                        nuevaFila += '<tr><td> <input  class="input_fields_general_tab_modal"  type="text"/></td>';
+                        nuevaFila += '<td> <input  class="input_fields_general_tab_modal"  type="text" /></td>';
                         nuevaFila += '<td> <button class="btn btn-danger remove_fila" type="button" title="Eliminar persona" name="btn_delete_person" style="visibility:visible;"> X </button></td></tr>';
                         table.find("tbody").append(nuevaFila);
                     }
 
                     function setTableFamily(nombre, rol, i) {
                         let nuevaFila = "";
-                        nuevaFila += '<tr><td> <input id="nom' + i + '" class="input_fields_general_tab"  type="text"/></td>';
-                        nuevaFila += '<td> <input id="rol' + i + '" class="input_fields_general_tab"  type="text" /></td>';
+                        nuevaFila += '<tr><td> <input id="nom' + i + '" class="input_fields_general_tab_modal"  type="text"/></td>';
+                        nuevaFila += '<td> <input id="rol' + i + '" class="input_fields_general_tab_modal"  type="text" /></td>';
                         nuevaFila += '<td> <button class="btn btn-danger remove_fila" type="button" title="Eliminar persona" name="btn_delete_person" style="visibility:visible;"> X </button></td></tr>';
                         $("#table_familia").find("tbody").append(nuevaFila);
                         $("#nom" + i).val(nombre)
@@ -362,7 +357,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                     /*Controles para el registros de inresos a la universidad*/
                     function addTableIng(table) {
                         let nuevaFila = "";
-                        nuevaFila += '<tr><td> <input id="anio_' + ing + '" class="input_fields_general_tab ingresos_u step3" name="anio_' + ing + '"  type="text"/></td>';
+                        nuevaFila += '<tr><td> <input id="anio_' + ing + '" class="input_fields_general_tab_modal ingresos_u step3" name="anio_' + ing + '"  type="text"/></td>';
                         nuevaFila += '<td> <select id="s_programa_' + ing + '" class="custom-select select-academics-data step3"></select> <input  id="id_programa_' + ing + '" name="id_programa_' + ing + '" class="ingresos_u" type="number" hidden></td>';
                         nuevaFila += '<td><select class="custom-select select-academics-data step3"> <option value="1">Bajos académicos</option> <option value="2">Condición de salud</option> <option value="3">Fallecimiento</option> <option value="4">Condición económica</option> <option value="5">Condición de programa académico</option> <option value="6">Cambio de institución educativa</option> <option value="7">Cambio de ciudad</option> <option value="8">Retiro voluntario</option> <option value="9">Prefiero no decirlo</option> </select> <input  id="motivo_' + ing + '" name="motivo_' + ing + '" class="ingresos_u" type="number" hidden> </td>';
                         nuevaFila += '<td> <button class="btn btn-danger remove_fila_ing" type="button" title="Eliminar persona" name="btn_delete_person" style="visibility:visible;"> X </button></td></tr>';
@@ -372,7 +367,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
 
                     function setTableIng(ingr, anioI, progI, motivoI) {
                         let nuevaFila = "";
-                        nuevaFila += '<tr><td> <input id="anio_' + ingr + '" class="input_fields_general_tab ingresos_u step3" name="anio_' + ingr + '"  type="text"/></td>';
+                        nuevaFila += '<tr><td> <input id="anio_' + ingr + '" class="input_fields_general_tab_modal ingresos_u step3" name="anio_' + ingr + '"  type="text"/></td>';
                         nuevaFila += '<td> <select id="s_programa_' + ingr + '" class="custom-select select-academics-data step3"></select> <input  id="id_programa_' + ingr + '" name="id_programa_' + ingr + '" class="ingresos_u" type="number" hidden></td>';
                         nuevaFila += '<td><select id="motivo_I' + ingr + '" class="custom-select select-academics-data step3"> <option value="1">Bajos académicos</option> <option value="2">Condición de salud</option> <option value="3">Fallecimiento</option> <option value="4">Condición económica</option> <option value="5">Condición de programa académico</option> <option value="6">Cambio de institución educativa</option> <option value="7">Cambio de ciudad</option> <option value="8">Retiro voluntario</option> <option value="9">Prefiero no decirlo</option> </select> <input id="motivo_' + ingr + '" name="motivo_' + ingr + '" class="ingresos_u" type="number" hidden> </td>';
                         nuevaFila += '<td> <button class="btn btn-danger remove_fila_ing" type="button" title="Eliminar persona" name="btn_delete_person" style="visibility:visible;"> X </button></td></tr>';
@@ -564,7 +559,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                                             dia = fecha.getDate()
                                         }
 
-                                        $("#fecha_nac").val(fecha.getFullYear() + "-" + mes + "-" + dia)
+                                        $("#fecha_nac_modal").val(fecha.getFullYear() + "-" + mes + "-" + dia)
                                         calc_edad(data[key]);
                                         break;
                                     case "json_detalle":
@@ -608,7 +603,12 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
 
                                         break;
                                     default:
-                                        $('#' + key).val(data[key])
+                                        if (key == "estrato" || key == "puntaje_icfes" || key == "hijos" || key == "tel_res" || key == "celular" || key == "tel_acudiente"
+                                            || key == "emailpilos") {
+                                            $('#' + key + '_modal').val(data[key])
+                                        }else{
+                                            $('#' + key).val(data[key])
+                                        }
                                         break;
                                 }
                             }
@@ -785,7 +785,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
 
                                     break;
                                 default:
-                                    $("#" + key).val(data[key])
+                                    if (key == 'observaciones') {
+                                        $("#" + key + "_modal").val(data[key])
+                                    }else{
+                                        $("#" + key).val(data[key])
+                                    }
                                     break;
                             }
 
@@ -1710,25 +1714,25 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                             case 'apellido':
                                 soloLetras(event)
                                 break;
-                            case 'celular':
+                            case 'celular_modal':
                                 soloNumeros(event)
                                 break;
-                            case 'tel_res':
+                            case 'tel_res_modal':
                                 soloNumeros(event)
                                 break;
                             case 'tel_ini':
                                 soloNumeros(event)
                                 break;
-                            case 'tel_acudiente':
+                            case 'tel_acudiente_modal':
                                 soloNumeros(event)
                                 break;
                             case 'tel_cont_2':
                                 soloNumeros(event)
                                 break;
-                            case 'estrato':
+                            case 'estrato_modal':
                                 soloNumeros(event)
                                 break;
-                            case 'hijos':
+                            case 'hijos_modal':
                                 soloNumeros(event)
                                 break;
                             case 'semestre_actual':
@@ -1737,7 +1741,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                             case 'anio_ingreso':
                                 soloNumeros(event)
                                 break;
-                            case 'puntaje_icfes':
+                            case 'puntaje_icfes_modal':
                                 soloNumeros(event)
                                 break;
 
@@ -1799,7 +1803,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
 
                     });
 
-                    $('#emailpilos').on('keyup', function() {
+                    $('#emailpilos_modal').on('keyup', function() {
                         var re = /([A-Z0-9a-z_-][^@])+?@[^$#<>?]+?\.[\w]{2,4}/.test(this.value);
                         if (!re) {
                             $('#errorEPilos').attr('hidden', false);
@@ -2061,7 +2065,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                     //todos las variables a guardar del formulario
                     function save_data() {
 
-                        $('#num_doc').val($("#num_doc_ini").val())
+                        $('#num_doc_modal').val($("#num_doc_ini").val())
 
                         var deportes = [];
                         deportes.push({ name: "deportes", value: input_deportes.getArr() });
@@ -2111,7 +2115,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                     //todos las variables a guardar del formulario
                     function update_ases_data() {
 
-                        $('#num_doc').val($("#num_doc_ini").val())
+                        $('#num_doc_modal').val($("#num_doc_ini").val())
 
                         var deportes = [];
                         deportes.push({ name: "deportes", value: input_deportes.getArr() });
@@ -2168,8 +2172,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                         var vive = buildArr($("#table_familia"));
                         buildJsonObject('set-vive', vive);
                         var familia = JSON.stringify(vive);
-                        var hijos = $("#hijos").val();
-                        var estrato = $("#estrato").val();
+                        var hijos = $("#hijos_modal").val();
+                        var estrato = $("#estrato_modal").val();
                         getStudentAses($("#num_doc_ini").val());
 
                         $.ajax({
@@ -2195,7 +2199,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
 
                     function save_economics_data() {
                         var economics_data = getEconomicsData();
-                        var estrato = $("#estrato").val();
+                        var estrato = $("#estrato_modal").val();
                         getStudentAses($("#num_doc_ini").val());
                         $.ajax({
                             type: "POST",
@@ -2222,7 +2226,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
 
                     function update_economics_dt() {
                         var economics_data = getEconomicsData();
-                        var estrato = $("#estrato").val();
+                        var estrato = $("#estrato_modal").val();
                         getStudentAses($("#num_doc_ini").val());
                         $.ajax({
                             type: "POST",
@@ -2254,7 +2258,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                         getStudentAses($("#num_doc_ini").val());
                         var programa = $("#programa").val();
                         var titulo = $("#titulo_1").val();
-                        var observaciones = $("#observaciones").val();
+                        var observaciones = $("#observaciones_modal").val();
                         $.ajax({
                             type: "POST",
                             data: JSON.stringify({
@@ -2281,7 +2285,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                         getStudentAses($("#num_doc_ini").val());
                         var programa = $("#programa").val();
                         var titulo = $("#titulo_1").val();
-                        var observaciones = $("#observaciones").val();
+                        var observaciones = $("#observaciones_modal").val();
                         $.ajax({
                             type: "POST",
                             data: JSON.stringify({
@@ -2420,7 +2424,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                     }
 
                     function save_data_user_step3() {
-                        var icfes = $("#puntaje_icfes").val();
+                        var icfes = $("#puntaje_icfes_modal").val();
                         var anio_ingreso = $("#anio_ingreso").val();
                         var colegio = $("#colegio").val();
                         getStudentAses($("#num_doc_ini").val());
