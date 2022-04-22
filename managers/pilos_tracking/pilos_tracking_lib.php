@@ -835,7 +835,7 @@ function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigo
 
       
     }catch(Exception $ex){
-      return "Error";
+      return $ex->getMessage();
     }
   
 }
@@ -1006,7 +1006,11 @@ function update_last_user_risk( $ases_student_code, $record_id ){
                 $new_user_risk->id_riesgo = $risk->id;
                 $new_user_risk->calificacion_riesgo = $individual_risk_lvl;
                 $new_user_risk->recorder = "dphpforms";
-                $DB->insert_record( 'talentospilos_riesg_usuario', $new_user_risk, $returnid=false, $bulk=false );
+                if($new_user_risk->id_usuario != 0 && $new_user_risk->id_usuario != null){
+                    $DB->insert_record( 'talentospilos_riesg_usuario', $new_user_risk, $returnid=false, $bulk=false );
+                }else{
+                    trigger_error('ASES Notificacion: se intentó hacer un insert en riego individual con id_usuario = 0');
+                }
             }
 
         }elseif ( $risk->nombre == 'familiar' ){
@@ -1026,7 +1030,11 @@ function update_last_user_risk( $ases_student_code, $record_id ){
                 $new_user_risk->id_riesgo = $risk->id;
                 $new_user_risk->calificacion_riesgo = $familiar_risk_lvl;
                 $new_user_risk->recorder = "dphpforms";
-                $DB->insert_record( 'talentospilos_riesg_usuario', $new_user_risk, $returnid=false, $bulk=false );
+                if($new_user_risk->id_usuario != 0 && $new_user_risk->id_usuario != null){
+                    $DB->insert_record( 'talentospilos_riesg_usuario', $new_user_risk, $returnid=false, $bulk=false );
+                }else{
+                    trigger_error('ASES Notificacion: se intentó hacer un insert en riego familiar con id_usuario = 0');
+                }
             }
 
         }elseif ( $risk->nombre == 'academico' ){
@@ -1046,7 +1054,11 @@ function update_last_user_risk( $ases_student_code, $record_id ){
                 $new_user_risk->id_riesgo = $risk->id;
                 $new_user_risk->calificacion_riesgo = $academico_risk_lvl;
                 $new_user_risk->recorder = "dphpforms";
-                $DB->insert_record( 'talentospilos_riesg_usuario', $new_user_risk, $returnid=false, $bulk=false );
+                if($new_user_risk->id_usuario != 0 && $new_user_risk->id_usuario != null){
+                    $DB->insert_record( 'talentospilos_riesg_usuario', $new_user_risk, $returnid=false, $bulk=false );
+                }else{
+                    trigger_error('ASES Notificacion: se intentó hacer un insert en riego academico con id_usuario = 0');
+                }
             }
 
         }elseif ( $risk->nombre == 'economico' ) {
@@ -1066,7 +1078,11 @@ function update_last_user_risk( $ases_student_code, $record_id ){
                 $new_user_risk->id_riesgo = $risk->id;
                 $new_user_risk->calificacion_riesgo = $economico_risk_lvl;
                 $new_user_risk->recorder = "dphpforms";
-                $DB->insert_record( 'talentospilos_riesg_usuario', $new_user_risk, $returnid=false, $bulk=false );
+                if($new_user_risk->id_usuario != 0 && $new_user_risk->id_usuario != null){
+                    $DB->insert_record( 'talentospilos_riesg_usuario', $new_user_risk, $returnid=false, $bulk=false );
+                }else{
+                    trigger_error('ASES Notificacion: se intentó hacer un insert en riego economico con id_usuario = 0');
+                }
             }
 
         }elseif ( $risk->nombre == 'vida_universitaria' ) {
@@ -1087,7 +1103,11 @@ function update_last_user_risk( $ases_student_code, $record_id ){
                 $new_user_risk->id_riesgo = $risk->id;
                 $new_user_risk->calificacion_riesgo = $vida_universitaria_risk_lvl;
                 $previous_renew_user_riskcord_risk->recorder = "dphpforms";
-                $DB->insert_record( 'talentospilos_riesg_usuario', $new_user_risk, $returnid=false, $bulk=false );
+                if($new_user_risk->id_usuario != 0 && $new_user_risk->id_usuario != null){
+                    $DB->insert_record( 'talentospilos_riesg_usuario', $new_user_risk, $returnid=false, $bulk=false );
+                }else{
+                    trigger_error('ASES Notificacion: se intentó hacer un insert en riego vida universitaria con id_usuario = 0');
+                }
             }
 
         }elseif ( $risk->nombre == 'geografico' ){
@@ -1117,6 +1137,8 @@ function update_last_user_risk( $ases_student_code, $record_id ){
                 // id_usuario sometimes reaches as 0
                 if($new_user_risk->id_usuario != 0 && $new_user_risk->id_usuario != null){
                     $DB->insert_record( 'talentospilos_riesg_usuario', $new_user_risk, $returnid=false, $bulk=false );
+                }else{
+                    trigger_error('ASES Notificacion: se intentó hacer un insert en riego geografico con id_usuario = 0');
                 }
             }
         }

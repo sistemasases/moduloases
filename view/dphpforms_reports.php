@@ -33,6 +33,7 @@ require_once('../managers/instance_management/instance_lib.php');
 require_once('../managers/menu_options.php');
 include_once("../managers/dphpforms/dphpforms_reverse_filter.php");
 include_once("../managers/dphpforms/dphpforms_form_updater.php");
+require_once(__DIR__.'/../managers/cohort/cohort_lib.php');
 include('../lib.php');
 
 
@@ -54,9 +55,11 @@ require_login($courseid, false);
 if (!consult_instance($blockid)) {
     header("Location: instanceconfiguration.php?courseid=$courseid&instanceid=$blockid");
 }
-
+$cohorts_select = \cohort_lib\get_html_cohorts_select($blockid);
 $contextcourse = context_course::instance($courseid);
 $contextblock = context_block::instance($blockid);
+
+$record->cohorts_checks = $cohorts_select;
 
 $url = new moodle_url("/blocks/ases/view/dphpforms_form_builder.php", array('courseid' => $courseid, 'instanceid' => $blockid));
 
