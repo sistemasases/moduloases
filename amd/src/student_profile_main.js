@@ -266,7 +266,7 @@ define(['jquery',
                         alert(data);
                     },
                     error: function (data) {
-                        loading_indi2cator.hide();
+                        loading_indicator.hide();
                         console.log(data)
                     }
                 });
@@ -389,7 +389,6 @@ define(['jquery',
                             }),
                             url: "../managers/student_profile/studentprofile_api.php",
                             success: function (msg) {
-                                loading_indicator.hide();
                                 if(msg.status_code == 0) {
                                     if ($('#select-' + id_program).val() == "ACTIVO") {
                                         $('#tr-' + id_moodle).addClass('is-active');
@@ -408,7 +407,6 @@ define(['jquery',
                             dataType: "json",
                             cache: "false",
                             error: function (msg) {
-                                loading_indicator.hide();
                                 swal(
                                     msg.title,
                                     msg.msg,
@@ -416,9 +414,11 @@ define(['jquery',
                                 );
                             },
                         });
+                        loading_indicator.hide();
                     } else {
                         $('#select-' + data.program_id).val(current_status);
                     }
+
                 });
         }, update_status_ases: function (parameters_url) {
 
@@ -1117,7 +1117,7 @@ define(['jquery',
                         .then(({html, js}) => {
                             Templates.appendNodeContents('.tab-content', html, js);
                             $("#"+tab_name+"_tab").addClass("active");
-
+                            loading_indicator.hide();
                             switch(tab_name){
                                 case 'socioed':
                                     socioed.init();
@@ -1137,19 +1137,18 @@ define(['jquery',
                             }
                         })
                         .catch(ex => console.error(ex));
-                    loading_indicator.hide();
                 } else {
-                    loading_indicator.hide();
                     console.log(msg);
                 }
             },
             dataType: "json",
             cache: "false",
             error: function(msg) {
-                loading_indicator.hide();
+
                 console.log(msg);
             }
         });
+        loading_indicator.hide();
     }
 
     /**
@@ -1172,7 +1171,6 @@ define(['jquery',
             }),
             url: "../managers/student_profile/studentprofile_api.php",
             success: function(msg) {
-                loading_indicator.hide();
                 if(msg.status_code == 0) {
                     var values = msg.data_response;
                     procesar_datos_riesgo(values);
@@ -1186,10 +1184,10 @@ define(['jquery',
             dataType: "json",
             cache: "false",
             error: function(msg) {
-                loading_indicator.hide();
                 console.log(msg);
             }
         });
+        loading_indicator.hide();
     }
 
     function graph() {
@@ -1280,7 +1278,6 @@ define(['jquery',
             cache: "false",
             url: "../../ases/managers/student_profile/studentprofile_api.php",
             success: function (msg) {
-                loading_indicator.hide();
                 if(msg.status_code == 0)
                 {
                     swal({
@@ -1296,7 +1293,6 @@ define(['jquery',
                 //clean_modal_dropout();
             },
             error: function (msg) {
-                loading_indicator.hide();
                 swal(
                     'Error',
                     'No se puede contactar con el servidor.',
@@ -1304,6 +1300,7 @@ define(['jquery',
                 );
             },
         });
+        loading_indicator.hide();
     }
 
     function manage_ases_status() {

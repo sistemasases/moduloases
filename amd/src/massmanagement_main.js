@@ -153,7 +153,7 @@ define(['jquery',
                         $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información Asignacion</h4><strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul> <li>username_monitor</li><li>username_estudiante</li> </ul> </p></div>');
                         break;
                     case 'roles_usuario':
-                        $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información Roles</h4><strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul> <li>username</li><li>rol(administrativo, reportes,profesional_ps, monitor_ps,  estudiante_t ó practicante_psp)</li> </ul> </p><p>Columnas extras aceptadas: <ul> <li>jefe</li>  </ul> </p></div>');
+                        $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información Roles</h4><strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul> <li>username</li><li>rol(administrativo, reportes,profesional_ps, monitor_ps,  estudiante_t ó practicante_ps)</li> </ul> </p><p>Columnas extras aceptadas: <ul> <li>jefe</li>  </ul> </p></div>');
                         break;
                     case 'status':
                         $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información estados</h4><strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul> <li>username</li> <li>estado_ases</li> <li>estado_icetex</li> <li>estado_programa</li><li>tracking_status</li> <li>motivo_ases(puede ir en blanco)</li> <li>motivo_icetex(puede ir en blanco)</li> </ul> </p></div>');
