@@ -8,7 +8,7 @@
 /**
  * @module block_ases/student_new_register
  */
-define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smart_wizard', 'block_ases/mustache', 'block_ases/sweetalert'],
+define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smart_wizard', 'block_ases/mustache', 'block_ases/sweetalert', 'block_ases/select2'],
     function($, bootstrap, tagging, smart_wizard, mustache) {
         return {
             init: function() {
@@ -83,7 +83,10 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                         input_actividades = new Tagging($("#tiempo_libre"), $("#tags_tiempo_libre"));
                         input_actividades.createTag();
 
+                        $(".select_modal").select2();
+
                         $('#modalExample').show();
+                        document.body.style.overflowY = "hidden";
                     });
 
                     function setSelectPrograma() {
@@ -93,6 +96,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                     //Ocultar el modal
                     $('.closer').on('click', function() {
                         $('#modalExample').hide();
+                        document.body.style.overflowY = "visible";
                     });
 
 
@@ -117,13 +121,26 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                         id_moodle = "";
                         id_ases = "";
                         data_ases = "";
-                        id_economics_data, id_academics_data, id_discapacity_data, id_healt_service = "";
+                        id_economics_data = "";
+                        id_academics_data = "";
+                        id_discapacity_data = "";
+                        id_healt_service = "";
                         cod_programa = "";
                         general_data = "";
-                        mdl_user, ases_user, user_extended = false;
-                        economics_data, academics_data = false;
-                        healthCondition, healthService, discapacity = false;
-                        cambios_s1, cambios_s2, cambios_s3, cambios_s4, cambios_s5, cambios_s6 = false;
+                        mdl_user =false;
+                        ases_user =false;
+                        user_extended = false;
+                        economics_data = false;
+                        academics_data = false;
+                        healthCondition= false;
+                        healthService= false;
+                        discapacity = false;
+                        cambios_s1= false;
+                        cambios_s2= false;
+                        cambios_s3= false;
+                        cambios_s4= false;
+                        cambios_s5= false;
+                        cambios_s6 = false;
 
                         //Deshabilitar campos a excepcion del codigo
                         $("#step-1 :input").prop("disabled", true);
@@ -149,6 +166,10 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
 
                         crearTags('deportes', [])
                         crearTags('actividades', [])
+
+                        $("#table_familia").find("tbody tr").remove();
+
+                        $('#smartwizard').smartWizard("reset");
                     });
 
 
@@ -233,7 +254,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                                 },
                                 function(isConfirm) {
                                     if (isConfirm) {
-                                        swal("Confirmado", "", "success");
+                                        swal({title: "Confirmado",text: "",type: "success", timer: 1500});
                                         mdl_user = true;
                                         ases_user = false;
                                         unsetData("step-2")
@@ -244,7 +265,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                                         unsetData("step-6")
                                         disableMdliputs();
                                     } else {
-                                        swal("Cancelado", "Ingresa nuevamente el codigo del estudiante", "error");
+                                        swal({title: "Cancelado",text: "Ingresa nuevamente el codigo del estudiante",type: "error", timer: 1500});
                                         $("#codigo_estudiantil").val("");
                                     }
                                 });
@@ -326,7 +347,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                             save_health_service();
                             healthService = true;
                             cambios_s6 = false;
-                            $('#smartwizard').smartWizard("reset");
+                            //$('#smartwizard').smartWizard("reset");
                         } else if (cambios_s6) {
                             update_health_service()
                             cambios_s6 = false;
@@ -440,11 +461,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                             },
                             function(isConfirm) {
                                 if (isConfirm) {
-                                    swal("Confirmado", "", "success");
+                                    swal({title: "Confirmado",text: "",type: "success", timer: 1500});
                                     $("#step-1 :input").prop("disabled", false);
                                     disableMdliputs();
                                 } else {
-                                    swal("Cancelado", "Ingresa nuevamente el documento del estudiante", "error");
+                                    swal({title: "Cancelado",text: "Ingresa nuevamente el documento del estudiante",type: "error", timer: 1500});
                                     $("#num_doc_ini").val("");
                                 }
                             });
@@ -531,7 +552,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                                             dataF = JSON.parse(data[key]);
                                             let radioF = dataF.find(obj => obj.key_input === "vive")
                                             setRadio(radioF.key_input, radioF.val_input)
-                                            $("#table_familia").find("tr").remove();
+                                            $("#table_familia").find("tbody tr").remove();
                                             for (let i = 0; i < dataF.length - 1; i++) {
                                                 let object = dataF[i];
                                                 setTableFamily(object.nombre, object.rol, i);
@@ -539,7 +560,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
 
 
                                         } else {
-                                            $("#table_familia").find("tr").remove();
+                                            $("#table_familia").find("tbody tr").remove();
                                         }
                                         break;
                                     case "fecha_nac":
@@ -572,10 +593,13 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                                             } else {
                                                 if (object.key_input_number == 'sede') {
                                                     $('#select_sede').val(object.val_input_number)
+                                                    $('#select_sede').trigger('change')
                                                 } else if (object.key_input_number == 'orientacion_s') {
                                                     $('#select-orientacion').val(object.val_input_number)
+                                                    $('#select-orientacion').trigger('change')
                                                 } else {
                                                     $('#acompanamientos').val(object.val_input_number)
+                                                    $('#acompanamientos').trigger('change')
                                                 }
                                             }
 
@@ -595,11 +619,13 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                                         break;
                                     case "id_economics_data":
                                         id_economics_data = data[key]
-                                        economics_data = true;
-                                        discapacity = true;
-                                        checkEcxist(id_ases, 'exist_academics_data')
-                                        checkEcxist(id_ases, 'exist_health_data')
-                                        checkEcxist(id_ases, 'exist_discapacity_data')
+                                        if (id_economics_data != null) {
+                                            economics_data = true;
+                                            discapacity = true;
+                                            checkEcxist(id_ases, 'exist_academics_data')
+                                            checkEcxist(id_ases, 'exist_health_data')
+                                            checkEcxist(id_ases, 'exist_discapacity_data')
+                                        }
 
                                         break;
                                     default:
@@ -608,6 +634,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                                             $('#' + key + '_modal').val(data[key])
                                         }else{
                                             $('#' + key).val(data[key])
+                                            $('#' + key).trigger('change')
                                         }
                                         break;
                                 }
@@ -1085,7 +1112,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
 
                                     let name = $(this).attr("name")
                                     if ($(this).is(":checked")) {
-                                        $("input[name=" + name + "]").attr("checked", false);
+                                        $(this).attr('checked', false);
                                     }
 
                                     if ($(this).hasClass("otro")) {
@@ -1342,12 +1369,14 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                     function buildJsonTArea(id_text, arr) {
                         json_insert = {};
 
-                        if ($("#" + id_text).val().length >= 3) {
-
-                            json_insert.key_input_text = $("#" + id_text).attr("id");
-                            json_insert.val_input_text = $("#" + id_text).val();
-                            arr.push(json_insert);
-                            json_insert = {};
+                        if ($("#" + id_text).val() != null) {
+                            if ($("#" + id_text).val().length >= 3) {
+    
+                                json_insert.key_input_text = $("#" + id_text).attr("id");
+                                json_insert.val_input_text = $("#" + id_text).val();
+                                arr.push(json_insert);
+                                json_insert = {};
+                            }
                         }
 
 
@@ -1955,6 +1984,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                                             getStudentAses($("#num_doc_ini").val());
                                             getDataBD(id_ases, 'get_academics_data')
                                             setAcademicsData(general_data);
+                                            cambios_s3 = false;
                                         }
                                     }
                                     break;
@@ -2038,6 +2068,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                         pass = pass.toUpperCase();
 
                         $.ajax({
+                            async: false,
                             type: "POST",
                             data: JSON.stringify({
                                 "function": 'save_mdl_user',
@@ -2091,6 +2122,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
 
 
                         $.ajax({
+                            async: false,
                             type: "POST",
                             data: JSON.stringify({
                                 "function": 'save_data',
@@ -2140,6 +2172,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
 
 
                         $.ajax({
+                            async: false,
                             type: "POST",
                             data: JSON.stringify({
                                 "function": 'update_data_ases',
@@ -2148,7 +2181,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                             url: "../managers/student_profile/studentprofile_api.php",
                             success: function(msg) {
                                 if (msg) {
-                                    swal("Cambios actualizados exitosamente!", "", "success")
+                                    swal({title: "Cambios actualizados exitosamente!",text: "",type: "success", timer: 1500});
                                 }
                             },
 
@@ -2177,6 +2210,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                         getStudentAses($("#num_doc_ini").val());
 
                         $.ajax({
+                            async: false,
                             type: "POST",
                             data: JSON.stringify({
                                 "function": 'save_data_user_step2',
@@ -2202,6 +2236,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                         var estrato = $("#estrato_modal").val();
                         getStudentAses($("#num_doc_ini").val());
                         $.ajax({
+                            async: false,
                             type: "POST",
                             data: JSON.stringify({
                                 "function": 'insert_economics_data',
@@ -2229,6 +2264,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                         var estrato = $("#estrato_modal").val();
                         getStudentAses($("#num_doc_ini").val());
                         $.ajax({
+                            async: false,
                             type: "POST",
                             data: JSON.stringify({
                                 "function": 'update_economics_dt',
@@ -2237,7 +2273,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                             url: "../managers/student_profile/studentprofile_api.php",
                             success: function(msg) {
                                 if (msg) {
-                                    swal("Cambios actualizados exitosamente!", "", "success")
+                                    swal({title: "Cambios actualizados exitosamente!",text: "",type: "success", timer: 1500});
                                 }
                             },
 
@@ -2260,6 +2296,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                         var titulo = $("#titulo_1").val();
                         var observaciones = $("#observaciones_modal").val();
                         $.ajax({
+                            async: false,
                             type: "POST",
                             data: JSON.stringify({
                                 "function": 'insert_academics_data',
@@ -2287,6 +2324,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                         var titulo = $("#titulo_1").val();
                         var observaciones = $("#observaciones_modal").val();
                         $.ajax({
+                            async: false,
                             type: "POST",
                             data: JSON.stringify({
                                 "function": 'update_academics_dt',
@@ -2295,7 +2333,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                             url: "../managers/student_profile/studentprofile_api.php",
                             success: function(msg) {
                                 if (msg) {
-                                    swal("Cambios actualizados exitosamente!", "", "success")
+                                    swal({title: "Cambios actualizados exitosamente!",text: "",type: "success", timer: 1500});
                                 }
                             },
 
@@ -2315,6 +2353,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                         var datos_discapacidad = getDiscapacityData();
                         getStudentAses($("#num_doc_ini").val());
                         $.ajax({
+                            async: false,
                             type: "POST",
                             data: JSON.stringify({
                                 "function": 'insert_disapacity_data',
@@ -2339,6 +2378,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                         var datos_discapacidad = getDiscapacityData();
                         getStudentAses($("#num_doc_ini").val());
                         $.ajax({
+                            async: false,
                             type: "POST",
                             data: JSON.stringify({
                                 "function": 'update_discapacity_dt',
@@ -2347,7 +2387,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                             url: "../managers/student_profile/studentprofile_api.php",
                             success: function(msg) {
                                 if (msg) {
-                                    swal("Cambios actualizados exitosamente!", "", "success")
+                                    swal({title: "Cambios actualizados exitosamente!",text: "",type: "success", timer: 1500});
                                 }
                             },
 
@@ -2368,6 +2408,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                         getStudentAses($("#num_doc_ini").val());
                         var eps = $("#EPS").val();
                         $.ajax({
+                            async: false,
                             type: "POST",
                             data: JSON.stringify({
                                 "function": 'insert_health_service',
@@ -2398,6 +2439,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                         getStudentAses($("#num_doc_ini").val());
                         var eps = $("#EPS").val();
                         $.ajax({
+                            async: false,
                             type: "POST",
                             data: JSON.stringify({
                                 "function": 'update_health_service',
@@ -2430,6 +2472,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                         getStudentAses($("#num_doc_ini").val());
 
                         $.ajax({
+                            async: false,
                             type: "POST",
                             data: JSON.stringify({
                                 "function": 'save_data_user_step3',
@@ -2456,6 +2499,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                         getStudentAses($("#num_doc_ini").val());
 
                         $.ajax({
+                            async: false,
                             type: "POST",
                             data: JSON.stringify({
                                 "function": 'save_data_user_step4',
