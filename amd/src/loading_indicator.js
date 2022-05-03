@@ -67,9 +67,10 @@
 
             var hide_loading_indicator = function(){
                 loading_instances--;
-                if( loading_instances == 0 ){
+                if( loading_instances <= 0 ){
                     $(".loading_indicator").hide();
                 }
+                console.log(loading_instances);
             }
 
             return {

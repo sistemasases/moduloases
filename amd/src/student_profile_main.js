@@ -1,4 +1,5 @@
 // Standard license block omitted.
+
 /*
  * @package    block_ases
  * @copyright  ASES
@@ -23,7 +24,8 @@ define(['jquery',
     'block_ases/socioed_profile_main',
     'block_ases/geographic_main',
     'block_ases/discapacity_tracking_main',
-], function ($, bootstrap, d3, sweetalert, jqueryui, select2, Chart, mustache, loading_indicator, academic, socioed, geographic, discapacity_tracking) {
+    'core/templates'
+], function ($, bootstrap, d3, sweetalert, jqueryui, select2, Chart, mustache, loading_indicator, academic, socioed, geographic, discapacity_tracking, Templates) {
 
     return {
         init: function (data_init) {
@@ -264,7 +266,7 @@ define(['jquery',
                         alert(data);
                     },
                     error: function (data) {
-                        loading_indi2cator.hide();
+                        loading_indicator.hide();
                         console.log(data)
                     }
                 });
@@ -387,7 +389,6 @@ define(['jquery',
                             }),
                             url: "../managers/student_profile/studentprofile_api.php",
                             success: function (msg) {
-                                loading_indicator.hide();
                                 if(msg.status_code == 0) {
                                     if ($('#select-' + id_program).val() == "ACTIVO") {
                                         $('#tr-' + id_moodle).addClass('is-active');
@@ -406,7 +407,6 @@ define(['jquery',
                             dataType: "json",
                             cache: "false",
                             error: function (msg) {
-                                loading_indicator.hide();
                                 swal(
                                     msg.title,
                                     msg.msg,
@@ -414,9 +414,11 @@ define(['jquery',
                                 );
                             },
                         });
+                        loading_indicator.hide();
                     } else {
                         $('#select-' + data.program_id).val(current_status);
                     }
+
                 });
         }, update_status_ases: function (parameters_url) {
 
@@ -1109,17 +1111,13 @@ define(['jquery',
             }),
             url: "../managers/student_profile/studentprofile_api.php",
             success: function(msg) {
-                if(msg.status_code == 0) {
-                    $.ajax({
-                        url: "../templates/view_"+tab_name+"_tab_sp.mustache",
-                        data: null,
-                        dataType: "text",
-                        async: false,
-                        success: function( template ){
-                            loading_indicator.hide();
-                            let tab_to_load = $(mustache.render( template, msg.data_response ));
-                            $(".tab-content").append( tab_to_load );
 
+                if(msg.status_code == 0) {
+                    Templates.renderForPromise("block_ases/view_"+tab_name+"_tab_sp", msg.data_response, 'moove')
+                        .then(({html, js}) => {
+                            Templates.appendNodeContents('.tab-content', html, js);
+                            $("#"+tab_name+"_tab").addClass("active");
+                            loading_indicator.hide();
                             switch(tab_name){
                                 case 'socioed':
                                     socioed.init();
@@ -1137,26 +1135,20 @@ define(['jquery',
                                     discapacity_tracking.init();
                                     break;
                             }
-
-                            $("#"+tab_name+"_tab").addClass("active");
-                        },
-                        error: function(){
-                            loading_indicator.hide();
-                            console.log( "../templates/view_"+tab_name+"_tab_sp.mustache cannot be reached." );
-                        }
-                    });
+                        })
+                        .catch(ex => console.error(ex));
                 } else {
-                    loading_indicator.hide();
                     console.log(msg);
                 }
             },
             dataType: "json",
             cache: "false",
             error: function(msg) {
-                loading_indicator.hide();
+
                 console.log(msg);
             }
         });
+        loading_indicator.hide();
     }
 
     /**
@@ -1179,7 +1171,6 @@ define(['jquery',
             }),
             url: "../managers/student_profile/studentprofile_api.php",
             success: function(msg) {
-                loading_indicator.hide();
                 if(msg.status_code == 0) {
                     var values = msg.data_response;
                     procesar_datos_riesgo(values);
@@ -1193,10 +1184,10 @@ define(['jquery',
             dataType: "json",
             cache: "false",
             error: function(msg) {
-                loading_indicator.hide();
                 console.log(msg);
             }
         });
+        loading_indicator.hide();
     }
 
     function graph() {
@@ -1287,7 +1278,6 @@ define(['jquery',
             cache: "false",
             url: "../../ases/managers/student_profile/studentprofile_api.php",
             success: function (msg) {
-                loading_indicator.hide();
                 if(msg.status_code == 0)
                 {
                     swal({
@@ -1303,7 +1293,6 @@ define(['jquery',
                 //clean_modal_dropout();
             },
             error: function (msg) {
-                loading_indicator.hide();
                 swal(
                     'Error',
                     'No se puede contactar con el servidor.',
@@ -1311,6 +1300,7 @@ define(['jquery',
                 );
             },
         });
+        loading_indicator.hide();
     }
 
     function manage_ases_status() {

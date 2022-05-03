@@ -33,6 +33,7 @@ $fields_format = array(
     'IN_cond'=>'Indígena (I.N.)',
     'MAP_cond'=>'Los más altos puntajes en el Examen de Estado (M.A.P.)',
     'CA_cond'=>'Comunidades Afrocolombianas (C.A.)',
+    'CAC_cond'=>'Comunidades Afrocolombianas Consejo Comunitario (C.A.C.)',
     'CU_cond'=>'Cupo (C.U.)',
     'PR_cond'=>'Programa de Reinserción (P.R.)',
     'MPM_cond'=>'Los más altos puntajes en el Examen de Estado, de los colegios oficiales en los municipios del Departamento del Valle del Cauca (M.P.M.)',
