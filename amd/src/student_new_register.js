@@ -57,7 +57,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                         loadSelector($('#barrio_res'), 'get_barrios');
                         loadSelector($('#id_ciudad_res'), 'get_ciudades');
                         setSelectPrograma();
-
+                        
                         //Secciòn 3
                         loadSelector($('#id_pais_res'), 'get_paises');
                         loadSelector($('#barrio_ini'), 'get_barrios');
@@ -79,11 +79,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                         //Habilitar tagging 
                         input_deportes = new Tagging($("#deportes_tag"), $("#tags_deportes"), 1, 3);
                         input_deportes.createTag();
-
+                        
                         input_actividades = new Tagging($("#tiempo_libre"), $("#tags_tiempo_libre"));
                         input_actividades.createTag();
 
-                        $(".select_modal").select2();
+                        $('.js-example-basic-single').select2();
 
                         $('#modalExample').show();
                         document.body.style.overflowY = "hidden";
@@ -114,7 +114,10 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                     });
 
                     $('#limpiar_form').on('click', function() {
+                        clearForm()
+                    });
 
+                    function clearForm() {
                         //Reinicio de las variables
                         input_deportes;
                         input_actividades;
@@ -170,7 +173,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                         $("#table_familia").find("tbody tr").remove();
 
                         $('#smartwizard').smartWizard("reset");
-                    });
+                    }
 
 
                     //Funcion para obtener los datos del usuario al digitar el codigo
@@ -420,55 +423,57 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                     /*Funcion para determinar si el usuario existe en la tabla talentospilos_usuario
                         y talentospilos_user_extended mediante el numero de cedula*/
                     $("#num_doc_ini").blur(function() {
-                        hideAlerts('step1')
-                        getStudentAses($("#num_doc_ini").val());
-                        $("#step-1 :input").prop("disabled", false);
-                        if (id_ases != null) {
-                            getStudent($("#codigo_estudiantil").val());
-                            getExistUserExtended(id_ases, id_moodle);
-                            if (user_extended) {
-                                unsetData("step-2")
-                                unsetData("step-3")
-                                unsetData("div_educ_media")
-                                unsetData("step-4")
-                                unsetData("step-5")
-                                unsetData("step-6")
-                                disableMdliputs();
-                                ases_user = true;
-                                getStudentAses($("#num_doc_ini").val(), 1);
-                                setAsesData(data_ases)
-                            } else {
-                                disableMdliputs();
-                                $("#num_doc_ini").val("");
-                                swal(
-                                    "Waarning",
-                                    "No existe relacion entre el numero de documento y el codigo del estudiante, intentalo nuevamente.",
-                                    "warning"
-                                );
-                            }
-                        } else {
-
-                            swal({
-                                title: "Warning",
-                                text: "Usuario inexistente en la base de datos, ¿Esta seguro de registrar este usuario?.",
-                                type: "warning",
-                                showCancelButton: true,
-                                confirmButtonClass: "btn-success",
-                                confirmButtonText: "Confirmar",
-                                cancelButtonText: "Cancelar",
-                                closeOnConfirm: false,
-                                closeOnCancel: false
-                            },
-                            function(isConfirm) {
-                                if (isConfirm) {
-                                    swal({title: "Confirmado",text: "",type: "success", timer: 1500});
-                                    $("#step-1 :input").prop("disabled", false);
+                        if ($("#num_doc_ini").val().length > 2) {
+                            hideAlerts('step1')
+                            getStudentAses($("#num_doc_ini").val());
+                            $("#step-1 :input").prop("disabled", false);
+                            if (id_ases != null) {
+                                getStudent($("#codigo_estudiantil").val());
+                                getExistUserExtended(id_ases, id_moodle);
+                                if (user_extended) {
+                                    unsetData("step-2")
+                                    unsetData("step-3")
+                                    unsetData("div_educ_media")
+                                    unsetData("step-4")
+                                    unsetData("step-5")
+                                    unsetData("step-6")
                                     disableMdliputs();
+                                    ases_user = true;
+                                    getStudentAses($("#num_doc_ini").val(), 1);
+                                    setAsesData(data_ases)
                                 } else {
-                                    swal({title: "Cancelado",text: "Ingresa nuevamente el documento del estudiante",type: "error", timer: 1500});
+                                    disableMdliputs();
                                     $("#num_doc_ini").val("");
+                                    swal(
+                                        "Waarning",
+                                        "No existe relacion entre el numero de documento y el codigo del estudiante, intentalo nuevamente.",
+                                        "warning"
+                                    );
                                 }
-                            });
+                            } else {
+    
+                                swal({
+                                    title: "Warning",
+                                    text: "Usuario inexistente en la base de datos, ¿Esta seguro de registrar este usuario?.",
+                                    type: "warning",
+                                    showCancelButton: true,
+                                    confirmButtonClass: "btn-success",
+                                    confirmButtonText: "Confirmar",
+                                    cancelButtonText: "Cancelar",
+                                    closeOnConfirm: false,
+                                    closeOnCancel: false
+                                },
+                                function(isConfirm) {
+                                    if (isConfirm) {
+                                        swal({title: "Confirmado",text: "",type: "success", timer: 1500});
+                                        $("#step-1 :input").prop("disabled", false);
+                                        disableMdliputs();
+                                    } else {
+                                        swal({title: "Cancelado",text: "Ingresa nuevamente el documento del estudiante",type: "error", timer: 1500});
+                                        $("#num_doc_ini").val("");
+                                    }
+                                });
+                            }
                         }
                     });
 
@@ -543,6 +548,13 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                     /*Funcion para setear los campos extraidos de la base de datos de la tabla talentospilos_usuario
                         La mayoria de campos de esta funcion se encuentran en la seccion 1 */
                     function setAsesData(data) {
+                        var version_register = true;
+                        for (var key in data) {
+                            if (key == "json_detalle") {
+                                version_register = false;
+                            }
+                        }
+
                         for (var key in data) {
                             if (data[key] != null) {
                                 switch (key) {
@@ -551,7 +563,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                                         if (data[key].indexOf("Array") == -1) {
                                             dataF = JSON.parse(data[key]);
                                             let radioF = dataF.find(obj => obj.key_input === "vive")
-                                            setRadio(radioF.key_input, radioF.val_input)
+                                            if (radioF != null) {
+                                                setRadio(radioF.key_input, radioF.val_input)
+                                            }
                                             $("#table_familia").find("tbody tr").remove();
                                             for (let i = 0; i < dataF.length - 1; i++) {
                                                 let object = dataF[i];
@@ -607,7 +621,12 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                                                 setRadioCheck(object.key_input)
                                                 showInput(object.key_input)
                                             }
+
+                                            if (object.v_modal != null) {
+                                                version_register = true;
+                                            }
                                         }
+                                        
                                         break;
                                     case "actividades_ocio_deporte":
                                         var dataArray = data[key];
@@ -640,6 +659,10 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                                 }
                             }
                         }
+                        if (!version_register) {
+                            swal({title: "",text: "Este usuario ha sido registrado con otro formulario",type: "info"});
+                            clearForm()
+                        }
                         cambios_s1 = false;
                     }
 
@@ -649,7 +672,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                         if (id == "deportes") {
                             input_deportes.displayTags(array, $("#tags_deportes"))
                         } else {
-                            input_deportes.displayTags(array, $("#tags_tiempo_libre"))
+                            input_actividades.displayTags(array, $("#tags_tiempo_libre"))
                         }
                     }
 
@@ -2114,6 +2137,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                         var json_detalle = [];
                         buildJsonObject('otra_identidad', json_detalle);
                         json_detalle.push({ key_input_number: "orientacion_s", val_input_number: $("#select-orientacion").val() });
+                        json_detalle.push({ v_modal: true});
                         buildJsonObject('otra_orientacion', json_detalle);
                         buildJsonObject('div_contacto_2', json_detalle);
                         buildJsonObject('otros_acomp', json_detalle);
@@ -2164,6 +2188,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                         var json_detalle = [];
                         buildJsonObject('otra_identidad', json_detalle);
                         json_detalle.push({ key_input_number: "orientacion_s", val_input_number: $("#select-orientacion").val() });
+                        json_detalle.push({ v_modal: true});
                         buildJsonObject('otra_orientacion', json_detalle);
                         buildJsonObject('div_contacto_2', json_detalle);
                         buildJsonObject('otros_acomp', json_detalle);
