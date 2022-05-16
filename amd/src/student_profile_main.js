@@ -823,13 +823,13 @@ define(['jquery',
                             if (!(validate_email[0] === field.value)) {
                                 msg.title = "Error";
                                 msg.status = "error";
-                                msg.msg = "El campo " + field.name + " no cumple con el formato institucional.";
+                                msg.msg = "El campo " + field.name + " no cumple con el formato institucional. Si no cuenta con el " + field.name + " institucional del estudiante, ingrese `temporal@correounivalle.edu.co', y el " + field.name + " alternativo en el campo correspondiente de la información del estudiante.";
                                 return msg;
                             }
                         }else {
                             msg.title = "Error";
                             msg.status = "error";
-                            msg.msg = "El campo " + field.name + " no cumple con el formato institucional.";
+                            msg.msg = "El campo " + field.name + " no cumple con el formato institucional. Si no cuenta con el " + field.name + " institucional del estudiante, ingrese `temporal@correounivalle.edu.co', y el " + field.name + " alternativo en el campo correspondiente de la información del estudiante.";
                             return msg;
                         }
                         break;
