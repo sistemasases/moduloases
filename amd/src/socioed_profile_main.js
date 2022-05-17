@@ -24,6 +24,8 @@ define(['jquery',
                 var codigo_monitor = $('#current_user_id').val();
                 var dphpforms_instance = $('#dphpforms_block_instance').attr('data-info');
 
+                console.log(codigo_monitor, dphpforms_instance);
+
                 $('div').removeClass('regla_incumplida');
                 $('#modal_v2_peer_tracking').fadeIn(300);
                 $('.id_estudiante').find('input').val(student_code);

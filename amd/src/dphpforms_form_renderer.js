@@ -218,7 +218,7 @@ define([
                         dataType: "text",
                         cache: "false",
                         error: function (msg) {
-                            console.log(msg)
+                            console.error(msg)
                         }
                     });
                 }
