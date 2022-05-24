@@ -330,6 +330,9 @@ function get_html_cohorts_select($instance_id, $include_todos=true,  $name='cond
 
 
     }else{
+        if($include_todos) {
+            $cohorts_select.='<option value="TODOS">Todas las cohortes</option>';
+        }
         foreach($cohorts as $ch){
             $cohorts_select.= "<option value='$ch->idnumber'>$ch->name</option>";
         }
