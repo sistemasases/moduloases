@@ -8,8 +8,14 @@
 /**
  * @module block_ases/student_new_register
  */
-define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smart_wizard', 'block_ases/mustache', 'block_ases/sweetalert', 'block_ases/select2'],
-    function($, bootstrap, tagging, smart_wizard, mustache) {
+define(['jquery',
+    'block_ases/bootstrap',
+    'block_ases/tagging',
+    'block_ases/smart_wizard',
+    'block_ases/mustache',
+    'block_ases/sweetalert',
+    'block_ases/select2'],
+    function($, bootstrap, tagging, smart_wizard, mustache, sweetalert, select2) {
         return {
             init: function() {
                 $(document).ready(function() {
@@ -83,11 +89,26 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                         input_actividades = new Tagging($("#tiempo_libre"), $("#tags_tiempo_libre"));
                         input_actividades.createTag();
 
-                        $('.js-example-basic-single').select2();
+                        initSelect2()
 
                         $('#modalExample').show();
                         document.body.style.overflowY = "hidden";
                     });
+
+                    function initSelect2() {
+                        $(".select_modal").select2({
+                            width: 'resolve',
+                            height: 'resolve',
+                            language: {
+                                noResults: function () {
+                                    return "No hay resultado";
+                                },
+                                searching: function () {
+                                    return "Buscando..";
+                                }
+                            },
+                        });
+                    }
 
                     function setSelectPrograma() {
                         loadSelector($('#select_programa'), 'get_programas_academicos');
@@ -171,6 +192,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                         crearTags('actividades', [])
 
                         $("#table_familia").find("tbody tr").remove();
+                        $("#table_ingresos").find("tbody tr").remove();
 
                         $('#smartwizard').smartWizard("reset");
                     }
@@ -361,39 +383,43 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                     /*Controles para el registros de Familiares*/
                     function addTable(table) {
                         let nuevaFila = "";
-                        nuevaFila += '<tr><td> <input  class="input_fields_general_tab_modal"  type="text"/></td>';
-                        nuevaFila += '<td> <input  class="input_fields_general_tab_modal"  type="text" /></td>';
+                        nuevaFila += '<tr><td> <input  class="input_fields_general_tab_modal tabl_famiia"  type="text"/></td>';
+                        nuevaFila += '<td> <input  class="input_fields_general_tab_modal tabl_famiia"  type="text" /></td>';
                         nuevaFila += '<td> <button class="btn btn-danger remove_fila" type="button" title="Eliminar persona" name="btn_delete_person" style="visibility:visible;"> X </button></td></tr>';
                         table.find("tbody").append(nuevaFila);
+                        initCambios('tabl_famiia')
                     }
 
                     function setTableFamily(nombre, rol, i) {
                         let nuevaFila = "";
-                        nuevaFila += '<tr><td> <input id="nom' + i + '" class="input_fields_general_tab_modal"  type="text"/></td>';
-                        nuevaFila += '<td> <input id="rol' + i + '" class="input_fields_general_tab_modal"  type="text" /></td>';
+                        nuevaFila += '<tr><td> <input id="nom' + i + '" class="input_fields_general_tab_modal tabl_famiia"  type="text"/></td>';
+                        nuevaFila += '<td> <input id="rol' + i + '" class="input_fields_general_tab_modal tabl_famiia"  type="text" /></td>';
                         nuevaFila += '<td> <button class="btn btn-danger remove_fila" type="button" title="Eliminar persona" name="btn_delete_person" style="visibility:visible;"> X </button></td></tr>';
                         $("#table_familia").find("tbody").append(nuevaFila);
                         $("#nom" + i).val(nombre)
                         $("#rol" + i).val(rol)
+                        initCambios('tabl_famiia')
                     }
 
                     var ing = 0;
                     /*Controles para el registros de inresos a la universidad*/
                     function addTableIng(table) {
                         let nuevaFila = "";
-                        nuevaFila += '<tr><td> <input id="anio_' + ing + '" class="input_fields_general_tab_modal ingresos_u step3" name="anio_' + ing + '"  type="text"/></td>';
-                        nuevaFila += '<td> <select id="s_programa_' + ing + '" class="custom-select select-academics-data step3"></select> <input  id="id_programa_' + ing + '" name="id_programa_' + ing + '" class="ingresos_u" type="number" hidden></td>';
-                        nuevaFila += '<td><select class="custom-select select-academics-data step3"> <option value="1">Bajos académicos</option> <option value="2">Condición de salud</option> <option value="3">Fallecimiento</option> <option value="4">Condición económica</option> <option value="5">Condición de programa académico</option> <option value="6">Cambio de institución educativa</option> <option value="7">Cambio de ciudad</option> <option value="8">Retiro voluntario</option> <option value="9">Prefiero no decirlo</option> </select> <input  id="motivo_' + ing + '" name="motivo_' + ing + '" class="ingresos_u" type="number" hidden> </td>';
+                        nuevaFila += '<tr><td> <input id="anio_' + ing + '" class="input_fields_general_tab_modal ingresos_u tabl_ing" name="anio_' + ing + '"  type="text"/></td>';
+                        nuevaFila += '<td> <select id="s_programa_' + ing + '" class="custom-select select-academics-data select_modal tabl_ing"></select> <input  id="id_programa_' + ing + '" name="id_programa_' + ing + '" class="ingresos_u" type="number" hidden></td>';
+                        nuevaFila += '<td><select id="motivo_I' + ing + '" class="custom-select select-academics-data select_modal tabl_ing"> <option value="1">Bajos académicos</option> <option value="2">Condición de salud</option> <option value="3">Fallecimiento</option> <option value="4">Condición económica</option> <option value="5">Condición de programa académico</option> <option value="6">Cambio de institución educativa</option> <option value="7">Cambio de ciudad</option> <option value="8">Retiro voluntario</option> <option value="9">Prefiero no decirlo</option> </select> <input  id="motivo_' + ing + '" name="motivo_' + ing + '" class="ingresos_u" type="number" hidden> </td>';
                         nuevaFila += '<td> <button class="btn btn-danger remove_fila_ing" type="button" title="Eliminar persona" name="btn_delete_person" style="visibility:visible;"> X </button></td></tr>';
                         table.find("tbody").append(nuevaFila);
                         loadSelector($('#s_programa_' + ing + ''), 'get_programas_academicos');
+                        initSelect2()
+                        initCambios('tabl_ing')
                     }
 
                     function setTableIng(ingr, anioI, progI, motivoI) {
                         let nuevaFila = "";
-                        nuevaFila += '<tr><td> <input id="anio_' + ingr + '" class="input_fields_general_tab_modal ingresos_u step3" name="anio_' + ingr + '"  type="text"/></td>';
-                        nuevaFila += '<td> <select id="s_programa_' + ingr + '" class="custom-select select-academics-data step3"></select> <input  id="id_programa_' + ingr + '" name="id_programa_' + ingr + '" class="ingresos_u" type="number" hidden></td>';
-                        nuevaFila += '<td><select id="motivo_I' + ingr + '" class="custom-select select-academics-data step3"> <option value="1">Bajos académicos</option> <option value="2">Condición de salud</option> <option value="3">Fallecimiento</option> <option value="4">Condición económica</option> <option value="5">Condición de programa académico</option> <option value="6">Cambio de institución educativa</option> <option value="7">Cambio de ciudad</option> <option value="8">Retiro voluntario</option> <option value="9">Prefiero no decirlo</option> </select> <input id="motivo_' + ingr + '" name="motivo_' + ingr + '" class="ingresos_u" type="number" hidden> </td>';
+                        nuevaFila += '<tr><td> <input id="anio_' + ingr + '" class="input_fields_general_tab_modal ingresos_u tabl_ing" name="anio_' + ingr + '"  type="text"/></td>';
+                        nuevaFila += '<td> <select id="s_programa_' + ingr + '" class="custom-select select-academics-data select_modal tabl_ing"></select> <input  id="id_programa_' + ingr + '" name="id_programa_' + ingr + '" class="ingresos_u" type="number" hidden></td>';
+                        nuevaFila += '<td><select id="motivo_I' + ingr + '" class="custom-select select-academics-data select_modal tabl_ing"> <option value="1">Bajos académicos</option> <option value="2">Condición de salud</option> <option value="3">Fallecimiento</option> <option value="4">Condición económica</option> <option value="5">Condición de programa académico</option> <option value="6">Cambio de institución educativa</option> <option value="7">Cambio de ciudad</option> <option value="8">Retiro voluntario</option> <option value="9">Prefiero no decirlo</option> </select> <input id="motivo_' + ingr + '" name="motivo_' + ingr + '" class="ingresos_u" type="number" hidden> </td>';
                         nuevaFila += '<td> <button class="btn btn-danger remove_fila_ing" type="button" title="Eliminar persona" name="btn_delete_person" style="visibility:visible;"> X </button></td></tr>';
                         $("#table_ingresos").find("tbody").append(nuevaFila);
                         loadSelector($('#s_programa_' + ingr + ''), 'get_programas_academicos');
@@ -404,6 +430,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                         }, 1000);
                         $("#motivo_I" + ingr).val(motivoI)
                         ing = ingr
+                        initCambios('tabl_ing')
                     }
 
                     //Generar un arreglo apartir de la tabla-familia
@@ -832,7 +859,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                                             setRadio(dataAdic[i].key_input, dataAdic[i].val_input)
                                         }
                                     }
-
+                                    setTimeout(() => {
+                                        initSelect2()
+                                    }, 1000);
                                     break;
                                 default:
                                     if (key == 'observaciones') {
@@ -1278,7 +1307,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
 
                         //Recolectar valores de los selects
                         var selects = $(".select-academics-data").map(function() { return $(this).attr("id"); }).get()
-                        var inputs = $(".select-academics-data").map(function() { return $(this).next().attr("id") }).get()
+                        var inputs = $(".select-academics-data").map(function() { return $(this).next().next().attr("id") }).get()
                         for (var i = 0; i < inputs.length; i++) {
 
                             $("#" + inputs[i]).val($("#" + selects[i] + " option:selected").val());
@@ -1576,7 +1605,36 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                             }
                         })
                     }
- 
+                    
+                    //Funcion para detectar los cambios de la tabla familia e ingresos
+                    function initCambios(nameClass) {
+                        $('.'+nameClass).each(function() {
+                            var elem = $(this);
+    
+                            // Save current value of element
+                            elem.data('oldVal', elem.val());
+    
+                            // Look for changes in the value
+                            elem.bind("propertychange change input paste", function(event) {
+                                // If value has changed...
+                                if (elem.data('oldVal') != elem.val()) {
+                                    // Updated stored value
+                                    elem.data('oldVal', elem.val());
+    
+                                    // Do action
+                                    (nameClass === 'tabl_famiia') ? cambios_s2 = true : cambios_s3 = true
+                                    
+                                }
+                            });
+    
+                            elem.bind('keypress', function(e) {
+    
+                                var elem_id = elem.attr("id")
+                                detValidacion(e, elem_id)
+                            });
+    
+                        });
+                    }
 
                     //Validador si hay cambios en la seccion 1 del formulario, para actualizar en la BD   
                     $('.step1').each(function() {
@@ -1953,6 +2011,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                     */
                     $("#smartwizard").on("leaveStep", function(e, anchorObject, currentStepIndex, stepDirection, nextStepIndex) {
                         if (stepDirection === "forward") {
+                            document.getElementById("modal_acomp").scrollIntoView({behavior: 'auto'});
                             getSelectValues();
                             switch (currentStepIndex) {
                                 case 0:
@@ -1984,7 +2043,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                                             getStudentAses($("#num_doc_ini").val());
                                             getDataBD(id_ases, 'get_economics_data')
                                             setEconomicsData(general_data)
-                                        }
+                                        }                                          
                                     }
                                     break;
                                 case 1:
@@ -1992,6 +2051,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                                         swal("Oops!", "Rellena todos los campos necesarios para poder avanzar", "warning")
                                         return false;
                                     } else {
+                                        $("#table_ingresos").find("tbody").find("tr").remove();
                                         if (!economics_data) {
                                             save_economics_data();
                                             save_data_user_step2();
@@ -2072,7 +2132,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/tagging', 'block_ases/smar
                     function getSelectValues() {
                         $('#tipo_doc').val($("#tipo_doc_ini option:selected").val())
                         var selects = $(".select-registro").map(function() { return $(this).attr("id"); }).get()
-                        var inputs = $(".select-registro").map(function() { return $(this).next().attr("id") }).get()
+                        var inputs = $(".select-registro").map(function() { return $(this).next().next().attr("id") }).get()
                         for (var i = 0; i < inputs.length; i++) {
 
                             $("#" + inputs[i]).val($("#" + selects[i] + " option:selected").val());
