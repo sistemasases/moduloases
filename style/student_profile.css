@@ -33,6 +33,18 @@
 
     }
 
+    .select_style .select2.select2-container.select2-container--default{
+        font-size: 100% !important;
+    }
+
+    .select_style .select2-container--default .select2-selection--single .select2-selection__rendered{
+        line-height: 25px !important;
+    }
+
+    .select_style .select2-container .select2-selection--single{
+        height: 25px !important;
+    }
+
     .select2-container .select2-selection--single{
         height: 40px;
         border-radius: 0 0 0px 0px;
