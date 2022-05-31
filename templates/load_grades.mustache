@@ -1,0 +1,21 @@
+{{#data}}
+    {{> block_ases/side_menu}}
+    <div id="root-load-grades">
+        <div id="carga_csv" class="ases-form-group ases-col-lg-6" style="min-height: 50vh">
+            <label for="carga_csv">Selecciona un archivo (CSV)</label>
+            <input type="file" class="ases-form-control" name="csv_file_loader" accept="text/csv">
+            <button id="btn-upload-csv" class="ases-btn ases-btn-sm ases-danger">
+                Subir
+            </button>
+            <button id="btn-alertas" class="ases-btn ases-btn-sm ases-btn-default disabled">
+                Generar alertas
+            </button>
+        </div>
+
+        <div id="info" class="ases-col-lg-6">
+            <h3>Resultado de la operación</h3>
+            {{result}}
+        </div>
+    </div>
+
+{{/data}}
