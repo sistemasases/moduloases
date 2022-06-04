@@ -27,10 +27,111 @@
 /**
  * @return void
  */
-function load_csv(string $url) {
-    $handle_csv = fopen($url, "r");
 
-    while (($data = fgetcsv($handle_csv, 1000)) !== FALSE) {
-        print_r($data); die();
+require_once (__DIR__ . '/../../../../config.php');
+require_once (__DIR__ . '/../../core/module_loader.php');
+
+module_loader("periods");
+
+
+function load_csv(array $file) {
+    $grades = array();
+
+    $filename = $file["name"];
+    if (!move_uploaded_file($file['tmp_name'], "../../view/archivos_subidos/" . $filename)) {
+        return -1;
+    }
+
+    ini_set('auto_detect_line_endings', true);
+
+    $rows = array_map('str_getcsv', file("../../view/archivos_subidos/$filename"));
+    $header = array_shift($rows);
+
+    foreach ($rows as $row) {
+        $grades[] = array_combine($header, $row);
+    }
+
+    return $grades;
+}
+
+/**
+ * @return array|void
+ * @throws Exception
+ */
+function get_students_ases() {
+    global $DB;
+
+    $sql = "SELECT distinct username, id_ases_user FROM {user}
+            INNER JOIN {talentospilos_user_extended} ext on {user}.id = ext.id_moodle_user
+            WHERE tracking_status = 1";
+
+    try {
+        $ases_students = $DB    get_students_ases();->get_records_sql($sql);
+    }
+    catch (Exception $ex) {
+        Throw New Exception($ex->getMessage());
+    }
+
+    return $ases_students;
+}
+
+function filter_students($var): bool
+{
+    $ases_students = get_students_ases();
+
+    foreach ($ases_students as $ases_student) {
+        if ($var->username == $ases_student->username) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function send_alerts(array $grades, $instance_id) {
+    $arr = array_filter($grades, "filter_students");
+    $current_period = core_periods_get_current_period($instance_id);
+
+    foreach ($arr as $item) {
+
+        $id_professional = get_id_assigned_professional($item->id_ases_user);
+        $id_practicante = get_id_assigned_pract($item->id_ases_user);
+
+        $pract = get_full_user($id_practicante);
+        $prof = get_full_user($id_professional);
+
+        $errors = craft_and_send_email([$pract, $prof], $item);
     }
 }
+
+function craft_and_send_email(array $recipients, $student) {
+    $error_email = [];
+    $subject = "Registro de nota pérdida";
+
+    $messageHtml = "Se registra una nota pérdida para el estudiante: <br><br>";
+    $messageHtml .= "<b>Nombre completo</b>: $student->firstname $student->lastname <br>";
+    $messageHtml .= "<b>Código:</b> $student->username <br>";
+    $messageHtml .= "<b>Correo electrónico:</b> $student->email <br><br>";
+    $messageHtml .= "<b>Curso:</b> $student->fullname <br>";
+    $messageHtml .= "<b>Nota:</b> $student->finalgrade de $student->passingrade<br>";
+    $messageHtml .= "<b>Fecha:</b> $student->fecha<br>";
+
+    $from = get_full_user(107089); // sistemas1008
+
+    foreach ($recipients as $recipient) {
+        $result = email_to_user($recipient, $from, $subject, "", $messageHtml);
+
+        if (!$result) {
+            $error_email[] = $recipient;
+        }
+    }
+
+    return $error_email;
+}
+
+
+
+
+
+
+

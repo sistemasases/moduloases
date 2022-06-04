@@ -1,4 +1,21 @@
+#div-info {
+    height: 100px;
+}
+
 #btn-upload-csv, #btn-alertas {
     margin: 1em 1em 1em 0;
     padding: 0 1.5em;
+}
+
+#info-content {
+    overflow: auto;
+}
+#info-content.success {
+    background: #00bb00;
+    text: #fff;
+}
+
+#info-content.error {
+    background: #ff280e;
+    text: #fff;
 }

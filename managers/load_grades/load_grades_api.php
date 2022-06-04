@@ -32,10 +32,47 @@ if (isset($input->function) && isset($input->params)) {
     $function = $input->function;
     $params = $input->params;
 
-    if ($function == 'load_csv') {
-        load_csv($params[0]);
+
+    if ($function == 'send_alerts') {
+        /**
+         * params[0]: Associative array with the student's grades.
+         */
+        $result = send_alerts($params[0]);
+
+        if ($result) {
+
+            echo json_encode(
+                array(
+                    "status_code" => 0,
+                    "message" => "Enviando alertas a los practicantes y profesionales a cargo...",
+                    "data_response" => $result
+                )
+            );
+        }
+        else {
+            return_with_code(-99);
+        }
+    }
+    else {
+        return_with_code(-4);
+    }
+} else if (isset($_FILES)) {
+    $result = load_csv($_FILES['file']);
+
+    if ($result) {
+        echo json_encode(
+            array(
+                "status_code" => 0,
+                "message" => "Archivo cargado correctamente.",
+                "data_response" => $result
+            )
+        );
+    }
+    else {
+        return_with_code($result);
     }
 }
+
 
 /**
  * @method return_with_code
