@@ -66,7 +66,7 @@ function get_students_ases() {
             WHERE tracking_status = 1";
 
     try {
-        $ases_students = $DB    get_students_ases();->get_records_sql($sql);
+        $ases_students = $DB->get_records_sql($sql);
     }
     catch (Exception $ex) {
         Throw New Exception($ex->getMessage());
@@ -90,7 +90,7 @@ function filter_students($var): bool
 
 function send_alerts(array $grades, $instance_id) {
     $arr = array_filter($grades, "filter_students");
-    $current_period = core_periods_get_current_period($instance_id);
+    $errors = [];
 
     foreach ($arr as $item) {
 
@@ -101,6 +101,10 @@ function send_alerts(array $grades, $instance_id) {
         $prof = get_full_user($id_professional);
 
         $errors = craft_and_send_email([$pract, $prof], $item);
+    }
+
+    if (count($errors) > 0) {
+        return -7;
     }
 }
 

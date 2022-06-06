@@ -36,10 +36,11 @@ if (isset($input->function) && isset($input->params)) {
     if ($function == 'send_alerts') {
         /**
          * params[0]: Associative array with the student's grades.
+         * params[1]: Instance_id
          */
-        $result = send_alerts($params[0]);
+        $result = send_alerts($params[0], $params[1]);
 
-        if ($result) {
+        if (is_array($result)) {
 
             echo json_encode(
                 array(
@@ -48,6 +49,9 @@ if (isset($input->function) && isset($input->params)) {
                     "data_response" => $result
                 )
             );
+        }
+        else if ($result == -7) {
+            return_with_code($result);
         }
         else {
             return_with_code(-99);
@@ -149,6 +153,15 @@ function return_with_code($code){
                 array(
                     "status_code" => $code,
                     "error_message" => "critical error.",
+                    "data_response" => ""
+                )
+            );
+            break;
+        case -7:
+            echo json_encode(
+                array(
+                    "status_code" => $code,
+                    "error_message" => "Algunos correos no pudieron enviarse.\n Debe ser solucionado por un desarrollador!",
                     "data_response" => ""
                 )
             );

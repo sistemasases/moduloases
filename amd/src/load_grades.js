@@ -11,6 +11,8 @@ define(['jquery', 'block_ases/sweetalert','block_ases/mustache'], function($, sw
 
     return {
         init: function () {
+            const urlParams = new URLSearchParams(window.location.search);
+
             let formData = new FormData();
             let grades;
 
@@ -57,7 +59,7 @@ define(['jquery', 'block_ases/sweetalert','block_ases/mustache'], function($, sw
                     type: "POST",
                     data: JSON.stringify({
                         "function": "send_alerts",
-                        "params": [grades],
+                        "params": [grades, urlParams.get('instanceid')],
                     }),
                     cache: "false",
                     success: (msg) => {
