@@ -9,13 +9,12 @@
 
 #info-content {
     overflow: auto;
+    text: #fff;
 }
 #info-content.success {
     background: #00bb00;
-    text: #fff;
 }
 
 #info-content.error {
     background: #ff280e;
-    text: #fff;
 }

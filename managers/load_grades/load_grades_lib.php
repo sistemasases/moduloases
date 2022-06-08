@@ -30,9 +30,13 @@
 
 require_once (__DIR__ . '/../../../../config.php');
 require_once (__DIR__ . '/../../core/module_loader.php');
+require_once (__DIR__ . '/../seguimiento_grupal/seguimientogrupal_lib.php');
+require_once (__DIR__ . '/../lib/student_lib.php');
 
 module_loader("periods");
 
+$instance_id = 0;
+$ases_students = [];
 
 function load_csv(array $file) {
     $grades = array();
@@ -58,12 +62,18 @@ function load_csv(array $file) {
  * @return array|void
  * @throws Exception
  */
-function get_students_ases() {
+function get_students_ases($instance_id) {
     global $DB;
 
-    $sql = "SELECT distinct username, id_ases_user FROM {user}
-            INNER JOIN {talentospilos_user_extended} ext on {user}.id = ext.id_moodle_user
-            WHERE tracking_status = 1";
+    $current_period = core_periods_get_current_period($instance_id)->id;
+
+    $sql = "SELECT monest.id, username, id_ases_user FROM {user} 
+            INNER JOIN {talentospilos_user_extended} ext on {user}.id = ext.id_moodle_user 
+            INNER JOIN {talentospilos_monitor_estud} monest on monest.id_estudiante=ext.id_ases_user 
+            WHERE monest.id_instancia=$instance_id 
+            AND monest.id_semestre=$current_period 
+            AND tracking_status = 1
+            ";
 
     try {
         $ases_students = $DB->get_records_sql($sql);
@@ -77,10 +87,11 @@ function get_students_ases() {
 
 function filter_students($var): bool
 {
-    $ases_students = get_students_ases();
+    global $ases_students;
 
     foreach ($ases_students as $ases_student) {
         if ($var->username == $ases_student->username) {
+            $var->id_ases_user = $ases_student->id_ases_user;
             return true;
         }
     }
@@ -89,48 +100,51 @@ function filter_students($var): bool
 }
 
 function send_alerts(array $grades, $instance_id) {
+    global $ases_students;
+
+    $ases_students = get_students_ases($instance_id);
+
     $arr = array_filter($grades, "filter_students");
-    $errors = [];
+
+    $emails = [];
 
     foreach ($arr as $item) {
 
-        $id_professional = get_id_assigned_professional($item->id_ases_user);
-        $id_practicante = get_id_assigned_pract($item->id_ases_user);
+        $id_professional = get_assigned_professional($item->id_ases_user, $instance_id)->id;
+        $id_practicante = get_assigned_pract($item->id_ases_user, $instance_id)->id;
 
-        $pract = get_full_user($id_practicante);
-        $prof = get_full_user($id_professional);
-
-        $errors = craft_and_send_email([$pract, $prof], $item);
+        $emails[$id_professional] .= prepare_email($item);
+        $emails[$id_practicante] .= prepare_email($item);
     }
 
-    if (count($errors) > 0) {
-        return -7;
+    $sending_user = get_full_user(107089);
+    $sending_user->maildisplay = false;
+    $sending_user->mailformat = 1;
+    $subject = "Registros de notas pérdidas";
+
+    foreach ($emails as $key => $val) {
+
+        $receiving_user = get_full_user($key);
+        $receiving_user->maildisplay = true;
+        $receiving_user->mailformat = 1;
+        $result = email_to_user($receiving_user, $sending_user,$subject,"Test",$val,",", true);
+        var_dump($result); die();
     }
+
 }
 
-function craft_and_send_email(array $recipients, $student) {
-    $error_email = [];
-    $subject = "Registro de nota pérdida";
+function prepare_email($student) {
 
     $messageHtml = "Se registra una nota pérdida para el estudiante: <br><br>";
     $messageHtml .= "<b>Nombre completo</b>: $student->firstname $student->lastname <br>";
     $messageHtml .= "<b>Código:</b> $student->username <br>";
     $messageHtml .= "<b>Correo electrónico:</b> $student->email <br><br>";
     $messageHtml .= "<b>Curso:</b> $student->fullname <br>";
-    $messageHtml .= "<b>Nota:</b> $student->finalgrade de $student->passingrade<br>";
+    $messageHtml .= "<b>Nota obtenida:</b> $student->finalgrade de $student->grademax<br>";
+    $messageHtml .= "<b>Nota mínima para pasar:</b> $student->gradepass<br>";
     $messageHtml .= "<b>Fecha:</b> $student->fecha<br>";
 
-    $from = get_full_user(107089); // sistemas1008
-
-    foreach ($recipients as $recipient) {
-        $result = email_to_user($recipient, $from, $subject, "", $messageHtml);
-
-        if (!$result) {
-            $error_email[] = $recipient;
-        }
-    }
-
-    return $error_email;
+    return $messageHtml . "<hr/><br>";
 }
 
 

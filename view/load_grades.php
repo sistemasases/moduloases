@@ -42,8 +42,7 @@ require_once (__DIR__ . '/../classes/output/renderer.php');
 
 require_once (__DIR__ . '/../lib.php');
 
-global $PAGE;
-global $USER;
+global $USER,$PAGE;
 
 
 // Set up the page
@@ -82,9 +81,13 @@ $coursenode->add_node($blocknode);
 
 
 $page_title = 'Carga de notas';
+
 $PAGE->set_url($url);
+$PAGE->set_context($contextcourse);
+$PAGE->set_context($contextblock);
 $PAGE->set_title($page_title);
-$PAGE->set_heading($page_title);
+
+//$PAGE->set_heading($page_title);
 
 $PAGE->requires->css('/blocks/ases/style/aaspect.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);

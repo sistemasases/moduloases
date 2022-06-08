@@ -7,7 +7,12 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define(['jquery', 'block_ases/sweetalert','block_ases/mustache'], function($, sweetalert, mustache){
+define([
+    'jquery',
+    'block_ases/sweetalert',
+    'block_ases/mustache',
+    'block_ases/loading_indicator'
+], function($, sweetalert, mustache, loading_indicator){
 
     return {
         init: function () {
@@ -54,6 +59,8 @@ define(['jquery', 'block_ases/sweetalert','block_ases/mustache'], function($, sw
             })
 
             $("#btn-alertas").on('click', () => {
+                $("#btn-alertas").addClass('disabled')
+                loading_indicator.show();
                 $.ajax({
                     url: "../managers/load_grades/load_grades_api.php",
                     type: "POST",
@@ -71,7 +78,7 @@ define(['jquery', 'block_ases/sweetalert','block_ases/mustache'], function($, sw
                         }
                         showInfo(obj)
 
-                        $("#btn-alertas").addClass("disabled")
+                        loading_indicator.hide()
                     },
                     error: (msg) => {
                         console.error(msg)
@@ -80,6 +87,7 @@ define(['jquery', 'block_ases/sweetalert','block_ases/mustache'], function($, sw
                             msg.message,
                             "error"
                         )
+                        loading_indicator.hide()
                     }
                 })
             })
