@@ -121,25 +121,32 @@ function send_alerts(array $grades, $instance_id) {
     $sending_user->maildisplay = false;
     $sending_user->mailformat = 1;
     $subject = "Registros de notas pérdidas";
-
+	
+    $success = 0;
     foreach ($emails as $key => $val) {
 
         $receiving_user = get_full_user($key);
         $receiving_user->maildisplay = true;
         $receiving_user->mailformat = 1;
         $result = email_to_user($receiving_user, $sending_user,$subject,"Test",$val,",", true);
-        var_dump($result); die();
+	if ($result) $sucess++;
     }
 
+    return $success;
 }
 
 function prepare_email($student) {
+
+	if ($student->gradepass == $student->grademax) {
+		$student->gradepass = ceil($student->grademax / 2);
+	}
 
     $messageHtml = "Se registra una nota pérdida para el estudiante: <br><br>";
     $messageHtml .= "<b>Nombre completo</b>: $student->firstname $student->lastname <br>";
     $messageHtml .= "<b>Código:</b> $student->username <br>";
     $messageHtml .= "<b>Correo electrónico:</b> $student->email <br><br>";
     $messageHtml .= "<b>Curso:</b> $student->fullname <br>";
+    $messageHtml .= "<b>Actividad:</b> $student->itemname <br>";
     $messageHtml .= "<b>Nota obtenida:</b> $student->finalgrade de $student->grademax<br>";
     $messageHtml .= "<b>Nota mínima para pasar:</b> $student->gradepass<br>";
     $messageHtml .= "<b>Fecha:</b> $student->fecha<br>";
