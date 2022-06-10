@@ -1,4 +1,4 @@
-<?php
+    <?php
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -445,6 +445,16 @@ function create_menu_options($userid, $blockid, $courseid)
 
                 $menu_options = '<a id="menu_monitorias" class="menu_a" href= "' . $url . '">Monitorias académicas</a>';
                 $academic_options['Monitorias académicas'] = $menu_options;
+            }
+
+            if ($function == 'load_grades') {
+                $url = new moodle_url("/blocks/ases/view/load_grades.php", array(
+                        'courseid' => $courseid,
+                        'instanceid' => $blockid
+                ));
+
+                $menu_options = '<a id="menu_load_grades" class="menu_a" href="' . $url . '">Cargar notas críticas</a>';
+                $academic_options['Cargar notas críticas'] = $menu_options;
             }
 
         }
