@@ -4,13 +4,19 @@
 
 #btn-upload-csv, #btn-alertas {
     margin: 1em 1em 1em 0;
-    padding: 0 1.5em;
+    padding: .5em 1.5em;
 }
 
 #info-content {
-    overflow: auto;
-    text: #fff;
+    margin: 0.5em;
+    color: #fff;
+    text-align: center;
+    font-size: 1.3em;
+    font-weight: 600;
+    align-items: center;
+    border-radius: 5px;
 }
+
 #info-content.success {
     background: #00bb00;
 }

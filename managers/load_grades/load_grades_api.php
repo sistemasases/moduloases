@@ -19,7 +19,7 @@
  *
  * @author     David Santiago Cortés
  * @package    block_ases
- * @copyright  2021 David Santiago Cortés <david.cortes@correounivalle.edu.co>
+ * @copyright  2022 David Santiago Cortés <david.cortes@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -45,16 +45,14 @@ if (isset($input->function) && isset($input->params)) {
             echo json_encode(
                 array(
                     "status_code" => 0,
-                    "message" => "Enviando alertas a los practicantes y profesionales a cargo...",
+                    "message" => "Enviadas ".$result['success'] . "/" . $result['total'] . " alertas a los practicantes y 
+                                    profesionales a cargo.",
                     "data_response" => $result
                 )
             );
         }
-        else if ($result == -7) {
-            return_with_code($result);
-        }
         else {
-            return_with_code(-99);
+            return_with_code($result);
         }
     }
     else {
@@ -75,6 +73,8 @@ if (isset($input->function) && isset($input->params)) {
     else {
         return_with_code($result);
     }
+} else {
+    return_with_code(-3);
 }
 
 
