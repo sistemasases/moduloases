@@ -1,0 +1,26 @@
+#div-info {
+    height: 100px;
+}
+
+#btn-upload-csv, #btn-alertas {
+    margin: 1em 1em 1em 0;
+    padding: .5em 1.5em;
+}
+
+#info-content {
+    margin: 0.5em;
+    color: #fff;
+    text-align: center;
+    font-size: 1.3em;
+    font-weight: 600;
+    align-items: center;
+    border-radius: 5px;
+}
+
+#info-content.success {
+    background: #00bb00;
+}
+
+#info-content.error {
+    background: #ff280e;
+}
