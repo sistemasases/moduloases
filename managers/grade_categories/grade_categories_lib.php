@@ -57,57 +57,66 @@ module_loader("periods");
 function get_courses_pilos($instanceid){
     global $DB;
 
-    
-    $inicio_periodo_actual = (core_periods_get_current_period($instanceid))->fecha_inicio;    
-    $inicio_periodo_actual = substr($inicio_periodo_actual, 0, 10);    
-    //$semestre = substr($inicio_periodo_actual,0,4) . substr($inicio_periodo_actual, 5, 2);
-    $query_courses = "
-        SELECT DISTINCT curso.id,
-                        curso.fullname,
-                        curso.shortname,
+    if (is_numeric($instanceid)) {
 
-          (SELECT concat_ws(' ',firstname,lastname) AS fullname
-           FROM
-             (SELECT usuario.firstname,
-                     usuario.lastname,
-                     userenrol.timecreated
-              FROM {course} cursoP
-              INNER JOIN {context} cont ON cont.instanceid = cursoP.id
-              INNER JOIN {role_assignments} rol ON cont.id = rol.contextid
-              INNER JOIN {user} usuario ON rol.userid = usuario.id
-              INNER JOIN {enrol} enrole ON cursoP.id = enrole.courseid
-              INNER JOIN {user_enrolments} userenrol ON (enrole.id = userenrol.enrolid
-                                                           AND usuario.id = userenrol.userid)
-              WHERE cont.contextlevel = 50
-                AND rol.roleid = 3
-                AND cursoP.id = curso.id
-              ORDER BY userenrol.timecreated ASC
-              LIMIT 1) AS subc) AS nombre
-        FROM {course} curso
-        INNER JOIN {enrol} ROLE ON curso.id = role.courseid
-        INNER JOIN {user_enrolments} enrols ON enrols.enrolid = role.id
-	WHERE SUBSTRING(curso.shortname FROM 4 FOR 7) IN (SELECT codigo_materia FROM {talentospilos_materias_criti})
-	    AND to_timestamp(curso.startdate)::date >= '$inicio_periodo_actual'
-	    AND enrols.userid IN
-            (SELECT user_m.id
-            FROM {user} user_m
-            INNER JOIN {talentospilos_user_extended} extended ON user_m.id = extended.id_moodle_user
-            INNER JOIN {talentospilos_est_estadoases} estado_u ON extended.id_ases_user = estado_u.id_estudiante
-            INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
-            WHERE estados.nombre = 'seguimiento'
-            
-            INTERSECT
+	$periodo_actual = core_periods_get_current_period($instanceid);
 
-            SELECT user_m.id
-            FROM {user} user_m 
-            INNER JOIN {cohort_members} memb ON user_m.id = memb.userid
-            WHERE memb.cohortid IN (SELECT id_cohorte
-                                    FROM   {talentospilos_inst_cohorte}
-                                    WHERE  id_instancia = $instanceid))";
-    $result = $DB->get_records_sql($query_courses);
+	if (is_null($periodo_actual)) return [];	
+
+	$inicio_periodo_actual = $periodo_actual->fecha_inicio;    
+    	$inicio_periodo_actual = substr($inicio_periodo_actual, 0, 10);    
+    	$query_courses = "
+    	    SELECT DISTINCT curso.id,
+    	                    curso.fullname,
+    	                    curso.shortname,
+
+    	      (SELECT concat_ws(' ',firstname,lastname) AS fullname
+    	       FROM
+    	         (SELECT usuario.firstname,
+    	                 usuario.lastname,
+    	                 userenrol.timecreated
+    	          FROM {course} cursoP
+    	          INNER JOIN {context} cont ON cont.instanceid = cursoP.id
+    	          INNER JOIN {role_assignments} rol ON cont.id = rol.contextid
+    	          INNER JOIN {user} usuario ON rol.userid = usuario.id
+    	          INNER JOIN {enrol} enrole ON cursoP.id = enrole.courseid
+    	          INNER JOIN {user_enrolments} userenrol ON (enrole.id = userenrol.enrolid
+    	                                                       AND usuario.id = userenrol.userid)
+    	          WHERE cont.contextlevel = 50
+    	            AND rol.roleid = 3
+    	            AND cursoP.id = curso.id
+    	          ORDER BY userenrol.timecreated ASC
+    	          LIMIT 1) AS subc) AS nombre
+    	    FROM {course} curso
+    	    INNER JOIN {enrol} ROLE ON curso.id = role.courseid
+    	    INNER JOIN {user_enrolments} enrols ON enrols.enrolid = role.id
+    	    WHERE SUBSTRING(curso.shortname FROM 4 FOR 7) IN (SELECT codigo_materia FROM {talentospilos_materias_criti})
+    	        AND to_timestamp(curso.startdate)::date >= '$inicio_periodo_actual'
+    	        AND enrols.userid IN
+    	        (SELECT user_m.id
+    	        FROM {user} user_m
+    	        INNER JOIN {talentospilos_user_extended} extended ON user_m.id = extended.id_moodle_user
+    	        INNER JOIN {talentospilos_est_estadoases} estado_u ON extended.id_ases_user = estado_u.id_estudiante
+    	        INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
+    	        WHERE estados.nombre = 'seguimiento'
+    	        
+    	        INTERSECT
+
+    	        SELECT user_m.id
+    	        FROM {user} user_m 
+    	        INNER JOIN {cohort_members} memb ON user_m.id = memb.userid
+    	        WHERE memb.cohortid IN (SELECT id_cohorte
+    	                                FROM   {talentospilos_inst_cohorte}
+    	                                WHERE  id_instancia = $instanceid))";
+    	$result = $DB->get_records_sql($query_courses);
+    	
+    	$result = processInfo($result);
+    	return $result;
+    } else {
+	Throw New Exception("grade_categories_lib => instancia no numerica: $instanceid");
+    }
     
-    $result = processInfo($result);
-    return $result;
+
 }
 
 
@@ -115,7 +124,7 @@ function get_courses_pilos($instanceid){
  * Obtains all teacher given a certain information
  * @see processInfo($info)
  * @param $info --> Object containing a teacher name, shortname, fullname, id 
- * @return array with syntaxis: array("$nomProfesor" => array(array("id" => $id_curso, "nombre"=>$nom_curso,"shortname"=>$shortname_curso), array(...)))
+ * @return array with syntax: array("$nomProfesor" => array(array("id" => $id_curso, "nombre"=>$nom_curso,"shortname"=>$shortname_curso), array(...)))
  */
 function processInfo($info){
     $profesores = [];
