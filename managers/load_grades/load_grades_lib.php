@@ -110,11 +110,12 @@ function send_alerts(array $grades, $instance_id) {
 
     foreach ($arr as $item) {
 
-        $id_professional = get_assigned_professional($item->id_ases_user, $instance_id)->id;
-        $id_practicante = get_assigned_pract($item->id_ases_user, $instance_id)->id;
+        $professional = get_assigned_professional($item->id_ases_user, $instance_id);
+        $practicante = get_assigned_pract($item->id_ases_user, $instance_id);
+        $monitor = get_assigned_monitor($item->id_ases_user, $instance_id);
 
-        $emails[$id_professional] .= prepare_email($item);
-        $emails[$id_practicante] .= prepare_email($item);
+        //$emails[$professional["id"]] .= prepare_email($item, $monitor, $practicante);
+        $emails[$practicante->id] .= prepare_email($item, $monitor);
     }
 
     $sending_user = get_full_user(107089);
@@ -140,16 +141,20 @@ function send_alerts(array $grades, $instance_id) {
     return $to_return;
 }
 
-function prepare_email($student) {
+function prepare_email($student, $monitor, $practicante=null) {
 
 	if ($student->gradepass == $student->grademax) {
 		$student->gradepass = ceil($student->grademax / 2);
 	}
 
-    $messageHtml = "Se registra una nota pérdida para el estudiante: <br><br>";
-    $messageHtml .= "<b>Nombre completo</b>: $student->firstname $student->lastname <br>";
+    $messageHtml = "Tenga un cordial saludo, <br><br>";
+    $messageHtml .= "Se registra una nota pérdida para el estudiante: <br><br>";
+    $messageHtml .= "<b>Nombre completo</b>: $student->firstname $student->lastname ($student->email)<br>";
     $messageHtml .= "<b>Código:</b> $student->username <br>";
-    $messageHtml .= "<b>Correo electrónico:</b> $student->email <br>";
+    $messageHtml .= "<b>Monitor:</b> $monitor->firstname $monitor->lastname ($monitor->email)<br>";
+    if (isset($practicante)) {
+	$messageHtml .= "<b>Practicante:</b> $practicante->firstname $practicante->lastname ($practicante->email)<br>";
+    }
     $messageHtml .= "<b>Curso:</b> $student->fullname <br>";
     $messageHtml .= "<b>Actividad:</b> $student->itemname <br>";
     $messageHtml .= "<b>Nota obtenida:</b> $student->finalgrade de $student->grademax<br>";
