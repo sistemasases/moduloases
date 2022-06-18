@@ -114,7 +114,7 @@ function send_alerts(array $grades, $instance_id) {
         $practicante = get_assigned_pract($item->id_ases_user, $instance_id);
         $monitor = get_assigned_monitor($item->id_ases_user, $instance_id);
 
-        //$emails[$professional["id"]] .= prepare_email($item, $monitor, $practicante);
+        $emails[$professional->id] .= prepare_email($item, $monitor, $practicante);
         $emails[$practicante->id] .= prepare_email($item, $monitor);
     }
 
