@@ -148,7 +148,6 @@ function cohort_add_user_to_cohort($cohort, $user) {
     } else {
         return false;
     }
-
     cohort_add_member($cohort_id, $user_id);
     return true;
 
@@ -272,10 +271,12 @@ function is_todos_cohort($cohort_value): bool {
  */
 function get_cohort_groups() {
     return array(['id'=>'SPP', 'name'=>'Ser Pilo Paga'],
-        ['id'=>'SPT', 'name'=>'Ser Pilo Paga Talentos'],
-        ['id'=>'SPE', 'name'=>'Condición de Excepción'],
-        ['id'=>'3740', 'name'=>'Ingeniería Topográfica'],
-        ['id'=>'OTROS', 'name'=>'Otros ASES']);
+                 ['id'=>'SPT', 'name'=>'Ser Pilo Paga Talentos'],
+                 ['id'=>'CEX', 'name'=>'Condición de Excepción'],
+                 ['id'=>'GENX', 'name'=>'Generación E - Excelencia'],
+                 ['id'=>'GEE', 'name'=>'Generación E - Equidad'],
+                 ['id'=>'OTRO', 'name'=>'Otros ASES'],
+                 );
 }
 
 /**

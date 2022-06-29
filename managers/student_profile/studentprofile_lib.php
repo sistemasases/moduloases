@@ -817,7 +817,7 @@ function getReasonDropoutStudent($code_student){
     if(!empty($tmp_result)){
         $sql_query ="SELECT descripcion FROM {talentospilos_motivos} WHERE id = $tmp_result->id_motivo";
         $motivo =  $DB->get_record_sql($sql_query)->descripcion;
-        $result = "Motivo retiro: " . $motivo . "\nDetalle: ".$tmp_result->detalle;
+        $result = "Motivo retiro: " . $motivo . "\nDetalle Retiro: ".$tmp_result->detalle;
     }
     return $result;
 }

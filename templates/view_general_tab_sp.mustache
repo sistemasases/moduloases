@@ -323,19 +323,17 @@
                 <input class="btn btn-block" type="button" id="input_button_add_person" name="input_button_add_person"
                     value="Agregar persona" />
             </div>
+
+            <h3 class="h-sections-general-tab2" style="margin-top: 3cm !important;">OBSERVACIONES</h3>
+            <hr class="hr-general-tab-fields">
             <div class="row">
                 <div class="col-sm-12">
-                    <label for="observaciones" class="col-md-12">Observaciones</label>
-                    <textarea name="observacion" id="observacion" class="col-sm-12" readonly></textarea>
-                    <textarea name="" id="observaciones_anteriores" class="col-md-12" readonly>{{observations}}</textarea>
+                    <textarea name="" id="observaciones_anteriores" class="col-md-12" readonly style="min-height: 5cm !important; resize: none !important;">{{observations}}</textarea>
+                    <textarea name="observacion" id="observacion" class="col-sm-12" readonly  style="resize: none !important;"></textarea>
                 </div>
 
                 <a class="col-md-11" id="link_doc_dtddp" href="{{{tratamiento_datos_personales_doc}}}" target="_blank">Documento de autorización para el tratamiento de datos personales</a>
                 <input type="url" class="input_fields_general_tab_otro" name="link_doc_dtddp" id="field_doc_dtddp" value="{{{tratamiento_datos_personales_doc}}}"/>
-
-
-
-
             </div>
 
         </div>
