@@ -62,7 +62,7 @@ function load_csv(array $file) {
  * @return array|void
  * @throws Exception
  */
-function get_students_ases($instance_id) {
+function get_students_ases($instance_id): array {
     global $DB;
 
     $current_period = core_periods_get_current_period($instance_id)->id;
@@ -108,6 +108,7 @@ function send_alerts(array $grades, $instance_id) {
 
     $emails = [];
 
+    $summ_data = [];
     foreach ($arr as $item) {
 
         $professional = get_assigned_professional($item->id_ases_user, $instance_id);
@@ -136,16 +137,82 @@ function send_alerts(array $grades, $instance_id) {
 
         if ($result == true) $to_return["success"]++;
     }
-
+    
+    send_summarized_alerts($grades, $arr, $instance_id);
 
     return $to_return;
 }
 
+/**
+ * Envia el consolidado de alertas en forma de tabla a Yurani y Académico
+ */
+function send_summarized_alerts(array $grades, array $filtered_arr, $instance_id) {
+
+    global $ases_students;
+
+    switch ($instance_id) {
+        case 450299:
+            $ases_students = get_students_ases(1420604);
+            break;
+
+        case 1420604:
+            $ases_students = get_students_ases(450299);
+            break;
+
+        default:
+            return 0;
+    }
+
+    array_push(
+        $filtered_arr,
+        array_filter($grades, "filter_students")
+    );
+
+    $email_body = prepare_summarized_email($filtered_arr);
+
+    $receiving_user1 = get_user_by_username("1107059505"); // Yurany Velasco
+    $receiving_user1->maildisplay = true;
+    $receiving_user1->mailformat = 1;
+
+    $result_1 = email_to_user($receiving_user1, get_full_user(107089),"Consolidado Notas Pérdidas ASES Cali y Regionales","",$email_body);
+    //$result_2 = email_to_user($receiving_user, get_full_user(107089),"Consolidado Notas Pérdidas ASES","",$email_body);
+}
+
+
+function prepare_summarized_email(array $data) {
+    $message_html = "Tenga un cordial saludo, <br><br> A continuación hallará un consolidado con las notas pérdidas 
+	de estudiantes ASES durante la semana anterior.<br>";
+
+    $table_html =
+	"<table style='table-layout:fixed;border-collapse:collapse;border:1px solid black;width:100%;text-align:center;'>
+	    <thead >
+		<tr style='letter-spacing:1px;'>
+		    <th>Sede</th><th>Estudiante</th><th>Curso</th><th>Actividad</th><th>Nota</th><th>Fecha</th>
+		</tr>
+	    </thead>
+	    <tbody>";
+
+    foreach ($data as $datum) {
+        $table_html .=
+            "<tr style='letter-spacing:1px;'>
+            <td style='border: 1px solid #333'>" . $datum->firstname . " " . $datum->lastname . " " . $datum->username . "</td>" .
+            "<td style='border: 1px solid #333;'>" . $datum->fullname ."</td>" .
+            "<td style='border: 1px solid #333;'>" . $datum->itemname ."</td>" .
+            "<td style='border: 1px solid #333;'>" . $datum->finalgrade . "/" . $datum->grademax ."</td>" .
+            "<td style='border: 1px solid #333;'>" . $datum->fecha ."</td>" .
+            "</tr>";
+    }
+
+    $table_html .= "</tbody></table><br>";
+
+    return $message_html .= $table_html;
+}
+
 function prepare_email($student, $monitor, $practicante=null) {
 
-	if ($student->gradepass == $student->grademax) {
-		$student->gradepass = ceil($student->grademax / 2);
-	}
+    if ($student->gradepass == $student->grademax) {
+	    $student->gradepass = ceil($student->grademax / 2);
+    }
 
     $messageHtml = "Tenga un cordial saludo, <br><br>";
     $messageHtml .= "Se registra una nota pérdida para el estudiante: <br><br>";
@@ -163,10 +230,4 @@ function prepare_email($student, $monitor, $practicante=null) {
 
     return $messageHtml . "<hr/><br>";
 }
-
-
-
-
-
-
 
