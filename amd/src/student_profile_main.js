@@ -1025,6 +1025,34 @@ define(['jquery',
                             return msg;
                         }
                         break;
+                    case "name_person":
+                        if (has_symbols(field.value)) {
+                            msg.title = "Error";
+                            msg.status = "error";
+                            msg.msg = "El campo " + field.name + " (Nombre persona con quien vive) no debe contener símbolos";
+                            return msg;
+                        }
+                        if (has_numbers(field.value)) {
+                            msg.title = "Error";
+                            msg.status = "error";
+                            msg.msg = "El campo " + field.name + " (Nombre persona con quien vive) no debe contener números";
+                            return msg;
+                        }
+                        break;
+                    case "parentesco_person":
+                        if (has_symbols(field.value)) {
+                            msg.title = "Error";
+                            msg.status = "error";
+                            msg.msg = "El campo " + field.name + " (Parentesco persona con quien vive) no debe contener símbolos";
+                            return msg;
+                        }
+                        if (has_numbers(field.value)) {
+                            msg.title = "Error";
+                            msg.status = "error";
+                            msg.msg = "El campo " + field.name + " (Parentesco persona con quien vive) no debe contener números";
+                            return msg;
+                        }
+                        break;
                     case "emailpilos":
                         if (!is_email(field.value)) {
                             msg.title = "Error";
