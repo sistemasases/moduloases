@@ -783,7 +783,7 @@ function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigo
 	error_log(
 	    "Error al enviar correo a:$emailToUser->email, remitente: $emailFromUser->email", 
 	    3,
-	    "/var/temp/mail-errors.log"
+	    "/var/log/mail-errors.log"
 	);
     }
 
@@ -817,7 +817,7 @@ function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigo
     	    error_log(
     	        "Error al enviar correo a:$emailToUser->email, remitente: $emailFromUser->email", 
     	        3,
-    	        "/var/temp/mail-errors.log"
+    	        "/var/log/mail-errors.log"
     	    );
     	}
 
@@ -853,7 +853,7 @@ function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigo
     	    error_log(
     	        "Error al enviar correo a:$emailToUser->email, remitente: $emailFromUser->email", 
     	        3,
-    	        "/var/temp/mail-errors.log"
+    	        "/var/log/mail-errors.log"
     	    );
     	}
         
@@ -861,8 +861,9 @@ function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigo
 	error_log(
 	    "Error al enviar correo a:$codigoEnviarN1, $codigoEnviarN2, $codigoEnviarN3\n Destinatario: $receiving_user->email", 
 	    3,
-	    "/var/temp/mail-errors.log"
+	    "/var/log/mail-errors.log"
 	);
+	Throw New Exception($ex->getMessage());
       return $ex->getMessage();
     }
   
