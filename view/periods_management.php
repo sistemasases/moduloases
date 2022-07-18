@@ -26,12 +26,15 @@
 
 // Standard GPL and phpdocs
 require_once(__DIR__ . '/../../../config.php');
+require_once(__DIR__. '/../core/module_loader.php');
 require_once($CFG->libdir.'/adminlib.php');
 require_once('../managers/instance_management/instance_lib.php');
-require_once('../managers/periods_management/periods_lib.php');
+//require_once('../managers/periods_management/periods_lib.php');
 require_once ('../managers/permissions_management/permissions_lib.php');
 require_once ('../managers/validate_profile_action.php');
 require_once ('../managers/menu_options.php');
+
+module_loader("periods");
 
 global $PAGE;
 
@@ -56,7 +59,7 @@ if(!consult_instance($blockid)){
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 
 //Getting all semesters
-$semesters = get_all_semesters(); 
+$semesters = core_periods_get_all_periods($blockid); 
 
 $table_semesters = '';
 $table_semesters .= '<option value=""> --------------------------------- </option>';

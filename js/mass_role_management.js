@@ -84,7 +84,7 @@ function addHelpMessage(selector){
             $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información</h4><strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul> <li>username_monitor</li><li>username_estudiante</li> </ul> </p></div>');
             break;
         case 'roles_usuario':
-            $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información</h4><strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul> <li>username</li><li>rol(administrativo, reportes,profesional_ps, monitor_ps,  estudiante_t ó practicante_psp)</li> </ul> </p><p>Columnas aceptadas: <ul> <li>jefe</li>  </ul> </p></div>');
+            $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información</h4><strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul> <li>username</li><li>rol(administrativo, reportes,profesional_ps, monitor_ps,  estudiante_t ó practicante_ps)</li> </ul> </p><p>Columnas aceptadas: <ul> <li>jefe</li>  </ul> </p></div>');
             break;
         case 'status':
             $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información</h4><strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul> <li>username</li> <li>Estado Ases</li> <li>Estado Icetex</li> <li>Estado de Programa</li><li>Tracking Status</li> </ul> </p></div>');

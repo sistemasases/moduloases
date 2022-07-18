@@ -8,6 +8,7 @@ $conditions = array(); // Condiciones para la consulta
 $query_fields = array();
 $risk_fields = array();
 $academic_fields = array();
+$exception_fields = array();
 $statuses_array = array();
 $assignment_fields = array();
 
@@ -22,19 +23,29 @@ $fields_format = array(
     'email'=>'ases_students.email',
     'cellphone'=>'ases_students.celular',
     'address'=>'ases_students.direccion_res',
-    
     'program_code'=>'academic_program.cod_univalle AS cod_univalle',
     'name_program'=>'academic_program.nombre AS nombre_programa',
     'faculty'=>'faculty.nombre AS nombre_facultad',
-
     'average'=>'accum_average.promedio_acumulado AS promedio_acumulado',
     'academic_stimuli'=>'history_estim.numero_estimulos AS estimulos',
     'low_academic_performance'=>'history_bajo.numero_bajo AS bajos',
-
+    'exception_cond'=>'cond_excepcion.condicion AS condicion_excepcion', //condicion_excepcion_code
+    'IN_cond'=>'Indígena (I.N.)',
+    'MAP_cond'=>'Los más altos puntajes en el Examen de Estado (M.A.P.)',
+    'CA_cond'=>'Comunidades Afrocolombianas (C.A.)',
+    'CAC_cond'=>'Comunidades Afrocolombianas Consejo Comunitario (C.A.C.)',
+    'CU_cond'=>'Cupo (C.U.)',
+    'PR_cond'=>'Programa de Reinserción (P.R.)',
+    'MPM_cond'=>'Los más altos puntajes en el Examen de Estado, de los colegios oficiales en los municipios del Departamento del Valle del Cauca (M.P.M.)',
+    'DNI_cond'=>'Aspirantes que estén realizando actualmente su último año de bachillerato, provenientes de Departamentos donde no existen sedes ni seccionales de Instituciones de Educación Superior (D.N.I)',
+    'MDP_cond'=>'Aspirantes que estén realizando actualmente su último año de bachillerato, que provengan de Municipios de difícil acceso o con problemas de orden público (M.D.P.)',
+    'PD_cond'=>'Población Desplazada. (P.D.)',
+    'VC_cond'=>'Víctimas del conflicto político armado (V.C.)',
+    'AR_cond'=>'Atletas de rendimiento (A.R)',
+    'NA_cond'=>'Ninguna de las anteriores',
     'ases_status'=>'ases_status.ases_status_student',
     'icetex_status'=>'icetex_status.icetex_status_student',
-    'academic_program_status'=>'ases_students.program_status',
-
+    'academic_program_status'=>'current_program_status.program_status',
     'professional'=>'assignments_query.professional',
     'training'=>'assignments_query.trainer',
     'monitor'=>'assignments_query.monitor'
@@ -55,6 +66,7 @@ $columns_format = array(
     'average'=>'Promedio acumulado',
     'academic_stimuli'=>'Estimulos',
     'low_academic_performance'=>'Bajos rendimientos',
+    'exception_cond'=>'Condición de Excepción', //condicion_excepcion_code
     'ases_status'=>'Estado ASES',
     'icetex_status'=>'Estado ICETEX',
     'academic_program_status'=>'Estado programa',
@@ -79,9 +91,9 @@ if(isset($_POST['fields'])){
 
 if(isset($_POST['academic_fields'])){
     $counter_columns += 1;
-    foreach($_POST['academic_fields'] as $academic_field){
-        array_push($academic_fields, $fields_format[$academic_field]);
-        array_push($columns, array("title"=>$columns_format[$academic_field], "name"=>explode(' ', $fields_format[$academic_field])[2], "data"=>explode(' ', $fields_format[$academic_field])[2]));
+    foreach ($_POST['academic_fields'] as $academic_field) {
+            array_push($academic_fields, $fields_format[$academic_field]);
+            array_push($columns, array("title"=>$columns_format[$academic_field], "name"=>explode(' ', $fields_format[$academic_field])[2], "data"=>explode(' ', $fields_format[$academic_field])[2]));
     }
 }
 
@@ -96,13 +108,13 @@ if(isset($_POST['risk_fields'])){
         array_push($columns, array("title"=>'R.'.strtoupper(substr($risk_name, 0, 1)).substr($risk_name, 1, 2).$select, "name"=>$risk_name, "data"=>$risk_name));
         array_push($risk_fields, $risk_field);
     }
+
 }
 
 if(isset($_POST['status_fields'])){
-
     $array_statuses = array(
-        'seguimiento' => 'SEGUIMIENTO',
-        'sinseguimiento' => 'SIN SEGUIMIENTO'
+        'seguimiento' => 'ACTIVO',
+        'sinseguimiento' => 'INACTIVO'
     );
 
     foreach($_POST['status_fields'] as $status_field){
@@ -126,40 +138,17 @@ if(isset($_POST['status_fields'])){
                 break;
 
             case 'icetex_status':
-
-                $icetex_statuses = get_icetex_states();
-                $set_name_inactive = true;
-
-                foreach($icetex_statuses as $status){                    
-                    
-                    switch($status->nombre){
-
-                        case 'APLAZADO':
-                        case 'EGRESADO':
-                        case 'RETIRADO':
-                            if($set_name_inactive){
-                                $option .= "<option>";
-                                $option .= "INACTIVO";
-                                $option .= "</option>";
-                                $set_name_inactive = false;
-                            }
-                            break;
-                        default:
-                            $option .= "<option>";
-                            $option .= $status->nombre;
-                            $option .= "</option>";
-                            break;
-                    }                         
-                } 
+                $option .= "<option>ACTIVO</option>";
+                $option .= "<option>INACTIVO</option>";
                 break;
             
             case 'academic_program_status':
 
-                $academic_program_statuses = get_academic_program_statuses();
+                $academic_program_statuses = array("ACTIVO","INACTIVO","SEMESTRE CANCELADO");
 
                 foreach($academic_program_statuses as $status){
                     $option .= "<option>";
-                    $option .= $status->nombre;
+                    $option .= $status;
                     $option .= "</option>";
                 }
 
@@ -210,10 +199,18 @@ if(isset($_POST['assignment_fields']) && isset($_POST['instance_id'])){
     }
 }
 
+if(isset($_POST['exception_fields'])){
+    $counter_columns += 1;
+    foreach($_POST['exception_fields'] as $exception_field){
+        array_push($exception_fields, $fields_format[$exception_field]);
+        }
+        array_push($columns, array("title"=>$columns_format['exception_cond'], "name"=>explode(' ', $fields_format['exception_cond'])[2], "data"=>explode(' ', $fields_format['exception_cond'])[2]));
+    }
+
 if(isset($_POST['instance_id'])){
     $counter = 0;
     
-    $result = get_ases_report($query_fields, $conditions, $risk_fields, $academic_fields, $statuses_array, $assignment_fields, $_POST['instance_id']);
+    $result = get_ases_report($query_fields, $conditions, $risk_fields, $academic_fields, $statuses_array, $assignment_fields, $exception_fields, $_POST['instance_id']);
 
     $data = array(
                 "bsort" => false,

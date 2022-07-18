@@ -6,3 +6,13 @@ package-lock.json
 /nbproject/private/
 .vscode
 .idea
+tags*
+tags.lock
+tags.temp
+*/tags
+vendor/latitude/latitude/src/functions.php
+test.txt
+npm-debug.log
+asescli.py
+/commands/*
+.rgignore

@@ -62,7 +62,7 @@ $url = new moodle_url("/blocks/ases/view/dphpforms_form_editor_comportamientos.p
 
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 
-$rol = get_role_ases($USER->id);
+$rol = lib_get_rol_name_ases($USER->id, $blockid);
 
 $record->form_id = $form_id;
 $record->comportamientos_disparadores = dphpforms_form_updater_get_disparadores( $form_id );

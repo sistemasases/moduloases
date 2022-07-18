@@ -19,9 +19,11 @@
  *
  * @author     Iader E. García Gómez
  * @author     Jorge Eduardo Mayor
+ * @author     Carlos M.Tovar Parra
  * @package    block_ases
  * @copyright  2018 Iader E. García <iadergg@gmail.com>
  * @copyright  2019 Jorge Eduardo Mayor <mayor.jorge@correounivalle.edu.co>
+ * @copyright  2021 Carlos M. Tovar Parra <carlos.mauricio.tovar@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
  
@@ -36,6 +38,7 @@
  
 function get_geographic_info($id_ases){
     global $DB;
+    if(empty($id_ases)) return false;
     $sql_query = "SELECT id_usuario AS id_user, latitud AS latitude, longitud AS longitude, barrio AS neighborhood,
                   id_ciudad AS id_city, direccion AS res_address, vive_lejos AS live_far_away , vive_zona_riesgo AS live_risk_zone, nativo AS native,
                   nivel_riesgo AS risk_level, observaciones AS observations
@@ -124,6 +127,26 @@ function student_profile_get_res_address($id_ases)
 }
 
 /**
+ * Extract the id of the student's neighborhood of residence from {talentospilos_demografia} table,
+ * and gets the name of the neighborhood in {talentospilos_barrios} table
+ *
+ * @see student_profile_get_neighborhood($id_ases)
+ * @param $id_ases
+ * @return string
+ */
+function student_profile_get_neighborhood($id_ases){
+    global $DB;
+    $neighborhoods_array = get_neighborhoods();
+    $sql_query = "SELECT barrio FROM {talentospilos_demografia} WHERE id_usuario = $id_ases";
+    $res_neighborhood = $DB->get_record_sql($sql_query)->barrio;
+    for ($i = 1; $i <= count($neighborhoods_array); $i++) {
+        if ($neighborhoods_array[$i]->id == (int) $res_neighborhood) {
+            return $neighborhoods_array[$i]->nombre;
+        }
+    }
+    return "NO DEFINIDO";
+}
+/**
  * Obtains all neighborhoods from {talentospilos_barrios} table
  *
  * @see get_neighborhoods()
@@ -202,7 +225,12 @@ function student_profile_save_geographic_info($id_ases, $latitude, $longitude, $
         $data_object_risk->calificacion_riesgo = (int)$nivel_riesgo;
         $data_object_risk->recorder = "other";
 
+        if($data_object_risk->id == 0){
+            trigger_error('ASES Notificacion: actualizar user_rol en la BD con id 0');
+            $result_geographic_risk = false;
+        }else{
         $result_geographic_risk = $DB->update_record('talentospilos_riesg_usuario', $data_object_risk);
+        }
     }
     else{
         $data_object_risk = new stdClass();
@@ -212,7 +240,11 @@ function student_profile_save_geographic_info($id_ases, $latitude, $longitude, $
         $data_object_risk->calificacion_riesgo = (int)$nivel_riesgo;
         $data_object_risk->recorder = "other";
 
-        $result_geographic_risk = $DB->insert_record('talentospilos_riesg_usuario', $data_object_risk, true);
+        // Bandaid fix
+        // id_usuario sometimes reaches as 0
+        if($data_object_risk->id_usuario != 0 && $data_object_risk->id_usuario != null){
+            $result_geographic_risk = $DB->insert_record('talentospilos_riesg_usuario', $data_object_risk, true);
+        }
     }
 
     if($geographic_info){
@@ -229,8 +261,12 @@ function student_profile_save_geographic_info($id_ases, $latitude, $longitude, $
         $geographic_info->vive_zona_riesgo = (isset($vive_zona_riesgo)?$vive_zona_riesgo:$geographic_info->vive_zona_riesgo);
         $geographic_info->nativo = (isset($nativo)?$nativo:$geographic_info->nativo);
         $geographic_info->nivel_riesgo = (isset($nivel_riesgo)?$nivel_riesgo:$geographic_info->nivel_riesgo);
-
-        $result_geographic_info = $DB->update_record('talentospilos_demografia', $geographic_info);
+        if($geographic_info->id == 0){
+            trigger_error('ASES Notificacion: actualizar demografia en la BD con id 0');
+            $result_geographic_info = false;
+        }else{
+            $result_geographic_info = $DB->update_record('talentospilos_demografia', $geographic_info);
+        }
     }
     else{
         $data_object = new stdClass();

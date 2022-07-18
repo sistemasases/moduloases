@@ -18,15 +18,22 @@
 /**
  * Estrategia ASES
  *
+ * @deprecated
  * @author     Juan Pablo Moreno Muñoz
  * @author     Jeison Cardona Gómez
  * @package    block_ases
  * @copyright  2017 Juan Pablo Moreno Muñoz <moreno.juan@correounivalle.edu.co>
  * @copyright  2019 Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @deprecated
+ */
+/**
+ * This lib is to not be used in any place.
+ * Pleace @see core/periods/periods.php
  */
 
 require_once(dirname(__FILE__). '/../../../../config.php');
+
 
  /**
  * Function that returns the current semester in a given interval
@@ -35,15 +42,15 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  * @param $fecha_inicio ---> starting date
  * @param $fecha_fin ---> ending date
  * @return object that represents the semester within the given interval
+ * @deprecated @see core_periods_get_all_periods()
  */
 
  function get_current_semester_byinterval($fecha_inicio,$fecha_fin){
-     
-     global $DB;
+    global $DB;
 
-     $sql_query = "SELECT id  max, nombre FROM {talentospilos_semestre} WHERE fecha_inicio ='$fecha_inicio' and fecha_fin ='$fecha_fin' ";
-     $current_semester = $DB->get_record_sql($sql_query);
-     return $current_semester;
+    $sql_query = "SELECT id  max, nombre FROM {talentospilos_semestre} WHERE fecha_inicio ='$fecha_inicio' and fecha_fin ='$fecha_fin' ";
+    $current_semester = $DB->get_record_sql($sql_query);
+    return $current_semester;
  }
 
  /**
@@ -52,6 +59,7 @@ require_once(dirname(__FILE__). '/../../../../config.php');
  * @param string $start_date With postgres fortmat YYYY-MM-DD
  * @param string $end_date With postgres fortmat YYYY-MM-DD
  * @return int $to_return id_semester
+ * @deprecated 
  */
 
 function periods_management_get_current_semester_by_apprx_interval( $start_date, $end_date ){
@@ -64,7 +72,6 @@ function periods_management_get_current_semester_by_apprx_interval( $start_date,
                     AND fecha_fin >= '$end_date'";
 
     $to_return = $DB->get_record_sql( $sql );
-
     if( $to_return ){
         return $to_return->id;
     }else{
@@ -82,49 +89,36 @@ function periods_management_get_current_semester_by_apprx_interval( $start_date,
  * @return object that represents the current semester
  */
  
- function get_current_semester(){
-     
-     global $DB;
-
-     $sql_query = "SELECT id AS max, nombre FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
-     $current_semester = $DB->get_record_sql($sql_query);
-     return $current_semester;
- }
+// function get_current_semester(){
+//     
+//     global $DB;
+//
+//     $sql_query = "SELECT id AS max, nombre FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
+//     $current_semester = $DB->get_record_sql($sql_query);
+//     return $current_semester;
+// }
 
 /**
  * Función que retorna la fecha de inicio del semestre actual
  * @see get_current_semester()
  * @return cadena de texto que representa la fecha de inicio del semestre actual
+ * @deprecated Refactorizar llamados a esta función.
+ * @todo delete this function, no other calls to it.
  */
-function get_current_semester_start(){
-    global $DB;
-    $sql_query = "SELECT fecha_inicio AS fecha FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
-    $current_semester = $DB->get_record_sql($sql_query);
-    return $current_semester;
-}
+//function get_current_semester_start(){
+//    global $DB;
+//    $sql_query = "SELECT fecha_inicio AS fecha FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
+//    $current_semester = $DB->get_record_sql($sql_query);
+//    return $current_semester;
+//}
 
-/**
- * Función que retorna la fecha de inicio del semestre actual en el formato #AÑO#MES
- * @see get_current_semester_start()
- * @return cadena de texto que representa la fecha de inicio del semestre actual con formato procesado
- */
-function get_current_semester_processed(){
-    $sem = get_current_semester_start();
-    $semestre = $sem->fecha;
-
-    $año = substr($semestre,0,4);
-    $mes = substr($semestre,5,2);
-
-    $semestre = $año.$mes;
-
-    return $semestre;
-}
 
  /**
  * Function that returns the current semester.
  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>.
  * @return object that represents the current semester.
  * @return null if are no semesters registered.
+ * @deprecated @see core_periods_get_current_period on core/periods/periods.php
  */
  
 function periods_get_current_semester(){
@@ -139,7 +133,6 @@ function periods_get_current_semester(){
     )";
     
     $current_semester = $DB->get_record_sql($sql_query);
-
     return $current_semester;
 }
 
@@ -149,6 +142,7 @@ function periods_get_current_semester(){
  * @see get_semester_interval($id)
  * @param $id ---> semester's id
  * @return object that represents the semester 
+ * @deprecated
  */
  
  function get_semester_interval($id){
@@ -166,14 +160,15 @@ function periods_get_current_semester(){
  * 
  * @see get_all_semesters()
  * @return array that contains every semester registered on the DataBase
+ * @deprecated @see core_periods_get_all_periods on core/periods/periods.php
+ * @todo delete this function, no other calls to it.
  */
 
  function get_all_semesters(){
      global $DB;
 
      $sql_query = "SELECT id, nombre, fecha_inicio, fecha_fin FROM {talentospilos_semestre}";
-     $all_semesters = $DB->get_records_sql($sql_query);          
-
+     $all_semesters = $DB->get_records_sql($sql_query);   
      return $all_semesters;
      
  }
@@ -187,6 +182,8 @@ function periods_get_current_semester(){
  * @see get_semester_by_id($idSemester)
  * @param $idSemester -> semester's id
  * @return object that represents certain information about the specific semester
+ * @deprecated @see core_periods_get_period_by_id on core/periods/periods.php
+ * @todo delete.
  */
 
 
@@ -212,10 +209,11 @@ function periods_get_current_semester(){
  * @param $semesterInfo -> array with the new information of a semester
  * @param $idSemester -> semester's id
  * @return boolean true if it was updated, false it wasn't
+ * @deprecated
  */
 
  function update_semester($semesterInfo, $idSemester){
-
+	 
      global $DB;
 
      try{
@@ -227,14 +225,17 @@ function periods_get_current_semester(){
           $semester->fecha_inicio = $semesterInfo[2];
           $semester->fecha_fin = $semesterInfo[3];
 
-
+          if($semester->id == 0){
+            trigger_error('ASES Notificacion: actualizar semestre en la BD con id 0');
+            return -1;
+        }
           $update = $DB->update_record('talentospilos_semestre', $semester);
 
 
           return $update;
  
      }catch(Exception $e){
-          return $e->getMessage();
+        return $e->getMessage();
      }
 
 
@@ -245,6 +246,8 @@ function periods_get_current_semester(){
  * 
  * @see get_all_semesters_table()
  * @return array
+ * @deprecated
+ * @todo delete, no more calls to this function.
  */
  
  function get_all_semesters_table(){
@@ -280,10 +283,10 @@ function periods_get_current_semester(){
  * @param $beginning_date -> semester's starting date
  * @param $ending_date -> semester's ending date
  * @return number
+ * @deprecated @see core_periods_create_period
  */
 
  function create_semester($name, $beginning_date, $ending_date){
-
      global $DB;
 
      $newSemester = new stdClass;
@@ -294,8 +297,6 @@ function periods_get_current_semester(){
      $insert = $DB->insert_record('talentospilos_semestre', $newSemester, true);
 
      return $insert;
-
-
  }
 
  /**
@@ -303,10 +304,11 @@ function periods_get_current_semester(){
   * 
   * @see get_semester_id_by_name($semester_name)
   * @param $semester_name -> name of the semester to be found
-  * @return Integer 
+  * @deprecated
+  * @return Integer
+  * @todo delete.
   */
  function get_semester_id_by_name($semester_name){
-
     global $DB;
 
     $sql_query = "SELECT id FROM {talentospilos_semestre} WHERE nombre = '$semester_name'";
@@ -328,10 +330,11 @@ function periods_get_current_semester(){
  * Functions that returns all stored semesters.
  * @author Jeison Cardona Gómez <jeison.cardona@correounivalle.edu.co>
  * @return array
+ * @deprecated @see core_periods_get_all_periods()
+ * @todo delete.
  */
 
 function periods_management_get_all_semesters(){
-     
     global $DB;
     $sql = "SELECT * FROM {talentospilos_semestre}";
 

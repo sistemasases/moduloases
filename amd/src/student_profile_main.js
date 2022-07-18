@@ -1,4 +1,5 @@
 // Standard license block omitted.
+
 /*
  * @package    block_ases
  * @copyright  ASES
@@ -8,6 +9,7 @@
 /**
  * @module block_ases/student_profile_main
  */
+
 
 define(['jquery',
     'block_ases/bootstrap',
@@ -21,7 +23,9 @@ define(['jquery',
     'block_ases/academic_profile_main',
     'block_ases/socioed_profile_main',
     'block_ases/geographic_main',
-    'block_ases/discapacity_tracking_main'], function ($, bootstrap, d3, sweetalert, jqueryui, select2, Chart, mustache, loading_indicator, academic, socioed, geographic, discapacity_tracking) {
+    'block_ases/discapacity_tracking_main',
+    'core/templates'
+], function ($, bootstrap, d3, sweetalert, jqueryui, select2, Chart, mustache, loading_indicator, academic, socioed, geographic, discapacity_tracking, Templates) {
 
     return {
         init: function (data_init) {
@@ -38,6 +42,10 @@ define(['jquery',
             var cod_facultad = cod_programa_activo[1];
             var latLng_student_campus = (cod_facultad === '6' || cod_facultad === '8')?LATLNG_CAMPUS_SANFER:LATLNG_CAMPUS_MELENDEZ;
 
+         
+         
+           
+           // createDataTable($("#table_prueba"), columns,dataset)
             // Agrega iframe para Google Maps
             if (ciudad_est == 'CALI') {
 
@@ -49,6 +57,9 @@ define(['jquery',
             }
 
 
+           
+
+            $('#field_doc_dtddp').hide();
 
             /**
              * Event that loads asynchronously the socio-educational tab
@@ -86,6 +97,7 @@ define(['jquery',
                 $("#mapa").appendTo("#movableMap");
             });
 
+             
             //Carga una determinada pestaña
 
             //Eliminar fila de una tabla
@@ -104,6 +116,8 @@ define(['jquery',
                     $(this).attr("title", proptitle);
                 }
             });
+
+           
 
             /**
              * Funcion para añadir una nueva fila en la tabla
@@ -144,6 +158,8 @@ define(['jquery',
                 load_student(student_code);
             });
 
+        
+
             // Manage statuses
             for (var i = 0, len = data_init.length; i < len; i++) {
                 $('#select-' + data_init[i].academic_program_id + ' option[value=' + data_init[i].program_status + ']').attr('selected', true);
@@ -155,6 +171,9 @@ define(['jquery',
                 }
             }
 
+       
+           
+            
             var current_tracking_status = "";
 
             // ******* Manage edition ******
@@ -183,6 +202,7 @@ define(['jquery',
                 if(status_ases == "seguimiento")
                     self.update_status_ases(parameters);
             });
+              
 
             switch (parameters.tab) {
                 case "socioed_tab":
@@ -197,6 +217,7 @@ define(['jquery',
                     panel_collapse.removeClass('in');
                     break;
             }
+
 
             var modal_peer_tracking = $('#modal_peer_tracking');
 
@@ -368,7 +389,6 @@ define(['jquery',
                             }),
                             url: "../managers/student_profile/studentprofile_api.php",
                             success: function (msg) {
-                                loading_indicator.hide();
                                 if(msg.status_code == 0) {
                                     if ($('#select-' + id_program).val() == "ACTIVO") {
                                         $('#tr-' + id_moodle).addClass('is-active');
@@ -387,7 +407,6 @@ define(['jquery',
                             dataType: "json",
                             cache: "false",
                             error: function (msg) {
-                                loading_indicator.hide();
                                 swal(
                                     msg.title,
                                     msg.msg,
@@ -395,9 +414,11 @@ define(['jquery',
                                 );
                             },
                         });
+                        loading_indicator.hide();
                     } else {
                         $('#select-' + data.program_id).val(current_status);
                     }
+
                 });
         }, update_status_ases: function (parameters_url) {
 
@@ -666,13 +687,13 @@ define(['jquery',
                 $('#tip-save').show();
                 $('#span-icon-cancel-edit').show();
                 $('#tip-cancel').show();
-                $('#tipo_doc').prop('disabled', false);
+                $('#i_tipo_doc').prop('disabled', false);
                 $('#num_doc').prop('readonly', false);
                 $('#email').prop('readonly', false);
                 $('#icetex_status').prop('disabled', false);
                 $('#pais').prop('disabled', false);
                 $('#genero').prop('disabled', false);
-                $('#sexo').prop('disabled', false);
+                $('#s_sexo').prop('disabled', false);
                 $('#cond_excepcion').prop('disabled', false);
                 $('#act_simultanea').prop('disabled', false);
                 $('#etnia').prop('disabled', false);
@@ -680,9 +701,10 @@ define(['jquery',
                 $('#otro_genero').prop('disabled', false);
                 $('#otro_genero').prop('required', false);
                 $('#otro_act_simultanea').prop('required', false);
-                $('#estado_civil').prop('disabled', false);
+                $('#s_estado_civil').prop('disabled', false);
                 $('#observacion').prop('readonly', false);
                 $('.select_statuses_program').prop('disabled', false);
+                $('#field_doc_dtddp').show();
                 $('.input_fields_general_tab').prop('readonly', false);
                 $('.bt_delete_person').css("visibility", "visible");
                 $('.input-tracking').prop('disabled', false);
@@ -690,6 +712,10 @@ define(['jquery',
                 $('#edit_person_vive').show();
                 $('#age').hide();
                 $('#birthdate').show();
+                $('#link_doc_dtddp').bind('click', function(e) {e.preventDefault();});
+                $('#link_doc_dtddp').css("color", "black")
+                    .css("text-decoration", "none");
+
                 //$('#edit_institucion').show();
 
                 $('#genero').on('click', function () {
@@ -739,7 +765,6 @@ define(['jquery',
             $('#span-icon-save-profile').on('click', function () {
 
                 var form_with_changes = $('#ficha_estudiante').serializeArray();
-
                 var result_validation = object_function.validate_form(form_with_changes);
 
                 if (result_validation.status == "error") {
@@ -768,6 +793,7 @@ define(['jquery',
                     }
                     data_persons = JSON.stringify(data_persons);
                     object_function.save_form_edit_profile(form_with_changes, object_function, update_or_insert1, update_or_insert2, data_persons);
+
                     $('#otro_genero').prop('disabled', true);
                     $('#otro_act_simultanea').prop('disabled', true);
                     $('#otro_genero').prop('required', false);
@@ -797,13 +823,13 @@ define(['jquery',
                             if (!(validate_email[0] === field.value)) {
                                 msg.title = "Error";
                                 msg.status = "error";
-                                msg.msg = "El campo " + field.name + " no cumple con el formato institucional.";
+                                msg.msg = "El campo " + field.name + " no cumple con el formato institucional. Si no cuenta con el " + field.name + " institucional del estudiante, ingrese `temporal@correounivalle.edu.co', y el " + field.name + " alternativo en el campo correspondiente de la información del estudiante.";
                                 return msg;
                             }
                         }else {
                             msg.title = "Error";
                             msg.status = "error";
-                            msg.msg = "El campo " + field.name + " no cumple con el formato institucional.";
+                            msg.msg = "El campo " + field.name + " no cumple con el formato institucional. Si no cuenta con el " + field.name + " institucional del estudiante, ingrese `temporal@correounivalle.edu.co', y el " + field.name + " alternativo en el campo correspondiente de la información del estudiante.";
                             return msg;
                         }
                         break;
@@ -841,6 +867,12 @@ define(['jquery',
                             msg.title = "Error";
                             msg.status = "error";
                             msg.msg = "El campo " + field.name + " no debe contener letras";
+                            return msg;
+                        }
+                        if (has_symbols(field.value)) {
+                            msg.title = "Error";
+                            msg.status = "error";
+                            msg.msg = "El campo " + field.name + " no debe contener símbolos";
                             return msg;
                         }
                         break;
@@ -972,6 +1004,54 @@ define(['jquery',
                             msg.msg = "El campo " + field.name + " solo debe contener números";
                             return msg;
                         }
+                        if (has_symbols(field.value)) {
+                            msg.title = "Error";
+                            msg.status = "error";
+                            msg.msg = "El campo " + field.name + " solo debe contener números";
+                            return msg;
+                        }
+                        break;
+                    case "acudiente":
+                        if (has_symbols(field.value)) {
+                            msg.title = "Error";
+                            msg.status = "error";
+                            msg.msg = "El campo " + field.name + " no debe contener símbolos";
+                            return msg;
+                        }
+                        if (has_numbers(field.value)) {
+                            msg.title = "Error";
+                            msg.status = "error";
+                            msg.msg = "El campo " + field.name + " no debe contener números";
+                            return msg;
+                        }
+                        break;
+                    case "name_person":
+                        if (has_symbols(field.value)) {
+                            msg.title = "Error";
+                            msg.status = "error";
+                            msg.msg = "El campo " + field.name + " (Nombre persona con quien vive) no debe contener símbolos";
+                            return msg;
+                        }
+                        if (has_numbers(field.value)) {
+                            msg.title = "Error";
+                            msg.status = "error";
+                            msg.msg = "El campo " + field.name + " (Nombre persona con quien vive) no debe contener números";
+                            return msg;
+                        }
+                        break;
+                    case "parentesco_person":
+                        if (has_symbols(field.value)) {
+                            msg.title = "Error";
+                            msg.status = "error";
+                            msg.msg = "El campo " + field.name + " (Parentesco persona con quien vive) no debe contener símbolos";
+                            return msg;
+                        }
+                        if (has_numbers(field.value)) {
+                            msg.title = "Error";
+                            msg.status = "error";
+                            msg.msg = "El campo " + field.name + " (Parentesco persona con quien vive) no debe contener números";
+                            return msg;
+                        }
                         break;
                     case "emailpilos":
                         if (!is_email(field.value)) {
@@ -998,6 +1078,7 @@ define(['jquery',
                 url: "../managers/student_profile/studentprofile_api.php",
                 success: function (msg) {
                     loading_indicator.hide();
+                    $('#link_doc_dtddp').attr('href', $('#field_doc_dtddp').prop('value'));
                     if(msg.status_code == 0) {
                         swal(
                             msg.title,
@@ -1029,25 +1110,28 @@ define(['jquery',
             $('#tip-save').hide();
             $('#span-icon-edit').show();
             $('#tip-edit').show();
-            $('#tipo_doc').prop('disabled', true);
+            $('#i_tipo_doc').prop('disabled', true);
             $('#num_doc').prop('readonly', true);
             $('#email').prop('readonly', true);
             $('#icetex_status').prop('disabled', true);
             $('#genero').prop('disabled', true);
-            $('#sexo').prop('disabled', true);
+            $('#s_sexo').prop('disabled', true);
             $('#cond_excepcion').prop('disabled', true);
             $('#act_simultanea').prop('disabled', true);
             $('#etnia').prop('disabled', true);
-            $('#estado_civil').prop('disabled', true);
+            $('#s_estado_civil').prop('disabled', true);
             $('#pais').prop('disabled', true);
             $('#observacion').prop('readonly', true);
             $('.select_statuses_program').prop('disabled', true);
+            $('#field_doc_dtddp').hide();
             $('.input_fields_general_tab').prop('readonly', true);
             $('.input-tracking').prop('disabled', true);
             $(".bt_delete_person").css("visibility", "hidden");
             $('#age').show();
             $('#birthdate').hide();
-
+            $('#link_doc_dtddp').css("color", "").css("text-decoration", "");
+            $('#link_doc_dtddp').unbind('click');
+            
         }, revert_changes: function (form) {
             // Revertir cualquier cambio después de cancelar la edición
             for (field in form) {
@@ -1081,17 +1165,13 @@ define(['jquery',
             }),
             url: "../managers/student_profile/studentprofile_api.php",
             success: function(msg) {
-                if(msg.status_code == 0) {
-                    $.ajax({
-                        url: "../templates/view_"+tab_name+"_tab_sp.mustache",
-                        data: null,
-                        dataType: "text",
-                        async: false,
-                        success: function( template ){
-                            loading_indicator.hide();
-                            let tab_to_load = $(mustache.render( template, msg.data_response ));
-                            $(".tab-content").append( tab_to_load );
 
+                if(msg.status_code == 0) {
+                    Templates.renderForPromise("block_ases/view_"+tab_name+"_tab_sp", msg.data_response, 'moove')
+                        .then(({html, js}) => {
+                            Templates.appendNodeContents('.tab-content', html, js);
+                            $("#"+tab_name+"_tab").addClass("active");
+                            loading_indicator.hide();
                             switch(tab_name){
                                 case 'socioed':
                                     socioed.init();
@@ -1109,26 +1189,20 @@ define(['jquery',
                                     discapacity_tracking.init();
                                     break;
                             }
-
-                            $("#"+tab_name+"_tab").addClass("active");
-                        },
-                        error: function(){
-                            loading_indicator.hide();
-                            console.log( "../templates/view_"+tab_name+"_tab_sp.mustache cannot be reached." );
-                        }
-                    });
+                        })
+                        .catch(ex => console.error(ex));
                 } else {
-                    loading_indicator.hide();
                     console.log(msg);
                 }
             },
             dataType: "json",
             cache: "false",
             error: function(msg) {
-                loading_indicator.hide();
+
                 console.log(msg);
             }
         });
+        loading_indicator.hide();
     }
 
     /**
@@ -1151,7 +1225,6 @@ define(['jquery',
             }),
             url: "../managers/student_profile/studentprofile_api.php",
             success: function(msg) {
-                loading_indicator.hide();
                 if(msg.status_code == 0) {
                     var values = msg.data_response;
                     procesar_datos_riesgo(values);
@@ -1165,10 +1238,10 @@ define(['jquery',
             dataType: "json",
             cache: "false",
             error: function(msg) {
-                loading_indicator.hide();
                 console.log(msg);
             }
         });
+        loading_indicator.hide();
     }
 
     function graph() {
@@ -1192,6 +1265,16 @@ define(['jquery',
         var numbers = "0123456789";
         for (i = 0; i < str.length; i++) {
             if (numbers.indexOf(str.charAt(i), 0) != -1) {
+                return 1;
+            }
+        }
+        return 0;
+    }
+
+    function has_symbols(str) {
+        var symbols = "|°!¡'@#$%&/()=¿?+{}[]-+*.,<>;:_^~";
+        for (i = 0; i < str.length; i++) {
+            if (symbols.indexOf(str.charAt(i), 0) != -1) {
                 return 1;
             }
         }
@@ -1259,7 +1342,6 @@ define(['jquery',
             cache: "false",
             url: "../../ases/managers/student_profile/studentprofile_api.php",
             success: function (msg) {
-                loading_indicator.hide();
                 if(msg.status_code == 0)
                 {
                     swal({
@@ -1275,7 +1357,6 @@ define(['jquery',
                 //clean_modal_dropout();
             },
             error: function (msg) {
-                loading_indicator.hide();
                 swal(
                     'Error',
                     'No se puede contactar con el servidor.',
@@ -1283,6 +1364,7 @@ define(['jquery',
                 );
             },
         });
+        loading_indicator.hide();
     }
 
     function manage_ases_status() {
@@ -1356,6 +1438,8 @@ define(['jquery',
             }
         });
     }
+
+  
 
     function save_ases_status() {
         var data = new Array();
@@ -2024,6 +2108,8 @@ define(['jquery',
             });
         }
     }
+    
+   
 
     function load_student(code_student) {
 

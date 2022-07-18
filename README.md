@@ -86,6 +86,14 @@ Usamos la siguiente estructura para el versionado:
 * b = Actualización/Nueva view sin cambios en la BD/Macro-cambio parcial
 * c = Corrección de errores/Refactorización menor
 
+## Glosario
+
+Existen difentes tipos de estudiantes en el módulo Ases, los cuales son los siguientes:
+
+* Estudiantes Activos ASES: Aquellos que tengan monitor socioeducativo en el período actual
+* Estudiantes activos ICETEX: Aquello que tengan Resolución en el período actual
+* Estudiantes activos SRA: Aquellos que tengan algún registro en la tabla académica para el periodo actual, y que no tengan fecha de cancelación.
+
 ## Autores
 
 * **Jeison Cardona Gómez** - [vvbv](https://github.com/vvbv)
@@ -95,11 +103,19 @@ Usamos la siguiente estructura para el versionado:
 * **Camilo José Cruz Rivera** - [cjcruzrivera](https://github.com/cjcruzrivera)
 * **Isabella Serna Ramírez** - [isabella317](https://github.com/isabella317)
 * **Juan Pablo Castro** - [jpcv222](https://github.com/jpcv222)
+* **Joan Manuel Tovar Guzmán** - [joanmtg](https://github.com/joanmtg)
 * **Jorge Eduardo Mayor Fernández** - [Jorgemayor](https://github.com/Jorgemayor)
 * **Alejandro Palacios Hurtado** - [alexoph](https://github.com/alexoph)
-* **Joan Manuel Tovar Guzmán** - [joanmtg](https://github.com/joanmtg)
+* **David Santiago Cortés Cortés** - [DavidC0rtes](https://github.com/DavidC0rtes)
+* **Joan Sebastián Betancourt Arias** - [SebastianBetancourt](https://github.com/SebastianBetancourt)
 * **ASES Dev** - [sistemasases](https://github.com/sistemasases)
 * **Fabio Andres Castañeda Duarte** - [fabioacd](https://github.com/fabioacd)
+* **Cesar Alberto Becerra Ramírez** - [Rhazek12](https://github.com/Rhazek12)
+* **Nicolas Lasso Jaramillo** - [MurphLaws](https://github.com/MurphLaws)
+* **Cristian Duvan Machado Mosquera** - [CriistiianDM](https://github.com/CriistiianDM)
+* **Milton Armando Garcia Ecue** - [1000tonage](https://github.com/1000tonage)
 * **José Alejandro Libreros** - *Documentación* - [josealejolibreros](https://github.com/josealejolibreros)
 * **Diana Melissa Millares** - *Documentación* - [melissamillares](https://github.com/melissamillares)
+* **Valentina Salamanca Rodríguez** - *Documentación* - [vantwot](https://github.com/vantwot)
+ 
 

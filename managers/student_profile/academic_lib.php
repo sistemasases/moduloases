@@ -18,8 +18,10 @@
  * Ases block
  *
  * @author     Iader E. García Gómez
+ * @author     Carlos M. Tovar Parra
  * @package    block_ases
  * @copyright  2018 Iader E. García <iadergg@gmail.com>
+ * @copyright  2021 Carlos M. Tovar Parra <carlos.mauricio.tovar@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -28,22 +30,27 @@ require_once $CFG->dirroot . '/grade/querylib.php';
 require_once $CFG->dirroot . '/grade/report/user/lib.php';
 require_once $CFG->dirroot . '/grade/lib.php';
 require_once (__DIR__ . '/../course/course_lib.php');
+require_once (__DIR__ . '/../../core/module_loader.php');
+
+module_loader('periods');
 
 /**
  * Returns an html wiht courses and grades for a student in the last semester
  *
  * @see get_grades_courses_student_last_semester($id_student)
  * @param $id_student --> id from {user}
+ * @param $instance_id --> instance id from {block_instances}
  * @return string html courses
  */
 
-function get_grades_courses_student_last_semester($id_student)
+function get_grades_courses_student_last_semester($id_student, $instance_id)
 {
 
     global $DB;
 
-    $query_semestre = "SELECT nombre FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
-    $sem = $DB->get_record_sql($query_semestre)->nombre;
+    //$query_semestre = "SELECT nombre FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
+    //$sem = $DB->get_record_sql($query_semestre)->nombre;
+    $sem = core_periods_get_current_period($instance_id)->nombre;
 
     $año = substr($sem, 0, 4);
 
@@ -186,8 +193,9 @@ function get_historical_semesters_by_student($id_student)
         $semester->json_materias = $register->json_materias;
 
         //search semester name
-        $query_semestre = "SELECT nombre FROM {talentospilos_semestre} WHERE id = $id_semester";
-        $semester_name = $DB->get_record_sql($query_semestre)->nombre;
+        //$query_semestre = "SELECT nombre FROM {talentospilos_semestre} WHERE id = $id_semester";
+        //$semester_name = $DB->get_record_sql($query_semestre)->nombre;
+        $semester_name = core_periods_get_period_by_id($id_semester)->nombre;
 
         //search program name
         $query_program = "SELECT nombre FROM {talentospilos_programa} WHERE id = $id_programa";
@@ -300,7 +308,7 @@ function make_html_semesters($semesters)
             if ($materias === null) {
                 $descriptions .= "NO REGISTRA MATERIAS EN ESTE SEMESTRE";
             } else {
-                $descriptions .= "<div class = 'row'> <b>
+                $descriptions .= "<div> <b>
                 <div class = 'col-md-4'>
                    MATERIA
                 </div>
@@ -313,7 +321,10 @@ function make_html_semesters($semesters)
                <div class = 'col-md-2'>
                     CREDITOS
                </div>
-                </b>
+               <div class = 'col-md-2'>
+                    CANCELA
+               </div>
+                </b><br>
             </div>";
 
                 foreach ($materias as $materia) {
@@ -321,6 +332,7 @@ function make_html_semesters($semesters)
                     if(is_float($materia->nota + 0) and $materia->nota < 3){
                         $perdida = "perdida";
                     }
+                    $cancelacion_materia=date('d-m-Y',$materia->fecha_cancelacion_materia);
                     $descriptions .= "<div class = 'row $perdida'>
                     <div class = 'col-md-4'>
                         $materia->nombre_materia
@@ -333,6 +345,9 @@ function make_html_semesters($semesters)
                     </div>
                     <div class = 'col-md-2'>
                          $materia->creditos
+                    </div>
+                    <div class = 'col-md-2'>
+                         $cancelacion_materia
                     </div>
                     
                  </div>";

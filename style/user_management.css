@@ -1,0 +1,44 @@
+details {
+    width: inherit;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    margin-bottom: 2%;
+    padding: 1%;
+    margin-left: 0.6%;
+}
+
+details > summary {
+    font-size: 120%;
+}
+
+details[open] {
+    padding: 1%;
+}
+
+details[open] summary {
+    border-bottom: 1px solid #aaa;
+    margin-bottom: .5em;
+}
+
+details[open] summary ~ * {
+    animation: sweep .5s ease-in-out;
+}
+
+select {
+    height: 2em;
+}
+
+span.delete_user {
+    background-image: url(./images/cancel.png);
+    background-size: contain;
+    width: 30%;
+    height: 15px;
+    display: block;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+@keyframes sweep {
+    0% {opacity: 0; margin-top: -5%}
+    100% {opacity: 1; margin-top: 0px}
+}

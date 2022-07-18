@@ -8,7 +8,10 @@
 * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
 */
 
-define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($, bootstrap, sweetalert) {
+define(['jquery', 
+        'block_ases/bootstrap', 
+        'block_ases/sweetalert',
+        'block_ases/mustache'], function ($, bootstrap, sweetalert, mustache) {
 
 
     return {
@@ -87,6 +90,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($,
                     case 'status':
                         controler = 'mrm_status.php'; //
                         break;
+					case 'monitor_data':
+						controler = 'mrm_monitor_data.php';
+						break;
                     default:
                         return 0;
                 }
@@ -120,7 +126,12 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($,
                         $('#informacion').append(msj.urlzip);
                     },
                     error: function (msj) {
-                        alert("error ajax");
+						swal(
+							'Error',
+							'Error con el servidor, por favor inténtelo nuevamente',
+							'error'
+						);
+						console.log(msj);
                         $('#response').html("");
                         var val = $('#selector').val();
                         addHelpMessage(val);
@@ -142,10 +153,25 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert'], function ($,
                         $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información Asignacion</h4><strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul> <li>username_monitor</li><li>username_estudiante</li> </ul> </p></div>');
                         break;
                     case 'roles_usuario':
-                        $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información Roles</h4><strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul> <li>username</li><li>rol(administrativo, reportes,profesional_ps, monitor_ps,  estudiante_t ó practicante_psp)</li> </ul> </p><p>Columnas extras aceptadas: <ul> <li>jefe</li>  </ul> </p></div>');
+                        $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información Roles</h4><strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul> <li>username</li><li>rol(administrativo, reportes,profesional_ps, monitor_ps,  estudiante_t ó practicante_ps)</li> </ul> </p><p>Columnas extras aceptadas: <ul> <li>jefe</li>  </ul> </p></div>');
                         break;
                     case 'status':
                         $('#informacion').append('<div class="alert alert-info"><h4 align="center">Información estados</h4><strong>Para tener en cuenta...</strong> <br><p>Columnas obligatorias:<ul> <li>username</li> <li>estado_ases</li> <li>estado_icetex</li> <li>estado_programa</li><li>tracking_status</li> <li>motivo_ases(puede ir en blanco)</li> <li>motivo_icetex(puede ir en blanco)</li> </ul> </p></div>');
+                        break;
+                    case 'monitor_data':
+                        $.ajax({
+                            url: "../templates/mass_management/"+selector+"_div.mustache",
+                            data: null,
+                            dataType: "text",
+                            success: function (template) {
+                                let divToLoad = $(mustache.render(template, {}));
+                                console.log(divToLoad);
+                                $('#informacion').append(divToLoad);
+                            },
+                            error: function() {
+                                console.error(`../templates/mass_management/${selector}_div.mustache cannot be reached.`);
+                            }
+                        }); 
                         break;
                     default:
                     // code

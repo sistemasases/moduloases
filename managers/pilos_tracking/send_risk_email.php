@@ -35,7 +35,7 @@ $_JSON_POST_INPUT = json_decode(file_get_contents('php://input'));
 
 //Verifies which functions will be executed to call the respective method or returns a json wheter with an email or  array of students, .
 if(isset($_POST['function']) || !(is_null($_JSON_POST_INPUT)) ){
-    
+
     $function = null;
     if(isset($_POST['function'])){
         $function = $_POST['function'];
@@ -72,6 +72,7 @@ if(isset($_POST['function']) || !(is_null($_JSON_POST_INPUT)) ){
 function send_email($risk_array, $observations_array, $id_receiving_user, $id_student_moodle, $id_student_pilos, $date, $subject="", $messageText="", $track_url){
 
     global $USER, $DB;
+
 
     $emailToUser = new stdClass;
     $emailFromUser = new stdClass;
@@ -174,6 +175,9 @@ function send_email_dphpforms($json_risk_observation_, $student_code, $date, $su
 
     global $USER, $DB;
 
+    $url_components = parse_url($track_url);
+    parse_str($url_components['query'], $params);
+
     $json_risk_observation = array_values( $json_risk_observation_ );
 
     $emailToUser = new stdClass;
@@ -184,8 +188,8 @@ function send_email_dphpforms($json_risk_observation_, $student_code, $date, $su
     //$id_estudiante = get_ases_user_by_code($student_code)->id;
     $id_estudiante = $student_code;
 
-    $id_professional = get_assigned_professional($id_estudiante)->id;
-    $id_practicante = get_assigned_pract($id_estudiante)->id;
+    $id_professional = get_assigned_professional($id_estudiante, $params['instanceid'])->id;
+    $id_practicante = get_assigned_pract($id_estudiante, $params['instanceid'])->id;
     
     $sending_user = get_user_by_username('sistemas1008');
     $receiving_user = get_full_user($id_professional);

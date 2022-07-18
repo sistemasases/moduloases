@@ -92,7 +92,7 @@ $output = $PAGE->get_renderer('block_ases');
 
 
 // Loading information to show
-$rol = get_role_ases($USER->id);
+$rol = lib_get_rol_name_ases($USER->id, $blockid);
 $courses = get_courses_pilos($blockid);
 
 if($rol == 'sistemas' || $rol == 'academico'){
@@ -137,7 +137,7 @@ if($rol == 'sistemas' || $rol == 'academico'){
     
     foreach($courses as $profe => $cursos){
         
-        if($user_name == $profe){
+        if($user_name == $profe) {
             $htmlTable.="<tr class='cerrado' id = 'profesor_$index' ><td style='border-right: none' id = 'profe_$index'>$profe</td><td style='border-left: none'><button style='width: 100%' class = 'desplegate'><i class='glyphicon glyphicon-chevron-left'></i></button></td></tr>";
             
             $courses_info.="<div style = 'padding-left: 15px' id = 'curso_$index'>";

@@ -332,7 +332,8 @@ define([
                         <input 
             placeholder="Ingrese un valor entre 1 y 100" 
             id="elementAggregationCoef" 
-            v-model="elementAggregationCoef" type="number">
+            v-model="elementAggregationCoef" type="number"
+            v-on:keypress="isNumber($event)">
             </template>
             <br/>
             <template v-if="elementTypeId === categoryElementTypeId || elementTypeId === partialExamElementId">
@@ -376,6 +377,15 @@ define([
             }
         },
         methods: {
+            isNumber: function(evt) {
+                evt = (evt) ? evt : window.event;
+                var charCode = (evt.which) ? evt.which : evt.keyCode;
+                if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
+                    evt.preventDefault();
+                } else {
+                    return true;
+                }
+            },
            changeAggregation(aggregation) {
              this.aggregation = aggregation;
            },
@@ -675,14 +685,14 @@ define([
             @mouseout="showMenu = false" 
             v-bind:colspan="childSize" >
                 <flex-row align-v="center"  v-bind:style="editZoneStyles">
-                    <input v-model="catName" :class="getCatClass" @focus="catFocus" @blur="catBlur" @keydown.enter="updateCategoryName" @keyup.enter="$event.target.blur()"></input>
+                    <input v-model="catName" :class="getCatClass" @focus="catFocus" @blur="catBlur" @keyup.enter="$event.target.blur()"></input>
                     <input
                      v-model="catWeight" 
                      :class="catGetWeightClass"
                      @focus="catWFocus" @blur="catWBlur"
-                     @keydown.enter="saveAggregationCoef" 
                      @keyup.enter="$event.target.blur()"
                      v-if="parentCategory.aggregation == weightedAggregation"
+                     v-on:keypress="isNumber($event)"
                      ></input>
                     <category-mini-menu v-bind:categoryId="category.id" v-show="showMenu"></category-mini-menu>
                 </flex-row>
@@ -738,6 +748,15 @@ define([
             }
         },
         methods: {
+            isNumber: function(evt) {
+                evt = (evt) ? evt : window.event;
+                var charCode = (evt.which) ? evt.which : evt.keyCode;
+                if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
+                    evt.preventDefault();
+                } else {
+                    return true;
+                }
+            },
             catFocus: function (){
                 //this.length = 17;
                 this.getCatClass = 'catwithfocus';
@@ -748,7 +767,7 @@ define([
                 //this.length = 19;
                 this.getCatClass = 'catnotfocused';
                 this.showFullName = false;
-                this.uptadeCatName();
+                this.updateCategoryName();
             },
             catWFocus: function (){
                 this.catGetWeightClass = 'catwwithfocus';
@@ -758,7 +777,7 @@ define([
             catWBlur: function (){
                 this.catGetWeightClass = 'catwnotfocused';
                 this.showFullName = false;
-                this.updateWeight();
+                this.saveAggregationCoef();
             },
             updateCategoryName: function () {
              this.$store.dispatch(
@@ -766,10 +785,9 @@ define([
                  {...this.category, fullname: this.catName})
            },
             saveAggregationCoef: function() {
-                if(this.catWeight !== this.aggregationCoef) {
                     this.$store.dispatch(g_store.actions.UPDATE_ITEM,
                         {...this.categoryGradeItem, aggregationcoef: this.catWeight})
-                }
+
             },
             uptadeCatName: function(){
                 if(this.showFullName){
@@ -909,9 +927,9 @@ define([
                      v-model="weight" 
                      :class="getWeightClass"
                      @focus="wfocus" @blur="wblur"
-                     @keydown.enter="saveAggregationCoefChanges" 
                      @keyup.enter="$event.target.blur()"
                      v-if="parentCategory.aggregation == weightedAggregation"
+                     v-on:keypress="isNumber($event)"
                      ></input>
                     <item-mini-menu v-show="showMenuItems" v-bind:itemId="item.id"></item-mini-menu>
                 </flex-row>
@@ -933,7 +951,7 @@ define([
                     getClass: 'inotfocused',
                     getWeightClass: 'iwnotfocused',
                     content: "",
-                    weight: "",
+                    weight: 0,
                     //length: 19,
                     editZoneStyles: {
                         /*display: 'grid',
@@ -945,6 +963,15 @@ define([
             },
             props: ['itemId'],
             methods: {
+                isNumber: function(evt) {
+                    evt = (evt) ? evt : window.event;
+                    var charCode = (evt.which) ? evt.which : evt.keyCode;
+                    if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
+                        evt.preventDefault();
+                    } else {
+                        return true;
+                    }
+                },
                 focus: function (){
                     //this.length = 17;
                     this.getClass = 'iwithfocus';
@@ -952,41 +979,48 @@ define([
                     this.uptadeContent();
                 },
                 blur: function (){
-                    //this.length = 19;
                     this.getClass = 'inotfocused';
                     this.showFullName = false;
-                    this.uptadeContent();
+                    if (this.content !== this.item.itemname) {
+                        this.saveNameChanges()
+                    }else{
+                        this.uptadeContent();
+                    }
                 },
                 wfocus: function (){
                     this.getWeightClass = 'iwwithfocus';
-                    this.showFullName = true;
                     this.updateWeight();
                 },
                 wblur: function (){
                     this.getWeightClass = 'iwnotfocused';
-                    this.showFullName = false;
-                    this.updateWeight();
+                    if (parseFloat(this.weight) !== parseFloat(this.item.aggregationcoef)){
+                        this.saveAggregationCoefChanges();
+                    }else {
+                        this.updateWeight();
+                    }
                 },
                 ...Vuex.mapActions({
                     deleteItem: g_store.actions.DELETE_ITEM
                 }),
-                saveNameChanges: function () {
-                    if (this.content !== this.item.itemname) {
-                        this.$store.dispatch(
+                saveNameChanges:function () {
+
+                    this.$store.dispatch(
+                        g_store.actions.UPDATE_ITEM,
+                        {...this.item, itemname: this.content}
+                    );
+/*                        this.$store.dispatch(
                             g_store.actions.UPDATE_ITEM,
                             {...this.item, itemname: this.content}
-                        );
-                    }
+                        );*/
                 },
                 saveAggregationCoefChanges: function() {
-                    if (this.weight !== this.item.aggregationcoef) {
-                        this.$store.dispatch(
-                            g_store.actions.UPDATE_ITEM,
-                            {...this.item, aggregationcoef: this.weight}
-                        );
-                    }
+                    this.$store.dispatch(
+                        g_store.actions.UPDATE_ITEM,
+                        {...this.item, aggregationcoef: this.weight}
+                    )
                 },
                 uptadeContent: function(){
+                    console.log('update');
                     if(this.showFullName){
                         this.content = this.item.itemname;
                     }else{
@@ -1000,6 +1034,7 @@ define([
                     }
                 },
                 updateWeight: function(){
+                    console.log(this.item.aggregationcoef);
                     this.weight = this.$options.filters.round(this.item.aggregationcoef, 2);
                     if(this.getWeightClass === 'iwnotfocused'){
                         this.weight += '%';
@@ -1104,7 +1139,7 @@ define([
             });
         var TdGrade = Vue.component('td-grade',
             {
-               template: `
+                template: `
                 <td  class="td-grade"
                 v-bind:style="this.inputDisabled? { 'background-color': '#e1e4fe' } : { }"> 
                 <!--{{item.itemtype}}-->
@@ -1117,6 +1152,7 @@ define([
                 v-bind:max="grade.rawgrademax" 
                 v-bind:min="grade.rawgrademin" 
                 v-bind:size="decimalPlaces + 1"
+                v-on:keypress="isNumber($event)"
                 v-model.lazy="finalGrade">
                 </td>
                 `,
@@ -1124,7 +1160,16 @@ define([
                 methods: {
                     ...Vuex.mapActions({
                         updateGrade: g_store.actions.UPDATE_GRADE
-                })
+                    }),
+                    isNumber: function(evt) {
+                        evt = (evt) ? evt : window.event;
+                        var charCode = (evt.which) ? evt.which : evt.keyCode;
+                        if ((charCode > 31 && (charCode < 48 || charCode > 57)) && charCode !== 46) {
+                            evt.preventDefault();
+                        } else {
+                            return true;
+                        }
+                    }
                 },
                 computed: {
 
@@ -1141,7 +1186,7 @@ define([
                         'studentsCount'
                     ]),
                     tabIndex: function() {
-                      return (this.itemIndex + 1) * this.studentsCount +  this.studentIndex + 1;
+                        return (this.itemIndex + 1) * this.studentsCount +  this.studentIndex + 1;
                     },
                     inputDisabled: function () {
 
@@ -1151,13 +1196,15 @@ define([
                         return this.grades[this.gradeId];
                     },
                     item: function () {
-                      return this.items[this.grade.itemid];
+                        return this.items[this.grade.itemid];
                     },
                     finalGrade: {
                         get() {
-                           return g_utils.round(this.grade.finalgrade, this.decimalPlaces);
+                            console.log("getFInal");
+                            return g_utils.round(this.grade.finalgrade, this.decimalPlaces);
                         },
                         set(value) {
+                            console.log("setFinal");
                             this.grade.finalgrade = value;
                             this.updateGrade(this.grade, this.course.id);
                         }

@@ -148,7 +148,6 @@ function cohort_add_user_to_cohort($cohort, $user) {
     } else {
         return false;
     }
-
     cohort_add_member($cohort_id, $user_id);
     return true;
 
@@ -272,10 +271,12 @@ function is_todos_cohort($cohort_value): bool {
  */
 function get_cohort_groups() {
     return array(['id'=>'SPP', 'name'=>'Ser Pilo Paga'],
-        ['id'=>'SPT', 'name'=>'Ser Pilo Paga Talentos'],
-        ['id'=>'SPE', 'name'=>'Condición de Excepción'],
-        ['id'=>'3740', 'name'=>'Ingeniería Topográfica'],
-        ['id'=>'OTROS', 'name'=>'Otros ASES']);
+                 ['id'=>'SPT', 'name'=>'Ser Pilo Paga Talentos'],
+                 ['id'=>'CEX', 'name'=>'Condición de Excepción'],
+                 ['id'=>'GENX', 'name'=>'Generación E - Excelencia'],
+                 ['id'=>'GEE', 'name'=>'Generación E - Equidad'],
+                 ['id'=>'OTRO', 'name'=>'Otros ASES'],
+                 );
 }
 
 /**
@@ -330,6 +331,9 @@ function get_html_cohorts_select($instance_id, $include_todos=true,  $name='cond
 
 
     }else{
+        if($include_todos) {
+            $cohorts_select.='<option value="TODOS">Todas las cohortes</option>';
+        }
         foreach($cohorts as $ch){
             $cohorts_select.= "<option value='$ch->idnumber'>$ch->name</option>";
         }

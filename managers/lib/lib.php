@@ -28,9 +28,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+require_once ((__DIR__) . '/../../core/module_loader.php');
 require_once dirname(__FILE__) . '/../../../../config.php';
-require_once $CFG->dirroot . '/blocks/ases/managers/periods_management/periods_lib.php';
+//require_once $CFG->dirroot . '/blocks/ases/managers/periods_management/periods_lib.php';
 
+module_loader('periods');
+module_loader('security');
 /**
  * Gets all academic programs that are stored on talentospilos_programa table
  *
@@ -134,12 +137,12 @@ function isMonOrPract($USER)
  * @param $id --> user moodle id
  * @return string --> containing user role
  */
-function get_role_ases($id)
+function get_role_ases($id, $instance_id)
 {
     global $DB;
 
-    $semestre = get_current_semester();
-    $id_semestre = $semestre->max;
+    $semestre = core_periods_get_current_period($instance_id);
+    $id_semestre = $semestre->id;
 
     $query_role = "SELECT rol.nombre_rol  FROM {talentospilos_rol} rol INNER JOIN {talentospilos_user_rol} uRol ON rol.id = uRol.id_rol WHERE uRol.id_usuario = $id AND uRol.id_semestre = $id_semestre";
     $rol = $DB->get_record_sql($query_role)->nombre_rol;
@@ -164,7 +167,7 @@ function lib_get_rol_name_ases($user_id, $instance_id, $semester_id = null )
     global $DB;
 
     if( !$semester_id ){
-        $semester_id = periods_get_current_semester()->id;
+        $semester_id = core_periods_get_current_period($instance_id)->id;
     }
 
     $query_role = "SELECT rol.nombre_rol  
@@ -204,19 +207,19 @@ function make_select_ficha($id, $rol, $student_code, $instance_id, $actions){
     if(property_exists($actions, 'search_assigned_students_sp')){
         if ($rol == 'profesional_ps') {
 
-            $asign .= process_info_assigned_students(get_asigned_by_profesional($id), $student_code);
+            $asign .= process_info_assigned_students(get_asigned_by_profesional($id, $instance_id), $student_code);
     
         } elseif ($rol == 'practicante_ps') {
     
-            $asign .= process_info_assigned_students(get_asigned_by_practicante($id), $student_code);
+            $asign .= process_info_assigned_students(get_asigned_by_practicante($id, $instance_id), $student_code);
     
         } elseif ($rol == 'monitor_ps') {
     
-            $asign .= process_info_assigned_students(get_asigned_by_monitor($id), $student_code);
+            $asign .= process_info_assigned_students(get_asigned_by_monitor($id, $instance_id), $student_code);
     
         }elseif ($rol == 'director_prog') {
     
-            $asign .= process_info_assigned_students(get_asigned_by_dir_prog($id), $student_code);   
+            $asign .= process_info_assigned_students(get_asigned_by_dir_prog($id, $instance_id), $student_code);   
             
         }
     }elseif(property_exists($actions, 'search_student_sp')) {
@@ -233,15 +236,16 @@ function make_select_ficha($id, $rol, $student_code, $instance_id, $actions){
  *
  * @see get_asigned_by_monitor($id)
  * @param $id --> monitor id
+ * @param $instance_id --> instance id
  * @return  Array --> with every stdClass student
  */
 
-function get_asigned_by_monitor($id)
+function get_asigned_by_monitor($id, $instance_id)
 {
     global $DB;
 
-    $semestre = get_current_semester();
-    $id_semestre = $semestre->max;
+    $semestre = core_periods_get_current_period($instance_id);
+    $id_semestre = $semestre->id;
 
     $query = "SELECT user_moodle.username, user_moodle.firstname, user_moodle.lastname
               FROM {user} AS user_moodle
@@ -259,15 +263,16 @@ function get_asigned_by_monitor($id)
  *
  * @see get_asigned_by_practicante($id)
  * @param $id --> practicant id
+ * @param $instance_id --> instance id
  * @return array --> with every student
  */
 
-function get_asigned_by_practicante($id)
+function get_asigned_by_practicante($id, $instance_id)
 {
     global $DB;
 
-    $semestre = get_current_semester();
-    $id_semestre = $semestre->max;
+    $semestre = core_periods_get_current_period($instance_id);
+    $id_semestre = $semestre->id;
 
     $query = "SELECT rol.id_usuario
               FROM {talentospilos_user_rol} AS rol
@@ -278,7 +283,7 @@ function get_asigned_by_practicante($id)
     $result = $DB->get_records_sql($query);
 
     foreach ($result as $id_mon) {
-        $students = array_merge($students, get_asigned_by_monitor($id_mon->id_usuario));
+        $students = array_merge($students, get_asigned_by_monitor($id_mon->id_usuario, $instance_id));
     }
     return $students;
 }
@@ -290,15 +295,16 @@ function get_asigned_by_practicante($id)
  *
  * @see get_asigned_by_profesional($id)
  * @param $id --> professional id
+ * @param $instance_id --> instance id
  * @return array --> with every student
  */
 
-function get_asigned_by_profesional($id)
+function get_asigned_by_profesional($id, $instance_id)
 {
     global $DB;
 
-    $semestre = get_current_semester();
-    $id_semestre = $semestre->max;
+    $semestre = core_periods_get_current_period($instance_id);
+    $id_semestre = $semestre->id;
 
     $query = "SELECT rol.id_usuario
               FROM {talentospilos_user_rol} AS rol
@@ -319,14 +325,15 @@ function get_asigned_by_profesional($id)
  *
  * @see get_asigned_by_dir_prog($id)
  * @param $id --> dirrector id
+ * @param $instance_id --> instance id
  * @return array --> with every student
  */
-function get_asigned_by_dir_prog($id)       
+function get_asigned_by_dir_prog($id, $instance_id)       
 {
     global $DB;
 
-    $semestre = get_current_semester();
-    $id_semestre = $semestre->max;
+    $semestre = core_periods_get_current_period($instance_id);
+    $id_semestre = $semestre->id;
 
     $query_program = "SELECT id_programa FROM {talentospilos_user_rol} WHERE id_usuario = $id AND id_semestre = $id_semestre";
     $id_programa = $DB->get_record_sql($query_program)->id_programa;
@@ -353,8 +360,8 @@ function get_all_student($instance_id)
 {
     global $DB;
 
-    $semestre = get_current_semester();
-    $id_semestre = $semestre->max;
+    $semestre = core_periods_get_current_period($instance_id);
+    $id_semestre = $semestre->id;
 
     $query = "SELECT DISTINCT user_moodle.username, user_moodle.firstname, user_moodle.lastname
               FROM {user} AS user_moodle

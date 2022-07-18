@@ -31,6 +31,9 @@ require_once(dirname(__FILE__) . '/../lib/student_lib.php');
 require_once(dirname(__FILE__) . '/../role_management/role_management_lib.php');
 require_once(dirname(__FILE__) . '/user_management_lib.php');
 require_once(dirname(__FILE__) . '/../monitor_assignments/monitor_assignments_lib.php');
+require_once(dirname(__FILE__) . '/../../core/module_loader.php');
+
+module_loader('periods');
 
 /**
  * Function that verifies if an user has a role assigned
@@ -46,8 +49,7 @@ function verify_user_assign($username,$instancia){
     $sql_query = "SELECT * FROM {user} WHERE username ='$username';";
     $object_user = $DB->get_record_sql($sql_query);
 
-    $query_semestre = "SELECT * FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
-    $object_semester = $DB->get_record_sql($query_semestre);
+    $object_semester = core_periods_get_current_period($idinstancia); 
 
 
     $sql_query_user = "SELECT * from mdl_talentospilos_user_rol where id_instancia='$instancia' and id_usuario='$object_user->id' and id_semestre='$object_semester->id' and estado=0";
@@ -74,8 +76,8 @@ function get_students($instanceid)
     
     //the program which is associated with the instance is consulted
 
-    $query_semestre = "SELECT nombre FROM {talentospilos_semestre} WHERE id = (SELECT MAX(id) FROM {talentospilos_semestre})";
-    $sem = $DB->get_record_sql($query_semestre)->nombre;
+
+    $sem = core_periods_get_current_period($instanceid)->nombre;
     
     $año = substr($sem, 0, 4);
     
@@ -361,14 +363,23 @@ function get_professionals($id = null, $idinstancia)
 function get_users_role($idinstancia)
 {
     global $DB;
+    $current_period = core_periods_get_current_period($idinstancia);
+
     $array       = Array();
-    $sql_query   = "SELECT {user}.id, {user}.username, {user}.firstname, {user}.lastname, {talentospilos_rol}.nombre_rol FROM {talentospilos_user_rol} INNER JOIN {user} ON {talentospilos_user_rol}.id_usuario = {user}.id 
-                                INNER JOIN {talentospilos_rol} ON {talentospilos_user_rol}.id_rol = {talentospilos_rol}.id INNER JOIN {talentospilos_semestre} s ON  s.id = {talentospilos_user_rol}.id_semestre 
-                                WHERE {talentospilos_user_rol}.estado = 1 AND {talentospilos_user_rol}.id_instancia=" . $idinstancia . " AND s.id = (SELECT MAX(id) FROM {talentospilos_semestre});";
+    $sql_query   = 
+        "SELECT {user}.id, {user}.username, {user}.firstname, {user}.lastname, {talentospilos_rol}.nombre_rol 
+        FROM {talentospilos_user_rol} 
+        INNER JOIN {user} 
+            ON {talentospilos_user_rol}.id_usuario = {user}.id 
+        INNER JOIN {talentospilos_rol} 
+            ON {talentospilos_user_rol}.id_rol = {talentospilos_rol}.id INNER JOIN {talentospilos_semestre} s ON  s.id = {talentospilos_user_rol}.id_semestre 
+        WHERE {talentospilos_user_rol}.estado = 1 AND {talentospilos_user_rol}.id_instancia=" . $idinstancia . " AND s.id = $current_period->id";
+
     $users_array = $DB->get_records_sql($sql_query);
     
     foreach ($users_array as $user) {
-        $user->button = "<a id = \"delete_user\"  ><span  id=\"" . $user->id . "\" class=\"red glyphicon glyphicon-remove\"></span></a>";
+        //$user->button = "<a id = delete_user$user->id ><span  id=\"" . $user->id . "\" class=\"red glyphicon glyphicon-remove\"></span></a>";
+        $user->button = "<span class=delete_user id=$user->id > </span>";
         array_push($array, $user);
     }
     return $array;
@@ -412,10 +423,11 @@ function drop_student_of_monitor($monitor, $student)
  * @see dropStudentofMonitor($monitor, $student)
  * @param $monitor [string] username en moodle del ususario del monitor 
  * @param $student [string] username en moodle del usuario studiante
+ * @param $instance_id [int] instancia del periodo
  * @return boolean
  **/
 
-function dropStudentofMonitor($monitor, $student)
+function dropStudentofMonitor($monitor, $student, $instance_id)
 {
     global $DB;
     
@@ -430,11 +442,11 @@ function dropStudentofMonitor($monitor, $student)
     $studentid = get_ases_user_by_code($student);
     
     
-    $semestre_act = get_current_semester();
+    $semestre_act = core_periods_get_current_period($instance_id);
     
     if ($studentid) {
         //where clause
-        $whereclause = "id_monitor = " . $idmonitor->id . " AND id_estudiante =" . $studentid->id . " AND id_semestre=" . $semestre_act->max;
+        $whereclause = "id_monitor = " . $idmonitor->id . " AND id_estudiante =" . $studentid->id . " AND id_semestre=" . $semestre_act->id;
         $asignation = $DB->get_record_sql( 
             "SELECT id FROM {talentospilos_monitor_estud} WHERE " . $whereclause
         );
@@ -450,16 +462,17 @@ function dropStudentofMonitor($monitor, $student)
  * @see changeMonitor($oldMonitor, $newMonitor)
  * @param $oldMonitor  current student's monitor 
  * @param $newMonitor  new student's monitor
+ * @param int  $instance_id  instancia del período
  * @return boolean
  **/
-function changeMonitor($oldMonitor, $newMonitor)
+function changeMonitor($oldMonitor, $newMonitor, $instance_id)
 {
     global $DB;
     
     try {
-        $lastsemester = get_current_semester();
+        $lastsemester = core_periods_get_current_period($instance_id);
         
-        $sql_query = "SELECT  id from {talentospilos_monitor_estud} where id_semestre=" . $lastsemester->max . " and id_monitor =" . $oldMonitor;
+        $sql_query = "SELECT  id from {talentospilos_monitor_estud} where id_semestre=" . $lastsemester->id . " and id_monitor =" . $oldMonitor;
         $result    = $DB->get_records_sql($sql_query);
         
         foreach ($result as $row) {
@@ -469,7 +482,11 @@ function changeMonitor($oldMonitor, $newMonitor)
             $newObject             = new stdClass();
             $newObject->id         = $row->id;
             $newObject->id_monitor = $newMonitor;
+            if($newObject->id == 0){
+                trigger_error('ASES Notificacion: actualizar monitor en la BD con id 0');
+            }else{
             $DB->update_record('talentospilos_monitor_estud', $newObject);
+            }
         }
         
         return 1;
@@ -500,14 +517,14 @@ function actualiza_rol_practicante($username, $role, $idinstancia, $state = 1, $
     $sql_query = "SELECT id FROM {talentospilos_rol} WHERE nombre_rol='$role';";
     $id_role   = $DB->get_record_sql($sql_query);
     
-    $sql_query   = "select max(id) as id from {talentospilos_semestre};";
-    $id_semester = $DB->get_record_sql($sql_query);
+    //$sql_query   = "select max(id) as id from {talentospilos_semestre};";
+    $current_semester = core_periods_get_current_period($idinstancia);
 
     $array = new stdClass;
     $array->id_rol       = $id_role->id;
     $array->id_usuario   = $id_user_moodle->id;
     $array->estado       = $state;
-    $array->id_semestre  = $id_semester->id;
+    $array->id_semestre  = $current_semester->id;
     if($id_boss =='ninguno'){
         $id_boss=null;
         $array->id_jefe = null;
@@ -536,7 +553,12 @@ function actualiza_rol_practicante($username, $role, $idinstancia, $state = 1, $
         }
         
         $array->id     = $checkrole->id;
+        if($array->id == 0){
+            trigger_error('ASES Notificacion: actualizar user_rol en la BD con id 0');
+            $update_record = false;
+        }else{
         $update_record = $DB->update_record('talentospilos_user_rol', $array);
+        }
         //echo $update_record;
         if ($update_record) {
             $result = 3;
@@ -579,11 +601,10 @@ function update_role_monitor_ps($username, $role, $array_students, $boss, $idins
     $sql_query = "SELECT id FROM {user} WHERE username ='$username';";
     $id_moodle = $DB->get_record_sql($sql_query);
 
-    //current semester's id is consulted
-    $sql_query = "select max(id) as id_semestre from {talentospilos_semestre};";
-    $semestre  = $DB->get_record_sql($sql_query);
+    //current semester is consulted
+    $semestre  = core_periods_get_current_period($idinstancia);
     
-    $sql_query     = "SELECT rol.id as id, rol.nombre_rol as nombre_rol, ur.id as id_user_rol, id_usuario FROM {talentospilos_user_rol} ur INNER JOIN {talentospilos_rol} rol ON rol.id = ur.id_rol  WHERE id_usuario = " . $id_moodle->id . " and id_semestre =" . $semestre->id_semestre . " AND ur.id_instancia=" . $idinstancia . ";";
+    $sql_query     = "SELECT rol.id as id, rol.nombre_rol as nombre_rol, ur.id as id_user_rol, id_usuario FROM {talentospilos_user_rol} ur INNER JOIN {talentospilos_rol} rol ON rol.id = ur.id_rol  WHERE id_usuario = " . $id_moodle->id . " and id_semestre =" . $semestre->id . " AND ur.id_instancia=" . $idinstancia . ";";
     $id_rol_actual = $DB->get_record_sql($sql_query);
     
     
@@ -595,7 +616,7 @@ function update_role_monitor_ps($username, $role, $array_students, $boss, $idins
     $object_role->id_rol       = $id_role->id;
     $object_role->id_usuario   = $id_moodle->id;
     $object_role->estado       = $state;
-    $object_role->id_semestre  = $semestre->id_semestre;
+    $object_role->id_semestre  = $semestre->id;
     if($boss =='ninguno'){
      $id_boss=null;
      $object_role->id_jefe = null;
@@ -624,7 +645,11 @@ function update_role_monitor_ps($username, $role, $array_students, $boss, $idins
             $DB->delete_records_select('talentospilos_usuario_prof', $whereclause);
         }
         $object_role->id = $id_rol_actual->id_user_rol;
-        $DB->update_record('talentospilos_user_rol', $object_role);
+        if($object_role->id == 0){
+            trigger_error('ASES Notificacion: actualizar rol en la BD con id 0');
+        }else{
+            $DB->update_record('talentospilos_user_rol', $object_role);
+        }
         
         $check_assignment = monitor_student_assignment($username, $array_students, $idinstancia);
         
@@ -654,20 +679,28 @@ function manage_role_profesional_ps($username, $role, $professional, $idinstanci
         $sql_query   = "SELECT * FROM {user} WHERE username ='$username';";
         $object_user = $DB->get_record_sql($sql_query);
         
+        $id_current_semester = core_periods_get_current_period($idinstancia);
+        
         // Current role
         pg_query("BEGIN") or die("Could not start transaction\n");
-        $sql_query       = "SELECT id_rol, nombre_rol FROM {talentospilos_user_rol} ur INNER JOIN {talentospilos_rol} r ON r.id = ur.id_rol WHERE id_usuario = " . $object_user->id . " AND ur.id_instancia=" . $idinstancia . " AND  id_semestre = (SELECT max(id) FROM {talentospilos_semestre});";
+        $sql_query = 
+            "SELECT id_rol, nombre_rol 
+            FROM {talentospilos_user_rol} ur 
+            INNER JOIN {talentospilos_rol} r ON r.id = ur.id_rol 
+            WHERE id_usuario = " . $object_user->id . 
+            " AND ur.id_instancia=" . $idinstancia . 
+            " AND  id_semestre = $id_current_semester->id";
+
         $id_current_role = $DB->get_record_sql($sql_query);
         pg_query("COMMIT") or die("Transaction commit failed\n");
         
-        $id_current_semester = get_current_semester();
         
         if (empty($id_current_role)) {
             
             // Start db transaction
             pg_query("BEGIN") or die("Could not start transaction\n");
             
-            assign_role_user($username, $role, 1, $id_current_semester->max, $idinstancia, null);
+            assign_role_user($username, $role, 1, $id_current_semester->id, $idinstancia, null);
             
             assign_professional_user($object_user->id, $professional);
             
@@ -677,7 +710,7 @@ function manage_role_profesional_ps($username, $role, $professional, $idinstanci
         } else {
             //keep in mind current semester in sql script
             $sql_query        = "SELECT * FROM {talentospilos_user_rol} userrol INNER JOIN {talentospilos_usuario_prof} userprof 
-                            ON userrol.id_usuario = userprof.id_usuario INNER JOIN {talentospilos_rol} rol ON rol.id = userrol.id_rol  WHERE userprof.id_usuario = " . $object_user->id . " AND userrol.id_semestre=" . $id_current_semester->max . " AND userrol.id_instancia = " . $idinstancia . ";";
+                            ON userrol.id_usuario = userprof.id_usuario INNER JOIN {talentospilos_rol} rol ON rol.id = userrol.id_rol  WHERE userprof.id_usuario = " . $object_user->id . " AND userrol.id_semestre=" . $id_current_semester->id . " AND userrol.id_instancia = " . $idinstancia . ";";
             $object_user_role = $DB->get_record_sql($sql_query);
             
             if ($object_user_role) {
@@ -702,11 +735,11 @@ function manage_role_profesional_ps($username, $role, $professional, $idinstanci
                 pg_query("BEGIN") or die("Could not start transaction\n");
                 if ($id_current_role->nombre_rol == 'monitor_ps') {
                     
-                    $lastsemester = get_current_semester();
-                    $whereclause  = "id_semestre =" . $lastsemester->max . " and  id_monitor = " . $object_user->id;
+                    $lastsemester = core_periods_get_last_period((int)$idinstancia);
+                    $whereclause  = "id_semestre =" . $lastsemester->id . " and  id_monitor = " . $object_user->id;
                     $DB->delete_records_select('talentospilos_monitor_estud', $whereclause);
                 }
-                update_role_user($username, $role, $idinstancia, $state, $id_current_semester->max, null);
+                update_role_user($username, $role, $idinstancia, $state, $id_current_semester->id, null);
                 assign_professional_user($object_user->id, $professional);
                 pg_query("COMMIT") or die("Transaction commit failed\n");
             }
@@ -740,22 +773,24 @@ function update_program_director($username, $role, $id_instance, $status = 1, $i
         $sql_query   = "SELECT * FROM {user} WHERE username ='$username';";
         $object_user = $DB->get_record_sql($sql_query);
 
+        $current_semester = core_periods_get_current_period($id_instance);
+
         $sql_query = "SELECT id_rol, nombre_rol 
                       FROM {talentospilos_user_rol} AS user_role 
                       INNER JOIN {talentospilos_rol} AS t_role ON t_role.id = user_role.id_rol 
                       WHERE id_usuario = $object_user->id AND user_role.id_instancia= $id_instance 
-                                                          AND id_semestre = (SELECT max(id) FROM {talentospilos_semestre})";
+                                                          AND id_semestre = $current_semester->id";
 
         $current_role = $DB->get_record_sql($sql_query);
 
-        $id_current_semester = get_current_semester();
+
 
         if (empty($current_role)) {
             
             // Start db transaction
             pg_query("BEGIN") or die("Could not start transaction\n");
             
-            $result = assign_role_user($username, $role, 1, $id_current_semester->max, $id_instance, null, $id_academic_program);
+            $result = assign_role_user($username, $role, 1, $current_semester->id, $id_instance, null, $id_academic_program);
 
             // End db transaction
             pg_query("COMMIT") or die("Transaction commit failed\n");
@@ -764,7 +799,7 @@ function update_program_director($username, $role, $id_instance, $status = 1, $i
             // Start db transaction
             pg_query("BEGIN") or die("Could not start transaction\n");
 
-            $result = update_role_user($username, $role, $id_instance, 1, $id_current_semester, null, $id_academic_program);
+            $result = update_role_user($username, $role, $id_instance, 1, $current_semester, null, $id_academic_program);
             
             // End db transaction
             pg_query("COMMIT") or die("Transaction commit failed\n");
@@ -885,9 +920,9 @@ function checking_role($username, $idinstancia)
     $sql_query      = "SELECT id FROM {user} WHERE username = '$username'";
     $id_moodle_user = $DB->get_record_sql($sql_query);
     
-    $semestre = get_current_semester();
+    $semestre = core_periods_get_current_period($idinstancia);
     
-    $sql_query  = "SELECT ur.id_rol as id_rol , r.nombre_rol as nombre_rol, ur.id as id, ur.id_usuario, ur.estado FROM {talentospilos_user_rol} ur INNER JOIN {talentospilos_rol} r ON r.id = ur.id_rol WHERE ur.id_usuario = " . $id_moodle_user->id . " and ur.id_semestre = " . $semestre->max . " and ur.id_instancia=" . $idinstancia . ";";
+    $sql_query  = "SELECT ur.id_rol as id_rol , r.nombre_rol as nombre_rol, ur.id as id, ur.id_usuario, ur.estado FROM {talentospilos_user_rol} ur INNER JOIN {talentospilos_rol} r ON r.id = ur.id_rol WHERE ur.id_usuario = " . $id_moodle_user->id . " and ur.id_semestre = " . $semestre->id . " and ur.id_instancia=" . $idinstancia . ";";
     $role_check = $DB->get_record_sql($sql_query);
     
     return $role_check;
@@ -916,8 +951,12 @@ function update_professional_user($id_user, $professional)
         $record_professional_type                 = new stdClass;
         $record_professional_type->id             = $id_to_update->id;
         $record_professional_type->id_profesional = $id_professional->id;
-        
+        if($record_professional_type->id == 0){
+            trigger_error('ASES Notificacion: actualizar profesional en la BD con id 0');
+            $update_record = false;
+        }else{
         $update_record = $DB->update_record('talentospilos_usuario_prof', $record_professional_type);
+        }
         
         return $update_record;
     } else {

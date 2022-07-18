@@ -315,7 +315,11 @@ if (isset($_FILES['csv_file'])) {
                     $record->id_ciudad_nac = $data[17];
                     $record->id_discapacidad = $data[24];
                     $record->id = $array_id_talentos[$count];
-                    $DB->update_record('talentospilos_usuario', $record);
+                    if($record->id == 0){
+                        trigger_error('ASES Notificacion: actualizar usuario en la BD con id 0');
+                    }else{
+                        $DB->update_record('talentospilos_usuario', $record);
+                    }
                 } else {
                     $record->id_ciudad_ini = $array_id_ciudadini[$count];
                     $record->id_ciudad_res = $array_id_ciudadres[$count];
@@ -477,8 +481,11 @@ if (isset($_FILES['csv_file'])) {
                     $record->id_academic_program = dat[3];
                     //dat[4] --> tracking_status
                     $record->tracking_status = $dat[4];
-
+                    if($record->id == 0){
+                        trigger_error('ASES Notificacion: actualizar usuario en la BD con id 0');
+                    }else{
                     $DB->update_record('talentospilos_user_extended', $record);
+                    }
                     // foreach ($result as $value) {
 
                     //     //METODO USANDO MODELO ANTIGUO.(usando user_info_data)
@@ -620,6 +627,7 @@ if (isset($_FILES['csv_file'])) {
                 $record->nombre = $data[0];
                 $record->fecha_inicio = $data[1];
                 $record->fecha_fin = $data[2];
+                $record->id_instancia = $data[3];
                 $DB->insert_record('talentospilos_semestre', $record);
             }
             $respuesta = 1;
@@ -640,7 +648,11 @@ if (isset($_FILES['csv_file'])) {
                     $record->cod_comuna = $data[1];
                     $record->nombre = $data[2];
                     $record->estrato = $data[3];
+                    if($record->id == 0){
+                        trigger_error('ASES Notificacion: actualizar usuario en la BD con id 0');
+                    }else{
                     $DB->update_record('talentospilos_barrios', $record);
+                    }
                 } else {
                     $record->cod_barrio = (int) $data[0];
                     $record->cod_comuna = $data[1];
@@ -693,8 +705,11 @@ if (isset($_FILES['csv_file'])) {
                     // print_r($record->longitud);
                     $record->latitud = (double) $data[3];
                     $record->barrio = (int) $id_barrio->id;
-
+                    if($record->id == 0){
+                        trigger_error('ASES Notificacion: actualizar demografia en la BD con id 0');
+                    }else{
                     $DB->update_record('talentospilos_demografia', $record);
+                    }
 
                 } else {
                     $record->id_usuario = (int) $id_user_talentos;
@@ -716,9 +731,17 @@ if (isset($_FILES['csv_file'])) {
                 $registro = $DB->get_record_sql("SELECT id FROM {talentospilos_riesg_usuario} WHERE id_usuario = $id_user_talentos AND id_riesgo = $id_geografic_risk");
                 if( $registro ){
                     $new_risk->id = $registro->id;
-                    $DB->update_record('talentospilos_riesg_usuario', $new_risk);                    
+                    if($record->id == 0){
+                        trigger_error('ASES Notificacion: actualizar riesgo en la BD con id 0');
+                    }else{
+                    $DB->update_record('talentospilos_riesg_usuario', $new_risk);
+                    }                    
                 }else{
-                    $DB->insert_record('talentospilos_riesg_usuario', $new_risk);
+                    // Bandaid fix
+                    // id_usuario sometimes reaches as 0
+                    if($new_risk->id_usuario != 0 && $new_risk->id_usuario != null){
+                        $DB->insert_record('talentospilos_riesg_usuario', $new_risk);
+                    }
                 }
                 
                 $count++;

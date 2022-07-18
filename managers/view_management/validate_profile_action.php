@@ -9,12 +9,12 @@
     //Hace falta validar que el perfil este en el periodo actual
     function get_perfil_usuario($id_moodle, $id_instancia){
         global $DB;
-        $current_semester = get_current_semester(); 
+        $current_semester = core_periods_get_current_period($id_instancia); 
        
         $sql_query = "SELECT * FROM {talentospilos_perfil} WHERE id IN (
                         SELECT id_perfil FROM {talentospilos_usuario_perfil} 
                             WHERE estado = 1 
-                            AND id_semestre =".$current_semester->max."
+                            AND id_semestre =".$current_semester->id."
                             AND id_usuario = ".$id_moodle." 
                             AND id_instancia =".$id_instancia."
                         );";
@@ -43,6 +43,7 @@
      * Función que retorna el identificador del semestre actual 
      * @see get_current_semester()
      * @return cadena de texto que representa el semestre actual
+	 * @deprecated -- Please see core/periods
      */
     function get_current_semester(){
         global $DB;
@@ -55,6 +56,7 @@
      * Función que retorna la fecha de inicio del semestre actual
      * @see get_current_semester()
      * @return cadena de texto que representa la fecha de inicio del semestre actual
+	 * @deprecated -- Please see core/periods
      */
     function get_current_semester_start(){
         global $DB;
@@ -63,22 +65,6 @@
         return $current_semester;
     }
 
-    /**
-     * Función que retorna la fecha de inicio del semestre actual en el formato #AÑO#MES
-     * @see get_current_semester_start()
-     * @return cadena de texto que representa la fecha de inicio del semestre actual con formato procesado
-     */
-    function get_current_semester_processed(){
-        $sem = get_current_semester_start();
-        $semestre = $sem->fecha;
-
-        $año = substr($semestre,0,4);
-        $mes = substr($semestre,5,2);
-
-        $semestre = $año.$mes;
-
-        return $semestre;
-    }
     
     /**
      * Retorna el id de talentos a partir del id de moodle

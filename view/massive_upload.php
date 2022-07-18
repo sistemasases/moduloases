@@ -35,6 +35,7 @@ require_once (__DIR__ . '/../managers/mass_management/endpoints.php');
 
 $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
+require_login($courseid, false);
 $selected_upload = optional_param('selected_upload', null, PARAM_TEXT);
 $actions = authenticate_user_view($USER->id, $blockid);
 if (!isset($actions->massive_upload)) {

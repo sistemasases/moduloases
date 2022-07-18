@@ -22,10 +22,11 @@
  * @copyright  2019 Luis Gerardo Manrique Cardona <luis.manrique@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-const VERSION=1;
+if (!defined('DB_VERSION')) define('DB_VERSION', 1);
+//const VERSION=1;
 
 require_once( __DIR__ . "/../../../../config.php");
-require_once( __DIR__ . "/v" . VERSION . "/entrypoint.php");
+require_once( __DIR__ . "/v" . DB_VERSION . "/entrypoint.php");
 use function \core_db\{call_db_function};
 
 function core_db_select($class_name, array $conditions = null, $fields = '*', $sort = null) {

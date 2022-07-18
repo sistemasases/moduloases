@@ -22,6 +22,8 @@ define([
     return {
         init: function () {
 
+            var params = get_url_parameters(document.location.search)
+
             $("input[type=date]").keypress(function (e) {
                 e.preventDefault();
             });
@@ -91,12 +93,16 @@ define([
             });
 
             function get_url_parameters(url) {
-                var start_param_position = url.indexOf("?");
-                var params = "";
-                for (var i = start_param_position; i < url.length; i++) {
-                    params += url[i];
+                
+                var query_string = [];
+                var query = document.location.search.substring(1);
+                var vars = query.split("&");
+                for (var i = 0; i < vars.length; i++) {
+                    var pair = vars[i].split("=");
+                    query_string[pair[0]] = pair[1];
                 }
-                return params.replace(/#[a-zA-z]+_[a-zA-z]+/i, '');
+
+                return query_string;
             }
 
             function get_student_code() {
@@ -212,7 +218,7 @@ define([
                         dataType: "text",
                         cache: "false",
                         error: function (msg) {
-                            console.log(msg)
+                            console.error(msg)
                         }
                     });
                 }
@@ -311,7 +317,7 @@ define([
             $(document).on('click', ".dphpforms-peer-record", function () {
                 if (!$(this).attr("disabled")) {
                     var id_tracking = $(this).attr('data-record-id');
-                    load_record_updater('seguimiento_pares', id_tracking);
+                    load_record_updater('seguimiento_pares', id_tracking, params.instanceid);
                     $('#modal_v2_edit_peer_tracking').fadeIn(300);
                 }
             });
@@ -320,7 +326,7 @@ define([
             $(document).on('click', '.dphpforms-groupal-record', function () {
                 if (!$(this).attr("disabled")) {
                     var id_tracking = $(this).attr('data-record-id');
-                    load_record_updater('seguimiento_grupal', id_tracking);
+                    load_record_updater('seguimiento_grupal', id_tracking, params.instanceid);
                     $('#modal_v2_edit_groupal_tracking').fadeIn(300);
                 }
             });
@@ -433,13 +439,21 @@ define([
                 });
             }
 
-            function load_record_updater(form_id, record_id) {
-
+            // Esta función se encarga de cargar un formulario dinámico
+            // para ser actualizado (editable)
+            //
+            // form_id -> Tipo de formulario (seguimiento_grupal o seguimiento_pares)
+            // record_id -> id del formulario en la BD
+            // instance_id -> instancia a la que pertenece
+            // 
+            // NOTA: La url en la petición GET puede parecer que tenga un error
+            // cerca al parametro form_id, esto es intencional, NO modificar.
+            function load_record_updater(form_id, record_id, instance_id) {
 
                 $('.div').removeClass('regla_incumplida');
                 $("#body_editor").html("");
                 loading_indicator.show();
-                $.get("../managers/dphpforms/dphpforms_forms_core.php?form_id=&record_id=" + record_id, function (data) {
+                $.get("../managers/dphpforms/dphpforms_forms_core.php?form_id=&record_id=" + record_id + "&instance_id="+instance_id, function (data) {
                     loading_indicator.hide();
 
                     if (form_id == 'seguimiento_grupal') {
@@ -603,6 +617,26 @@ define([
                     $("input[type=date]").keypress(function (e) {
                         e.preventDefault();
                     });
+					
+				    // Campos deprecados.
+				    const deprecatedFields = [
+					    'relacion_pareja',
+					    'composicion_familiar',
+					    'influencia',
+					    'aspec_academicos',
+					    'estra_academicas',
+					    'inter_autoe_ocupacional',
+					    'carac_socioeconomicas',
+					    'icetex',
+					    'oferta_servicios',
+					    'induccion',
+					    'vida_universitaria',
+					    'retor_ciuda_origen'
+				    ];
+
+				    deprecatedFields.forEach( fieldValue => {
+				    	$(`input[value=${fieldValue}]`).parent().css("display", "none")
+				    });
                 });
             }
 

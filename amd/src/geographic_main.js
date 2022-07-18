@@ -13,15 +13,16 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
     return {
 
         init: function(){
-            
-            const id_ases = $('#id_ases').val();
-            var student_marker;
+
             const LATLNG_CAMPUS_MELENDEZ = new google.maps.LatLng(3.3741569,-76.5355235);
             const LATLNG_CAMPUS_SANFER = new google.maps.LatLng(3.431626, -76.546822);
+            const id_ases = $('#id_ases').val();
 
             var cod_programa_activo = document.querySelector('#cod_programa_activo').dataset.info;
             var cod_facultad = cod_programa_activo[1];
             var latLng_student_campus = (cod_facultad === '6' || cod_facultad === '8')?LATLNG_CAMPUS_SANFER:LATLNG_CAMPUS_MELENDEZ;
+            var map_working = map_is_enable();
+            var student_marker;
 
             /**
              * Executes the method search_direction() by unfocusing the address text area.
@@ -34,8 +35,8 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
              * Executes the method search_direction() by pressing the enter key.
              */
             $("#geographic_direccion").keypress(function(event) {
-                var keycode = (event.keyCode ? event.keyCode : event.which);
-                if (keycode == '13') {
+                let keycode = (event.keyCode ? event.keyCode : event.which);
+                if(keycode == '13') {
                     search_direction();
                 }
             });
@@ -48,32 +49,24 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
             });
 
             $("#select_neighborhood").select2({
-
                 language: {
-
                     noResults: function() {
-
                         return "No hay resultado";
                     },
                     searching: function() {
-
-                        return "Buscando..";
+                        return "Buscando...";
                     }
                 },
                 dropdownAutoWidth: true,
             });
 
             $("#geographic_ciudad").select2({
-
                 language: {
-
                     noResults: function() {
-
                         return "No hay resultado";
                     },
                     searching: function() {
-
-                        return "Buscando..";
+                        return "Buscando...";
                     }
                 },
                 dropdownAutoWidth: true,
@@ -124,7 +117,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 var latitude = $('#latitude').val();
                 var longitude = $('#longitude').val();
 
-                if (ciudad_est == 1079) {
+                if(ciudad_est == 1079) {
 
                     document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination="+latLng_student_campus.lat()+","+latLng_student_campus.lng()+"&mode=transit'></iframe>";
 
@@ -146,14 +139,22 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                     closeOnConfirm: true,
                     closeOnCancel: true
                 }, function(isConfirm) {
-                    if (isConfirm) {
-                        var latitude = $('#latitude').val();
-                        var longitude = $('#longitude').val();
+                    if(isConfirm) {
+                        var nivel_riesgo = $('input[name=geographic_nivel_riesgo]:checked').val();
+                        var neighborhood = $('#select_neighborhood').val();
+                        var latitude = parseFloat($('#latitude').val());
+                        var longitude = parseFloat($('#longitude').val());
                         var address = $('#geographic_direccion').val();
                         var city = $('#geographic_ciudad').val();
                         var duration = 0;
                         var distance = 0;
                         var mode;
+                        var directionsService;
+
+                        if(!map_working) {
+                            save_geographic_info(id_ases, latitude, longitude, duration, distance, address, neighborhood, city, nivel_riesgo);
+                            return;
+                        }
 
                         var ciudad = document.getElementById("geographic_ciudad");
                         var selectedCity = ciudad.options[ciudad.selectedIndex].text;
@@ -169,13 +170,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
 
                         var destination;
                         var map = document.getElementById('mapa');
-                        var directionsService = new google.maps.DirectionsService();
                         service = new google.maps.places.PlacesService(map);
                         service.findPlaceFromQuery(request, callback);
 
                         function callback(results) {
-
-                            if (results != null) {
+                            if(results != null) {
                                 destination = results[0];
                             }
                         }
@@ -184,7 +183,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                          * Sets the latitude and longitude due to the changes on the
                          * google map.
                          */
-                        if (destination != null) {
+                        if(destination != null) {
                             latitude = destination.geometry.location.lat();
                             longitude = destination.geometry.location.lng();
                         } else {
@@ -223,38 +222,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                         //Calculates the distance and the duration due to the specified route.
                         directionsService.route(route_request, function(response, status) {
 
-                            var nivel_riesgo = $('input[name=geographic_nivel_riesgo]:checked').val();
-                            var neighborhood = $('#select_neighborhood').val();
+                            var legs = response.routes[0].legs[0];
+                            distance = legs.distance.value;
+                            duration = legs.duration.value;
 
-                            if (city == 1){
-                                swal(
-                                    "Error",
-                                    "Debe definir la ciudad del estudiante antes de guardar",
-                                    "error");
-                            } else if(city == 1079 && neighborhood == 'No registra'){
-                                swal(
-                                    "Error",
-                                    "Debe definir un barrio de residencia antes de guardar",
-                                    "error");
-                            } else if (nivel_riesgo == null){
-                                swal(
-                                    "Error",
-                                    "Debe definir un nivel de riesgo antes de guardar",
-                                    "error");
-                            } else if (address.trim() == ""){
-                                swal(
-                                    "Error",
-                                    "Debe definir una dirección antes de guardar",
-                                    "error");
-                            } else {
-
-                                var legs = response.routes[0].legs[0];
-
-                                distance = legs.distance.value;
-                                duration = legs.duration.value;
-
-                                save_geographic_info(id_ases, latitude, longitude, duration, distance, address, neighborhood, city, nivel_riesgo);
-                            }
+                            save_geographic_info(id_ases, latitude, longitude, duration, distance, address, neighborhood, city, nivel_riesgo);
                         });
                     }
                 });
@@ -266,6 +238,11 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
              * @return {void}
              */
             function search_direction () {
+
+                if(!map_working) {
+                    return;
+                }
+
                 var geocoder = new google.maps.Geocoder();
                 var select = document.getElementById('geographic_ciudad');
                 var input_address = $('#geographic_direccion').val();
@@ -273,7 +250,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 geocoder.geocode({
                     "address": composed_address
                 }, function(results) {
-                    if (results[0]) {
+                    if(results[0]) {
                         var latitud = results[0].geometry.location.lat();
                         var longitud = results[0].geometry.location.lng();
                         student_marker = edit_map(latitud, longitud);
@@ -293,9 +270,13 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
              * @return {object} Student's marker
              */
             function edit_map(latitude, longitude){
-                document.getElementById('mapa').innerHTML = "";
 
-                var geocoder;
+                if(!map_working) {
+                    console.log("Mapas fuera de servicio");
+                    return student_marker;
+                }
+
+                document.getElementById('mapa').innerHTML = "";
 
                 var opciones = {
                     center: latLng_student_campus,
@@ -322,20 +303,20 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                     map: map
                 });
 
-                geocoder = new google.maps.Geocoder();
-
                 var infowindow = new google.maps.InfoWindow();
                 infowindow.setContent("Residencia Estudiante");
                 infowindow.open(map, marker);
+
+                var geocoder = new google.maps.Geocoder();
 
                 google.maps.event.addListener(map, 'click', function (event) {
                     geocoder.geocode({
                             'latLng': event.latLng
                         },
                         function (results, status) {
-                            if (status == google.maps.GeocoderStatus.OK) {
-                                if (results[0]) {
-                                    if (marker) {
+                            if(status == google.maps.GeocoderStatus.OK) {
+                                if(results[0]) {
+                                    if(marker) {
                                         marker.setPosition(event.latLng);
                                     } else {
                                         marker = new google.maps.Marker({
@@ -371,6 +352,31 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
              */
             function save_geographic_info(id_ases, latitude, longitude, duration, distance, address, neighborhood, city, nivel_riesgo){
 
+                if(city == 1) {
+                    swal(
+                        "Error",
+                        "Debe definir la ciudad del estudiante antes de guardar",
+                        "error");
+                    return;
+                } else if(city == 1079 && neighborhood == 'No registra') {
+                    swal(
+                        "Error",
+                        "Debe definir un barrio de residencia antes de guardar",
+                        "error");
+                    return;
+                } else if(nivel_riesgo == null) {
+                    swal(
+                        "Error",
+                        "Debe definir un nivel de riesgo antes de guardar",
+                        "error");
+                } else if(address.trim() == "") {
+                    swal(
+                        "Error",
+                        "Debe definir una dirección antes de guardar",
+                        "error");
+                    return;
+                }
+
                 var observaciones = $('#geographic_text_area').val();
                 var vive_lejos = $('#geographic_checkbox_vive_lejos').prop("checked");
                 var vive_zona_riesgo = $('#geographic_checkbox_zona_riesgo').prop("checked");
@@ -379,7 +385,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 $.ajax({
                     type: "POST",
                     data: JSON.stringify({
-                        "func": 'save_geographic_info',
+                        "function": 'save_geographic_info',
                         "params": [id_ases, latitude, longitude, neighborhood,
                                     duration, distance, address, city,
                                     observaciones, vive_lejos, vive_zona_riesgo,
@@ -416,6 +422,13 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                     error: function(msg) {
                         console.log(msg);
                     }
+                });
+            }
+
+            function map_is_enable() {
+                var geocoder = new google.maps.Geocoder();
+                geocoder.geocode( {'address': 'prueba'}, function(results, status) {
+                    return status == google.maps.GeocoderStatus.OK;
                 });
             }
         }

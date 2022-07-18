@@ -53,8 +53,7 @@ class StudentGradesInACourseSummary extends BaseAPIView {
 
     function send_response()
     {
-
-        return get_student_item_grades_sumary_report($this->args['student_id']);
+        return get_student_item_grades_sumary_report($this->args['student_id'], null, $this->args['instance_id']);
     }
 }
 

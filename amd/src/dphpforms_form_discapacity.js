@@ -66,15 +66,16 @@ define([
             $("#div_necesidades input[type=checkbox]").on("change", function(){
                 if($(this).is(":checked")){
                    
-                    $(this).parent().find(":input[type=text]").prop("disabled", false);
-                    $(this).parent().find(":input[type=text]").prop("required", true);
+                    $(this).parents("tr").find("td:nth-child(2) input").prop("disabled", false);
+                    $(this).parents("tr").find("td:nth-child(2) input").prop("required", true);
                 }else{
-                    $(this).parent().find(":input[type=text]").prop("value", "");
-                    $(this).parent().find(":input[type=text]").prop("disabled", true);
-                    $(this).parent().find(":input[type=text]").prop("required", false);
+                    $(this).parents("tr").find("td:nth-child(2) input").prop("value", "");
+                    $(this).parents("tr").find("td:nth-child(2) input").prop("disabled", true);
+                    $(this).parents("tr").find("td:nth-child(2) input").prop("required", false);
                 }     
                       
             });
+            
 
             $("#div_posibilidades_condiciones input[type=range]").on("change", function(){
              if($(this).val()==1){
@@ -86,9 +87,13 @@ define([
             }
             if($(this).val()==3){
                 $(this).parent().find(":input[type=text]").prop("value","Con apoyo");
+                $(this).parents("tr").find("td:nth-child(3) input").prop("disabled", false);
+            }else{
+                $(this).parents("tr").find("td:nth-child(3) input").prop("disabled", true);
             }
             });
 
+  
             $("#check_otra_posibilidad").on("click", function(){
                 if($(this).is(":checked")){
                     $("#div_otra_actividad").show();
@@ -117,23 +122,23 @@ define([
             $("#div_cond_salud input[type=checkbox]").on("change", function(){
                 if($(this).is(":checked")){
                     
-                    $(this).parent().find(":input[type=text]").prop("disabled", false);
-                    $(this).parent().find(":input[type=text]").prop("required", true);
+                    $(this).parents("tr").find("td:nth-child(2) input").prop("disabled", false);
+                    $(this).parents("tr").find("td:nth-child(2) input").prop("required", true);
                 }else{
-                    $(this).parent().find(":input[type=text]").prop("value", "");
-                    $(this).parent().find(":input[type=text]").prop("disabled", true);
-                    $(this).parent().find(":input[type=text]").prop("required", false);
+                    $(this).parents("tr").find("td:nth-child(2) input").prop("value", "");
+                    $(this).parents("tr").find("td:nth-child(2) input").prop("disabled", true);
+                    $(this).parents("tr").find("td:nth-child(2) input").prop("required", false);
                 }     
                       
             });
             $("#div_dificultad_permanente input[type=checkbox]").on("change", function(){
                 if($(this).is(":checked")){
-                    $(this).parent().find(":input[type=text]").prop("disabled", false);
-                    $(this).parent().find(":input[type=text]").prop("required", true);
+                    $(this).parents("tr").find("td:nth-child(2) input").prop("disabled", false);
+                    $(this).parents("tr").find("td:nth-child(2) input").prop("required", true);
                 }else{
-                    $(this).parent().find(":input[type=text]").prop("value", "");
-                    $(this).parent().find(":input[type=text]").prop("disabled", true);
-                    $(this).parent().find(":input[type=text]").prop("required", false);
+                    $(this).parents("tr").find("td:nth-child(2) input").prop("value", "");
+                    $(this).parents("tr").find("td:nth-child(2) input").prop("disabled", true);
+                    $(this).parents("tr").find("td:nth-child(2) input").prop("required", false);
                 }     
                       
             });
@@ -1349,6 +1354,7 @@ define([
                     
                     array = json_bd[i];
                     for(obj_json in array){
+
 
                         if(array[obj_json]['key_factor'] == "check_factor4" || array[obj_json]['key_factor'] == "check_factor2_7" ){
                             //Desplegar la opcion otro

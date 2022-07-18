@@ -40,9 +40,11 @@ function get_array_students_with_resolution($no_res_bool){
     $sql_query = "SELECT row_number() over(), spp_students.id_ases_user, spp_students.cohorte, spp_students.num_doc, substring(spp_students.username from 0 for 8) AS codigo, 
                     spp_students.lastname, spp_students.firstname, spp_students.nombre_semestre, res_students.codigo_resolucion,
                     res_students.monto_estudiante, academic_students.fecha_cancel, academic_students.promedio_semestre, status_icetex.nombre_estado,
-                    CASE WHEN (academic_students.fecha_cancel IS NULL AND academic_students.promedio_semestre IS NOT NULL)
+                    CASE WHEN ( academic_students.fecha_cancel IS NULL AND spp_students.nombre_semestre = (SELECT nombre FROM {talentospilos_semestre} WHERE id = (SELECT max(id) FROM {talentospilos_semestre})))
                                 THEN '-ACTIVO'
-                        WHEN (academic_students.promedio_semestre IS NULL)
+                        WHEN (academic_students.fecha_cancel IS NULL AND academic_students.promedio_semestre IS NOT NULL)
+                                THEN '-ACTIVO'
+                        WHEN (academic_students.promedio_semestre IS NULL OR academic_students.fecha_cancel IS NOT NULL)
                                 THEN '-INACTIVO'		
                     END AS program_status,
                     CASE WHEN (res_students.codigo_resolucion IS NULL)
@@ -50,22 +52,20 @@ function get_array_students_with_resolution($no_res_bool){
 						WHEN (res_students.codigo_resolucion IS NOT NULL)
 								THEN res_students.codigo_resolucion
                     END AS codigo_resolucion,
-                    CASE WHEN ( (academic_students.fecha_cancel IS NULL AND academic_students.promedio_semestre IS NOT NULL) 
-                                    AND status_icetex.nombre_estado LIKE '5%')
+                    CASE WHEN ( res_students.monto_estudiante != '0' AND res_students.codigo_resolucion IS NOT NULL)
                                 THEN '-ACTIVO'
-                        WHEN (academic_students.promedio_semestre IS NULL OR status_icetex.nombre_estado LIKE '3%' 
-                                    OR status_icetex.nombre_estado IS NULL)
+                        WHEN ( res_students.monto_estudiante = '0' OR res_students.codigo_resolucion IS NULL)
                                 THEN '-INACTIVO'
                     END AS est_ice_sra
                 FROM
-                (SELECT user_extended.id_ases_user, moodle_user.lastname, moodle_user.firstname, cohorts.idnumber, semestre.id AS id_semestre, semestre.nombre AS nombre_semestre, 
+                (SELECT user_extended.id_ases_user, moodle_user.lastname, moodle_user.firstname, cohorts.idnumber, semestre.id AS id_semestre, semestre.nombre AS nombre_semestre,
                     usuario.num_doc, moodle_user.username, substring(cohorts.idnumber from 0 for 5) AS cohorte
                 FROM {cohort_members} AS members
                 INNER JOIN {cohort} AS cohorts ON members.cohortid = cohorts.id
                 INNER JOIN {talentospilos_user_extended} AS user_extended ON user_extended.id_moodle_user = members.userid
                 INNER JOIN {talentospilos_usuario} AS usuario ON usuario.id = user_extended.id_ases_user
                 INNER JOIN {user} AS moodle_user ON moodle_user.id = user_extended.id_moodle_user
-                CROSS JOIN {talentospilos_semestre} AS semestre 
+                CROSS JOIN {talentospilos_semestre} AS semestre
                 WHERE (cohorts.idnumber LIKE 'SPP%' OR cohorts.idnumber LIKE 'SPEX%') AND user_extended.tracking_status = 1) AS spp_students 
 
                 LEFT JOIN 
@@ -258,7 +258,7 @@ function get_count_active_res_students($cohort){
 
     $array_active_res = array();
 
-    $sql_query = "SELECT semestre.nombre AS semestre, Count(res_est.id) AS num_act_res, sum(res_est.monto_estudiante) AS monto_act_res
+    $original_sql_query = "SELECT semestre.nombre AS semestre, Count(res_est.id) AS num_act_res, sum(res_est.monto_estudiante) AS monto_act_res
                     FROM {talentospilos_res_estudiante} AS res_est
                         INNER JOIN {talentospilos_res_icetex} res_ice ON res_ice.id = res_est.id_resolucion
                         INNER JOIN {talentospilos_semestre} semestre ON semestre.id = res_ice.id_semestre
@@ -267,7 +267,6 @@ function get_count_active_res_students($cohort){
                         INNER JOIN {cohort} cohortm ON cohortm.id = co_mem.cohortid
                         WHERE cohortm.idnumber LIKE '$cohort%' AND uext.tracking_status = 1
                         AND ((res_est.id_estudiante, res_ice.id_semestre)
-
                             IN 
                             
                             (SELECT DISTINCT academ.id_estudiante, academ.id_semestre
@@ -278,7 +277,6 @@ function get_count_active_res_students($cohort){
                             INNER JOIN {cohort} cohortm ON cohortm.id = co_mem.cohortid
                             WHERE cohortm.idnumber LIKE '$cohort%' AND academ.promedio_semestre IS NOT NULL 
                             AND uext.tracking_status = 1))
-
                         AND ((res_est.id_estudiante, res_ice.id_semestre)
                         
                             IN 
@@ -294,13 +292,33 @@ function get_count_active_res_students($cohort){
                         
                     GROUP BY semestre.nombre";
 
-    $count = $DB->get_records_sql($sql_query);
-    
+    $edited_sql_query = "SELECT res_est.id AS num_act_res, res_est.monto_estudiante AS monto_act_res, tu.num_doc
+                        FROM {talentospilos_res_estudiante} AS res_est
+                        INNER JOIN {talentospilos_res_icetex} AS res_ice ON res_ice.id = res_est.id_resolucion
+                        INNER JOIN {talentospilos_user_extended} AS uext ON uext.id_ases_user = res_est.id_estudiante
+                        INNER JOIN {cohort_members} AS cohort_mem ON uext.id_moodle_user = cohort_mem.userid
+                        INNER JOIN {cohort} AS cohort ON cohort.id = cohort_mem.cohortid
+                        INNER JOIN {talentospilos_usuario} AS tu ON tu.id = uext.id_ases_user
+                        WHERE cohort.idnumber LIKE '$cohort%' AND res_ice.id_semestre = 7
+                        
+                        ORDER BY tu.num_doc";
+
+    //$count = $DB->get_records_sql($original_sql_query);
+    $count = $DB->get_records_sql($edited_sql_query);
+
+    file_put_contents("test.txt", "Data set:",FILE_APPEND);
+
     foreach($count as $record){
         $record->cohort = $cohort;
-        $record->monto_act_res = "$".number_format($record->monto_act_res, 0, ',', '.');
+        //$record->monto_act_res = "$".number_format($record->monto_act_res, 0, ',', '.');
+
+        file_put_contents("test.txt", "\n\n  ".json_encode($record), FILE_APPEND);
+
         array_push($array_active_res, $record);
     }
+
+    file_put_contents("test.txt", "\n\n\n", FILE_APPEND);
+
 
     return $array_active_res;
 }

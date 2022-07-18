@@ -6,11 +6,16 @@
  * @license  http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define(['jquery'], function($) {
+define(['jquery',
+        'block_ases/loading_indicator',
+        'block_ases/mustache'], 
+        function($, loading_indicator, mustache) {
 
     return {
 
         init: function() {
+            
+            const params = get_url_parameters(document.location.search)
 
             var student_code = $('#dphpforms_ases_student_code').attr('data-info');
 
@@ -18,6 +23,8 @@ define(['jquery'], function($) {
 
                 var codigo_monitor = $('#current_user_id').val();
                 var dphpforms_instance = $('#dphpforms_block_instance').attr('data-info');
+
+                console.log(codigo_monitor, dphpforms_instance);
 
                 $('div').removeClass('regla_incumplida');
                 $('#modal_v2_peer_tracking').fadeIn(300);
@@ -28,7 +35,70 @@ define(['jquery'], function($) {
                 $('.id_practicante').find('input').val( $("#dphpforms_practicing_id").data("info") );
                 $('.id_profesional').find('input').val( $("#dphpforms_professional_id").data("info") );
                 $('.username').find('input').val( $("#dphpforms_username").data("info") );
+                
+				// Campos deprecados.
+				const deprecatedFields = [
+				    'relacion_pareja',
+					'composicion_familiar',
+					'influencia',
+					'aspec_academicos',
+					'estra_academicas',
+					'inter_autoe_ocupacional',
+					'carac_socioeconomicas',
+					'icetex',
+					'oferta_servicios',
+					'induccion',
+					'vida_universitaria',
+					'retor_ciuda_origen'
+				];
 
+				deprecatedFields.forEach( fieldValue => {
+					$(`input[value=${fieldValue}]`).parent().css("display", "none")
+				});
+
+            });
+            $('#button_carga_Hisotricos').on('click', function() {
+                loading_indicator.show();
+                var id_ases = $('#id_ases').val();
+                var id_instance = document.querySelector('#dphpforms_block_instance').dataset.info;
+
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify({
+                        "function": 'cargar_historicos',
+                        "params": [id_ases, id_instance],
+                    }),
+                    url: "../managers/student_profile/studentprofile_api.php",
+                    success: function(msg) {
+                        if(msg.status_code == 0) {
+                            loading_indicator.show();
+                            $.ajax({
+                                url: "../templates/socioed_historic.mustache",
+                                data: null,
+                                dataType: "text",
+                                async: false,
+                                success: function( template ){
+                                    let tab_to_load = $(mustache.render( template, msg.data_response ));
+                                    $("#socioed_historic").append( tab_to_load );
+                                },
+                                error: function(msg) {
+                                    //loading_indicator.hide();
+                                    console.log(msg);
+                                }
+                            });
+                        }else {
+                            console.log(msg);
+                        }
+                    },
+                    dataType: "json",
+                    cache: "false",
+                    error: function(msg) {
+                        //loading_indicator.hide();
+                        console.log(msg);
+                    }
+                });
+                loading_indicator.hide();
+                $('#button_carga_Hisotricos').prop('disabled',true)
             });
 
             $('#button_primer_acercamiento').on('click', function() {
@@ -43,7 +113,9 @@ define(['jquery'], function($) {
 
             $('#button_actualizar_primer_acercamiento').click(function(){
                 $('div').removeClass('regla_incumplida');
-                $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id=primer_acercamiento&record_id=" + $(this).attr('data-record-id'), function( data ) {
+
+
+                $.get( "../managers/dphpforms/dphpforms_forms_core.php?form_id=primer_acercamiento&instance_id="+params.instanceid+"&record_id=" + $(this).attr('data-record-id'), function( data ) {
                     $("#primer_acercamiento_form").html("");
                     $('#primer_acercamiento_form').append( data );
                     $('#modal_primer_acercamiento').fadeIn(300);
@@ -67,5 +139,19 @@ define(['jquery'], function($) {
             });
         }
     };
+
+    function get_url_parameters(page) {
+        // This function is anonymous, is executed immediately and
+        // the return value is assigned to QueryString!
+        var query_string = [];
+        var query = document.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            query_string[pair[0]] = pair[1];
+        }
+
+        return query_string;
+    }
 });
 

@@ -7,7 +7,9 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $dbman = $DB->get_manager();
     $result = true;
 
-    if ($oldversion < 2019111514080 ) {
+    if ($oldversion < 22022040517380) {
+
+
       
     //     // ************************************************************************************************************
     //     // Actualización que crea la tabla para los campos extendidos de usuario (Tabla: {talentospilos_user_extended})
@@ -4028,9 +4030,511 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $DB->execute( "ALTER TABLE " . $tablename . " ADD COLUMN $colname JSON" );
             
         }
-        
-        upgrade_block_savepoint(true, 2019111514080, 'ases');
-        return $result;
 
+        // ********************************************************************************************************
+        // ACTUALIZACIÓN QUE CREA LA NUEVA TABLA talentospilos_monitores NECESARIA PARA LA FICHA DE MONITORES
+        // Version: 2020101411330
+        // ********************************************************************************************************
+
+        $table = new xmldb_table('talentospilos_monitores');
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
+        $table->add_field('id_moodle_user', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'id');
+        
+        // Launch add key primary.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        //
+        // Launch add key id_moodle_user.
+        $table->add_key('id_moodle_user', XMLDB_KEY_FOREIGN_UNIQUE, ['id_moodle_user'], 'user', ['id']);
+
+        //// Conditionally launch create table.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        $field_id_programa = new xmldb_field('id_programa', XMLDB_TYPE_INTEGER, '4', null, XMLDB_NOTNULL, null, null, 'id_moodle_user');
+
+        $field_num_doc = new xmldb_field('num_doc', XMLDB_TYPE_INTEGER, '15', null, XMLDB_NOTNULL, null, null, 'id_programa');
+
+        $field_pdf_banco = new xmldb_field('pdf_cuenta_banco', XMLDB_TYPE_TEXT, null, null, null, null, null, 'num_doc');
+        
+        $field_pdf_acuerdo = new xmldb_field('pdf_acuerdo_conf', XMLDB_TYPE_TEXT, null, null, null, null, null, 'pdf_cuenta_banco');
+
+        $field_pdf_doc = new xmldb_field('pdf_doc', XMLDB_TYPE_TEXT, null, null, null, null, null, 'pdf_acuerdo_conf');
+
+        $field_pdf_d10 = new xmldb_field('pdf_d10', XMLDB_TYPE_TEXT, null, null, null, null, null, 'pdf_doc');
+
+        // Conditionally launch add fields.
+        if (!$dbman->field_exists($table, $field_id_programa)) {
+            $dbman->add_field($table, $field_id_programa);
+        }
+
+        if (!$dbman->field_exists($table, $field_num_doc)) {
+            $dbman->add_field($table, $field_num_doc);
+        }
+
+        if (!$dbman->field_exists($table, $field_pdf_banco)) {
+            $dbman->add_field($table, $field_pdf_banco);
+        }
+
+        if (!$dbman->field_exists($table, $field_pdf_doc)) {
+            $dbman->add_field($table, $field_pdf_doc);
+        }
+
+        if (!$dbman->field_exists($table, $field_pdf_d10)) {
+            $dbman->add_field($table, $field_pdf_d10);
+        }
+
+        // ********************************************************************************************************
+        // Creación de tablas monitoria, sesi_monitoria, asis_monitoria, mate_monitoria necesarias para 
+        // la funcionalidad de control de asistencia a monitorias academicas
+        // Version: 2020112311242
+        // ********************************************************************************************************
+
+        //  table talentospilos_monitoria
+        $table = new xmldb_table('talentospilos_monitoria');
+
+        // Adding fields to table talentospilos_monitoria.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('dia', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('hora', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('monitor', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('materia', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('eliminado', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, null);
+        
+        // Adding keys to table talentospilos_monitoria.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('monitoria_monitor', XMLDB_KEY_FOREIGN, ['monitor'], 'talentospilos_monitor', ['id']);
+        $table->add_key('materia_materia', XMLDB_KEY_FOREIGN, ['materia'], 'talentospilos_mate_monitoria', ['id']);
+
+        // Conditionally launch create table for talentospilos_monitoria.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Define table talentospilos_mate_monitoria to be created.
+        $table = new xmldb_table('talentospilos_mate_monitoria');
+
+        // Adding fields to table talentospilos_mate_monitoria.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('nombre', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null);
+        $table->add_field('eliminado', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table talentospilos_mate_monitoria.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+
+        // Conditionally launch create table for talentospilos_mate_monitoria.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Define table talentospilos_sesi_monitoria to be created.
+        $table = new xmldb_table('talentospilos_sesi_monitoria');
+
+        // Adding fields to table talentospilos_sesi_monitoria.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('id_monitoria', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('fecha', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+    $table->add_field('eliminado', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table talentospilos_sesi_monitoria.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('sesion_monitoria', XMLDB_KEY_FOREIGN, ['id_monitoria'], 'talentospilos_monitoria', ['id']);
+
+        // Conditionally launch create table for talentospilos_sesi_monitoria.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Define table talentospilos_asis_monitoria to be created.
+        $table = new xmldb_table('talentospilos_asis_monitoria');
+
+        // Adding fields to table talentospilos_asis_monitoria.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('sesion', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('asistente', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('fecha_inscripcion', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('telefono', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('asiste', XMLDB_TYPE_BINARY, null, null, null, null, null);
+        $table->add_field('eliminado', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table talentospilos_asis_monitoria.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('asistente_usuario', XMLDB_KEY_FOREIGN, ['asistente'], 'moodle_usuario', ['id']);
+        $table->add_key('sesion_sesion', XMLDB_KEY_FOREIGN, ['sesion'], 'talentospilos_sesi_monitoria', ['id']);
+
+        // Conditionally launch create table for talentospilos_asis_monitoria.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // ACTUALIZACIÓN 2020112316010, SE AÑADEN CAMPOS DE INFORMACIÓN GENERAL DEL MONITOR
+        // - Email alternátivo
+        // - Telefono 1
+        // - Telefono 2
+        // A LA TABLA {talentospilos_monitores}
+        
+        // Define field email_alternativo to be added to talentospilos_monitores.
+        $table = new xmldb_table('talentospilos_monitores');
+        $field_alt_email = new xmldb_field('email_alternativo', XMLDB_TYPE_TEXT, null, null, null, null, null, 'pdf_d10');
+
+        // Conditionally launch add field email_alternativo.
+        if (!$dbman->field_exists($table, $field_alt_email)) {
+            $dbman->add_field($table, $field_alt_email);
+        }
+        
+        $field = new xmldb_field('telefono1', XMLDB_TYPE_TEXT, null, null, null, null, null, 'email_alternativo');
+
+        // Conditionally launch add field telefono1.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $field = new xmldb_field('telefono2', XMLDB_TYPE_TEXT, null, null, null, null, null, 'telefono1');
+
+        // Conditionally launch add field telefono2.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }    
+
+		/*
+		 * Se añade campo faltante a la tabla de monitores (pdf_acuerdo_conf)
+		 * VERSION: 2021022018500
+		 */
+		
+        if (!$dbman->field_exists($table, $field_pdf_acuerdo)) {
+            $dbman->add_field($table, $field_pdf_acuerdo);
+        }
+
+        /* ////////////////////////////////////////////////////////////////////////////////////////////////
+		 * Actualización para el aplicativo de monitorías academicas: 
+         * En {talentospilos_asis_monitoria} inscripción, añadidos asignatura_a_consultar y tematica_a_consultar
+         * Eliminación del campo telefono en la tabla de inscripción
+         * Eliminación del campo pdf_acuerdo_conf de talentospilos_asis_monitoria, que fue agregado por error
+         * 
+		 * Joan Sebastian Betancourt. VERSION: 2021032313380
+		 */
+
+        // Define field asignatura_a_consultar to be added to talentospilos_asis_monitoria.
+        $table = new xmldb_table('talentospilos_asis_monitoria');
+        $field = new xmldb_field('asignatura_a_consultar', XMLDB_TYPE_TEXT, null, null, null, null, null, 'eliminado');
+
+        // Conditionally launch add field asignatura_a_consultar.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field tematica_a_consultar to be added to talentospilos_asis_monitoria.
+        $table = new xmldb_table('talentospilos_asis_monitoria');
+        $field = new xmldb_field('tematica_a_consultar', XMLDB_TYPE_TEXT, null, null, null, null, null, 'asignatura_a_consultar');
+
+        // Conditionally launch add field tematica_a_consultar.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field telefono to be dropped from talentospilos_asis_monitoria.
+        $table = new xmldb_table('talentospilos_asis_monitoria');
+        $field = new xmldb_field('telefono');
+
+        // Conditionally launch drop field telefono.
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        $field = new xmldb_field('pdf_acuerdo_conf');
+
+        // Conditionally launch drop field asistente.
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        /* #####################################################################################
+         * ACTUALIZACIÓN 2021041719080
+         * Se modifica el modelo de las tablas para regionalización
+         * del plugin. S. Cortés
+         * ####################################################################################
+         */
+        $table = new xmldb_table('talentospilos_semestre');
+        $field = new xmldb_field('id_tipo_periodo', XMLDB_TYPE_INTEGER, '10', null, null, null, '1', 'fecha_fin');
+        
+        $key = new xmldb_key('fk_tipo_periodo', XMLDB_KEY_FOREIGN, ['id_tipo_periodo'], 'talentospilos_tipo_periodo', ['id']);
+        $dbman->drop_key($table, $key);
+
+        // Se elimina campo innecesario id_tipo_periodo de la tabla semestre
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+        
+        // Se añaden en su lugar campo y fk id_instancia a la tabla semestre
+        $field = new xmldb_field('id_instancia', XMLDB_TYPE_INTEGER, '10', null, null, null, '1', 'fecha_fin');
+        
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $table->add_key('periodo_instancia_fk', XMLDB_KEY_FOREIGN, ['id_instancia'], 'block_instances', ['id']);
+        
+        // Se elimina tabla innecesaria tipo_periodo
+        $table = new xmldb_table('talentospilos_tipo_periodo');
+        
+        if ($dbman->table_exists($table)) {
+            $dbman->drop_table($table);
+        }
+
+        /* ////////////////////////////////////////////////////////////////////////////////////////////////
+		 * Actualización para el aplicativo de monitorías academicas: 
+         * En talentospilos_asis_monitoria, añadidos nombre_asignatura_a_consultar y prof_asignatura_a_consultar
+         * Cambio del tipo de dato de talentospilos_asis_monitoria.asignatura_a_consultar a integer
+         * Cambio del tipo de dato de talentospilos_asis_monitoria.asiste a integer
+         * 
+		 * Joan Sebastian Betancourt. VERSION: 2021042110000
+		 */
+
+        // Define field nombre_asignatura_a_consultar to be added to talentospilos_asis_monitoria.
+        $table = new xmldb_table('talentospilos_asis_monitoria');
+        $field = new xmldb_field('nombre_asignatura_a_consultar', XMLDB_TYPE_TEXT, null, null, null, null, null, 'asignatura_a_consultar');
+
+        // Conditionally launch add field nombre_asignatura_a_consultar.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field prof_asignatura_a_consultar to be added to talentospilos_asis_monitoria.
+        $table = new xmldb_table('talentospilos_asis_monitoria');
+        $field = new xmldb_field('prof_asignatura_a_consultar', XMLDB_TYPE_TEXT, null, null, null, null, null, 'nombre_asignatura_a_consultar');
+        
+        // Conditionally launch add field prof_asignatura_a_consultar.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field asignatura_a_consultar to be dropped from talentospilos_asis_monitoria.
+        $table = new xmldb_table('talentospilos_asis_monitoria');
+        $field = new xmldb_field('asignatura_a_consultar');
+
+        // Conditionally launch drop field asignatura_a_consultar.
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        // Define field asignatura_a_consultar to be added to talentospilos_asis_monitoria.
+        $table = new xmldb_table('talentospilos_asis_monitoria');
+        $field = new xmldb_field('asignatura_a_consultar', XMLDB_TYPE_INTEGER, '10', null, null, null, '1', 'eliminado');
+
+        // Conditionally launch add field asignatura_a_consultar.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field asignatura_a_consultar to be dropped from talentospilos_asis_monitoria.
+        $table = new xmldb_table('talentospilos_asis_monitoria');
+        $field = new xmldb_field('asiste');
+
+        // Conditionally launch drop field asiste.
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        // Define field asiste to be added to talentospilos_asis_monitoria.
+        $table = new xmldb_table('talentospilos_asis_monitoria');
+        $field = new xmldb_field('asiste', XMLDB_TYPE_INTEGER, '10', null, null, null, '1', 'eliminado');
+
+        // Conditionally launch add field asiste.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // ////////////////////////////////////////////////////////////////////////////////////////////////
+        
+        /*************************************************************
+         * ACTUALIZACIÓN TABLA PERIODOS
+         * Se cambia el valor por defecto del campo id_instancia de 1 a NULL
+         * David S. Cortes
+         * VERSION: (2)2021052715150
+         */
+        // Changing the default of field id_instancia on table talentospilos_semestre to drop it.
+        //$table = new xmldb_table('talentospilos_semestre');
+        //$field = new xmldb_field('id_instancia', XMLDB_TYPE_INTEGER, '10', null, null, null, '1', 'fecha_fin');
+        //
+        //if ($dbman->field_exists($table, $field)) {
+        //    $dbman->drop_field($table, $field);
+        //}
+        //
+        //$field = new xmldb_field('id_instancia', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'fecha_fin');
+        //if (!$dbman->field_exists($table, $field)) {
+        //    $dbman->add_field($table, $field);
+        //}
+
+        /**************************************************************/
+
+        /*****************************************
+         * ACTUALIZACIÓN INYECCION CAMBIO ROL SEDE REGIONALES
+         * VERSION: 220210615191700
+         * David S. Cortés
+         * Corregimos el rol asigando a sistemas la instancia de regionales
+         */
+        //$table = new xmldb_table('talentospilos_user_rol');
+        //$dataobject = new stdClass();
+        //$dataobject->id = 2813; 
+        //$dataobject->id_rol = 6;
+        //$DB->update_record('talentospilos_user_rol', $dataobject );
+
+
+
+          /* #####################################################################################
+         * ACTUALIZACIÓN 22021071314240
+         * Se crea la tabla mdl_talentospilos_otros_acom y se puebla, ademàs de inserts necesarios para el anexo
+         * de la nueva funcionalidad(registrar un nuevo usuario_ases)
+         * ####################################################################################
+         */
+
+        /*
+         $table = new xmldb_table('talentospilos_otros_acom');
+         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+         $table->add_field('acompanamiento', XMLDB_TYPE_CHAR, '60', null, XMLDB_NOTNULL, null, null);
+         $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+         
+         if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+
+            $acompanamientos = array('Ases', 'Graca', 'Etnicidad', 'Gènero', 'Campus diverso', 'Universidad saludable', 'Otros', 'Ninguno');
+            $record = new stdClass();
+    
+             for($i = 0; $i < count($acompanamientos); $i++){
+                 $record->acompanamiento = $acompanamientos[$i];
+                 $result = $DB->insert_record('talentospilos_otros_acom', $record, true);
+             }
+        }
+    
+         //Inserts para anexar la funcionalidad (registrar estudiante)al menù
+        
+         $funcionalidad = new stdClass();
+         $funcionalidad->nombre_func = "student_new_register";
+         $funcionalidad->descripcion = "Permite registrar un nuevo estudiante a acompañar";
+
+         $id_funcionalidad = $DB->insert_record('talentospilos_funcionalidad', $funcionalidad);
+         
+         $accion = new stdClass();
+         $accion->nombre_accion = "registrar";
+         $accion->descripcion = "registrar un estudiante";
+         $accion->estado = 1;
+         $accion->id_funcionalidad = $id_funcionalidad;
+
+         $id_accion = $DB->insert_record('talentospilos_accion', $accion);
+
+         $permisos_rol = new stdClass();
+         $permisos_rol->id_rol = 6;
+         $permisos_rol->id_accion = $id_accion;
+
+         $id = $DB->insert_record('talentospilos_permisos_rol', $permisos_rol);
+
+         $permisos_rol_dis = new stdClass();
+         $permisos_rol_dis->id_rol = 16;
+         $permisos_rol_dis->id_accion = $id_accion;
+
+         $id_dis = $DB->insert_record('talentospilos_permisos_rol', $permisos_rol_dis);
+    */
+
+    /* #####################################################################################
+         * ACTUALIZACIÓN   22021101321440
+         * César Becerra
+         * Se crean indices para las columnas id_formulario, id_pregunta de la tabla mdl_talentospilos_df_form_preg 
+         * con el fin de optimizar la consulta student_profile_load_socioed_tab.
+         * 
+         * Tambien se hacen 4 Insert para crear los programas ADMINISTRACIÓN PÚBLICA,FINANZAS Y BANCA,ADMINISTRACIÓN TURÍSTICA
+         * y TECNOLOGÍA EN DESARROLLO DE SOFTWARE. Esto debido al error en la interfaz de subida de datos.
+         * ####################################################################################
+         
+
+        $sql_intel= "create index IDX_talentos_df_form_preg_id_formulario on {talentospilos_df_form_preg} (id_formulario)";
+        $sql_intel2="create index IDX_talentos_df_form_preg_id_pregunta on {talentospilos_df_form_preg} (id_pregunta)";
+        $sql_INSERT1="INSERT INTO {talentospilos_programa}(codigosnies, cod_univalle, nombre, id_sede, id_facultad, jornada) VALUES (109557,3847,'ADMINISTRACIÓN PÚBLICA',1,8,'DIURNA')"; 
+        $sql_INSERT2="INSERT INTO {talentospilos_programa}(codigosnies, cod_univalle, nombre, id_sede, id_facultad, jornada) VALUES (109909,3848,'FINANZAS Y BANCA',1,8,'DIURNA')"; 
+        $sql_INSERT3="INSERT INTO {talentospilos_programa}(codigosnies, cod_univalle, nombre, id_sede, id_facultad, jornada) VALUES (109917,3849,'ADMINISTRACIÓN TURÍSTICA',1,8,'DIURNA')"; 
+        $sql_INSERT4="INSERT INTO {talentospilos_programa}(codigosnies, cod_univalle, nombre, id_sede, id_facultad, jornada) VALUES (109943,2724,'TECNOLOGÍA EN DESARROLLO DE SOFTWARE',1,7,'NOCTURNA')";
+        $DB->execute($sql_intel);
+        $DB->execute($sql_intel2);
+        $DB->execute($sql_INSERT1);
+        $DB->execute($sql_INSERT2);
+        $DB->execute($sql_INSERT3);
+        $DB->execute($sql_INSERT4);
+
+    */
+        /* #####################################################################################
+         * ACTUALIZACIÓN 22021110814570
+         * Dilan Polanco
+         * Se crea campos adicionales a las tablas talentospilos_economics_data, talentospilos_academics_data y talentospilos_healt_data
+         * para poder almacenar los datos nuevos del formulario
+         * ####################################################################################
+        */ 
+
+         // Define field datos_economicos_adicionales to be added to talentospilos_economics_data.
+         $table = new xmldb_table('talentospilos_economics_data');
+         $field = new xmldb_field('datos_economicos_adicionales', XMLDB_TYPE_TEXT, null, null, null, null, null, 'expectativas_laborales');
+ 
+         // Conditionally launch add field datos_economicos_adicionales.
+         if (!$dbman->field_exists($table, $field)) {
+             $dbman->add_field($table, $field);
+         }
+        
+        // Define field datos_academicos_adicionales to be added to talentospilos_academics_data.
+        $table = new xmldb_table('talentospilos_academics_data');
+        $field = new xmldb_field('datos_academicos_adicionales', XMLDB_TYPE_TEXT, null, null, null, null, null, 'titulo_academico_colegio');
+        
+        // Conditionally launch add field datos_academicos_adicionales.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field datos_salud_adicionales to be added to talentospilos_health_data.
+        $table = new xmldb_table('talentospilos_health_data');
+        $field = new xmldb_field('datos_salud_adicionales', XMLDB_TYPE_TEXT, null, null, null, null, null, 'servicios_usados');
+
+        // Conditionally launch add field datos_salud_adicionales.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        
+
+        /* #####################################################################################
+         * ACTUALIZACIÓN 22022031814060
+         * Dilan Polanco
+         * Se crea la tabla talentospilos_discapacity_dt para el almacenamiento de los datos de discapacidad de
+         * los estudiantes registrados con el formulario nuevo
+         * 
+         * ####################################################################################
+         */
+
+        // Define field fields to be added to talentospilos_discapacity_dt.
+        $table = new xmldb_table('talentospilos_discapacity_dt');
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null, null);
+        $table->add_field('id_ases_user', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('percepcion_disca', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('diagnosticos', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('condicion_salud', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('medicamentos', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('cambios_tratamiento', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('discapacidad_municipio', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('certificado_discapacidad', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('certificado_invalidez', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('condicion_organos', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('dificultad_permanente', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('participacion_estudiantil', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('organizacion_disca', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('apoyo_dicapacidad', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Conditionally launch add field id.
+        if (!$dbman->table_exists($table)) {
+
+            $dbman->create_table($table);
+
+        }
+        
+
+
+        upgrade_block_savepoint(true, 22022040517380, 'ases');
+
+        return $result;
     }
 }

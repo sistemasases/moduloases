@@ -21,10 +21,12 @@
  * @author     Iader E. García G.
  * @author     Jeison Cardona Gómez
  * @author     Juan Pablo Castro
+ * @author     Carlos M. Tovar Parra
  * @package    block_ases
  * @copyright  2016 Iader E. García <iadergg@gmail.com>
  * @copyright  2019 Jeison Cardona Gomez <jeison.cardona@correounivalle.edu.co>
  * @copyright  2019 Juan Pablo Castro <juan.castro.vasquez@correounivalle.edu.co>
+ * @copyright  2021 Carlos M. Tovar Parra <carlos.mauricio.tovar@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -50,10 +52,13 @@ require_once '../managers/dphpforms/dphpforms_records_finder.php';
 require_once '../managers/dphpforms/dphpforms_get_record.php';
 require_once '../managers/user_management/user_management_lib.php';
 require_once '../managers/monitor_assignments/monitor_assignments_lib.php';
-require_once '../managers/periods_management/periods_lib.php';
+//require_once '../managers/periods_management/periods_lib.php';
 require_once '../classes/AsesUser.php';
 require_once '../classes/mdl_forms/user_image_form.php';
+require_once '../core/module_loader.php';
 include '../lib.php';
+
+module_loader('periods');
 
 global $PAGE;
 global $USER;
@@ -70,7 +75,7 @@ $title = "Ficha estudiante";
 $pagetitle = $title;
 $courseid = required_param('courseid', PARAM_INT);
 $blockid = required_param('instanceid', PARAM_INT);
-$student_code = (string)optional_param('student_code', 0, PARAM_TEXT);
+$student_code = optional_param('student_code', '0', PARAM_TEXT);
 
 require_login($courseid, false);
 
@@ -98,13 +103,17 @@ $record = new stdClass;
 $actions = authenticate_user_view($USER->id, $blockid);
 $record = $actions;
 
+// Security system, blocks defined on mustache files won't show if there is no call to core_secure_render
+// @see core_secure_render on core/security/security.php
+//core_secure_render($record, $USER->id);
+
 $data_init = array();
 
 $rol = lib_get_rol_name_ases($USER->id, $blockid);
 $html_profile_image = "";
 $id_user_moodle_ = null;
 $ases_student = null;
-if ($student_code != 0) {
+if ($student_code != '0') {
 
     $ases_student = get_ases_user_by_code($student_code);
     $student_id = $ases_student->id;
@@ -145,78 +154,83 @@ if ($student_code != 0) {
     }
 
     //Get academics data of student
+    $body_table_others_institutions = '';
     if(get_exist_academics_data($ases_student->id)){
         $record->academics_data      = "1";
         $record->academics_data_json = json_encode(get_academics_data($ases_student->id));
+    
+        //Get aditional academics existing data
+
+        $aditional_academics_data = get_academics_data($ases_student->id);
+
+        //Extraer json y decodificar datos de otras instituciones del estudiante
+        $objeto_json_institutions = json_decode($aditional_academics_data->otras_instituciones);
+
+        //Recorrer el objeto json (array) y contruir los tr y td de la tabla
+        foreach($objeto_json_institutions as $objeto){
+
+            $body_table_others_institutions .= "<tr><td> <input name='name_institucion' class='input_fields_general_tab'  type='text' value='$objeto->name_institution'/></td>
+        <td> <input name='nivel_academico_institucion' class='input_fields_general_tab'  type='text' value='$objeto->academic_level'/></td>
+        <td> <input name='apoyos_institucion' class='input_fields_general_tab'  type='text' value='$objeto->supports'/></td>
+        <td> <button type ='button' id='bt_delete_institucion' title='Eliminar institución' name='btn_delete_institucion' style='visibility:visible;'> </button></td> </tr>";
+
+        }
+
+        $record->current_resolution         =$aditional_academics_data->resolucion_programa;
+        $record->total_time                 =$aditional_academics_data->creditos_totales;
+        $record->previous_academic_title    =$aditional_academics_data->titulo_academico_colegio;
+        $record->info_others_institutions   =$body_table_others_institutions;
+        $record->academics_observations     =$aditional_academics_data->observaciones;
+        $record->academics_dificults        =$aditional_academics_data->dificultades;
+        $record->academics_data_json        =json_encode($aditional_academics_data);
+
     }else{
         $record->academics_data = "0";
+        $record->current_resolution         ='No encontrado';
+        $record->total_time                 ='No encontrado';
+        $record->previous_academic_title    ='No encontrado';
+        $record->info_others_institutions   ='No encontrado';
+        $record->academics_observations     ='No encontrado';
+        $record->academics_dificults        ='No encontrado';
+        $record->academics_data_json        ='No encontrado';
     }
-
-    //Get aditional academics existing data
-
-    $aditional_academics_data = get_academics_data($ases_student->id);
-
-    $body_table_others_institutions = '';
-
-    //Extraer json y decodificar datos de otras instituciones del estudiante
-    $objeto_json_institutions = json_decode($aditional_academics_data->otras_instituciones);
-
-    //Recorrer el objeto json (array) y contruir los tr y td de la tabla
-    foreach($objeto_json_institutions as $objeto){
-
-        $body_table_others_institutions .= "<tr><td> <input name='name_institucion' class='input_fields_general_tab'  type='text' value='$objeto->name_institution'/></td>
-    <td> <input name='nivel_academico_institucion' class='input_fields_general_tab'  type='text' value='$objeto->academic_level'/></td>
-    <td> <input name='apoyos_institucion' class='input_fields_general_tab'  type='text' value='$objeto->supports'/></td>
-    <td> <button type ='button' id='bt_delete_institucion' title='Eliminar institución' name='btn_delete_institucion' style='visibility:visible;'> </button></td> </tr>";
-
-    }
-
-    $record->current_resolution         =$aditional_academics_data->resolucion_programa;
-    $record->total_time                 =$aditional_academics_data->creditos_totales;
-    $record->previous_academic_title    =$aditional_academics_data->titulo_academico_colegio;
-    $record->info_others_institutions   =$body_table_others_institutions;
-    $record->academics_observations     =$aditional_academics_data->observaciones;
-    $record->academics_dificults        =$aditional_academics_data->dificultades;
-    $record->academics_data_json        =json_encode($aditional_academics_data);
 
     //Faculty name foreach academic program
-
-    $faculty_name = '';
 
 
     $record->id_moodle = $id_user_moodle;
     $record->id_ases = $student_id;
     $record->email_moodle = $user_moodle->email_moodle;
     $record->age = substr($ases_student->age, 0, 2);
-    foreach ($academic_programs as $program){
-        if($program->tracking_status == 1){
+    
+    $num_doc = $ases_student->num_doc;
+    $student_codes = get_student_codes($num_doc);
+    foreach($academic_programs as $program) {
+        $cod_programa = $program->cod_univalle;
+        foreach($student_codes as $codes){
+            $moodle_username = $codes->code;
+            $student_program = substr($moodle_username,-4);
+            if($cod_programa == $student_program){
+                $cod_programa = $moodle_username;
+                break;
+            }      
+        }
+
+        if($program->tracking_status == 1) {
             $sede = $program->nombre_sede;
-            $cod_programa = $program->cod_univalle;
             $nombre_programa = $program->nombre_programa;
             $program->nombre_sede = "<b>".$sede."</b>";
             $program->cod_univalle = "<b>".$cod_programa."</b>";
             $program->nombre_programa = "<b>".$nombre_programa."</b>";
-
-            $faculty_name .= $program->cod_univalle ."-" .$program->nombre_facultad .  "<br>";
-            $program_time .= $program->cod_univalle ."-" .$program->jornada  . "<br>";
-            $name_program = $program->nombre_programa."-".$program->cod_univalle;
-
             $record->cod_programa_activo = $cod_programa;
-            break;
-        }else {
-            $faculty_name .= $program->cod_univalle ."-" .$program->nombre_facultad .  "<br>";
-            $program_time .= $program->cod_univalle ."-" .$program->jornada  . "<br>";
+        }else{
+            $program->cod_univalle = $cod_programa;
         }
-
     }
 
     $record->estamento = $ases_student->estamento;
     $record->colegio = $ases_student->colegio;
-
-    $record->name_program = $name_program;
-    $record->faculty_name = $faculty_name;
-    $record->name_program_time = $program_time;
-    $record->name_current_semester = get_current_semester()->nombre;
+    $record->name_current_semester = core_periods_get_current_period($blockid)->nombre;
     $record->academic_programs = $academic_programs;
     $record->student_cohorts = $student_cohorts;
 
@@ -249,7 +263,7 @@ if ($student_code != 0) {
     $record->emailpilos = $ases_student->emailpilos;
     $record->attendant = $ases_student->acudiente;
     $record->attendant_tel = $ases_student->tel_acudiente;
-    $record->num_doc = $ases_student->num_doc;
+    $record->num_doc = $num_doc;
     $record->json_detalle_discapacity  =$ases_student->json_detalle;
 
 
@@ -351,6 +365,27 @@ if ($student_code != 0) {
 
     $record->municipio_act = student_profile_get_ciudad_res($student_id);
     $record->res_address = student_profile_get_res_address($student_id);
+    $record->neighborhood = student_profile_get_neighborhood($student_id);
+/*
+    //TRAE LAS CONDICIONES DE EXCEPCIÒN
+    
+    $cond_excep= get_cond_excepcion();
+    $options_excep = '';
+    foreach($cond_excep as $cond){
+        $options_excep .=" <option value='$cond->id'>$cond->condicion_excepcion</option>"  ;
+    }  
+
+    $record->options_excep = $options_excep;
+    
+    //TRAE LOS OTROS ACOMPAÑAMIENTOS
+    $acompañamientos = get_otros_acompañamientos();
+    $options_acompañamientos = '';
+    foreach($acompañamientos as $ac){
+        $options_acompañamientos .= "<option value='$ac->id'>$ac->acompanamiento</option>" ;
+    }
+
+    $record->options_acompañamientos = $options_acompañamientos;
+   */ 
 
     //TRAE ETNIAS
     $etnias= get_etnias();
@@ -524,13 +559,16 @@ if ($student_code != 0) {
         $record->sons = $ases_student->hijos;
     }
 
+    // traer enlace a documento de autorización para el tratamiento de datos personales
+    $record->tratamiento_datos_personales_doc = json_decode($ases_student->json_detalle)->tratamiento_datos_personales_doc;
+
 
     $reasons_dropout_observations = getReasonDropoutStudent ($ases_student->id);
     $record->observations = $reasons_dropout_observations."\n".$ases_student->observacion;
 
     // Estado ASES
 
-    $id_current_semester = core_periods_get_current_period()->id;
+    $id_current_semester = core_periods_get_current_period($blockid)->id;
     $last_monitor_assignment = monitor_assignments_get_last_monitor_student_assignment($student_id, $blockid);
     $id_instance_last_assignment = $last_monitor_assignment->id_instancia;
     $id_semester_last_assignment = $last_monitor_assignment->id_semestre;
@@ -593,11 +631,12 @@ if ($student_code != 0) {
     $trainee_object = new stdClass();
     $professional_object = new stdClass();
 
+
     $record->id_dphpforms_creado_por = $USER->id;
 
-    $monitor_object = get_assigned_monitor($student_id);
-    $trainee_object = get_assigned_pract($student_id);
-    $professional_object = get_assigned_professional($student_id);
+    $monitor_object = get_assigned_monitor($student_id, $blockid);
+    $trainee_object = get_assigned_pract($student_id, $blockid);
+    $professional_object = get_assigned_professional($student_id, $blockid);
 
     $flag_with_assignation = false;
 
@@ -826,6 +865,12 @@ if ($rol == 'dir_socioeducativo') {
 if ($rol == 'monitor_ps') {
     $record->monitor_ps = true;
 }
+
+if($rol == 'discapacidad' || $rol == 'sistemas'){
+    $record->show_discapacity = true;
+}else{
+    $record->show_discapacity = false;
+}
 /** Update user image */
 $show_html_elements_update_user_profile_image = false;
 if (isset($actions->update_user_profile_image)) {
@@ -863,7 +908,7 @@ $url_update_user_image           = new moodle_url("/blocks/ases/view/edit_user_i
 $record->update_profile_image_url = $url_update_user_image;
 
 // periods_lib.php contains get_current_semester()
-$record->current_semester = get_current_semester()->max;
+$record->current_semester = core_periods_get_current_period($blockid)->id;
 
 $stud_mon_prac_prof = user_management_get_stud_mon_prac_prof( $record->ases_student_code, $record->instance, $record->current_semester );
 $record->monitor_id = $stud_mon_prac_prof->monitor->id;
@@ -877,6 +922,12 @@ $record->flag_with_assignation = $flag_with_assignation;
 if( $dphpforms_ases_user ){
     if( !$flag_with_assignation ){
         $last_assignment = monitor_assignments_get_last_student_assignment( $dphpforms_ases_user, $blockid );
+        foreach ($last_assignment as $i => $e) {
+            if(is_null($e)){
+                $last_assignment[$i]->firstname = 'No se encontraron asignaciones';
+                $last_assignment[$i]->lastname = '';
+            }
+        }
         $record->last_assignment_monitor = $last_assignment['monitor_obj']->firstname . " " . $last_assignment['monitor_obj']->lastname;
         $record->last_assignment_practicant = $last_assignment['pract_obj']->firstname . " " . $last_assignment['pract_obj']->lastname;
         $record->last_assignment_professional = $last_assignment['prof_obj']->firstname . " " . $last_assignment['prof_obj']->lastname;
@@ -913,6 +964,9 @@ $PAGE->requires->css('/blocks/ases/style/discapacity_tab.css', true);
 $PAGE->requires->css('/blocks/ases/style/others_tab.css', true);
 $PAGE->requires->css('/blocks/ases/style/switch.css', true);
 $PAGE->requires->css('/blocks/ases/style/fontawesome550.min.css', true);
+
+
+
 //Pendiente para cambiar el idioma del nombre del archivo junto con la estructura de
 //su nombramiento.
 $PAGE->requires->css('/blocks/ases/style/creadorFormulario.css', true);

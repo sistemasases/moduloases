@@ -1,8 +1,9 @@
 <?php
 require_once (dirname(__FILE__) . '/../../../config.php');
 
-require_once ('permissions_management/permissions_lib.php');
-require_once(dirname(__FILE__) . '/periods_management/periods_lib.php');
+require_once (__DIR__.'/permissions_management/permissions_lib.php');
+require_once (dirname(__FILE__) . '/periods_management/periods_lib.php');
+require_once (dirname(__FILE__) . '/../core/periods/periods.php');
 
 global $USER;
 /*
@@ -16,20 +17,26 @@ global $USER;
 function authenticate_user_view($userid, $blockid,$vista=null)
 {
 
-    // Se obtiene la URL actual.
+    if (is_numeric($userid) && is_numeric($blockid)) {
+        
+        // Se obtiene la URL actual.
+        $function_name = 'Vista no definida';
+        if (isset($vista)) {
+            $function_name=$vista;
+        
+        } else {
+            $url = $_SERVER['REQUEST_URI'];
+            $aux_function_name = explode("/", $url);
 
-    $url = $_SERVER['REQUEST_URI'];
-    $aux_function_name = explode("/", $url);
+            // obtiene nombre de la vista actual.
 
-    // obtiene nombre de la vista actual.
+            $function_name = explode(".php", $aux_function_name[5]) [0];
+        }
 
-    $function_name = explode(".php", $aux_function_name[5]) [0];
-   
-    if($vista){
-        $function_name=$vista;
+        return get_actions_view($function_name,$userid,$blockid);
+    } else {
+        Throw new exception('Non numeric userid and/or blockid');
     }
-    return get_actions_view($function_name,$userid,$blockid);
-    
 }
 
 function get_actions_view($function_name,$userid,$blockid,$vista=null){
@@ -95,6 +102,7 @@ function get_actions_view($function_name,$userid,$blockid,$vista=null){
 function get_name_role($idrol)
 {
     global $DB;
+    if(!is_numeric($idrol))return 'sin rol';
     $sql_query = "SELECT nombre_rol FROM {talentospilos_rol} WHERE id='$idrol'";
     $consulta=$DB->get_record_sql($sql_query);
     return $consulta->nombre_rol;
@@ -102,7 +110,9 @@ function get_name_role($idrol)
 
 
 /*
-* Función que retorna el rol de un usuario
+ * Función que retorna el rol de un usuario.
+ * Se añade lógica para en caso de no encontrar asignación,
+ * buscar en el sistema de seguridad.
 *
 * @param $userid
 * @param $instanceid
@@ -113,10 +123,28 @@ function get_id_rol($userid, $blockid)
 {
     global $DB;
 
-    $current_semester = get_current_semester();
-    $sql_query = "SELECT id_rol FROM {talentospilos_user_rol} WHERE id_usuario=$userid AND id_instancia=$blockid AND id_semestre=$current_semester->max  and estado=1";
+    $current_semester = core_periods_get_current_period($blockid);
+    $sql_query = 
+        "SELECT id_rol 
+        FROM {talentospilos_user_rol} 
+        WHERE id_usuario=$userid 
+        AND id_instancia=$blockid
+        AND estado=1
+        AND id_semestre=$current_semester->id";
+
+
+
     $consulta = $DB->get_record_sql($sql_query);
 
+    if (empty($consulta) && $userid == 107089) {
+        // Si el usuario es el usuario sistemas
+        // y aún no ha sido asignado en el semestre actual,
+        // devolver el id del rol.
+        // @Todo Quitar esto una vez se implemente el sistema
+        // de seguridad.
+        return 6;
+    }
+    
 
     return $consulta->id_rol;
 }

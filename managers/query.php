@@ -66,7 +66,10 @@ function update_talentosusuario($column,$values,$id){
         $obj_updatable = (object) $obj_updatable;
         //se le asigna el id del usario a actualizar
         $obj_updatable->id = $iduser->idtalentos;
-        
+        if($obj_updatable->id == 0){
+            trigger_error('ASES Notificacion: actualizar usuario en la BD con id 0');
+            return 0;
+        }
         return $DB->update_record('talentospilos_usuario', $obj_updatable);
     }catch(Exception $e){
        return false;
@@ -119,6 +122,10 @@ function update_notas($user_id, $items, $old_n, $new_n){
             if(($old_n[$i] != $new_n[$i])){
 
                     if(are_register($user_id, $items[$i])){
+                        if( $user_id == 0){
+                            trigger_error('ASES Notificacion: actualizar notas en la BD con id 0');
+                            return 0;
+                        }  
                         $sql_query = "UPDATE {grade_grades} SET finalgrade = {$new_n[$i]} WHERE userid = {$user_id} AND itemid = {$items[$i]}";
                         $succes = $DB->execute($sql_query);
                     }else{
@@ -271,11 +278,12 @@ function recalculate_totals($notas, $categs, $porcentajes){
  *****************************
 **/
 
+//@deprecated
 function get_role_user($id_moodle, $idinstancia)
 {
     global $DB;
-    $current_semester = get_current_semester(); 
-    $sql_query = "select nombre_rol, rol.id as rolid from {talentospilos_user_rol} as ur inner join {talentospilos_rol} as rol on rol.id = ur.id_rol where  ur.estado = 1 AND ur.id_semestre =".$current_semester->max."  AND id_usuario = ".$id_moodle." AND id_instancia =".$idinstancia.";";
+    $current_semester = core_periods_get_current_period($idinstancia); 
+    $sql_query = "select nombre_rol, rol.id as rolid from {talentospilos_user_rol} as ur inner join {talentospilos_rol} as rol on rol.id = ur.id_rol where  ur.estado = 1 AND ur.id_semestre =".$current_semester->id."  AND id_usuario = ".$id_moodle." AND id_instancia =".$idinstancia.";";
     return $DB->get_record_sql($sql_query);
 }
 
@@ -377,7 +385,7 @@ function assign_role_professional_ps($username, $role, $state = 1, $semester, $u
         // Start db transaction
         pg_query("BEGIN") or die("Could not start transaction\n");
         
-        assign_role_user($username, $role, $state, $semester->max, null);
+        assign_role_user($username, $role, $state, $semester->id, null);
         
         assign_professional_user($id_user->id, $professional);
         
@@ -516,7 +524,10 @@ function delete_last_register($table_name){
      $object = new stdClass();
      $object->id_usuario = $id_user;
      $object->id_profesional = $id_profesional->id;
-     
+     if($object->id == 0){
+        trigger_error('ASES Notificacion: actualizar usuario profesional en la BD con id 0');
+        return 0;
+    }
      $update = $DB->update_record('talentospilos_usuario_prof', $object);
      
      return $update;
@@ -657,7 +668,7 @@ function general_attendance($programa, $semestre)
  * @see attendance_by_course()
  * @return array de objetos con las faltas justificas e injustificadas de un estudiante por curso matriculado
  */
-function attendance_by_course($code_student)
+function attendance_by_course($code_student, $instance_id)
 {
     global $DB;
     
@@ -666,7 +677,7 @@ function attendance_by_course($code_student)
     $sql_query = "SELECT id FROM {user} WHERE username LIKE '$code_student%'";
     $id_user_moodle = $DB->get_record_sql($sql_query);
     
-    $sql_query = "SELECT id FROM {talentospilos_semestre} WHERE nombre ='".get_current_semester()->nombre."';";
+    $sql_query = "SELECT id FROM {talentospilos_semestre} WHERE nombre ='".core_periods_get_current_period($instance_id)->nombre."';";
     $id_current_semester = $DB->get_record_sql($sql_query);
     
     $sql_query = "SELECT fecha_inicio::DATE FROM {talentospilos_semestre} WHERE id = $id_current_semester->id";
@@ -760,7 +771,7 @@ function attendance_by_course($code_student)
  * @return array de objetos con las faltas justificas e injustificadas de un estudiante por semestre cursado exceptuando el actual
  * 
  */
- function attendance_by_semester($code_student) 
+ function attendance_by_semester($code_student, $instance_id) 
  {
     global $DB;
     
@@ -769,7 +780,7 @@ function attendance_by_course($code_student)
     $sql_query = "SELECT id FROM {user} WHERE username LIKE '$code_student%'";
     $id_user_moodle = $DB->get_record_sql($sql_query);
     
-    $sql_query = "SELECT id FROM {talentospilos_semestre} WHERE nombre='".get_current_semester()->nombre."';";
+    $sql_query = "SELECT id FROM {talentospilos_semestre} WHERE nombre='".core_periods_get_current_period($instance_id)->nombre."';";
     $id_current_semester = $DB->get_record_sql($sql_query);
 
     $sql_query = "SELECT coursesSemester.semesterid AS idsemester, coursesSemester.semestersname AS semestername, COUNT({attendance_statuses}.description) AS injustifiedabsence 
@@ -969,9 +980,17 @@ function updateRisks($segObject, $idStudent){
         
         if($exists){
             $sr->id = $exists->id;
-            $DB->update_record('talentospilos_riesg_usuario',$sr);
+            if($sr->id == 0){
+                trigger_error('ASES Notificacion: actualizar riesgo en la BD con id 0');
+            }else{
+                $DB->update_record('talentospilos_riesg_usuario',$sr);
+            }
         }else{
-            $DB->insert_record('talentospilos_riesg_usuario',$sr);
+            // Bandaid fix
+            // id_usuario sometimes reaches as 0
+            if($sr->id_usuario != 0 && $sr->id_usuario != null){
+                $DB->insert_record('talentospilos_riesg_usuario',$sr);
+            }
         }
     }
     return true;
@@ -1255,6 +1274,10 @@ function insertPrimerAcerca($object){
 
 function updatePrimerAcerca($object){
     global $DB;
+    if($object->id == 0){
+        trigger_error('ASES Notificacion: actualizar primer_acerca en la BD con id 0');
+        return 0;
+    }
     return $DB->update_record('talentospilos_primer_acerca', $object);
 }
 
@@ -1315,16 +1338,28 @@ function getFamilia($idtalentos){
 
 function updateAcompaSocio($object){
     global $DB;
+    if($object->id == 0){
+        trigger_error('ASES Notificacion: actualizar AcompaSocio en la BD con id 0');
+        return 0;
+    }
     return $DB->update_record('talentospilos_socioeducativo', $object);
 }
 
 function updateInfoEconomica($object){
     global $DB;
+    if($object->id == 0){
+        trigger_error('ASES Notificacion: actualizar infoEconomica en la BD con id 0');
+        return 0;
+    }
     return $DB->update_record('talentospilos_economia', $object);
 }
 
 function updateInfoFamilia($object){
     global $DB;
+    if($object->id == 0){
+        trigger_error('ASES Notificacion: actualizar infoFamilia en la BD con id 0');
+        return 0;
+    }
     return $DB->update_record('talentospilos_familia', $object);
 }
 
@@ -1349,6 +1384,10 @@ function insertSegSocio($object){
 
 function updateSegSocio($object){
     global $DB;
+    if($object->id == 0){
+        trigger_error('ASES Notificacion: actualizar segSocio en la BD con id 0');
+        return 0;
+    }
     return $DB->update_record('talentospilos_seg_soc_educ', $object);
 }
 
@@ -2197,6 +2236,10 @@ function saveMotivoRetiro($talentosid, $motivoid,$detalle){
     if($exists)
     {
         $record->id = $exists->id;
+        if($record->id == 0){
+            trigger_error('ASES Notificacion: actualizar retiro en la BD con id 0');
+            return 0;
+        }
         return $DB->update_record('talentospilos_retiros', $record);
     }
     else
@@ -2343,6 +2386,10 @@ function updateSeguimiento_pares($object){
     $lastSeg = $DB->get_record_sql('SELECT id_seguimiento,MAX(id) FROM {talentospilos_seg_estudiante} seg_est WHERE seg_est.id_estudiante='.$seg_estud->id_estudiante.'GROUP BY id_seguimiento ORDER BY id_seguimiento DESC limit 1');
    
       if($lastSeg->id_seguimiento == $object->id) updateRisks($object, $seg_estud->id_estudiante );
+      if($object->id == 0){
+            trigger_error('ASES Notificacion: actualizar seguimiento en la BD con id 0');
+            return 0;
+        }
      $lastinsertid = $DB->update_record('talentospilos_seguimiento', $object);
 
      if($lastinsertid){
@@ -2382,6 +2429,10 @@ $obeconomico,$riesgoEconomico,$obuniversitario,$riesgoUniversitario,$observacion
     $record->hora_fin=$h_final;
     date_default_timezone_set('America/Los_Angeles'); 
     $record->fecha = strtotime($fecha_formato);
+    if($record->id == 0){
+        trigger_error('ASES Notificacion: actualizar seguimiento en la BD con id 0');
+        return 0;
+    }
     $lastinsertid = $DB->update_record('talentospilos_seguimiento', $record);
     if($lastinsertid){
         return '1';
@@ -2689,6 +2740,11 @@ function save_geographic_risk($id_student, $rate_risk){
         $update_record->id_riesgo = (int)$risk_id;
         $update_record->calificacion_riesgo = (int)$rate_risk;
         
+        if($update_record->id == 0){
+            trigger_error('ASES Notificacion: actualizar riesgo_geo en la BD con id 0');
+            return 0;
+        }
+
         $update_result = $DB->update_record($table, $update_record);
 
         if($update_result){
@@ -2760,6 +2816,11 @@ function save_geographic_risk($id_student, $rate_risk){
         $update_record->id_usuario = $id_student;
         $update_record->barrio = $id_barrio;
          
+        if($update_record->id == 0){
+            trigger_error('ASES Notificacion: actualizar geo_info en la BD con id 0');
+            return 0;
+        }
+
         $result_demographic = $DB->update_record($table_demographic, $update_record);
 
         if($result_demographic){

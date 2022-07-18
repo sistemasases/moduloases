@@ -60,7 +60,7 @@ $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);
 $url = new moodle_url("/blocks/ases/view/groupal_tracking.php", array('courseid' => $courseid, 'instanceid' => $blockid));
 
-$rol = get_role_ases($USER->id);
+$rol = lib_get_rol_name_ases($USER->id, $blockid);
 
 //Menu items are created
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
@@ -70,8 +70,8 @@ $data = 'data';
 $data = new stdClass;
 
 
-$current_semester = get_current_semester();
-$result = get_tracking_grupal_monitor_current_semester($USER->id,$current_semester->max);
+$current_semester = core_periods_get_current_period($blockid);
+$result = get_tracking_grupal_monitor_current_semester($USER->id,$current_semester->id);
 $render_trackings = render_monitor_groupal_trackings($result);
 
 

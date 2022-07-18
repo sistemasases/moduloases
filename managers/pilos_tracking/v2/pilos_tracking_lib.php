@@ -50,7 +50,7 @@ function pilos_tracking_get_tracking_count( $username, $semester_id, $instance, 
     $fecha_inicio = null;
     $fecha_fin = null;
 
-    $interval = get_semester_interval($semester_id);
+    $interval = core_periods_get_period_by_id($semester_id);
     if(!$interval){
         return -1;
     }
@@ -128,17 +128,21 @@ function pilos_tracking_get_tracking_count( $username, $semester_id, $instance, 
         }else if( $user_rol->nombre_rol == "practicante_ps" ){
 
             //List of monitor_ps
-            $list_users = $DB->get_records_sql( $sql_pro_prac );
-            
-            foreach( $list_users as $user ){
+            try {
+                $list_users = $DB->get_records_sql( $sql_pro_prac );
+                
+                foreach( $list_users as $user ){
 
-                $count = new stdClass();
-                $count->username = $user->username;
-                $count->count = pilos_tracking_general_get_count( $user->id_usuario, "monitor_ps", $fecha_inicio_str, $fecha_fin_str, $instance, $semester_id );
-                
-                array_push( $to_return, $count );
-                
+                    $count = new stdClass();
+                    $count->username = $user->username;
+                    $count->count = pilos_tracking_general_get_count( $user->id_usuario, "monitor_ps", $fecha_inicio_str, $fecha_fin_str, $instance, $semester_id );
+
+                    array_push( $to_return, $count );
+                }
+            } catch(Exception $ex) {
+                throw new exception($ex->getMessage());
             }
+
 
             return $to_return;
 
@@ -432,17 +436,13 @@ function cache_generator( $semester_id, $instance  ){
     
     $cache_duration = 60*30; //30 min
     
-    $obj_semester = get_semester_by_id($semester_id);
+    $obj_semester = core_periods_get_period_by_id($semester_id);
     
     $fecha_inicio = null;
     $fecha_fin = null;
 
-    $interval = get_semester_interval($semester_id);
-    if(!$interval){
-        return -1;
-    }
-    $fecha_inicio = getdate(strtotime($interval->fecha_inicio));
-    $fecha_fin = getdate(strtotime($interval->fecha_fin));
+    $fecha_inicio = getdate(strtotime($obj_semester->fecha_inicio));
+    $fecha_fin = getdate(strtotime($obj_semester->fecha_fin));
 
     $mon_tmp = $fecha_inicio["mon"];
     $day_tmp = $fecha_inicio["mday"];

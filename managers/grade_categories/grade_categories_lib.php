@@ -32,12 +32,14 @@
 // Queries from module grades record (registro de notas)
 
 require_once(__DIR__ . '/../../../../config.php');
+require_once(__DIR__ . '/../../core/module_loader.php');
 require_once $CFG->libdir.'/gradelib.php';
 require_once $CFG->dirroot.'/grade/lib.php';
 require_once $CFG->dirroot.'/grade/report/user/lib.php';
 require_once $CFG->dirroot.'/blocks/ases/managers/lib/student_lib.php'; 
 require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib.php'; 
 
+module_loader("periods");
 
 ///******************************************///
 ///*** Get info grade_categories methods ***///
@@ -55,9 +57,11 @@ require_once $CFG->dirroot.'/blocks/ases/managers/periods_management/periods_lib
 function get_courses_pilos($instanceid){
     global $DB;
 
-    $semestre = get_current_semester_processed();
-
-    //print_r($semestre);
+    
+    $inicio_periodo_actual = (core_periods_get_current_period($instanceid))->fecha_inicio;    
+    $inicio_periodo_actual = substr($inicio_periodo_actual, 0, 10);
+    //$semestre = substr($inicio_periodo_actual,0,4) . substr($inicio_periodo_actual, 5, 2);
+    //print_r($inicio_periodo_actual); die(); // DONOTCOMMIT))
     $query_courses = "
         SELECT DISTINCT curso.id,
                         curso.fullname,
@@ -83,7 +87,9 @@ function get_courses_pilos($instanceid){
         FROM {course} curso
         INNER JOIN {enrol} ROLE ON curso.id = role.courseid
         INNER JOIN {user_enrolments} enrols ON enrols.enrolid = role.id
-        WHERE SUBSTRING(curso.shortname FROM 4 FOR 7) IN (SELECT codigo_materia FROM {talentospilos_materias_criti}) AND SUBSTRING(curso.shortname FROM 15 FOR 6) = '$semestre' AND enrols.userid IN
+        WHERE SUBSTRING(curso.shortname FROM 4 FOR 7) IN (SELECT codigo_materia FROM {talentospilos_materias_criti}) 
+            AND to_timestamp(curso.startdate)::date >= '$inicio_periodo_actual' 
+            AND enrols.userid IN
             (SELECT user_m.id
             FROM {user} user_m
             INNER JOIN {talentospilos_user_extended} extended ON user_m.id = extended.id_moodle_user
@@ -102,6 +108,7 @@ function get_courses_pilos($instanceid){
     $result = $DB->get_records_sql($query_courses);
     
     $result = processInfo($result);
+    //print_r($result); die(); // DONOTCOMMIT))
     return $result;
 }
 
@@ -116,16 +123,18 @@ function processInfo($info){
     $profesores = [];
     
     foreach ($info as $course) {
-        $profesor = $course->nombre;
-        $id = $course->id;
-        $nombre = $course->fullname;
-        $shortname = $course->shortname;
-        $curso=["id"=>$id,"nombre"=>$nombre,"shortname"=>$shortname];
-        if(!isset($profesores[$profesor])){
-            $profesores[$profesor] = [];
+        if (isset($course->nombre)) {
+            
+            $profesor = $course->nombre;
+            $id = $course->id;
+            $nombre = $course->fullname;
+            $shortname = $course->shortname;
+            $curso=["id"=>$id,"nombre"=>$nombre,"shortname"=>$shortname];
+            if(!isset($profesores[$profesor])){
+                $profesores[$profesor] = [];
+            }
+            array_push($profesores[$profesor],$curso) ;
         }
-        
-        array_push($profesores[$profesor],$curso) ;
     }
     return $profesores;
 }

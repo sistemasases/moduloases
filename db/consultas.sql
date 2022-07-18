@@ -923,3 +923,28 @@ and mdl_talentospilos_semestre.nombre = '2018B';
 
 
 -- Fin de consulta monitor, estudiante y jefe practicante
+
+-- Todos los estudiantes que hacen parte del programa ASES
+
+SELECT DISTINCT
+		ases_user.id AS id_ases,
+		moodle_user.idnumber AS codigo,
+		moodle_user.firstname,  
+		moodle_user.lastname,
+		STRING_AGG(cohort.idnumber, ', ') AS cohortes
+		FROM mdl_cohort AS cohort 
+		INNER JOIN mdl_talentospilos_inst_cohorte AS instance_cohort ON cohort.id = instance_cohort.id_cohorte
+		INNER JOIN mdl_cohort_members AS cohort_member ON cohort_member.cohortid = cohort.id
+		INNER JOIN mdl_user AS moodle_user ON moodle_user.id = cohort_member.userid
+		INNER JOIN mdl_talentospilos_user_extended AS user_extended ON user_extended.id_moodle_user = moodle_user.id
+		INNER JOIN mdl_talentospilos_usuario AS ases_user ON ases_user.id = user_extended.id_ases_user
+		INNER JOIN mdl_talentospilos_estad_programa AS program_statuses ON program_statuses.id = user_extended.program_status
+	WHERE instance_cohort.id_instancia = 450299 AND user_extended.tracking_status = 1                                
+	GROUP BY 
+	 	ases_user.id,
+		moodle_user.idnumber,
+		moodle_user.firstname,
+		moodle_user.lastname
+
+
+    -- Fin deconsulta

@@ -1,0 +1,36 @@
+[
+    [
+        {
+            "key_input":"datos_academicos_adicionales",
+            "val_input":[
+                {"key_input_text":"semestre_actual","val_input_text":"7"},
+                {"key_input":"jornada","val_input":"1"},{"key_input_date":"ingreso_dicapacidad","val_input_date":"2021-12-07"}
+            ]
+        }
+    ],
+    
+    [
+        {
+            "key_input":"otras_instituciones",
+            "val_input":[
+                {"key_input_text":"colegio","val_input_text":"jmc"},
+                {"key_input_text":"titulo_1","val_input_text":"bachiller"},
+                {"key_input":"tipo_institucion_media","val_input":"1"},
+                {"key_input_text":"colegio_superior","val_input_text":"UV"},
+                {"key_input_text":"titulo_2","val_input_text":"tec sis"},
+                {"key_input":"tipo_institucion_superior","val_input":"1"}
+            ]
+        }
+    ],
+    
+    [
+        {
+            "key_input":"dificultades",
+            "val_input":[
+                {"key_input_text":"dificultad_1","val_input_text":"Ninguns"},
+                {"key_input_text":"apoyo_1","val_input_text":"nada de nada"},
+                {"key_input_text":"dificultad_superior_1","val_input_text":"Not"},
+                {"key_input_text":"apoyo_superior_1","val_input_text":"no"}]
+        }
+    ]
+]
