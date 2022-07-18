@@ -869,6 +869,12 @@ define(['jquery',
                             msg.msg = "El campo " + field.name + " no debe contener letras";
                             return msg;
                         }
+                        if (has_symbols(field.value)) {
+                            msg.title = "Error";
+                            msg.status = "error";
+                            msg.msg = "El campo " + field.name + " no debe contener símbolos";
+                            return msg;
+                        }
                         break;
                     case "ingreso":
 
@@ -996,6 +1002,54 @@ define(['jquery',
                             msg.title = "Error";
                             msg.status = "error";
                             msg.msg = "El campo " + field.name + " solo debe contener números";
+                            return msg;
+                        }
+                        if (has_symbols(field.value)) {
+                            msg.title = "Error";
+                            msg.status = "error";
+                            msg.msg = "El campo " + field.name + " solo debe contener números";
+                            return msg;
+                        }
+                        break;
+                    case "acudiente":
+                        if (has_symbols(field.value)) {
+                            msg.title = "Error";
+                            msg.status = "error";
+                            msg.msg = "El campo " + field.name + " no debe contener símbolos";
+                            return msg;
+                        }
+                        if (has_numbers(field.value)) {
+                            msg.title = "Error";
+                            msg.status = "error";
+                            msg.msg = "El campo " + field.name + " no debe contener números";
+                            return msg;
+                        }
+                        break;
+                    case "name_person":
+                        if (has_symbols(field.value)) {
+                            msg.title = "Error";
+                            msg.status = "error";
+                            msg.msg = "El campo " + field.name + " (Nombre persona con quien vive) no debe contener símbolos";
+                            return msg;
+                        }
+                        if (has_numbers(field.value)) {
+                            msg.title = "Error";
+                            msg.status = "error";
+                            msg.msg = "El campo " + field.name + " (Nombre persona con quien vive) no debe contener números";
+                            return msg;
+                        }
+                        break;
+                    case "parentesco_person":
+                        if (has_symbols(field.value)) {
+                            msg.title = "Error";
+                            msg.status = "error";
+                            msg.msg = "El campo " + field.name + " (Parentesco persona con quien vive) no debe contener símbolos";
+                            return msg;
+                        }
+                        if (has_numbers(field.value)) {
+                            msg.title = "Error";
+                            msg.status = "error";
+                            msg.msg = "El campo " + field.name + " (Parentesco persona con quien vive) no debe contener números";
                             return msg;
                         }
                         break;
@@ -1211,6 +1265,16 @@ define(['jquery',
         var numbers = "0123456789";
         for (i = 0; i < str.length; i++) {
             if (numbers.indexOf(str.charAt(i), 0) != -1) {
+                return 1;
+            }
+        }
+        return 0;
+    }
+
+    function has_symbols(str) {
+        var symbols = "|°!¡'@#$%&/()=¿?+{}[]-+*.,<>;:_^~";
+        for (i = 0; i < str.length; i++) {
+            if (symbols.indexOf(str.charAt(i), 0) != -1) {
                 return 1;
             }
         }
