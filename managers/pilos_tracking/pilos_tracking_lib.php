@@ -778,6 +778,14 @@ function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigo
     $messageHtml.="$name_prof";
 
     $email_result = email_to_user($emailToUser, $emailFromUser->email, $subject, $messageText, $messageHtml, ", ", true);
+    if (!$email_result) {
+	
+	error_log(
+	    "Error al enviar correo a:$emailToUser->email, remitente: $emailFromUser->email", 
+	    3,
+	    "/var/log/mail-errors.log"
+	);
+    }
 
 
        $email_result=0;
@@ -803,6 +811,15 @@ function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigo
 
 
       $email_result = email_to_user($emailToUser, $emailFromUser, $subject, $messageText, $messageHtml, ", ", true);
+
+	if (!$email_result) {
+    	    
+    	    error_log(
+    	        "Error al enviar correo a:$emailToUser->email, remitente: $emailFromUser->email", 
+    	        3,
+    	        "/var/log/mail-errors.log"
+    	    );
+    	}
 
         $email_result=0;
         //************************************************************************************************************
@@ -830,11 +847,23 @@ function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigo
         
         $receiving_user = get_full_user( 107089 );//Sistemas1008 : 107089
         $email_result = email_to_user($receiving_user, $emailFromUser, "[ Backup ]" . $subject, $messageText, $messageHtml, ", ", true);
-        
-      
 
-      
+	if (!$email_result) {
+    	    
+    	    error_log(
+    	        "Error al enviar correo a:$emailToUser->email, remitente: $emailFromUser->email", 
+    	        3,
+    	        "/var/log/mail-errors.log"
+    	    );
+    	}
+        
     }catch(Exception $ex){
+	error_log(
+	    "Error al enviar correo a:$codigoEnviarN1, $codigoEnviarN2, $codigoEnviarN3\n Destinatario: $receiving_user->email", 
+	    3,
+	    "/var/log/mail-errors.log"
+	);
+	Throw New Exception($ex->getMessage());
       return $ex->getMessage();
     }
   
