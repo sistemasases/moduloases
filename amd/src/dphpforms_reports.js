@@ -480,6 +480,169 @@ define([
                     //$("#progress_group").addClass("hidden");
                     
                     return report;
+                }else if( form_type == "inasistencia" ){
+                    
+                    var report_size = report.length;
+                    for( var x = 0; x < report_size; x++){
+
+                        var pos_firstname = -1;
+                        var pos_lastname = -1;
+
+                        var id_estudiante = null;
+                        var id_creado_por = null;
+
+                        var deleted = false;
+
+                        for( var y = 0; y < Object.keys(report[x]).length; y++ ){
+                            if( report[x][y].respuesta == "-#$%-" ){
+                                report[x][y].respuesta = "";
+                            }
+                            
+                            if( 
+                                report[x][y].local_alias == "puntuacion_riesgo_individual" ||
+                                report[x][y].local_alias == "puntuacion_riesgo_familiar" ||
+                                report[x][y].local_alias == "puntuacion_riesgo_academico" ||
+                                report[x][y].local_alias == "puntuacion_riesgo_economico" ||
+                                report[x][y].local_alias == "puntuacion_vida_uni"
+                             ){
+                                if( report[x][y].respuesta == "1" ){
+                                    report[x][y].respuesta = "bajo"
+                                }else if( report[x][y].respuesta == "2" ){
+                                    report[x][y].respuesta = "medio"
+                                }else if( report[x][y].respuesta == "3" ){
+                                    report[x][y].respuesta = "alto"
+                                }
+                            }
+
+                            if( report[x][y].local_alias == "revisado_profesional" ){
+                                
+                                if( report[x][y].respuesta == "0" ){
+                                    report[x][y].respuesta = "marcado"
+                                }else if( report[x][y].respuesta == "-1" ){
+                                    report[x][y].respuesta = "no_marcado"
+                                }
+
+                            }
+                            if( report[x][y].local_alias == "revisado_practicante" ){
+                                
+                                if( report[x][y].respuesta == "0" ){
+                                    report[x][y].respuesta = "marcado"
+                                }else if( report[x][y].respuesta == "-1" ){
+                                    report[x][y].respuesta = "no_marcado"
+                                }
+
+                            }
+                            if( !id_estudiante || !id_creado_por ){
+                                if( report[x][y].local_alias == "id_estudiante" ){
+                                    id_estudiante = report[x][y].respuesta;
+                                }
+                                if( report[x][y].local_alias == "id_creado_por" ){
+                                    id_creado_por = report[x][y].respuesta;
+                                }
+                            }
+                            
+                        }
+
+                        var instance_id = parseInt($("#dphpforms-instance-id").data("instance-id"));
+
+                        $.ajax({
+                            type: "POST",
+                            url: "../managers/user_management/user_management_api.php",
+                            data: JSON.stringify({ "function": "get_crea_stud_mon_prac_prof", "params": [ id_estudiante, id_creado_por, instance_id, id_semester ] }),
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            async: false,  
+                            success: function(data){
+
+                                report[x][Object.keys(report[x]).length] = { 
+                                    enunciado:"monitor_name", 
+                                    id:"00", 
+                                    local_alias:"monitor_name",
+                                    respuesta: String(data.data_response.monitor.firstname) + " " + String(data.data_response.monitor.lastname)
+                                };
+
+                                report[x][Object.keys(report[x]).length] = { 
+                                    enunciado:"practicing_name", 
+                                    id:"00", 
+                                    local_alias:"practicing_name",
+                                    respuesta: String(data.data_response.practicing.firstname) + " " + String(data.data_response.practicing.lastname)
+                                };
+
+                                report[x][Object.keys(report[x]).length] = { 
+                                    enunciado:"professional_name", 
+                                    id:"00", 
+                                    local_alias:"professional_name",
+                                    respuesta: String(data.data_response.professional.firstname) + " " + String(data.data_response.professional.lastname)
+                                };
+
+                                report[x][Object.keys(report[x]).length] = { 
+                                    enunciado:"created_by", 
+                                    id:"00", 
+                                    local_alias:"created_by",
+                                    respuesta: String(data.data_response.created_by.firstname) + " " + String(data.data_response.created_by.lastname)
+                                };
+
+                                var username = data.data_response.student_username;
+                                if( username ){
+                                    username = data.data_response.student_username.split("-")[0];
+                                }else{
+                                    username = "null";
+                                }
+
+                                report[x][Object.keys(report[x]).length] = { 
+                                    enunciado:"student_code", 
+                                    id:"00", 
+                                    local_alias:"student_code",
+                                    respuesta: username
+                                };
+
+                                report[x][Object.keys(report[x]).length] = { 
+                                    enunciado:"student_firstname", 
+                                    id:"00", 
+                                    local_alias:"student_firstname",
+                                    respuesta: String(data.data_response.student.firstname)
+                                };
+
+                                report[x][Object.keys(report[x]).length] = { 
+                                    enunciado:"student_lastname", 
+                                    id:"00", 
+                                    local_alias:"student_lastname",
+                                    respuesta: String(data.data_response.student.lastname)
+                                };       
+                            },
+                            failure: function(errMsg) {
+                                console.log(errMsg);
+                                
+                            }
+                        });
+
+                        var fields_to_move = 3;
+
+                        for( var k = Object.keys(report[x]).length - 1; k >= 0 ; k-- ){
+                            report[x][k+fields_to_move] = $.extend( true, {}, report[x][k] );
+                        }
+
+                        report[x][0] = $.extend( true, {}, report[x][Object.keys(report[x]).length - 3] );
+                        report[x][1] = $.extend( true, {}, report[x][Object.keys(report[x]).length - 2] );
+                        report[x][2] = $.extend( true, {}, report[x][Object.keys(report[x]).length - 1] );
+
+                        delete report[x][Object.keys(report[x]).length - 1];
+                        delete report[x][Object.keys(report[x]).length - 1];
+                        delete report[x][Object.keys(report[x]).length - 1];
+                       
+                        $("#progress-custom").find("div").width( (( 100 / report_size ) * ( x + 1 )).toFixed( 0 ) + "%" );
+                        $("#progress-custom").find("div").html( (( 100 / report_size ) * ( x + 1 )).toFixed( 0 ) + "%" );
+                        $("#progress-custom").find("div").attr( "aria-valuenow", (( 100 / report_size ) * ( x + 1 )).toFixed( 0 ) ); 
+
+                    }
+
+                    $("#progress-custom").find("div").addClass("progress-bar-success");
+                    $("#message").removeClass("alert alert-info");
+                    $("#message").addClass("alert alert-success");
+                    $("#message").html( "<strong>Info!</strong>  Reporte generado." );
+                    //$("#progress_group").addClass("hidden");
+                    
+                    return report;
                 }else{
 
                     $("#progress-custom").find("div").addClass("progress-bar-success");
@@ -573,6 +736,8 @@ define([
                 var start_date = $('#start_date').val();
                 var end_date = $('#end_date').val();
                 var cod_student = $('#code_student_dphpforms').val();
+                var check_seguimiento = $('#check_seguimiento').prop('checked');
+                var check_inasistencia = $('#check_inasistencia').prop('checked');
                 if( start_date >= end_date ){
                     swal(
                         {title:'Información',
@@ -604,9 +769,9 @@ define([
                         failure: function(errMsg) {}
                     });
 
-                    if( id_semester && !cod_student ){
+                    if( id_semester && !cod_student && check_seguimiento== true ){
 
-                        var preguntas = JSON.parse( $("#dphpforms-reports-preguntas").html());
+                        var preguntas = JSON.parse( $("#dphpforms-reports-preguntas1").html());
                         let instance_id = $("#dphpforms-instance-id").data("instance-id");
                     
                         $(".progress-bar").removeClass("progress-bar-success");
@@ -706,9 +871,9 @@ define([
                                 
                          });
 
-                    }else if( id_semester && cod_student){
+                    }else if( id_semester && cod_student && check_seguimiento== true){
 
-                        var preguntas = JSON.parse( $("#dphpforms-reports-preguntas").html());
+                        var preguntas = JSON.parse( $("#dphpforms-reports-preguntas1").html());
                         let instance_id = $("#dphpforms-instance-id").data("instance-id");
                     
                         $(".progress-bar").removeClass("progress-bar-success");
@@ -783,6 +948,209 @@ define([
                                                 $("#progress-download").find("div").addClass("progress-bar-success");
                                                 setTimeout(function(){
                                                     var tight_records = custom_actions( completed_records, "seguimiento_pares" );
+                                                    downloadCSV( tight_records );
+                                                    //render_datatable( tight_records );
+                                                },10);
+                                                
+                                            };
+                                            
+                                    }).fail(function(err) {
+                                        console.log(err);
+                                    });
+                                    $('#progress').text( Math.round( progress ) );
+                                }
+                                if( count_records == 0 ){ 
+                                    $('#progress').text( 100 );
+                                    $("#message").removeClass("alert alert-info");
+                                    $("#message").addClass("alert alert-success");
+                                    $("#message").html( "<strong>Info!</strong>  Reporte generado." );
+                                    $("#progress_group").addClass("hidden");
+                                    
+                                };
+    
+                            },
+                            error: function(data) {}
+                                
+                         });
+
+                    }else if( id_semester && !cod_student && check_inasistencia== true ){
+
+                        var preguntas = JSON.parse( $("#dphpforms-reports-preguntas2").html());
+                        let instance_id = $("#dphpforms-instance-id").data("instance-id");
+                    
+                        $(".progress-bar").removeClass("progress-bar-success");
+                        $(".progress-bar").removeClass("progress-bar-success");
+                        $(".progress-bar").width( "0%" );
+                        $(".progress-bar").html( "0%" );
+                        $(".progress-bar").attr( "aria-valuenow", "0" );
+                        $('#progress_group').css('display','block');
+                        $("#progress_group").removeClass("hidden");
+                        $("#message").removeClass("alert alert-success");
+                        $("#message").addClass("alert alert-info");
+                        $('#message').html( "<strong>Info!</strong> Se está generando el reporte, esto puede tardar un par de minutos dependiendo de su conexión a internet, capacidad del ordenador, intervalo de tiempo seleccionado y rapidez del campus virtual." );
+                        
+                        $.ajax({
+                            type: 'POST',
+                            url: "../managers/dphpforms/v2/dphpforms_api.php",
+                            data: JSON.stringify( 
+                                {
+                                    "function":"find_records",
+                                    "params":[
+                                        {
+                                            "form":"inasistencia",
+                                            "filterFields":[
+                                                    ["in_fecha",[[start_date,">="], [end_date,"<="]], false],
+                                                    ["in_id_instancia", [[instance_id,"LIKE"]], false],
+                        
+                                                ],
+                                            "orderFields":[],
+                                            "orderByDatabaseRecordDate":false,
+                                            "recordStatus":["!deleted"],
+                                            "selectedFields":[],
+                                            "asFields": []
+                                        }
+                                    ]
+                                } 
+                            ),
+                            contentType: "aplication/json",
+                            dataType: "json",
+                            cache: "false",
+                            success: function(data) {
+                                let count_records = Object.keys( data['data_response'] ).length;
+                                let completed_records = [];
+                                let completed_records_datatable = [];
+                                let progress = 0;
+
+                                for( var t = 0; t < count_records; t++ ){
+
+                                    $.get( '../managers/dphpforms/dphpforms_get_record.php?record_id=' + data['data_response'][t]['id_registro'], function( record ) {  
+                                        if(  Object.keys( record['record'] ).length > 0  ){
+    
+                                                var seguimiento_base = $.extend( true, {}, preguntas );
+    
+                                                for( var x = 0; x <  Object.keys( record['record']['campos'] ).length; x++ ){
+    
+                                                    for( var k = 0; k < Object.keys( seguimiento_base ).length; k++ ){
+                                                        if( seguimiento_base[k].id == parseInt( record['record']['campos'][ x ]['id_pregunta'] ) ){
+                                                            seguimiento_base[k].respuesta = record['record']['campos'][ x ]['respuesta'];
+                                                                                                                    
+                                                        }
+                                                    }
+                                                };
+    
+                                                completed_records.push( seguimiento_base );
+                                            };
+    
+                                            progress ++;
+                                            $("#progress-download").find("div").width( (( 100 / count_records ) * progress).toFixed( 0 ) + "%" );
+                                            $("#progress-download").find("div").html( (( 100 / count_records ) * progress).toFixed( 0 ) + "%" );
+                                            $("#progress-download").find("div").attr( "aria-valuenow", (( 100 / count_records ) * progress).toFixed( 0 ) );
+                                            if( progress == count_records ){
+                                                $("#progress-download").find("div").addClass("progress-bar-success");
+                                                setTimeout(function(){
+                                                    var tight_records = custom_actions( completed_records, "inasistencia" );
+                                                    downloadCSV( tight_records );
+                                                    //render_datatable( tight_records );
+                                                },10);
+                                                
+                                            };
+                                            
+                                    }).fail(function(err) {
+                                        console.log(err);
+                                    });
+                                    $('#progress').text( Math.round( progress ) );
+                                }
+                                if( count_records == 0 ){ 
+                                    $('#progress').text( 100 );
+                                    $("#message").removeClass("alert alert-info");
+                                    $("#message").addClass("alert alert-success");
+                                    $("#message").html( "<strong>Info!</strong>  Reporte generado." );
+                                    $("#progress_group").addClass("hidden");
+                                    
+                                };
+    
+                            },
+                            error: function(data) {}
+                                
+                         });
+
+                    }else if( id_semester && cod_student && check_inasistencia== true){
+
+                        var preguntas = JSON.parse( $("#dphpforms-reports-preguntas2").html());
+                        let instance_id = $("#dphpforms-instance-id").data("instance-id");
+                    
+                        $(".progress-bar").removeClass("progress-bar-success");
+                        $(".progress-bar").removeClass("progress-bar-success");
+                        $(".progress-bar").width( "0%" );
+                        $(".progress-bar").html( "0%" );
+                        $(".progress-bar").attr( "aria-valuenow", "0" );
+                        $('#progress_group').css('display','block');
+                        $("#progress_group").removeClass("hidden");
+                        $("#message").removeClass("alert alert-success");
+                        $("#message").addClass("alert alert-info");
+                        $('#message').html( "<strong>Info!</strong> Se está generando el reporte, esto puede tardar un par de minutos dependiendo de su conexión a internet, capacidad del ordenador, intervalo de tiempo seleccionado y rapidez del campus virtual." );
+                        
+                        $.ajax({
+                            type: 'POST',
+                            url: "../managers/dphpforms/v2/dphpforms_api.php",
+                            data: JSON.stringify( 
+                                {
+                                    "function":"find_records",
+                                    "params":[
+                                        {
+                                            "form":"inasistencia",
+                                            "filterFields":[
+                                                    ["in_fecha",[[start_date,">="], [end_date,"<="]], false],
+                                                    ["in_id_instancia", [[instance_id,"LIKE"]], false],
+                                                    ["in_id_estudiante", [[cod_student,"LIKE"]], false]
+                                                ],
+                                            "orderFields":[],
+                                            "orderByDatabaseRecordDate":false,
+                                            "recordStatus":["!deleted"],
+                                            "selectedFields":[],
+                                            "asFields": []
+                                        }
+                                    ]
+                                } 
+                            ),
+                            contentType: "aplication/json",
+                            dataType: "json",
+                            cache: "false",
+                            success: function(data) {
+                                let count_records = Object.keys( data['data_response'] ).length;
+                                let completed_records = [];
+                                let completed_records_datatable = [];
+                                let progress = 0;
+
+                                for( var t = 0; t < count_records; t++ ){
+
+                                    $.get( '../managers/dphpforms/dphpforms_get_record.php?record_id=' + data['data_response'][t]['id_registro'], function( record ) {
+                                            
+                                        if(  Object.keys( record['record'] ).length > 0  ){
+    
+                                                var seguimiento_base = $.extend( true, {}, preguntas );
+    
+                                                for( var x = 0; x <  Object.keys( record['record']['campos'] ).length; x++ ){
+    
+                                                    for( var k = 0; k < Object.keys( seguimiento_base ).length; k++ ){
+                                                        if( seguimiento_base[k].id == parseInt( record['record']['campos'][ x ]['id_pregunta'] ) ){
+                                                            seguimiento_base[k].respuesta = record['record']['campos'][ x ]['respuesta'];
+                                                                                                                    
+                                                        }
+                                                    }
+                                                };
+    
+                                                completed_records.push( seguimiento_base );
+                                            };
+    
+                                            progress ++;
+                                            $("#progress-download").find("div").width( (( 100 / count_records ) * progress).toFixed( 0 ) + "%" );
+                                            $("#progress-download").find("div").html( (( 100 / count_records ) * progress).toFixed( 0 ) + "%" );
+                                            $("#progress-download").find("div").attr( "aria-valuenow", (( 100 / count_records ) * progress).toFixed( 0 ) );
+                                            if( progress == count_records ){
+                                                $("#progress-download").find("div").addClass("progress-bar-success");
+                                                setTimeout(function(){
+                                                    var tight_records = custom_actions( completed_records, "inasistencia" );
                                                     downloadCSV( tight_records );
                                                     //render_datatable( tight_records );
                                                 },10);

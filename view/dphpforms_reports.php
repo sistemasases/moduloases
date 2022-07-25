@@ -69,21 +69,33 @@ $rol = lib_get_rol_name_ases($USER->id, $blockid);
 
 // dphpforms_form_updater.php->get_alias()
 $record->alias_preguntas_globales = array_values(get_alias());
-$preguntas_form = array_values(get_preguntas_form("seguimiento_pares"));
+$preguntas_form1 = array_values(get_preguntas_form("seguimiento_pares"));
+$preguntas_form2 = array_values(get_preguntas_form("inasistencia"));
 
 $record->dphpforms_instance_id = $blockid;
 
-$preguntas_form_short = array();
-foreach( $preguntas_form as &$pregunta ){
-    array_push( $preguntas_form_short, array(
-            'id' => $pregunta->id,
-            'enunciado' => $pregunta->enunciado,
-            'local_alias' => json_decode($pregunta->atributos_campo)->local_alias
+$preguntas_form_short1 = array();
+foreach( $preguntas_form1 as &$pregunta1 ){
+    array_push( $preguntas_form_short1, array(
+            'id' => $pregunta1->id,
+            'enunciado' => $pregunta1->enunciado,
+            'local_alias' => json_decode($pregunta1->atributos_campo)->local_alias
         ) 
     );
 }
 
-$record->preguntas = json_encode( $preguntas_form_short );
+$preguntas_form_short2 = array();
+foreach( $preguntas_form2 as &$pregunta2 ){
+    array_push( $preguntas_form_short2, array(
+            'id' => $pregunta2->id,
+            'enunciado' => $pregunta2->enunciado,
+            'local_alias' => json_decode($pregunta2->atributos_campo)->local_alias
+        ) 
+    );
+}
+
+$record->preguntas1 = json_encode( $preguntas_form_short1 );
+$record->preguntas2 = json_encode( $preguntas_form_short2 );
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 $record->menu = $menu_option;
 
