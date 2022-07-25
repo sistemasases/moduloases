@@ -1,7 +1,8 @@
 <body>
     {{#data}}
     {{> block_ases/side_menu}}
-    <div id="dphpforms-reports-preguntas" style="display:none;">{{{preguntas}}}</div>
+    <div id="dphpforms-reports-preguntas1" style="display:none;">{{{preguntas1}}}</div>
+    <div id="dphpforms-reports-preguntas2" style="display:none;">{{{preguntas2}}}</div>
     <div id="dphpforms-instance-id" data-instance-id="{{dphpforms_instance_id}}" style="display:none;"></div>
     <div class="container">
         <div class="row">
@@ -38,7 +39,7 @@
         <div id="container-control" class="row">
 
             <div class="row">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="col-xs-20 col-sm-20 col-md-20 col-lg-20">
                     <div class="form-group col-xs-4 col-sm-4 col-md-4 col-lg-4">
                         <label for="">Fecha de inicio</label>
                         <input type="date" name="" id="start_date" class="form-control ajuste_fecha">
@@ -52,6 +53,16 @@
                         <input type="text" name="" id="code_student_dphpforms" class="">
                     </div>
                 </div> 
+                <fieldset id="base_fields">
+                        <div>
+                            <div class="checkbox">
+                                 <input type="checkbox" name="valor_check" id="check_seguimiento" value="check_seguimiento" > Seguimiento
+                            </div>
+                            <div class="checkbox">
+                                <input type="checkbox" name="valor_check" id="check_inasistencia" value="check_inasistencia" > Inasistencia
+                            </div>
+                        </div>
+                 </fieldset>
                 <!--div class="col-sm-4" id="div_cohorts">
                     <label for="">Cohorte:  </label>
                     {{{cohorts_checks}}}
