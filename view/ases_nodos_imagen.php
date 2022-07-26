@@ -90,7 +90,7 @@ $data->cohorts_checks = $cohorts_select;
 $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);
 
-$url = new moodle_url("/blocks/ases/view/ases_graphic_reports.php",array('courseid' => $courseid, 'instanceid' => $blockid));
+$url = new moodle_url("/blocks/ases/view/ases_nodos_imagen.php",array('courseid' => $courseid, 'instanceid' => $blockid));
 
 // ---------------------------------------------
 // Carga por defecto de estudiantes relacionados
