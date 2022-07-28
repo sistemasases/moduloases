@@ -37,7 +37,7 @@ require_once(__DIR__.'/../managers/cohort/cohort_lib.php');
 include('../lib.php');
 global $PAGE;
 
-include("../classes/output/ases_graphic_reports_page.php");
+include("../classes/output/ases_nodos_imagen_page.php");
 include("../classes/output/renderer.php");
 
 // Set up the page.
@@ -56,19 +56,8 @@ require_login($courseid, false);
 
 
 
-
-$cohorts_select = \cohort_lib\get_html_cohorts_select($blockid);
-
 //se crean los elementos del menu
 $menu_option = create_menu_options($id_current_user, $blockid, $courseid);
-
-$risks = get_riesgos();
-$risks_table='';
-
-
-// Carga de riesgos
-foreach($risks as $risk){
-    $risks_table.='<div class="checkbox"><input type="checkbox" name="risk_fields[]" id="'.$risk->id.'" value="'.$risk->id.'" /> '.$risk->descripcion.'</div>';}
 
 
 // Crea una clase con la información que se llevará al template.
@@ -83,33 +72,17 @@ foreach($actions as $act){
 }
 
 $data->menu = $menu_option;
-$data->risks_checks = $risks_table;
 
-$data->cohorts_checks = $cohorts_select;
-//$data->status_ases = $estados_ases;
+
 $contextcourse = context_course::instance($courseid);
 $contextblock =  context_block::instance($blockid);
 
 $url = new moodle_url("/blocks/ases/view/ases_nodos_imagen.php",array('courseid' => $courseid, 'instanceid' => $blockid));
 
-// ---------------------------------------------
-// Carga por defecto de estudiantes relacionados
-// ---------------------------------------------
-$data_to_table = get_default_ases_report($blockid);
-$params = new stdClass();
-$params->table = $data_to_table;
-
-// ---------------------------------------------
-// Carga información resumen
-// ---------------------------------------------
-$data->summary_spp_cohorts = get_summary_group_cohorts('SPP', $blockid);
-$data->summary_spe_cohorts = get_summary_group_cohorts('SPE', $blockid);
-$data->summary_oa_cohorts = get_summary_group_cohorts('Otros', $blockid);
-$data->summary_3740_cohorts = get_summary_group_cohorts('3740', $blockid);
 
 // Navigation setup
 $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
-$blocknode = navigation_node::create('Reporte general gráfico ',$url, null, 'block', $blockid);
+$blocknode = navigation_node::create('Nodos Imagen',$url, null, 'block', $blockid);
 $coursenode->add_node($blocknode);
 
 $PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
@@ -129,7 +102,7 @@ $PAGE->set_title($pagetitle);
 $PAGE->set_heading($pagetitle);
 
 $output = $PAGE->get_renderer('block_ases');
-$ases_graphic_reports_page = new \block_ases\output\ases_graphic_reports_page($data);
+$ases_nodos_imagen_page = new \block_ases\output\ases_nodos_imagen_page($data);
 
 //echo $output->standard_head_html(); 
 echo $output->header();
