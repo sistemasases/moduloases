@@ -313,4 +313,9 @@ class renderer extends plugin_renderer_base {
         $data = $page->export_for_template($this);
         return parent::render_from_template('block_ases/load_grades', $data);
     }
+
+    public function render_ases_nodos_imagen_page($page){
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('block_ases/ases_nodos_imagen', $data);
+    }
 }
