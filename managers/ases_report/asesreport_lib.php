@@ -1415,14 +1415,18 @@ function get_default_ases_report($id_instance){
  *
  * @see get_professionals_by_instance
  * @param $instance_id       --> Identificador de instancia
+ * @param $period_id        --> (Optional) Periodo id de interés.
  * @return Array 
  */
 
-function get_professionals_by_instance($instance_id){
+function get_professionals_by_instance($instance_id, $period_id=null){
     
     global $DB;
 
     $result = array();
+    if (empty($period_id)) {
+        $period_id = (core_periods_get_current_period($instance_id))->id;
+    }
 
     $sql_query = "SELECT CONCAT(moodle_user.firstname, CONCAT(' ', moodle_user.lastname)) AS fullname, moodle_user.id
                   FROM {talentospilos_user_rol} AS user_rol
@@ -1431,7 +1435,7 @@ function get_professionals_by_instance($instance_id){
                                   FROM {talentospilos_rol}
                                   WHERE nombre_rol = 'profesional_ps')
                         AND id_instancia = $instance_id
-                        AND id_semestre =". core_periods_get_current_period($instance_id)->id
+                        AND id_semestre =". $period_id
                         ."ORDER BY fullname";
 
     $result = $DB->get_records_sql($sql_query);

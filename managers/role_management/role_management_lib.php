@@ -59,10 +59,13 @@ function get_pract_of_prof($id_prof,$id_instance){
  * @see get_monitors_of_pract($id_pract,$id_instance)
  * @return Array
  */
-function get_monitors_of_pract($id_pract,$id_instance){
+function get_monitors_of_pract($id_pract,$id_instance, $period_id = null){
    global $DB;
 
-    $current_semester = core_periods_get_current_period($id_instance);
+    if (empty($period_id)) {
+        $period_id= (core_periods_get_current_period($id_instance))->id;
+    }
+
     $id_monitor = get_role_id('monitor_ps');
     $sql_query = "SELECT id_usuario, users.firstname,users.lastname,id_semestre,users.username, CONCAT(users.firstname, ' ', users.lastname) AS fullname
                   FROM {talentospilos_user_rol} AS user_rol
@@ -70,7 +73,7 @@ function get_monitors_of_pract($id_pract,$id_instance){
                   WHERE user_rol.id_jefe = '$id_pract' 
                         AND user_rol.id_rol = '$id_monitor->id' 
                         AND user_rol.estado = 1 
-                        AND user_rol.id_semestre = '$current_semester->id' 
+                        AND user_rol.id_semestre = '$period_id' 
                         AND user_rol.id_instancia = '$id_instance'
                   ORDER BY fullname ASC";
 
@@ -112,22 +115,26 @@ function get_quantity_students_by_pract($id_practicant,$instance,$semester=null)
  * @see get_monitors_of_pract($id_pract,$id_instance)
  * @return Array
  */
-function get_students_of_monitor($id_monitor,$id_instance){
+function get_students_of_monitor($id_monitor,$id_instance, $period_id = null){
    global $DB;
 
-    $current_semester = core_periods_get_current_period($id_instance);
+    if (empty($period_id)) {
+        $period_id = (core_periods_get_current_period($id_instance))->id;
+    }
+
     $sql_query = 
     "SELECT ME.id, 
      ME.id_monitor,
      ME.id_estudiante, 
      ME.id_semestre,
      ME.id_instancia,
+    U.username,
      CONCAT(U.firstname, ' ',U.lastname) AS fullname 
     FROM {talentospilos_monitor_estud} AS ME
     INNER JOIN {user} AS U ON U.id = (SELECT id_moodle_user
                                                   FROM {talentospilos_user_extended} extended
                                                   WHERE id_ases_user = ME.id_estudiante and tracking_status=1)
-    WHERE ME.id_semestre = $current_semester->id 
+    WHERE ME.id_semestre = $period_id 
         AND ME.id_monitor = $id_monitor 
         AND ME.id_instancia = $id_instance
     ORDER BY fullname ASC";
