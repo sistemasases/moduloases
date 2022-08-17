@@ -106,5 +106,5 @@ $ases_nodos_imagen_page = new \block_ases\output\ases_nodos_imagen_page($data);
 
 //echo $output->standard_head_html(); 
 echo $output->header();
-echo $output->render($ases_graphic_reports_page);
+echo $output->render($ases_nodos_imagen_page);
 echo $output->footer();
