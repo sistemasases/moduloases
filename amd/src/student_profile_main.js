@@ -360,7 +360,19 @@ define(['jquery',
                     dateFormat: "yy-mm-dd",
                     changeYear: true,
                     changeMonth: true,
+                    onChangeMonthYear: function (year, month, inst) {
+                           $(this).datepicker('setDate', new Date(year, month - 1, inst.selectedDay));
+                    },
+                    onClose: function (dateText, inst) {
+                       $('#birthdate').prop('disabled', false);
+                    }
                 });
+   
+                $("#birthdate").on('click', function () {
+                   //desativar el input de fecha de nacimiento
+                   $('#birthdate').prop('disabled', true);
+                })
+                
             });
         }, update_status_program: function (current_status, element) {
 
