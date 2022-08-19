@@ -695,8 +695,6 @@ function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigo
     global $CFG;
 
     try{
-
-
 	error_log(
 	    "\n[".date('Y-M-d H:i e')."] Trying to send emails with the following data: [
 		$tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigoEnviarN3, instance: $instance,$fecha,$nombre,
@@ -786,18 +784,19 @@ function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigo
     $messageHtml.='Ficha: <a href="'.$link.'">'.$link.'</a><br><br>';
     $messageHtml.="Cordialmente<br>";
     $messageHtml.="$name_prof";
-
+    error_log("\nSending first email", 3, "/var/log/mail-errors.log");
     $email_result = email_to_user($emailToUser, $emailFromUser->email, $subject, $messageText, $messageHtml, ", ", true);
     
     $log_msg = "\n[".date('Y-M-d H:i e'). "] Correo a:$emailToUser->email, remitente: $emailFromUser->email, estudiante: $student_username";
     
     if (!$email_result) {
 	
-	error_log(
-	    $log_msg . " ¡ERROR!" , 
-	    3,
-	    "/var/log/mail-errors.log"
-	);
+        error_log(
+            $log_msg . " ¡ERROR!" ,
+            3,
+            "/var/log/mail-errors.log"
+        );
+        throw new Exception("Error enviando correo");
     } else {
 	
 	error_log(
@@ -840,6 +839,7 @@ function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigo
     	        3,
     	        "/var/log/mail-errors.log"
     	    );
+            throw new Exception("Error enviando correo");
     	} else {
     	    
     	    error_log(
@@ -881,6 +881,7 @@ function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigo
     	        3,
     	        "/var/log/mail-errors.log"
     	    );
+            throw new Exception("Error enviando correo");
     	} else {
     	    
     	    error_log(
@@ -910,15 +911,25 @@ function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigo
     		);
     	}
         
-    }catch(Exception $ex){
-	error_log(
-	    "\nError al enviar correo a:$codigoEnviarN1, $codigoEnviarN2, $codigoEnviarN3\n Destinatario: $receiving_user->email", 
-	    3,
-	    "/var/log/mail-errors.log"
-	);
-	Throw New Exception($ex->getMessage());
-      return $ex->getMessage();
+    } catch(Exception $ex) {
+        error_log(
+            "\n[".date('Y-M-d H:i e'). "] Error al enviar correo a:$codigoEnviarN1, $codigoEnviarN2, $codigoEnviarN3\n Destinatario: $receiving_user->email",
+            3,
+            "/var/log/mail-errors.log"
+        );
+
+        return array(
+            "status_code" => -1,
+            "error_message" => "Error enviando correos. Revisar /var/log/mail-errors.log",
+            "data_response" => null,
+        );
     }
+
+    return array(
+        "status_code" => 0,
+        "error_message" => "Correos enviados correctamente.",
+        "data_response" => null,
+    );
   
 }
 

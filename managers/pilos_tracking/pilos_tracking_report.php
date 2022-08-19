@@ -267,7 +267,7 @@ if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_P
 
                 if (isset($monitor_code)|| count((array)$practicant_code) > 0 || count((array)$profesional_code) > 0) {
 
-                    echo send_email_to_user(
+                    echo json_encode( send_email_to_user(
                         $_POST['tracking_type'],
                         $monitor_code,
                         $practicant_code->id_usuario,
@@ -279,7 +279,7 @@ if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_P
                         $instance,
                         $courseid,
                         $id_ases_student
-                    );
+                    ));
                 } else {
                     throw new Exception("Monitor o practicante o profesional no encontrado.");
                 }
