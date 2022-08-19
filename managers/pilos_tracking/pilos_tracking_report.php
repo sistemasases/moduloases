@@ -265,19 +265,25 @@ if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_P
                     $_POST['semester']
                 );
 
-                echo send_email_to_user(
-                    $_POST['tracking_type'], 
-                    $monitor_code, 
-                    $practicant_code->id_usuario,
-                    $profesional_code->id,
-                    date("Y-m-d", strtotime($date)), 
-                    $id_moodle_student->firstname . " " . $id_moodle_student->lastname, 
-                    $_POST['message_to_send'], 
-                    $place,
-                    $instance,
-                    $courseid,
-                    $id_ases_student
-                );
+                if (count($monitor_code) > 0 || count((array)$practicant_code) > 0 || count($profesional_code) > 0) {
+
+                    echo send_email_to_user(
+                        $_POST['tracking_type'],
+                        $monitor_code,
+                        $practicant_code->id_usuario,
+                        $profesional_code->id,
+                        date("Y-m-d", strtotime($date)),
+                        $id_moodle_student->firstname . " " . $id_moodle_student->lastname,
+                        $_POST['message_to_send'],
+                        $place,
+                        $instance,
+                        $courseid,
+                        $id_ases_student
+                    );
+                } else {
+                    throw new Exception("Monitor o practicante o profesional no encontrado.");
+                }
+
             } catch (Exception $ex) {
                 return $ex->getMessage();
             }
