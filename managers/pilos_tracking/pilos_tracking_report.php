@@ -265,7 +265,7 @@ if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_P
                     $_POST['semester']
                 );
 
-                if (count($monitor_code) > 0 || count((array)$practicant_code) > 0 || count($profesional_code) > 0) {
+                if (isset($monitor_code)|| count((array)$practicant_code) > 0 || count((array)$profesional_code) > 0) {
 
                     echo send_email_to_user(
                         $_POST['tracking_type'],
