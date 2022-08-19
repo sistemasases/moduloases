@@ -23,6 +23,7 @@
  * @copyright  2017 Isabella Serna RamÄ†Ā­rez <isabella.serna@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+global $CFG;
 require_once ('../validate_profile_action.php');
 require_once ('tracking_functions.php');
 require_once ('../lib/student_lib.php');
@@ -35,6 +36,7 @@ require_once ('../dphpforms/dphpforms_records_finder.php');
 require_once ('../dphpforms/dphpforms_get_record.php');
 require_once ('../user_management/user_lib.php');
 require_once ('../role_management/role_management_lib.php');
+require_once (__DIR__ . '/../monitor_profile/monitor_profile_lib.php');
 require_once $CFG->dirroot . '/blocks/ases/managers/user_management/user_management_lib.php';
 
 global $USER;
@@ -227,6 +229,7 @@ if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_P
     $place = $_POST['place'];
     $tracking_type = $_POST['tracking_type'];
     $instance = $_POST['instance'];
+    
 
     if (is_numeric($instance)) {
        $instance = intval($instance); 
@@ -237,6 +240,7 @@ if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_P
     $courseid = $_POST['courseid'];
     if ($_POST['form'] == 'new_form')
         {
+
             $register = null;
             if( $tracking_type == "individual" ){
                 $register = dphpforms_get_record($_POST['id_tracking'], 'id_estudiante');
@@ -252,25 +256,34 @@ if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_P
             }
 
             try {
-            
                 $id_moodle_student = user_management_get_full_ases_user($json['record']['alias_key']['respuesta']);
                 $id_ases_student = $json['record']['alias_key']['respuesta'];
                 $monitor_code = get_student_monitor($id_ases_student, $_POST['semester'], $instance);
                 $practicant_code = get_boss_of_monitor_by_semester($monitor_code, $_POST['semester'], $instance);
-                $profesional_code = get_boss_of_monitor_by_semester($practicant_code->id_jefe, $_POST['semester'], $instance);
-                echo send_email_to_user(
-                    $_POST['tracking_type'], 
-                    $monitor_code, 
-                    $practicant_code->id_jefe, 
-                    $profesional_code->id_jefe, 
-                    date("Y-m-d", strtotime($date)), 
-                    $id_moodle_student->firstname . " " . $id_moodle_student->lastname, 
-                    $_POST['message_to_send'], 
-                    $place,
-                    $instance,
-                    $courseid,
-                    $id_ases_student
+                $profesional_code = get_practicant_boss_under_period(
+                    $practicant_code->id_usuario,
+                    $_POST['semester']
                 );
+
+                if (isset($monitor_code)|| count((array)$practicant_code) > 0 || count((array)$profesional_code) > 0) {
+
+                    echo send_email_to_user(
+                        $_POST['tracking_type'],
+                        $monitor_code,
+                        $practicant_code->id_usuario,
+                        $profesional_code->id,
+                        date("Y-m-d", strtotime($date)),
+                        $id_moodle_student->firstname . " " . $id_moodle_student->lastname,
+                        $_POST['message_to_send'],
+                        $place,
+                        $instance,
+                        $courseid,
+                        $id_ases_student
+                    );
+                } else {
+                    throw new Exception("Monitor o practicante o profesional no encontrado.");
+                }
+
             } catch (Exception $ex) {
                 return $ex->getMessage();
             }
