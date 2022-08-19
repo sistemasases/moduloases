@@ -20,7 +20,14 @@ module_loader('periods');
 function get_boss_of_monitor_by_semester($id_monitor,$id_semester,$id_instance){
   global $DB;
 
-    $sql_query="SELECT * FROM {talentospilos_user_rol} where id_usuario=$id_monitor and id_semestre=$id_semester and id_instancia=$id_instance";
+    $sql_query="
+        SELECT * FROM {talentospilos_user_rol} where id_usuario in (
+            SELECT id_jefe FROM {talentospilos_user_rol} 
+            where id_usuario=$id_monitor 
+            and id_semestre=$id_semester 
+            and id_instancia=$id_instance
+            and id_rol=4
+        ) LIMIT 1";
 
     $practicant = $DB->get_record_sql($sql_query);
     return $practicant;
