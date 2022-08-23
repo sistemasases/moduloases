@@ -312,6 +312,11 @@ if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_P
                 }
 
             } catch (Exception $ex) {
+                error_log(
+                    "[".date('Y-M-d H:i e')." API CALL " .$ex->getMessage(). "]\n" ,
+                    3,
+                    "/var/log/mail-errors.log"
+                );
                 return $ex->getMessage();
             }
 
