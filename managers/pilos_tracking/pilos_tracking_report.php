@@ -229,7 +229,11 @@ if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_P
     $place = $_POST['place'];
     $tracking_type = $_POST['tracking_type'];
     $instance = $_POST['instance'];
-    
+        error_log(
+            "[".date('Y-M-d H:i e')." API CALL entering API to send emails]\n" ,
+            3,
+            "/var/log/mail-errors.log"
+        );
 
     if (is_numeric($instance)) {
        $instance = intval($instance); 
@@ -240,6 +244,11 @@ if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_P
     $courseid = $_POST['courseid'];
     if ($_POST['form'] == 'new_form')
         {
+            error_log(
+                "[".date('Y-M-d H:i e')." API CALL form is new_form]\n" ,
+                3,
+                "/var/log/mail-errors.log"
+            );
 
             $register = null;
             if( $tracking_type == "individual" ){
@@ -254,7 +263,11 @@ if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_P
                     $date = $field['respuesta'];
                 }
             }
-
+            error_log(
+                "[".date('Y-M-d H:i e')." API CALL entering try-catch]\n" ,
+                3,
+                "/var/log/mail-errors.log"
+            );
             try {
                 $id_moodle_student = user_management_get_full_ases_user($json['record']['alias_key']['respuesta']);
                 $id_ases_student = $json['record']['alias_key']['respuesta'];
@@ -264,9 +277,18 @@ if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_P
                     $practicant_code->id_usuario,
                     $_POST['semester']
                 );
+                error_log(
+                    "[".date('Y-M-d H:i e')." API CALL got all socioed info]\n" ,
+                    3,
+                    "/var/log/mail-errors.log"
+                );
 
                 if (isset($monitor_code)|| count((array)$practicant_code) > 0 || count((array)$profesional_code) > 0) {
-
+                    error_log(
+                        "[".date('Y-M-d H:i e')." API CALL about to call lib to send email]\n" ,
+                        3,
+                        "/var/log/mail-errors.log"
+                    );
                     echo json_encode( send_email_to_user(
                         $_POST['tracking_type'],
                         $monitor_code,
@@ -281,6 +303,11 @@ if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_P
                         $id_ases_student
                     ));
                 } else {
+                    error_log(
+                        "[".date('Y-M-d H:i e')." API CALL monitor,practicant or professional not found]\n" ,
+                        3,
+                        "/var/log/mail-errors.log"
+                    );
                     throw new Exception("Monitor o practicante o profesional no encontrado.");
                 }
 

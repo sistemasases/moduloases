@@ -893,7 +893,7 @@ function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigo
         
         $receiving_user = get_full_user( 107089 );//Sistemas1008 : 107089
         $email_result = email_to_user($receiving_user, $emailFromUser, "[ Backup ]" . $subject, $messageText, $messageHtml, ", ", true);
-	$log_msg = "\n[".date('Y-M-d H:i e'). "] Correo a:$receiving_user->email, remitente: $emailFromUser->email, estudiante: $student_username";
+	    $log_msg = "\n[".date('Y-M-d H:i e'). "] Correo a:$receiving_user->email, remitente: $emailFromUser->email, estudiante: $student_username";
 
 	if (!$email_result) {
     	    
