@@ -36,6 +36,7 @@ require_once('../managers/menu_options.php');
 require_once(__DIR__.'/../managers/cohort/cohort_lib.php');
 include('../lib.php');
 global $PAGE;
+global $DB;
 
 include("../classes/output/ases_nodos_imagen_page.php");
 include("../classes/output/renderer.php");
@@ -85,17 +86,22 @@ $coursenode = $PAGE->navigation->find($courseid, navigation_node::TYPE_COURSE);
 $blocknode = navigation_node::create('Nodos Imagen',$url, null, 'block', $blockid);
 $coursenode->add_node($blocknode);
 
-$PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
-$PAGE->requires->css('/blocks/ases/style/ases_graphic_reports_style.css', true);
-$PAGE->requires->css('/blocks/ases/style/styles_pilos.css', true);
-$PAGE->requires->css('/blocks/ases/style/bootstrap_pilos.min.css', true);
-$PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
-$PAGE->requires->css('/blocks/ases/style/round-about_pilos.css', true);
-$PAGE->requires->css('/blocks/ases/style/jquery.dataTables.min.css', true);
-$PAGE->requires->css('/blocks/ases/style/buttons.dataTables.min.css', true);
-$PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 
-$PAGE->requires->js_call_amd('block_ases/ases_graphic_reports','init');
+//consulta para obtener los nodos de la instancia
+$sql_query_nodos = "SELECT DISTINCT tb_1.id,firstname , lastname , tb_2.id_usuario AS target , id_jefe AS source FROM mdl_user AS tb_1
+JOIN mdl_talentospilos_user_rol AS tb_2
+ON tb_1.id = tb_2.id_usuario  AND tb_2.estado = 1
+AND tb_2.id_semestre IN (SELECT MAX(id) FROM mdl_talentospilos_semestre)
+WHERE (tb_2.id_jefe is not null IN (tb_2.id_rol = 4 OR tb_2.id_rol = 7) ) ";
+
+$nodos = $DB->get_records_sql($sql_query_nodos);
+
+$sql_query_edges = "SELECT id_usuario AS target FROM mdl_talentospilos_user_rol
+WHERE (id_rol = 3 OR id_rol = 2 OR id_rol = 2)  AND id_semestre IN (SELECT MAX(id) FROM mdl_talentospilos_semestre)";
+
+$edges = $DB->get_records_sql($sql_query_edges);
+
+$PAGE->requires->js_call_amd('block_ases/ases_nodos_imagen','init',array($nodos,$edges));
 
 $PAGE->set_url($url);
 $PAGE->set_title($pagetitle);
