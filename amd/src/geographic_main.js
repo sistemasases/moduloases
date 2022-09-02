@@ -128,6 +128,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
             });
 
             $('#button_save_geographic').on('click', function(){
+                
                 swal({
                     title: "Atención",
                     text: "¿Está seguro que la ubicación del marcador en el mapa coincide con la dirección del estudiante?",
@@ -150,7 +151,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                         var distance = 0;
                         var mode;
                         var directionsService;
-
                         if(!map_working) {
                             save_geographic_info(id_ases, latitude, longitude, duration, distance, address, neighborhood, city, nivel_riesgo);
                             return;
@@ -350,8 +350,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
              * @param {int} nivel_riesgo student's geographic risk level
              * @return {void}
              */
-            function save_geographic_info(id_ases, latitude, longitude, duration, distance, address, neighborhood, city, nivel_riesgo){
-
+            function save_geographic_info(id_ases, latitude, longitude, duration, distance, address, neighborhood, city, nivel_riesgo){ 
                 if(city == 1) {
                     swal(
                         "Error",
@@ -369,6 +368,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                         "Error",
                         "Debe definir un nivel de riesgo antes de guardar",
                         "error");
+                    return;
                 } else if(address.trim() == "") {
                     swal(
                         "Error",
@@ -430,6 +430,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 geocoder.geocode( {'address': 'prueba'}, function(results, status) {
                     return status == google.maps.GeocoderStatus.OK;
                 });
+                return false;
             }
         }
     }
