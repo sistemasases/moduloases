@@ -128,16 +128,19 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
             });
 
             $('#button_save_geographic').on('click', function(){
-                
+                message = "¿Está seguro que la ubicación del marcador en el mapa coincide con la dirección del estudiante?";
+                if(!map_working){
+                    message = "El servicio de mapas no está disponible, pero se puede almacenar la información geográfica sin actualizar la ruta en el mapa. ¿Desea continuar?";
+                }
                 swal({
                     title: "Atención",
-                    text: "¿Está seguro que la ubicación del marcador en el mapa coincide con la dirección del estudiante?",
+                    text: message,
                     type: "warning",
                     showCancelButton: true,
                     confirmButtonClass: "btn-danger",
                     confirmButtonText: "Sí",
                     cancelButtonText: "No",
-                    closeOnConfirm: true,
+                    closeOnConfirm: false,
                     closeOnCancel: true
                 }, function(isConfirm) {
                     if(isConfirm) {
@@ -155,7 +158,6 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                             save_geographic_info(id_ases, latitude, longitude, duration, distance, address, neighborhood, city, nivel_riesgo);
                             return;
                         }
-
                         var ciudad = document.getElementById("geographic_ciudad");
                         var selectedCity = ciudad.options[ciudad.selectedIndex].text;
                         var query = address + " " + selectedCity + " Colombia";
@@ -430,7 +432,7 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/sweetalert', 'block_ases/j
                 geocoder.geocode( {'address': 'prueba'}, function(results, status) {
                     return status == google.maps.GeocoderStatus.OK;
                 });
-                return false;
+                return false; //se añadió esta linea porque el servicio de mapas no funciona y no se puede validar
             }
         }
     }
