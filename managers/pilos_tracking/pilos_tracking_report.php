@@ -317,7 +317,12 @@ if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_P
                     3,
                     "/var/log/mail-errors.log"
                 );
-                return $ex->getMessage();
+
+                echo json_encode(array(
+                    "status_code" => -1,
+                    "error_message" => $ex->getMessage(),
+                    "data_response" => null
+                ));
             }
 
         }
