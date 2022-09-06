@@ -934,6 +934,9 @@ if( $dphpforms_ases_user ){
     }
 }
 
+
+$record->last_date_change_profile = $ases_student->ult_modificacion;
+
 //Menu items are created
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
 $record->menu = $menu_option;

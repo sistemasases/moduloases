@@ -35,57 +35,57 @@ define(['jquery',
             var ciudad_est = $('#municipio_act').val();
             var latitude = $('#latitude').val();
             var longitude = $('#longitude').val();
-            const LATLNG_CAMPUS_MELENDEZ = new google.maps.LatLng(3.3741569,-76.5355235);
+            const LATLNG_CAMPUS_MELENDEZ = new google.maps.LatLng(3.3741569, -76.5355235);
             const LATLNG_CAMPUS_SANFER = new google.maps.LatLng(3.431626, -76.546822);
 
             var cod_programa_activo = document.querySelector('#cod_programa_activo').dataset.info;
             var cod_facultad = cod_programa_activo[1];
-            var latLng_student_campus = (cod_facultad === '6' || cod_facultad === '8')?LATLNG_CAMPUS_SANFER:LATLNG_CAMPUS_MELENDEZ;
+            var latLng_student_campus = (cod_facultad === '6' || cod_facultad === '8') ? LATLNG_CAMPUS_SANFER : LATLNG_CAMPUS_MELENDEZ;
 
-         
-         
-           
-           // createDataTable($("#table_prueba"), columns,dataset)
+
+
+
+            // createDataTable($("#table_prueba"), columns,dataset)
             // Agrega iframe para Google Maps
             if (ciudad_est == 'CALI') {
 
-                document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination="+latLng_student_campus.lat()+","+latLng_student_campus.lng()+"&mode=transit'></iframe>";
+                document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=" + latLng_student_campus.lat() + "," + latLng_student_campus.lng() + "&mode=transit'></iframe>";
 
             } else {
 
-                document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination="+latLng_student_campus.lat()+","+latLng_student_campus.lng()+"&mode=driving'></iframe>";
+                document.getElementById('mapa').innerHTML = "<iframe class='col-xs-12 col-sm-12 col-md-12 col-lg-12' height='396' frameborder='0' style='border:0' src='https://www.google.com/maps/embed/v1/directions?key=AIzaSyAoE-aPVfruphY4V4BbE8Gdwi93x-5tBTM&origin=" + latitude + "," + longitude + "&destination=" + latLng_student_campus.lat() + "," + latLng_student_campus.lng() + "&mode=driving'></iframe>";
             }
 
 
-           
+
 
             $('#field_doc_dtddp').hide();
 
             /**
              * Event that loads asynchronously the socio-educational tab
              */
-            $("#socioed_li").one('click', {tab_name: 'socioed'}, load_tabs);
+            $("#socioed_li").one('click', { tab_name: 'socioed' }, load_tabs);
 
             /**
              * Event that loads asynchronously the academic tab
              */
-            $("#academic_li").one('click', {tab_name: 'academic'}, load_tabs);
+            $("#academic_li").one('click', { tab_name: 'academic' }, load_tabs);
 
             /**
              * Event that loads asynchronously the geographic tab
              */
-            $("#geographic_li").one('click', {tab_name: 'geographic'}, load_tabs);
+            $("#geographic_li").one('click', { tab_name: 'geographic' }, load_tabs);
 
             /**
              * Event that loads asynchronously the discapacity_tracking tab
              */
-            $("#discapacity_tracking_li").one('click', {tab_name: 'discapacity_tracking'}, load_tabs);
+            $("#discapacity_tracking_li").one('click', { tab_name: 'discapacity_tracking' }, load_tabs);
 
             /**
              * Event that moves the Google Maps map from
              * "General" to "Geografico".
              */
-            $("#geographic_li").on('click',function () {
+            $("#geographic_li").on('click', function () {
                 $("#mapa").appendTo("#geographic_map");
             });
 
@@ -97,7 +97,7 @@ define(['jquery',
                 $("#mapa").appendTo("#movableMap");
             });
 
-             
+
             //Carga una determinada pestaña
 
             //Eliminar fila de una tabla
@@ -117,7 +117,7 @@ define(['jquery',
                 }
             });
 
-           
+
 
             /**
              * Funcion para añadir una nueva fila en la tabla
@@ -158,7 +158,7 @@ define(['jquery',
                 load_student(student_code);
             });
 
-        
+
 
             // Manage statuses
             for (var i = 0, len = data_init.length; i < len; i++) {
@@ -171,9 +171,9 @@ define(['jquery',
                 }
             }
 
-       
-           
-            
+
+
+
             var current_tracking_status = "";
 
             // ******* Manage edition ******
@@ -183,7 +183,7 @@ define(['jquery',
 
             $('div.slider.round').click(function (event) { current_tracking_status = event.target.parentElement.children[0].checked; });
 
-            $('.input-tracking').on('change', { current_tracking_status: current_tracking_status },function () {
+            $('.input-tracking').on('change', { current_tracking_status: current_tracking_status }, function () {
                 self.update_tracking_status(current_tracking_status, $(this), data_init, self);
             });
 
@@ -195,14 +195,14 @@ define(['jquery',
                 self.update_status_program(current_status, $(this));
             });
 
-            $('#icetex_status').on('click',{ previous_status: $('#icetex_status option:selected').text() }, manage_icetex_status);
+            $('#icetex_status').on('click', { previous_status: $('#icetex_status option:selected').text() }, manage_icetex_status);
 
             $('#icon-tracking').on('click', function () {
                 var status_ases = $('#input_status_ases').val();
-                if(status_ases == "seguimiento")
+                if (status_ases == "seguimiento")
                     self.update_status_ases(parameters);
             });
-              
+
 
             switch (parameters.tab) {
                 case "socioed_tab":
@@ -350,8 +350,8 @@ define(['jquery',
                 }
 
                 var heights = $(".equalize").map(function () {
-                        return $(this).height();
-                    }).get(),
+                    return $(this).height();
+                }).get(),
                     maxHeight = Math.max.apply(null, heights);
 
                 $(".equalize").height(maxHeight);
@@ -361,18 +361,18 @@ define(['jquery',
                     changeYear: true,
                     changeMonth: true,
                     onChangeMonthYear: function (year, month, inst) {
-                           $(this).datepicker('setDate', new Date(year, month - 1, inst.selectedDay));
+                        $(this).datepicker('setDate', new Date(year, month - 1, inst.selectedDay));
                     },
                     onClose: function (dateText, inst) {
-                       $('#birthdate').prop('disabled', false);
+                        $('#birthdate').prop('disabled', false);
                     }
                 });
-   
+
                 $("#birthdate").on('click', function () {
-                   //desativar el input de fecha de nacimiento
-                   $('#birthdate').prop('disabled', true);
+                    //desativar el input de fecha de nacimiento
+                    $('#birthdate').prop('disabled', true);
                 })
-                
+
             });
         }, update_status_program: function (current_status, element) {
 
@@ -381,15 +381,15 @@ define(['jquery',
             var status_program = element.val();
 
             swal({
-                    title: "Advertencia",
-                    text: "¿Está seguro que desea cambiar el estado del programa?",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonClass: "btn-danger",
-                    confirmButtonText: "Si",
-                    cancelButtonText: "No",
-                    closeOnConfirm: false
-                },
+                title: "Advertencia",
+                text: "¿Está seguro que desea cambiar el estado del programa?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+                closeOnConfirm: false
+            },
                 function (isConfirm) {
                     if (isConfirm) {
                         loading_indicator.show();
@@ -401,7 +401,7 @@ define(['jquery',
                             }),
                             url: "../managers/student_profile/studentprofile_api.php",
                             success: function (msg) {
-                                if(msg.status_code == 0) {
+                                if (msg.status_code == 0) {
                                     if ($('#select-' + id_program).val() == "ACTIVO") {
                                         $('#tr-' + id_moodle).addClass('is-active');
                                     } else {
@@ -450,7 +450,7 @@ define(['jquery',
                     $('#save_changes_dropout').on('click', function () {
 
                         loading_indicator.show();
-                        var id_ases= $('#id_ases').val();
+                        var id_ases = $('#id_ases').val();
                         var id_reason_dropout = $('#reasons_select').val();
                         var observation = $('#description_dropout').val();
 
@@ -466,7 +466,7 @@ define(['jquery',
 
                                 loading_indicator.hide();
 
-                                if(msg.status_code == 0) {
+                                if (msg.status_code == 0) {
                                     $('#input_status_ases').val('sinseguimiento');
                                     $('#tip_ases_status').html('No se realiza seguimiento en esta instancia');
                                     $('#icon-tracking').removeClass('i-tracking-t');
@@ -479,7 +479,7 @@ define(['jquery',
                                         msg.message,
                                         msg.type
                                     );
-                                } else if(msg.status_code == -7 || msg.status_code == -8){
+                                } else if (msg.status_code == -7 || msg.status_code == -8) {
                                     swal(
                                         msg.title,
                                         msg.error_message,
@@ -514,16 +514,16 @@ define(['jquery',
 
                 if (has_tracking_status.tracking_status) {
                     swal({
-                            title: "¿Está seguro/a de cambiar el estado?",
-                            text: "Se alternará el perfil de Moodle asociado al estudiante al cual se el realiza seguimiento",
-                            type: "warning",
-                            showCancelButton: true,
-                            confirmButtonColor: "#d51b23",
-                            confirmButtonText: "Si",
-                            cancelButtonText: "No",
-                            closeOnConfirm: true,
-                            allowEscapeKey: false
-                        },
+                        title: "¿Está seguro/a de cambiar el estado?",
+                        text: "Se alternará el perfil de Moodle asociado al estudiante al cual se el realiza seguimiento",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#d51b23",
+                        confirmButtonText: "Si",
+                        cancelButtonText: "No",
+                        closeOnConfirm: true,
+                        allowEscapeKey: false
+                    },
                         function (isConfirm) {
                             if (isConfirm) {
 
@@ -545,7 +545,7 @@ define(['jquery',
                                     success: function (msg) {
                                         loading_indicator.hide();
                                         setTimeout(function () {
-                                            if(msg.status_code == 0 || msg.status_code == -9) {
+                                            if (msg.status_code == 0 || msg.status_code == -9) {
                                                 swal(
                                                     msg.title,
                                                     msg.message,
@@ -724,7 +724,7 @@ define(['jquery',
                 $('#edit_person_vive').show();
                 $('#age').hide();
                 $('#birthdate').show();
-                $('#link_doc_dtddp').bind('click', function(e) {e.preventDefault();});
+                $('#link_doc_dtddp').bind('click', function (e) { e.preventDefault(); });
                 $('#link_doc_dtddp').css("color", "black")
                     .css("text-decoration", "none");
 
@@ -777,6 +777,13 @@ define(['jquery',
             $('#span-icon-save-profile').on('click', function () {
 
                 var form_with_changes = $('#ficha_estudiante').serializeArray();
+
+                var date = new Date();
+                //obetener la fecha en formato timestamp
+                var fecha = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+                //add form with changes to the object one new property
+                form_with_changes.push({ name: 'ult_modificacion', value: fecha });
+                
                 var result_validation = object_function.validate_form(form_with_changes);
 
                 if (result_validation.status == "error") {
@@ -838,7 +845,7 @@ define(['jquery',
                                 msg.msg = "El campo " + field.name + " no cumple con el formato institucional. Si no cuenta con el " + field.name + " institucional del estudiante, ingrese `temporal@correounivalle.edu.co', y el " + field.name + " alternativo en el campo correspondiente de la información del estudiante.";
                                 return msg;
                             }
-                        }else {
+                        } else {
                             msg.title = "Error";
                             msg.status = "error";
                             msg.msg = "El campo " + field.name + " no cumple con el formato institucional. Si no cuenta con el " + field.name + " institucional del estudiante, ingrese `temporal@correounivalle.edu.co', y el " + field.name + " alternativo en el campo correspondiente de la información del estudiante.";
@@ -850,13 +857,13 @@ define(['jquery',
                         let regex_date = /^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/;
                         let validate_date = regex_date.exec(field.value);
 
-                        if(validate_date == null){
+                        if (validate_date == null) {
                             msg.title = "Error";
                             msg.status = "error";
                             msg.msg = "El campo 'fecha de nacimiento' no cumple con el formato de fecha aceptado (yyyy-mm-dd).";
                             return msg;
-                        } else{
-                            field.value +=" 00:00:00";
+                        } else {
+                            field.value += " 00:00:00";
                         }
                         break;
                     case "estrato":
@@ -1091,7 +1098,7 @@ define(['jquery',
                 success: function (msg) {
                     loading_indicator.hide();
                     $('#link_doc_dtddp').attr('href', $('#field_doc_dtddp').prop('value'));
-                    if(msg.status_code == 0) {
+                    if (msg.status_code == 0) {
                         swal(
                             msg.title,
                             msg.message,
@@ -1143,7 +1150,7 @@ define(['jquery',
             $('#birthdate').hide();
             $('#link_doc_dtddp').css("color", "").css("text-decoration", "");
             $('#link_doc_dtddp').unbind('click');
-            
+
         }, revert_changes: function (form) {
             // Revertir cualquier cambio después de cancelar la edición
             for (field in form) {
@@ -1167,7 +1174,7 @@ define(['jquery',
         var id_instance = document.querySelector('#dphpforms_block_instance').dataset.info;
 
         $(".active").removeClass("active");
-        $("#"+tab_name+"_li").addClass("active");
+        $("#" + tab_name + "_li").addClass("active");
 
         $.ajax({
             type: "POST",
@@ -1176,15 +1183,15 @@ define(['jquery',
                 "params": [id_ases, tab_name, id_instance],
             }),
             url: "../managers/student_profile/studentprofile_api.php",
-            success: function(msg) {
+            success: function (msg) {
 
-                if(msg.status_code == 0) {
-                    Templates.renderForPromise("block_ases/view_"+tab_name+"_tab_sp", msg.data_response, 'moove')
-                        .then(({html, js}) => {
+                if (msg.status_code == 0) {
+                    Templates.renderForPromise("block_ases/view_" + tab_name + "_tab_sp", msg.data_response, 'moove')
+                        .then(({ html, js }) => {
                             Templates.appendNodeContents('.tab-content', html, js);
-                            $("#"+tab_name+"_tab").addClass("active");
+                            $("#" + tab_name + "_tab").addClass("active");
                             loading_indicator.hide();
-                            switch(tab_name){
+                            switch (tab_name) {
                                 case 'socioed':
                                     socioed.init();
                                     break;
@@ -1209,7 +1216,7 @@ define(['jquery',
             },
             dataType: "json",
             cache: "false",
-            error: function(msg) {
+            error: function (msg) {
 
                 console.log(msg);
             }
@@ -1223,12 +1230,12 @@ define(['jquery',
      * @desc Gets the necessary information to load
      * the risk graphic
      */
-    function load_risk_info(){
+    function load_risk_info() {
 
         loading_indicator.show();
         var id_ases = $('#id_ases').val();
         var peer_tracking_div = document.querySelector('#peer_tracking_info');
-        var peer_tracking_info = JSON.parse((peer_tracking_div)?peer_tracking_div.dataset.info:null);
+        var peer_tracking_info = JSON.parse((peer_tracking_div) ? peer_tracking_div.dataset.info : null);
         $.ajax({
             type: "POST",
             data: JSON.stringify({
@@ -1236,8 +1243,8 @@ define(['jquery',
                 "params": [id_ases, peer_tracking_info],
             }),
             url: "../managers/student_profile/studentprofile_api.php",
-            success: function(msg) {
-                if(msg.status_code == 0) {
+            success: function (msg) {
+                if (msg.status_code == 0) {
                     var values = msg.data_response;
                     procesar_datos_riesgo(values);
                     $('#modal_riesgos').fadeIn(200);
@@ -1249,7 +1256,7 @@ define(['jquery',
             },
             dataType: "json",
             cache: "false",
-            error: function(msg) {
+            error: function (msg) {
                 console.log(msg);
             }
         });
@@ -1354,8 +1361,7 @@ define(['jquery',
             cache: "false",
             url: "../../ases/managers/student_profile/studentprofile_api.php",
             success: function (msg) {
-                if(msg.status_code == 0)
-                {
+                if (msg.status_code == 0) {
                     swal({
                         title: msg.title,
                         text: msg.message,
@@ -1451,7 +1457,7 @@ define(['jquery',
         });
     }
 
-  
+
 
     function save_ases_status() {
         var data = new Array();
@@ -2120,8 +2126,8 @@ define(['jquery',
             });
         }
     }
-    
-   
+
+
 
     function load_student(code_student) {
 
@@ -2170,7 +2176,7 @@ define(['jquery',
         var graphical_data = [];
         var NOMBRES_DIMENSIONES = ['individual', 'familiar', 'academico', 'economico', 'vida_universitaria'];
 
-        for(var i = 0; i < Object.keys(dimensiones).length; i++) {
+        for (var i = 0; i < Object.keys(dimensiones).length; i++) {
             var arreglo_dimension = [];
             var fechas = [];
             var color = [];
@@ -2180,12 +2186,11 @@ define(['jquery',
             var dato_actual = dimensiones[nombre_dimension][0]['datos'];
             var contador = 0;
 
-            while(dato_actual['end'] == 'false')
-            {
+            while (dato_actual['end'] == 'false') {
                 fechas.push(dato_actual['fecha']);
                 color.push(dato_actual['color']);
                 riesgo.push(dato_actual['riesgo']);
-                contador+=1;
+                contador += 1;
                 dato_actual = dimensiones[nombre_dimension][contador]['datos'];
             }
 
