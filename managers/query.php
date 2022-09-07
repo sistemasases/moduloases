@@ -1677,7 +1677,7 @@ function getIdLastSemester($idmoodle){
 function getStudentInformation($idTalentos){
     global $DB;
     
-    $sql_query = "SELECT usuario.id, usuario.firstname, infor_data.id, infor_data.data, infor_field.shortname, usuario_talentos.sexo, usuario_talentos.id_ciudad_ini, municipios_ini_talentos.nombre AS municipio_procedencia, departamentos_ini_talentos.nombre AS departamento_procedencia, usuario_talentos.id_ciudad_res, municipios_res_talentos.nombre AS municipio_residencia, departamentos_res_talentos.nombre AS departamento_residencia, usuario_talentos.ult_modificacion 
+    $sql_query = "SELECT usuario.id, usuario.firstname, infor_data.id, infor_data.data, infor_field.shortname, usuario_talentos.sexo, usuario_talentos.id_ciudad_ini, municipios_ini_talentos.nombre AS municipio_procedencia, departamentos_ini_talentos.nombre AS departamento_procedencia, usuario_talentos.id_ciudad_res, municipios_res_talentos.nombre AS municipio_residencia, departamentos_res_talentos.nombre AS departamento_residencia,usuario_talentos.ult_modificacion 
     FROM {user} AS usuario 
     INNER JOIN {user_info_data} AS infor_data 
     ON usuario.id = infor_data.userid 
