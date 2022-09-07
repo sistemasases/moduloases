@@ -913,14 +913,14 @@ function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigo
         
     } catch(Exception $ex) {
         error_log(
-            "\n[".date('Y-M-d H:i e'). "] Error al enviar correo a:$codigoEnviarN1, $codigoEnviarN2, $codigoEnviarN3\n Destinatario: $receiving_user->email",
+            "\n[".date('Y-M-d H:i e'). "] Error al enviar correos :". $ex->getMessage(),
             3,
             "/var/log/mail-errors.log"
         );
 
         return array(
             "status_code" => -1,
-            "error_message" => "Error enviando correos. Revisar /var/log/mail-errors.log",
+            "error_message" => "Error enviando correos. " . $ex->getMessage(),
             "data_response" => null,
         );
     }
