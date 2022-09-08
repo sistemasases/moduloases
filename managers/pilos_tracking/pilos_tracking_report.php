@@ -37,7 +37,10 @@ require_once ('../dphpforms/dphpforms_get_record.php');
 require_once ('../user_management/user_lib.php');
 require_once ('../role_management/role_management_lib.php');
 require_once (__DIR__ . '/../monitor_profile/monitor_profile_lib.php');
+require_once (__DIR__ . '/../../core/module_loader.php');
 require_once $CFG->dirroot . '/blocks/ases/managers/user_management/user_management_lib.php';
+
+module_loader("periods");
 
 global $USER;
 
@@ -269,13 +272,31 @@ if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_P
                 "/var/log/mail-errors.log"
             );
             try {
+                $period = core_periods_get_period_by_id($_POST['semester']);
+
                 $id_moodle_student = user_management_get_full_ases_user($json['record']['alias_key']['respuesta']);
                 $id_ases_student = $json['record']['alias_key']['respuesta'];
-                $monitor_code = get_student_monitor($id_ases_student, $_POST['semester'], $instance);
-                $practicant_code = get_boss_of_monitor_by_semester($monitor_code, $_POST['semester'], $instance);
+
+                $monitor = get_student_monitor($id_ases_student, $period->id, $instance);
+                if (!$monitor) {
+                    Throw New Exception(
+                        "No se ha encontrado monitor del estudiante $id_moodle_student->username durante el periodo $period->nombre. 
+                        Favor revisar el período seleccionado."
+                    );
+                }
+
+                $monitor_code = $monitor->id_monitor;
+                $practicant_code = get_boss_of_monitor_by_semester($monitor_code, $period->id, $instance);
+                if (count((array)$practicant_code) == 0) {
+                    Throw New Exception(
+                        "No se ha encontrado practicante del monitor $monitor->username durante el periodo $period->nombre.
+                        Favor revisar el período seleccionado."
+                    );
+                }
+
                 $profesional_code = get_practicant_boss_under_period(
                     $practicant_code->id_usuario,
-                    $_POST['semester']
+                    $period->id
                 );
                 error_log(
                     "[".date('Y-M-d H:i e')." API CALL got all socioed info]\n" ,
