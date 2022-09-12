@@ -714,20 +714,19 @@ function update_status_program($program_id, $status, $student_id){
  *
  * @see get_student_monitor($id_ases_user,$id_semester,$id_instance)
  * @param $id_student --> student id on {talentospilos_usuario} table
- * @return array Containing the information
+ * @return array Containing the information or False otherwise.
  */
 function get_student_monitor($id_ases_user, $id_semester, $id_instance)
 {
 
     global $DB;
 
-    if (is_null($id_ases_user)) {
+    if (is_null($id_ases_user) || !is_numeric($id_ases_user)) {
         Throw New Exception('Empty id supplied as student id in function get_student_monitor');
     }
 
     $sql_query = "SELECT id_monitor FROM {talentospilos_monitor_estud} WHERE id_estudiante =$id_ases_user AND  id_instancia=$id_instance AND id_semestre =$id_semester";
-    $id_monitor = $DB->get_record_sql($sql_query)->id_monitor;
-
+    $id_monitor = $DB->get_record_sql($sql_query);
     return $id_monitor;
 }
 
