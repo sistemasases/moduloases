@@ -1170,6 +1170,7 @@ function get_period_select($periods, $rol = null){
 
     if($rol !== "sistemas"){
         $extra .= "col-xs-offset-6 col-sm-offset-6 col-md-offset-7 col-lg-offset-7";
+        $periods = [end($periods)];
     }
 
     $table.= '<div id="consulta_periodo" class="form-group col-xs-6 col-sm-6 col-md-5 col-lg-5 '.$extra.'">';
