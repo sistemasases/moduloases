@@ -1260,6 +1260,7 @@ define(
                                     console.log(`mensaje error : ${msg.error_message}`);
                                     swal({
                                         title: "Error al enviar correos",
+                                        text: msg?.error_message,
                                         html: true,
                                         type: "error",
                                         confirmButtonColor: "#d51b23"
