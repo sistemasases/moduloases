@@ -249,7 +249,7 @@ define(['jquery',
                         }
                     });
 
-                    /* Funcion para validar si el la consulta del usuario en la tabla mdl_user existe
+                    /* Funcion para validar si la consulta del usuario en la tabla mdl_user existe
                         En caso de no existir se determina si se creara un estudiante nuevo o se ingresara otro codigo*/
                     function validateStudent(fullUser) {
                         if (fullUser != false) {
@@ -1138,6 +1138,7 @@ define(['jquery',
                         });
                     }
 
+                    //Se encarga de vaciar todos los campos
                     function unsetData(step) {
                         $("#" + step).find('input').each(function() {
 
@@ -1201,6 +1202,7 @@ define(['jquery',
 
                     }
 
+                    //Obtiene los datos de Salud del formulario para enviarlo a la BD
                     function getHealtService() {
                         var arr_service_disca = [];
                         var arr_insert = [];
@@ -1230,7 +1232,7 @@ define(['jquery',
                     }
 
 
-
+                    //Obtiene los datos de Discapacidad del formulario para enviarlo a la BD
                     function getDiscapacityData() {
                         var arr_discapacidad = [];
                         var arr_insert = [];
@@ -2039,6 +2041,7 @@ define(['jquery',
                                             cambios_s1 = false;
                                         }
 
+                                        //Setea los campos economicos si el usuario existe
                                         if (economics_data) {
                                             getStudentAses($("#num_doc_ini").val());
                                             getDataBD(id_ases, 'get_economics_data')

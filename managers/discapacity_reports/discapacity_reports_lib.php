@@ -43,7 +43,7 @@ function get_list_discapacity_reports(){
                             INNER JOIN mdl_user AS _user ON _user.id = cohort_members.userid
                                 INNER JOIN mdl_talentospilos_user_extended AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND talentospilos_user_extended.id_moodle_user = _user.id
                                      INNER JOIN mdl_talentospilos_usuario AS talentospilos_usuario ON talentospilos_usuario.id =  talentospilos_user_extended.id_ases_user AND talentospilos_usuario.json_detalle IS NOT NULL
-                            WHERE cohort.idnumber = 'DISC2018B'";
+                            WHERE cohort.idnumber = 'DISC2018B' OR cohort.idnumber = 'DISC2021B'";
                                 
     $results = $DB->get_records_sql($sql);
 
@@ -68,7 +68,7 @@ function get_list_discapacity_reports(){
         INNER JOIN {user} AS _user ON _user.id = cohort_members.userid
             INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND talentospilos_user_extended.id_moodle_user = _user.id
                 INNER JOIN {talentospilos_usuario} AS talentospilos_usuario ON talentospilos_usuario.id =  talentospilos_user_extended.id_ases_user AND talentospilos_usuario.json_detalle IS NULL
-                    WHERE cohort.idnumber = 'DISC2018B') AS total";
+                    WHERE cohort.idnumber = 'DISC2018B' OR cohort.idnumber = 'DISC2021B') AS total";
 
     $result = $DB->get_record_sql($sql);
     return $result->cant;
@@ -89,7 +89,7 @@ function get_students_dd(){
         INNER JOIN {user} AS _user ON _user.id = cohort_members.userid
             INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND talentospilos_user_extended.id_moodle_user = _user.id
                 INNER JOIN {talentospilos_usuario} AS talentospilos_usuario ON talentospilos_usuario.id =  talentospilos_user_extended.id_ases_user AND talentospilos_usuario.json_detalle IS NULL
-                    WHERE cohort.idnumber = 'DISC2018B'";
+                    WHERE cohort.idnumber = 'DISC2018B' OR cohort.idnumber = 'DISC2021B'";
 
     $result = $DB->get_records_sql($sql);
     return $result;
@@ -111,7 +111,7 @@ function get_cant_sin_economics_data(){
             INNER JOIN {user} AS _user ON _user.id = cohort_members.userid
             INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND 	talentospilos_user_extended.id_moodle_user = _user.id
                 INNER JOIN {talentospilos_usuario} AS talentospilos_usuario ON talentospilos_usuario.id =  talentospilos_user_extended.id_ases_user 
-                            WHERE cohort.idnumber = 'DISC2018B' 
+                            WHERE cohort.idnumber = 'DISC2018B' OR cohort.idnumber = 'DISC2021B'
     EXCEPT
 
     SELECT  talentospilos_usuario.num_doc
@@ -122,7 +122,7 @@ function get_cant_sin_economics_data(){
                 INNER JOIN {talentospilos_usuario} AS talentospilos_usuario ON talentospilos_usuario.id =  talentospilos_user_extended.id_ases_user 
                     INNER JOIN {talentospilos_economics_data} AS talentospilos_economics_data ON talentospilos_economics_data.id_ases_user =	talentospilos_usuario.id
                 
-            WHERE cohort.idnumber = 'DISC2018B') AS total";
+            WHERE cohort.idnumber = 'DISC2018B' OR cohort.idnumber = 'DISC2021B') AS total";
 
     $result = $DB->get_record_sql($sql);
     return $result->cant;
@@ -144,7 +144,7 @@ function get_students_ed(){
             INNER JOIN {user} AS _user ON _user.id = cohort_members.userid
             INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND 	talentospilos_user_extended.id_moodle_user = _user.id
                 INNER JOIN {talentospilos_usuario} AS talentospilos_usuario ON talentospilos_usuario.id =  talentospilos_user_extended.id_ases_user 
-                            WHERE cohort.idnumber = 'DISC2018B' 
+                            WHERE cohort.idnumber = 'DISC2018B' OR cohort.idnumber = 'DISC2021B'
     EXCEPT
 
     SELECT  talentospilos_usuario.num_doc, _user.firstname AS firstname_student, _user.lastname AS lastname_student
@@ -155,7 +155,7 @@ function get_students_ed(){
                 INNER JOIN {talentospilos_usuario} AS talentospilos_usuario ON talentospilos_usuario.id =  talentospilos_user_extended.id_ases_user 
                     INNER JOIN {talentospilos_economics_data} AS talentospilos_economics_data ON talentospilos_economics_data.id_ases_user = talentospilos_usuario.id
                 
-            WHERE cohort.idnumber = 'DISC2018B' ";
+            WHERE cohort.idnumber = 'DISC2018B' OR cohort.idnumber = 'DISC2021B'";
 
     $result = $DB->get_records_sql($sql);
     return $result;
@@ -177,7 +177,7 @@ function get_cant_sin_health_data(){
             INNER JOIN {user} AS _user ON _user.id = cohort_members.userid
             INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND	talentospilos_user_extended.id_moodle_user = _user.id
                 INNER JOIN {talentospilos_usuario} AS talentospilos_usuario ON talentospilos_usuario.id =  talentospilos_user_extended.id_ases_user 
-                            WHERE cohort.idnumber = 'DISC2018B' 
+                            WHERE cohort.idnumber = 'DISC2018B' OR cohort.idnumber = 'DISC2021B'
     EXCEPT
 
     SELECT  talentospilos_usuario.num_doc
@@ -188,7 +188,7 @@ function get_cant_sin_health_data(){
                 INNER JOIN {talentospilos_usuario} AS talentospilos_usuario ON talentospilos_usuario.id =  talentospilos_user_extended.id_ases_user 
                     INNER JOIN {talentospilos_health_data} AS talentospilos_health_data ON talentospilos_health_data.id_ases_user = 	talentospilos_usuario.id
                 
-            WHERE cohort.idnumber = 'DISC2018B') AS total";
+            WHERE cohort.idnumber = 'DISC2018B' OR cohort.idnumber = 'DISC2021B') AS total";
 
     $result = $DB->get_record_sql($sql);
     return $result->cant;
@@ -210,7 +210,7 @@ function get_students_hd(){
             INNER JOIN {user} AS _user ON _user.id = cohort_members.userid
             INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 AND 		talentospilos_user_extended.id_moodle_user = _user.id
                 INNER JOIN {talentospilos_usuario} AS talentospilos_usuario ON talentospilos_usuario.id =  talentospilos_user_extended.id_ases_user 
-                            WHERE cohort.idnumber = 'DISC2018B' 
+                            WHERE cohort.idnumber = 'DISC2018B' OR cohort.idnumber = 'DISC2021B'
     EXCEPT
 
     SELECT  talentospilos_usuario.num_doc, _user.firstname AS firstname_student, _user.lastname AS lastname_student
@@ -221,7 +221,7 @@ function get_students_hd(){
                 INNER JOIN {talentospilos_usuario} AS talentospilos_usuario ON talentospilos_usuario.id =  talentospilos_user_extended.id_ases_user 
                     INNER JOIN {talentospilos_health_data} AS talentospilos_health_data ON talentospilos_health_data.id_ases_user = 	talentospilos_usuario.id
                 
-            WHERE cohort.idnumber = 'DISC2018B' ";
+            WHERE cohort.idnumber = 'DISC2018B' OR cohort.idnumber = 'DISC2021B'";
 
     $result = $DB->get_records_sql($sql);
     return $result;
@@ -265,7 +265,7 @@ function get_data_to_grapich(){
                                                                         AND talentospilos_user_extended.id_moodle_user = _user.id
                          INNER JOIN {talentospilos_usuario} AS talentospilos_usuario ON talentospilos_usuario.id =  talentospilos_user_extended.id_ases_user 
                                                                         AND talentospilos_usuario.json_detalle IS NOT NULL
-                WHERE cohort.idnumber = 'DISC2018B'";
+                WHERE cohort.idnumber = 'DISC2018B' OR cohort.idnumber = 'DISC2021B'";
                                 
     $results = $DB->get_records_sql($sql);
 
