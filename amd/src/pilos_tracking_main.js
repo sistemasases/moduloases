@@ -1246,7 +1246,8 @@ define(
                             success: function(msg) {
                                 //If it was successful...
                                 loading_indicator.hide();
-                                if (msg != "Error") {
+                                msg = JSON.parse(msg)
+                                if (msg.status_code === 0) {
                                     swal({
                                         title: "Correo enviado",
                                         html: true,
@@ -1256,10 +1257,10 @@ define(
                                     text.val("");
 
                                 } else {
-                                    console.log("mensaje error : ");
-                                    console.log( msg )
+                                    console.log(`mensaje error : ${msg.error_message}`);
                                     swal({
-                                        title: "error al enviar el correo al monitor",
+                                        title: "Error al enviar correos",
+                                        text: msg?.error_message,
                                         html: true,
                                         type: "error",
                                         confirmButtonColor: "#d51b23"

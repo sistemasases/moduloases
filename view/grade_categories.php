@@ -95,6 +95,7 @@ $output = $PAGE->get_renderer('block_ases');
 $rol = lib_get_rol_name_ases($USER->id, $blockid);
 $courses = get_courses_pilos($blockid);
 
+
 if($rol == 'sistemas' || $rol == 'academico'){
     
     $htmlTable =  "<table id = 'teachers' cellspacing='0' width='100%' border>
