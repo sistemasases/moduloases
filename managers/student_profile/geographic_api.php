@@ -71,6 +71,12 @@ if(isset($input->function) && isset($input->params)) {
 
             $nivel_riesgo = (int) $nivel_riesgo;
 
+            if($latitude==null){
+                $latitude = 0;
+            }
+            if($longitude==null){
+                $longitude = 0;
+            }
             //Validations of each parameter
             if(isset($id_ases) && is_string($id_ases) &&  is_numeric($latitude) && 
                 is_numeric($longitude) && is_string($neighborhood) && is_int($duration) && 

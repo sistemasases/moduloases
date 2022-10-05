@@ -23,6 +23,7 @@
  * @copyright  2017 Isabella Serna RamÄ†Ā­rez <isabella.serna@correounivalle.edu.co>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+global $CFG;
 require_once ('../validate_profile_action.php');
 require_once ('tracking_functions.php');
 require_once ('../lib/student_lib.php');
@@ -35,7 +36,11 @@ require_once ('../dphpforms/dphpforms_records_finder.php');
 require_once ('../dphpforms/dphpforms_get_record.php');
 require_once ('../user_management/user_lib.php');
 require_once ('../role_management/role_management_lib.php');
+require_once (__DIR__ . '/../monitor_profile/monitor_profile_lib.php');
+require_once (__DIR__ . '/../../core/module_loader.php');
 require_once $CFG->dirroot . '/blocks/ases/managers/user_management/user_management_lib.php';
+
+module_loader("periods");
 
 global $USER;
 
@@ -227,6 +232,11 @@ if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_P
     $place = $_POST['place'];
     $tracking_type = $_POST['tracking_type'];
     $instance = $_POST['instance'];
+        error_log(
+            "[".date('Y-M-d H:i e')." API CALL entering API to send emails]\n" ,
+            3,
+            "/var/log/mail-errors.log"
+        );
 
     if (is_numeric($instance)) {
        $instance = intval($instance); 
@@ -237,6 +247,12 @@ if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_P
     $courseid = $_POST['courseid'];
     if ($_POST['form'] == 'new_form')
         {
+            error_log(
+                "[".date('Y-M-d H:i e')." API CALL form is new_form]\n" ,
+                3,
+                "/var/log/mail-errors.log"
+            );
+
             $register = null;
             if( $tracking_type == "individual" ){
                 $register = dphpforms_get_record($_POST['id_tracking'], 'id_estudiante');
@@ -250,29 +266,84 @@ if (isset($_POST['type']) && $_POST['type'] == "send_email_to_user" && isset($_P
                     $date = $field['respuesta'];
                 }
             }
-
+            error_log(
+                "[".date('Y-M-d H:i e')." API CALL entering try-catch]\n" ,
+                3,
+                "/var/log/mail-errors.log"
+            );
             try {
-            
+                $period = core_periods_get_period_by_id($_POST['semester']);
+
                 $id_moodle_student = user_management_get_full_ases_user($json['record']['alias_key']['respuesta']);
                 $id_ases_student = $json['record']['alias_key']['respuesta'];
-                $monitor_code = get_student_monitor($id_ases_student, $_POST['semester'], $instance);
-                $practicant_code = get_boss_of_monitor_by_semester($monitor_code, $_POST['semester'], $instance);
-                $profesional_code = get_boss_of_monitor_by_semester($practicant_code->id_jefe, $_POST['semester'], $instance);
-                echo send_email_to_user(
-                    $_POST['tracking_type'], 
-                    $monitor_code, 
-                    $practicant_code->id_jefe, 
-                    $profesional_code->id_jefe, 
-                    date("Y-m-d", strtotime($date)), 
-                    $id_moodle_student->firstname . " " . $id_moodle_student->lastname, 
-                    $_POST['message_to_send'], 
-                    $place,
-                    $instance,
-                    $courseid,
-                    $id_ases_student
+
+                $monitor = get_student_monitor($id_ases_student, $period->id, $instance);
+                if (!$monitor) {
+                    Throw New Exception(
+                        "No se ha encontrado monitor del estudiante $id_moodle_student->username durante el periodo $period->nombre. 
+                        Favor revisar el período seleccionado."
+                    );
+                }
+
+                $monitor_code = $monitor->id_monitor;
+                $practicant_code = get_boss_of_monitor_by_semester($monitor_code, $period->id, $instance);
+                if (count((array)$practicant_code) == 0) {
+                    Throw New Exception(
+                        "No se ha encontrado practicante del monitor $monitor->username durante el periodo $period->nombre.
+                        Favor revisar el período seleccionado."
+                    );
+                }
+
+                $profesional_code = get_practicant_boss_under_period(
+                    $practicant_code->id_usuario,
+                    $period->id
                 );
+                error_log(
+                    "[".date('Y-M-d H:i e')." API CALL got all socioed info]\n" ,
+                    3,
+                    "/var/log/mail-errors.log"
+                );
+
+                if (isset($monitor_code)|| count((array)$practicant_code) > 0 || count((array)$profesional_code) > 0) {
+                    error_log(
+                        "[".date('Y-M-d H:i e')." API CALL about to call lib to send email]\n" ,
+                        3,
+                        "/var/log/mail-errors.log"
+                    );
+                    echo json_encode( send_email_to_user(
+                        $_POST['tracking_type'],
+                        $monitor_code,
+                        $practicant_code->id_usuario,
+                        $profesional_code->id,
+                        date("Y-m-d", strtotime($date)),
+                        $id_moodle_student->firstname . " " . $id_moodle_student->lastname,
+                        $_POST['message_to_send'],
+                        $place,
+                        $instance,
+                        $courseid,
+                        $id_ases_student
+                    ));
+                } else {
+                    error_log(
+                        "[".date('Y-M-d H:i e')." API CALL monitor,practicant or professional not found]\n" ,
+                        3,
+                        "/var/log/mail-errors.log"
+                    );
+                    throw new Exception("Monitor o practicante o profesional no encontrado.");
+                }
+
             } catch (Exception $ex) {
-                return $ex->getMessage();
+                error_log(
+                    "[".date('Y-M-d H:i e')." API CALL " .$ex->getMessage(). "]\n" ,
+                    3,
+                    "/var/log/mail-errors.log"
+                );
+
+                echo json_encode(array(
+                    "status_code" => -1,
+                    "error_message" => $ex->getMessage(),
+                    "data_response" => null
+                ));
             }
 
         }

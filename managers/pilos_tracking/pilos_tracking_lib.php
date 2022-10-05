@@ -695,7 +695,14 @@ function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigo
     global $CFG;
 
     try{
-
+	error_log(
+	    "\n[".date('Y-M-d H:i e')."] Trying to send emails with the following data: [
+		$tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigoEnviarN3, instance: $instance,$fecha,$nombre,
+		curso: $courseid, id_ases: $id_ases_student, place: $place
+	    ]",
+	    3, 
+	    "/var/log/mail-errors.log"
+    );
     $emailToUser = new stdClass;
     $emailFromUser = new stdClass;
     $messageHtml="";
@@ -706,6 +713,7 @@ function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigo
     AND tracking_status = 1";
 
     $student_extended_obj = $DB->get_record_sql( $sql_student );
+    error_log("\n[".date('Y-M-d H:i e')."] Got student extended object", 3, "/var/log/mail-errors.log");
 
     $id_user = $USER->id;
 
@@ -776,15 +784,26 @@ function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigo
     $messageHtml.='Ficha: <a href="'.$link.'">'.$link.'</a><br><br>';
     $messageHtml.="Cordialmente<br>";
     $messageHtml.="$name_prof";
-
+    error_log("\nSending first email", 3, "/var/log/mail-errors.log");
     $email_result = email_to_user($emailToUser, $emailFromUser->email, $subject, $messageText, $messageHtml, ", ", true);
+    
+    $log_msg = "\n[".date('Y-M-d H:i e'). "] Correo a:$emailToUser->email, remitente: $emailFromUser->email, estudiante: $student_username";
+    
     if (!$email_result) {
 	
+        error_log(
+            $log_msg . " ¡ERROR!" ,
+            3,
+            "/var/log/mail-errors.log"
+        );
+        throw new Exception("Error enviando correo");
+    } else {
+	
 	error_log(
-	    "Error al enviar correo a:$emailToUser->email, remitente: $emailFromUser->email", 
-	    3,
-	    "/var/log/mail-errors.log"
-	);
+    	    $log_msg, 
+    	    3,
+    	    "/var/log/mail-errors.log"
+    	);
     }
 
 
@@ -810,15 +829,24 @@ function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigo
       $emailToUser->lastnamephonetic = '';
 
 
-      $email_result = email_to_user($emailToUser, $emailFromUser, $subject, $messageText, $messageHtml, ", ", true);
+	$email_result = email_to_user($emailToUser, $emailFromUser, $subject, $messageText, $messageHtml, ", ", true);
+	$log_msg = "\n[".date('Y-M-d H:i e'). "] Correo a:$emailToUser->email, remitente: $emailFromUser->email, estudiante: $student_username";
 
 	if (!$email_result) {
     	    
     	    error_log(
-    	        "Error al enviar correo a:$emailToUser->email, remitente: $emailFromUser->email", 
+    	        $log_msg . " ¡ERROR!" , 
     	        3,
     	        "/var/log/mail-errors.log"
     	    );
+            throw new Exception("Error enviando correo");
+    	} else {
+    	    
+    	    error_log(
+    		    $log_msg, 
+    		    3,
+    		    "/var/log/mail-errors.log"
+    		);
     	}
 
         $email_result=0;
@@ -844,28 +872,64 @@ function send_email_to_user( $tipoSeg, $codigoEnviarN1, $codigoEnviarN2, $codigo
 
 
         $email_result = email_to_user($emailToUser, $emailFromUser, $subject, $messageText, $messageHtml, ", ", true);
-        
-        $receiving_user = get_full_user( 107089 );//Sistemas1008 : 107089
-        $email_result = email_to_user($receiving_user, $emailFromUser, "[ Backup ]" . $subject, $messageText, $messageHtml, ", ", true);
+	$log_msg = "\n[".date('Y-M-d H:i e'). "] Correo a:$emailToUser->email, remitente: $emailFromUser->email, estudiante: $student_username";
 
 	if (!$email_result) {
     	    
     	    error_log(
-    	        "Error al enviar correo a:$emailToUser->email, remitente: $emailFromUser->email", 
+    	        $log_msg . " ¡ERROR!" , 
     	        3,
     	        "/var/log/mail-errors.log"
     	    );
+            throw new Exception("Error enviando correo");
+    	} else {
+    	    
+    	    error_log(
+    		    $log_msg, 
+    		    3,
+    		    "/var/log/mail-errors.log"
+    		);
     	}
         
-    }catch(Exception $ex){
-	error_log(
-	    "Error al enviar correo a:$codigoEnviarN1, $codigoEnviarN2, $codigoEnviarN3\n Destinatario: $receiving_user->email", 
-	    3,
-	    "/var/log/mail-errors.log"
-	);
-	Throw New Exception($ex->getMessage());
-      return $ex->getMessage();
+        $receiving_user = get_full_user( 107089 );//Sistemas1008 : 107089
+        $email_result = email_to_user($receiving_user, $emailFromUser, "[ Backup ]" . $subject, $messageText, $messageHtml, ", ", true);
+	    $log_msg = "\n[".date('Y-M-d H:i e'). "] Correo a:$receiving_user->email, remitente: $emailFromUser->email, estudiante: $student_username";
+
+	if (!$email_result) {
+    	    
+    	    error_log(
+    	        $log_msg .  "¡ERROR!" , 
+    	        3,
+    	        "/var/log/mail-errors.log"
+    	    );
+    	} else {
+    	    
+    	    error_log(
+    		    $log_msg, 
+    		    3,
+    		    "/var/log/mail-errors.log"
+    		);
+    	}
+        
+    } catch(Exception $ex) {
+        error_log(
+            "\n[".date('Y-M-d H:i e'). "] Error al enviar correos :". $ex->getMessage(),
+            3,
+            "/var/log/mail-errors.log"
+        );
+
+        return array(
+            "status_code" => -1,
+            "error_message" => "Error enviando correos. " . $ex->getMessage(),
+            "data_response" => null,
+        );
     }
+
+    return array(
+        "status_code" => 0,
+        "error_message" => "Correos enviados correctamente.",
+        "data_response" => null,
+    );
   
 }
 

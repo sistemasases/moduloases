@@ -314,8 +314,9 @@ function get_practicant_boss_under_period(int $pract_moodle_id, int $period_id)
         )";
 
     $result = $DB->get_record_sql( $query ); 
+
     if ( !property_exists($result, 'id') ) {
-        return null;
+        Throw New Exception("Can't find bosss of user $pract_moodle_id under period $period_id");
     }
 
     return $result;
