@@ -341,11 +341,21 @@
                     <textarea name="" id="observaciones_anteriores" class="col-md-12" readonly style="min-height: 5cm !important; resize: none !important;">{{observations}}</textarea>
                     <textarea name="observacion" id="observacion" class="col-sm-12" readonly  style="resize: none !important;"></textarea>
                 </div>
-
-                <a class="col-md-11" id="link_doc_dtddp" href="{{{tratamiento_datos_personales_doc}}}" target="_blank">Documento de autorización para el tratamiento de datos personales</a>
-                <input type="url" class="input_fields_general_tab_otro" name="link_doc_dtddp" id="field_doc_dtddp" value="{{{tratamiento_datos_personales_doc}}}"/>
             </div>
-
+            <div class="ases-row">
+                <div class="ases-col-md-4">
+                    <h3>TRATAMIENTO DE DATOS PERSONALES</h3>
+                    <hr class="hr-general-tab-fields"/>
+                    {{#tratamiento_datos_personales_doc}}
+                        <a class="col-md-11" id="link_doc_dtddp" href="{{{.}}}" target="_blank">Documento de autorización para el tratamiento de datos personales
+                            <input type="hidden" class="input_fields_general_tab_otro" name="link_doc_dtddp" id="field_doc_dtddp" readonly value="{{{.}}}"/>
+                        </a>
+                    {{/tratamiento_datos_personales_doc}}
+                    {{^tratamiento_datos_personales_doc.0}}
+                        No hay ningún enlace.
+                    {{/tratamiento_datos_personales_doc.0}}
+                </div>
+            </div>
         </div>
     </div>
 
