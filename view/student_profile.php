@@ -128,7 +128,6 @@ if ($student_code != '0') {
     $id_user_moodle_ = $id_user_moodle;
 
     $user_moodle = get_moodle_user($id_user_moodle);
-
     $html_profile_image = AsesUser::get_HTML_img_profile_image($contextblock->id, $ases_student->id);
     //$academic_programs = get_status_program_for_profile($student_id);
     $academic_programs = get_status_program_for_profile_aditional($student_id);
@@ -933,6 +932,8 @@ if( $dphpforms_ases_user ){
         $record->last_assignment_professional = $last_assignment['prof_obj']->firstname . " " . $last_assignment['prof_obj']->lastname;
     }
 }
+
+$record->last_date_change_profile = $ases_student->ult_modificacion;
 
 //Menu items are created
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);
