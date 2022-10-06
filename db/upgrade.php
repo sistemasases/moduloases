@@ -7,7 +7,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $dbman = $DB->get_manager();
     $result = true;
 
-    if ($oldversion < 22022040517380) {
+    if ($oldversion < 22022100417381) {
 
 
       
@@ -4530,10 +4530,26 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
             $dbman->create_table($table);
 
         }
+
+        /**
+         *  @author Cristian Duvan Machado Mosquera
+         *  @dec actualizacion de la tabla usuarios, se añadio un atributo
+         *  de tipo timestap para guardar la fecha de la ultima actualizacion
+        */
+
+        // Define field id to be added to talentospilos_usuario.
+        $table = new xmldb_table('talentospilos_usuario');
+        $field = new xmldb_field('ult_modificacion', XMLDB_TYPE_DATETIME, null, null, null, null, null, 'id_etnia');
+    
+        // Conditionally launch add field id.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+    
         
 
 
-        upgrade_block_savepoint(true, 22022040517380, 'ases');
+        upgrade_block_savepoint(true, 22022100417381, 'ases');
 
         return $result;
     }

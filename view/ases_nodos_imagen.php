@@ -34,6 +34,8 @@ require_once('../managers/permissions_management/permissions_lib.php');
 require_once('../managers/validate_profile_action.php');
 require_once('../managers/menu_options.php');
 require_once(__DIR__.'/../managers/cohort/cohort_lib.php');
+require_once '../classes/AsesUser.php';
+require_once '../managers/lib/student_lib.php';
 include('../lib.php');
 global $PAGE;
 global $DB;
@@ -88,20 +90,29 @@ $coursenode->add_node($blocknode);
 
 
 //consulta para obtener los nodos de la instancia
-$sql_query_nodos = "SELECT DISTINCT tb_1.id,firstname , lastname , tb_2.id_usuario AS target , id_jefe AS source FROM mdl_user AS tb_1
+$sql_query_nodos = "SELECT DISTINCT tb_1.id,firstname , lastname , tb_2.id_usuario AS target , id_jefe AS source, tb_1.username FROM mdl_user AS tb_1
 JOIN mdl_talentospilos_user_rol AS tb_2
 ON tb_1.id = tb_2.id_usuario  AND tb_2.estado = 1
 AND tb_2.id_semestre IN (SELECT MAX(id) FROM mdl_talentospilos_semestre)
-WHERE (tb_2.id_jefe is not null IN (tb_2.id_rol = 4 OR tb_2.id_rol = 7) ) ";
+WHERE (tb_2.id_jefe is not null IN (tb_2.id_rol = 4 OR tb_2.id_rol = 7) ) AND (
+tb_2.id_rol = 4 OR tb_2.id_rol = 7 OR tb_2.id_rol = 3 OR tb_2.id_rol = 12)";
 
 $nodos = $DB->get_records_sql($sql_query_nodos);
 
 $sql_query_edges = "SELECT id_usuario AS target FROM mdl_talentospilos_user_rol
-WHERE (id_rol = 3 OR id_rol = 2 OR id_rol = 2)  AND id_semestre IN (SELECT MAX(id) FROM mdl_talentospilos_semestre)";
+WHERE (id_rol = 3)  AND id_semestre IN (SELECT MAX(id) FROM mdl_talentospilos_semestre)";
 
 $edges = $DB->get_records_sql($sql_query_edges);
 
-$PAGE->requires->js_call_amd('block_ases/ases_nodos_imagen','init',array($nodos,$edges));
+$nodoid[] = array();
+
+//recorrer el array de nodos para obtener los id de los nodos
+foreach($nodos as $nodo) {
+    $id_usuario_ases = get_ases_user_by_code($nodo->username);
+    $nodoid[] = AsesUser::get_HTML_img_profile_image($contextblock->id, intval($id_usuario_ases->id));
+}
+
+$PAGE->requires->js_call_amd('block_ases/ases_nodos_imagen','init',array($nodos,$edges,$nodoid));
 
 $PAGE->set_url($url);
 $PAGE->set_title($pagetitle);
