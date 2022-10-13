@@ -560,7 +560,12 @@ if ($student_code != '0') {
 
     // traer enlace a documento de autorización para el tratamiento de datos personales
     $record->tratamiento_datos_personales_doc = json_decode($ases_student->json_detalle)->tratamiento_datos_personales_doc;
-
+    // Para acceder el indice del enlace dentro de la plantilla de mustache...
+    if (count($record->tratamiento_datos_personales_doc) > 0 ) {
+        foreach ($record->tratamiento_datos_personales_doc as $key => $value) {
+            $record->tratamiento_datos_personales_doc[$key] = array('idx' => $key+1, 'link' => $value);
+        }
+    }
 
     $reasons_dropout_observations = getReasonDropoutStudent ($ases_student->id);
     $record->observations = $reasons_dropout_observations."\n".$ases_student->observacion;

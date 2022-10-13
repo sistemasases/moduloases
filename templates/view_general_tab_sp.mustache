@@ -357,8 +357,8 @@
                     <h3>TRATAMIENTO DE DATOS PERSONALES</h3>
                     <hr class="hr-general-tab-fields"/>
                     {{#tratamiento_datos_personales_doc}}
-                        <a class="col-md-11" id="link_doc_dtddp" href="{{{.}}}" target="_blank">Documento de autorización para el tratamiento de datos personales
-                            <input type="hidden" class="input_fields_general_tab_otro" name="link_doc_dtddp" id="field_doc_dtddp" readonly value="{{{.}}}"/>
+                        <a class="col-md-11" id="link_doc_dtddp" href="{{link}}" target="_blank">Parte {{idx}} Documento ATDP
+                            <input type="hidden" class="input_fields_general_tab_otro" name="link_doc_dtddp" id="field_doc_dtddp" readonly value="{{link}}"/>
                         </a>
                     {{/tratamiento_datos_personales_doc}}
                     {{^tratamiento_datos_personales_doc.0}}
