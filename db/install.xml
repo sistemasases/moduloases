@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="blocks/ases/db" VERSION="20221004" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
+<XMLDB PATH="blocks/ases/db" VERSION="20221021" COMMENT="XMLDB file for Moodle blocks/configurable_reports"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -1328,6 +1328,17 @@
         <FIELD NAME="participacion_estudiantil" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="organizacion_disca" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="apoyo_dicapacidad" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="talentospilos_profesor_curso" COMMENT="Tabla para el manejo de la relacion profesor, estudiante y curso">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="id_profesor" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="atributo para almacenar el id del profesor"/>
+        <FIELD NAME="codigo_materia" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="campo para guardar el codigo de la materia"/>
+        <FIELD NAME="id_periodo" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="guardar el perdido del semestre"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
