@@ -777,6 +777,11 @@ define(['jquery',
             $('#span-icon-save-profile').on('click', function () {
 
                 var form_with_changes = $('#ficha_estudiante').serializeArray();
+                var date = new Date();
+                //obetener la fecha en formato timestamp
+                var fecha = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+                //add form with changes to the object one new property
+                form_with_changes.push({ name: 'ult_modificacion', value: fecha });
                 var result_validation = object_function.validate_form(form_with_changes);
 
                 if (result_validation.status == "error") {

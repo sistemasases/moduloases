@@ -22,8 +22,7 @@ define(['jquery',
 
         return {
 
-            init: function (array_data, edges) {
-
+            init: function (array_data, edges , imgProfile) {
 
                 let array_element = {
                     "nodes": [
@@ -55,6 +54,31 @@ define(['jquery',
                         }
                     }
                 ]
+
+                function insert_img_style(node_json) {
+
+                (Object.values(node_json)).map( function (node,index) {
+
+                    let id_node = node.target
+                    let imgUrl = $(imgProfile[index]).attr('src');
+                    
+                    if (imgUrl != undefined) {
+
+                        array_style.push({
+                            "selector": `#${id_node}`,
+                            "style": {
+                                "background-image": `url('${imgUrl}')`
+                            }
+                        })
+
+
+                    }
+
+                })
+
+               }
+
+               insert_img_style(array_data)
 
                 /**
                   * @autor Cristian Duvan Machado Mosquera <cristian.machado@correounivalle.edu.co>
@@ -94,11 +118,13 @@ define(['jquery',
     
                         let id_node = node.target
                         let name_node = node.firstname
+                    
                         cy.add({
                             data: { id: id_node, name: name_node }
                         });
 
                     })
+
                     
                     add_edges(node_json, 1)
 
@@ -220,7 +246,7 @@ define(['jquery',
                                 });
 
                                 cy.add({ group: 'edges', data: { id: `${tapped.id()}${i}`, source: tapped.id(), target: i } })
-
+                               
                                 var layout = cy.layout({
                                     name: 'breadthfirst',
                                     directed: true,
@@ -238,6 +264,7 @@ define(['jquery',
                             localStorage.setItem('pan', JSON.stringify(cy.pan()))
                             localStorage.setItem('zoom', JSON.stringify(cy.zoom()))
 
+                           
                             //agrega el nodo al flujo
                             layout.run();
 

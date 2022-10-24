@@ -128,7 +128,6 @@ if ($student_code != '0') {
     $id_user_moodle_ = $id_user_moodle;
 
     $user_moodle = get_moodle_user($id_user_moodle);
-
     $html_profile_image = AsesUser::get_HTML_img_profile_image($contextblock->id, $ases_student->id);
     //$academic_programs = get_status_program_for_profile($student_id);
     $academic_programs = get_status_program_for_profile_aditional($student_id);
@@ -561,7 +560,12 @@ if ($student_code != '0') {
 
     // traer enlace a documento de autorización para el tratamiento de datos personales
     $record->tratamiento_datos_personales_doc = json_decode($ases_student->json_detalle)->tratamiento_datos_personales_doc;
-
+    // Para acceder el indice del enlace dentro de la plantilla de mustache...
+    if (count($record->tratamiento_datos_personales_doc) > 0 ) {
+        foreach ($record->tratamiento_datos_personales_doc as $key => $value) {
+            $record->tratamiento_datos_personales_doc[$key] = array('idx' => $key+1, 'link' => $value);
+        }
+    }
 
     $reasons_dropout_observations = getReasonDropoutStudent ($ases_student->id);
     $record->observations = $reasons_dropout_observations."\n".$ases_student->observacion;
@@ -933,6 +937,8 @@ if( $dphpforms_ases_user ){
         $record->last_assignment_professional = $last_assignment['prof_obj']->firstname . " " . $last_assignment['prof_obj']->lastname;
     }
 }
+
+$record->last_date_change_profile = $ases_student->ult_modificacion;
 
 //Menu items are created
 $menu_option = create_menu_options($USER->id, $blockid, $courseid);

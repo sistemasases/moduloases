@@ -263,6 +263,16 @@
                         <span class="span-staff-ps">{{monitor_fullname}}</span>
                     </div>
                 </div>
+                <div class="" id="info_modificasion">
+                    <h3 class="h-sections-general-tab">   </h3>
+                    <hr class="hr-general-tab-fields"> 
+                    <div class="row">
+                        <label for="profesional_ps" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab"> Última Modificación:</label>
+                        <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab">
+                            <span class="span-staff-ps">{{last_date_change_profile}}</span>
+                        </div>
+                    </div>
+                </div>
 
                 {{/flag_with_assignation}}
                 {{^flag_with_assignation}}
@@ -286,6 +296,16 @@
                         <label for="monitor_ps" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab">Monitor</label>
                         <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab">
                             <span class="span-staff-ps">{{last_assignment_monitor}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="" id="info_modificasion">
+                    <h3 class="h-sections-general-tab">   </h3>
+                    <hr class="hr-general-tab-fields"> 
+                    <div class="row">
+                        <label for="profesional_ps" class="col-xs-3 col-sm-3 col-md-3 col-lg-3 label_fields_general_tab"> Última Modificación:</label>
+                        <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 div_fields_general_tab">
+                            <span class="span-staff-ps">{{last_date_change_profile}}</span>
                         </div>
                     </div>
                 </div>
@@ -337,8 +357,8 @@
                     <h3>TRATAMIENTO DE DATOS PERSONALES</h3>
                     <hr class="hr-general-tab-fields"/>
                     {{#tratamiento_datos_personales_doc}}
-                        <a class="col-md-11" id="link_doc_dtddp" href="{{{.}}}" target="_blank">Documento de autorización para el tratamiento de datos personales
-                            <input type="hidden" class="input_fields_general_tab_otro" name="link_doc_dtddp" id="field_doc_dtddp" readonly value="{{{.}}}"/>
+                        <a class="col-md-11" id="link_doc_dtddp" href="{{link}}" target="_blank">Parte {{idx}} Documento ATDP
+                            <input type="hidden" class="input_fields_general_tab_otro" name="link_doc_dtddp" id="field_doc_dtddp" readonly value="{{link}}"/>
                         </a>
                     {{/tratamiento_datos_personales_doc}}
                     {{^tratamiento_datos_personales_doc.0}}
