@@ -102,22 +102,22 @@ if (isset($_FILES['file'])) {
 
             //validate programa
             if ($associativeTitles['codigo_programa'] != null) {
-                $codigo_programa = $data[$associativeTitles['programa']];
+                $codigo_programa = $data[$associativeTitles['codigo_programa']];
                 if ($codigo_programa != '') {
 
                     $id_programa = get_id_program($codigo_programa);
                     if (!$id_programa) {
                         $isValidRow = false;
-                        array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['programa'] + 1), 'programa', 'No existe un programa asociado al codigo ' . $codigo_programa]);
+                        array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['codigo_programa'] + 1), 'programa', 'No existe un programa asociado al codigo ' . $codigo_programa]);
                     }
 
                 } else {
                     $isValidRow = false;
-                    array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['programa'] + 1), 'programa', 'El campo programa es obligatorio y se encuentra vacio']);
+                    array_push($detail_errors, [$line_count, $lc_wrongFile, ($associativeTitles['codigo_programa'] + 1), 'programa', 'El campo programa es obligatorio y se encuentra vacio']);
                 }
 
             } else {
-                throw new MyException('La columna con el campo programa es obligatoria');
+                throw new MyException('La columna con el campo codigo_programa es obligatoria');
             }
 
             //validate semestre
