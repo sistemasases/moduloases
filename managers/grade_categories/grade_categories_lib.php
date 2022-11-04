@@ -62,6 +62,9 @@ function get_courses_pilos($instanceid){
     $inicio_periodo_actual = substr($inicio_periodo_actual, 0, 10);
     //$semestre = substr($inicio_periodo_actual,0,4) . substr($inicio_periodo_actual, 5, 2);
     //print_r($inicio_periodo_actual); die(); // DONOTCOMMIT))
+    $fecha_short_name = substr($inicio_periodo_actual, 0, 7);
+    $fecha_short_name = str_replace("-", "", $fechaDmg);
+
     $query_courses = "
         SELECT DISTINCT curso.id,
                         curso.fullname,
@@ -87,9 +90,9 @@ function get_courses_pilos($instanceid){
         FROM {course} curso
         INNER JOIN {enrol} ROLE ON curso.id = role.courseid
         INNER JOIN {user_enrolments} enrols ON enrols.enrolid = role.id
-        WHERE SUBSTRING(curso.shortname FROM 4 FOR 7) IN (SELECT codigo_materia FROM {talentospilos_materias_criti}) 
-            AND to_timestamp(curso.startdate)::date >= '$inicio_periodo_actual' 
-            AND enrols.userid IN
+        WHERE SUBSTRING(curso.shortname FROM 4 FOR 7) IN (SELECT codigo_materia FROM mdl_talentospilos_materias_criti) 
+        AND SUBSTRING(curso.shortname FROM 15 FOR 6) >= '$fecha_short_name'
+        AND enrols.userid IN
             (SELECT user_m.id
             FROM {user} user_m
             INNER JOIN {talentospilos_user_extended} extended ON user_m.id = extended.id_moodle_user
