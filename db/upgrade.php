@@ -7,7 +7,7 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
     $dbman = $DB->get_manager();
     $result = true;
 
-    if ($oldversion < 22022100417381) {
+    if ($oldversion < 22022102117381) {
 
 
       
@@ -4545,11 +4545,33 @@ function xmldb_block_ases_upgrade($oldversion = 0) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
+
+        /**
+         *  @author Cristian Duvan Machado Mosquera
+         *  @dec se creo una tabla para la vista de yurani que consiste en una relacion profesor-materia-estudiante-semestre
+         *  
+        */
+        // Define table talentospilos_profesor_curso to be created.
+        $table = new xmldb_table('talentospilos_profesor_curso');
+
+        // Adding fields to table talentospilos_profesor_curso.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('id_profesor', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+        $table->add_field('codigo_materia', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+        $table->add_field('id_periodo', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+  
+        // Adding keys to table talentospilos_profesor_curso.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+  
+        // Conditionally launch create table for talentospilos_profesor_curso.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
     
         
 
 
-        upgrade_block_savepoint(true, 22022100417381, 'ases');
+        upgrade_block_savepoint(true, 22022102117381, 'ases');
 
         return $result;
     }
