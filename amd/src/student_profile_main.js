@@ -24,8 +24,9 @@ define(['jquery',
     'block_ases/socioed_profile_main',
     'block_ases/geographic_main',
     'block_ases/discapacity_tracking_main',
-    'core/templates'
-], function ($, bootstrap, d3, sweetalert, jqueryui, select2, Chart, mustache, loading_indicator, academic, socioed, geographic, discapacity_tracking, Templates) {
+    'core/templates',
+    'core/modal_factory'
+], function ($, bootstrap, d3, sweetalert, jqueryui, select2, Chart, mustache, loading_indicator, academic, socioed, geographic, discapacity_tracking, Templates, ModalFactory) {
 
     return {
         init: function (data_init) {
@@ -42,10 +43,20 @@ define(['jquery',
             var cod_facultad = cod_programa_activo[1];
             var latLng_student_campus = (cod_facultad === '6' || cod_facultad === '8')?LATLNG_CAMPUS_SANFER:LATLNG_CAMPUS_MELENDEZ;
 
-         
-         
-           
-           // createDataTable($("#table_prueba"), columns,dataset)
+
+            // Trigger modal if there are no links to the ATDP doc
+            let modalTrigger = $('#nil-links-span');
+            ModalFactory.create({
+                type: ModalFactory.types.ALERT,
+                title: 'Atención',
+                body: 'El estudiante no ha subido enlaces al documento de ATDP',
+                footer: 'test',
+            }, modalTrigger)
+                .done(function(modal) {
+                    modalTrigger.length > 0 && modalTrigger.click();
+                });
+
+            // createDataTable($("#table_prueba"), columns,dataset)
             // Agrega iframe para Google Maps
             if (ciudad_est == 'CALI') {
 
