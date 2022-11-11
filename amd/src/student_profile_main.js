@@ -49,7 +49,7 @@ define(['jquery',
             ModalFactory.create({
                 type: ModalFactory.types.ALERT,
                 title: 'Atención',
-                body: 'El estudiante no ha subido enlaces al documento de ATDP',
+                body: `Al estudiante no se le ha subido el documento de Autorización de Tratamiento de Datos Personales. Por favor hacerlo a la brevedad posible. <a target=_blank href="https://drive.google.com/file/d/19MpvhUrAvfh4NmEWqZGOacxy3tMmpNAY/view">Enlace al documento</a>`,
                 footer: 'test',
             }, modalTrigger)
                 .done(function(modal) {
