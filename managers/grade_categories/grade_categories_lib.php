@@ -65,49 +65,20 @@ function get_courses_pilos($instanceid){
     $fecha_short_name = substr($inicio_periodo_actual, 0, 7);
     $fecha_short_name = str_replace("-", "", $fecha_short_name);
 
-    $query_courses = "
-        SELECT DISTINCT curso.id,
-                        curso.fullname,
-                        curso.shortname,
-
-          (SELECT concat_ws(' ',firstname,lastname) AS fullname
-           FROM
-             (SELECT usuario.firstname,
-                     usuario.lastname,
-                     userenrol.timecreated
-              FROM {course} cursoP
-              INNER JOIN {context} cont ON cont.instanceid = cursoP.id
-              INNER JOIN {role_assignments} rol ON cont.id = rol.contextid
-              INNER JOIN {user} usuario ON rol.userid = usuario.id
-              INNER JOIN {enrol} enrole ON cursoP.id = enrole.courseid
-              INNER JOIN {user_enrolments} userenrol ON (enrole.id = userenrol.enrolid
-                                                           AND usuario.id = userenrol.userid)
-              WHERE cont.contextlevel = 50
-                AND rol.roleid = 3
-                AND cursoP.id = curso.id
-              ORDER BY userenrol.timecreated ASC
-              LIMIT 1) AS subc) AS nombre
-        FROM {course} curso
-        INNER JOIN {enrol} ROLE ON curso.id = role.courseid
-        INNER JOIN {user_enrolments} enrols ON enrols.enrolid = role.id
-        WHERE SUBSTRING(curso.shortname FROM 4 FOR 7) IN (SELECT codigo_materia FROM {talentospilos_materias_criti}) 
-        AND SUBSTRING(curso.shortname FROM 15 FOR 6) >= '$fecha_short_name'
-        AND enrols.userid IN
-            (SELECT user_m.id
-            FROM {user} user_m
-            INNER JOIN {talentospilos_user_extended} extended ON user_m.id = extended.id_moodle_user
-            INNER JOIN {talentospilos_est_estadoases} estado_u ON extended.id_ases_user = estado_u.id_estudiante
-            INNER JOIN {talentospilos_estados_ases} estados ON estados.id = estado_u.id_estado_ases
-            WHERE estados.nombre = 'seguimiento'
-            
-            INTERSECT
-
-            SELECT user_m.id
-            FROM {user} user_m 
-            INNER JOIN {cohort_members} memb ON user_m.id = memb.userid
-            WHERE memb.cohortid IN (SELECT id_cohorte
-                                    FROM   {talentospilos_inst_cohorte}
-                                    WHERE  id_instancia = $instanceid))";
+    $query_courses = " SELECT DISTINCT course.id,
+                                       course.fullname,
+                                       course.shortname,
+                                       concat_ws(' ',usuario.firstname,usuario.lastname) AS nombre
+                       FROM mdl_course course
+                       JOIN mdl_context cont ON cont.instanceid = course.id
+                       JOIN mdl_role_assignments rol ON cont.id = rol.contextid
+                       JOIN mdl_user usuario ON rol.userid = usuario.id
+                       JOIN mdl_enrol enrole ON course.id = enrole.courseid
+                       JOIN mdl_user_enrolments userenrol ON (enrole.id = userenrol.enrolid AND usuario.id = userenrol.userid)
+                       WHERE SUBSTRING (course.shortname FROM 15 FOR 6) >= '$fecha_short_name' 
+                       AND SUBSTRING(course.shortname FROM 4 FOR 7) IN (SELECT codigo_materia FROM mdl_talentospilos_materias_criti)
+                       AND rol.roleid = 3	
+                       AND cont.contextlevel = 50";
     $result = $DB->get_records_sql($query_courses);
     
     $result = processInfo($result);
