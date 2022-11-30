@@ -318,4 +318,9 @@ class renderer extends plugin_renderer_base {
         $data = $page->export_for_template($this);
         return parent::render_from_template('block_ases/ases_nodos_imagen', $data);
     }
+
+    public function render_register_student_v1_page($page) {
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('block_ases/register_student_v1', $data);
+    }
 }
