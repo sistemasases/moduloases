@@ -77,6 +77,7 @@ $coursenode->add_node($blocknode);
 $PAGE->requires->css('/blocks/ases/style/student_profile.css', true);
 $PAGE->requires->css('/blocks/ases/style/smart_wizard.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/smart_wizard_theme_dots.min.css', true);
+$PAGE->requires->css('/blocks/ases/style/sweetalert.css', true);
 
 $PAGE->requires->js_call_amd('block_ases/student_new_register', 'init');
 
