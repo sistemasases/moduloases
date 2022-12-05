@@ -71,11 +71,14 @@ $blocknode = navigation_node::create('Panel general',$url, null, 'block', $insta
 $coursenode->add_node($blocknode);
 
 
-$PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
-$PAGE->requires->css('/blocks/ases/style/bootstrap.min.css', true);
-$PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
+//$PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
+//$PAGE->requires->css('/blocks/ases/style/bootstrap.min.css', true);
+//$PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
+$PAGE->requires->css('/blocks/ases/style/student_profile.css', true);
+$PAGE->requires->css('/blocks/ases/style/smart_wizard.min.css', true);
+$PAGE->requires->css('/blocks/ases/style/smart_wizard_theme_dots.min.css', true);
 
-//$PAGE->requires->js_call_amd('block_ases/register_student_v1', 'init');
+$PAGE->requires->js_call_amd('block_ases/student_new_register', 'init');
 
 $output = $PAGE->get_renderer('block_ases');
 
@@ -83,5 +86,5 @@ $output = $PAGE->get_renderer('block_ases');
 $ee = new \block_ases\output\register_student_v1_page($record);
 
 echo $output->header();
-echo "$output->render($ee)";
+echo $output->render($ee);
 echo $output->footer();

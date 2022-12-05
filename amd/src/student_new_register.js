@@ -468,6 +468,7 @@ define(['jquery',
 
                         $('#modalExample').show();
                         document.body.style.overflowY = "hidden";
+                        document.body.style.overflowX = "hidden";
                     });
 
                     function initSelect2() {
