@@ -407,7 +407,7 @@ define(['jquery',
                     var mdl_user, ases_user, user_extended = false;
                     var economics_data, academics_data = false;
                     var healthCondition, healthService, discapacity = false;
-                    var cambios_s1, cambios_s2, cambios_s3, cambios_s4, cambios_s5, cambios_s6 = false, cualquier_cambio;
+                    var cambios_s1, cambios_s2, cambios_s3, cambios_s4, cambios_s5, cambios_s4_5, cambios_s6 = false, cualquier_cambio;
 
                     $("#step-1 :input").prop("disabled", true);
                     $("#codigo_estudiantil").prop("disabled", false);
@@ -541,6 +541,7 @@ define(['jquery',
                         cambios_s4= false;
                         cambios_s5= false;
                         cambios_s6 = false;
+                        cambios_s4_5 = false;
                         cualquier_cambio = false;
 
                         //Deshabilitar campos a excepcion del codigo
@@ -2109,8 +2110,20 @@ define(['jquery',
                     //Validador si hay cambios en la seccion 3 del formulario, para actualizar en la BD   
                     $('.step4').each(function() {
                         var elem = $(this);
+                        elem.data('oldVal', elem.val());
 
-                        // Save current value of element
+                        if(elem.attr("id") === "id_discapacidad") {
+
+                            elem.bind("propertychange change", function(event) {
+                                if(elem.data('oldVal') != elem.val()) {
+                                    elem.data('oldVal', elem.val());
+
+                                    cambios_s4 = true;
+                                    cualquier_cambio = true;
+                                }
+                            });
+                        }
+                        /*// Save current value of element
                         elem.data('oldVal', elem.val());
 
                         // Look for changes in the value
@@ -2124,7 +2137,7 @@ define(['jquery',
                                 cambios_s4 = true;
                                 cualquier_cambio = true;
                             }
-                        });
+                        });*/
                     });
 
                     //Validador si hay cambios en la seccion 3 del formulario, para actualizar en la BD   
@@ -2199,7 +2212,7 @@ define(['jquery',
                      */
                     $('textarea').on('change', function() {
                         if($(this).hasClass("step4")) {
-                            cambios_s5 = true;
+                            cambios_s4_5 = true;
                             cualquier_cambio = true;
                         }
                     });
@@ -2309,7 +2322,7 @@ define(['jquery',
                     $('input[type="checkbox"]').on('change', function() {
                         if ($(this).hasClass("step4")) {
                             //cambios_s4 = true;
-                            cambios_s5 = true;
+                            cambios_s4_5 = true;
                             cualquier_cambio = true;
                         } else if ($(this).hasClass("step5")) {
                             cambios_s5 = true;
@@ -2513,6 +2526,10 @@ define(['jquery',
                                     } else if (cambios_s4) {
                                         update_discapacidad_step4();
                                         cambios_s4 = false;
+                                    } 
+                                    if (cambios_s4_5) {
+                                        update_discapacity_dt();
+                                        cambios_s4_5 = false;
                                     }
                                     break;
                                 case 4:
