@@ -407,7 +407,7 @@ define(['jquery',
                     var mdl_user, ases_user, user_extended = false;
                     var economics_data, academics_data = false;
                     var healthCondition, healthService, discapacity = false;
-                    var cambios_s1, cambios_s2, cambios_s3, cambios_s4, cambios_s5, cambios_s6 = false;
+                    var cambios_s1, cambios_s2, cambios_s3, cambios_s4, cambios_s5, cambios_s6 = false, cualquier_cambio;
 
                     $("#step-1 :input").prop("disabled", true);
                     $("#codigo_estudiantil").prop("disabled", false);
@@ -541,6 +541,7 @@ define(['jquery',
                         cambios_s4= false;
                         cambios_s5= false;
                         cambios_s6 = false;
+                        cualquier_cambio = false;
 
                         //Deshabilitar campos a excepcion del codigo
                         $("#step-1 :input").prop("disabled", true);
@@ -721,22 +722,26 @@ define(['jquery',
                         la universidad en las secciones 2 y 3 del formulario*/
                     $(document).on('click', '.remove_fila', function() {
                         cambios_s2 = true
+                        cualquier_cambio = true;
                         $(this).parent().parent().remove();
                     });
 
                     $(document).on('click', '.remove_fila_ing', function() {
                         cambios_s3 = true
+                        cualquier_cambio = true;
                         ing--;
                         $(this).parent().parent().remove();
                     });
 
                     $("#add_person_r").on('click', function() {
                         cambios_s2 = true
+                        cualquier_cambio = true;
                         addTable($("#table_familia"));
                     });
 
                     $("#add_ingreso").on('click', function() {
                         cambios_s3 = true
+                        cualquier_cambio = true;
                         ing++;
                         addTableIng($("#table_ingresos"));
                     });
@@ -752,6 +757,9 @@ define(['jquery',
                         } else if (cambios_s6) {
                             update_health_service()
                             cambios_s6 = false;
+                        } else if (cualquier_cambio) {
+                            swal("Actualización completada Exitosamente", "", "success");
+                            cualquier_cambio = false;
                         }
                     });
 
@@ -1998,7 +2006,8 @@ define(['jquery',
                                     elem.data('oldVal', elem.val());
     
                                     // Do action
-                                    (nameClass === 'tabl_famiia') ? cambios_s2 = true : cambios_s3 = true
+                                    //(nameClass === 'tabl_famiia') ? cambios_s2 = true : cambios_s3 = true
+                                    (nameClass === 'tabl_famiia') ? [cambios_s2, cualquier_cambio] = [true, true] : [cambios_s3, cualquier_cambio] = [true,true];
                                     
                                 }
                             });
@@ -2030,6 +2039,7 @@ define(['jquery',
 
                                 // Do action
                                 cambios_s1 = true;
+                                cualquier_cambio = true
                             }
                         });
 
@@ -2056,6 +2066,7 @@ define(['jquery',
 
                                 // Do action
                                 cambios_s2 = true;
+                                cualquier_cambio = true;
                             }
                         });
 
@@ -2083,6 +2094,7 @@ define(['jquery',
 
                                 // Do action
                                 cambios_s3 = true;
+                                cualquier_cambio = true;
                             }
                         });
 
@@ -2110,6 +2122,7 @@ define(['jquery',
 
                                 // Do action
                                 cambios_s4 = true;
+                                cualquier_cambio = true;
                             }
                         });
                     });
@@ -2130,6 +2143,7 @@ define(['jquery',
 
                                 // Do action
                                 cambios_s5 = true;
+                                cualquier_cambio = true;
                             }
                         });
                     });
@@ -2158,14 +2172,19 @@ define(['jquery',
                     $('input[type="radio"]').on('change', function() {
                         if ($(this).hasClass("step1")) {
                             cambios_s1 = true;
+                            cualquier_cambio = true;
                         } else if ($(this).hasClass("step2")) {
                             cambios_s2 = true;
+                            cualquier_cambio = true;
                         } else if ($(this).hasClass("step3")) {
                             cambios_s3 = true;
+                            cualquier_cambio = true;
                         } else if ($(this).hasClass("step4")) {
                             cambios_s4 = true;
+                            cualquier_cambio = true;
                         } else if ($(this).hasClass("step5")) {
                             cambios_s5 = true;
+                            cualquier_cambio = true;
                         } else if ($(this).hasClass("step6")) {
                             cambios_s6 = true;
                         } else {
@@ -2181,6 +2200,7 @@ define(['jquery',
                     $('textarea').on('change', function() {
                         if($(this).hasClass("step4")) {
                             cambios_s5 = true;
+                            cualquier_cambio = true;
                         }
                     });
 
@@ -2290,10 +2310,13 @@ define(['jquery',
                         if ($(this).hasClass("step4")) {
                             //cambios_s4 = true;
                             cambios_s5 = true;
+                            cualquier_cambio = true;
                         } else if ($(this).hasClass("step5")) {
                             cambios_s5 = true;
+                            cualquier_cambio = true;
                         } else if ($(this).hasClass("step6")) {
                             cambios_s6 = true;
+                            cualquier_cambio = true;
                         } else {
 
                         }
