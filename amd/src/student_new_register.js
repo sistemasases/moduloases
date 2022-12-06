@@ -490,9 +490,10 @@ define(['jquery',
                         loadSelector($('#select_programa'), 'get_programas_academicos');
                     }
 
-                    //Ocultar el modal
+                    //Ocultar el modal //todo
                     $('.closer').on('click', function() {
                         $('#modalExample').hide();
+                        clearForm();
                         document.body.style.overflowY = "visible";
                     });
 
@@ -2524,7 +2525,7 @@ define(['jquery',
                                         discapacity = true;
                                         cambios_s4 = false;
                                     } else if (cambios_s4) {
-                                        update_discapacidad_step4();
+                                        update_discapacidad_step4(cambios_s4_5);
                                         cambios_s4 = false;
                                     } 
                                     if (cambios_s4_5) {
@@ -3033,10 +3034,11 @@ define(['jquery',
                     }
 
                     /**
-                     * Actualiza solo la opción discapacidad de la sección 4
-                     * @param none
+                     * Actualiza solo la opción id_discapacidad de la sección 4
+                     * @param {boolean} show_swal - Muestra el swal de exito si solo se ha realizado cambios en 
+                     * el dropdown de discapacidad
                      */
-                    function update_discapacidad_step4() {
+                    function update_discapacidad_step4(show_swal) {
                         var id_discapacidad = $("#input_discapacidad").val();
                         getStudentAses($("#num_doc_ini").val());
 
@@ -3049,7 +3051,9 @@ define(['jquery',
                             }),
                             url: "../managers/student_profile/studentprofile_api.php",
                             success: function(msg) {
-                                //swal({title: "Cambios actualizados exitosamente!",text: "",type: "success", timer: 1500});
+                                if(!show_swal) {
+                                    swal({title: "Cambios actualizados exitosamente!",text: "",type: "success", timer: 1500});
+                                }
                             },
                             error: function(msg) {
                                 swal({title: "Error al comunicarse con el servidor, por favor inténtelo nuevamente.",text: "",type: "error", timer: 1500});
