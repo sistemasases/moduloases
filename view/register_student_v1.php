@@ -73,7 +73,7 @@ $coursenode->add_node($blocknode);
 
 //$PAGE->requires->css('/blocks/ases/style/base_ases.css', true);
 //$PAGE->requires->css('/blocks/ases/style/bootstrap.min.css', true);
-//$PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
+$PAGE->requires->css('/blocks/ases/style/side_menu_style.css', true);
 $PAGE->requires->css('/blocks/ases/style/student_profile.css', true);
 $PAGE->requires->css('/blocks/ases/style/smart_wizard.min.css', true);
 $PAGE->requires->css('/blocks/ases/style/smart_wizard_theme_dots.min.css', true);
