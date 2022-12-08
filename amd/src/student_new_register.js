@@ -407,7 +407,7 @@ define(['jquery',
                     var mdl_user, ases_user, user_extended = false;
                     var economics_data, academics_data = false;
                     var healthCondition, healthService, discapacity = false;
-                    var cambios_s1, cambios_s2, cambios_s3, cambios_s4, cambios_s5, cambios_s6 = false;
+                    var cambios_s1, cambios_s2, cambios_s3, cambios_s4, cambios_s5, cambios_s4_5, cambios_s6 = false, cualquier_cambio;
 
                     $("#step-1 :input").prop("disabled", true);
                     $("#codigo_estudiantil").prop("disabled", false);
@@ -468,6 +468,7 @@ define(['jquery',
 
                         $('#modalExample').show();
                         document.body.style.overflowY = "hidden";
+                        document.body.style.overflowX = "hidden";
                     });
 
                     function initSelect2() {
@@ -489,9 +490,10 @@ define(['jquery',
                         loadSelector($('#select_programa'), 'get_programas_academicos');
                     }
 
-                    //Ocultar el modal
+                    //Ocultar el modal //todo
                     $('.closer').on('click', function() {
                         $('#modalExample').hide();
+                        clearForm();
                         document.body.style.overflowY = "visible";
                     });
 
@@ -540,6 +542,8 @@ define(['jquery',
                         cambios_s4= false;
                         cambios_s5= false;
                         cambios_s6 = false;
+                        cambios_s4_5 = false;
+                        cualquier_cambio = false;
 
                         //Deshabilitar campos a excepcion del codigo
                         $("#step-1 :input").prop("disabled", true);
@@ -720,22 +724,26 @@ define(['jquery',
                         la universidad en las secciones 2 y 3 del formulario*/
                     $(document).on('click', '.remove_fila', function() {
                         cambios_s2 = true
+                        cualquier_cambio = true;
                         $(this).parent().parent().remove();
                     });
 
                     $(document).on('click', '.remove_fila_ing', function() {
                         cambios_s3 = true
+                        cualquier_cambio = true;
                         ing--;
                         $(this).parent().parent().remove();
                     });
 
                     $("#add_person_r").on('click', function() {
                         cambios_s2 = true
+                        cualquier_cambio = true;
                         addTable($("#table_familia"));
                     });
 
                     $("#add_ingreso").on('click', function() {
                         cambios_s3 = true
+                        cualquier_cambio = true;
                         ing++;
                         addTableIng($("#table_ingresos"));
                     });
@@ -751,6 +759,9 @@ define(['jquery',
                         } else if (cambios_s6) {
                             update_health_service()
                             cambios_s6 = false;
+                        } else if (cualquier_cambio) {
+                            swal("Actualización completada Exitosamente", "", "success");
+                            cualquier_cambio = false;
                         }
                     });
 
@@ -1997,7 +2008,8 @@ define(['jquery',
                                     elem.data('oldVal', elem.val());
     
                                     // Do action
-                                    (nameClass === 'tabl_famiia') ? cambios_s2 = true : cambios_s3 = true
+                                    //(nameClass === 'tabl_famiia') ? cambios_s2 = true : cambios_s3 = true
+                                    (nameClass === 'tabl_famiia') ? [cambios_s2, cualquier_cambio] = [true, true] : [cambios_s3, cualquier_cambio] = [true,true];
                                     
                                 }
                             });
@@ -2029,6 +2041,7 @@ define(['jquery',
 
                                 // Do action
                                 cambios_s1 = true;
+                                cualquier_cambio = true
                             }
                         });
 
@@ -2055,6 +2068,7 @@ define(['jquery',
 
                                 // Do action
                                 cambios_s2 = true;
+                                cualquier_cambio = true;
                             }
                         });
 
@@ -2082,6 +2096,7 @@ define(['jquery',
 
                                 // Do action
                                 cambios_s3 = true;
+                                //cualquier_cambio = true;
                             }
                         });
 
@@ -2096,8 +2111,20 @@ define(['jquery',
                     //Validador si hay cambios en la seccion 3 del formulario, para actualizar en la BD   
                     $('.step4').each(function() {
                         var elem = $(this);
+                        elem.data('oldVal', elem.val());
 
-                        // Save current value of element
+                        if(elem.attr("id") === "id_discapacidad") {
+                            elem.bind("propertychange change", function(event) {
+                                if(elem.data('oldVal') != elem.val()) {
+                                    if(elem.data('oldVal') != null) {
+                                        cambios_s4 = true;
+                                        cualquier_cambio = true;
+                                    }
+                                    elem.data('oldVal', elem.val());
+                                }
+                            });
+                        }
+                        /*// Save current value of element
                         elem.data('oldVal', elem.val());
 
                         // Look for changes in the value
@@ -2109,8 +2136,9 @@ define(['jquery',
 
                                 // Do action
                                 cambios_s4 = true;
+                                cualquier_cambio = true;
                             }
-                        });
+                        });*/
                     });
 
                     //Validador si hay cambios en la seccion 3 del formulario, para actualizar en la BD   
@@ -2129,6 +2157,7 @@ define(['jquery',
 
                                 // Do action
                                 cambios_s5 = true;
+                                cualquier_cambio = true;
                             }
                         });
                     });
@@ -2157,14 +2186,19 @@ define(['jquery',
                     $('input[type="radio"]').on('change', function() {
                         if ($(this).hasClass("step1")) {
                             cambios_s1 = true;
+                            cualquier_cambio = true;
                         } else if ($(this).hasClass("step2")) {
                             cambios_s2 = true;
+                            cualquier_cambio = true;
                         } else if ($(this).hasClass("step3")) {
                             cambios_s3 = true;
+                            cualquier_cambio = true;
                         } else if ($(this).hasClass("step4")) {
                             cambios_s4 = true;
+                            cualquier_cambio = true;
                         } else if ($(this).hasClass("step5")) {
                             cambios_s5 = true;
+                            cualquier_cambio = true;
                         } else if ($(this).hasClass("step6")) {
                             cambios_s6 = true;
                         } else {
@@ -2179,7 +2213,8 @@ define(['jquery',
                      */
                     $('textarea').on('change', function() {
                         if($(this).hasClass("step4")) {
-                            cambios_s5 = true;
+                            cambios_s4_5 = true;
+                            cualquier_cambio = true;
                         }
                     });
 
@@ -2288,11 +2323,14 @@ define(['jquery',
                     $('input[type="checkbox"]').on('change', function() {
                         if ($(this).hasClass("step4")) {
                             //cambios_s4 = true;
-                            cambios_s5 = true;
+                            cambios_s4_5 = true;
+                            cualquier_cambio = true;
                         } else if ($(this).hasClass("step5")) {
                             cambios_s5 = true;
+                            cualquier_cambio = true;
                         } else if ($(this).hasClass("step6")) {
                             cambios_s6 = true;
+                            cualquier_cambio = true;
                         } else {
 
                         }
@@ -2487,8 +2525,12 @@ define(['jquery',
                                         discapacity = true;
                                         cambios_s4 = false;
                                     } else if (cambios_s4) {
-                                        update_discapacidad_step4();
+                                        update_discapacidad_step4(cambios_s4_5);
                                         cambios_s4 = false;
+                                    } 
+                                    if (cambios_s4_5) {
+                                        update_discapacity_dt();
+                                        cambios_s4_5 = false;
                                     }
                                     break;
                                 case 4:
@@ -2992,10 +3034,11 @@ define(['jquery',
                     }
 
                     /**
-                     * Actualiza solo la opción discapacidad de la sección 4
-                     * @param none
+                     * Actualiza solo la opción id_discapacidad de la sección 4
+                     * @param {boolean} show_swal - Muestra el swal de exito si solo se ha realizado cambios en 
+                     * el dropdown de discapacidad
                      */
-                    function update_discapacidad_step4() {
+                    function update_discapacidad_step4(show_swal) {
                         var id_discapacidad = $("#input_discapacidad").val();
                         getStudentAses($("#num_doc_ini").val());
 
@@ -3008,7 +3051,9 @@ define(['jquery',
                             }),
                             url: "../managers/student_profile/studentprofile_api.php",
                             success: function(msg) {
-                                //swal({title: "Cambios actualizados exitosamente!",text: "",type: "success", timer: 1500});
+                                if(!show_swal) {
+                                    swal({title: "Cambios actualizados exitosamente!",text: "",type: "success", timer: 1500});
+                                }
                             },
                             error: function(msg) {
                                 swal({title: "Error al comunicarse con el servidor, por favor inténtelo nuevamente.",text: "",type: "error", timer: 1500});
