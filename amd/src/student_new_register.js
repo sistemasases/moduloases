@@ -2096,7 +2096,7 @@ define(['jquery',
 
                                 // Do action
                                 cambios_s3 = true;
-                                cualquier_cambio = true;
+                                //cualquier_cambio = true;
                             }
                         });
 
@@ -2114,13 +2114,13 @@ define(['jquery',
                         elem.data('oldVal', elem.val());
 
                         if(elem.attr("id") === "id_discapacidad") {
-
                             elem.bind("propertychange change", function(event) {
                                 if(elem.data('oldVal') != elem.val()) {
+                                    if(elem.data('oldVal') != null) {
+                                        cambios_s4 = true;
+                                        cualquier_cambio = true;
+                                    }
                                     elem.data('oldVal', elem.val());
-
-                                    cambios_s4 = true;
-                                    cualquier_cambio = true;
                                 }
                             });
                         }
