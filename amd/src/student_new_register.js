@@ -1899,7 +1899,7 @@ define(['jquery',
                                         break;
                                     }
                                     break;
-                                case 'checkbox':
+                                case 'checkbox': //todo
                                     var o = getValue($(this));
                                     if (o.id !== "") {
                                         json_object.key_input = $(this).attr("id");
@@ -2520,6 +2520,7 @@ define(['jquery',
 
                                     break;
                                 case 3:
+                                    var discapacity_old = discapacity;
                                     if (!discapacity) {
                                         save_data_user_step4();
                                         discapacity = true;
@@ -2528,8 +2529,8 @@ define(['jquery',
                                         update_discapacidad_step4(cambios_s4_5);
                                         cambios_s4 = false;
                                     } 
-                                    if (cambios_s4_5) {
-                                        update_discapacity_dt();
+                                    if (cambios_s4_5 && discapacity_old) {
+                                        update_discapacity_dt();  //Necesito corregir este punto ¿porque me esta actualizndo algo donde ni siquiera he realizado una inserción????
                                         cambios_s4_5 = false;
                                     }
                                     break;
