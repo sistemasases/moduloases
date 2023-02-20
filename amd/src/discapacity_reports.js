@@ -152,16 +152,16 @@ define([
                     type: "POST",
                     data: { load: 'getDataGraphic' },
                     url: "../managers/discapacity_reports/discapacity_reports_api.php",
-                    success: function (msg) {
-                        //console.log(msg);
-                        create_graphic_discapacity(msg);
+                    success: function (data) {
+                        //console.log(data);
+                        create_graphic_discapacity(data);
 
                     },
                     dataType: "json",
                     cache: false,
                     async: true,
 
-                    failure: function (msg) { }
+                    failure: function (data) { }
                 });
             }
 

@@ -244,30 +244,33 @@ function get_detalle_discapacity($id_form){
     return $results->json_detalle;
 }
 
-
- /**
- * Function that load discapacity data switch num_doc 
- * @see get_detalle_discapacity($id_form)
- * @param $id_form---> num_doc user
- * @return string
- **/
-
-function get_data_to_grapich(){
-
+/**
+ * Función que realiza una consulta para los usuarios de la cohorte de DISC2018B
+ * @return mixed
+ */
+function get_json_detalle_disc2018b() {
     global $DB;
-    $array_detalles = array();
-    $array_records  = array();
- 
+
     $sql = "SELECT  talentospilos_usuario.num_doc AS num_doc_act,  talentospilos_usuario.json_detalle AS detalle_disc FROM {cohort} AS cohort 
             INNER JOIN {cohort_members} AS cohort_members ON cohort_members.cohortid = cohort.id
                 INNER JOIN {user} AS _user ON _user.id = cohort_members.userid
                     INNER JOIN {talentospilos_user_extended} AS talentospilos_user_extended ON talentospilos_user_extended.tracking_status = 1 
                                                                         AND talentospilos_user_extended.id_moodle_user = _user.id
                          INNER JOIN {talentospilos_usuario} AS talentospilos_usuario ON talentospilos_usuario.id =  talentospilos_user_extended.id_ases_user 
-                                                                        AND talentospilos_usuario.json_detalle IS NOT NULL
                 WHERE cohort.idnumber = 'DISC2018B'";
-                                
-    $results = $DB->get_records_sql($sql);
+
+    return $DB->get_records_sql($sql);
+}
+
+
+ /**
+ * Función para listar un array de conteo segun el tipo de discapacidad 
+ * @return Array
+ */
+function get_data_to_grapich(){
+
+    $array_detalles = array();  
+    $results = get_json_detalle_disc2018b();
 
 
     $cognitiva = 0;
@@ -276,35 +279,48 @@ function get_data_to_grapich(){
     $sensorial = 0;   
     $multiple = 0;
     $otra = 0;   
+    $tipo = "";
     
+    foreach ($results as $row) {
+        $discapacity = json_decode($row->detalle_disc);
+        if($discapacity == null)
+            continue;
 
-    foreach ($results as $record) {
-        $tipo_discapacidad_register = json_decode($record->detalle_disc);
-        $tipo                       = $tipo_discapacidad_register->tipo_discapacidad->tipo_discapacidad;
-        switch($tipo){
-        case "Cognitiva": 
-        $cognitiva ++;
-        break;    
-        case "Psicosocial": 
-        $psicosocial ++;
-        break;   
-        case "Física": 
-        $fisica ++;
-        break;   
-        case "Sensorial": 
-        $sensorial ++;
-        break;   
-        case "Múltiple": 
-        $multiple ++;
-        break;   
-        case "Otra": 
-        $otra ++;
-        break;   
-        }
-    }
-    $cant = count($results);
-    array_push($array_detalles, $cognitiva, $psicosocial, $fisica, $sensorial, $multiple, $otra);
+        $tipo_discapacidad = $discapacity->tipo_discapacidad->tipo_discapacidad;
+        
+
+        if (gettype($tipo_discapacidad) == "array") {
+            if (count($tipo_discapacidad) == 0)
+                continue;
     
+            $tipo = $tipo_discapacidad[0];
+
+        }else
+            $tipo = $tipo_discapacidad;
+
+            switch($tipo) {
+                case "Cognitiva": 
+                    $cognitiva ++;
+                    break;    
+                case "Psicosocial": 
+                    $psicosocial ++;
+                    break;   
+                case "Física": 
+                    $fisica ++;
+                    break;   
+                case "Sensorial": 
+                    $sensorial ++;
+                    break;   
+                case "Múltiple": 
+                    $multiple ++;
+                    break;   
+                case "Otra": 
+                    $otra ++;
+                    break;   
+            }
+    }
+
+    array_push($array_detalles, $cognitiva, $psicosocial, $fisica, $sensorial, $multiple, $otra);
 
    return $array_detalles;
 
