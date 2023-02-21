@@ -48,14 +48,12 @@ define([
             });
 
             $(document).on('click', '#tableDiscapacityReports tbody tr td', function () {
-                var id = "";
+                var document = "";
 
-                // Obtenemos la primer columna de la fila seleccionada
-                // seleccionada
-               id =  $(this).parents("tr").find("td:first").html();
+                //Obtiene el numero de documento "Primera columna"
+                document =  $(this).parents("tr").find("td:first").html();
 
-               // alert(valores);
-                get_others_data_discapacity(id);
+                redirect_student_profile(document);
 
             });
 
@@ -86,20 +84,21 @@ define([
 
             });
 
-            function get_others_data_discapacity(id){
+            function redirect_student_profile(id){
                 //Get one form switch id
                 $.ajax({
                     type: "POST",
-                    data: { load: 'get_others_data_discapacity', params: id },
+                    data: { load: 'getUserName', params: id },
                     url: "../managers/discapacity_reports/discapacity_reports_api.php",
                     dataType: "json",
                     cache: false,
                     async: true,
                     success: function (msg) {
-
-                        create_modal(msg);
+                        location.href = "student_profile.php" + location.search + "&student_code=" + msg;
                     },
-                    failure: function (msg) { }
+                    failure: function (msg) { 
+                        alert("No");
+                    }
                 });
             }
 

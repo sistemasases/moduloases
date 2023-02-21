@@ -245,6 +245,23 @@ function get_detalle_discapacity($id_form){
 }
 
 /**
+ * Función que consulta el username de la tabla user_extended para la condición de tracking_estatus == 1
+ * @param $id
+ * @return string
+ */
+function get_username($id) {
+    global $DB;
+
+    $sql = "SELECT _user.username FROM {talentospilos_usuario} AS usuario
+	            INNER JOIN {talentospilos_user_extended} AS user_ex ON usuario.id = user_ex.id_ases_user
+		            INNER JOIN {user} AS _user ON _user.id = user_ex.id_moodle_user
+	            WHERE usuario.num_doc_ini = '$id' and user_ex.tracking_status = '1' ";
+
+    $result = $DB->get_record_sql($sql);
+    return json_encode($result->username);
+}
+
+/**
  * Función que realiza una consulta para los usuarios de la cohorte de DISC2018B
  * @return mixed
  */

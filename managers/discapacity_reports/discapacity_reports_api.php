@@ -160,6 +160,10 @@
             }else{     
                 return_with_code( -2 );
             }
+        }else if($_POST['load'] == "getUserName"){
+            $data = get_username($_POST['params']);
+            echo $data;
+
         }else if( $_POST['load'] == "getDataGraphic" ){
             //Example of load: getDataGraphic valid: 
             //data: get_form   params: NOT
