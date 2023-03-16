@@ -114,6 +114,8 @@ Existen difentes tipos de estudiantes en el módulo Ases, los cuales son los sig
 * **Nicolas Lasso Jaramillo** - [MurphLaws](https://github.com/MurphLaws)
 * **Cristian Duvan Machado Mosquera** - [CriistiianDM](https://github.com/CriistiianDM)
 * **Milton Armando Garcia Ecue** - [1000tonage](https://github.com/1000tonage)
+* **Deiby Alexander Rodriguez Rodallega** - [Dalex11](https://github.com/Dalex11)
+* **Diego Gil** - [@Diego2038](https://github.com/@Diego2038)
 * **José Alejandro Libreros** - *Documentación* - [josealejolibreros](https://github.com/josealejolibreros)
 * **Diana Melissa Millares** - *Documentación* - [melissamillares](https://github.com/melissamillares)
 * **Valentina Salamanca Rodríguez** - *Documentación* - [vantwot](https://github.com/vantwot)
