@@ -5,8 +5,10 @@ namespace Latitude\QueryBuilder\Query;
 use Latitude\QueryBuilder\TestCase;
 
 use function Latitude\QueryBuilder\alias;
+use function Latitude\QueryBuilder\express;
 use function Latitude\QueryBuilder\field;
-use function Latitude\QueryBuilder\fnctn;
+use function Latitude\QueryBuilder\fn;
+use function Latitude\QueryBuilder\identify;
 use function Latitude\QueryBuilder\on;
 
 class SelectTest extends TestCase
@@ -167,7 +169,7 @@ class SelectTest extends TestCase
     {
         $select = $this->factory
             ->select(
-                alias(fnctn('COUNT', 'id'), 'total')
+                alias(fn('COUNT', 'id'), 'total')
             )
             ->from('employees')
             ->groupBy('department');
@@ -187,7 +189,7 @@ class SelectTest extends TestCase
         $select = $this->factory
             ->select(
                 'department',
-                alias($sum = fnctn('SUM', 'salary'), 'total')
+                alias($sum = fn('SUM', 'salary'), 'total')
             )
             ->from('employees')
             ->groupBy('department')
@@ -213,7 +215,6 @@ class SelectTest extends TestCase
 
         $this->assertSql('SELECT * FROM users ORDER BY birthday', $select);
         $this->assertParams([], $select);
-
     }
 
     public function testOrderByDirection()
@@ -222,7 +223,7 @@ class SelectTest extends TestCase
             ->select(
                 'u.id',
                 'u.username',
-                alias(fnctn('COUNT', 'l.id'), 'total')
+                alias(fn('COUNT', 'l.id'), 'total')
             )
             ->from(alias('users', 'u'))
             ->join(alias('logins', 'l'), on('u.id', 'l.user_id'))
@@ -239,6 +240,30 @@ class SelectTest extends TestCase
         ]);
 
         $this->assertSql($expected, $select);
+        $this->assertParams([], $select);
+    }
+
+    public function testOrderByReset()
+    {
+        $select = $this->factory
+            ->select()
+            ->from('users')
+            ->orderBy('birthday');
+
+        $select->orderBy(null);
+
+        $this->assertSql('SELECT * FROM users', $select);
+        $this->assertParams([], $select);
+    }
+
+    public function testOrderByExpression()
+    {
+        $select = $this->factory
+            ->select()
+            ->from('users')
+            ->orderBy(express("FIELD(%s, 'off')", identify('status')), 'DESC');
+
+        $this->assertSql("SELECT * FROM users ORDER BY FIELD(status, 'off') DESC", $select);
         $this->assertParams([], $select);
     }
 

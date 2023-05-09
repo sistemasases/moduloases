@@ -1,0 +1,41 @@
+<?php return array(
+    'root' => array(
+        'name' => 'ases/block_ases',
+        'pretty_version' => 'dev-develop',
+        'version' => 'dev-develop',
+        'reference' => '0ef7820deeb6ce13a19584f175a5869fdaff7780',
+        'type' => 'project',
+        'install_path' => __DIR__ . '/../../',
+        'aliases' => array(),
+        'dev' => true,
+    ),
+    'versions' => array(
+        'ases/block_ases' => array(
+            'pretty_version' => 'dev-develop',
+            'version' => 'dev-develop',
+            'reference' => '0ef7820deeb6ce13a19584f175a5869fdaff7780',
+            'type' => 'project',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'justinrainbow/json-schema' => array(
+            'pretty_version' => '5.2.12',
+            'version' => '5.2.12.0',
+            'reference' => 'ad87d5a5ca981228e0e205c2bc7dfb8e24559b60',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../justinrainbow/json-schema',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'latitude/latitude' => array(
+            'pretty_version' => '3.3.1',
+            'version' => '3.3.1.0',
+            'reference' => '29c83264ff498b2d506e606b9b48800233d0fa4c',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../latitude/latitude',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+    ),
+);

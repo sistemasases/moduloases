@@ -35,6 +35,9 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                 $('#academic_program_li').css({
                     display: 'none'
                 });
+                $('#facult_program_li').css({
+                    display: 'none'
+                });
                 $(".assignment_li").css({
                     display: 'none'
                 });
@@ -110,23 +113,33 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                         get_boss(4);
                         $('#boss_li').fadeIn();
                         $('#academic_program_li').fadeOut();
+                        $('#facult_program_li').fadeOut();
                     } else if ($("#role_select").val() == "profesional_ps") {
                         $("#form_prof_type").fadeIn();
                         $('#boss_li').fadeOut();
                         $("#form_mon_student").fadeOut();
                         $('#academic_program_li').fadeOut();
+                        $('#facult_program_li').fadeOut();
                     } else if ($("#role_select").val() == "practicante_ps") {
                         $("#form_prof_type").fadeOut();
                         $("#form_mon_student").fadeOut();
                         get_boss(7);
                         $('#boss_li').fadeIn();
+                        $('#facult_program_li').fadeOut();
                         $('#academic_program_li').fadeOut();
                     } else if($('#role_select').val() == "director_prog"){
                         $('#form_prof_type').fadeOut();
                         $('#form_mon_student').fadeOut();
                         $('#boss_li').fadeOut();
                         $('#academic_program_li').fadeIn();
-                    }else {
+                        $('#facult_program_li').fadeOut();
+                    }else if($('#role_select').val() == "vcd_academico"){
+                        $('#form_prof_type').fadeOut();
+                        $('#form_mon_student').fadeOut();
+                        $('#boss_li').fadeOut();
+                        $('#academic_program_li').fadeOut();
+                        $('#facult_program_li').fadeIn();
+                    } else {
                         $('#boss_li').fadeOut();
                         $("#form_mon_student").fadeOut();
                         $("#form_prof_type").fadeOut();
@@ -298,22 +311,32 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                                             $('#boss_li').fadeOut();
                                             $("#form_mon_student").fadeOut();
                                             $('#academic_program_li').fadeOut();
+                                            $('#facult_program_li').fadeOut();
                                         } else if (msg.rol == "monitor_ps") {
                                             loadStudents();
                                             get_boss(4, msg.boss);
                                             $("#form_mon_student").fadeIn();
                                             $("#form_prof_type").fadeOut();
                                             $('#academic_program_li').fadeOut();
+                                            $('#facult_program_li').fadeOut();
                                         } else if (msg.rol == "practicante_ps") {
                                             get_boss(7, msg.boss);
                                             $("#form_mon_student").fadeOut();
                                             $("#form_prof_type").fadeOut();
                                             $('#academic_program_li').fadeOut();
+                                            $('#facult_program_li').fadeOut();
                                         } else if(msg.rol == "director_prog"){
                                             $("#form_mon_student").fadeOut();
                                             $("#form_prof_type").fadeOut();
                                             $('#boss_li').fadeOut();
                                             $('#academic_program_li').fadeIn();
+                                            $('#facult_program_li').fadeOut();
+                                        } else if(msg.rol == "vcd_academico"){
+                                            $("#form_mon_student").fadeOut();
+                                            $("#form_prof_type").fadeOut();
+                                            $('#boss_li').fadeOut();
+                                            $('#academic_program_li').fadeOut();
+                                            $('#facult_program_li').fadeIn();
                                         } else {
                                             $('#boss_li').fadeOut();
                                             $("#form_mon_student").fadeOut();
@@ -472,6 +495,37 @@ define(['jquery', 'block_ases/bootstrap', 'block_ases/jquery.dataTables', 'block
                                 role: dataRole,
                                 username: dataUsername,
                                 academic_program: academic_program_id,
+                                idinstancia: getIdinstancia()
+                            },
+                            url: "../managers/user_management/update_role_user.php",
+                            success: function(msg) {
+                                swal({
+                                    title: "Información!",
+                                    text: msg,
+                                    type: "info",
+                                    html: true,
+                                    confirmButtonColor: "#d51b23",
+                                    confirmButtonText: "Ok!",
+                                    closeOnConfirm: true
+                                });
+                                userLoad(dataUsername);
+                            },
+                            dataType: "text",
+                            cache: "false",
+                            error: function(msg) {
+                                swal("Error", "Ha ocurrido un error", "error")
+                            },
+                        });
+                    } else if(dataRole == "vcd_academico"){
+
+                        var facult_program_id = $('#facult_program_select').val();
+
+                        $.ajax({
+                            type: "POST",
+                            data: {
+                                role: dataRole,
+                                username: dataUsername,
+                                facult_program: facult_program_id,
                                 idinstancia: getIdinstancia()
                             },
                             url: "../managers/user_management/update_role_user.php",

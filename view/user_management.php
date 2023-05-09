@@ -79,6 +79,16 @@ foreach($academic_programs as $academic_program){
 
 $data->academic_program_select = $academic_programs_options;
 
+$facult_programs = get_facultad();
+$facult_programs_options = "";
+
+foreach($facult_programs as $facult_program){
+    $facult_programs_options .= "<option value='$facult_program->id'>$facult_program->cod_univalle - 
+                                   $facult_program->facultad_nombre - $facult_program->location_name - $facult_program->jornada</option>";
+}
+
+$data->facult_program_select = $facult_programs_options;
+
 $data->table = $table_courseuseres;
 $data->menu = $menu_option;
 

@@ -119,6 +119,22 @@ can be used for common types:
 - `innerJoin()`
 - `fullJoin()`
 
+# ORDER BY
+
+Ordering can be applied:
+
+```php
+$query = $factory
+    ->select()
+    ->from('users')
+    ->orderBy('username', 'asc');
+```
+Ordering can be reset:
+
+```php
+$query->orderBy(null);
+```
+
 # LIMIT and OFFSET
 
 Limits and offsets can be applied:

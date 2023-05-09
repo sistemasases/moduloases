@@ -122,7 +122,7 @@ function get_cohorts_by_idnumber($id_number){
          $user_role = $DB->get_record_sql($sql_query);
 
          switch ($user_role->nombre_rol) {
-             case 'director_prog':
+            case 'director_prog':
 
                  $conditions_query_directors = " WHERE ases_students.id_academic_program = $user_role->id_programa";
                  $conditions_query_assigned = " AND ases_students.student_id IN (SELECT id_estudiante AS student_id
@@ -131,6 +131,18 @@ function get_cohorts_by_idnumber($id_number){
 
                  $where_user = $conditions_query_directors.$conditions_query_assigned;
                  break;
+
+             case 'vcd_academico':
+
+                 $conditions_vcd_query_directors = " INNER JOIN {talentospilos_programa} AS prog_acad ON prog_acad.id_academic_program = ases_students.id_academic_program
+                 INNER JOIN {talentospilos_facultad} AS fac_acad on fac_acad.id =  $user_role->id_facultad";
+                 $conditions_vcd_query_assigned = " AND ases_students.student_id IN (SELECT id_estudiante AS student_id
+                                      FROM {talentospilos_monitor_estud} 
+                                WHERE id_semestre = " . core_periods_get_current_period($instance_id)->id . " AND id_instancia = $instance_id)";
+
+                  $conditions_vcd_query_directors.$conditions_vcd_query_assigned;
+                 break;
+
 
              case 'profesional_ps':
 
@@ -711,6 +723,7 @@ function get_not_assign_students($general_fields=null, $conditions, $academic_fi
         $user_role = $DB->get_record_sql($sql_query);
 
         switch($user_role->nombre_rol){
+
             case 'director_prog':
 
                 $conditions_query_directors = " user_extended.id_academic_program = $user_role->id_programa";
@@ -721,6 +734,20 @@ function get_not_assign_students($general_fields=null, $conditions, $academic_fi
                 $result_query = $DB->get_records_sql($sql_query);
 
                 break;
+        
+           case 'vcd_academico':
+
+
+                    $conditions_vcd_query_directors = " INNER JOIN {talentospilos_programa} AS prog_acad ON prog_acad.id_academic_program = ases_students.id_academic_program
+                    INNER JOIN {talentospilos_facultad} AS fac_acad on fac_acad.id =  $user_role->id_facultad";
+
+                    $sisaC .= $conditions_vcd_query_directors;
+    
+                    $sql_query = $sisaC;
+                    $result_query = $DB->get_records_sql($sql_query);
+    
+                    break;
+                
 
             case 'profesional_ps':
 
@@ -1243,6 +1270,29 @@ function get_ases_report($general_fields=null,
                 $result_query = $DB->get_records_sql($sql_query);
 
                 break;
+
+            case 'vcd_academico':
+
+
+                    $conditions_vcd_query_directors ="SELECT user_mdl.username, user_mdl.firstname, user_mdl.lastname, user_mdl.idnumber as num_doc, cohort.idnumber as cohorts_student FROM  {talentospilos_user_extended} as ases_students
+                    INNER JOIN {user} AS user_mdl on user_mdl.id = ases_students.id_moodle_user
+                    INNER JOIN {cohort_members} AS cohortm ON user_mdl.id = cohortm.userid
+                    INNER JOIN {cohort} as cohort on cohortm.cohortid = cohort.id 
+                    INNER JOIN {talentospilos_programa} AS prog_acad on prog_acad.id = $user_role->id_programa
+                    INNER JOIN {talentospilos_facultad} AS fac_acad on fac_acad.id = $user_role->id_programa";
+                    $conditions_vcd_query_assigned = " AND  ases_students.id_ases_user IN (SELECT id_estudiante AS student_id
+                                      FROM {talentospilos_monitor_estud} as mtme 
+                                WHERE mtme.id_semestre = ". core_periods_get_current_period($instance_id)->id ." AND mtme.id_instancia = $instance_id)";
+    
+                    $sisaC= $conditions_vcd_query_directors.$conditions_vcd_query_assigned;
+    
+                    $sql_query = $sub_query_status.$sub_query_academic.$sub_query_assignment_fields.$sisaC;
+    
+                    $result_query = $DB->get_records_sql($sql_query);
+
+                    break;
+
+                    
             case 'profesional_ps':
 
                 $sub_query_ps_staff = " INNER JOIN {talentospilos_monitor_estud} AS monitor_student ON monitor_student.id_estudiante = ases_students.student_id

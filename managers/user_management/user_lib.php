@@ -812,6 +812,55 @@ function update_program_director($username, $role, $id_instance, $status = 1, $i
     }
 }
 
+function update_fac_director($username, $role, $id_instance, $status = 1, $id_fac_program){
+
+    global $DB;
+    
+    try{
+
+        // Select object user
+        $sql_query   = "SELECT * FROM {user} WHERE username ='$username';";
+        $object_user = $DB->get_record_sql($sql_query);
+
+        $current_semester = core_periods_get_current_period($id_instance);
+
+        $sql_query = "SELECT id_rol, nombre_rol 
+                      FROM {talentospilos_user_rol} AS user_role 
+                      INNER JOIN {talentospilos_rol} AS t_role ON t_role.id = user_role.id_rol 
+                      WHERE id_usuario = $object_user->id AND user_role.id_instancia= $id_instance 
+                                                          AND id_semestre = $current_semester->id";
+
+        $current_role = $DB->get_record_sql($sql_query);
+
+
+
+        if (empty($current_role)) {
+            
+            // Start db transaction
+            pg_query("BEGIN") or die("Could not start transaction\n");
+            
+            $result = assign_role_user($username, $role, 1, $current_semester->id, $id_instance, null, $id_fac_program);
+
+            // End db transaction
+            pg_query("COMMIT") or die("Transaction commit failed\n");
+        }else{
+
+            // Start db transaction
+            pg_query("BEGIN") or die("Could not start transaction\n");
+
+            $result = update_role_user($username, $role, $id_instance, 1, $current_semester, null, $id_fac_program);
+            
+            // End db transaction
+            pg_query("COMMIT") or die("Transaction commit failed\n");
+        }
+
+        return $result;       
+
+    }catch (Exception $e) {
+        return "Error al gestionar el rol del usuario director de programa " . $e->getMessage();
+    }
+}
+
 /**
  * 
  * Gets an user given his id
@@ -1012,6 +1061,29 @@ function get_students_by_program($id_academic_program){
 }
 
 /**
+ * Función que retorna los estudiantes relacionados a un programa académico
+ * @see get_students_by_facul($id_fac_program)
+ * @param $id_fac_program   ---> Identificador del programa académico
+ * @return stdClass
+ */
+
+ function get_students_by_facul($id_fac_program){
+
+    global $DB;
+
+    $sql_query = 'SELECT * FROM {talentospilos_user_extended} AS extended_user
+                    INNER JOIN {talentospilos_usuario} AS ases_user ON ases_user.id= extended_user.id_ases_user 
+                      INNER JOIN {talentospilos_programa} AS prog_acad on prog_acad.id = extended_user.id_academic_program
+                        INNER JOIN {talentospilos_facultad} AS fac_acad on fac_acad.id  =  prog_acad.id_facultad
+                          WHERE prog_acad.id_facultad = $id_fac_program';
+
+    $result_query = $DB->get_records_sql($sql_query);
+
+    return $result_query;
+
+}
+
+/**
  * Función que retorna los programas académicos 
  * @see get_academic_programs()
  * @return array of stdclass
@@ -1029,3 +1101,24 @@ function get_academic_programs(){
 
     return $result_query;
 }
+
+/**
+ * Función que retorna las facultades
+ * @see get_facultad()
+ * @return array of stdclass
+ **/
+
+
+function get_facultad(){
+    
+    global $DB;
+
+    $sql_query = "SELECT fac_acad.id, fac_acad.nombre AS facultad_nombre,  fac_acad.cod_univalle, location_university.nombre AS location_name, academic_program.jornada
+       FROM {talentospilos_facultad} AS fac_acad
+        INNER JOIN {talentospilos_programa} AS academic_program on    academic_program.id_facultad  = fac_acad.id
+         INNER JOIN {talentospilos_sede} AS location_university ON location_university.id = academic_program.id_sede";
+    $result_query = $DB->get_records_sql($sql_query);
+
+    return $result_query;
+}
+

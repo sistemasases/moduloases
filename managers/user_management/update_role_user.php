@@ -133,6 +133,29 @@ if(isset($_POST['role']) && isset($_POST['username'])){
                 echo $success;
                 break;
             }
+    }else if($_POST['role'] == 'vcd_academico' && isset($_POST['idinstancia'])){
+
+        $success =  update_fac_director($_POST['username'], $_POST['role'],$_POST['idinstancia'], 1, $_POST['facult_program']);
+        switch($success){
+            case 1:
+                echo "Rol asignado con éxito";
+                break;
+            case 2:
+                echo "No se ha podido asignar el rol";
+                break;
+            case 3:
+                echo "Rol actualizado con éxito.";
+                break;
+            case 4:
+                echo "Actualización de rol fallida.ultimo";
+                break;
+            case 5:
+                echo "El usuario no puede ser su mismo jefe";
+                break;
+            default:
+                echo $success;
+                break;
+            }
     }else{
 
 

@@ -1,123 +1,138 @@
-[
-    {
-        "name": "justinrainbow/json-schema",
-        "version": "5.2.7",
-        "version_normalized": "5.2.7.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/justinrainbow/json-schema.git",
-            "reference": "8560d4314577199ba51bf2032f02cd1315587c23"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/justinrainbow/json-schema/zipball/8560d4314577199ba51bf2032f02cd1315587c23",
-            "reference": "8560d4314577199ba51bf2032f02cd1315587c23",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.3"
-        },
-        "require-dev": {
-            "friendsofphp/php-cs-fixer": "^2.1",
-            "json-schema/json-schema-test-suite": "1.2.0",
-            "phpunit/phpunit": "^4.8.35"
-        },
-        "time": "2018-02-14T22:26:30+00:00",
-        "bin": [
-            "bin/validate-json"
-        ],
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "5.0.x-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "JsonSchema\\": "src/JsonSchema/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Bruno Prieto Reis",
-                "email": "bruno.p.reis@gmail.com"
+{
+    "packages": [
+        {
+            "name": "justinrainbow/json-schema",
+            "version": "5.2.12",
+            "version_normalized": "5.2.12.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/justinrainbow/json-schema.git",
+                "reference": "ad87d5a5ca981228e0e205c2bc7dfb8e24559b60"
             },
-            {
-                "name": "Justin Rainbow",
-                "email": "justin.rainbow@gmail.com"
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/justinrainbow/json-schema/zipball/ad87d5a5ca981228e0e205c2bc7dfb8e24559b60",
+                "reference": "ad87d5a5ca981228e0e205c2bc7dfb8e24559b60",
+                "shasum": ""
             },
-            {
-                "name": "Igor Wiedler",
-                "email": "igor@wiedler.ch"
+            "require": {
+                "php": ">=5.3.3"
             },
-            {
-                "name": "Robert Schönthal",
-                "email": "seroscho@googlemail.com"
-            }
-        ],
-        "description": "A library to validate a json schema.",
-        "homepage": "https://github.com/justinrainbow/json-schema",
-        "keywords": [
-            "json",
-            "schema"
-        ]
-    },
-    {
-        "name": "latitude/latitude",
-        "version": "3.1.1",
-        "version_normalized": "3.1.1.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/shadowhand/latitude.git",
-            "reference": "2b76eab67eef05bf88f2505cea2c4c11033f27c2"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/shadowhand/latitude/zipball/2b76eab67eef05bf88f2505cea2c4c11033f27c2",
-            "reference": "2b76eab67eef05bf88f2505cea2c4c11033f27c2",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=7.1"
-        },
-        "require-dev": {
-            "eloquent/liberator": "^2.0",
-            "hoa/devtools": "^1.17",
-            "hoa/ruler": "2.17.05.16",
-            "phpstan/phpstan": "^0.9.1",
-            "phpunit/phpunit": "^6.0",
-            "vimeo/psalm": "^0.3.88"
-        },
-        "suggest": {
-            "hoa/ruler": "Adds support for creating criteria from strings"
-        },
-        "time": "2018-05-09T14:39:02+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "files": [
-                "src/functions.php"
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "~2.2.20||~2.15.1",
+                "json-schema/json-schema-test-suite": "1.2.0",
+                "phpunit/phpunit": "^4.8.35"
+            },
+            "time": "2022-04-13T08:02:27+00:00",
+            "bin": [
+                "bin/validate-json"
             ],
-            "psr-4": {
-                "Latitude\\QueryBuilder\\": "src/"
-            }
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.0.x-dev"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "JsonSchema\\": "src/JsonSchema/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bruno Prieto Reis",
+                    "email": "bruno.p.reis@gmail.com"
+                },
+                {
+                    "name": "Justin Rainbow",
+                    "email": "justin.rainbow@gmail.com"
+                },
+                {
+                    "name": "Igor Wiedler",
+                    "email": "igor@wiedler.ch"
+                },
+                {
+                    "name": "Robert Schönthal",
+                    "email": "seroscho@googlemail.com"
+                }
+            ],
+            "description": "A library to validate a json schema.",
+            "homepage": "https://github.com/justinrainbow/json-schema",
+            "keywords": [
+                "json",
+                "schema"
+            ],
+            "support": {
+                "issues": "https://github.com/justinrainbow/json-schema/issues",
+                "source": "https://github.com/justinrainbow/json-schema/tree/5.2.12"
+            },
+            "install-path": "../justinrainbow/json-schema"
         },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Woody Gilk",
-                "email": "woody.gilk@gmail.com",
-                "homepage": "https://github.com/shadowhand"
-            }
-        ],
-        "description": "A SQL query builder with zero dependencies"
-    }
-]
+        {
+            "name": "latitude/latitude",
+            "version": "3.3.1",
+            "version_normalized": "3.3.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/shadowhand/latitude.git",
+                "reference": "29c83264ff498b2d506e606b9b48800233d0fa4c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/shadowhand/latitude/zipball/29c83264ff498b2d506e606b9b48800233d0fa4c",
+                "reference": "29c83264ff498b2d506e606b9b48800233d0fa4c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "eloquent/liberator": "^2.0",
+                "eloquent/phpstan-phony": "^0.4.0",
+                "hoa/devtools": "^1.17",
+                "hoa/ruler": "2.17.05.16",
+                "phpstan/phpstan": "^0.11.6",
+                "phpstan/phpstan-phpunit": "^0.11.1",
+                "phpunit/phpunit": "^7.5"
+            },
+            "suggest": {
+                "hoa/ruler": "Adds support for creating criteria from strings"
+            },
+            "time": "2019-07-29T13:08:55+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "files": [
+                    "src/functions.php"
+                ],
+                "psr-4": {
+                    "Latitude\\QueryBuilder\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Woody Gilk",
+                    "email": "woody.gilk@gmail.com",
+                    "homepage": "https://github.com/shadowhand"
+                }
+            ],
+            "description": "A SQL query builder with zero dependencies",
+            "support": {
+                "issues": "https://github.com/shadowhand/latitude/issues",
+                "source": "https://github.com/shadowhand/latitude/tree/3.3.1"
+            },
+            "install-path": "../latitude/latitude"
+        }
+    ],
+    "dev": true,
+    "dev-package-names": []
+}

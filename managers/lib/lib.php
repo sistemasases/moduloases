@@ -28,7 +28,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once ((__DIR__) . '/../../core/module_loader.php');
+require_once((__DIR__) . '/../../core/module_loader.php');
 require_once dirname(__FILE__) . '/../../../../config.php';
 //require_once $CFG->dirroot . '/blocks/ases/managers/periods_management/periods_lib.php';
 
@@ -59,14 +59,15 @@ function load_programs()
  * @example 201327951 -> 1327951
  * @example 1327951-3743 -> 1327951
  */
-function extract_normalized_code($value) {
+function extract_normalized_code($value)
+{
     $value_length = strlen($value);
     if ($value_length == 7) {
         return $value;
-    } else if( ($value_length == 12 || $value_length == 11) && strpos($value, '-') !== false) {
-        return explode('-', $value )[0];
+    } else if (($value_length == 12 || $value_length == 11) && strpos($value, '-') !== false) {
+        return explode('-', $value)[0];
     } else {
-            return '';
+        return '';
     }
 
 
@@ -162,11 +163,11 @@ function get_role_ases($id, $instance_id)
  * @param integer $semester_id
  * @return string containing role name
  */
-function lib_get_rol_name_ases($user_id, $instance_id, $semester_id = null )
+function lib_get_rol_name_ases($user_id, $instance_id, $semester_id = null)
 {
     global $DB;
 
-    if( !$semester_id ){
+    if (!$semester_id) {
         $semester_id = core_periods_get_current_period($instance_id)->id;
     }
 
@@ -190,9 +191,10 @@ function lib_get_rol_name_ases($user_id, $instance_id, $semester_id = null )
  * @param $instance_id
  * @return string --> Containing the previous select
  */
-function make_select_ficha($id, $rol, $student_code, $instance_id, $actions){
+function make_select_ficha($id, $rol, $student_code, $instance_id, $actions)
+{
 
-    global $DB;  
+    global $DB;
 
     $sel = "";
 
@@ -204,27 +206,32 @@ function make_select_ficha($id, $rol, $student_code, $instance_id, $actions){
 
     $asign = "<select name='asignados' id='asignados' style='width:100%'><option $sel>Seleccione un estudiante</option>";
 
-    if(property_exists($actions, 'search_assigned_students_sp')){
+    if (property_exists($actions, 'search_assigned_students_sp')) {
         if ($rol == 'profesional_ps') {
 
             $asign .= process_info_assigned_students(get_asigned_by_profesional($id, $instance_id), $student_code);
-    
+
         } elseif ($rol == 'practicante_ps') {
-    
+
             $asign .= process_info_assigned_students(get_asigned_by_practicante($id, $instance_id), $student_code);
-    
+
         } elseif ($rol == 'monitor_ps') {
-    
+
             $asign .= process_info_assigned_students(get_asigned_by_monitor($id, $instance_id), $student_code);
-    
-        }elseif ($rol == 'director_prog') {
-    
-            $asign .= process_info_assigned_students(get_asigned_by_dir_prog($id, $instance_id), $student_code);   
-            
+
+        } elseif ($rol == 'director_prog') {
+
+            $asign .= process_info_assigned_students(get_asigned_by_dir_prog($id, $instance_id), $student_code);
+
+        } elseif ($rol == 'vcd_academico') {
+
+            $asign .= process_info_assigned_students(get_asigned_by_vcd_academico($id, $instance_id), $student_code);
+
         }
-    }elseif(property_exists($actions, 'search_student_sp')) {
-        $asign .= process_info_assigned_students(get_all_student($instance_id), $student_code);   
-    }else{
+
+    } elseif (property_exists($actions, 'search_student_sp')) {
+        $asign .= process_info_assigned_students(get_all_student($instance_id), $student_code);
+    } else {
         $asign .= "El usuario no tiene permisos para buscar estudiantes";
     }
     $asign .= "</select>";
@@ -328,7 +335,7 @@ function get_asigned_by_profesional($id, $instance_id)
  * @param $instance_id --> instance id
  * @return array --> with every student
  */
-function get_asigned_by_dir_prog($id, $instance_id)       
+function get_asigned_by_dir_prog($id, $instance_id)
 {
     global $DB;
 
@@ -347,6 +354,41 @@ function get_asigned_by_dir_prog($id, $instance_id)
 
     return $result;
 
+
+    /**
+     * Gets all students assigned to a 'vcd_academico'
+     *
+     * @see get_asigned_by_dir_prog($id)
+     * @param $id --> dirrector id
+     * @param $instance_id --> instance id
+     * @return array --> with every student
+     */
+    function get_asigned_by_vcd_academico($id, $instance_id)
+    {
+        global $DB;
+
+        $semestre = core_periods_get_current_period($instance_id);
+        $id_semestre = $semestre->id;
+
+
+        $query_facult = "SELECT fac_acad.id FROM {talentospilos_user_rol} AS extended_user         
+         inner JOIN {talentospilos_user_extended} AS ext_user on ext_user.id_moodle_user = extended_user.id_usuario
+          INNER JOIN {talentospilos_programa} AS prog_acad on prog_acad.id = ext_user.id_academic_program 
+          INNER JOIN {talentospilos_facultad} AS fac_acad on fac_acad.id  =  prog_acad.id_facultad
+          WHERE extended_user.id = $id AND extended_user.id_semestre =   $id_semestre";
+        $id_facultad = $DB->get_record_sql($query_facult)->id_facultad;
+
+        $query = "SELECT user_moodle.username, user_moodle.firstname, user_moodle.lastname FROM {user} AS user_moodle
+        inner join {talentospilos_user_extended} AS extended_user on user_moodle.id = extended_user.id_moodle_user                     
+         INNER JOIN {talentospilos_programa} AS prog_acad on prog_acad.id = extended_user.id_academic_program
+          INNER JOIN {talentospilos_facultad} AS fac_acad on fac_acad.id  =  prog_acad.id_facultad
+            WHERE prog_acad.id_facultad = $id_facultad";
+
+        $result = $DB->get_records_sql($query);
+
+        return $result;
+
+    }
 }
 
 /**

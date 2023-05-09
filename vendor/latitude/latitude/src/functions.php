@@ -13,7 +13,7 @@ function alias($field, string $alias): ExpressionInterface
     return express('%s AS %s', identify($field), identify($alias));
 }
 
-function fnctn(string $function, ...$replacements): ExpressionInterface
+function fn(string $function, ...$replacements): ExpressionInterface
 {
     return express("$function(%s)", listing(identifyAll($replacements)));
 }
@@ -28,7 +28,7 @@ function on(string $left, string $right): CriteriaInterface
     return criteria('%s = %s', identify($left), identify($right));
 }
 
-function order(string $column, string $direction = null): StatementInterface
+function order($column, string $direction = null): StatementInterface
 {
     if (empty($direction)) {
         return identify($column);
@@ -67,11 +67,15 @@ function identify($name): StatementInterface
         return $name;
     }
 
-    if (strpos($name, '.') === false) {
-        return new Partial\Identifier($name);
+    if (strpos($name, '.') !== false) {
+        return new Partial\IdentifierQualified(...identifyAll(explode('.', $name)));
     }
 
-    return new Partial\IdentifierQualified(...identifyAll(explode('.', $name)));
+    if ($name === '*') {
+        return new Partial\Literal($name);
+    }
+
+    return new Partial\Identifier($name);
 }
 
 /**

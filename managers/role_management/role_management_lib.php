@@ -334,6 +334,9 @@ function monitor_student_assignment($username_monitor, $array_students, $idinsta
     }else if($role == "director_prog"){
         $array_record->id_programa = $id_academic_program;
         $id_boss = null;
+    }else if($role == "vcd_academico"){
+        $array_record->id_programa = $id_academic_program;
+        $id_boss = null;
     }else{
         $id_boss = null;
     }

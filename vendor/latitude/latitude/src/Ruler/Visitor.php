@@ -14,6 +14,7 @@ use function Latitude\QueryBuilder\identify;
 use function Latitude\QueryBuilder\listing;
 use function Latitude\QueryBuilder\literal;
 use function Latitude\QueryBuilder\param;
+use function Latitude\QueryBuilder\group;
 
 class Visitor implements VisitorInterface
 {
@@ -101,12 +102,27 @@ class Visitor implements VisitorInterface
     {
         $values = array_map($this->remapper($handle, $eldnah), $element->getArguments());
 
+        if ($element->getName() === 'or') {
+            return group(criteria(
+                sprintf('%%s %s %%s', strtoupper($element->getName())),
+                $values[0],
+                $values[1]
+            ));
+        }
+
         if ($element->isFunction()) {
             return criteria(sprintf('%s(%%s)', strtoupper($element->getName())), listing($values));
         }
 
         if (count($values) === 2) {
-            return criteria(sprintf('%%s %s %%s', $element->getName()), $values[0], $values[1]);
+            $operator = $element->getName();
+            // `NULL` requires operator replacements: `=` becomes `IS` and `!=` becomes `IS NOT`
+            $parameter = $element->getArguments()[1];
+            if ($parameter instanceof Ast\Bag\Scalar and is_null($parameter->getValue())) {
+                $operator = $element->getName() === '!=' ? 'IS NOT' : 'IS';
+            }
+
+            return criteria(sprintf('%%s %s %%s', strtoupper($operator)), $values[0], $values[1]);
         }
 
         return criteria(sprintf('%s (%%s)', $element->getName()), listing($values, ' '));
