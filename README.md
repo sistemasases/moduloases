@@ -117,5 +117,6 @@ Existen difentes tipos de estudiantes en el módulo Ases, los cuales son los sig
 * **José Alejandro Libreros** - *Documentación* - [josealejolibreros](https://github.com/josealejolibreros)
 * **Diana Melissa Millares** - *Documentación* - [melissamillares](https://github.com/melissamillares)
 * **Valentina Salamanca Rodríguez** - *Documentación* - [vantwot](https://github.com/vantwot)
+* **Carlos Mauricio Tovar Parra - [Carlosmtp](https://github.com/Carlosmtp)
  
 
